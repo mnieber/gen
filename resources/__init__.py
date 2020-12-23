@@ -1,0 +1,9 @@
+from resources import docker_file  # noqa
+from resources import gitrepository  # noqa
+from resources import layer  # noqa
+from resources import layergroup  # noqa
+from resources import layergroups  # noqa
+from resources import makefile  # noqa
+from resources import pipcompile  # noqa
+from resources import project  # noqa
+from resources import srcdir  # noqa
