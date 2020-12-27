@@ -4,51 +4,17 @@ import sys
 
 import mistune
 
-import resources
-from config import config
+import leap_mn
+from config import config, install
 
-resource_builders = {
-    "project": resources.project.Builder,
-    "src-dir": resources.srcdir.Builder,
-    "git-repository": resources.gitrepository.Builder,
-    "layer-group": resources.layergroup.Builder,
-    "layer": resources.layer.Builder,
-    "pip-compile": resources.pipcompile.Builder,
-    "dockerfile": resources.docker_file.Builder,
-    "makefile": resources.makefile.Builder,
-}
-
-
-def create_line(text, it=None):
-    terms = []
-    tags = list(resource_builders.keys())
-
-    for word in text.split():
-        parts = word.split(":")
-        if len(parts) == 2:
-            data, tag = parts
-            if tag in tags:
-                terms.append(parser.Term(data, tag))
-    return parser.Line(text, terms, it)
-
-
-ittable_lut = {
-    "makefile": True,
-    "layer-group": True,
-    "service": True,
-}
-
-
-is_global_lut = {
-    "git-repository": True,
-    "layer-group": True,
-    "src-dir": True,
-    "project": True,
-}
+leap_mn.install_all()
 
 
 def get_blocks(raw_markdown):
-    blockCollector = parser.BlockCollector(ittable_lut, create_line)
+    blockCollector = parser.BlockCollector(
+        create_block=lambda name: parser.Block(name),
+        create_line=parser.get_create_line(config.ittable_lut),
+    )
     mistune.Markdown(renderer=blockCollector)(raw_markdown)
     return blockCollector.blocks
 
@@ -59,11 +25,12 @@ def main(gen_file):
         raw_markdown = ifs.read()
 
     blocks = get_blocks(raw_markdown)
-    parser.extract_resources(
-        config.global_block, is_global_lut.keys(), blocks, resource_builders
-    )
+    for block in blocks:
+        parser.create_resources(block)
 
-    print(config.global_block.describe())
+    for block in blocks:
+        parser.update_resources(block)
+
     for block in blocks:
         print(block.describe())
 
@@ -77,4 +44,8 @@ if __name__ == "__main__":
     if not os.path.exists(gen_file):
         report("Genspec file not found: " + gen_file)
         sys.exit(1)
-    main(gen_file)
+
+    try:
+        main(gen_file)
+    except Exception as e:
+        report(f"Error: {e}")

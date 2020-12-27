@@ -19,8 +19,17 @@ class Block:
     def get_resource(self, term):
         result = self.resource_by_term.get(term)
         if not result:
-            raise Exception("Expected a {term} resource in block {self.name}")
+            raise Exception(f"Expected a {term} resource in block {self.name}")
         return result
+
+    def get_resource_by_tag(self, tag):
+        for term, res in self.resource_by_term.items():
+            if term.tag == tag:
+                return res
+        return None
+
+    def find_lines_with_term(self, term):
+        return [x for x in self.lines if term in x.terms]
 
     def describe(self):
         result = f"Block: name={self.name}\n"

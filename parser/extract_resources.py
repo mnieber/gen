@@ -1,25 +1,21 @@
-#
+from config import config
 
 
-def extract_resources(global_block, global_tags, blocks, builders):
-    for block in blocks:
-        for line in block.lines:
-            new_resource_by_term = {}
-            for term in line.terms:
-                builder = builders.get(term.tag)
-                if not builder:
-                    continue
+def create_resources(block):
+    for line in block.lines:
+        for term in line.terms:
+            create_rule = config.create_rule_by_tag.get(term.tag)
+            if not create_rule:
+                continue
 
-                is_global = term.tag in global_tags
-                target_block = global_block if is_global else block
-                if term in target_block.resource_by_term:
-                    continue
+            if term in block.resource_by_term:
+                continue
 
-                resource = builder.create(term, line, block)
-                target_block.add_resource(resource, term)
-                new_resource_by_term[term] = resource
+            resource = create_rule(term, line, block)
+            block.add_resource(resource, term)
 
-            for term, resource in new_resource_by_term.items():
-                builder = builders.get(term.tag)
-                if hasattr(builder, "build"):
-                    builder.build(resource, term, line, block)
+
+def update_resources(block):
+    for term, resource in block.resource_by_term.items():
+        for update_rule in block.update_ruleset_by_term.get(term.tag) or []:
+            update_rule(resource, term, block)

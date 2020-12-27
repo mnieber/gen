@@ -1,17 +1,10 @@
-from config import config
-
-from resources.resource import Resource
+from leap_mn.layergroup import LayerGroup
+from leap_mn.resource import Resource
 
 
 class LayerGroups(Resource):
     def __init__(self):
-        self.group_by_name = {"global": LayerGroup()}
-
-    @staticmethod
-    def global_group(config):
-        return config.global_block.resource_by_name.setdefault(
-            "layer-groups", LayerGroups()
-        )
+        self.group_by_name = {"global": LayerGroup("global")}
 
     def describe(self, indent=0):
         return (

@@ -8,16 +8,16 @@ There is no:foobar configuration.
 
 ## Stack
 
-The root directory has a :docker_compose and a :docker_compose_dev file.
+The root directory has a :docker-compose and a :docker-compose-dev file.
 
 ## Frontend
 
-The frontend:service has a node_14:docker_file and a :docker_file_dev.
-:It uses the default:root_dir and default:src_mount_point.
+The frontend:service has a node_14:docker-file and a :docker-file-dev.
+:It uses the default:root-dir and default:src-mount-point.
 
 ## Backend
 
-The backend:service has a python_3.8:docker_file and a :docker_file_dev.
-:It uses the default:root_dir and default:src_mount_point.
+The backend:service has a python_3.8:docker-file and a :docker-file-dev.
+:It uses the default:root-dir and default:src-mount-point.
 :It also has a :makefile for running :pip-compile.
-:It uses :pytest with :pytest_html.
+:It uses :pytest with :pytest-html.

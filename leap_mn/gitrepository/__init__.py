@@ -1,4 +1,4 @@
-from resources.resource import Resource
+from leap_mn.resource import Resource
 
 
 class GitRepository(Resource):
@@ -9,10 +9,8 @@ class GitRepository(Resource):
         return " " * indent + f"GitRepository: url={self.url}"
 
 
-class Builder:
-    @staticmethod
-    def create(term, line, block):
-        return GitRepository(term.data)
+def create(term, line, block):
+    return GitRepository(term.data)
 
     # git_dir = os.path.join(get('src_dir'), ".git")
     # if not os.path.exists(git_dir):

@@ -8,3 +8,13 @@ class Term:
 
     def __hash__(self):
         return hash((self.tag, self.data))
+
+
+def text_to_terms(text):
+    terms = []
+    for word in text.split():
+        parts = word.split(":")
+        if len(parts) == 2:
+            data, tag = parts
+            terms.append(Term(data, tag))
+    return terms

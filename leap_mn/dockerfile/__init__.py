@@ -11,7 +11,11 @@ def describe(self, indent=0):
 
 
 def create(term, line, block):
-    return Dockerfile(term.data)
+    return Dockerfile("default")
+
+
+def create_dev(term, line, block):
+    return Dockerfile("dev")
 
 
 def pip_install_in_dockerfile(block, pip_package, try_resources):
