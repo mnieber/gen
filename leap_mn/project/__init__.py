@@ -11,3 +11,8 @@ class Project(Resource):
 
 def create(term, line, block):
     return Project(term.data)
+
+
+create_rule_by_tag = {
+    "project": create,
+}

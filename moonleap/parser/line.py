@@ -1,8 +1,8 @@
-from parser.term import text_to_terms
+from moonleap.parser.term import text_to_terms
 
 
 class Line:
-    def __init__(self, text, terms, it_term):
+    def __init__(self, text, terms, it_term, block=None):
         self.text = text
         self.terms = terms
         self.it_term = it_term
@@ -20,7 +20,7 @@ class Line:
         return f"Line: " + ",".join(str(x) for x in self.terms)
 
 
-def get_create_line(ittable_lut):
+def get_create_line(is_ittable_by_tag):
     def create_line(text, it_term=None):
         terms = []
         next_it_term = None
@@ -35,7 +35,7 @@ def get_create_line(ittable_lut):
                 next_it_term = it_term
             else:
                 terms.append(term)
-                if not next_it_term and ittable_lut.get(term.tag, False):
+                if not next_it_term and is_ittable_by_tag.get(term.tag, False):
                     next_it_term = term
 
         return Line(text, terms, next_it_term)

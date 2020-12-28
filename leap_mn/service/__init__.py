@@ -11,3 +11,13 @@ class Service(Resource):
 
 def create(term, line, block):
     return Service(term.data)
+
+
+create_rule_by_tag = {
+    "service": create,
+}
+
+
+is_ittable_by_tag = {
+    "service": True,
+}

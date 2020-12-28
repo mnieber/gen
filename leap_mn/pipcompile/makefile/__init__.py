@@ -1,4 +1,5 @@
-from utils import chop0
+from moonleap.parser.block import has_terms_in_same_line
+from moonleap.utils import chop0
 
 makefile_rule = chop0(
     """
@@ -9,7 +10,6 @@ pip-compile:
 )
 
 
-def update(self, resource, term, line, block):
-    makefile_res = block.get_resource_by_tag("makefile")
-    if makefile_res:
-        makefile_res.add_rule(makefile_rule)
+def update(block, pipcompile_term, makefile_term):
+    if has_terms_in_same_line(block, pipcompile_term, makefile_term):
+        block.get_resource(makefile_term).add_rule(makefile_rule)

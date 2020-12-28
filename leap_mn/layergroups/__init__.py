@@ -19,3 +19,6 @@ class LayerGroups(Resource):
 #     LayerGroups.global_group(config).group_by_name.setdefault(
 #         layer_group.name, layer_group
 #     )
+
+
+create_rule_by_tag = {}

@@ -19,8 +19,11 @@ def create(term, line, block):
     return LayerGroup(name=term.data)
 
 
-def add_layers(resource, term, block):
-    for line in block.find_lines_with_term(term):
-        for a_term in line.find_terms_with_tag("layer"):
-            layer = block.get_resource(a_term)
-            resource.layer_by_name[layer.name] = layer
+create_rule_by_tag = {
+    "layer-group": create,
+}
+
+
+is_ittable_by_tag = {
+    "layer-group": True,
+}

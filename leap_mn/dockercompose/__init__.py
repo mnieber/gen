@@ -15,3 +15,9 @@ def create(term, line, block):
 
 def create_dev(term, line, block):
     return DockerCompose("dev")
+
+
+create_rule_by_tag = {
+    "docker-compose-dev": create_dev,
+    "docker-compose": create,
+}

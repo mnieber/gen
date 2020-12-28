@@ -6,5 +6,15 @@ class PipCompile(Resource):
         pass
 
 
-def create(self, term, line, block):
+def create(term, line, block):
     return PipCompile()
+
+
+create_rule_by_tag = {
+    "pip-compile": create,
+}
+
+update_rules = [
+    (None, "dockerfile"),
+    ("leap_mn.makefile", "makefile"),
+]

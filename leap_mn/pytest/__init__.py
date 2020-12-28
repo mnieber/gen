@@ -11,3 +11,8 @@ class Pytest(Resource):
 
 def create(term, line, block):
     return Pytest()
+
+
+create_rule_by_tag = {
+    "pytest": create,
+}

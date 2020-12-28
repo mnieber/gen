@@ -11,3 +11,8 @@ class SrcDir(Resource):
 
 def create(term, line, block):
     return SrcDir(term.data)
+
+
+create_rule_by_tag = {
+    "src-dir": create,
+}

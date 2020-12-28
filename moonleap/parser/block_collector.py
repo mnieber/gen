@@ -1,11 +1,14 @@
 import os
 import re
-from parser import Block
 
 import mistune
 import nltk
+from moonleap.parser import Block
 
-nltk.download("punkt")
+try:
+    nltk.sent_tokenize("test")
+except LookupError:
+    nltk.download("punkt")
 
 
 class FormatError(Exception):
@@ -14,8 +17,8 @@ class FormatError(Exception):
 
 def clean_text(text):
     result = text
-    result = re.sub("<br\>", " ", result)
-    result = re.sub("<[^<]+?>", "", result)
+    result = re.sub(r"<br\>", " ", result)
+    result = re.sub(r"<[^<]+?>", "", result)
     return result
 
 

@@ -1,11 +1,12 @@
 import os
-import parser
 import sys
-
-import mistune
+import traceback
 
 import leap_mn
-from config import config, install
+import mistune
+
+from moonleap import parser
+from moonleap.config import config, install
 
 leap_mn.install_all()
 
@@ -13,7 +14,7 @@ leap_mn.install_all()
 def get_blocks(raw_markdown):
     blockCollector = parser.BlockCollector(
         create_block=lambda name: parser.Block(name),
-        create_line=parser.get_create_line(config.ittable_lut),
+        create_line=parser.get_create_line(config.is_ittable_by_tag),
     )
     mistune.Markdown(renderer=blockCollector)(raw_markdown)
     return blockCollector.blocks
@@ -49,3 +50,4 @@ if __name__ == "__main__":
         main(gen_file)
     except Exception as e:
         report(f"Error: {e}")
+        report(traceback.format_exc(e))

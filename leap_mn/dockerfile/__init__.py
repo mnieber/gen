@@ -18,9 +18,15 @@ def create_dev(term, line, block):
     return Dockerfile("dev")
 
 
-def pip_install_in_dockerfile(block, pip_package, try_resources):
-    for resource_name in try_resources:
-        dockerfile = block.resource_by_name.get(resource_name)
+create_rule_by_tag = {
+    "docker-file-dev": create_dev,
+    "docker-file": create,
+}
+
+
+def pip_install_in_dockerfile(block, pip_package, try_resource_tags):
+    for resource_tag in try_resource_tags:
+        dockerfile = block.get_resource_by_tag(resource_tag)
         if dockerfile:
             dockerfile.add_pip_install(pip_package)
             return

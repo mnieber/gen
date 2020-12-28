@@ -15,3 +15,8 @@ def create(term, line, block):
     # git_dir = os.path.join(get('src_dir'), ".git")
     # if not os.path.exists(git_dir):
     #     schedule(["gh", "create", "dodo-gen"], "I will create a new project on Github")
+
+
+create_rule_by_tag = {
+    "git-repository": create,
+}

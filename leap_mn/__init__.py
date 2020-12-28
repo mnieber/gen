@@ -1,4 +1,4 @@
-from config import config, install
+from moonleap.config import config, install
 from ramda import merge
 
 from . import (
@@ -18,29 +18,18 @@ from . import (
 
 
 def install_all():
-    config.create_rule_by_tag = merge(
-        config.create_rule_by_tag,
-        {
-            "docker-compose-dev": dockercompose.create_dev,
-            "docker-compose": dockercompose.create,
-            "docker-file-dev": dockerfile.create_dev,
-            "docker-file": dockerfile.create,
-            "dockerfile": dockerfile.create,
-            "layer-group": layergroup.create,
-            "layer": layer.create,
-            "makefile": makefile.create,
-            "pytest": pytest.create,
-        },
-    )
-
-    config.ittable_lut = merge(
-        config.ittable_lut,
-        {
-            "makefile": True,
-            "layer-group": True,
-            "service": True,
-        },
-    )
+    install(dockercompose)
+    install(dockerfile)
+    install(gitrepository)
+    install(layer)
+    install(layergroup)
+    install(layergroups)
+    install(makefile)
+    install(pipcompile)
+    install(project)
+    install(pytest)
+    install(service)
+    install(srcdir)
 
 
 # config.update_rules = {
