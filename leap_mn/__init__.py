@@ -7,7 +7,6 @@ from . import (
     gitrepository,
     layer,
     layergroup,
-    layergroups,
     makefile,
     pipcompile,
     project,
@@ -23,7 +22,6 @@ def install_all():
     install(gitrepository)
     install(layer)
     install(layergroup)
-    install(layergroups)
     install(makefile)
     install(pipcompile)
     install(project)

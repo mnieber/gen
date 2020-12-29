@@ -5,8 +5,8 @@ class GitRepository(Resource):
     def __init__(self, url):
         self.url = url
 
-    def describe(self, indent=0):
-        return " " * indent + f"GitRepository: url={self.url}"
+    def describe(self):
+        return {str(self): dict(url=self.url)}
 
 
 def create(term, line, block):
@@ -20,3 +20,7 @@ def create(term, line, block):
 create_rule_by_tag = {
     "git-repository": create,
 }
+
+update_rules = [
+    ("leap_mn.srcdir", "srcdir"),
+]

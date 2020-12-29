@@ -10,13 +10,12 @@ class Makefile(Resource):
     def add_rule(self, rule):
         self.rules.append(rule)
 
-    def describe(self, indent):
-        return (
-            " " * indent
-            + "Makefile rules="
-            + os.linesep
-            + os.linesep.join(" " * (indent + 4) + x for x in self.rules)
-        )
+    def describe(self):
+        return {
+            str(self): dict(
+                rules=[x for x in self.rules],
+            )
+        }
 
 
 def create(term, line, block):

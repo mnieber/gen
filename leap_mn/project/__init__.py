@@ -5,8 +5,8 @@ class Project(Resource):
     def __init__(self, name):
         self.name = name
 
-    def describe(self, indent=0):
-        return " " * indent + f"Project: name={self.name}"
+    def describe(self):
+        return {str(self): dict(name=self.name)}
 
 
 def create(term, line, block):
@@ -15,4 +15,8 @@ def create(term, line, block):
 
 create_rule_by_tag = {
     "project": create,
+}
+
+is_ittable_by_tag = {
+    "project": True,
 }

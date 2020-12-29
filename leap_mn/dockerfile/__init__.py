@@ -5,9 +5,8 @@ class Dockerfile(Resource):
     def __init__(self, name):
         self.name = name
 
-
-def describe(self, indent=0):
-    return " " * indent + f"Dockerfile: name={self.name}"
+    def describe(self):
+        return {str(self): dict(name=self.name)}
 
 
 def create(term, line, block):

@@ -7,8 +7,11 @@ class Resource:
     def __init__(self):
         self.id = uuid.uuid4().hex
 
-    def describe(self, indent=0):
-        return " " * indent + str(type(self).__name__)
+    def __str__(self):
+        return self.__class__.__name__
+
+    def describe(self):
+        return str(self)
 
     @property
     def type_id(self):

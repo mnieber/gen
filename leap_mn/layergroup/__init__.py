@@ -6,13 +6,13 @@ class LayerGroup(Resource):
         self.name = name
         self.layer_by_name = {}
 
-    def describe(self, indent):
-        return (
-            " " * indent
-            + f"LayerGroup: name={self.name}"
-            + "\n"
-            + "\n".join([x.describe(indent + 4) for x in self.layer_by_name.values()])
-        )
+    def describe(self):
+        return {
+            str(self): dict(
+                name=self.name,
+                layers=[x.describe() for x in self.layer_by_name.values()],
+            )
+        }
 
 
 def create(term, line, block):

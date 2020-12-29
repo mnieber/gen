@@ -9,6 +9,9 @@ class Term:
     def __hash__(self):
         return hash((self.tag, self.data))
 
+    def __eq__(self, rhs):
+        return self.tag == rhs.tag and self.data == rhs.data
+
 
 def text_to_terms(text):
     terms = []

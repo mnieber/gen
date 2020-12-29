@@ -11,5 +11,5 @@ pip-compile:
 
 
 def update(block, pipcompile_term, makefile_term):
-    if has_terms_in_same_line(block, pipcompile_term, makefile_term):
+    if has_terms_in_same_line(block, makefile_term, pipcompile_term):
         block.get_resource(makefile_term).add_rule(makefile_rule)

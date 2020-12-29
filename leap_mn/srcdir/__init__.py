@@ -4,9 +4,12 @@ from leap_mn.resource import Resource
 class SrcDir(Resource):
     def __init__(self, location):
         self.location = location
+        self.git_repo = None
 
-    def describe(self, indent=0):
-        return " " * indent + f"SrcDir: location={self.location}"
+    def describe(self):
+        return {
+            str(self): dict(location=self.location, git_repo=self.git_repo.describe())
+        }
 
 
 def create(term, line, block):

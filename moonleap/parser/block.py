@@ -1,6 +1,7 @@
 import typing as T
 
 from moonleap.parser.line import Line
+from yaml import Dumper, dump
 
 
 class Block:
@@ -23,7 +24,7 @@ class Block:
             raise Exception(f"Expected a {term} resource in block {self.name}")
         return result
 
-    def drop_resource(self, term):
+    def drop_resource_by_term(self, term):
         del self.resource_by_term[term]
 
     def get_resource_by_tag(self, tag):
@@ -36,15 +37,20 @@ class Block:
         return [x for x in self.lines if term in x.terms]
 
     def describe(self):
-        result = f"Block: name={self.name}\n"
+        sep = "----------------------------------------------\n"
+        result = f"{sep}Block: name={self.name}\n{sep}"
         for resource in self.resource_by_term.values():
-            result += resource.describe(indent=0) + "\n"
+            result += dump(resource.describe()) + "\n"
         return result
 
 
-def has_terms_in_same_line(block, term1, term2):
+def has_terms_in_same_line(block, term1, term2, is_ordered=True):
     for line in block.lines:
         if term1 in line.terms and term2 in line.terms:
-            return True
+            return (
+                line.terms.index(term1) < line.terms.index(term2)
+                if is_ordered
+                else True
+            )
 
     return False
