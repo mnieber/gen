@@ -28,7 +28,7 @@ The move-lists:module contains a move-lists:store.
 
 ## Backend
 
-The backend:service has a python_3.8:docker-file and a :docker-file-dev.
+The backend:service has a python_3.8:dockerfile and a :dockerfile-dev.
 :It uses the default:root-dir and default:src-mount-point.
 :It also has a :makefile for running :pip-compile.
 :It uses :pytest with :pytest-html.

@@ -1,9 +1,11 @@
-from leap_mn.resource import Resource
+from leap_mn import gitrepository
+from moonleap.config import reduce
+from moonleap.resource import Resource
 
 
 class SrcDir(Resource):
     def __init__(self, location):
-        self.location = location
+        self.location = location or "src"
         self.git_repo = None
 
     def describe(self):
@@ -13,9 +15,14 @@ class SrcDir(Resource):
 
 
 def create(term, line, block):
-    return SrcDir(term.data)
+    return [SrcDir(term.data)]
 
 
-create_rule_by_tag = {
-    "src-dir": create,
-}
+@reduce(SrcDir, resource_id="leap_mn.gitrepository")
+def set_git_repo(src_dir, git_repo):
+    if src_dir.is_mentioned_in_same_line(git_repo, is_ordered=False):
+        src_dir.git_repo = git_repo
+        git_repo.drop_from_block()
+
+
+tags = ["src-dir"]

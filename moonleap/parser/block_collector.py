@@ -32,18 +32,27 @@ def clean_sentence(sentence):
 class BlockCollector(mistune.Renderer):
     def __init__(self, create_block, create_line):
         super().__init__(escape=True, hard_wrap=True)
+        self.stack = []
         self.block = None
         self.blocks = []
         self.line = None
         self.create_block = create_block
         self.create_line = create_line
 
+    @property
+    def parent_block(self):
+        return self.stack[-1] if self.stack else None
+
     def header(self, text, level, raw=None):
-        if level <= 2:
-            self.block = self.create_block(text)
-            self.line = self.create_line(text, it_term=None)
-            self.block.lines.append(self.line)
-            self.blocks.append(self.block)
+        while self.parent_block and self.parent_block.level >= level:
+            self.stack.pop()
+
+        self.block = self.create_block(text, level, self.parent_block)
+        self.stack.append(self.block)
+
+        self.line = self.create_line(text, it_term=None)
+        self.block.lines.append(self.line)
+        self.blocks.append(self.block)
         return super().header(text, level, raw)
 
     def paragraph(self, text):

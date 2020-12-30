@@ -1,23 +1,16 @@
-from leap_mn.resource import Resource
+from moonleap.resource import Resource
 
 
 class DockerCompose(Resource):
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, is_dev):
+        self.is_dev = is_dev
 
     def describe(self):
-        return {str(self): dict(name=self.name)}
+        return {str(self): dict(is_dev=self.is_dev)}
 
 
 def create(term, line, block):
-    return DockerCompose("default")
+    return [DockerCompose(is_dev=term.tag == "docker-compose-dev")]
 
 
-def create_dev(term, line, block):
-    return DockerCompose("dev")
-
-
-create_rule_by_tag = {
-    "docker-compose-dev": create_dev,
-    "docker-compose": create,
-}
+tags = ["docker-compose", "docker-compose-dev"]

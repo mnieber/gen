@@ -1,4 +1,14 @@
-from leap_mn.resource import Resource
+from leap_mn.makefilerule import MakefileRule
+from moonleap.resource import Resource
+from moonleap.utils import chop0
+
+makefile_rule = chop0(
+    """
+pip-compile:
+    pip-compile requirements.in -o requirements.txt",
+    pip-compile requirements.dev.in -o requirements.dev.txt",
+"""
+)
 
 
 class PipCompile(Resource):
@@ -7,14 +17,7 @@ class PipCompile(Resource):
 
 
 def create(term, line, block):
-    return PipCompile()
+    return [PipCompile(), MakefileRule(makefile_rule)]
 
 
-create_rule_by_tag = {
-    "pip-compile": create,
-}
-
-update_rules = [
-    (None, "dockerfile"),
-    ("leap_mn.makefile", "makefile"),
-]
+tags = ["pip-compile"]

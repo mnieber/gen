@@ -1,7 +1,7 @@
 from moonleap.resource import Resource
 
 
-class Service(Resource):
+class DockerfileDev(Resource):
     def __init__(self, name):
         self.name = name
 
@@ -10,8 +10,7 @@ class Service(Resource):
 
 
 def create(term, line, block):
-    return [Service(term.data)]
+    return [DockerfileDev(name=term.name)]
 
 
-is_ittable = True
-tags = ["service"]
+tags = ["dockerfile-dev"]

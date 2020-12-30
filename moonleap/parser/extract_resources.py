@@ -10,32 +10,20 @@ def create_resources(block):
             if not create_rule:
                 continue
 
-            if term in block.resource_by_term:
+            if term in block.get_terms(include_parents=True):
                 continue
 
-            resource = create_rule(term, line, block)
-            block.add_resource(resource, term)
-
-
-def run_update_rule(block, resource_term, co_resource_term, pgk_path):
-    try:
-        m = import_module(pgk_path)
-    except ImportError as e:
-        raise Exception(f"Could not import update rule module: {pkg_path}")
-
-    m.update(block, resource_term, co_resource_term)
+            for resource in create_rule(term, line, block):
+                block.add_resource(resource, term)
 
 
 def update_resources(block):
-    resource_by_term = list(block.resource_by_term.items())
+    resource_by_term = list(block.get_resource_by_term(include_parents=False))
     for resource_term, resource in resource_by_term:
         update_rules = config.get_update_rules(resource)
-        for resource_type_id, pkg_sub_path in update_rules:
-            pkg_path = ".".join([resource.__module__, pkg_sub_path])
-            if resource_type_id is None:
-                run_update_rule(block, resource_term, None, pkg_path)
-                continue
-
-            for co_resource_term, co_resource in resource_by_term:
+        for resource_type_id, update in update_rules.items():
+            for co_resource_term, co_resource in block.get_resource_by_term(
+                include_parents=True
+            ):
                 if resource_type_id == co_resource.type_id:
-                    run_update_rule(block, resource_term, co_resource_term, pkg_path)
+                    update(resource, co_resource)

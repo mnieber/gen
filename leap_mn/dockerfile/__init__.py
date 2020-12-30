@@ -1,31 +1,28 @@
-from leap_mn.resource import Resource
+from moonleap.config import reduce
+from moonleap.resource import Resource
 
 
 class Dockerfile(Resource):
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, is_dev):
+        self.is_dev = is_dev
+        self.pip_package_names = []
 
     def describe(self):
-        return {str(self): dict(name=self.name)}
+        return {str(self): dict(is_dev=self.is_dev)}
 
 
 def create(term, line, block):
-    return Dockerfile("default")
+    return [Dockerfile(is_dev=term.tag == "dockerfile-dev")]
 
 
-def create_dev(term, line, block):
-    return Dockerfile("dev")
+@reduce(Dockerfile, resource_id="leap_mn.pipdependency")
+def add_pip_dependency(dockerfile, pip_dependency):
+    if pip_dependency.is_dev and not dockerfile.is_dev:
+        return
+
+    if dockerfile.is_mentioned_in_same_block(pip_dependency):
+        if pip_dependency.package_name not in dockerfile.pip_package_names:
+            dockerfile.pip_package_names.append(pip_dependency.package_name)
 
 
-create_rule_by_tag = {
-    "docker-file-dev": create_dev,
-    "docker-file": create,
-}
-
-
-def pip_install_in_dockerfile(block, pip_package, try_resource_tags):
-    for resource_tag in try_resource_tags:
-        dockerfile = block.get_resource_by_tag(resource_tag)
-        if dockerfile:
-            dockerfile.add_pip_install(pip_package)
-            return
+tags = ["dockerfile", "dockerfile-dev"]

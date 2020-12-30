@@ -13,7 +13,9 @@ leap_mn.install_all()
 
 def get_blocks(raw_markdown):
     blockCollector = parser.BlockCollector(
-        create_block=lambda name: parser.Block(name),
+        create_block=lambda name, level, parent_block: parser.Block(
+            name, level, parent_block
+        ),
         create_line=parser.get_create_line(config.is_ittable_by_tag),
     )
     mistune.Markdown(renderer=blockCollector)(raw_markdown)
@@ -21,7 +23,6 @@ def get_blocks(raw_markdown):
 
 
 def main(gen_file):
-    __import__("pudb").set_trace()
     with open(gen_file) as ifs:
         raw_markdown = ifs.read()
 

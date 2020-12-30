@@ -1,4 +1,4 @@
-from leap_mn.resource import Resource
+from moonleap.resource import Resource
 
 
 class GitRepository(Resource):
@@ -10,17 +10,7 @@ class GitRepository(Resource):
 
 
 def create(term, line, block):
-    return GitRepository(term.data)
-
-    # git_dir = os.path.join(get('src_dir'), ".git")
-    # if not os.path.exists(git_dir):
-    #     schedule(["gh", "create", "dodo-gen"], "I will create a new project on Github")
+    return [GitRepository(term.data)]
 
 
-create_rule_by_tag = {
-    "git-repository": create,
-}
-
-update_rules = [
-    ("leap_mn.srcdir", "srcdir"),
-]
+tags = ["git-repository"]
