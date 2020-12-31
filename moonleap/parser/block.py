@@ -10,16 +10,16 @@ class Block:
         self.name = name
         self.level = level
         self.parent_block = parent_block
-        self._resource_by_term = []
+        self._resources = []
         self.lines: T.List[Line] = []
 
-    def get_resource_by_term(self, include_parents):
+    def get_resources(self, include_parents):
         parent_result = (
-            self.parent_block.get_resource_by_term(include_parents=True)
+            self.parent_block.get_resources(include_parents=True)
             if include_parents and self.parent_block
             else []
         )
-        return parent_result + self._resource_by_term
+        return parent_result + self._resources
 
     def get_terms(self, include_parents):
         result = (
@@ -36,13 +36,11 @@ class Block:
     def add_resource(self, resource, term):
         resource.block = self
         resource.term = term
-        self._resource_by_term.append((term, resource))
+        self._resources.append(resource)
         return resource
 
     def drop_resource(self, resource):
-        self._resource_by_term = [
-            x for x in self._resource_by_term if x[1] is not resource
-        ]
+        self._resources = [x for x in self._resources if x is not resource]
 
     def find_lines_with_term(self, term):
         return [x for x in self.lines if term in x.terms]
@@ -50,7 +48,7 @@ class Block:
     def describe(self):
         sep = "----------------------------------------------\n"
         result = f"{sep}Block: name={self.name}\n{sep}"
-        for term, resource in self._resource_by_term:
+        for resource in self._resources:
             result += dump({str(resource): resource.describe()}) + "\n"
         return result
 

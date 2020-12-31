@@ -5,29 +5,17 @@ import traceback
 import leap_mn
 import mistune
 
-from moonleap import parser
-from moonleap.config import config, install
+from moonleap import config, create_resources, parser
 
 leap_mn.install_all()
-
-
-def get_blocks(raw_markdown):
-    blockCollector = parser.BlockCollector(
-        create_block=lambda name, level, parent_block: parser.Block(
-            name, level, parent_block
-        ),
-        create_line=parser.get_create_line(config.is_ittable_by_tag),
-    )
-    mistune.Markdown(renderer=blockCollector)(raw_markdown)
-    return blockCollector.blocks
 
 
 def main(gen_file):
     with open(gen_file) as ifs:
         raw_markdown = ifs.read()
 
-    blocks = get_blocks(raw_markdown)
-    parser.create_resources(blocks)
+    blocks = parser.get_blocks(raw_markdown)
+    create_resources(blocks)
 
     for block in blocks:
         print(block.describe())

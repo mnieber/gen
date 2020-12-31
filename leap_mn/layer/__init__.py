@@ -1,6 +1,10 @@
 from moonleap import Resource, reduce
 
 
+def get_root_config(layer):
+    return dict()
+
+
 class Layer(Resource):
     def __init__(self, name):
         self.name = name
@@ -29,14 +33,20 @@ class LayerConfig(Resource):
         return dict(name=self.name)
 
 
+def create(term, block):
+    return [Layer(name=term.data)]
+
+
+@reduce(parent_resource="moonleap.Always", resource=Layer, delay=True)
+def add_root_config(always, layer):
+    if layer.is_root:
+        return [LayerConfig("root", get_root_config(layer))]
+
+
 @reduce(parent_resource="leap_mn.Layer", resource=LayerConfig)
 def add_config(layer, layer_config):
     if layer_config.is_created_in_block_that_mentions(layer):
         layer.sections.append(layer_config)
-
-
-def create(term, block):
-    return [Layer(name=term.data)]
 
 
 @reduce(parent_resource=Layer, resource="leap_mn.LayerGroup")
@@ -46,7 +56,7 @@ def add_layer_group(layer, layer_group):
 
 
 @reduce(parent_resource=Layer, resource="leap_mn.SrcDir")
-def add_layer(layer, src_dir):
+def add_src_dir(layer, src_dir):
     if layer.is_root:
         layer.src_dir = src_dir
 

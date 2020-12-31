@@ -1,5 +1,6 @@
 import uuid
 
+from moonleap.parser.term import Term
 from moonleap.utils import resource_id_from_class
 
 
@@ -47,4 +48,5 @@ class Resource:
 
 
 class Always(Resource):
-    pass
+    def __init__(self):
+        self.term = Term("always", "always")

@@ -3,7 +3,9 @@ import re
 
 import mistune
 import nltk
+from moonleap.config import config
 from moonleap.parser import Block
+from moonleap.parser.line import get_create_line
 
 try:
     nltk.sent_tokenize("test")
@@ -65,3 +67,12 @@ class BlockCollector(mistune.Renderer):
             )
             self.block.lines.append(self.line)
         return super().paragraph(text)
+
+
+def get_blocks(raw_markdown):
+    blockCollector = BlockCollector(
+        create_block=lambda name, level, parent_block: Block(name, level, parent_block),
+        create_line=get_create_line(config.is_ittable_by_tag),
+    )
+    mistune.Markdown(renderer=blockCollector)(raw_markdown)
+    return blockCollector.blocks

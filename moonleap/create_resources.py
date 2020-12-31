@@ -1,21 +1,14 @@
 from importlib import import_module
 
 from moonleap.config import config
-from moonleap.parser.term import always_term
 from moonleap.resource import Always
-
-
-def skip_term(block, term):
-    return term in [x[0] for x in block.get_resource_by_term(include_parents=True)]
 
 
 def update_parent_resources(block, resource, delayed):
     new_resources = []
 
-    parent_resource_by_term = [(always_term, Always())] + list(
-        block.get_resource_by_term(include_parents=True)
-    )
-    for parent_resource_term, parent_resource in parent_resource_by_term:
+    parent_resources = [Always()] + list(block.get_resources(include_parents=True))
+    for parent_resource in parent_resources:
         update_rules = config.get_update_rules(parent_resource.type_id)
         for resource_type_id, (update, delay) in update_rules.items():
             if resource_type_id == resource.type_id:
@@ -54,7 +47,7 @@ def create_resources(blocks):
             if not create_rule:
                 continue
 
-            if skip_term(block, term):
+            if term in [r.term for r in block.get_resources(include_parents=True)]:
                 continue
 
             for resource in create_rule(term, block):
