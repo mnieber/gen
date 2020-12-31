@@ -1,7 +1,29 @@
 from importlib import import_module
 
-from moonleap.always import Always, always_term
 from moonleap.config import config
+from moonleap.parser.term import always_term
+from moonleap.resource import Always
+
+
+def skip_term(block, term):
+    return term in [x[0] for x in block.get_resource_by_term(include_parents=True)]
+
+
+def update_parent_resources(block, resource):
+    new_resources = []
+
+    parent_resource_by_term = [(always_term, Always())] + list(
+        block.get_resource_by_term(include_parents=True)
+    )
+    for parent_resource_term, parent_resource in parent_resource_by_term:
+        update_rules = config.get_update_rules(parent_resource.type_id)
+        for resource_type_id, update in update_rules.items():
+            if resource_type_id == resource.type_id:
+                new_resources += update(parent_resource, resource) or []
+
+    for new_resource in new_resources:
+        block.add_resource(new_resource, resource.term)
+        update_parent_resources(block, new_resource)
 
 
 def create_resources(block):
@@ -11,22 +33,12 @@ def create_resources(block):
             if not create_rule:
                 continue
 
-            if term in [x[0] for x in block.get_resource_by_term(include_parents=True)]:
+            if skip_term(block, term):
                 continue
 
             for resource in create_rule(term, line, block):
-                if resource:
-                    block.add_resource(resource, term)
+                if not resource:
+                    continue
 
-
-def update_resources(block):
-    parent_resource_by_term = [(always_term, Always())] + list(
-        block.get_resource_by_term(include_parents=True)
-    )
-    resource_by_term = list(block.get_resource_by_term(include_parents=False))
-    for parent_resource_term, parent_resource in parent_resource_by_term:
-        update_rules = config.get_update_rules(parent_resource.type_id)
-        for resource_type_id, update in update_rules.items():
-            for resource_term, resource in resource_by_term:
-                if resource_type_id == resource.type_id:
-                    update(parent_resource, resource)
+                block.add_resource(resource, term)
+                update_parent_resources(block, resource)

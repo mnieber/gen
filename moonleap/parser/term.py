@@ -21,3 +21,6 @@ def text_to_terms(text):
             data, tag = parts
             terms.append(Term(data, tag))
     return terms
+
+
+always_term = Term("always", "always")

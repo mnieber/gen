@@ -31,9 +31,6 @@ def main(gen_file):
         parser.create_resources(block)
 
     for block in blocks:
-        parser.update_resources(block)
-
-    for block in blocks:
         print(block.describe())
 
 

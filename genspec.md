@@ -1,8 +1,9 @@
 # Spec of the cashcog:project
 
-The cashcog:project has a :src-dir that stores files from the mnieber/test:git-repository.
+The cashcog:project has a root:layer.
+:It has a server:layer-group with a stack:layer, frontend:layer and backend:layer.
+:It has a :src-dir that stores files from the mnieber/test:git-repository.
 :It runs a frontend:service and a backend:service.
-:It has a root:layer that has a server:layer-group with a stack:layer, frontend:layer and backend:layer.
 
 ## The stack:layer
 

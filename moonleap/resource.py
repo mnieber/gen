@@ -44,3 +44,7 @@ class Resource:
 
     def drop_from_block(self):
         self.block.drop_resource(self)
+
+
+class Always(Resource):
+    pass

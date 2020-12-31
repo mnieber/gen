@@ -1,5 +1,6 @@
 from leap_mn.layerconfig import LayerConfig
-from moonleap.resource import Resource
+from moonleap.config import reduce
+from moonleap.resource import Always, Resource
 from moonleap.utils import chop0
 
 
@@ -19,19 +20,17 @@ class DockerCompose(Resource):
 def create(term, line, block):
     return [
         DockerCompose(name=term.data, is_dev=term.tag == "docker-compose-dev"),
-        term.tag == "docker-compose"
-        and LayerConfig("docker-compose", get_layer_config()),
     ]
 
 
-# TODO: create a reduce rule with parent=always that creates the layer config,
-# such that the new layerconfig is itself also reduced.
-# This allows us to decouple (if wanted) the creation of the layer config from the
-# creation of the docker-compose
+@reduce(parent_resource=Always, resource=DockerCompose)
+def create_layer_config(always, docker_compose):
+    if docker_compose.term.tag == "docker-compose":
+        return [LayerConfig("docker-compose", get_layer_config())]
 
 
-# TODO: let parent resource respond immediately to the creation of child resources
-# Simplify by strictly requiring parent resources to exist before child resources
+# TODO: allow to add inferred terms to a block, based on the blocks contents
+# From these inferred terms, resources can be created (e.g. root:layer is inferred from any other layer)
 
 
 # TODO: publish a separate ontology that other vendors can support
