@@ -1,5 +1,6 @@
 from importlib import import_module
 
+from moonleap.always import Always, always_term
 from moonleap.config import config
 
 
@@ -10,20 +11,22 @@ def create_resources(block):
             if not create_rule:
                 continue
 
-            if term in block.get_terms(include_parents=True):
+            if term in [x[0] for x in block.get_resource_by_term(include_parents=True)]:
                 continue
 
             for resource in create_rule(term, line, block):
-                block.add_resource(resource, term)
+                if resource:
+                    block.add_resource(resource, term)
 
 
 def update_resources(block):
+    parent_resource_by_term = [(always_term, Always())] + list(
+        block.get_resource_by_term(include_parents=True)
+    )
     resource_by_term = list(block.get_resource_by_term(include_parents=False))
-    for resource_term, resource in resource_by_term:
-        update_rules = config.get_update_rules(resource)
+    for parent_resource_term, parent_resource in parent_resource_by_term:
+        update_rules = config.get_update_rules(parent_resource.type_id)
         for resource_type_id, update in update_rules.items():
-            for co_resource_term, co_resource in block.get_resource_by_term(
-                include_parents=True
-            ):
-                if resource_type_id == co_resource.type_id:
-                    update(resource, co_resource)
+            for resource_term, resource in resource_by_term:
+                if resource_type_id == resource.type_id:
+                    update(parent_resource, resource)

@@ -38,8 +38,9 @@ class Resource:
 
         return False
 
-    def is_mentioned_in_same_block(self, other_resource):
-        return self.block is other_resource.block
+    def is_created_in_block_that_mentions(self, other_resource):
+        terms = self.block.get_terms(include_parents=False)
+        return other_resource.term in terms
 
     def drop_from_block(self):
         self.block.drop_resource(self)

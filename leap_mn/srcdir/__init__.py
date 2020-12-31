@@ -18,11 +18,10 @@ def create(term, line, block):
     return [SrcDir(term.data)]
 
 
-@reduce(SrcDir, resource_id="leap_mn.gitrepository")
+@reduce(SrcDir, resource="leap_mn.gitrepository")
 def set_git_repo(src_dir, git_repo):
     if src_dir.is_mentioned_in_same_line(git_repo, is_ordered=False):
         src_dir.git_repo = git_repo
-        git_repo.drop_from_block()
 
 
 tags = ["src-dir"]

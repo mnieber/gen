@@ -27,9 +27,10 @@ class Block:
             if include_parents and self.parent_block
             else []
         )
-        for term, resource in self._resource_by_term:
-            if term not in result:
-                result.append(term)
+        for line in self.lines:
+            for term in line.terms:
+                if term not in result:
+                    result.append(term)
         return result
 
     def add_resource(self, resource, term):

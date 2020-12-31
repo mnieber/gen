@@ -9,8 +9,8 @@ class Config:
         self.update_rules_by_resource_type_id = {}
         self.is_ittable_by_tag = {}
 
-    def get_update_rules(self, resource):
-        return self.update_rules_by_resource_type_id.get(resource.type_id) or {}
+    def get_update_rules(self, parent_resource_id):
+        return self.update_rules_by_resource_type_id.get(parent_resource_id) or {}
 
 
 config = Config()
@@ -22,11 +22,18 @@ def install(module):
         config.is_ittable_by_tag[tag] = getattr(module, "is_ittable", False)
 
 
-def reduce(resource, resource_id):
-    this_resource_id = str_to_type_id(resource.__module__)
+def reduce(parent_resource, resource):
+    resource_id = (
+        resource if isinstance(resource, str) else str_to_type_id(resource.__module__)
+    )
+    parent_resource_id = (
+        parent_resource
+        if isinstance(parent_resource, str)
+        else str_to_type_id(parent_resource.__module__)
+    )
 
     def wrapped(f):
-        config.update_rules_by_resource_type_id.setdefault(this_resource_id, {})
-        config.update_rules_by_resource_type_id[this_resource_id][resource_id] = f
+        config.update_rules_by_resource_type_id.setdefault(parent_resource_id, {})
+        config.update_rules_by_resource_type_id[parent_resource_id][resource_id] = f
 
     return wrapped

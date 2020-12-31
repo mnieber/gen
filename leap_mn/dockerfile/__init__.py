@@ -15,12 +15,12 @@ def create(term, line, block):
     return [Dockerfile(is_dev=term.tag == "dockerfile-dev")]
 
 
-@reduce(Dockerfile, resource_id="leap_mn.pipdependency")
+@reduce(parent_resource=Dockerfile, resource="leap_mn.pipdependency")
 def add_pip_dependency(dockerfile, pip_dependency):
     if pip_dependency.is_dev and not dockerfile.is_dev:
         return
 
-    if dockerfile.is_mentioned_in_same_block(pip_dependency):
+    if pip_dependency.is_created_in_block_that_mentions(dockerfile):
         if pip_dependency.package_name not in dockerfile.pip_package_names:
             dockerfile.pip_package_names.append(pip_dependency.package_name)
 
