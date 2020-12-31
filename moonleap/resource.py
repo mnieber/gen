@@ -1,6 +1,6 @@
 import uuid
 
-from moonleap.utils import str_to_type_id
+from moonleap.utils import resource_id_from_class
 
 
 class Resource:
@@ -17,15 +17,15 @@ class Resource:
 
     @property
     def type_id(self):
-        return str_to_type_id(self.__module__)
+        return resource_id_from_class(self.__class__)
 
     @property
     def vendor(self):
-        return self.__module__.split(".")[-2]
+        return self.type_id.split(".")[0]
 
     @property
     def module(self):
-        return self.__module__.split(".")[-1]
+        return self.type_id.split(".")[1]
 
     def is_mentioned_in_same_line(self, other_resource, is_ordered=True):
         for line in self.block.lines:

@@ -29,11 +29,4 @@ def create_layer_config(always, docker_compose):
         return [LayerConfig("docker-compose", get_layer_config())]
 
 
-# TODO: allow to add inferred terms to a block, based on the blocks contents
-# From these inferred terms, resources can be created (e.g. root:layer is inferred from any other layer)
-
-
-# TODO: publish a separate ontology that other vendors can support
-
-
 tags = ["docker-compose", "docker-compose-dev"]

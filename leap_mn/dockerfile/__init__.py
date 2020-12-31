@@ -15,7 +15,7 @@ def create(term, block):
     return [Dockerfile(is_dev=term.tag == "dockerfile-dev")]
 
 
-@reduce(parent_resource=Dockerfile, resource="leap_mn.pipdependency")
+@reduce(parent_resource=Dockerfile, resource="leap_mn.PipDependency")
 def add_pip_dependency(dockerfile, pip_dependency):
     if pip_dependency.is_dev and not dockerfile.is_dev:
         return

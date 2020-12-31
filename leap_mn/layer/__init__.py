@@ -27,13 +27,13 @@ def create(term, block):
     return [Layer(name=term.data)]
 
 
-@reduce(parent_resource=Layer, resource="leap_mn.layergroup")
+@reduce(parent_resource=Layer, resource="leap_mn.LayerGroup")
 def add_layer_group(layer, layer_group):
     if layer.is_root:
         layer.layer_groups.append(layer_group)
 
 
-@reduce(parent_resource=Layer, resource="leap_mn.srcdir")
+@reduce(parent_resource=Layer, resource="leap_mn.SrcDir")
 def add_layer(layer, src_dir):
     if layer.is_root:
         layer.src_dir = src_dir

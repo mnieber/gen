@@ -11,7 +11,7 @@ class LayerConfig(Resource):
         return {str(self): dict(name=self.name)}
 
 
-@reduce(parent_resource="leap_mn.layer", resource=LayerConfig)
+@reduce(parent_resource="leap_mn.Layer", resource=LayerConfig)
 def add_config(layer, layer_config):
     if layer_config.is_created_in_block_that_mentions(layer):
         layer.sections.append(layer_config)
