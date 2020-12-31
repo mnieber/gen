@@ -1,4 +1,5 @@
-from leap_mn.layerconfig import LayerConfig
+from leap_mn.layer import LayerConfig
+from leap_mn.pipdependency import PipDependency
 from moonleap import Always, Resource
 from moonleap.config import reduce
 
@@ -9,7 +10,7 @@ class PytestHtml(Resource):
 
 
 def create(term, block):
-    return [PytestHtml()]
+    return [PytestHtml(), PipDependency("pytest-html")]
 
 
 @reduce(parent_resource="leap_mn.Pytest", resource=PytestHtml)

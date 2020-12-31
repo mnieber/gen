@@ -1,5 +1,4 @@
-from moonleap.config import reduce
-from moonleap.resource import Resource
+from moonleap import Resource, reduce
 
 
 class LayerGroup(Resource):

@@ -1,6 +1,4 @@
-from leap_mn import gitrepository
-from moonleap.config import reduce
-from moonleap.resource import Resource
+from moonleap import Resource, reduce
 
 
 class PkgDependency(Resource):

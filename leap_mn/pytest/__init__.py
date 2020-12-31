@@ -1,4 +1,5 @@
-from leap_mn.layerconfig import LayerConfig
+from leap_mn.layer import LayerConfig
+from leap_mn.pipdependency import PipDependency
 from moonleap import Always, Resource
 from moonleap.config import reduce
 
@@ -16,7 +17,7 @@ class Pytest(Resource):
 
 
 def create(term, block):
-    return [Pytest()]
+    return [Pytest(), PipDependency("pytest")]
 
 
 @reduce(parent_resource=Always, resource=Pytest, delay=True)

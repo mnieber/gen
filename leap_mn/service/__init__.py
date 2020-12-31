@@ -1,4 +1,4 @@
-from moonleap.resource import Resource
+from moonleap import Resource
 
 
 class Service(Resource):

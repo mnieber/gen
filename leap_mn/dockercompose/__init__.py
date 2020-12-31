@@ -1,7 +1,5 @@
-from leap_mn.layerconfig import LayerConfig
-from moonleap.config import reduce
-from moonleap.resource import Always, Resource
-from moonleap.utils import chop0
+from leap_mn.layer import LayerConfig
+from moonleap import Always, Resource, chop0, reduce
 
 
 def get_layer_config():

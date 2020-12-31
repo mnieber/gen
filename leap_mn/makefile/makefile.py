@@ -1,7 +1,7 @@
 import os
 
 from leap_mn.pkgdependency import PkgDependency
-from moonleap import Resource, reduce
+from moonleap import Resource
 
 
 class Makefile(Resource):
@@ -17,22 +17,8 @@ class Makefile(Resource):
         )
 
 
-class MakefileRule(Resource):
-    def __init__(self, text):
-        self.text = text
-
-    def describe(self):
-        return dict(text=self.text)
-
-
 def create(term, block):
     return [Makefile(), PkgDependency("make", is_dev=True)]
-
-
-@reduce(parent_resource=Makefile, resource=MakefileRule)
-def add_makefile_rule(makefile, makefile_rule):
-    if makefile_rule.is_created_in_block_that_mentions(makefile):
-        makefile.add_rule(makefile_rule.text)
 
 
 is_ittable = True

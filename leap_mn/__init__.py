@@ -9,6 +9,7 @@ from . import (
     layergroup,
     makefile,
     pipcompile,
+    pipdependency,
     project,
     pytest,
     pytesthtml,
@@ -25,6 +26,7 @@ def install_all():
     install(layergroup)
     install(makefile)
     install(pipcompile)
+    install(pipdependency)
     install(project)
     install(pytest)
     install(pytesthtml)

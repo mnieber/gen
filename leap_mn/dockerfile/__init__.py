@@ -1,5 +1,4 @@
-from moonleap.config import reduce
-from moonleap.resource import Resource
+from moonleap import Resource, reduce
 
 
 class Dockerfile(Resource):
@@ -7,8 +6,12 @@ class Dockerfile(Resource):
         self.is_dev = is_dev
         self.pip_package_names = []
 
+    def add_pip_package(self, package_name):
+        if package_name not in self.pip_package_names:
+            self.pip_package_names.append(package_name)
+
     def describe(self):
-        return dict(is_dev=self.is_dev)
+        return dict(is_dev=self.is_dev, pip_install=self.pip_package_names)
 
 
 def create(term, block):
@@ -21,8 +24,7 @@ def add_pip_dependency(dockerfile, pip_dependency):
         return
 
     if pip_dependency.is_created_in_block_that_mentions(dockerfile):
-        if pip_dependency.package_name not in dockerfile.pip_package_names:
-            dockerfile.pip_package_names.append(pip_dependency.package_name)
+        dockerfile.add_pip_package(pip_dependency.package_name)
 
 
 tags = ["dockerfile", "dockerfile-dev"]

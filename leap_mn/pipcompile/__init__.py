@@ -1,6 +1,5 @@
-from leap_mn.makefilerule import MakefileRule
-from moonleap.resource import Resource
-from moonleap.utils import chop0
+from leap_mn.makefile import MakefileRule
+from moonleap import Resource, chop0
 
 makefile_rule = chop0(
     """
