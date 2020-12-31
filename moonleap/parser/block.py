@@ -56,20 +56,3 @@ class Block:
 
     def __str__(self):
         return f"Block ({self.name})"
-
-
-def get_resource_by_tag(resource_by_term, tag):
-    for term, res in resource_by_term.items():
-        if term.tag == tag:
-            return res
-    return None
-
-    # def get_resource(self, term, raise_if_not_found=True):
-    #     result = self.resource_by_term.get(term)
-    #     if not result and self.parent_block:
-    #         result = self.parent_block.get_resource(term, raise_if_not_found=False)
-
-    #     if raise_if_not_found and not result:
-    #         raise Exception(f"Expected a {term} resource in block {self.name}")
-
-    #     return result

@@ -9,7 +9,7 @@ class DockerfileDev(Resource):
         return {str(self): dict(name=self.name)}
 
 
-def create(term, line, block):
+def create(term, block):
     return [DockerfileDev(name=term.name)]
 
 

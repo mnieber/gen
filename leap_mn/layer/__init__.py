@@ -23,7 +23,7 @@ class Layer(Resource):
         }
 
 
-def create(term, line, block):
+def create(term, block):
     return [Layer(name=term.data)]
 
 

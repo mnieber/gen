@@ -9,7 +9,7 @@ class Service(Resource):
         return {str(self): dict(name=self.name)}
 
 
-def create(term, line, block):
+def create(term, block):
     return [Service(term.data)]
 
 

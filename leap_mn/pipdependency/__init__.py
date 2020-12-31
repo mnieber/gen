@@ -10,7 +10,7 @@ class PipDependency(Resource):
         return {str(self): dict(package_name=self.package_name)}
 
 
-def create(term, line, block):
+def create(term, block):
     return [PipDependency(term.data)]
 
 

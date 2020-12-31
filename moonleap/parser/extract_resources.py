@@ -27,18 +27,17 @@ def update_parent_resources(block, resource):
 
 
 def create_resources(block):
-    for line in block.lines:
-        for term in line.terms:
-            create_rule = config.create_rule_by_tag.get(term.tag)
-            if not create_rule:
+    for term in block.get_terms(include_parents=False):
+        create_rule = config.create_rule_by_tag.get(term.tag)
+        if not create_rule:
+            continue
+
+        if skip_term(block, term):
+            continue
+
+        for resource in create_rule(term, block):
+            if not resource:
                 continue
 
-            if skip_term(block, term):
-                continue
-
-            for resource in create_rule(term, line, block):
-                if not resource:
-                    continue
-
-                block.add_resource(resource, term)
-                update_parent_resources(block, resource)
+            block.add_resource(resource, term)
+            update_parent_resources(block, resource)

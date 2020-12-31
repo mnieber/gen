@@ -16,7 +16,7 @@ class LayerGroup(Resource):
         }
 
 
-def create(term, line, block):
+def create(term, block):
     return [LayerGroup(name=term.data)]
 
 

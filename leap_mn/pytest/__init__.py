@@ -6,7 +6,7 @@ class Pytest(Resource):
         pass
 
 
-def create(term, line, block):
+def create(term, block):
     return [Pytest()]
 
 

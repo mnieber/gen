@@ -11,7 +11,7 @@ class Dockerfile(Resource):
         return {str(self): dict(is_dev=self.is_dev)}
 
 
-def create(term, line, block):
+def create(term, block):
     return [Dockerfile(is_dev=term.tag == "dockerfile-dev")]
 
 

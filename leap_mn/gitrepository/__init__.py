@@ -9,7 +9,7 @@ class GitRepository(Resource):
         return {str(self): dict(url=self.url)}
 
 
-def create(term, line, block):
+def create(term, block):
     return [GitRepository(term.data)]
 
 

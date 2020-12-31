@@ -14,7 +14,7 @@ class SrcDir(Resource):
         }
 
 
-def create(term, line, block):
+def create(term, block):
     return [SrcDir(term.data)]
 
 

@@ -19,7 +19,7 @@ class Makefile(Resource):
         }
 
 
-def create(term, line, block):
+def create(term, block):
     return [Makefile(), PkgDependency("make", is_dev=True)]
 
 

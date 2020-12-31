@@ -17,7 +17,7 @@ class DockerCompose(Resource):
         return {str(self): dict(is_dev=self.is_dev)}
 
 
-def create(term, line, block):
+def create(term, block):
     return [
         DockerCompose(name=term.data, is_dev=term.tag == "docker-compose-dev"),
     ]

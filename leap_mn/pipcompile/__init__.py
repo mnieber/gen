@@ -16,7 +16,7 @@ class PipCompile(Resource):
         pass
 
 
-def create(term, line, block):
+def create(term, block):
     return [PipCompile(), MakefileRule(makefile_rule)]
 
 

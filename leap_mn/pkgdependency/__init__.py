@@ -12,7 +12,7 @@ class PkgDependency(Resource):
         return {str(self): dict(package_name=self.package_name, is_dev=self.is_dev)}
 
 
-def create(term, line, block):
+def create(term, block):
     return [PkgDependency(term.data, is_dev=term.tag == "pkg-dependency-dev")]
 
 
