@@ -9,7 +9,7 @@ class PkgDependency(Resource):
         self.is_dev = is_dev
 
     def describe(self):
-        return {str(self): dict(package_name=self.package_name, is_dev=self.is_dev)}
+        return dict(package_name=self.package_name, is_dev=self.is_dev)
 
 
 def create(term, block):

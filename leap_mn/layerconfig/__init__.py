@@ -8,7 +8,7 @@ class LayerConfig(Resource):
         self.config = config
 
     def describe(self):
-        return {str(self): dict(name=self.name)}
+        return dict(name=self.name)
 
 
 @reduce(parent_resource="leap_mn.Layer", resource=LayerConfig)

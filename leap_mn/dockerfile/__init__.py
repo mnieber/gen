@@ -8,7 +8,7 @@ class Dockerfile(Resource):
         self.pip_package_names = []
 
     def describe(self):
-        return {str(self): dict(is_dev=self.is_dev)}
+        return dict(is_dev=self.is_dev)
 
 
 def create(term, block):

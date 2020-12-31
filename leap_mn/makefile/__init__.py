@@ -12,11 +12,9 @@ class Makefile(Resource):
         self.rules.append(rule)
 
     def describe(self):
-        return {
-            str(self): dict(
-                rules=[x for x in self.rules],
-            )
-        }
+        return dict(
+            rules=[x for x in self.rules],
+        )
 
 
 def create(term, block):

@@ -8,12 +8,10 @@ class LayerGroup(Resource):
         self.layer_by_name = {}
 
     def describe(self):
-        return {
-            str(self): dict(
-                name=self.name,
-                layers=[x.name for x in self.layer_by_name.values()],
-            )
-        }
+        return dict(
+            name=self.name,
+            layers=[x.name for x in self.layer_by_name.values()],
+        )
 
 
 def create(term, block):

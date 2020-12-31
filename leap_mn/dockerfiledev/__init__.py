@@ -6,7 +6,7 @@ class DockerfileDev(Resource):
         self.name = name
 
     def describe(self):
-        return {str(self): dict(name=self.name)}
+        return dict(name=self.name)
 
 
 def create(term, block):

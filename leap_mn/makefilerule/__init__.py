@@ -6,7 +6,7 @@ class MakefileRule(Resource):
         self.text = text
 
     def describe(self):
-        return {str(self): dict(text=self.text)}
+        return dict(text=self.text)
 
 
 def create(term, block):

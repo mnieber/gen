@@ -27,8 +27,7 @@ def main(gen_file):
         raw_markdown = ifs.read()
 
     blocks = get_blocks(raw_markdown)
-    for block in blocks:
-        parser.create_resources(block)
+    parser.create_resources(blocks)
 
     for block in blocks:
         print(block.describe())

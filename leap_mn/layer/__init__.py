@@ -12,15 +12,13 @@ class Layer(Resource):
         self.src_dir = None
 
     def describe(self):
-        return {
-            str(self): dict(
-                name=self.name,
-                path=self.path,
-                layer_groups=[x.name for x in self.layer_groups],
-                sections=[x.name for x in self.sections],
-                src_dir=self.src_dir.location if self.src_dir else None,
-            )
-        }
+        return dict(
+            name=self.name,
+            path=self.path,
+            layer_groups=[x.name for x in self.layer_groups],
+            sections=[x.name for x in self.sections],
+            src_dir=self.src_dir.location if self.src_dir else None,
+        )
 
 
 def create(term, block):

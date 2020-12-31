@@ -51,7 +51,7 @@ class Block:
         sep = "----------------------------------------------\n"
         result = f"{sep}Block: name={self.name}\n{sep}"
         for term, resource in self._resource_by_term:
-            result += dump(resource.describe()) + "\n"
+            result += dump({str(resource): resource.describe()}) + "\n"
         return result
 
     def __str__(self):

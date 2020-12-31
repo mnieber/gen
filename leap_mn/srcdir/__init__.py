@@ -9,9 +9,7 @@ class SrcDir(Resource):
         self.git_repo = None
 
     def describe(self):
-        return {
-            str(self): dict(location=self.location, git_repo=self.git_repo.describe())
-        }
+        return dict(location=self.location, git_repo=self.git_repo.describe())
 
 
 def create(term, block):

@@ -6,7 +6,7 @@ class GitRepository(Resource):
         self.url = url
 
     def describe(self):
-        return {str(self): dict(url=self.url)}
+        return dict(url=self.url)
 
 
 def create(term, block):

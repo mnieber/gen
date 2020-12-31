@@ -11,6 +11,7 @@ from . import (
     pipcompile,
     project,
     pytest,
+    pytesthtml,
     service,
     srcdir,
 )
@@ -26,5 +27,6 @@ def install_all():
     install(pipcompile)
     install(project)
     install(pytest)
+    install(pytesthtml)
     install(service)
     install(srcdir)

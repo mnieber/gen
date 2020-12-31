@@ -7,7 +7,7 @@ class PipDependency(Resource):
         self.package_name = package_name
 
     def describe(self):
-        return {str(self): dict(package_name=self.package_name)}
+        return dict(package_name=self.package_name)
 
 
 def create(term, block):

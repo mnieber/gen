@@ -22,7 +22,7 @@ def install(module):
         config.is_ittable_by_tag[tag] = getattr(module, "is_ittable", False)
 
 
-def reduce(parent_resource, resource):
+def reduce(parent_resource, resource, delay=False):
     resource_id = (
         resource if isinstance(resource, str) else resource_id_from_class(resource)
     )
@@ -34,6 +34,9 @@ def reduce(parent_resource, resource):
 
     def wrapped(f):
         config.update_rules_by_resource_type_id.setdefault(parent_resource_id, {})
-        config.update_rules_by_resource_type_id[parent_resource_id][resource_id] = f
+        config.update_rules_by_resource_type_id[parent_resource_id][resource_id] = (
+            f,
+            delay,
+        )
 
     return wrapped
