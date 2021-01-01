@@ -25,13 +25,13 @@ def create(term, block):
     ]
 
 
-@reduce(parent_resource=DockerCompose, resource=Always)
+@reduce(a_resource=DockerCompose, b_resource=Always)
 def create_layer_config(docker_compose, always):
     if docker_compose.term.tag == "docker-compose":
         return [LayerConfig("docker-compose", get_layer_config())]
 
 
-@reduce(parent_resource=DockerCompose, resource="leap_mn.Service")
+@reduce(a_resource=DockerCompose, b_resource="leap_mn.Service")
 def add_service(docker_compose, service):
     if docker_compose.is_mentioned_in_same_line(service):
         docker_compose.add_service(service)

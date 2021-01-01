@@ -37,19 +37,19 @@ def create(term, block):
     return [Layer(name=term.data)]
 
 
-@reduce(parent_resource="leap_mn.Layer", resource=LayerConfig)
+@reduce(a_resource="leap_mn.Layer", b_resource=LayerConfig)
 def add_config(layer, layer_config):
     if layer_config.is_created_in_block_that_mentions(layer):
         layer.sections.append(layer_config)
 
 
-@reduce(parent_resource=Layer, resource="leap_mn.LayerGroup")
+@reduce(a_resource=Layer, b_resource="leap_mn.LayerGroup")
 def add_layer_group(layer, layer_group):
     if layer.is_root:
         layer.layer_groups.append(layer_group)
 
 
-@reduce(parent_resource=Layer, resource="leap_mn.SrcDir")
+@reduce(a_resource=Layer, b_resource="leap_mn.SrcDir")
 def add_src_dir(layer, src_dir):
     if layer.is_root:
         layer.src_dir = src_dir

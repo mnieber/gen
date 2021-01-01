@@ -17,7 +17,7 @@ def create(term, block):
     return [LayerGroup(name=term.data)]
 
 
-@reduce(parent_resource=LayerGroup, resource="leap_mn.Layer")
+@reduce(a_resource=LayerGroup, b_resource="leap_mn.Layer")
 def add_layer(layer_group, layer):
     if layer_group.is_mentioned_in_same_line(layer) and not layer.is_root:
         layer.path = f"{layer_group.name}.{layer.name}.yaml"

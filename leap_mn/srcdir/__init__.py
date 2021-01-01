@@ -17,7 +17,7 @@ def create(term, block):
     return [SrcDir(term.data)]
 
 
-@reduce(parent_resource=SrcDir, resource="leap_mn.GitRepository")
+@reduce(a_resource=SrcDir, b_resource="leap_mn.GitRepository")
 def set_git_repo(src_dir, git_repo):
     if src_dir.is_mentioned_in_same_line(git_repo, is_ordered=False):
         src_dir.git_repo = git_repo

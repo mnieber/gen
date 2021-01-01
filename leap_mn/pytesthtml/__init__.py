@@ -12,7 +12,7 @@ def create(term, block):
     return [PytestHtml(), PipDependency("pytest-html")]
 
 
-@reduce(parent_resource="leap_mn.Pytest", resource=PytestHtml)
+@reduce(a_resource="leap_mn.Pytest", b_resource=PytestHtml)
 def add_pytest_html(pytest, pytest_html):
     if pytest.is_created_in_block_that_mentions(pytest):
         pytest.pytest_html = pytest_html

@@ -10,8 +10,8 @@ class Config:
         self.render_function_by_resource_type_id = {}
         self.is_ittable_by_tag = {}
 
-    def get_update_rules(self, parent_resource_id):
-        return self.update_rules_by_resource_type_id.get(parent_resource_id) or {}
+    def get_update_rules(self, resource_id):
+        return self.update_rules_by_resource_type_id.get(resource_id) or {}
 
 
 config = Config()
@@ -30,21 +30,24 @@ def install(module):
     )
 
 
-def reduce(parent_resource, resource, delay=False):
-    resource_id = (
-        resource if isinstance(resource, str) else resource_id_from_class(resource)
+def reduce(a_resource, b_resource):
+    b_resource_id = (
+        b_resource
+        if isinstance(b_resource, str)
+        else resource_id_from_class(b_resource)
     )
-    parent_resource_id = (
-        parent_resource
-        if isinstance(parent_resource, str)
-        else resource_id_from_class(parent_resource)
+    a_resource_id = (
+        a_resource
+        if isinstance(a_resource, str)
+        else resource_id_from_class(a_resource)
     )
 
+    def register(res_id_1, res_id_2, f, is_reversed):
+        config.update_rules_by_resource_type_id.setdefault(res_id_1, {})
+        config.update_rules_by_resource_type_id[res_id_1][res_id_2] = (f, is_reversed)
+
     def wrapped(f):
-        config.update_rules_by_resource_type_id.setdefault(parent_resource_id, {})
-        config.update_rules_by_resource_type_id[parent_resource_id][resource_id] = (
-            f,
-            delay,
-        )
+        register(a_resource_id, b_resource_id, f, False)
+        register(b_resource_id, a_resource_id, f, True)
 
     return wrapped

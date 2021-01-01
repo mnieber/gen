@@ -20,7 +20,7 @@ def create(term, block):
     return [Pytest(), PipDependency("pytest")]
 
 
-@reduce(parent_resource=Pytest, resource=Always, delay=True)
+@reduce(a_resource=Pytest, b_resource=Always)
 def create_layer_config(pytest, always):
     return [LayerConfig("pytest", get_layer_config())]
 

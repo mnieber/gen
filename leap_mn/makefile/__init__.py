@@ -29,7 +29,7 @@ def create(term, block):
     return [Makefile(), PkgDependency("make", is_dev=True)]
 
 
-@reduce(parent_resource=Makefile, resource=MakefileRule)
+@reduce(a_resource=Makefile, b_resource=MakefileRule)
 def add_makefile_rule(makefile, makefile_rule):
     if makefile_rule.is_created_in_block_that_mentions(makefile):
         makefile.add_rule(makefile_rule.text)
