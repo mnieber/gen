@@ -4,6 +4,7 @@ from ramda import merge
 from . import (
     dockercompose,
     dockerfile,
+    dodoconfig,
     gitrepository,
     layer,
     layergroup,
@@ -21,6 +22,7 @@ from . import (
 def install_all():
     install(dockercompose)
     install(dockerfile)
+    install(dodoconfig)
     install(gitrepository)
     install(layer)
     install(layergroup)

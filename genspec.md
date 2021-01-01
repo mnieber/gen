@@ -1,13 +1,14 @@
 # Spec of the cashcog:project
 
-The cashcog:project has a root:layer.
+The cashcog:project has a :dodo-config.
 :It has a server:layer-group with a stack:layer, frontend:layer and backend:layer.
 :It has a :src-dir that stores files from the mnieber/test:git-repository.
 :It runs a frontend:service and a backend:service.
 
 ## The stack:layer
 
-The root directory has a :docker-compose and a :docker-compose-dev file.
+The stack:layer has a :docker-compose and a :docker-compose-dev file that are used
+to run the frontend:service and backend:service.
 
 ## The frontend:layer
 

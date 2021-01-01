@@ -10,9 +10,13 @@ class DockerCompose(Resource):
     def __init__(self, name, is_dev):
         self.name = name
         self.is_dev = is_dev
+        self.services = []
 
     def describe(self):
-        return dict(is_dev=self.is_dev)
+        return dict(is_dev=self.is_dev, services=[x.name for x in self.services])
+
+    def add_service(self, service):
+        self.services.append(service)
 
 
 def create(term, block):
@@ -25,6 +29,12 @@ def create(term, block):
 def create_layer_config(docker_compose, always):
     if docker_compose.term.tag == "docker-compose":
         return [LayerConfig("docker-compose", get_layer_config())]
+
+
+@reduce(parent_resource=DockerCompose, resource="leap_mn.Service")
+def add_service(docker_compose, service):
+    if docker_compose.is_mentioned_in_same_line(service):
+        docker_compose.add_service(service)
 
 
 tags = ["docker-compose", "docker-compose-dev"]

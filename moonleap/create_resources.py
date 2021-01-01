@@ -6,7 +6,7 @@ from moonleap.config import config
 from moonleap.resource import Always
 
 
-def update_with_child(resource, child_resource):
+def update_resource_with_child(resource, child_resource):
     update_rules = config.get_update_rules(resource.type_id)
     new_resources = []
     for child_resource_type_id, (update, delay) in update_rules.items():
@@ -19,11 +19,11 @@ def update_with_child(resource, child_resource):
 def add_resource(block, resource, term):
     block.add_resource(resource, term)
 
-    for new_resource in update_with_child(resource, Always()):
+    for new_resource in update_resource_with_child(resource, Always()):
         add_resource(block, new_resource, term)
 
     for child_resource in list(block.get_resources(include_children=True)):
-        for new_resource in update_with_child(resource, child_resource):
+        for new_resource in update_resource_with_child(resource, child_resource):
             add_resource(block, new_resource, term)
 
 
