@@ -1,60 +1,42 @@
 from importlib import import_module
 
+import ramda as R
+
 from moonleap.config import config
 from moonleap.resource import Always
 
 
-def update_parent_resources(block, resource, delayed):
+def update_with_child(resource, child_resource):
+    update_rules = config.get_update_rules(resource.type_id)
     new_resources = []
-
-    parent_resources = [Always()] + list(block.get_resources(include_parents=True))
-    for parent_resource in parent_resources:
-        update_rules = config.get_update_rules(parent_resource.type_id)
-        for resource_type_id, (update, delay) in update_rules.items():
-            if resource_type_id == resource.type_id:
-                if delay:
-                    delayed.append((update, parent_resource, resource))
-                else:
-                    new_resources += update(parent_resource, resource) or []
-
-    for new_resource in new_resources:
-        block.add_resource(new_resource, resource.term)
-        update_parent_resources(block, new_resource, delayed)
+    for child_resource_type_id, (update, delay) in update_rules.items():
+        if child_resource_type_id == child_resource.type_id:
+            for new_resource in update(resource, child_resource) or []:
+                new_resources.append(new_resource)
+    return new_resources
 
 
-def process_delayed(delayed):
-    new_resources = []
-    new_delayed = []
+def add_resource(block, resource, term):
+    block.add_resource(resource, term)
 
-    for update, parent_resource, resource in delayed:
-        block = resource.block
-        new_resources += update(parent_resource, resource) or []
+    for new_resource in update_with_child(resource, Always()):
+        add_resource(block, new_resource, term)
 
-        for new_resource in new_resources:
-            block.add_resource(new_resource, resource.term)
-            update_parent_resources(block, new_resource, new_delayed)
-
-    if new_delayed:
-        process_delayed(new_delayed)
+    for child_resource in list(block.get_resources(include_children=True)):
+        for new_resource in update_with_child(resource, child_resource):
+            add_resource(block, new_resource, term)
 
 
 def create_resources(blocks):
-    delayed = []
-
-    for block in blocks:
-        for term in block.get_terms(include_parents=False):
+    for block in R.sort_by(lambda x: -1 * x.level)(blocks):
+        for term in reversed(block.get_terms()):
             create_rule = config.create_rule_by_tag.get(term.tag)
             if not create_rule:
                 continue
 
-            if term in [r.term for r in block.get_resources(include_parents=True)]:
+            if term in block.get_terms(include_parents=True, include_self=False):
                 continue
 
             for resource in create_rule(term, block):
-                if not resource:
-                    continue
-
-                block.add_resource(resource, term)
-                update_parent_resources(block, resource, delayed)
-
-    process_delayed(delayed)
+                if resource:
+                    add_resource(block, resource, term)

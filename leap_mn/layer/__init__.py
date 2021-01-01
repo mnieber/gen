@@ -1,6 +1,6 @@
 import json
 
-from moonleap import Resource, reduce, yaml2dict
+from moonleap import Always, Resource, reduce, yaml2dict
 
 from .render import render_layer
 
@@ -47,8 +47,8 @@ def create(term, block):
     return [Layer(name=term.data)]
 
 
-@reduce(parent_resource="moonleap.Always", resource=Layer, delay=True)
-def create_root_config(always, layer):
+@reduce(parent_resource=Layer, resource=Always, delay=True)
+def create_root_config(layer, always):
     if layer.is_root:
         return [LayerConfig("root", get_root_config(layer))]
 

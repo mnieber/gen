@@ -40,8 +40,7 @@ class Resource:
         return False
 
     def is_created_in_block_that_mentions(self, other_resource):
-        terms = self.block.get_terms(include_parents=False)
-        return other_resource.term in terms
+        return other_resource.term in self.block.get_terms()
 
     def drop_from_block(self):
         self.block.drop_resource(self)

@@ -21,8 +21,8 @@ def create(term, block):
     ]
 
 
-@reduce(parent_resource=Always, resource=DockerCompose)
-def create_layer_config(always, docker_compose):
+@reduce(parent_resource=DockerCompose, resource=Always)
+def create_layer_config(docker_compose, always):
     if docker_compose.term.tag == "docker-compose":
         return [LayerConfig("docker-compose", get_layer_config())]
 

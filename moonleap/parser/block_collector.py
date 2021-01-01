@@ -69,9 +69,15 @@ class BlockCollector(mistune.Renderer):
         return super().paragraph(text)
 
 
+def create_block(name, level, parent_block):
+    block = Block(name, level)
+    block.link(parent_block)
+    return block
+
+
 def get_blocks(raw_markdown):
     blockCollector = BlockCollector(
-        create_block=lambda name, level, parent_block: Block(name, level, parent_block),
+        create_block=create_block,
         create_line=get_create_line(config.is_ittable_by_tag),
     )
     mistune.Markdown(renderer=blockCollector)(raw_markdown)
