@@ -23,3 +23,4 @@ def create(term, block):
 
 is_ittable = True
 tags = ["makefile"]
+render_function_by_resource_type = []

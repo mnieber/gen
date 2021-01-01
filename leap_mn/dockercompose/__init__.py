@@ -28,3 +28,4 @@ def create_layer_config(always, docker_compose):
 
 
 tags = ["docker-compose", "docker-compose-dev"]
+render_function_by_resource_type = []

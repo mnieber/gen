@@ -28,3 +28,4 @@ is_ittable = True
 
 
 tags = ["layer-group"]
+render_function_by_resource_type = []

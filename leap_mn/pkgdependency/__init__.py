@@ -15,3 +15,4 @@ def create(term, block):
 
 
 tags = ["pkg-dependency", "pkg-dependency-dev"]
+render_function_by_resource_type = []

@@ -15,3 +15,4 @@ def create(term, block):
 
 is_ittable = True
 tags = ["project"]
+render_function_by_resource_type = []

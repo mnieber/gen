@@ -1,8 +1,18 @@
-from moonleap import Resource, reduce
+import json
+
+from moonleap import Resource, reduce, yaml2dict
+
+from .render import render_layer
+
+root_config = """
+ROOT:
+  src_dir: ${/ROOT/project_dir}/src
+  version: 1.0.0
+"""
 
 
 def get_root_config(layer):
-    return dict()
+    return yaml2dict(root_config)
 
 
 class Layer(Resource):
@@ -38,7 +48,7 @@ def create(term, block):
 
 
 @reduce(parent_resource="moonleap.Always", resource=Layer, delay=True)
-def add_root_config(always, layer):
+def create_root_config(always, layer):
     if layer.is_root:
         return [LayerConfig("root", get_root_config(layer))]
 
@@ -62,3 +72,5 @@ def add_src_dir(layer, src_dir):
 
 
 tags = ["layer"]
+
+render_function_by_resource_type = [(Layer, render_layer)]

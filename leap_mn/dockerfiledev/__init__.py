@@ -14,3 +14,4 @@ def create(term, block):
 
 
 tags = ["dockerfile-dev"]
+render_function_by_resource_type = []

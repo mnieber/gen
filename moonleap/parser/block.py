@@ -1,8 +1,8 @@
 import typing as T
 
 from moonleap.parser.line import Line
+from moonleap.utils import dict2yaml
 from ramda import merge
-from yaml import Dumper, dump
 
 
 class Block:
@@ -49,7 +49,7 @@ class Block:
         sep = "----------------------------------------------\n"
         result = f"{sep}Block: name={self.name}\n{sep}"
         for resource in self._resources:
-            result += dump({str(resource): resource.describe()}) + "\n"
+            result += dict2yaml({str(resource): resource.describe()}) + "\n"
         return result
 
     def __str__(self):

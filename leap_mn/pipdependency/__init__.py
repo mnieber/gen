@@ -15,3 +15,4 @@ def create(term, block):
 
 
 tags = ["pip-dependency"]
+render_function_by_resource_type = []

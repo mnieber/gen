@@ -28,3 +28,4 @@ def add_pip_dependency(dockerfile, pip_dependency):
 
 
 tags = ["dockerfile", "dockerfile-dev"]
+render_function_by_resource_type = []

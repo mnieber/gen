@@ -1,4 +1,3 @@
-from leap_mn.layer import LayerConfig
 from leap_mn.pipdependency import PipDependency
 from moonleap import Always, Resource
 from moonleap.config import reduce
@@ -20,3 +19,4 @@ def add_pytest_html(pytest, pytest_html):
 
 
 tags = ["pytest-html"]
+render_function_by_resource_type = []

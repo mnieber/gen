@@ -7,6 +7,7 @@ class Config:
     def __init__(self):
         self.create_rule_by_tag = {}
         self.update_rules_by_resource_type_id = {}
+        self.render_function_by_resource_type_id = {}
         self.is_ittable_by_tag = {}
 
     def get_update_rules(self, parent_resource_id):
@@ -20,6 +21,13 @@ def install(module):
     for tag in module.tags:
         config.create_rule_by_tag[tag] = module.create
         config.is_ittable_by_tag[tag] = getattr(module, "is_ittable", False)
+    config.render_function_by_resource_type_id = merge(
+        config.render_function_by_resource_type_id,
+        {
+            resource_id_from_class(resource): render
+            for resource, render in module.render_function_by_resource_type
+        },
+    )
 
 
 def reduce(parent_resource, resource, delay=False):

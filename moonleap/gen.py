@@ -5,7 +5,7 @@ import traceback
 import leap_mn
 import mistune
 
-from moonleap import config, create_resources, parser
+from moonleap import config, create_resources, parser, render_resources
 
 leap_mn.install_all()
 
@@ -19,6 +19,11 @@ def main(gen_file):
 
     for block in blocks:
         print(block.describe())
+
+    output_dir = "output"
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
+    render_resources(blocks, output_dir)
 
 
 def report(x):
