@@ -1,8 +1,6 @@
 from leap_mn.layer import LayerConfig
 from moonleap import Always, Resource, chop0, reduce
 
-from .render import render_docker_compose
-
 
 def get_layer_config():
     return {"DOCKER_COMPOSE": {"name": "<INSERT NAME>"}}
@@ -10,8 +8,7 @@ def get_layer_config():
 
 class DockerCompose(Resource):
     def __init__(self, name, is_dev):
-        self.name = name
-        self.basename = "docker-compose.dev.yaml" if is_dev else "docker-compose.yaml"
+        self.name = name + ".dev" if is_dev else name
         self.is_dev = is_dev
         self.services = []
 
@@ -20,6 +17,9 @@ class DockerCompose(Resource):
 
     def add_service(self, service):
         self.services.append(service)
+
+    def service_as_yaml(self, service):
+        return service.name
 
 
 def create(term, block):
@@ -41,4 +41,4 @@ def add_service(docker_compose, service):
 
 
 tags = ["docker-compose", "docker-compose-dev"]
-render_function_by_resource_type = [(DockerCompose, render_docker_compose)]
+templates_by_resource_type = [(DockerCompose, "templates")]

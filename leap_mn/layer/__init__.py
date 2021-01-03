@@ -1,23 +1,25 @@
 import json
 
 from moonleap import Resource, reduce
-
-from .render import render_layer
+from yaml import dump
 
 
 class Layer(Resource):
     def __init__(self, name):
         self.name = name
+        self.group_name = None
         self.is_root = name == "root"
-        self.path = f"config.yaml" if self.is_root else f"{name}.yaml"
         self.layer_groups = []
         self.sections = []
         self.src_dir = None
 
+    @property
+    def full_name(self):
+        return f"{self.group_name}.{self.name}" if self.group_name else self.name
+
     def describe(self):
         return dict(
-            name=self.name,
-            path=self.path,
+            name=self.full_name,
             layer_groups=[x.name for x in self.layer_groups],
             sections=[x.name for x in self.sections],
             src_dir=self.src_dir.location if self.src_dir else None,
@@ -28,6 +30,10 @@ class LayerConfig(Resource):
     def __init__(self, name, config):
         self.name = name
         self.config = config
+
+    @property
+    def as_yaml(self):
+        return dump(self.config)
 
     def describe(self):
         return dict(name=self.name)
@@ -57,4 +63,4 @@ def add_src_dir(layer, src_dir):
 
 tags = ["layer"]
 
-render_function_by_resource_type = [(Layer, render_layer)]
+templates_by_resource_type = [(Layer, "templates")]

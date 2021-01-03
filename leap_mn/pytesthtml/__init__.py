@@ -19,4 +19,3 @@ def add_pytest_html(pytest, pytest_html):
 
 
 tags = ["pytest-html"]
-render_function_by_resource_type = []

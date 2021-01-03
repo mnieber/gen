@@ -46,4 +46,3 @@ def add_pkg_dependency(dockerfile, pkg_dependency):
 
 
 tags = ["dockerfile", "dockerfile-dev"]
-render_function_by_resource_type = []

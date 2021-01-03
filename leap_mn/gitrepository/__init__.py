@@ -14,4 +14,3 @@ def create(term, block):
 
 
 tags = ["git-repository"]
-render_function_by_resource_type = []

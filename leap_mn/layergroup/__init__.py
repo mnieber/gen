@@ -20,7 +20,7 @@ def create(term, block):
 @reduce(a_resource=LayerGroup, b_resource="leap_mn.Layer")
 def add_layer(layer_group, layer):
     if layer_group.is_mentioned_in_same_line(layer) and not layer.is_root:
-        layer.path = f"{layer_group.name}.{layer.name}.yaml"
+        layer.group_name = layer_group.name
         layer_group.layer_by_name.setdefault(layer.name, layer)
 
 
@@ -28,4 +28,3 @@ is_ittable = True
 
 
 tags = ["layer-group"]
-render_function_by_resource_type = []

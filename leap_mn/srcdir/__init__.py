@@ -1,7 +1,5 @@
 from moonleap import Resource, reduce
 
-from .render import render_src_dir
-
 
 class SrcDir(Resource):
     def __init__(self, location):
@@ -26,4 +24,3 @@ def set_git_repo(src_dir, git_repo):
 
 
 tags = ["src-dir"]
-render_function_by_resource_type = [(SrcDir, render_src_dir)]

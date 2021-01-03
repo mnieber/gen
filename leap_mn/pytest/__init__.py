@@ -26,4 +26,3 @@ def create_layer_config(pytest, always):
 
 
 tags = ["pytest"]
-render_function_by_resource_type = []

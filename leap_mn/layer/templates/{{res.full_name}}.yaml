@@ -1,0 +1,3 @@
+{% for section in res.sections %}
+{{ section.as_yaml }}
+{% endfor %}

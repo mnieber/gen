@@ -3,8 +3,6 @@ import json
 from leap_mn.layer import Layer, LayerConfig
 from moonleap import Resource, reduce, yaml2dict
 
-from .render import render_layer
-
 root_config = """
 ROOT:
   src_dir: ${/ROOT/project_dir}/src
@@ -24,5 +22,3 @@ def create(term, block):
 
 
 tags = ["dodo-config"]
-
-render_function_by_resource_type = []

@@ -20,4 +20,3 @@ def create(term, block):
 
 
 tags = ["pip-compile"]
-render_function_by_resource_type = []

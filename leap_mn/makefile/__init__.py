@@ -37,4 +37,3 @@ def add_makefile_rule(makefile, makefile_rule):
 
 is_ittable = True
 tags = ["makefile"]
-render_function_by_resource_type = []
