@@ -42,6 +42,9 @@ class Resource:
     def is_created_in_block_that_mentions(self, other_resource):
         return other_resource.term in self.block.get_terms()
 
+    def is_created_in_block_that_describes(self, other_resource):
+        return other_resource.term in self.block.lines[0].terms
+
     def drop_from_block(self):
         self.block.drop_resource(self)
 

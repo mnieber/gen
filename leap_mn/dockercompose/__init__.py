@@ -8,7 +8,7 @@ def get_layer_config():
 
 class DockerCompose(Resource):
     def __init__(self, name, is_dev):
-        self.name = name + ".dev" if is_dev else name
+        self.name = name + (".dev" if is_dev else ".docker-compose.dev")
         self.is_dev = is_dev
         self.services = []
 
@@ -17,9 +17,6 @@ class DockerCompose(Resource):
 
     def add_service(self, service):
         self.services.append(service)
-
-    def service_as_yaml(self, service):
-        return service.name
 
 
 def create(term, block):

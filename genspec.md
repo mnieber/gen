@@ -10,13 +10,13 @@ The cashcog:project has a :dodo-config.
 The stack:layer has a :docker-compose and a :docker-compose-dev file that are used
 to run the frontend:service and backend:service.
 
-## The frontend:layer
+## The frontend:service in the frontend:layer
 
 The frontend:service has a node_14:dockerfile and a node_14:dockerfile-dev.
 :It uses the default:root-dir and default:src-mount-point.
 :It runs :create-react-app.
 
-## The backend:layer
+## The backend:service in the backend:layer
 
 The backend:service has a python_3.8:dockerfile and a python_3.8:dockerfile-dev.
 :It uses the default:root-dir and default:src-mount-point.

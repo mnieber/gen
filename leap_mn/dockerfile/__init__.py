@@ -1,3 +1,4 @@
+from leap_mn.service import Service
 from moonleap import Resource, reduce
 
 
@@ -43,6 +44,15 @@ def add_pkg_dependency(dockerfile, pkg_dependency):
 
     if pkg_dependency.is_created_in_block_that_mentions(dockerfile):
         dockerfile.add_package(pkg_dependency.package_name)
+
+
+@reduce(a_resource=Dockerfile, b_resource=Service)
+def add_to_service(dockerfile, service):
+    if dockerfile.is_created_in_block_that_describes(service):
+        if dockerfile.is_dev:
+            service.dockerfile_dev = dockerfile
+        else:
+            service.dockerfile = dockerfile
 
 
 tags = ["dockerfile", "dockerfile-dev"]

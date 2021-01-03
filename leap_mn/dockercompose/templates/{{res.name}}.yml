@@ -2,5 +2,15 @@ version: "3.7"
 
 services:
 {% for service in res.services %}
-{{ res.service_as_yaml(service) }}
+  {{service.name}}:
+    depends_on: []
+{% if service.dockerfile %}
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+{% endif %}
+    image: {{project_name}}_{{service.name}}
+    ports:
+      - "80:80"
+
 {% endfor %}
