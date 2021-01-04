@@ -5,6 +5,16 @@ import ramda as R
 from moonleap.config import config
 
 
+def add_child(resource, child_resource):
+    if config.has_children_of_type(resource.__class__, child_resource.__class__):
+        return resource.add_child(child_resource)
+
+    elif config.has_parents_of_type(child_resource.__class__, resource.__class__):
+        return child_resource.add_parent(resource)
+
+    return False
+
+
 def derive_resources(resource):
     new_resources = []
     derive_rules = config.get_derive_rules(resource.__class__)
@@ -28,16 +38,16 @@ def group_resources(blocks):
             if a_resource is b_resource:
                 continue
 
-            add_child = b_resource.is_created_in_block_that_describes(a_resource)
-            if not add_child:
+            must_add_child = b_resource.is_created_in_block_that_describes(a_resource)
+            if not must_add_child:
                 for block in blocks:
                     if block.describes(a_resource) or a_resource.block is block:
                         if a_resource.is_paired_with(block, b_resource):
-                            add_child = True
+                            must_add_child = True
                             break
 
-            if add_child:
-                a_resource.add_child(b_resource)
+            if must_add_child:
+                result = add_child(a_resource, b_resource)
 
 
 def create_resources(blocks):

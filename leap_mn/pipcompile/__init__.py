@@ -18,3 +18,6 @@ class PipCompile(Resource):
 @tags(["pip-compile"])
 def create(term, block):
     return [PipCompile(), MakefileRule(makefile_rule)]
+
+
+meta = {}

@@ -1,3 +1,6 @@
+from leap_mn.pipdependency import PipDependency
+from leap_mn.pkgdependency import PkgDependency
+from leap_mn.srcdir import SrcDir
 from moonleap import Resource, tags
 
 
@@ -7,9 +10,17 @@ class Service(Resource):
         self.name = name
 
 
-@tags(["service"])
+@tags(["service"], is_ittable=True)
 def create(term, block):
     return [Service(term.data)]
 
 
-is_ittable = True
+meta = {
+    Service: dict(
+        children={
+            "pip_dependencies": [PipDependency],
+            "pkg_dependencies": [PkgDependency],
+            "src_dir": SrcDir,
+        }
+    )
+}

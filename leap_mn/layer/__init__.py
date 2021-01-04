@@ -11,7 +11,7 @@ class Layer(Resource):
         self.name = name
 
     def __str__(self):
-        return f"{self.key} name={self.name}"
+        return f"Layer name={self.name}"
 
     @property
     def basename(self):
@@ -39,9 +39,9 @@ def create(term, block):
 
 
 meta = {
-    Layer: {
-        templates: "templates",
-        parents: {"parent_layer_group": LayerGroup},
-        children: {"sections": [LayerConfig], "layer_groups": [LayerGroup]},
-    }
+    Layer: dict(
+        templates="templates",
+        parents={"parent_layer_group": LayerGroup},
+        children={"sections": [LayerConfig], "layer_groups": [LayerGroup]},
+    )
 }

@@ -1,5 +1,6 @@
 from leap_mn.layer import LayerConfig
 from leap_mn.pipdependency import PipDependency
+from leap_mn.pytesthtml import PytestHtml
 from moonleap import Resource, tags
 from moonleap.config import derive
 
@@ -11,7 +12,6 @@ def get_layer_config():
 class Pytest(Resource):
     def __init__(self):
         super().__init__()
-        self.pytest_html = None
 
 
 @tags(["pytest"])
@@ -22,3 +22,6 @@ def create(term, block):
 @derive(Pytest)
 def create_layer_config(pytest):
     return [LayerConfig("pytest", get_layer_config())]
+
+
+meta = {Pytest: dict(children={"pytest_html": PytestHtml})}

@@ -7,7 +7,6 @@ from moonleap import Resource, tags
 class Makefile(Resource):
     def __init__(self):
         super().__init__()
-        self.rules = []
 
     def add_rule(self, rule):
         self.rules.append(rule)
@@ -19,9 +18,9 @@ class MakefileRule(Resource):
         self.text = text
 
 
-@tags(["makefile"])
+@tags(["makefile"], is_ittable=True)
 def create(term, block):
     return [Makefile(), PkgDependency("make", is_dev=True)]
 
 
-is_ittable = True
+meta = {Makefile: dict(children={"rules": [MakefileRule]})}

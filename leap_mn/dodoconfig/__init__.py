@@ -24,3 +24,6 @@ def create_root_config(layer):
     if layer.name == "config":
         return [LayerConfig("root", get_root_config(layer))]
     return []
+
+
+meta = {}

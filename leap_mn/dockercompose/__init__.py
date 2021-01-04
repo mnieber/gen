@@ -1,4 +1,5 @@
 from leap_mn.layer import LayerConfig
+from leap_mn.service import Service
 from moonleap import Resource, chop0, derive, tags
 
 
@@ -7,38 +8,43 @@ def get_layer_config():
 
 
 class DockerCompose(Resource):
-    def __init__(self, name, is_dev):
+    def __init__(self):
         super().__init__()
-        self.name = name + (".docker-compose" if is_dev else ".docker-compose.dev")
-        self.is_dev = is_dev
-        self.services = []
+
+    @property
+    def name(self):
+        return "docker-compose"
 
     def add_service(self, service):
         self.services.append(service)
 
 
+class DockerComposeDev(DockerCompose):
+    @property
+    def name(self):
+        return "docker-compose.dev"
+
+
 @tags(["docker-compose"])
 def create(term, block):
     return [
-        DockerCompose(name=term.data),
+        DockerCompose(),
     ]
 
 
 @tags(["docker-compose-dev"])
 def create(term, block):
     return [
-        DockerComposeDev(name=term.data),
+        DockerComposeDev(),
     ]
 
 
 @derive(DockerCompose)
 def create_layer_config(docker_compose):
-    if docker_compose.term.tag == "docker-compose":
-        return [LayerConfig("docker-compose", get_layer_config())]
-    return []
+    return [LayerConfig("docker-compose", get_layer_config())]
 
 
 meta = {
-    DockerCompose: {"templates": "templates"},
-    DockerComposeDev: {"templates": "templates-dev"},
+    DockerCompose: dict(templates="templates", children={"services": [Service]}),
+    DockerComposeDev: dict(templates="templates-dev", children={"services": [Service]}),
 }

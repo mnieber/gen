@@ -1,3 +1,5 @@
+from leap_mn.service import Service
+from leap_mn.srcdir import SrcDir
 from moonleap import Resource, tags
 
 
@@ -7,9 +9,9 @@ class Project(Resource):
         self.name = name
 
 
-@tags(["project"])
+@tags(["project"], is_ittable=True)
 def create(term, block):
     return [Project(term.data)]
 
 
-is_ittable = True
+meta = {Project: dict(children={"services": [Service], "src_dir": SrcDir})}

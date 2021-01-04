@@ -19,3 +19,6 @@ def create(term, block):
 @tags(["pkg-dependency-dev"])
 def create(term, block):
     return [PkgDependencyDev(term.data)]
+
+
+meta = {}
