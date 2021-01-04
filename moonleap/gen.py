@@ -17,8 +17,8 @@ def main(gen_file):
     blocks = parser.get_blocks(raw_markdown)
     create_resources(blocks)
 
-    for block in blocks:
-        print(block.describe())
+    # for block in blocks:
+    #     print(block.describe())
 
     output_dir = "output"
     if not os.path.exists(output_dir):

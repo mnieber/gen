@@ -6,6 +6,7 @@ from moonleap import Resource
 
 class Makefile(Resource):
     def __init__(self):
+        super().__init__()
         self.rules = []
 
     def add_rule(self, rule):

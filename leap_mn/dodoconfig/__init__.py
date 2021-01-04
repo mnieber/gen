@@ -1,7 +1,7 @@
 import json
 
 from leap_mn.layer import Layer, LayerConfig
-from moonleap import Resource, reduce, yaml2dict
+from moonleap import Resource, derive, yaml2dict
 
 root_config = """
 ROOT:
@@ -15,10 +15,14 @@ def get_root_config(layer):
 
 
 def create(term, block):
-    layer = Layer(name="root")
-    layer_config = LayerConfig("root", get_root_config(layer))
-    layer.sections.append(layer_config)
-    return [layer]
+    return [Layer(name="config")]
+
+
+@derive(resource=Layer)
+def create_root_config(layer):
+    if layer.name == "config":
+        return [LayerConfig("root", get_root_config(layer))]
+    return []
 
 
 tags = ["dodo-config"]

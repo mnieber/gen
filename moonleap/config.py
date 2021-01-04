@@ -35,24 +35,11 @@ def install(module):
     )
 
 
-def reduce(a_resource, b_resource):
-    b_resource_id = (
-        b_resource
-        if isinstance(b_resource, str)
-        else resource_id_from_class(b_resource)
-    )
-    a_resource_id = (
-        a_resource
-        if isinstance(a_resource, str)
-        else resource_id_from_class(a_resource)
-    )
-
-    def register(res_id_1, res_id_2, f, is_reversed):
-        config.update_rules_by_resource_type_id.setdefault(res_id_1, {})
-        config.update_rules_by_resource_type_id[res_id_1][res_id_2] = (f, is_reversed)
+def derive(resource):
+    resource_id = get_type_id(resource)
 
     def wrapped(f):
-        register(a_resource_id, b_resource_id, f, False)
-        register(b_resource_id, a_resource_id, f, True)
+        config.update_rules_by_resource_type_id.setdefault(resource_id, [])
+        config.update_rules_by_resource_type_id[resource_id].append(f)
 
     return wrapped

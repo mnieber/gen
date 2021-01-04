@@ -12,7 +12,7 @@ pip-compile:
 
 class PipCompile(Resource):
     def __init__(self):
-        pass
+        super().__init__()
 
 
 def create(term, block):

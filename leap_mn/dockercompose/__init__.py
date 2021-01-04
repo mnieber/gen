@@ -1,5 +1,5 @@
 from leap_mn.layer import LayerConfig
-from moonleap import Always, Resource, chop0, reduce
+from moonleap import Resource, chop0, derive
 
 
 def get_layer_config():
@@ -8,7 +8,8 @@ def get_layer_config():
 
 class DockerCompose(Resource):
     def __init__(self, name, is_dev):
-        self.name = name + (".dev" if is_dev else ".docker-compose.dev")
+        super().__init__()
+        self.name = name + (".docker-compose" if is_dev else ".docker-compose.dev")
         self.is_dev = is_dev
         self.services = []
 
@@ -25,16 +26,11 @@ def create(term, block):
     ]
 
 
-@reduce(a_resource=DockerCompose, b_resource=Always)
-def create_layer_config(docker_compose, always):
+@derive(resource=DockerCompose)
+def create_layer_config(docker_compose):
     if docker_compose.term.tag == "docker-compose":
         return [LayerConfig("docker-compose", get_layer_config())]
-
-
-@reduce(a_resource=DockerCompose, b_resource="leap_mn.Service")
-def add_service(docker_compose, service):
-    if docker_compose.is_mentioned_in_same_line(service):
-        docker_compose.add_service(service)
+    return []
 
 
 tags = ["docker-compose", "docker-compose-dev"]

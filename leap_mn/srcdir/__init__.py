@@ -1,8 +1,9 @@
-from moonleap import Resource, reduce
+from moonleap import Resource
 
 
 class SrcDir(Resource):
     def __init__(self, location):
+        super().__init__()
         self.location = location or "src"
         self.git_repo = None
 
@@ -15,12 +16,6 @@ class SrcDir(Resource):
 
 def create(term, block):
     return [SrcDir(term.data)]
-
-
-@reduce(a_resource=SrcDir, b_resource="leap_mn.GitRepository")
-def set_git_repo(src_dir, git_repo):
-    if src_dir.is_mentioned_in_same_line(git_repo, is_ordered=False):
-        src_dir.git_repo = git_repo
 
 
 tags = ["src-dir"]

@@ -13,11 +13,18 @@ class Term:
         return self.tag == rhs.tag and self.data == rhs.data
 
 
-def text_to_terms(text):
+def word_to_term(word):
+    parts = word.split(":")
+    if len(parts) == 2:
+        data, tag = parts
+        return Term(data, tag)
+    return None
+
+
+def words_to_terms(words):
     terms = []
-    for word in text.split():
-        parts = word.split(":")
-        if len(parts) == 2:
-            data, tag = parts
-            terms.append(Term(data, tag))
+    for word in words:
+        term = word_to_term(word)
+        if term:
+            terms.append(term)
     return terms

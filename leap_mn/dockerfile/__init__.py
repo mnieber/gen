@@ -1,12 +1,17 @@
 from leap_mn.service import Service
-from moonleap import Resource, reduce
+from moonleap import Resource
 
 
 class Dockerfile(Resource):
     def __init__(self, is_dev):
+        super().__init__()
         self.is_dev = is_dev
         self.pip_package_names = []
         self.package_names = []
+
+    @property
+    def key(self):
+        return self.type_id + ("-dev" if self.is_dev else "")
 
     def add_pip_package(self, package_name):
         if package_name not in self.pip_package_names:
@@ -26,33 +31,6 @@ class Dockerfile(Resource):
 
 def create(term, block):
     return [Dockerfile(is_dev=term.tag == "dockerfile-dev")]
-
-
-@reduce(a_resource=Dockerfile, b_resource="leap_mn.PipDependency")
-def add_pip_dependency(dockerfile, pip_dependency):
-    if pip_dependency.is_dev and not dockerfile.is_dev:
-        return
-
-    if pip_dependency.is_created_in_block_that_mentions(dockerfile):
-        dockerfile.add_pip_package(pip_dependency.package_name)
-
-
-@reduce(a_resource=Dockerfile, b_resource="leap_mn.PkgDependency")
-def add_pkg_dependency(dockerfile, pkg_dependency):
-    if pkg_dependency.is_dev and not dockerfile.is_dev:
-        return
-
-    if pkg_dependency.is_created_in_block_that_mentions(dockerfile):
-        dockerfile.add_package(pkg_dependency.package_name)
-
-
-@reduce(a_resource=Dockerfile, b_resource=Service)
-def add_to_service(dockerfile, service):
-    if dockerfile.is_created_in_block_that_describes(service):
-        if dockerfile.is_dev:
-            service.dockerfile_dev = dockerfile
-        else:
-            service.dockerfile = dockerfile
 
 
 tags = ["dockerfile", "dockerfile-dev"]

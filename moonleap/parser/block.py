@@ -14,6 +14,9 @@ class Block:
         self._resources = []
         self.lines: T.List[Line] = []
 
+    def describes(self, resource):
+        return resource.term in self.lines[0].terms
+
     def link(self, parent_block):
         self.parent_block = parent_block
         if parent_block:
@@ -41,18 +44,23 @@ class Block:
     ):
         result = []
 
+        def add(term):
+            if term not in result:
+                result.append(term)
+
         if include_children:
             for child_block in self.child_blocks:
-                result += child_block.get_terms(include_children=True)
+                for term in child_block.get_terms(include_children=True):
+                    add(term)
 
         if include_self:
             for line in self.lines:
                 for term in line.terms:
-                    if term not in result:
-                        result.append(term)
+                    add(term)
 
         if include_parents and self.parent_block:
-            result += self.parent_block.get_terms(include_parents=True)
+            for term in self.parent_block.get_terms(include_parents=True):
+                add(term)
 
         return result
 

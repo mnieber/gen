@@ -3,6 +3,7 @@ from moonleap import Resource
 
 class Project(Resource):
     def __init__(self, name):
+        super().__init__()
         self.name = name
 
     def describe(self):
