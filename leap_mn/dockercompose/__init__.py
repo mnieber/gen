@@ -1,5 +1,5 @@
 from leap_mn.layer import LayerConfig
-from moonleap import Resource, chop0, derive
+from moonleap import Resource, chop0, derive, tags
 
 
 def get_layer_config():
@@ -13,25 +13,32 @@ class DockerCompose(Resource):
         self.is_dev = is_dev
         self.services = []
 
-    def describe(self):
-        return dict(is_dev=self.is_dev, services=[x.name for x in self.services])
-
     def add_service(self, service):
         self.services.append(service)
 
 
+@tags(["docker-compose"])
 def create(term, block):
     return [
-        DockerCompose(name=term.data, is_dev=term.tag == "docker-compose-dev"),
+        DockerCompose(name=term.data),
     ]
 
 
-@derive(resource=DockerCompose)
+@tags(["docker-compose-dev"])
+def create(term, block):
+    return [
+        DockerComposeDev(name=term.data),
+    ]
+
+
+@derive(DockerCompose)
 def create_layer_config(docker_compose):
     if docker_compose.term.tag == "docker-compose":
         return [LayerConfig("docker-compose", get_layer_config())]
     return []
 
 
-tags = ["docker-compose", "docker-compose-dev"]
-templates_by_resource_type = [(DockerCompose, "templates")]
+meta = {
+    DockerCompose: {"templates": "templates"},
+    DockerComposeDev: {"templates": "templates-dev"},
+}

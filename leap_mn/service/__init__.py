@@ -1,4 +1,4 @@
-from moonleap import Resource
+from moonleap import Resource, tags
 
 
 class Service(Resource):
@@ -6,13 +6,10 @@ class Service(Resource):
         super().__init__()
         self.name = name
 
-    def describe(self):
-        return dict(name=self.name)
 
-
+@tags(["service"])
 def create(term, block):
     return [Service(term.data)]
 
 
 is_ittable = True
-tags = ["service"]

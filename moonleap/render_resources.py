@@ -8,7 +8,10 @@ from moonleap.config import config
 def render_resources(blocks, root_dir):
     for block in blocks:
         for resource in block.get_resources():
-            templates = config.templates_by_resource_type_id.get(resource.type_id)
+            if getattr(resource, "name", "") == "config":
+                resource.dump()
+
+            templates = config.get_templates(resource.__class__)
             if templates:
                 for template_fn in Path(templates).glob("*.*"):
                     with open(template_fn) as ifs:

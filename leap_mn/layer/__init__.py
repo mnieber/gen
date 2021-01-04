@@ -1,7 +1,7 @@
 import json
 
 from leap_mn.layergroup import LayerGroup
-from moonleap import Resource
+from moonleap import Resource, tags
 from yaml import dump
 
 
@@ -9,13 +9,9 @@ class Layer(Resource):
     def __init__(self, name):
         super().__init__()
         self.name = name
-        self.layer_groups = []
-        self.sections = []
-        self.src_dir = None
 
-    @property
-    def parent_layer_group(self):
-        return self.parent(LayerGroup)
+    def __str__(self):
+        return f"{self.key} name={self.name}"
 
     @property
     def basename(self):
@@ -23,14 +19,6 @@ class Layer(Resource):
             f"{self.parent_layer_group.name}.{self.name}"
             if self.parent_layer_group
             else self.name
-        )
-
-    def describe(self):
-        return dict(
-            name=self.name,
-            layer_groups=[x.name for x in self.layer_groups],
-            sections=[x.name for x in self.sections],
-            src_dir=self.src_dir.location if self.src_dir else None,
         )
 
 
@@ -44,14 +32,16 @@ class LayerConfig(Resource):
     def as_yaml(self):
         return dump(self.config)
 
-    def describe(self):
-        return dict(name=self.name)
 
-
+@tags(["layer"])
 def create(term, block):
     return [Layer(name=term.data)]
 
 
-tags = ["layer"]
-
-templates_by_resource_type = [(Layer, "templates")]
+meta = {
+    Layer: {
+        templates: "templates",
+        parents: {"parent_layer_group": LayerGroup},
+        children: {"sections": [LayerConfig], "layer_groups": [LayerGroup]},
+    }
+}

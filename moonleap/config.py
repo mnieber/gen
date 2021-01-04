@@ -2,44 +2,67 @@ from pathlib import Path
 
 from ramda import merge
 
-from moonleap.utils import resource_id_from_class
-
 
 class Config:
     def __init__(self):
         self.create_rule_by_tag = {}
-        self.update_rules_by_resource_type_id = {}
-        self.templates_by_resource_type_id = {}
+        self.derive_rules_by_resource_type = {}
         self.is_ittable_by_tag = {}
+        self.meta_by_resource_type = {}
 
-    def get_update_rules(self, resource_id):
-        return self.update_rules_by_resource_type_id.get(resource_id) or {}
+    def get_derive_rules(self, resource_type):
+        return self.derive_rules_by_resource_type.get(resource_type) or {}
 
 
 config = Config()
 
 
 def install(module):
-    for tag in module.tags:
-        config.create_rule_by_tag[tag] = module.create
-        config.is_ittable_by_tag[tag] = getattr(module, "is_ittable", False)
+    config.is_ittable_by_tag[tag] = getattr(module, "is_ittable", False)
 
-    config.templates_by_resource_type_id = merge(
-        config.templates_by_resource_type_id,
-        {
-            resource_id_from_class(resource): str(
-                Path(module.__file__).parent / templates
+    for resource_type, class_props in module.meta.items():
+        class_meta = self.meta_by_resource_type.setdefault(resource_type, {})
+
+        class_meta['templates'] = str(Path(module.__file__).parent / class_props['templates'])
+
+        for prop_name, parent_resource_type in class_meta.get('parents', {}).items():
+            parent_types = class_meta.setdefault('parent_types', [])
+            is_list = isinstance(parent_resource_type, list)
+            parent_type = parent_resource_type[0] if is_list else parent_resource_type
+            if parent_type not in parent_types:
+                parent_types.append(parent_type)
+
+            resource_type.setattr(prop_name) = (
+                lambda self: self.parents(parent_resource_type)
+                if is_list else
+                lambda self: self.parent(parent_resource_type)
             )
-            for resource, templates in getattr(module, "templates_by_resource_type", [])
-        },
-    )
+
+        for prop_name, child_resource_type in class_meta.get('children', {}).items():
+            child_types = class_meta.setdefault('child_types', [])
+            is_list = isinstance(child_resource_type, list)
+            child_type = child_resource_type[0] if is_list else child_resource_type
+            if child_type not in child_types:
+                child_types.append(child_type)
+
+            resource_type.setattr(prop_name) = (
+                lambda self: self.childten(child_resource_type)
+                if is_list else
+                lambda self: self.child(child_resource_type)
+            )
 
 
-def derive(resource):
-    resource_id = get_type_id(resource)
-
+def derive(resource_type):
     def wrapped(f):
-        config.update_rules_by_resource_type_id.setdefault(resource_id, [])
-        config.update_rules_by_resource_type_id[resource_id].append(f)
+        config.derive_rules_by_resource_type.setdefault(resource_type, [])
+        config.derive_rules_by_resource_type[resource_type].append(f)
 
-    return wrapped
+    return f
+
+
+def tags(tags):
+    def wrapped(f):
+        for tag in tags:
+            config.create_rule_by_tag[tag] = f
+
+    return f

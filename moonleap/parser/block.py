@@ -77,7 +77,7 @@ class Block:
         sep = "----------------------------------------------\n"
         result = f"{sep}Block: name={self.name}\n{sep}"
         for resource in self._resources:
-            result += dict2yaml({str(resource): resource.describe()}) + "\n"
+            result += str(resource) + "\n"
         return result
 
     def __str__(self):

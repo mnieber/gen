@@ -1,5 +1,5 @@
 from leap_mn.makefile import MakefileRule
-from moonleap import Resource, chop0
+from moonleap import Resource, chop0, tags
 
 makefile_rule = chop0(
     """
@@ -15,8 +15,6 @@ class PipCompile(Resource):
         super().__init__()
 
 
+@tags(["pip-compile"])
 def create(term, block):
     return [PipCompile(), MakefileRule(makefile_rule)]
-
-
-tags = ["pip-compile"]

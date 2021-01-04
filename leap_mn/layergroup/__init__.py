@@ -1,4 +1,4 @@
-from moonleap import Resource
+from moonleap import Resource, tags
 
 
 class LayerGroup(Resource):
@@ -7,18 +7,10 @@ class LayerGroup(Resource):
         self.name = name
         self.layer_by_name = {}
 
-    def describe(self):
-        return dict(
-            name=self.name,
-            layers=[x.name for x in self.layer_by_name.values()],
-        )
 
-
+@tags(["layer-group"])
 def create(term, block):
     return [LayerGroup(name=term.data)]
 
 
 is_ittable = True
-
-
-tags = ["layer-group"]

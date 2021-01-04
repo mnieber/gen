@@ -1,5 +1,5 @@
 from leap_mn.pipdependency import PipDependency
-from moonleap import Resource
+from moonleap import Resource, tags
 
 
 class PytestHtml(Resource):
@@ -7,8 +7,6 @@ class PytestHtml(Resource):
         super().__init__()
 
 
+@tags(["pytest-html"])
 def create(term, block):
     return [PytestHtml(), PipDependency("pytest-html")]
-
-
-tags = ["pytest-html"]

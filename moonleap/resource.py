@@ -1,6 +1,9 @@
 import uuid
 
+import yaml
+
 from moonleap.parser.term import Term, word_to_term
+from moonleap.utils import resource_id_from_class
 
 
 class Resource:
@@ -16,38 +19,41 @@ class Resource:
         return self.__class__.__name__
 
     def add_child(self, child_resource):
-        children = self.children.setdefault(child_resource.key, [])
-        if child_resource not in children:
-            children.append(child_resource)
+        if config.has_children_of_type(self.__class__, child_resource.__class__):
+            children = self.children.setdefault(child_resource.key, [])
+            if child_resource not in children:
+                children.append(child_resource)
 
-        parents = child_resource.parents.setdefault(self.key, [])
-        if self not in parents:
-            parents.append(self)
+        if config.has_parents_of_type(child_resource.__class__, self.__class__):
+            parents = child_resource.parents.setdefault(self.key, [])
+            if self not in parents:
+                parents.append(self)
 
     def parent(self, resource_type):
-        resource_type_id = get_type_id(resource_type)
-
-        parents = self.parents.get(resource_type_id)
+        parents = self.parents.get(resource_type)
         if not parents:
             return None
 
         if len(parents) > 1:
             raise Exception(
-                f"Expected a single parent of type {resource_type_id} in {self}"
+                f"Expected a single parent of type {resource_type} in {self}"
             )
 
         return parents[0]
 
     def describe(self):
-        return str(self)
+        result = {}
+        for child_type, children in self.children.items():
+            result[str(child_type)] = [child.describe() for child in children]
+        return result
+
+    def dump(self):
+        __import__("pudb").set_trace()
+        print(yaml.dump(self.describe()))
 
     @property
     def type_id(self):
         return resource_id_from_class(self.__class__)
-
-    @property
-    def key(self):
-        return self.type_id
 
     @property
     def vendor(self):
@@ -91,13 +97,3 @@ class Resource:
 
     def drop_from_block(self):
         self.block.drop_resource(self)
-
-
-def get_type_id(x):
-    return (
-        x
-        if isinstance(x, str)
-        else x.type_id
-        if isinstance(x, Resource)
-        else resource_id_from_class(x)
-    )

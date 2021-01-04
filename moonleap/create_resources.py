@@ -7,7 +7,7 @@ from moonleap.config import config
 
 def derive_resources(resource):
     new_resources = []
-    derive_rules = config.get_update_rules(resource.type_id)
+    derive_rules = config.get_derive_rules(resource.__class__)
     for derive_rule in derive_rules:
         new_resources += derive_rule(resource)
     return new_resources
