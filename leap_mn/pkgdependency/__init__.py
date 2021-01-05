@@ -2,7 +2,7 @@ from moonleap import Resource, tags
 
 
 class PkgDependency(Resource):
-    def __init__(self, package_name, is_dev):
+    def __init__(self, package_name):
         super().__init__()
         self.package_name = package_name
 

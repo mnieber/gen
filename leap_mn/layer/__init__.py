@@ -41,6 +41,7 @@ def create(term, block):
 meta = {
     Layer: dict(
         templates="templates",
+        output_dir=".dodo_commands",
         parents={"parent_layer_group": LayerGroup},
         children={"sections": [LayerConfig], "layer_groups": [LayerGroup]},
     )

@@ -14,4 +14,6 @@ def create(term, block):
     return [Project(term.data)]
 
 
-meta = {Project: dict(children={"services": [Service], "src_dir": SrcDir})}
+meta = {
+    Project: dict(output_dir="src", children={"services": [Service], "src_dir": SrcDir})
+}

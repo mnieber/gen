@@ -1,3 +1,4 @@
+from importlib import import_module
 from pathlib import Path
 
 from ramda import merge
@@ -24,6 +25,12 @@ class Config:
     def get_templates(self, resource_type):
         return self.meta_by_resource_type.get(resource_type, {}).get("templates", [])
 
+    def get_output_dir(self, resource):
+        output_dir = self.meta_by_resource_type.get(resource.__class__, {}).get(
+            "output_dir", ""
+        )
+        return output_dir(resource) if callable(output_dir) else output_dir
+
 
 config = Config()
 
@@ -34,10 +41,23 @@ def _install_templates(module, resource_type, src_class_meta, dest_class_meta):
         dest_class_meta["templates"] = str(Path(module.__file__).parent / templates)
 
 
+def _install_output_dir(module, resource_type, src_class_meta, dest_class_meta):
+    dest_class_meta["output_dir"] = src_class_meta.get("output_dir")
+
+
+def _resolve(resource_type):
+    if isinstance(resource_type, str):
+        p, type_name = resource_type.rsplit(".", 1)
+        return getattr(import_module(p), type_name)
+    return resource_type
+
+
 def _install_parent_types(module, resource_type, src_class_meta, dest_class_meta):
     from moonleap.resource import create_prop_for_parents
 
     for prop_name, parent_resource_type in src_class_meta.get("parents", {}).items():
+        parent_resource_type = _resolve(parent_resource_type)
+
         is_list = isinstance(parent_resource_type, list)
         parent_type = parent_resource_type[0] if is_list else parent_resource_type
 
@@ -52,6 +72,8 @@ def _install_child_types(module, resource_type, src_class_meta, dest_class_meta)
     from moonleap.resource import create_prop_for_children
 
     for prop_name, child_resource_type in src_class_meta.get("children", {}).items():
+        child_resource_type = _resolve(child_resource_type)
+
         is_list = isinstance(child_resource_type, list)
         child_type = child_resource_type[0] if is_list else child_resource_type
 
@@ -65,6 +87,7 @@ def _install_child_types(module, resource_type, src_class_meta, dest_class_meta)
 def install(module):
     for resource_type, src_class_meta in module.meta.items():
         dest_class_meta = config.meta_by_resource_type.setdefault(resource_type, {})
+        _install_output_dir(module, resource_type, src_class_meta, dest_class_meta)
         _install_templates(module, resource_type, src_class_meta, dest_class_meta)
         _install_parent_types(module, resource_type, src_class_meta, dest_class_meta)
         _install_child_types(module, resource_type, src_class_meta, dest_class_meta)
@@ -85,3 +108,17 @@ def tags(tags, is_ittable=False):
             config.is_ittable_by_tag[tag] = is_ittable
 
     return wrapped
+
+
+def output_dir_from(prop_name):
+    def get_output_dir(resource):
+        if hasattr(resource, prop_name):
+            prop = getattr(resource, prop_name)
+            return config.get_output_dir(prop)
+        return ""
+
+    return get_output_dir
+
+
+def output_path_from(prop_name):
+    return lambda x: Path(output_dir_from(prop_name)(x))

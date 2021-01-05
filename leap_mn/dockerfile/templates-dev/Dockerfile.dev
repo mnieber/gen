@@ -1,0 +1,9 @@
+FROM foodev
+
+{% for pkg in res.service.pkg_dependencies_dev %}
+RUN apt-get install {{ pkg.package_name }}
+{% endfor %}
+
+{% for pip_pkg in res.service.pip_dependencies_dev %}
+RUN pip install {{ pip_pkg.package_name }}
+{% endfor %}

@@ -1,4 +1,10 @@
-from moonleap.config import config, derive, tags  # noqa
+from moonleap.config import (
+    config,
+    derive,
+    output_dir_from,  # noqa
+    output_path_from,
+    tags,
+)
 from moonleap.create_resources import create_resources  # noqa
 from moonleap.render_resources import render_resources  # noqa
 from moonleap.resource import Resource  # noqa

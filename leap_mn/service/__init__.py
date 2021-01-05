@@ -1,7 +1,7 @@
-from leap_mn.pipdependency import PipDependency
-from leap_mn.pkgdependency import PkgDependency
+from leap_mn.pipdependency import PipDependency, PipDependencyDev
+from leap_mn.pkgdependency import PkgDependency, PkgDependencyDev
 from leap_mn.srcdir import SrcDir
-from moonleap import Resource, tags
+from moonleap import Resource, output_path_from, tags
 
 
 class Service(Resource):
@@ -17,10 +17,14 @@ def create(term, block):
 
 meta = {
     Service: dict(
+        output_dir=lambda x: str(output_path_from("project")(x) / x.name),
         children={
             "pip_dependencies": [PipDependency],
+            "pip_dependencies_dev": [PipDependencyDev],
             "pkg_dependencies": [PkgDependency],
+            "pkg_dependencies_dev": [PkgDependencyDev],
             "src_dir": SrcDir,
-        }
+        },
+        parents={"project": "leap_mn.project.Project"},
     )
 }
