@@ -14,8 +14,8 @@ class Block:
         self._resources = []
         self.lines: T.List[Line] = []
 
-    def describes(self, resource):
-        return resource.term in self.lines[0].terms
+    def describes(self, term):
+        return term in self.lines[0].terms
 
     def link(self, parent_block):
         self.parent_block = parent_block

@@ -2,7 +2,7 @@ import uuid
 
 import yaml
 
-from moonleap.parser.term import Term, word_to_term
+from moonleap.parser.term import Term
 from moonleap.utils import resource_id_from_class
 
 
@@ -18,22 +18,28 @@ class Resource:
     def __str__(self):
         return self.__class__.__name__
 
+    def get_children_by_type(self, child_resource_type):
+        return self._children_by_type.setdefault(child_resource_type, [])
+
+    def get_parents_by_type(self, parent_resource_type):
+        return self._parents_by_type.setdefault(parent_resource_type, [])
+
     def add_child(self, child_resource):
-        children = self._children_by_type.setdefault(child_resource.__class__, [])
+        children = self.get_children_by_type(child_resource.__class__)
         if child_resource not in children:
             children.append(child_resource)
             return True
         return False
 
     def add_parent(self, parent_resource):
-        parents = self._parents_by_type.setdefault(parent_resource.__class__, [])
+        parents = self.get_parents_by_type(parent_resource.__class__)
         if parent_resource not in parents:
             parents.append(parent_resource)
             return True
         return False
 
     def parent_of_type(self, resource_type):
-        parents = self._parents_by_type.get(resource_type)
+        parents = self.get_parents_by_type(resource_type)
         if not parents:
             return None
 
@@ -45,7 +51,7 @@ class Resource:
         return parents[0]
 
     def parents_of_type(self, resource_type):
-        parents = self._parents_by_type.get(resource_type)
+        parents = self.get_parents_by_type(resource_type)
         if not parents:
             return []
 
@@ -57,7 +63,7 @@ class Resource:
         return parents
 
     def child_of_type(self, resource_type):
-        children = self._children_by_type.get(resource_type)
+        children = self.get_children_by_type(resource_type)
         if not children:
             return None
 
@@ -69,7 +75,7 @@ class Resource:
         return children[0]
 
     def children_of_type(self, resource_type):
-        children = self._children_by_type.get(resource_type)
+        children = self.get_children_by_type(resource_type)
         if not children:
             return []
 
@@ -100,38 +106,6 @@ class Resource:
     @property
     def module(self):
         return self.type_id.split(".")[1]
-
-    def is_created_in_block_that_describes(self, other_resource):
-        return other_resource.term in self.block.lines[0].terms
-
-    def is_paired_with(self, block, other_resource):
-        for line in block.lines:
-            state = "find start"
-            count_other_resources = 0
-            for word in line.words:
-                term = word_to_term(word)
-
-                if term and term == self.term:
-                    state = "find verb"
-                elif word.startswith("/") and state == "find verb":
-                    state = "find other resource"
-                elif (
-                    word.startswith("/")
-                    and state == "find other resource"
-                    and count_other_resources > 0
-                ):
-                    state = "find start"
-                    count_other_resources = 0
-                elif (
-                    state == "find other resource"
-                    and term
-                    and term == other_resource.term
-                ):
-                    return True
-                elif term and state == "find other resource":
-                    count_other_resources += 1
-
-        return False
 
     def drop_from_block(self):
         self.block.drop_resource(self)

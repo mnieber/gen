@@ -5,7 +5,7 @@ from jinja2 import Template
 from moonleap.config import config
 
 
-def render_resources(blocks, root_dir):
+def render_resources(blocks, output_root_dir):
     for block in blocks:
         for resource in block.get_resources():
             print(resource)
@@ -18,7 +18,7 @@ def render_resources(blocks, root_dir):
                     with open(template_fn) as ifs:
                         t = Template(ifs.read(), trim_blocks=True)
                         output_fn = Template(template_fn.name).render(res=resource)
-                        output_dir = Path(root_dir) / output_sub_dir
+                        output_dir = Path(output_root_dir) / output_sub_dir
                         output_dir.mkdir(parents=True, exist_ok=True)
 
                         with open(str(output_dir / output_fn), "w") as ofs:

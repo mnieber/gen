@@ -17,10 +17,7 @@ def main(gen_file):
     blocks = parser.get_blocks(raw_markdown)
     create_resources(blocks)
 
-    output_dir = "output"
-    if not os.path.exists(output_dir):
-        os.mkdir(output_dir)
-    render_resources(blocks, output_dir)
+    render_resources(blocks, output_root_dir="output")
 
 
 def report(x):
