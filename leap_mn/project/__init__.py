@@ -1,3 +1,4 @@
+import moonleap.props as props
 from leap_mn.service import Service
 from leap_mn.srcdir import SrcDir
 from moonleap import Resource, tags
@@ -15,5 +16,11 @@ def create(term, block):
 
 
 meta = {
-    Project: dict(output_dir="src", children={"services": [Service], "src_dir": SrcDir})
+    Project: dict(
+        output_dir="src",
+        props={
+            "services": props.children_of_type(Service),
+            "src_dir": props.child_of_type(SrcDir),
+        },
+    )
 }

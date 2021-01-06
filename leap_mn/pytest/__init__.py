@@ -1,3 +1,4 @@
+import moonleap.props as props
 from leap_mn.layer import LayerConfig
 from leap_mn.pipdependency import PipDependency
 from leap_mn.pytesthtml import PytestHtml
@@ -24,4 +25,4 @@ def create_layer_config(pytest):
     return [LayerConfig("pytest", get_layer_config())]
 
 
-meta = {Pytest: dict(children={"pytest_html": PytestHtml})}
+meta = {Pytest: dict(props={"pytest_html": props.child_of_type(PytestHtml)})}

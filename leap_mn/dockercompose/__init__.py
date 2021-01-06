@@ -1,3 +1,4 @@
+import moonleap.props as props
 from leap_mn.layer import LayerConfig
 from leap_mn.project import Project
 from leap_mn.service import Service
@@ -49,8 +50,13 @@ meta = {
     DockerCompose: dict(
         output_dir=output_dir_from("project"),
         templates="templates",
-        children={"services": [Service]},
-        parents={"project": Project},
+        props={
+            "services": props.children_of_type(Service),
+            "project": props.parent_of_type(Project),
+        },
     ),
-    DockerComposeDev: dict(templates="templates-dev", children={"services": [Service]}),
+    DockerComposeDev: dict(
+        templates="templates-dev",
+        props={"services": props.children_of_type(Service)},
+    ),
 }

@@ -1,3 +1,4 @@
+import moonleap.props as props
 from leap_mn.gitrepository import GitRepository
 from moonleap import Resource, tags
 
@@ -13,4 +14,4 @@ def create(term, block):
     return [SrcDir(term.data)]
 
 
-meta = {SrcDir: dict(children={"git_repo": GitRepository})}
+meta = {SrcDir: dict(props={"git_repo": props.child_of_type(GitRepository)})}

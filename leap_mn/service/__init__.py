@@ -1,3 +1,4 @@
+import moonleap.props as props
 from leap_mn.pipdependency import PipDependency, PipDependencyDev
 from leap_mn.pkgdependency import PkgDependency, PkgDependencyDev
 from leap_mn.srcdir import SrcDir
@@ -18,13 +19,13 @@ def create(term, block):
 meta = {
     Service: dict(
         output_dir=lambda x: str(output_path_from("project")(x) / x.name),
-        children={
-            "pip_dependencies": [PipDependency],
-            "pip_dependencies_dev": [PipDependencyDev],
-            "pkg_dependencies": [PkgDependency],
-            "pkg_dependencies_dev": [PkgDependencyDev],
-            "src_dir": SrcDir,
+        props={
+            "pip_dependencies": props.children_of_type(PipDependency),
+            "pip_dependencies_dev": props.children_of_type(PipDependencyDev),
+            "pkg_dependencies": props.children_of_type(PkgDependency),
+            "pkg_dependencies_dev": props.children_of_type(PkgDependencyDev),
+            "src_dir": props.child_of_type(SrcDir),
+            "project": props.parent_of_type("leap_mn.project.Project"),
         },
-        parents={"project": "leap_mn.project.Project"},
     )
 }

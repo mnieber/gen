@@ -1,5 +1,6 @@
 import os
 
+import moonleap.props as props
 from leap_mn.pkgdependency import PkgDependency, PkgDependencyDev
 from leap_mn.service import Service
 from moonleap import Resource, output_dir_from, tags
@@ -28,7 +29,9 @@ meta = {
     Makefile: dict(
         templates="templates",
         output_dir=output_dir_from("service"),
-        children={"rules": [MakefileRule]},
-        parents={"service": Service},
+        props={
+            "rules": props.children_of_type(MakefileRule),
+            "service": props.parent_of_type(Service),
+        },
     )
 }

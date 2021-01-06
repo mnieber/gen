@@ -1,3 +1,4 @@
+import moonleap.props as props
 from leap_mn.service import Service
 from moonleap import Resource, output_dir_from, tags
 
@@ -26,11 +27,11 @@ meta = {
     Dockerfile: dict(
         templates="templates",
         output_dir=output_dir_from("service"),
-        parents={"service": Service},
+        props={"service": props.parent_of_type(Service)},
     ),
     DockerfileDev: dict(
         templates="templates-dev",
         output_dir=output_dir_from("service"),
-        parents={"service": Service},
+        props={"service": props.parent_of_type(Service)},
     ),
 }

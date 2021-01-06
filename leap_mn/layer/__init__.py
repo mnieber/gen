@@ -1,5 +1,6 @@
 import json
 
+import moonleap.props as props
 from leap_mn.layergroup import LayerGroup
 from moonleap import Resource, tags
 from yaml import dump
@@ -42,7 +43,10 @@ meta = {
     Layer: dict(
         templates="templates",
         output_dir=".dodo_commands",
-        parents={"parent_layer_group": LayerGroup},
-        children={"sections": [LayerConfig], "layer_groups": [LayerGroup]},
+        props={
+            "parent_layer_group": props.parent_of_type(LayerGroup),
+            "sections": props.children_of_type(LayerConfig),
+            "layer_groups": props.children_of_type(LayerGroup),
+        },
     )
 }

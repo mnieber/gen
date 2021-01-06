@@ -14,24 +14,6 @@ def _install_output_dir(module, resource_type, src_class_meta, dest_class_meta):
     dest_class_meta["output_dir"] = src_class_meta.get("output_dir")
 
 
-# Don't inline, it will create problems with the closure around parent_type
-def create_prop_for_parents(parent_type, is_list):
-    return (
-        property(lambda self: self.parents_of_type(parent_type))
-        if is_list
-        else property(lambda self: self.parent_of_type(parent_type))
-    )
-
-
-# Don't inline, it will create problems with the closure around parent_type
-def create_prop_for_children(child_type, is_list):
-    return (
-        property(lambda self: self.children_of_type(child_type))
-        if is_list
-        else property(lambda self: self.child_of_type(child_type))
-    )
-
-
 def _resolve(resource_type):
     is_list = isinstance(resource_type, list)
     t = resource_type[0] if is_list else resource_type
@@ -41,26 +23,19 @@ def _resolve(resource_type):
     return is_list, t
 
 
-def _install_parent_types(module, resource_type, src_class_meta, dest_class_meta):
-    for prop_name, parent_resource_type in src_class_meta.get("parents", {}).items():
-        is_list, parent_type = _resolve(parent_resource_type)
+def _install_props(module, resource_type, src_class_meta, dest_class_meta):
+    for prop_name, prop in src_class_meta.get("props", {}).items():
+        if prop.parent_resource_type:
+            parent_types = dest_class_meta.setdefault("parent_types", [])
+            if prop.parent_resource_type not in parent_types:
+                parent_types.append(prop.parent_resource_type)
 
-        parent_types = dest_class_meta.setdefault("parent_types", [])
-        if parent_type not in parent_types:
-            parent_types.append(parent_type)
+        if prop.child_resource_type:
+            child_types = dest_class_meta.setdefault("child_types", [])
+            if prop.child_resource_type not in child_types:
+                child_types.append(prop.child_resource_type)
 
-        setattr(resource_type, prop_name, create_prop_for_parents(parent_type, is_list))
-
-
-def _install_child_types(module, resource_type, src_class_meta, dest_class_meta):
-    for prop_name, child_resource_type in src_class_meta.get("children", {}).items():
-        is_list, child_type = _resolve(child_resource_type)
-
-        child_types = dest_class_meta.setdefault("child_types", [])
-        if child_type not in child_types:
-            child_types.append(child_type)
-
-        setattr(resource_type, prop_name, create_prop_for_children(child_type, is_list))
+        setattr(resource_type, prop_name, prop.prop)
 
 
 def install(module):
@@ -86,5 +61,4 @@ def install(module):
         dest_class_meta = config.meta_by_resource_type.setdefault(resource_type, {})
         _install_output_dir(module, resource_type, src_class_meta, dest_class_meta)
         _install_templates(module, resource_type, src_class_meta, dest_class_meta)
-        _install_parent_types(module, resource_type, src_class_meta, dest_class_meta)
-        _install_child_types(module, resource_type, src_class_meta, dest_class_meta)
+        _install_props(module, resource_type, src_class_meta, dest_class_meta)
