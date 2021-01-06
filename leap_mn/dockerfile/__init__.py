@@ -5,6 +5,7 @@ from moonleap import Resource, output_dir_from, tags
 class Dockerfile(Resource):
     def __init__(self):
         super().__init__()
+        self.install_command = "apt-get install -y"
 
 
 @tags(["dockerfile"])

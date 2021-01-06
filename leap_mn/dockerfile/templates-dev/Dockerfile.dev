@@ -1,7 +1,10 @@
 FROM foodev
 
-{% for pkg in res.service.pkg_dependencies_dev %}
-RUN apt-get install {{ pkg.package_name }}
+{% for pkg in res.service.pkg_dependencies_dev|sum(attribute="package_name", start = []) %}
+{% if loop.first %}
+RUN {{ res.install_command }} \
+{% endif %}
+    {{ pkg + ' \\' if not loop.last else pkg }}
 {% endfor %}
 
 {% for pip_pkg in res.service.pip_dependencies_dev %}
