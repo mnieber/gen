@@ -18,28 +18,28 @@ class Resource:
     def __str__(self):
         return self.__class__.__name__
 
-    def get_children_by_type(self, child_resource_type):
+    def children_of_type(self, child_resource_type):
         return self._children_by_type.setdefault(child_resource_type, [])
 
-    def get_parents_by_type(self, parent_resource_type):
+    def parents_of_type(self, parent_resource_type):
         return self._parents_by_type.setdefault(parent_resource_type, [])
 
     def add_child(self, child_resource):
-        children = self.get_children_by_type(child_resource.__class__)
+        children = self.children_of_type(child_resource.__class__)
         if child_resource not in children:
             children.append(child_resource)
             return True
         return False
 
     def add_parent(self, parent_resource):
-        parents = self.get_parents_by_type(parent_resource.__class__)
+        parents = self.parents_of_type(parent_resource.__class__)
         if parent_resource not in parents:
             parents.append(parent_resource)
             return True
         return False
 
     def parent_of_type(self, resource_type):
-        parents = self.get_parents_by_type(resource_type)
+        parents = self.parents_of_type(resource_type)
         if not parents:
             return None
 
@@ -50,20 +50,8 @@ class Resource:
 
         return parents[0]
 
-    def parents_of_type(self, resource_type):
-        parents = self.get_parents_by_type(resource_type)
-        if not parents:
-            return []
-
-        if not isinstance(parents, list):
-            raise Exception(
-                f"Expected a list of parents for type {resource_type} in {self}"
-            )
-
-        return parents
-
     def child_of_type(self, resource_type):
-        children = self.get_children_by_type(resource_type)
+        children = self.children_of_type(resource_type)
         if not children:
             return None
 
@@ -73,18 +61,6 @@ class Resource:
             )
 
         return children[0]
-
-    def children_of_type(self, resource_type):
-        children = self.get_children_by_type(resource_type)
-        if not children:
-            return []
-
-        if not isinstance(children, list):
-            raise Exception(
-                f"Expected a list of children for type {resource_type} in {self}"
-            )
-
-        return children
 
     def describe(self):
         result = {}
@@ -109,21 +85,3 @@ class Resource:
 
     def drop_from_block(self):
         self.block.drop_resource(self)
-
-
-# Don't inline, it will create problems with the closure around parent_type
-def create_prop_for_parents(parent_type, is_list):
-    return (
-        property(lambda self: self.parents_of_type(parent_type))
-        if is_list
-        else property(lambda self: self.parent_of_type(parent_type))
-    )
-
-
-# Don't inline, it will create problems with the closure around parent_type
-def create_prop_for_children(child_type, is_list):
-    return (
-        property(lambda self: self.children_of_type(child_type))
-        if is_list
-        else property(lambda self: self.child_of_type(child_type))
-    )

@@ -14,21 +14,36 @@ def _install_output_dir(module, resource_type, src_class_meta, dest_class_meta):
     dest_class_meta["output_dir"] = src_class_meta.get("output_dir")
 
 
+# Don't inline, it will create problems with the closure around parent_type
+def create_prop_for_parents(parent_type, is_list):
+    return (
+        property(lambda self: self.parents_of_type(parent_type))
+        if is_list
+        else property(lambda self: self.parent_of_type(parent_type))
+    )
+
+
+# Don't inline, it will create problems with the closure around parent_type
+def create_prop_for_children(child_type, is_list):
+    return (
+        property(lambda self: self.children_of_type(child_type))
+        if is_list
+        else property(lambda self: self.child_of_type(child_type))
+    )
+
+
 def _resolve(resource_type):
+    is_list = isinstance(resource_type, list)
+    t = resource_type[0] if is_list else resource_type
     if isinstance(resource_type, str):
         p, type_name = resource_type.rsplit(".", 1)
-        return getattr(import_module(p), type_name)
-    return resource_type
+        t = getattr(import_module(p), type_name)
+    return is_list, t
 
 
 def _install_parent_types(module, resource_type, src_class_meta, dest_class_meta):
-    from moonleap.resource import create_prop_for_parents
-
     for prop_name, parent_resource_type in src_class_meta.get("parents", {}).items():
-        parent_resource_type = _resolve(parent_resource_type)
-
-        is_list = isinstance(parent_resource_type, list)
-        parent_type = parent_resource_type[0] if is_list else parent_resource_type
+        is_list, parent_type = _resolve(parent_resource_type)
 
         parent_types = dest_class_meta.setdefault("parent_types", [])
         if parent_type not in parent_types:
@@ -38,13 +53,8 @@ def _install_parent_types(module, resource_type, src_class_meta, dest_class_meta
 
 
 def _install_child_types(module, resource_type, src_class_meta, dest_class_meta):
-    from moonleap.resource import create_prop_for_children
-
     for prop_name, child_resource_type in src_class_meta.get("children", {}).items():
-        child_resource_type = _resolve(child_resource_type)
-
-        is_list = isinstance(child_resource_type, list)
-        child_type = child_resource_type[0] if is_list else child_resource_type
+        is_list, child_type = _resolve(child_resource_type)
 
         child_types = dest_class_meta.setdefault("child_types", [])
         if child_type not in child_types:
