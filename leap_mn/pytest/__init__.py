@@ -17,7 +17,7 @@ class Pytest(Resource):
 
 @tags(["pytest"])
 def create(term, block):
-    return [Pytest(), PipDependency("pytest")]
+    return [Pytest(), PipDependency(["pytest"])]
 
 
 @derive(Pytest)

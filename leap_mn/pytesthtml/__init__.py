@@ -9,7 +9,7 @@ class PytestHtml(Resource):
 
 @tags(["pytest-html"])
 def create(term, block):
-    return [PytestHtml(), PipDependency("pytest-html")]
+    return [PytestHtml(), PipDependency(["pytest-html"])]
 
 
 meta = {}
