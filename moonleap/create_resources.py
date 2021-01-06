@@ -6,14 +6,14 @@ from moonleap.config import config
 
 
 def add_child(resource, child_resource):
-    if config.has_children_of_type(resource.__class__, child_resource.__class__):
+    if child_resource.__class__ in config.get_child_types(resource.__class__):
         if resource.add_child(child_resource):
             return True
     return False
 
 
 def add_parent(resource, parent_resource):
-    if config.has_parents_of_type(resource.__class__, parent_resource.__class__):
+    if parent_resource.__class__ in config.get_parent_types(resource.__class__):
         return resource.add_parent(parent_resource)
     return False
 

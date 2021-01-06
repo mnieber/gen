@@ -11,13 +11,14 @@ class Config:
     def get_derive_rules(self, resource_type):
         return self.derive_rules_by_resource_type.get(resource_type) or {}
 
-    def has_children_of_type(self, resource_type, child_resource_type):
-        class_meta = self.meta_by_resource_type.get(resource_type, {})
-        return child_resource_type in class_meta.get("child_types", [])
+    def get_meta(self, resource_type):
+        return self.meta_by_resource_type.get(resource_type, {})
 
-    def has_parents_of_type(self, resource_type, parent_resource_type):
-        class_meta = self.meta_by_resource_type.get(resource_type, {})
-        return parent_resource_type in class_meta.get("parent_types", [])
+    def get_child_types(self, resource_type):
+        return self.get_meta(resource_type).get("child_types", [])
+
+    def get_parent_types(self, resource_type):
+        return self.get_meta(resource_type).get("parent_types", [])
 
     def get_templates(self, resource_type):
         return self.meta_by_resource_type.get(resource_type, {}).get("templates", [])
