@@ -1,5 +1,4 @@
-from moonleap.config import config, install
-from ramda import merge
+from moonleap.install import install
 
 from . import (
     dockercompose,
