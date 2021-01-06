@@ -85,6 +85,24 @@ def _install_child_types(module, resource_type, src_class_meta, dest_class_meta)
 
 
 def install(module):
+    for f in [
+        f
+        for f in module.__dict__.values()
+        if callable(f) and f.__module__ == module.__name__
+    ]:
+        if hasattr(f, "moonleap_create_rule_by_tag"):
+            for tag, create_rule in f.moonleap_create_rule_by_tag.items():
+                config.create_rule_by_tag[tag] = create_rule
+
+        if hasattr(f, "moonleap_is_ittable_by_tag"):
+            for tag, is_ittable in f.moonleap_is_ittable_by_tag.items():
+                config.is_ittable_by_tag[tag] = is_ittable
+
+        if hasattr(f, "moonleap_derive_resource"):
+            resource_type = f.moonleap_derive_resource
+            config.derive_rules_by_resource_type.setdefault(resource_type, [])
+            config.derive_rules_by_resource_type[resource_type].append(f)
+
     for resource_type, src_class_meta in module.meta.items():
         dest_class_meta = config.meta_by_resource_type.setdefault(resource_type, {})
         _install_output_dir(module, resource_type, src_class_meta, dest_class_meta)
@@ -95,17 +113,22 @@ def install(module):
 
 def derive(resource_type):
     def wrapped(f):
-        config.derive_rules_by_resource_type.setdefault(resource_type, [])
-        config.derive_rules_by_resource_type[resource_type].append(f)
+        f.moonleap_derive_resource = resource_type
 
     return wrapped
 
 
 def tags(tags, is_ittable=False):
     def wrapped(f):
+        f.moonleap_create_rule_by_tag = {}
         for tag in tags:
-            config.create_rule_by_tag[tag] = f
-            config.is_ittable_by_tag[tag] = is_ittable
+            f.moonleap_create_rule_by_tag[tag] = f
+
+        f.moonleap_is_ittable_by_tag = {}
+        for tag in tags:
+            f.moonleap_is_ittable_by_tag[tag] = is_ittable
+
+        return f
 
     return wrapped
 
