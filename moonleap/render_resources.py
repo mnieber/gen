@@ -19,7 +19,7 @@ def render_resources(blocks, root_dir):
                         t = Template(ifs.read(), trim_blocks=True)
                         output_fn = Template(template_fn.name).render(res=resource)
                         output_dir = Path(root_dir) / output_sub_dir
-                        output_dir.mkdir(exist_ok=True)
+                        output_dir.mkdir(parents=True, exist_ok=True)
 
                         with open(str(output_dir / output_fn), "w") as ofs:
                             ofs.write(t.render(res=resource, project_name="TODO"))
