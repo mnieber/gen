@@ -21,7 +21,7 @@ class Line:
         return f"Line: " + ",".join(str(x) for x in self.terms)
 
 
-def get_create_line(is_ittable_by_tag):
+def get_create_line():
     def create_line(text, it_term=None):
         terms = []
         words = text.split()
@@ -37,7 +37,7 @@ def get_create_line(is_ittable_by_tag):
                 next_it_term = it_term
             else:
                 terms.append(term)
-                if not next_it_term and is_ittable_by_tag.get(term.tag, False):
+                if not next_it_term:
                     next_it_term = term
 
         return Line(text, words, terms, next_it_term)

@@ -10,7 +10,7 @@ class Project(Resource):
         self.name = name
 
 
-@tags(["project"], is_ittable=True)
+@tags(["project"])
 def create_project(term, block):
     return [Project(term.data)]
 

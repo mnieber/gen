@@ -78,7 +78,7 @@ def create_block(name, level, parent_block):
 def get_blocks(raw_markdown):
     blockCollector = BlockCollector(
         create_block=create_block,
-        create_line=get_create_line(config.is_ittable_by_tag),
+        create_line=get_create_line(),
     )
     mistune.Markdown(renderer=blockCollector)(raw_markdown)
     return blockCollector.blocks

@@ -20,7 +20,7 @@ class MakefileRule(Resource):
         self.text = text
 
 
-@tags(["makefile"], is_ittable=True)
+@tags(["makefile"])
 def create_makefile(term, block):
     return [Makefile(), PkgDependencyDev(["make"])]
 

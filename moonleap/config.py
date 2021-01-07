@@ -5,7 +5,6 @@ class Config:
     def __init__(self):
         self.create_rule_by_tag = {}
         self.derive_rules_by_resource_type = {}
-        self.is_ittable_by_tag = {}
         self.meta_by_resource_type = {}
 
     def get_derive_rules(self, resource_type):
@@ -41,15 +40,11 @@ def derive(resource_type):
     return wrapped
 
 
-def tags(tags, is_ittable=False):
+def tags(tags):
     def wrapped(f):
         f.moonleap_create_rule_by_tag = {}
         for tag in tags:
             f.moonleap_create_rule_by_tag[tag] = f
-
-        f.moonleap_is_ittable_by_tag = {}
-        for tag in tags:
-            f.moonleap_is_ittable_by_tag[tag] = is_ittable
 
         return f
 
@@ -58,7 +53,6 @@ def tags(tags, is_ittable=False):
 
 def output_dir_from(prop_name):
     def get_output_dir(resource):
-        __import__("pudb").set_trace()
         if hasattr(resource, prop_name):
             prop = getattr(resource, prop_name)
             return config.get_output_dir(prop)

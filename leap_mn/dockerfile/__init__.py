@@ -19,12 +19,12 @@ class DockerImage(Resource):
         self.name = name
 
 
-@tags(["dockerfile"], is_ittable=True)
+@tags(["dockerfile"])
 def create_dockerfile(term, block):
     return [Dockerfile()]
 
 
-@tags(["dockerfile-dev"], is_ittable=True)
+@tags(["dockerfile-dev"])
 def create_dockerfile_dev(term, block):
     return [DockerfileDev()]
 

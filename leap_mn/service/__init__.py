@@ -11,7 +11,7 @@ class Service(Resource):
         self.name = name
 
 
-@tags(["service"], is_ittable=True)
+@tags(["service"])
 def create_service(term, block):
     return [Service(term.data)]
 
