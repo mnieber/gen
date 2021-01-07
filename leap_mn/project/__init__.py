@@ -11,7 +11,7 @@ class Project(Resource):
 
 
 @tags(["project"], is_ittable=True)
-def create(term, block):
+def create_project(term, block):
     return [Project(term.data)]
 
 

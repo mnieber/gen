@@ -12,7 +12,7 @@ class Service(Resource):
 
 
 @tags(["service"], is_ittable=True)
-def create(term, block):
+def create_service(term, block):
     return [Service(term.data)]
 
 

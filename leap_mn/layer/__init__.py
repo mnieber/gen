@@ -35,7 +35,7 @@ class LayerConfig(Resource):
 
 
 @tags(["layer"])
-def create(term, block):
+def create_layer(term, block):
     return [Layer(name=term.data)]
 
 

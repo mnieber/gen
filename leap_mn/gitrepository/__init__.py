@@ -8,7 +8,7 @@ class GitRepository(Resource):
 
 
 @tags(["git-repository"])
-def create(term, block):
+def create_git_repository(term, block):
     return [GitRepository(term.data)]
 
 

@@ -21,7 +21,7 @@ class MakefileRule(Resource):
 
 
 @tags(["makefile"], is_ittable=True)
-def create(term, block):
+def create_makefile(term, block):
     return [Makefile(), PkgDependencyDev(["make", "some"])]
 
 

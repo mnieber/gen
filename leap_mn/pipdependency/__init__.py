@@ -12,12 +12,12 @@ class PipDependencyDev(PipDependency):
 
 
 @tags(["pip-dependency"])
-def create(term, block):
+def create_pip_dependency(term, block):
     return [PipDependency([term.data])]
 
 
 @tags(["pip-dependency-dev"])
-def create(term, block):
+def create_pip_dependency_dev(term, block):
     return [PipDependencyDev([term.data])]
 
 

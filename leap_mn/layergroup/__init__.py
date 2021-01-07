@@ -8,7 +8,7 @@ class LayerGroup(Resource):
 
 
 @tags(["layer-group"], is_ittable=True)
-def create(term, block):
+def create_layer_group(term, block):
     return [LayerGroup(name=term.data)]
 
 

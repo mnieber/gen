@@ -10,7 +10,7 @@ class SrcDir(Resource):
 
 
 @tags(["src-dir"])
-def create(term, block):
+def create_src_dir(term, block):
     return [SrcDir(term.data)]
 
 

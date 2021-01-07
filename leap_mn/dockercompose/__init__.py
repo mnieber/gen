@@ -28,14 +28,14 @@ class DockerComposeDev(DockerCompose):
 
 
 @tags(["docker-compose"])
-def create(term, block):
+def create_docker_compose(term, block):
     return [
         DockerCompose(),
     ]
 
 
 @tags(["docker-compose-dev"])
-def create(term, block):
+def create_docker_compose_dev(term, block):
     return [
         DockerComposeDev(),
     ]

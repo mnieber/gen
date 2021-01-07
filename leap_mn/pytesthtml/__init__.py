@@ -8,7 +8,7 @@ class PytestHtml(Resource):
 
 
 @tags(["pytest-html"])
-def create(term, block):
+def create_pytest_html(term, block):
     return [PytestHtml(), PipDependency(["pytest-html"])]
 
 

@@ -17,7 +17,7 @@ class PipCompile(Resource):
 
 
 @tags(["pip-compile"])
-def create(term, block):
+def create_pip_compile(term, block):
     return [PipCompile(), MakefileRule(makefile_rule), PipDependencyDev(["pip-tools"])]
 
 

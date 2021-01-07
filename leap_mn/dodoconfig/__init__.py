@@ -15,7 +15,7 @@ def get_root_config(layer):
 
 
 @tags(["dodo-config"])
-def create(term, block):
+def create_layer(term, block):
     return [Layer(name="config")]
 
 
