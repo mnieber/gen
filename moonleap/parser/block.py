@@ -22,20 +22,29 @@ class Block:
         if parent_block:
             parent_block.child_blocks.append(self)
 
-    def get_resources(
+    def get_blocks(
         self, include_self=True, include_children=False, include_parents=False
     ):
         result = []
 
-        if include_children:
-            for child_block in self.child_blocks:
-                result += child_block.get_resources(include_children=True)
+        if include_parents and self.parent_block:
+            result += self.parent_block.get_blocks(include_parents=True)
 
         if include_self:
-            result += self._resources
+            result += [self]
 
-        if include_parents and self.parent_block:
-            result += self.parent_block.get_resources(include_parents=True)
+        if include_children:
+            for child_block in self.child_blocks:
+                result += child_block.get_blocks(include_children=True)
+
+        return result
+
+    def get_resources(
+        self, include_self=True, include_children=False, include_parents=False
+    ):
+        result = []
+        for block in self.get_blocks(include_self, include_children, include_parents):
+            result += block._resources
 
         return result
 

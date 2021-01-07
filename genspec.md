@@ -14,13 +14,13 @@ The stack:layer is used to /run :docker-compose.
 
 ### The frontend:service in the frontend:layer
 
-The frontend:service /has a node_14:dockerfile and a node_14:dockerfile-dev.
+The frontend:service /has a :dockerfile and a :dockerfile-dev that /use the node_14:docker-image.
 :It /uses the default:root-dir and default:src-mount-point.
 :It /runs :create-react-app.
 
 ### The backend:service in the backend:layer
 
-The backend:service /has a python_3.8:dockerfile and a python_3.8:dockerfile-dev.
+The backend:service /has a :dockerfile and a :dockerfile-dev that /use the python_3.8:docker-image.
 :It /uses the default:root-dir and default:src-mount-point.
 :It also /has a :makefile for /running :pip-compile.
 :It /uses :pytest /with :pytest-html.

@@ -19,28 +19,28 @@ def _add_parent(resource, parent_resource):
     return False
 
 
-def _are_terms_paired(block, term, other_resource):
+def _are_terms_paired(block, a_term, b_term):
     for line in block.lines:
         state = "find start"
-        count_other_resources = 0
+        count_other_terms = 0
         for word in line.words:
             term = word_to_term(word)
 
-            if term and term == term:
+            if term and term == a_term:
                 state = "find verb"
             elif word.startswith("/") and state == "find verb":
-                state = "find other resource"
+                state = "find other term"
             elif (
                 word.startswith("/")
-                and state == "find other resource"
-                and count_other_resources > 0
+                and state == "find other term"
+                and count_other_terms > 0
             ):
                 state = "find start"
-                count_other_resources = 0
-            elif state == "find other resource" and term and term == other_term:
+                count_other_terms = 0
+            elif state == "find other term" and term and term == b_term:
                 return True
-            elif term and state == "find other resource":
-                count_other_resources += 1
+            elif term and state == "find other term":
+                count_other_terms += 1
 
     return False
 
@@ -63,26 +63,39 @@ def add_resource(block, resource, term):
 def group_resources(blocks):
     resources = blocks[0].get_resources(include_children=True)
 
-    for a_resource in resources:
-        for b_resource in resources:
-            if a_resource is b_resource:
+    for parent_resource in resources:
+        resources_visible_to_parent_resource = parent_resource.block.get_resources(
+            include_parents=True, include_children=True
+        )
+
+        for child_resource in resources_visible_to_parent_resource:
+            if parent_resource is child_resource:
                 continue
 
             # first check if b is created in a block that describes a
-            must_add_child = b_resource.block.describes(a_resource.term)
+            must_add_child = child_resource.block.describes(parent_resource.term)
 
             if not must_add_child:
+                blocks_visible_to_child_resource = child_resource.block.get_blocks(
+                    include_parents=True, include_children=True
+                )
+
                 # next, check if there is a block that describes or creates a, and where
                 # a and b are paired in the same line in a way that makes a the parent of b
-                for block in blocks:
-                    if block.describes(a_resource.term) or a_resource.block is block:
-                        if _are_terms_paired(block, a_resource.term, b_resource.term):
+                for block in blocks_visible_to_child_resource:
+                    if (
+                        block.describes(parent_resource.term)
+                        or parent_resource.block is block
+                    ):
+                        if _are_terms_paired(
+                            block, parent_resource.term, child_resource.term
+                        ):
                             must_add_child = True
                             break
 
             if must_add_child:
-                result = _add_child(a_resource, b_resource)
-                result = _add_parent(b_resource, a_resource)
+                result = _add_child(parent_resource, child_resource)
+                result = _add_parent(child_resource, parent_resource)
 
 
 def create_resources(blocks):

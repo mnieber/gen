@@ -22,16 +22,17 @@ def load_template(template_fn):
 
             if line.strip() == "":
                 end_idx = idx
-                if state == "search start":
-                    lines.insert(idx + 1, for_statement)
-                    lines.insert(idx + 2, "{% if loop.first %}")
+
+            if state == "search start":
+                if line.strip().startswith(r"{% for") and line.strip().endswith(r"%}"):
+                    lines.insert(idx + 1, "{% if loop.first %}")
                     state = "search loop"
 
-            if line.strip().startswith(r"{% loop") and line.strip().endswith(r"%}"):
-                for_statement = line.replace(r"{% loop", r"{% for")
-                lines[idx] = r"{% endif %}"
-                lines.insert(end_idx, r"{% endfor %}")
-                state = "search start"
+            if state == "search loop":
+                if line.strip() == r"{% body %}":
+                    lines[idx] = r"{% endif %}"
+                    lines.insert(end_idx, r"{% endfor %}")
+                    state = "search start"
 
             idx -= 1
 
