@@ -16,16 +16,19 @@ def create_service(term, block):
     return [Service(term.data)]
 
 
-meta = {
-    Service: dict(
-        output_dir=lambda x: str(output_path_from("project")(x) / x.name),
-        props={
-            "pip_dependencies": list_of_packages(PipDependency),
-            "pip_dependencies_dev": list_of_packages(PipDependencyDev),
-            "pkg_dependencies": list_of_packages(PkgDependency),
-            "pkg_dependencies_dev": list_of_packages(PkgDependencyDev),
-            "src_dir": props.child_of_type(SrcDir),
-            "project": props.parent_of_type("leap_mn.project.Project"),
-        },
-    )
-}
+def meta():
+    from leap_mn.project import Project
+
+    return {
+        Service: dict(
+            output_dir=lambda x: str(output_path_from("project")(x) / x.name),
+            props={
+                "pip_dependencies": list_of_packages(PipDependency),
+                "pip_dependencies_dev": list_of_packages(PipDependencyDev),
+                "pkg_dependencies": list_of_packages(PkgDependency),
+                "pkg_dependencies_dev": list_of_packages(PkgDependencyDev),
+                "src_dir": props.child_of_type(SrcDir),
+                "project": props.parent_of_type(Project),
+            },
+        )
+    }
