@@ -3,7 +3,7 @@ from importlib import import_module
 import ramda as R
 
 from moonleap.config import config
-from moonleap.parser.term import word_to_term
+from moonleap.parser.term import is_it_term, word_to_term
 
 
 def _add_child(resource, child_resource):
@@ -25,6 +25,8 @@ def _are_terms_paired(block, a_term, b_term):
         count_other_terms = 0
         for word in line.words:
             term = word_to_term(word)
+            if term and is_it_term(term):
+                term = line.it_term
 
             if term and term == a_term:
                 state = "find verb"

@@ -28,3 +28,7 @@ def words_to_terms(words):
         if term:
             terms.append(term)
     return terms
+
+
+def is_it_term(term):
+    return term.tag.lower() in ["it", "its"]

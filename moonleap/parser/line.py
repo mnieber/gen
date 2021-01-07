@@ -1,4 +1,4 @@
-from moonleap.parser.term import words_to_terms
+from moonleap.parser.term import is_it_term, words_to_terms
 
 
 class Line:
@@ -28,7 +28,7 @@ def get_create_line():
         next_it_term = None
         for term in words_to_terms(words):
             # check if :it must be replaced with it_term
-            if term.tag.lower() in ["it", "its"]:
+            if is_it_term(term):
                 if not it_term:
                     raise Exception(
                         f":It tag does not refer to a previous resource. Text:\n{text}"
