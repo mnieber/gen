@@ -7,7 +7,7 @@ from moonleap.config import derive
 
 
 def get_layer_config():
-    return {"PYTEST": {"pytesthtml": False}}
+    return {"pytesthtml": False}
 
 
 class Pytest(Resource):

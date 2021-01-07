@@ -22,7 +22,7 @@ class MakefileRule(Resource):
 
 @tags(["makefile"], is_ittable=True)
 def create_makefile(term, block):
-    return [Makefile(), PkgDependencyDev(["make", "some"])]
+    return [Makefile(), PkgDependencyDev(["make"])]
 
 
 meta = {

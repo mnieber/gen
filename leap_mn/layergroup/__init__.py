@@ -1,3 +1,4 @@
+import moonleap.props as props
 from moonleap import Resource, tags
 
 
@@ -12,4 +13,7 @@ def create_layer_group(term, block):
     return [LayerGroup(name=term.data)]
 
 
-meta = {}
+def meta():
+    from leap_mn.layer import Layer
+
+    return {LayerGroup: dict(props={"layers": props.children_of_type(Layer)})}

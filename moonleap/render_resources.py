@@ -43,8 +43,6 @@ def load_template(template_fn):
 def render_resources(blocks, output_root_dir):
     for block in blocks:
         for resource in block.get_resources():
-            print(resource)
-
             templates = config.get_templates(resource.__class__)
             output_sub_dir = config.get_output_dir(resource) or ""
 

@@ -36,6 +36,7 @@ config = Config()
 def derive(resource_type):
     def wrapped(f):
         f.moonleap_derive_resource = resource_type
+        return f
 
     return wrapped
 
@@ -57,6 +58,7 @@ def tags(tags, is_ittable=False):
 
 def output_dir_from(prop_name):
     def get_output_dir(resource):
+        __import__("pudb").set_trace()
         if hasattr(resource, prop_name):
             prop = getattr(resource, prop_name)
             return config.get_output_dir(prop)

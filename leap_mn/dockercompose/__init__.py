@@ -6,7 +6,7 @@ from moonleap import Resource, chop0, derive, output_dir_from, tags
 
 
 def get_layer_config():
-    return {"DOCKER_COMPOSE": {"name": "<INSERT NAME>"}}
+    return {"name": "<INSERT NAME>"}
 
 
 class DockerCompose(Resource):
@@ -43,7 +43,7 @@ def create_docker_compose_dev(term, block):
 
 @derive(DockerCompose)
 def create_layer_config(docker_compose):
-    return [LayerConfig("docker-compose", get_layer_config())]
+    return [LayerConfig("docker_compose", get_layer_config())]
 
 
 meta = {

@@ -14,6 +14,7 @@ from . import (
     pytest,
     pytesthtml,
     service,
+    servicelayergroup,
     srcdir,
 )
 
@@ -32,4 +33,5 @@ def install_all():
     install(pytest)
     install(pytesthtml)
     install(service)
+    install(servicelayergroup)
     install(srcdir)

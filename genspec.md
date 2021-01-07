@@ -3,14 +3,14 @@
 ## The cashcog:project and its :dodo-config
 
 The cashcog:project /has a :dodo-config.
-:It /has a server:layer-group /with a stack:layer, frontend:layer and backend:layer.
+:It /has a :service-layer-group /with a stack:layer, frontend:layer and backend:layer.
 :It /has a :src-dir that /stores files from the mnieber/test:git-repository.
-:It /has a :docker-compose and a :docker-compose-dev file that are used
-to /run the frontend:service and backend:service.
+:It /has a frontend:service and backend:service.
 
 ### The stack:layer
 
-The stack:layer is used to /run :docker-compose.
+The stack:layer /has a :docker-compose and a :docker-compose-dev file that are used
+to /run the frontend:service and backend:service.
 
 ### The frontend:service in the frontend:layer
 

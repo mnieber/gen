@@ -1,6 +1,7 @@
 import json
 
 import moonleap.props as props
+import ramda as R
 from leap_mn.layergroup import LayerGroup
 from moonleap import Resource, tags
 from yaml import dump
@@ -27,7 +28,12 @@ class LayerConfig(Resource):
     def __init__(self, name, config):
         super().__init__()
         self.name = name
-        self.config = config
+        self._config = config
+
+    @property
+    def config(self):
+        body = self._config(self) if callable(self._config) else self._config
+        return {self.name.upper(): body}
 
     @property
     def as_yaml(self):
@@ -45,8 +51,15 @@ meta = {
         output_dir=".dodo_commands",
         props={
             "parent_layer_group": props.parent_of_type(LayerGroup),
-            "sections": props.children_of_type(LayerConfig),
+            "sections": props.children_of_type(
+                LayerConfig, sort=R.sort_by(R.prop("name"))
+            ),
             "layer_groups": props.children_of_type(LayerGroup),
         },
-    )
+    ),
+    LayerConfig: dict(
+        props={
+            "layer": props.parent_of_type(Layer),
+        },
+    ),
 }

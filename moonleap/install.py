@@ -1,4 +1,3 @@
-from importlib import import_module
 from pathlib import Path
 
 from moonleap.config import config
@@ -12,15 +11,6 @@ def _install_templates(module, resource_type, src_class_meta, dest_class_meta):
 
 def _install_output_dir(module, resource_type, src_class_meta, dest_class_meta):
     dest_class_meta["output_dir"] = src_class_meta.get("output_dir")
-
-
-def _resolve(resource_type):
-    is_list = isinstance(resource_type, list)
-    t = resource_type[0] if is_list else resource_type
-    if isinstance(resource_type, str):
-        p, type_name = resource_type.rsplit(".", 1)
-        t = getattr(import_module(p), type_name)
-    return is_list, t
 
 
 def _install_props(module, resource_type, src_class_meta, dest_class_meta):
@@ -57,7 +47,8 @@ def install(module):
             config.derive_rules_by_resource_type.setdefault(resource_type, [])
             config.derive_rules_by_resource_type[resource_type].append(f)
 
-    for resource_type, src_class_meta in module.meta.items():
+    meta = module.meta() if callable(module.meta) else module.meta
+    for resource_type, src_class_meta in meta.items():
         dest_class_meta = config.meta_by_resource_type.setdefault(resource_type, {})
         _install_output_dir(module, resource_type, src_class_meta, dest_class_meta)
         _install_templates(module, resource_type, src_class_meta, dest_class_meta)
