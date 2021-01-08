@@ -1,5 +1,15 @@
+from pathlib import Path
+
+import moonleap.props as props
+from leap_mn.layer import LayerConfig
 from leap_mn.pipdependency import PipDependency
+from leap_mn.service import Service
 from moonleap import Resource, tags
+
+
+def get_layer_config(pytest_html):
+    result = dict(html_report=r"${/SERVER/install_dir}/report.html")
+    return result
 
 
 class PytestHtml(Resource):
@@ -9,7 +19,18 @@ class PytestHtml(Resource):
 
 @tags(["pytest-html"])
 def create_pytest_html(term, block):
-    return [PytestHtml(), PipDependency(["pytest-html"])]
+    pytest_html = PytestHtml()
+    return [
+        pytest_html,
+        PipDependency(["pytest-html"]),
+        LayerConfig("pytest", lambda x: get_layer_config(pytest_html)),
+    ]
 
 
-meta = {}
+meta = {
+    PytestHtml: dict(
+        props={
+            "service": props.parent_of_type(Service),
+        }
+    )
+}

@@ -3,7 +3,6 @@ import sys
 import traceback
 
 import leap_mn
-import mistune
 
 from moonleap import config, create_resources, parser, render_resources
 

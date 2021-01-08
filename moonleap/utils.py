@@ -28,3 +28,8 @@ def vendor_id_from_class(x):
 
 def resource_id_from_class(x):
     return vendor_id_from_class(x) + "." + x.__name__
+
+
+def dbg(x):
+    __import__("pudb").set_trace()
+    return x

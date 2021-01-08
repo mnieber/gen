@@ -4,6 +4,7 @@ import moonleap.props as props
 import ramda as R
 from leap_mn.layergroup import LayerGroup
 from moonleap import Resource, tags
+from moonleap.props import Prop
 from yaml import dump
 
 
@@ -25,19 +26,39 @@ class Layer(Resource):
 
 
 class LayerConfig(Resource):
-    def __init__(self, name, config):
+    def __init__(self, name, body):
         super().__init__()
         self.name = name
-        self._config = config
+        self.body = body
+
+    def get_body(self):
+        return self.body(self) if callable(self.body) else self.body
 
     @property
     def config(self):
-        body = self._config(self) if callable(self._config) else self._config
-        return {self.name.upper(): body}
+        return {self.name.upper(): self.get_body()}
 
     @property
     def as_yaml(self):
         return dump(self.config)
+
+
+def merge(lhs, rhs):
+    return LayerConfig(rhs.name, R.merge(lhs.get_body(), rhs.get_body()))
+
+
+def list_of_sections():
+    def prop(self):
+        items = self.children_of_type(LayerConfig)
+        return R.pipe(
+            R.always(items),
+            R.group_by(R.prop("name")),
+            R.values,
+            R.map(R.reduce(merge, LayerConfig("acc", {}))),
+            R.sort_by(R.prop("name")),
+        )(None)
+
+    return Prop(prop, child_resource_type=LayerConfig)
 
 
 @tags(["layer"])
@@ -51,9 +72,7 @@ meta = {
         output_dir=".dodo_commands",
         props={
             "parent_layer_group": props.parent_of_type(LayerGroup),
-            "sections": props.children_of_type(
-                LayerConfig, sort=R.sort_by(R.prop("name"))
-            ),
+            "sections": list_of_sections(),
             "layer_groups": props.children_of_type(LayerGroup),
         },
     ),

@@ -1,0 +1,6 @@
+ramda
+nltk
+six
+PyYAML
+mistune
+jinja2

@@ -1,13 +1,18 @@
 import moonleap.props as props
 from leap_mn.layer import LayerConfig
 from leap_mn.pipdependency import PipDependency
-from leap_mn.pytesthtml import PytestHtml
+from leap_mn.service import Service
 from moonleap import Resource, tags
 from moonleap.config import derive
 
 
-def get_layer_config():
-    return {"pytesthtml": False}
+def get_layer_config(pytest):
+    result = dict(capture=False)
+
+    if pytest.service and pytest.service.src_dir:
+        result["src_dir"] = pytest.service.src_dir.location
+
+    return result
 
 
 class Pytest(Resource):
@@ -17,12 +22,18 @@ class Pytest(Resource):
 
 @tags(["pytest"])
 def create_pytest(term, block):
-    return [Pytest(), PipDependency(["pytest"])]
+    pytest = Pytest()
+    return [
+        pytest,
+        PipDependency(["pytest"]),
+        LayerConfig("pytest", lambda x: get_layer_config(pytest)),
+    ]
 
 
-@derive(Pytest)
-def create_layer_config(pytest):
-    return [LayerConfig("pytest", get_layer_config())]
-
-
-meta = {Pytest: dict(props={"pytest_html": props.child_of_type(PytestHtml)})}
+meta = {
+    Pytest: dict(
+        props={
+            "service": props.parent_of_type(Service),
+        }
+    )
+}
