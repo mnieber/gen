@@ -4,3 +4,4 @@ six
 PyYAML
 mistune
 jinja2
+jinja2-ansible-filters

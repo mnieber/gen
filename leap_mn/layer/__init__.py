@@ -5,7 +5,6 @@ import ramda as R
 from leap_mn.layergroup import LayerGroup
 from moonleap import Resource, tags
 from moonleap.props import Prop
-from yaml import dump
 
 
 class Layer(Resource):
@@ -31,16 +30,15 @@ class LayerConfig(Resource):
         self.name = name
         self.body = body
 
+    def __str__(self):
+        return f"LayerConfig name={self.name}"
+
     def get_body(self):
         return self.body(self) if callable(self.body) else self.body
 
     @property
     def config(self):
         return {self.name.upper(): self.get_body()}
-
-    @property
-    def as_yaml(self):
-        return dump(self.config)
 
 
 def merge(lhs, rhs):

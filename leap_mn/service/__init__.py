@@ -1,4 +1,5 @@
 import moonleap.props as props
+from leap_mn.layer import LayerConfig
 from leap_mn.pipdependency import PipDependency, PipDependencyDev
 from leap_mn.pkgdependency import PkgDependency, PkgDependencyDev, list_of_packages
 from leap_mn.srcdir import SrcDir
@@ -10,10 +11,13 @@ class Service(Resource):
         super().__init__()
         self.name = name
 
+    def __str__(self):
+        return f"Service name={self.name}"
+
 
 @tags(["service"])
 def create_service(term, block):
-    return [Service(term.data)]
+    return [Service(term.data), LayerConfig("server", dict(install_dir="/app"))]
 
 
 def meta():

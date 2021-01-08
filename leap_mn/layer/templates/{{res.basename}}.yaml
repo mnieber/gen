@@ -1,3 +1,3 @@
 {% for section in res.sections %}
-{{ section.as_yaml }}
+{{ section.config | to_nice_yaml }}
 {% endfor %}

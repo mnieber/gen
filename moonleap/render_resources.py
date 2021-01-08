@@ -1,7 +1,9 @@
 import os
 from pathlib import Path
 
+import jinja2
 from jinja2 import Template
+from jinja2_ansible_filters import AnsibleCoreFiltersExtension
 
 from moonleap.config import config
 from moonleap.utils import chop
@@ -37,7 +39,14 @@ def load_template(template_fn):
             idx -= 1
 
         new_text = os.linesep.join(lines)
-        return Template(new_text, trim_blocks=True)
+
+        templateLoader = jinja2.FunctionLoader(lambda fn: new_text)
+        templateEnv = jinja2.Environment(
+            loader=templateLoader,
+            extensions=[AnsibleCoreFiltersExtension],
+            trim_blocks=True,
+        )
+        return templateEnv.get_template("tplt")
 
 
 def render_resources(blocks, output_root_dir):
