@@ -96,23 +96,47 @@ def group_resources(blocks):
                             break
 
             if must_add_child:
-                result = _add_child(parent_resource, child_resource)
-                result = _add_parent(child_resource, parent_resource)
+                _add_child(parent_resource, child_resource)
+                _add_parent(child_resource, parent_resource)
 
 
 def create_resources(blocks):
     for block in R.sort_by(lambda x: -1 * x.level)(blocks):
         for term in reversed(block.get_terms()):
+            block_describes_term = block.describes(term)
+
             create_rule = config.create_rule_by_tag.get(term.tag)
             if not create_rule:
                 continue
 
-            if term in block.get_terms(include_parents=True, include_self=False):
-                # term will be processed by a parent block
+            # check if term is "defined" in a parent block
+            skip = False
+            for parent_block in block.get_blocks(
+                include_parents=True, include_self=False
+            ):
+                if parent_block.describes(term):
+                    skip = True
+                    break
+
+                if not block_describes_term and term in parent_block.get_terms():
+                    skip = True
+                    break
+
+            # check if term is "defined" in a child block
+            if not skip and not block_describes_term:
+                for child_block in block.get_blocks(
+                    include_children=True, include_self=False
+                ):
+                    if child_block.describes(term):
+                        skip = True
+                        break
+
+            if skip:
                 continue
 
             for resource in create_rule(term, block):
                 if resource:
+                    # print(f"Add {resource} to {block.name} ({term})")
                     add_resource(block, resource, term)
 
     group_resources(blocks)
