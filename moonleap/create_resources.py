@@ -3,6 +3,7 @@ from importlib import import_module
 import ramda as R
 
 from moonleap.config import config
+from moonleap.entity import Entity
 from moonleap.parser.term import is_it_term, word_to_term
 
 
@@ -63,80 +64,59 @@ def add_resource(block, resource, term):
 
 
 def group_resources(blocks):
-    resources = blocks[0].get_resources(include_children=True)
+    for block in blocks:
+        entities = block.get_entities()
 
-    for parent_resource in resources:
-        resources_visible_to_parent_resource = parent_resource.block.get_resources(
-            include_parents=True, include_children=True
-        )
+        for parent_entity in entities:
+            for child_entity in entities:
+                if parent_entity is child_entity:
+                    continue
 
-        for child_resource in resources_visible_to_parent_resource:
-            if parent_resource is child_resource:
-                continue
+                must_add_child = block.describes(
+                    parent_entity.term
+                ) or _are_terms_paired(block, parent_entity.term, child_entity.term)
 
-            # first check if b is created in a block that describes a
-            must_add_child = child_resource.block.describes(parent_resource.term)
-
-            if not must_add_child:
-                blocks_visible_to_child_resource = child_resource.block.get_blocks(
-                    include_parents=True, include_children=True
-                )
-
-                # next, check if there is a block that describes or creates a, and where
-                # a and b are paired in the same line in a way that makes a the parent of b
-                for block in blocks_visible_to_child_resource:
-                    if (
-                        block.describes(parent_resource.term)
-                        or parent_resource.block is block
-                    ):
-                        if _are_terms_paired(
-                            block, parent_resource.term, child_resource.term
-                        ):
-                            must_add_child = True
-                            break
-
-            if must_add_child:
-                _add_child(parent_resource, child_resource)
-                _add_parent(child_resource, parent_resource)
+                if must_add_child:
+                    for parent_resource in parent_entity.resources:
+                        for child_resource in child_entity.resources:
+                            _add_child(parent_resource, child_resource)
+                            _add_parent(child_resource, parent_resource)
 
 
 def create_resources(blocks):
-    for block in R.sort_by(lambda x: -1 * x.level)(blocks):
-        for term in reversed(block.get_terms()):
-            block_describes_term = block.describes(term)
+    for block in R.sort_by(lambda x: x.level)(blocks):
+        parent_blocks = block.get_blocks(include_parents=True, include_self=False)
+        child_blocks = block.get_blocks(include_children=True, include_self=False)
 
+        for term in reversed(block.get_terms()):
             create_rule = config.create_rule_by_tag.get(term.tag)
             if not create_rule:
                 continue
 
-            # check if term is "defined" in a parent block
-            skip = False
-            for parent_block in block.get_blocks(
-                include_parents=True, include_self=False
-            ):
-                if parent_block.describes(term):
-                    skip = True
-                    break
-
-                if not block_describes_term and term in parent_block.get_terms():
-                    skip = True
-                    break
-
-            # check if term is "defined" in a child block
-            if not skip and not block_describes_term:
-                for child_block in block.get_blocks(
-                    include_children=True, include_self=False
-                ):
-                    if child_block.describes(term):
-                        skip = True
-                        break
-
-            if skip:
+            if block.get_entity(term):
                 continue
 
-            for resource in create_rule(term, block):
-                if resource:
-                    # print(f"Add {resource} to {block.name} ({term})")
-                    add_resource(block, resource, term)
+            entity = None
+
+            for parent_block in parent_blocks:
+                entity = parent_block.get_entity(term)
+                if entity:
+                    block.add_entity(entity)
+                    break
+
+            if entity:
+                continue
+
+            creator_block = block
+            if not block.describes(term):
+                for child_block in child_blocks:
+                    if child_block.describes(term):
+                        creator_block = child_block
+                        break
+
+            entity = Entity(creator_block, term, create_rule(term, creator_block))
+            creator_block.add_entity(entity)
+            if block is not creator_block:
+                block.add_entity(entity)
 
     group_resources(blocks)

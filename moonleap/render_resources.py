@@ -14,10 +14,8 @@ def load_template(template_fn):
         lines = [chop(x) for x in ifs.readlines()]
 
         state = "search loop"
-        offset = 0
         end_idx = len(lines)
         idx = len(lines) - 1
-        for_statement = None
 
         while idx >= 0:
             line = lines[idx]
@@ -51,16 +49,20 @@ def load_template(template_fn):
 
 def render_resources(blocks, output_root_dir):
     for block in blocks:
-        for resource in block.get_resources():
-            templates = config.get_templates(resource.__class__)
-            output_sub_dir = config.get_output_dir(resource) or ""
+        for entity in block.get_entities():
+            if entity.block is not block:
+                continue
 
-            if templates:
-                for template_fn in Path(templates).glob("*"):
-                    t = load_template(template_fn)
-                    output_fn = Template(template_fn.name).render(res=resource)
-                    output_dir = Path(output_root_dir) / output_sub_dir
-                    output_dir.mkdir(parents=True, exist_ok=True)
+            for resource in entity.resources:
+                templates = config.get_templates(resource.__class__)
+                output_sub_dir = config.get_output_dir(resource) or ""
 
-                    with open(str(output_dir / output_fn), "w") as ofs:
-                        ofs.write(t.render(res=resource, project_name="TODO"))
+                if templates:
+                    for template_fn in Path(templates).glob("*"):
+                        t = load_template(template_fn)
+                        output_fn = Template(template_fn.name).render(res=resource)
+                        output_dir = Path(output_root_dir) / output_sub_dir
+                        output_dir.mkdir(parents=True, exist_ok=True)
+
+                        with open(str(output_dir / output_fn), "w") as ofs:
+                            ofs.write(t.render(res=resource, project_name="TODO"))

@@ -17,7 +17,12 @@ class Service(Resource):
 
 @tags(["service"])
 def create_service(term, block):
-    return [Service(term.data), LayerConfig("server", dict(install_dir="/app"))]
+    return [
+        Service(term.data),
+        LayerConfig(
+            "server", dict(install_dir="/app", src_dir="${/SERVER/install_dir}/src")
+        ),
+    ]
 
 
 def meta():

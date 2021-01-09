@@ -62,15 +62,6 @@ class Resource:
 
         return children[0]
 
-    def describe(self):
-        result = {}
-        for child_type, children in self._children_by_type.items():
-            result[str(child_type)] = [child.describe() for child in children]
-        return result
-
-    def dump(self):
-        print(yaml.dump(self.describe()))
-
     @property
     def type_id(self):
         return resource_id_from_class(self.__class__)

@@ -11,11 +11,18 @@ class Block:
         self.level = level
         self.parent_block = None
         self.child_blocks = []
-        self._resources = []
+        self._entities = []
         self.lines: T.List[Line] = []
 
     def describes(self, term):
         return term in self.lines[0].terms
+
+    def mentions(self, term):
+        return term in self.get_terms()
+
+    def get_entity(self, term):
+        entities = [x for x in self._entities if x.term == term]
+        return entities[0] if entities else None
 
     def link(self, parent_block):
         self.parent_block = parent_block
@@ -39,12 +46,12 @@ class Block:
 
         return result
 
-    def get_resources(
+    def get_entities(
         self, include_self=True, include_children=False, include_parents=False
     ):
         result = []
         for block in self.get_blocks(include_self, include_children, include_parents):
-            result += block._resources
+            result += block._entities
 
         return result
 
@@ -52,42 +59,21 @@ class Block:
         self, include_self=True, include_children=False, include_parents=False
     ):
         result = []
-
-        def add(term):
-            if term not in result:
-                result.append(term)
-
-        if include_children:
-            for child_block in self.child_blocks:
-                for term in child_block.get_terms(include_children=True):
-                    add(term)
-
-        if include_self:
-            for line in self.lines:
+        for block in self.get_blocks(include_self, include_children, include_parents):
+            for line in block.lines:
                 for term in line.terms:
-                    add(term)
-
-        if include_parents and self.parent_block:
-            for term in self.parent_block.get_terms(include_parents=True):
-                add(term)
-
+                    if term not in result:
+                        result.append(term)
         return result
 
-    def add_resource(self, resource, term):
-        resource.block = self
-        resource.term = term
-        self._resources.append(resource)
-        return resource
+    def add_entity(self, entity):
+        if self.get_entity(entity.term):
+            raise Exception(f"Block {self.name} already has an entity for term {term}")
 
-    def drop_resource(self, resource):
-        self._resources = [x for x in self._resources if x is not resource]
+        self._entities.append(entity)
 
-    def describe(self):
-        sep = "----------------------------------------------\n"
-        result = f"{sep}Block: name={self.name}\n{sep}"
-        for resource in self._resources:
-            result += str(resource) + "\n"
-        return result
+    def drop_entity(self, entity):
+        self._entities = [x for x in self._entities if x is not entity]
 
     def __str__(self):
         return f"Block ({self.name})"

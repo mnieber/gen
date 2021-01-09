@@ -17,9 +17,6 @@ class DockerCompose(Resource):
     def name(self):
         return "docker-compose"
 
-    def add_service(self, service):
-        self.services.append(service)
-
 
 class DockerComposeDev(DockerCompose):
     @property

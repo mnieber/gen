@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+{% for service in res.services %}
+  {{service.name}}:
+    depends_on: []
+{% if service.dockerfile %}
+    build:
+      context: .
+      dockerfile: {{ service.dockerfile.path }}
+{% endif %}
+    image: {{project_name}}_{{service.name}}
+    ports:
+      - "80:80"
+
+{% endfor %}
