@@ -2,9 +2,9 @@ import json
 
 import moonleap.props as props
 import ramda as R
-from leap_mn.layergroup import LayerGroup
 from moonleap import Resource, tags
 from moonleap.props import Prop
+from moonleap.utils import merge_into_config
 
 
 class Layer(Resource):
@@ -42,7 +42,10 @@ class LayerConfig(Resource):
 
 
 def merge(lhs, rhs):
-    return LayerConfig(rhs.name, R.merge(lhs.get_body(), rhs.get_body()))
+    new_body = dict()
+    merge_into_config(new_body, lhs.get_body())
+    merge_into_config(new_body, rhs.get_body())
+    return LayerConfig(rhs.name, new_body)
 
 
 def list_of_sections():
@@ -64,19 +67,22 @@ def create_layer(term, block):
     return [Layer(name=term.data)]
 
 
-meta = {
-    Layer: dict(
-        templates="templates",
-        output_dir=".dodo_commands",
-        props={
-            "parent_layer_group": props.parent_of_type(LayerGroup),
-            "sections": list_of_sections(),
-            "layer_groups": props.children_of_type(LayerGroup),
-        },
-    ),
-    LayerConfig: dict(
-        props={
-            "layer": props.parent_of_type(Layer),
-        },
-    ),
-}
+def meta():
+    from leap_mn.layergroup import LayerGroup
+
+    return {
+        Layer: dict(
+            templates="templates",
+            output_dir=".dodo_commands",
+            props={
+                "parent_layer_group": props.parent_of_type(LayerGroup),
+                "sections": list_of_sections(),
+                "layer_groups": props.children_of_type(LayerGroup),
+            },
+        ),
+        LayerConfig: dict(
+            props={
+                "layer": props.parent_of_type(Layer),
+            },
+        ),
+    }

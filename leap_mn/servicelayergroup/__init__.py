@@ -1,5 +1,5 @@
 from leap_mn.layer import LayerConfig
-from leap_mn.layergroup import LayerGroup
+from leap_mn.layergroup import LayerGroup, get_layer_config
 from moonleap import tags
 
 
@@ -19,7 +19,11 @@ def create_dial_config(layer_group):
 @tags(["service-layer-group"])
 def create_service_layer_group(term, block):
     layer_group = LayerGroup(name="server")
-    return [layer_group, LayerConfig("dial", lambda x: create_dial_config(layer_group))]
+    return [
+        layer_group,
+        LayerConfig("dial", lambda x: create_dial_config(layer_group)),
+        LayerConfig("layer_groups", lambda x: get_layer_config(layer_group)),
+    ]
 
 
 meta = {}

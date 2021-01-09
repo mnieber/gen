@@ -5,11 +5,12 @@ from moonleap import Resource, tags, yaml2dict
 
 
 def get_root_config():
-    return {
-        #
-        "src_dir": "${/ROOT/project_dir}/src",
-        "version": "1.0.0",
-    }
+    return dict(
+        command_path=["~/.dodo_commands/default_project/commands/*"],
+        src_dir="${/ROOT/project_dir}/src",
+        shared_config_dir=r"${/ROOT/src_dir}/extra/.dodo_commands",
+        version="1.0.0",
+    )
 
 
 @tags(["dodo-config"])
