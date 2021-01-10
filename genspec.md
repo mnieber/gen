@@ -9,7 +9,7 @@ The cashcog:project /has a :dodo-config.
 
 ### The stack:layer
 
-The stack:layer /has a :docker-compose and a :docker-compose-dev file that are used
+The cashcog:project /has a :docker-compose and a :docker-compose-dev file that are used
 to /run the frontend:service and backend:service.
 
 ### The frontend:service in the frontend:layer
