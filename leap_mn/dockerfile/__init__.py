@@ -1,5 +1,5 @@
 import moonleap.props as props
-from leap_mn.layer import LayerConfig
+from leap_mn.layerconfig import LayerConfig
 from leap_mn.service import Service
 from moonleap import Resource, output_dir_from, tags
 

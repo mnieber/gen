@@ -1,6 +1,7 @@
 import json
 
-from leap_mn.layer import Layer, LayerConfig
+from leap_mn.layer import Layer
+from leap_mn.layerconfig import LayerConfig
 from moonleap import Resource, tags, yaml2dict
 
 

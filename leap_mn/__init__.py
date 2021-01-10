@@ -6,6 +6,7 @@ from . import (
     dodoconfig,
     gitrepository,
     layer,
+    layerconfig,
     layergroup,
     makefile,
     pipcompile,
@@ -25,6 +26,7 @@ def install_all():
     install(dodoconfig)
     install(gitrepository)
     install(layer)
+    install(layerconfig)
     install(layergroup)
     install(makefile)
     install(pipcompile)

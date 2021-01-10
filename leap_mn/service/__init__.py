@@ -1,5 +1,5 @@
 import moonleap.props as props
-from leap_mn.layer import LayerConfig
+from leap_mn.layerconfig import LayerConfig
 from leap_mn.pipdependency import PipDependency, PipDependencyDev
 from leap_mn.pkgdependency import PkgDependency, PkgDependencyDev, list_of_packages
 from leap_mn.srcdir import SrcDir

@@ -1,4 +1,4 @@
-from leap_mn.layer import LayerConfig
+from leap_mn.layerconfig import LayerConfig
 from leap_mn.layergroup import LayerGroup, get_layer_config
 from moonleap import tags
 
