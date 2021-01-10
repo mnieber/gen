@@ -78,8 +78,8 @@ def group_resources(blocks):
                 if parent_entity is child_entity:
                     continue
 
-                must_add_child = block.describes(
-                    parent_entity.term
+                must_add_child = (
+                    block.describes(parent_entity.term) and child_entity.block is block
                 ) or _are_terms_paired(block, parent_entity.term, child_entity.term)
 
                 if must_add_child:
