@@ -1,24 +1,25 @@
 # Spec of the cashcog:project
 
-## The cashcog:project and its :dodo-config
+## The cashcog:project
 
 The cashcog:project /has a :dodo-config.
-:It /has a :service-layer-group /with a stack:layer, frontend:layer and backend:layer.
+:It /has a frontend:service that is /configured in the frontend:layer.
+:It /has a backend:service that is /configured in the backend:layer.
+:It /has a :service-layer-group that /contains the stack:layer, frontend:layer and backend:layer.
 :It /has a :src-dir that /stores files from the mnieber/test:git-repository.
-:It /has a frontend:service and backend:service.
 
 ### The stack:layer
 
 The cashcog:project /has a :docker-compose and a :docker-compose-dev file that are used
 to /run the frontend:service and backend:service.
 
-### The frontend:service in the frontend:layer
+### The frontend:service
 
 The frontend:service /has a :dockerfile and a :dockerfile-dev that /use the node_14:docker-image.
 :It /uses the default:root-dir and default:src-mount-point.
 :It /runs :create-react-app.
 
-### The backend:service in the backend:layer
+### The backend:service
 
 The backend:service /has a :dockerfile and a :dockerfile-dev that /use the python_3.8:docker-image.
 :It /uses the default:root-dir and default:src-mount-point.

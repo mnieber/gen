@@ -8,16 +8,22 @@ from moonleap.parser.term import is_it_term, word_to_term
 
 
 def _add_child(resource, child_resource):
+    resource_type = resource.__class__
+    child_resource_type = child_resource.__class__
+
     if child_resource.__class__ in config.get_child_types(resource.__class__):
-        if resource.add_child(child_resource):
-            return True
-    return False
+        resource.add_child(child_resource)
+
+    forwarding_rules = config.get_forwarding_rules(resource_type)
+    if child_resource_type in forwarding_rules:
+        parent_resource = forwarding_rules[child_resource_type](resource)
+        if parent_resource:
+            _add_child(parent_resource, child_resource)
 
 
 def _add_parent(resource, parent_resource):
     if parent_resource.__class__ in config.get_parent_types(resource.__class__):
-        return resource.add_parent(parent_resource)
-    return False
+        resource.add_parent(parent_resource)
 
 
 def _are_terms_paired(block, a_term, b_term):
@@ -88,7 +94,7 @@ def create_resources(blocks):
         parent_blocks = block.get_blocks(include_parents=True, include_self=False)
         child_blocks = block.get_blocks(include_children=True, include_self=False)
 
-        for term in reversed(block.get_terms()):
+        for term in block.get_terms():
             create_rule = config.create_rule_by_tag.get(term.tag)
             if not create_rule:
                 continue

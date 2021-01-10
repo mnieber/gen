@@ -10,6 +10,12 @@ class Config:
     def get_derive_rules(self, resource_type):
         return self.derive_rules_by_resource_type.get(resource_type) or {}
 
+    def get_forwarding_rules(self, resource_type):
+        return (
+            self.get_meta(resource_type).get("forwarding_rules_by_resource_type", {})
+            or {}
+        )
+
     def get_meta(self, resource_type):
         return self.meta_by_resource_type.get(resource_type, {})
 

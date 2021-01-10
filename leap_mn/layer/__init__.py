@@ -1,6 +1,7 @@
 import json
 
 import moonleap.props as props
+from leap_mn.service import Service
 from moonleap import Resource, tags
 from moonleap.props import Prop
 
@@ -29,6 +30,7 @@ def create_layer(term, block):
 
 def meta():
     from leap_mn.layergroup import LayerGroup
+    from leap_mn.project import Project
 
     return {
         Layer: dict(
@@ -37,6 +39,16 @@ def meta():
             props={
                 "parent_layer_group": props.parent_of_type(LayerGroup),
                 "layer_groups": props.children_of_type(LayerGroup),
+            },
+        ),
+        Service: dict(
+            props={
+                "layers": props.children_of_type(Layer),
+            },
+        ),
+        Project: dict(
+            props={
+                "layers": props.children_of_type(Layer),
             },
         ),
     }

@@ -29,6 +29,15 @@ def _install_props(module, resource_type, src_class_meta, dest_class_meta):
         setattr(resource_type, prop_name, prop.prop)
 
 
+def _install_forwarding_rules(module, resource_type, src_class_meta, dest_class_meta):
+    forwarding_rules = dest_class_meta.setdefault(
+        "forwarding_rules_by_resource_type", {}
+    )
+    for forward_to_resource_type, getter in src_class_meta.get("forward", {}).items():
+        if resource_type not in forwarding_rules:
+            forwarding_rules[forward_to_resource_type] = getter
+
+
 def install(module):
     for f in [
         f
@@ -50,3 +59,6 @@ def install(module):
         _install_output_dir(module, resource_type, src_class_meta, dest_class_meta)
         _install_templates(module, resource_type, src_class_meta, dest_class_meta)
         _install_props(module, resource_type, src_class_meta, dest_class_meta)
+        _install_forwarding_rules(
+            module, resource_type, src_class_meta, dest_class_meta
+        )

@@ -1,6 +1,5 @@
 import moonleap.props as props
 import ramda as R
-from leap_mn.layer import Layer
 from moonleap import Resource
 from moonleap.props import Prop
 from moonleap.utils import merge_into_config
@@ -40,11 +39,33 @@ def get_merged_layer_config():
     return Prop(prop, child_resource_type=LayerConfig)
 
 
+def get_layer_with_same_name(service):
+    return R.find(lambda x: x.name == service.name)(service.layers)
+
+
+def get_config_layer(project):
+    return R.find(lambda x: x.name == "config")(project.layers)
+
+
 def meta():
+    from leap_mn.layer import Layer
+    from leap_mn.project import Project
+    from leap_mn.service import Service
+
     return {
         Layer: dict(
             props={
                 "config": get_merged_layer_config(),
+            },
+        ),
+        Service: dict(
+            forward={
+                LayerConfig: get_layer_with_same_name,
+            },
+        ),
+        Project: dict(
+            forward={
+                LayerConfig: get_config_layer,
             },
         ),
     }
