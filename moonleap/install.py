@@ -4,13 +4,14 @@ from moonleap.config import config
 
 
 def _install_templates(module, resource_type, src_class_meta, dest_class_meta):
-    templates = src_class_meta.get("templates")
-    if templates:
+    if "templates" in src_class_meta:
+        templates = src_class_meta["templates"]
         dest_class_meta["templates"] = str(Path(module.__file__).parent / templates)
 
 
 def _install_output_dir(module, resource_type, src_class_meta, dest_class_meta):
-    dest_class_meta["output_dir"] = src_class_meta.get("output_dir")
+    if "output_dir" in src_class_meta:
+        dest_class_meta["output_dir"] = src_class_meta["output_dir"]
 
 
 def _install_props(module, resource_type, src_class_meta, dest_class_meta):
