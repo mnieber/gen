@@ -15,13 +15,15 @@ class Service(Resource):
         return f"Service name={self.name}"
 
 
+def get_layer_config():
+    return dict(install_dir="/app", src_dir="${/SERVER/install_dir}/src")
+
+
 @tags(["service"])
 def create_service(term, block):
     return [
         Service(term.data),
-        LayerConfig(
-            "server", dict(install_dir="/app", src_dir="${/SERVER/install_dir}/src")
-        ),
+        LayerConfig(dict(SERVER=get_layer_config())),
     ]
 
 

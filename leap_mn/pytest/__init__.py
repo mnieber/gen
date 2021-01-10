@@ -26,7 +26,7 @@ def create_pytest(term, block):
     return [
         pytest,
         PipDependency(["pytest"]),
-        LayerConfig("pytest", lambda x: get_layer_config(pytest)),
+        LayerConfig(lambda x: dict(PYTEST=get_layer_config(pytest))),
     ]
 
 

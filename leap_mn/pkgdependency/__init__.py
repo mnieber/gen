@@ -17,12 +17,11 @@ def list_of_packages(resource_type):
     def prop(self):
         items = self.children_of_type(resource_type)
         return R.pipe(
+            R.always(items),
             R.map(R.prop("package_names")),
             R.chain(R.identity),
             sorted,
-        )(items)
-
-        # return sorted(R.chain(R.identity, [x.package_names for x in items]))
+        )(None)
 
     return Prop(prop, child_resource_type=resource_type)
 

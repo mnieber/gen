@@ -25,39 +25,41 @@ class Layer(Resource):
 
 
 class LayerConfig(Resource):
-    def __init__(self, name, body):
+    def __init__(self, body):
         super().__init__()
-        self.name = name
         self.body = body
 
     def __str__(self):
         return f"LayerConfig name={self.name}"
 
-    def get_body(self):
-        return self.body(self) if callable(self.body) else self.body
-
     @property
-    def config(self):
-        return {self.name.upper(): self.get_body()}
+    def name(self):
+        layers = self.parents_of_type(Layer)
+        return layers[0].name if len(layers) == 1 else ""
+
+    def get_body(self):
+        body = self.body(self) if callable(self.body) else self.body
+        return R.pipe(
+            R.always(body),
+            R.to_pairs,
+            R.map(lambda x: (x[0].upper(), x[1])),
+            R.sort_by(lambda x: x[0]),
+            R.from_pairs,
+        )(None)
 
 
 def merge(lhs, rhs):
     new_body = dict()
     merge_into_config(new_body, lhs.get_body())
     merge_into_config(new_body, rhs.get_body())
-    return LayerConfig(rhs.name, new_body)
+    return LayerConfig(new_body)
 
 
-def list_of_sections():
+def get_config():
     def prop(self):
-        items = self.children_of_type(LayerConfig)
-        return R.pipe(
-            R.always(items),
-            R.group_by(R.prop("name")),
-            R.values,
-            R.map(R.reduce(merge, LayerConfig("acc", {}))),
-            R.sort_by(R.prop("name")),
-        )(None)
+        configs = self.children_of_type(LayerConfig)
+        merged = R.reduce(merge, LayerConfig({}), configs)
+        return merged.get_body()
 
     return Prop(prop, child_resource_type=LayerConfig)
 
@@ -76,7 +78,7 @@ def meta():
             output_dir=".dodo_commands",
             props={
                 "parent_layer_group": props.parent_of_type(LayerGroup),
-                "sections": list_of_sections(),
+                "config": get_config(),
                 "layer_groups": props.children_of_type(LayerGroup),
             },
         ),

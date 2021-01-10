@@ -17,7 +17,7 @@ def get_root_config():
 def create_layer(term, block):
     return [
         Layer(name="config"),
-        LayerConfig("root", get_root_config()),
+        LayerConfig(dict(ROOT=get_root_config())),
     ]
 
 

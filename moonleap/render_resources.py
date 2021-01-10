@@ -48,6 +48,7 @@ def load_template(template_fn):
 
 
 def render_resources(blocks, output_root_dir):
+    filenames = []
     for block in blocks:
         for entity in block.get_entities():
             if entity.block is not block:
@@ -63,6 +64,11 @@ def render_resources(blocks, output_root_dir):
                         output_fn = Template(template_fn.name).render(res=resource)
                         output_dir = Path(output_root_dir) / output_sub_dir
                         output_dir.mkdir(parents=True, exist_ok=True)
+                        fn = str(output_dir / output_fn)
+                        if fn in filenames:
+                            print(f"Warning: writing twice to {fn}")
+                        else:
+                            filenames.append(fn)
 
-                        with open(str(output_dir / output_fn), "w") as ofs:
-                            ofs.write(t.render(res=resource, project_name="TODO"))
+                        with open(fn, "w") as ofs:
+                            ofs.write(t.render(res=resource))

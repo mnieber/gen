@@ -30,7 +30,7 @@ def create_makefile(term, block):
     return [
         Makefile(),
         PkgDependencyDev(["make"]),
-        LayerConfig("root", get_layer_config()),
+        LayerConfig(dict(ROOT=get_layer_config())),
     ]
 
 

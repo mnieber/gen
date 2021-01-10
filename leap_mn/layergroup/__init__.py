@@ -19,7 +19,7 @@ def create_layer_group(term, block):
     layer_group = LayerGroup(name=term.data)
     return [
         layer_group,
-        LayerConfig("layer_groups", lambda x: get_layer_config(layer_group)),
+        LayerConfig(lambda x: dict(LAYER_GROUPS=get_layer_config(layer_group))),
     ]
 
 

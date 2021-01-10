@@ -9,9 +9,15 @@ class Dockerfile(Resource):
         super().__init__()
         self.install_command = "apt-get install -y"
 
+    @property
+    def name(self):
+        return "Dockerfile"
+
 
 class DockerfileDev(Dockerfile):
-    pass
+    @property
+    def name(self):
+        return "Dockerfile.dev"
 
 
 class DockerImage(Resource):
@@ -32,7 +38,7 @@ def create_dockerfile(term, block):
     docker_file = Dockerfile()
     return [
         docker_file,
-        LayerConfig("docker_options", lambda x: get_layer_config(docker_file)),
+        LayerConfig(lambda x: dict(DOCKER_OPTIONS=get_layer_config(docker_file))),
     ]
 
 
@@ -61,6 +67,12 @@ meta = {
         props={
             "service": props.parent_of_type(Service),
             "image": props.child_of_type(DockerImage),
+        },
+    ),
+    Service: dict(
+        props={
+            "dockerfile": props.child_of_type(Dockerfile),
+            "dockerfile_dev": props.child_of_type(DockerfileDev),
         },
     ),
 }

@@ -23,7 +23,7 @@ def create_pytest_html(term, block):
     return [
         pytest_html,
         PipDependency(["pytest-html"]),
-        LayerConfig("pytest", lambda x: get_layer_config(pytest_html)),
+        LayerConfig(lambda x: dict(PYTEST=get_layer_config(pytest_html))),
     ]
 
 

@@ -3,5 +3,4 @@ version: "3.7"
 services:
 {% for service in res.services %}
   {{ res.config(service) | to_nice_yaml }}
-
 {% endfor %}
