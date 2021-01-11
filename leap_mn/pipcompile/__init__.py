@@ -1,6 +1,9 @@
+from dataclasses import dataclass
+
 from leap_mn.makefile import MakefileRule
-from leap_mn.pipdependency import PipDependencyDev
-from moonleap import Resource, chop0, tags
+from leap_mn.pipdependency import PipDependency
+from leap_mn.tool import Tool
+from moonleap import chop0, rule, tags
 
 makefile_rule = chop0(
     """
@@ -11,17 +14,18 @@ pip-compile:
 )
 
 
-class PipCompile(Resource):
-    def __init__(self):
-        super().__init__()
+@dataclass
+class PipCompile(Tool):
+    pass
 
 
 @tags(["pip-compile"])
 def create_pip_compile(term, block):
     pip_compile = PipCompile()
-    pip_compile.add_child(MakefileRule(makefile_rule))
-    pip_compile.add_child(PipDependencyDev(["pip-tools"]))
+    pip_compile.add_to_makefile_rules(MakefileRule(makefile_rule))
+    pip_compile.add_to_pip_dependencies_dev(PipDependency(["pip-tools"]))
     return pip_compile
 
 
-meta = {}
+def meta():
+    return []

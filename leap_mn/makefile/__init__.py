@@ -1,45 +1,48 @@
-import os
+from dataclasses import dataclass
 
 import moonleap.props as props
 from leap_mn.layerconfig import LayerConfig
-from leap_mn.pkgdependency import PkgDependency, PkgDependencyDev
-from leap_mn.service import Service
-from moonleap import Resource, output_dir_from, tags
+from leap_mn.pkgdependency import PkgDependency
+from leap_mn.tool import Tool
+from moonleap import Resource, output_dir_from, rule, tags
+from moonleap.config import config, extend
 
 
-class Makefile(Resource):
-    def __init__(self):
-        super().__init__()
-
-    def add_rule(self, rule):
-        self.rules.append(rule)
+@dataclass
+class Makefile(Tool):
+    pass
 
 
+@dataclass
 class MakefileRule(Resource):
-    def __init__(self, text):
-        super().__init__()
-        self.text = text
+    text: str
 
 
 def get_layer_config():
-    return dict(decorators=dict(docker=["make"]))
+    return dict(ROOT=dict(decorators=dict(docker=["make"])))
 
 
 @tags(["makefile"])
 def create_makefile(term, block):
     makefile = Makefile()
-    makefile.add_child(PkgDependencyDev(["make"]))
-    makefile.add_child(LayerConfig(dict(ROOT=get_layer_config())))
+    makefile.add_to_pkg_dependencies_dev(PkgDependency(["make"]))
+    makefile.layer_config = LayerConfig(get_layer_config())
     return makefile
 
 
-meta = {
-    Makefile: dict(
-        templates="templates",
-        output_dir=output_dir_from("service"),
-        props={
-            "rules": props.children_of_type(MakefileRule),
-            "service": props.parent_of_type(Service),
-        },
-    )
-}
+@rule("makefile", "running", "*")
+def makefile_running_pip_compile(makefile, tool, fltr_obj=props.fltr_instance(Tool)):
+    makefile.service.add_to_tools(tool)
+
+
+def meta():
+    from leap_mn.service import Service
+
+    @extend(Makefile)
+    class ExtendMakefile:
+        templates = "templates"
+        output_dir = output_dir_from("service")
+        rules = props.children("has", "makefile_rule")
+        service = props.parent(Service, "has", "makefile")
+
+    return [ExtendMakefile]

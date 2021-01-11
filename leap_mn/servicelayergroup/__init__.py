@@ -1,31 +1,33 @@
+import moonleap.props as props
 from leap_mn.layerconfig import LayerConfig
 from leap_mn.layergroup import LayerGroup, get_layer_config
-from moonleap import tags
+from moonleap import extend, rule, tags
+
+from .layer_configs import get_dial_config
 
 
-def create_dial_config(layer_group):
-    return {
-        "default": {
-            str(i + 1): f"dodo {layer.name}"
-            for i, layer in enumerate(layer_group.layers)
-        },
-        "shift": {
-            str(i + 1): r"${/ROOT/src_dir}/" + ("" if i == 0 else layer.name)
-            for i, layer in enumerate(layer_group.layers)
-        },
-    }
-
-
-@tags(["service-layer-group"])
+@tags(["service:layer-group"])
 def create_service_layer_group(term, block):
     layer_group = LayerGroup(name="server")
-    layer_group.add_child(
-        LayerConfig(lambda x: dict(DIAL=create_dial_config(layer_group)))
-    )
-    layer_group.add_child(
-        LayerConfig(lambda x: dict(LAYER_GROUPS=get_layer_config(layer_group)))
+    layer_group.layer_config = LayerConfig(
+        lambda: dict(
+            DIAL=get_dial_config(layer_group),
+            LAYER_GROUPS=get_layer_config(layer_group),
+        ),
     )
     return layer_group
 
 
-meta = {}
+@rule("service", "configured", "layer")
+def service_is_configured_in_layer(service, layer):
+    layer.add_to_layer_configs(service.layer_config)
+
+
+def meta():
+    from leap_mn.service import Service
+
+    @extend(Service)
+    class ExtendService:
+        layer = props.child("configured", "layer")
+
+    return [ExtendService]

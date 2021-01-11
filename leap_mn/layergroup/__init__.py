@@ -1,12 +1,15 @@
+from dataclasses import dataclass
+
 import moonleap.props as props
+from leap_mn.layer import Layer
 from leap_mn.layerconfig import LayerConfig
-from moonleap import Resource, tags
+from moonleap import Resource, rule, tags
+from moonleap.config import extend
 
 
+@dataclass
 class LayerGroup(Resource):
-    def __init__(self, name):
-        super().__init__()
-        self.name = name
+    name: str
 
 
 def get_layer_config(layer_group):
@@ -17,26 +20,20 @@ def get_layer_config(layer_group):
 @tags(["layer-group"])
 def create_layer_group(term, block):
     layer_group = LayerGroup(name=term.data)
-    layer_group.add_child(
-        LayerConfig(lambda x: dict(LAYER_GROUPS=get_layer_config(layer_group)))
+    layer_group.layer_config = LayerConfig(
+        lambda: dict(LAYER_GROUPS=get_layer_config(layer_group))
     )
     return layer_group
 
 
+@rule("*", "has", "layer-group", fltr_subj=props.fltr_instance(Layer))
+def layer_has_layer_group(layer, layer_group):
+    layer.add_to_layer_configs(layer_group.layer_config)
+
+
 def meta():
-    from leap_mn.layer import Layer
-    from leap_mn.project import Project
+    @extend(LayerGroup)
+    class ExtendLayerGroup:
+        layers = props.children("contains", "layer")
 
-    return {
-        LayerGroup: dict(props={"layers": props.children_of_type(Layer)}),
-    }
-
-
-def add_layer_group_to_project(project, layer_group):
-    if project.config_layer:
-        project.config_layer.add_child(layer_group)
-
-
-rules = {
-    "project": {("has", "layer-group"): add_layer_group_to_project},
-}
+    return [ExtendLayerGroup]

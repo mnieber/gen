@@ -1,4 +1,4 @@
-FROM {{ res.image.name }}
+FROM {{ res.image_name }}
 
 # install pkg dependencies
 {% for pkg in res.service.pkg_dependencies %}

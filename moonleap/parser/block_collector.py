@@ -1,10 +1,8 @@
-import os
 import re
 
 import mistune
 import nltk
-from moonleap.config import config
-from moonleap.parser import Block
+from moonleap.parser.block import Block
 from moonleap.parser.line import get_create_line
 
 try:

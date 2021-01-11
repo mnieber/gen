@@ -1,10 +1,7 @@
-from pathlib import Path
-
-import moonleap.props as props
 from leap_mn.layerconfig import LayerConfig
 from leap_mn.pipdependency import PipDependency
-from leap_mn.service import Service
-from moonleap import Resource, tags
+from leap_mn.tool import Tool
+from moonleap import tags
 
 
 def get_layer_config(pytest_html):
@@ -12,7 +9,7 @@ def get_layer_config(pytest_html):
     return result
 
 
-class PytestHtml(Resource):
+class PytestHtml(Tool):
     def __init__(self):
         super().__init__()
 
@@ -20,17 +17,12 @@ class PytestHtml(Resource):
 @tags(["pytest-html"])
 def create_pytest_html(term, block):
     pytest_html = PytestHtml()
-    pytest_html.add_child(PipDependency(["pytest-html"]))
-    pytest_html.add_child(
-        LayerConfig(lambda x: dict(PYTEST=get_layer_config(pytest_html)))
+    pytest_html.add_to_pip_dependencies(PipDependency(["pytest-html"]))
+    pytest_html.layer_config = LayerConfig(
+        lambda: dict(PYTEST=get_layer_config(pytest_html))
     )
     return pytest_html
 
 
-meta = {
-    PytestHtml: dict(
-        props={
-            "service": props.parent_of_type(Service),
-        }
-    )
-}
+def meta():
+    return []

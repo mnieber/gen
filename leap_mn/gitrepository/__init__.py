@@ -1,15 +1,17 @@
+from dataclasses import dataclass
+
 from moonleap import Resource, tags
 
 
+@dataclass
 class GitRepository(Resource):
-    def __init__(self, url):
-        super().__init__()
-        self.url = url
+    url: str
 
 
 @tags(["git-repository"])
 def create_git_repository(term, block):
-    return GitRepository(term.data)
+    return GitRepository(url=term.data)
 
 
-meta = {}
+def meta():
+    return []

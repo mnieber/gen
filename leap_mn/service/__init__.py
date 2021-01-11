@@ -1,45 +1,50 @@
+from dataclasses import dataclass
+from pathlib import Path
+
 import moonleap.props as props
+import ramda as R
 from leap_mn.layerconfig import LayerConfig
-from leap_mn.pipdependency import PipDependency, PipDependencyDev
-from leap_mn.pkgdependency import PkgDependency, PkgDependencyDev, list_of_packages
-from leap_mn.srcdir import SrcDir
-from moonleap import Resource, output_path_from, tags
+from moonleap import Resource, rule, tags
+from moonleap.config import config, extend, output_path_from
+from moonleap.slctrs import Selector
+
+from .layer_configs import get_service_layer_config
 
 
+@dataclass
 class Service(Resource):
-    def __init__(self, name):
-        super().__init__()
-        self.name = name
-
-    def __str__(self):
-        return f"Service name={self.name}"
+    name: str
 
 
-def get_layer_config():
-    return dict(install_dir="/app", src_dir="${/SERVER/install_dir}/src")
+package_names_rdcr = R.reduce(
+    lambda acc, x: R.concat(acc, R.map(R.prop("package_names"))(x)), []
+)
 
 
 @tags(["service"])
 def create_service(term, block):
     service = Service(term.data)
-    service.add_child(LayerConfig(dict(SERVER=get_layer_config())))
+    service.layer_config = LayerConfig(get_service_layer_config())
     return service
+
+
+@rule("service", "configured", "layer")
+def service_is_configured_in_layer(service, layer):
+    layer.add_to_layer_configs(service.layer_config)
+
+
+def get_output_dir(service):
+    return str(output_path_from("project")(service) / service.name)
 
 
 def meta():
     from leap_mn.project import Project
 
-    return {
-        Service: dict(
-            output_dir=lambda x: str(output_path_from("project")(x) / x.name),
-            props={
-                "pip_dependencies": list_of_packages(PipDependency),
-                "pip_dependencies_dev": list_of_packages(PipDependencyDev),
-                "pkg_dependencies": list_of_packages(PkgDependency),
-                "pkg_dependencies_dev": list_of_packages(PkgDependencyDev),
-                "src_dir": props.child_of_type(SrcDir),
-                "project": props.parent_of_type(Project),
-                "layer_config": props.child_of_type(LayerConfig),
-            },
-        )
-    }
+    @extend(Service)
+    class ExtendService:
+        output_dir = get_output_dir
+        src_dir = props.child("has", "src-dir")
+        project = props.parent(Project, "has", "service")
+        layer_config = props.child("has", "layer-config")
+
+    return [ExtendService]

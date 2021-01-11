@@ -1,9 +1,9 @@
-from importlib import import_module
-
 import ramda as R
 
 from moonleap.config import config
 from moonleap.parser.term import is_it_term, word_to_term
+from moonleap.resource import Resource
+from moonleap.slctrs import Rel
 
 
 def _get_verb_that_couples(block, a_term, b_term):
@@ -44,23 +44,38 @@ def derive_resources(resource):
     return new_resources
 
 
-def apply_rules(blocks):
+def find_relations(blocks):
     for block in blocks:
         entities = block.get_entities()
 
-        for parent_entity in entities:
-            for child_entity in entities:
-                if parent_entity is child_entity:
+        for parent_resource in entities:
+            for child_resource in entities:
+                if parent_resource is child_resource:
                     continue
 
                 verb = _get_verb_that_couples(
-                    block, parent_entity.term, child_entity.term
+                    block, parent_resource.term, child_resource.term
                 )
                 if verb:
-                    rules = config.get_rules(parent_entity.term.tag)
-                    for (object_verb, object_tag), rule in rules:
-                        if object_verb == verb and object_tag == child_entity.term.tag:
-                            rule(parent_entity, child_entity)
+                    rel = Rel(
+                        subj=parent_resource.term,
+                        verb=verb,
+                        obj=child_resource.term,
+                    )
+                    parent_resource.add_relation(
+                        rel,
+                        child_resource,
+                    )
+
+                    for rule in config.get_rules(rel, parent_resource, child_resource):
+                        rule.f(parent_resource, child_resource)
+
+
+def _create_generic_resource(term, block):
+    resource = Resource()
+    resource.term = term
+    resource.block = block
+    return resource
 
 
 def create_resources(blocks):
@@ -69,10 +84,6 @@ def create_resources(blocks):
         child_blocks = block.get_blocks(include_children=True, include_self=False)
 
         for term in block.get_terms():
-            create_rule = config.create_rule_by_tag.get(term.tag)
-            if not create_rule:
-                continue
-
             if block.get_entity(term):
                 continue
 
@@ -94,6 +105,7 @@ def create_resources(blocks):
                         creator_block = child_block
                         break
 
+            create_rule = config.get_create_rule(term) or _create_generic_resource
             entity = create_rule(term, creator_block)
             entity.term = term
             entity.block = creator_block
@@ -102,4 +114,4 @@ def create_resources(blocks):
             if block is not creator_block:
                 block.add_entity(entity)
 
-    apply_rules(blocks)
+    find_relations(blocks)

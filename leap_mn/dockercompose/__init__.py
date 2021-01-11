@@ -1,25 +1,21 @@
+from dataclasses import dataclass
+
 import moonleap.props as props
-import moonleap.rules as rules
 from leap_mn.layerconfig import LayerConfig
-from leap_mn.project import Project
-from leap_mn.service import Service
-from moonleap import Resource, chop0, output_dir_from, tags
+from moonleap import Resource, extend, output_dir_from, rule, tags
 
 
-def get_layer_config():
-    return {"name": "<INSERT NAME>"}
-
-
+@dataclass
 class DockerCompose(Resource):
-    def __init__(self):
-        super().__init__()
+    is_dev: bool = False
 
     @property
     def name(self):
-        return "docker-compose"
+        return "docker-compose" + (".dev" if self.is_dev else "")
 
     def dockerfile_name(self, service):
-        return service.dockerfile.name if service.dockerfile else ""
+        dockerfile = service.dockerfile_dev if self.is_dev else service.dockerfile
+        return dockerfile.name if dockerfile else ""
 
     def config(self, service):
         body = dict(
@@ -36,63 +32,45 @@ class DockerCompose(Resource):
         return {service.name: body}
 
 
-class DockerComposeDev(DockerCompose):
-    @property
-    def name(self):
-        return "docker-compose.dev"
-
-    def dockerfile_name(self, service):
-        return service.dockerfile_dev.name if service.dockerfile_dev else ""
+def get_layer_config(docker_compose):
+    project = docker_compose.project
+    suffix = "_dev" if docker_compose.is_dev else ""
+    name = (project.name if project else "<INSERT NAME>") + suffix
+    return {"DOCKER_COMPOSE" + suffix.upper(): {"name": name}}
 
 
 @tags(["docker-compose"])
 def create_docker_compose(term, block):
     docker_compose = DockerCompose()
-    docker_compose.add_child(LayerConfig(dict(DOCKER_COMPOSE=get_layer_config())))
-
     return docker_compose
 
 
-@tags(["docker-compose-dev"])
+@tags(["dev:docker-compose"])
 def create_docker_compose_dev(term, block):
-    docker_compose_dev = DockerCompose()
-    docker_compose_dev.add_child(
-        LayerConfig(dict(DOCKER_COMPOSE_DEV=get_layer_config()))
-    )
-
+    docker_compose_dev = DockerCompose(is_dev=True)
     return docker_compose_dev
 
 
-meta = {
-    DockerCompose: dict(
-        output_dir=output_dir_from("project"),
-        templates="templates",
-        props={
-            "services": props.children_of_type(Service),
-            "project": props.parent_of_type(Project),
-            "layer_config": props.child_of_type(LayerConfig),
-        },
-    ),
-    DockerComposeDev: dict(
-        output_dir=output_dir_from("project"),
-        templates="templates-dev",
-        props={
-            "services": props.children_of_type(Service),
-            "project": props.parent_of_type(Project),
-            "layer_config": props.child_of_type(LayerConfig),
-        },
-    ),
-}
+@rule(
+    "project",
+    "has",
+    "docker-compose",
+    description="""
+Add docker-compose settings to the root config layer in the dodo configuration.""",
+)
+def project_has_docker_compose(project, docker_compose):
+    layer_config = LayerConfig(lambda: get_layer_config(docker_compose))
+    project.config_layer.add_to_layer_configs(layer_config)
 
 
-def add_docker_compose_to_project(project, docker_compose):
-    if project.config_layer:
-        project.config_layer.add_child(docker_compose.layer_config)
+def meta():
+    from leap_mn.project import Project
 
+    @extend(DockerCompose)
+    class ExtendDockerCompose:
+        output_dir = output_dir_from("project")
+        templates = "templates"
+        services = props.children("run", "service")
+        project = props.parent(Project, "has", "docker-compose")
 
-rules = {
-    "project": {
-        ("has", "docker-compose"): add_docker_compose_to_project,
-        ("has", "docker-compose-dev"): add_docker_compose_to_project,
-    },
-}
+    return [ExtendDockerCompose]

@@ -1,14 +1,12 @@
+from dataclasses import dataclass
+
 from moonleap import Resource, tags
 
 
+@dataclass
 class PipDependency(Resource):
-    def __init__(self, package_names):
-        super().__init__()
-        self.package_names = package_names
-
-
-class PipDependencyDev(PipDependency):
-    pass
+    package_names: [str]
+    is_dev: bool = False
 
 
 @tags(["pip-dependency"])
@@ -16,9 +14,10 @@ def create_pip_dependency(term, block):
     return PipDependency([term.data])
 
 
-@tags(["pip-dependency-dev"])
+@tags(["dev:pip-dependency"])
 def create_pip_dependency_dev(term, block):
-    return PipDependencyDev([term.data])
+    return PipDependency([term.data], is_dev=True)
 
 
-meta = {}
+def meta():
+    return []

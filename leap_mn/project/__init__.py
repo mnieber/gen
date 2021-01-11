@@ -1,12 +1,13 @@
+from dataclasses import dataclass
+
 import moonleap.props as props
-import moonleap.rules as rules
 from moonleap import Resource, tags
+from moonleap.config import extend
 
 
+@dataclass
 class Project(Resource):
-    def __init__(self, name):
-        super().__init__()
-        self.name = name
+    name: str
 
 
 @tags(["project"])
@@ -18,20 +19,10 @@ def meta():
     from leap_mn.service import Service
     from leap_mn.srcdir import SrcDir
 
-    return {
-        Project: dict(
-            output_dir="src",
-            props={
-                "services": props.children_of_type(Service),
-                "src_dir": props.child_of_type(SrcDir),
-            },
-        )
-    }
+    @extend(Project)
+    class ExtendProject:
+        output_dir = "src"
+        services = props.child("has", "service")
+        src_dir = props.child("has", "src-dir")
 
-
-rules = {
-    "project": {
-        ("has", "service"): rules.add_child,
-        ("has", "src_dir"): rules.add_child,
-    }
-}
+    return [ExtendProject]

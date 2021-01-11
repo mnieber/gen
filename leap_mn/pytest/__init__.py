@@ -1,8 +1,11 @@
+from dataclasses import dataclass
+
 import moonleap.props as props
 from leap_mn.layerconfig import LayerConfig
 from leap_mn.pipdependency import PipDependency
-from leap_mn.service import Service
-from moonleap import Resource, tags
+from leap_mn.tool import Tool
+from moonleap import tags
+from moonleap.config import extend
 
 
 def get_layer_config(pytest):
@@ -14,23 +17,24 @@ def get_layer_config(pytest):
     return result
 
 
-class Pytest(Resource):
-    def __init__(self):
-        super().__init__()
+@dataclass
+class Pytest(Tool):
+    pass
 
 
 @tags(["pytest"])
 def create_pytest(term, block):
     pytest = Pytest()
-    pytest.add_child(PipDependency(["pytest"]))
-    pytest.add_child(LayerConfig(lambda x: dict(PYTEST=get_layer_config(pytest))))
+    pytest.add_to_pip_dependencies(PipDependency(["pytest"]))
+    pytest.layer_config = LayerConfig(lambda: dict(PYTEST=get_layer_config(pytest)))
     return pytest
 
 
-meta = {
-    Pytest: dict(
-        props={
-            "service": props.parent_of_type(Service),
-        }
-    )
-}
+def meta():
+    from leap_mn.service import Service
+
+    @extend(Pytest)
+    class ExtendPytest:
+        service = props.parent(Service, "has", "pytest")
+
+    return [ExtendPytest]

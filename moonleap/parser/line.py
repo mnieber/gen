@@ -17,8 +17,8 @@ class Line:
                 break
         return result
 
-    def __str__(self):
-        return f"Line: " + ",".join(str(x) for x in self.terms)
+    def __repr__(self):
+        return "Line: " + ",".join(str(x) for x in self.terms)
 
 
 def get_create_line():

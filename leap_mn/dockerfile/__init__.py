@@ -1,78 +1,55 @@
 import moonleap.props as props
 from leap_mn.layerconfig import LayerConfig
 from leap_mn.service import Service
-from moonleap import Resource, output_dir_from, tags
+from moonleap import output_dir_from, tags
+from moonleap.config import config, extend, rule
 
-
-class Dockerfile(Resource):
-    def __init__(self):
-        super().__init__()
-        self.install_command = "apt-get install -y"
-
-    @property
-    def name(self):
-        return "Dockerfile"
-
-
-class DockerfileDev(Dockerfile):
-    @property
-    def name(self):
-        return "Dockerfile.dev"
-
-
-class DockerImage(Resource):
-    def __init__(self, name):
-        super().__init__()
-        self.name = name
-
-
-def get_layer_config(docker_file):
-    service = docker_file.service
-    project = service.project
-
-    return {"*": {"container": f"{project.name}_{service.name}_1"}}
+from .layer_configs import get_layer_config
+from .resources import Dockerfile
 
 
 @tags(["dockerfile"])
 def create_dockerfile(term, block):
     docker_file = Dockerfile()
-    docker_file.add_child(
-        LayerConfig(lambda x: dict(DOCKER_OPTIONS=get_layer_config(docker_file)))
+    docker_file.layer_config = LayerConfig(
+        lambda: dict(DOCKER_OPTIONS=get_layer_config(docker_file))
     )
     return docker_file
 
 
-@tags(["dockerfile-dev"])
+@tags(["dev:dockerfile"])
 def create_dockerfile_dev(term, block):
-    return DockerfileDev()
+    return Dockerfile(is_dev=True)
 
 
-@tags(["docker-image"])
-def create_docker_image(term, block):
-    return DockerImage(term.data)
+@rule("dockerfile", "use", "docker-image")
+def dockerfile_use_docker_image(dockerfile, docker_image):
+    dockerfile.image_name = docker_image.term.data
 
 
-meta = {
-    Dockerfile: dict(
-        templates="templates",
-        output_dir=output_dir_from("service"),
-        props={
-            "service": props.parent_of_type(Service),
-            "image": props.child_of_type(DockerImage),
-        },
-    ),
-    DockerfileDev: dict(
-        templates="templates-dev",
-        output_dir=output_dir_from("service"),
-        props={
-            "service": props.parent_of_type(Service),
-            "image": props.child_of_type(DockerImage),
-        },
-    ),
-    Service: dict(
-        props={
-            "dockerfile": props.child_of_type(Dockerfile),
-            "dockerfile_dev": props.child_of_type(DockerfileDev),
-        },
-    ),
-}
+@rule(
+    "service",
+    "has",
+    "dockerfile",
+    description="""
+If the service has a dodo layer then we add the docker options to that layer.""",
+)
+def service_has_dockerfile(service, dockerfile):
+    if service.layer:
+        layer_config = LayerConfig(lambda: get_layer_config(service))
+        service.layer.add_to_layer_configs(layer_config)
+
+
+def meta():
+    @extend(Dockerfile)
+    class ExtendDockerfile:
+        service = props.parent(Service, "has", "dockerfile")
+        templates = "templates_{{res.term.data}}"
+        output_dir = output_dir_from("service")
+
+    @extend(Service)
+    class ExtendService:
+        dockerfile = props.child("has", ":dockerfile")
+        dockerfile_dev = props.child("has", "dev:dockerfile")
+
+    return [ExtendDockerfile, ExtendService]

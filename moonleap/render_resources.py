@@ -47,6 +47,10 @@ def load_template(template_fn):
         return templateEnv.get_template("tplt")
 
 
+def _render(filename, resource):
+    return Template(filename).render(res=resource)
+
+
 def render_resources(blocks, output_root_dir):
     filenames = []
     for block in blocks:
@@ -54,13 +58,13 @@ def render_resources(blocks, output_root_dir):
             if resource.block is not block:
                 continue
 
-            templates = config.get_templates(resource.__class__)
+            templates = _render(config.get_templates(resource), resource)
             output_sub_dir = config.get_output_dir(resource) or ""
 
             if templates:
                 for template_fn in Path(templates).glob("*"):
                     t = load_template(template_fn)
-                    output_fn = Template(template_fn.name).render(res=resource)
+                    output_fn = _render(template_fn.name, resource)
                     output_dir = Path(output_root_dir) / output_sub_dir
                     output_dir.mkdir(parents=True, exist_ok=True)
                     fn = str(output_dir / output_fn)

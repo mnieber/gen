@@ -1,12 +1,21 @@
 from pathlib import Path
 
 from moonleap.config import config
+from moonleap.parser.term import word_to_term
+from moonleap.props import Prop
 
 
 def _install_templates(module, resource_type, src_class_meta, dest_class_meta):
     if "templates" in src_class_meta:
         templates = src_class_meta["templates"]
-        dest_class_meta["templates"] = str(Path(module.__file__).parent / templates)
+
+        def get_templates(resource):
+            return str(
+                Path(module.__file__).parent
+                / (templates(resource) if callable(templates) else templates)
+            )
+
+        dest_class_meta["templates"] = get_templates
 
 
 def _install_output_dir(module, resource_type, src_class_meta, dest_class_meta):
@@ -15,27 +24,8 @@ def _install_output_dir(module, resource_type, src_class_meta, dest_class_meta):
 
 
 def _install_props(module, resource_type, src_class_meta, dest_class_meta):
-    for prop_name, prop in src_class_meta.get("props", {}).items():
-        if prop.parent_resource_type:
-            parent_types = dest_class_meta.setdefault("parent_types", [])
-            if prop.parent_resource_type not in parent_types:
-                parent_types.append(prop.parent_resource_type)
-
-        if prop.child_resource_type:
-            child_types = dest_class_meta.setdefault("child_types", [])
-            if prop.child_resource_type not in child_types:
-                child_types.append(prop.child_resource_type)
-
-        setattr(resource_type, prop_name, prop.prop)
-
-
-def _install_forwarding_rules(module, resource_type, src_class_meta, dest_class_meta):
-    forwarding_rules = dest_class_meta.setdefault(
-        "forwarding_rules_by_resource_type", {}
-    )
-    for forward_to_resource_type, getter in src_class_meta.get("forward", {}).items():
-        if resource_type not in forwarding_rules:
-            forwarding_rules[forward_to_resource_type] = getter
+    for prop_name, (prop_get, prop_set) in src_class_meta.get("props", {}).items():
+        setattr(resource_type, prop_name, property(prop_get, prop_set))
 
 
 def install(module):
@@ -46,22 +36,26 @@ def install(module):
     ]:
         if hasattr(f, "moonleap_create_rule_by_tag"):
             for tag, create_rule in f.moonleap_create_rule_by_tag.items():
-                config.create_rule_by_tag[tag] = create_rule
+                term = word_to_term(tag, default_to_tag=True)
+                config.create_rule_by_term[term] = create_rule
 
         if hasattr(f, "moonleap_derive_resource"):
             resource_type = f.moonleap_derive_resource
             config.derive_rules_by_resource_type.setdefault(resource_type, [])
             config.derive_rules_by_resource_type[resource_type].append(f)
 
-    meta = module.meta() if callable(module.meta) else module.meta
-    for resource_type, src_class_meta in meta.items():
-        dest_class_meta = config.meta_by_resource_type.setdefault(resource_type, {})
-        _install_output_dir(module, resource_type, src_class_meta, dest_class_meta)
-        _install_templates(module, resource_type, src_class_meta, dest_class_meta)
-        _install_props(module, resource_type, src_class_meta, dest_class_meta)
+        if hasattr(f, "moonleap_rule"):
+            config.add_rule(f.moonleap_rule)
 
-    if hasattr(module, "rules"):
-        rules = module.rules() if callable(module.rules) else module.rules
-        for subject_tag, subject_rules in rules.items():
-            dest_rules = config.rules_by_tag.setdefault(subject_tag, [])
-            dest_rules += subject_rules.items()
+    for c in module.meta():
+        resource_type = c._extends_resource_type
+        dest_class_meta = config.meta_by_resource_type.setdefault(resource_type, {})
+
+        _install_output_dir(module, resource_type, c.__dict__, dest_class_meta)
+        _install_templates(module, resource_type, c.__dict__, dest_class_meta)
+
+        for prop_name, p in c.__dict__.items():
+            if isinstance(p, Prop):
+                setattr(resource_type, prop_name, property(p.get, p.set))
+                if p.add:
+                    setattr(resource_type, "add_to_" + prop_name, p.add)

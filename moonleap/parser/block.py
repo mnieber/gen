@@ -1,8 +1,6 @@
 import typing as T
 
 from moonleap.parser.line import Line
-from moonleap.utils import dict2yaml
-from ramda import merge
 
 
 class Block:
@@ -68,12 +66,14 @@ class Block:
 
     def add_entity(self, entity):
         if self.get_entity(entity.term):
-            raise Exception(f"Block {self.name} already has an entity for term {term}")
+            raise Exception(
+                f"Block {self.name} already has an entity for term {entity.term}"
+            )
 
         self._entities.append(entity)
 
     def drop_entity(self, entity):
         self._entities = [x for x in self._entities if x is not entity]
 
-    def __str__(self):
+    def __repr__(self):
         return f"Block ({self.name})"

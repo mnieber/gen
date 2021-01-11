@@ -1,10 +1,7 @@
-import json
-
 import moonleap.props as props
-import moonleap.rules as rules
 from leap_mn.layer import Layer
 from leap_mn.layerconfig import LayerConfig
-from moonleap import Resource, tags, yaml2dict
+from moonleap import extend, tags
 
 
 def get_root_config():
@@ -19,17 +16,16 @@ def get_root_config():
 @tags(["dodo-config"])
 def create_layer(term, block):
     layer = Layer(name="config")
-    layer.add_child(LayerConfig(dict(ROOT=get_root_config())))
+    layer.add_to_layer_configs(LayerConfig(dict(ROOT=get_root_config())))
 
     return layer
 
 
-def add_dodo_config_to_project(project, dodo_config):
-    project.add_child(dodo_config)
+def meta():
+    from leap_mn.project import Project
 
+    @extend(Project)
+    class ExtendProject:
+        config_layer = props.child("has", "dodo-config")
 
-meta = {}
-
-rules = {
-    "project": {("has", "dodo-config"): rules.add_child},
-}
+    return [ExtendProject]

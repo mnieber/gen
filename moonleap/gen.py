@@ -4,7 +4,7 @@ import traceback
 
 import leap_mn
 
-from moonleap import config, create_resources, parser, render_resources
+from moonleap import create_resources, get_blocks, render_resources
 
 leap_mn.install_all()
 
@@ -13,7 +13,7 @@ def main(gen_file):
     with open(gen_file) as ifs:
         raw_markdown = ifs.read()
 
-    blocks = parser.get_blocks(raw_markdown)
+    blocks = get_blocks(raw_markdown)
     create_resources(blocks)
 
     render_resources(blocks, output_root_dir="output")

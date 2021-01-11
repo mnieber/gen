@@ -17,6 +17,7 @@ from . import (
     service,
     servicelayergroup,
     srcdir,
+    tool,
 )
 
 
@@ -37,3 +38,4 @@ def install_all():
     install(service)
     install(servicelayergroup)
     install(srcdir)
+    install(tool)

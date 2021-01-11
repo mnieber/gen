@@ -1,77 +1,42 @@
 import uuid
+from importlib import import_module
 
-import yaml
-
-from moonleap.parser.term import Term
+from moonleap.slctrs import Selector
 from moonleap.utils import resource_id_from_class
 
 
 class Resource:
     def __init__(self):
+        self._init()
+
+    def __post_init__(self):
+        self._init()
+
+    def _init(self):
         self.id = uuid.uuid4().hex
         self.block = None
         self.term = None
-        self._children_by_type = {}
-        self._parents_by_type = {}
+        self._relations = []
 
-    def __str__(self):
+    def __repr__(self):
         return self.__class__.__name__
 
-    def children_of_type(self, child_resource_type):
-        return self._children_by_type.setdefault(child_resource_type, [])
+    def get_relations(self):
+        return self._relations
 
-    def parents_of_type(self, parent_resource_type):
-        return self._parents_by_type.setdefault(parent_resource_type, [])
+    def has_relation(self, rel, resource):
+        return resource in Selector([rel]).select_from(self)
 
-    def add_child(self, child_resource):
-        children = self.children_of_type(child_resource.__class__)
-        if child_resource not in children:
-            children.append(child_resource)
-            return True
-        return False
+    def add_relation(self, relation, resource):
+        if not self.has_relation(relation, resource):
+            self._relations.append((relation, resource))
 
-    def add_parent(self, parent_resource):
-        parents = self.parents_of_type(parent_resource.__class__)
-        if parent_resource not in parents:
-            parents.append(parent_resource)
-            return True
-        return False
+        if not resource.has_relation(relation.inv(), self):
+            resource._relations.append((relation.inv(), self))
 
-    def parent_of_type(self, resource_type):
-        parents = self.parents_of_type(resource_type)
-        if not parents:
-            return None
 
-        if len(parents) > 1:
-            raise Exception(
-                f"Expected a single parent of type {resource_type} in {self}"
-            )
-
-        return parents[0]
-
-    def child_of_type(self, resource_type):
-        children = self.children_of_type(resource_type)
-        if not children:
-            return None
-
-        if len(children) > 1:
-            raise Exception(
-                f"Expected a single child of type {resource_type} in {self}"
-            )
-
-        return children[0]
-
-    @property
-    def type_id(self):
-        return resource_id_from_class(self.__class__)
-
-    @property
-    def vendor(self):
-        return self.type_id.split(".")[0]
-
-    @property
-    def module(self):
-        return self.type_id.split(".")[1]
-
-    def drop_from_block(self):
-        self.block.drop_resource(self)
+def resolve(resource_type):
+    if isinstance(resource_type, str):
+        p, type_name = resource_type.rsplit(".", 1)
+        return getattr(import_module(p), type_name)
+    return resource_type

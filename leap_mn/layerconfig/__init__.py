@@ -1,17 +1,19 @@
+import typing as T
+from dataclasses import dataclass
+
 import moonleap.props as props
 import ramda as R
 from moonleap import Resource
-from moonleap.props import Prop
-from moonleap.utils import merge_into_config
+from moonleap.config import extend
+from moonleap.utils.merge_into_config import merge_into_config
 from moonleap.utils.uppercase_dict_keys import uppercase_dict_keys
 
 
+@dataclass
 class LayerConfig(Resource):
-    def __init__(self, body):
-        super().__init__()
-        self.body = body
+    body: T.Union[dict, T.Callable]
 
-    def __str__(self):
+    def __repr__(self):
         return f"LayerConfig name={self.name}"
 
     @property
@@ -19,7 +21,7 @@ class LayerConfig(Resource):
         return "/".join(self.get_body().keys())
 
     def get_body(self):
-        body = self.body(self) if callable(self.body) else self.body
+        body = self.body() if callable(self.body) else self.body
         return uppercase_dict_keys(body)
 
 
@@ -30,37 +32,17 @@ def merge(lhs, rhs):
     return LayerConfig(new_body)
 
 
-def get_merged_layer_config():
-    def prop(self):
-        configs = self.children_of_type(LayerConfig)
-        merged = R.reduce(merge, LayerConfig({}), configs)
-        return LayerConfig(merged.get_body())
-
-    return Prop(prop, child_resource_type=LayerConfig)
-
-
-def get_layer_with_same_name(service):
-    return R.find(lambda x: x.name == service.name)(service.layers)
-
-
-def get_config_layer(project):
-    return R.find(lambda x: x.name == "config")(project.layers)
+def merge_configs(configs):
+    merged = R.reduce(merge, LayerConfig({}), configs)
+    return LayerConfig(merged.get_body())
 
 
 def meta():
     from leap_mn.layer import Layer
-    from leap_mn.project import Project
-    from leap_mn.service import Service
 
-    return {
-        Layer: dict(
-            props={
-                "config": get_merged_layer_config(),
-            },
-        ),
-        Project: dict(
-            forward={
-                LayerConfig: get_config_layer,
-            },
-        ),
-    }
+    @extend(Layer)
+    class ExtendLayer:
+        config = props.children("has", "layer-config", rdcr=merge_configs)
+        layer_configs = props.children("has", "layer-config")
+
+    return [ExtendLayer]
