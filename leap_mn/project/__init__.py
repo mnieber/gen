@@ -1,6 +1,5 @@
 import moonleap.props as props
-from leap_mn.service import Service
-from leap_mn.srcdir import SrcDir
+import moonleap.rules as rules
 from moonleap import Resource, tags
 
 
@@ -12,15 +11,27 @@ class Project(Resource):
 
 @tags(["project"])
 def create_project(term, block):
-    return [Project(term.data)]
+    return Project(term.data)
 
 
-meta = {
-    Project: dict(
-        output_dir="src",
-        props={
-            "services": props.children_of_type(Service),
-            "src_dir": props.child_of_type(SrcDir),
-        },
-    )
+def meta():
+    from leap_mn.service import Service
+    from leap_mn.srcdir import SrcDir
+
+    return {
+        Project: dict(
+            output_dir="src",
+            props={
+                "services": props.children_of_type(Service),
+                "src_dir": props.child_of_type(SrcDir),
+            },
+        )
+    }
+
+
+rules = {
+    "project": {
+        ("has", "service"): rules.add_child,
+        ("has", "src_dir"): rules.add_child,
+    }
 }

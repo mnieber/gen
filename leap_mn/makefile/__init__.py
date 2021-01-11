@@ -27,11 +27,10 @@ def get_layer_config():
 
 @tags(["makefile"])
 def create_makefile(term, block):
-    return [
-        Makefile(),
-        PkgDependencyDev(["make"]),
-        LayerConfig(dict(ROOT=get_layer_config())),
-    ]
+    makefile = Makefile()
+    makefile.add_child(PkgDependencyDev(["make"]))
+    makefile.add_child(LayerConfig(dict(ROOT=get_layer_config())))
+    return makefile
 
 
 meta = {

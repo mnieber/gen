@@ -59,6 +59,9 @@ def install(module):
         _install_output_dir(module, resource_type, src_class_meta, dest_class_meta)
         _install_templates(module, resource_type, src_class_meta, dest_class_meta)
         _install_props(module, resource_type, src_class_meta, dest_class_meta)
-        _install_forwarding_rules(
-            module, resource_type, src_class_meta, dest_class_meta
-        )
+
+    if hasattr(module, "rules"):
+        rules = module.rules() if callable(module.rules) else module.rules
+        for subject_tag, subject_rules in rules.items():
+            dest_rules = config.rules_by_tag.setdefault(subject_tag, [])
+            dest_rules += subject_rules.items()

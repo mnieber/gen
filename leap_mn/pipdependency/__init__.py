@@ -13,12 +13,12 @@ class PipDependencyDev(PipDependency):
 
 @tags(["pip-dependency"])
 def create_pip_dependency(term, block):
-    return [PipDependency([term.data])]
+    return PipDependency([term.data])
 
 
 @tags(["pip-dependency-dev"])
 def create_pip_dependency_dev(term, block):
-    return [PipDependencyDev([term.data])]
+    return PipDependencyDev([term.data])
 
 
 meta = {}

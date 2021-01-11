@@ -58,11 +58,6 @@ def meta():
                 "config": get_merged_layer_config(),
             },
         ),
-        Service: dict(
-            forward={
-                LayerConfig: get_layer_with_same_name,
-            },
-        ),
         Project: dict(
             forward={
                 LayerConfig: get_config_layer,

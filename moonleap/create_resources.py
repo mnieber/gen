@@ -3,32 +3,13 @@ from importlib import import_module
 import ramda as R
 
 from moonleap.config import config
-from moonleap.entity import Entity
 from moonleap.parser.term import is_it_term, word_to_term
 
 
-def _add_child(resource, child_resource):
-    resource_type = resource.__class__
-    child_resource_type = child_resource.__class__
-
-    if child_resource.__class__ in config.get_child_types(resource.__class__):
-        resource.add_child(child_resource)
-
-    forwarding_rules = config.get_forwarding_rules(resource_type)
-    if child_resource_type in forwarding_rules:
-        parent_resource = forwarding_rules[child_resource_type](resource)
-        if parent_resource:
-            _add_child(parent_resource, child_resource)
-
-
-def _add_parent(resource, parent_resource):
-    if parent_resource.__class__ in config.get_parent_types(resource.__class__):
-        resource.add_parent(parent_resource)
-
-
-def _are_terms_paired(block, a_term, b_term):
+def _get_verb_that_couples(block, a_term, b_term):
     for line in block.lines:
         state = "find start"
+        verb = None
         count_other_terms = 0
         for word in line.words:
             term = word_to_term(word)
@@ -38,6 +19,7 @@ def _are_terms_paired(block, a_term, b_term):
             if term and term == a_term:
                 state = "find verb"
             elif word.startswith("/") and state == "find verb":
+                verb = word[1:]
                 state = "find other term"
             elif (
                 word.startswith("/")
@@ -47,11 +29,11 @@ def _are_terms_paired(block, a_term, b_term):
                 state = "find start"
                 count_other_terms = 0
             elif state == "find other term" and term and term == b_term:
-                return True
+                return verb
             elif term and state == "find other term":
                 count_other_terms += 1
 
-    return False
+    return None
 
 
 def derive_resources(resource):
@@ -62,14 +44,7 @@ def derive_resources(resource):
     return new_resources
 
 
-def add_resource(block, resource, term):
-    block.add_resource(resource, term)
-
-    for new_resource in derive_resources(resource):
-        add_resource(block, new_resource, term)
-
-
-def group_resources(blocks):
+def apply_rules(blocks):
     for block in blocks:
         entities = block.get_entities()
 
@@ -78,15 +53,14 @@ def group_resources(blocks):
                 if parent_entity is child_entity:
                     continue
 
-                must_add_child = (
-                    block.describes(parent_entity.term) and child_entity.block is block
-                ) or _are_terms_paired(block, parent_entity.term, child_entity.term)
-
-                if must_add_child:
-                    for parent_resource in parent_entity.resources:
-                        for child_resource in child_entity.resources:
-                            _add_child(parent_resource, child_resource)
-                            _add_parent(child_resource, parent_resource)
+                verb = _get_verb_that_couples(
+                    block, parent_entity.term, child_entity.term
+                )
+                if verb:
+                    rules = config.get_rules(parent_entity.term.tag)
+                    for (object_verb, object_tag), rule in rules:
+                        if object_verb == verb and object_tag == child_entity.term.tag:
+                            rule(parent_entity, child_entity)
 
 
 def create_resources(blocks):
@@ -120,9 +94,12 @@ def create_resources(blocks):
                         creator_block = child_block
                         break
 
-            entity = Entity(creator_block, term, create_rule(term, creator_block))
+            entity = create_rule(term, creator_block)
+            entity.term = term
+            entity.block = creator_block
+
             creator_block.add_entity(entity)
             if block is not creator_block:
                 block.add_entity(entity)
 
-    group_resources(blocks)
+    apply_rules(blocks)

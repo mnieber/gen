@@ -21,10 +21,9 @@ def get_layer_config():
 
 @tags(["service"])
 def create_service(term, block):
-    return [
-        Service(term.data),
-        LayerConfig(dict(SERVER=get_layer_config())),
-    ]
+    service = Service(term.data)
+    service.add_child(LayerConfig(dict(SERVER=get_layer_config())))
+    return service
 
 
 def meta():
@@ -40,6 +39,7 @@ def meta():
                 "pkg_dependencies_dev": list_of_packages(PkgDependencyDev),
                 "src_dir": props.child_of_type(SrcDir),
                 "project": props.parent_of_type(Project),
+                "layer_config": props.child_of_type(LayerConfig),
             },
         )
     }

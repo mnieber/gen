@@ -20,11 +20,11 @@ class PytestHtml(Resource):
 @tags(["pytest-html"])
 def create_pytest_html(term, block):
     pytest_html = PytestHtml()
-    return [
-        pytest_html,
-        PipDependency(["pytest-html"]),
-        LayerConfig(lambda x: dict(PYTEST=get_layer_config(pytest_html))),
-    ]
+    pytest_html.add_child(PipDependency(["pytest-html"]))
+    pytest_html.add_child(
+        LayerConfig(lambda x: dict(PYTEST=get_layer_config(pytest_html)))
+    )
+    return pytest_html
 
 
 meta = {

@@ -6,15 +6,13 @@ class Config:
         self.create_rule_by_tag = {}
         self.derive_rules_by_resource_type = {}
         self.meta_by_resource_type = {}
+        self.rules_by_tag = {}
 
     def get_derive_rules(self, resource_type):
         return self.derive_rules_by_resource_type.get(resource_type) or {}
 
-    def get_forwarding_rules(self, resource_type):
-        return (
-            self.get_meta(resource_type).get("forwarding_rules_by_resource_type", {})
-            or {}
-        )
+    def get_rules(self, subject_tag):
+        return self.rules_by_tag.get(subject_tag, {})
 
     def get_meta(self, resource_type):
         return self.meta_by_resource_type.get(resource_type, {})

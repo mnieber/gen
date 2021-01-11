@@ -1,8 +1,9 @@
 import moonleap.props as props
+import moonleap.rules as rules
 from leap_mn.layerconfig import LayerConfig
 from leap_mn.project import Project
 from leap_mn.service import Service
-from moonleap import Resource, chop0, derive, output_dir_from, tags
+from moonleap import Resource, chop0, output_dir_from, tags
 
 
 def get_layer_config():
@@ -46,21 +47,20 @@ class DockerComposeDev(DockerCompose):
 
 @tags(["docker-compose"])
 def create_docker_compose(term, block):
-    return [
-        DockerCompose(),
-    ]
+    docker_compose = DockerCompose()
+    docker_compose.add_child(LayerConfig(dict(DOCKER_COMPOSE=get_layer_config())))
+
+    return docker_compose
 
 
 @tags(["docker-compose-dev"])
 def create_docker_compose_dev(term, block):
-    return [
-        DockerComposeDev(),
-    ]
+    docker_compose_dev = DockerCompose()
+    docker_compose_dev.add_child(
+        LayerConfig(dict(DOCKER_COMPOSE_DEV=get_layer_config()))
+    )
 
-
-@derive(DockerCompose)
-def create_layer_config(docker_compose):
-    return [LayerConfig(dict(DOCKER_COMPOSE=get_layer_config()))]
+    return docker_compose_dev
 
 
 meta = {
@@ -70,6 +70,7 @@ meta = {
         props={
             "services": props.children_of_type(Service),
             "project": props.parent_of_type(Project),
+            "layer_config": props.child_of_type(LayerConfig),
         },
     ),
     DockerComposeDev: dict(
@@ -78,6 +79,20 @@ meta = {
         props={
             "services": props.children_of_type(Service),
             "project": props.parent_of_type(Project),
+            "layer_config": props.child_of_type(LayerConfig),
         },
     ),
+}
+
+
+def add_docker_compose_to_project(project, docker_compose):
+    if project.config_layer:
+        project.config_layer.add_child(docker_compose.layer_config)
+
+
+rules = {
+    "project": {
+        ("has", "docker-compose"): add_docker_compose_to_project,
+        ("has", "docker-compose-dev"): add_docker_compose_to_project,
+    },
 }

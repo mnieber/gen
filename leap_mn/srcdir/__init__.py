@@ -11,7 +11,7 @@ class SrcDir(Resource):
 
 @tags(["src-dir"])
 def create_src_dir(term, block):
-    return [SrcDir(term.data)]
+    return SrcDir(term.data)
 
 
 meta = {SrcDir: dict(props={"git_repo": props.child_of_type(GitRepository)})}

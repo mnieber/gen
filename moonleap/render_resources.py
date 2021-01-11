@@ -50,25 +50,24 @@ def load_template(template_fn):
 def render_resources(blocks, output_root_dir):
     filenames = []
     for block in blocks:
-        for entity in block.get_entities():
-            if entity.block is not block:
+        for resource in block.get_entities():
+            if resource.block is not block:
                 continue
 
-            for resource in entity.resources:
-                templates = config.get_templates(resource.__class__)
-                output_sub_dir = config.get_output_dir(resource) or ""
+            templates = config.get_templates(resource.__class__)
+            output_sub_dir = config.get_output_dir(resource) or ""
 
-                if templates:
-                    for template_fn in Path(templates).glob("*"):
-                        t = load_template(template_fn)
-                        output_fn = Template(template_fn.name).render(res=resource)
-                        output_dir = Path(output_root_dir) / output_sub_dir
-                        output_dir.mkdir(parents=True, exist_ok=True)
-                        fn = str(output_dir / output_fn)
-                        if fn in filenames:
-                            print(f"Warning: writing twice to {fn}")
-                        else:
-                            filenames.append(fn)
+            if templates:
+                for template_fn in Path(templates).glob("*"):
+                    t = load_template(template_fn)
+                    output_fn = Template(template_fn.name).render(res=resource)
+                    output_dir = Path(output_root_dir) / output_sub_dir
+                    output_dir.mkdir(parents=True, exist_ok=True)
+                    fn = str(output_dir / output_fn)
+                    if fn in filenames:
+                        print(f"Warning: writing twice to {fn}")
+                    else:
+                        filenames.append(fn)
 
-                        with open(fn, "w") as ofs:
-                            ofs.write(t.render(res=resource))
+                    with open(fn, "w") as ofs:
+                        ofs.write(t.render(res=resource))

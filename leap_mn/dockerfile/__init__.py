@@ -36,20 +36,20 @@ def get_layer_config(docker_file):
 @tags(["dockerfile"])
 def create_dockerfile(term, block):
     docker_file = Dockerfile()
-    return [
-        docker_file,
-        LayerConfig(lambda x: dict(DOCKER_OPTIONS=get_layer_config(docker_file))),
-    ]
+    docker_file.add_child(
+        LayerConfig(lambda x: dict(DOCKER_OPTIONS=get_layer_config(docker_file)))
+    )
+    return docker_file
 
 
 @tags(["dockerfile-dev"])
 def create_dockerfile_dev(term, block):
-    return [DockerfileDev()]
+    return DockerfileDev()
 
 
 @tags(["docker-image"])
 def create_docker_image(term, block):
-    return [DockerImage(term.data)]
+    return DockerImage(term.data)
 
 
 meta = {

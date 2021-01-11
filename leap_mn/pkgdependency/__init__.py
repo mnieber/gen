@@ -28,12 +28,12 @@ def list_of_packages(resource_type):
 
 @tags(["pkg-dependency"])
 def create_pkg_dependency(term, block):
-    return [PkgDependency([term.data])]
+    return PkgDependency([term.data])
 
 
 @tags(["pkg-dependency-dev"])
 def create_pkg_dependency_dev(term, block):
-    return [PkgDependencyDev([term.data])]
+    return PkgDependencyDev([term.data])
 
 
 meta = {}

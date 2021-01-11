@@ -10,7 +10,6 @@ class Resource:
     def __init__(self):
         self.id = uuid.uuid4().hex
         self.block = None
-        self.line = None
         self.term = None
         self._children_by_type = {}
         self._parents_by_type = {}

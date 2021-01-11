@@ -19,11 +19,13 @@ def create_dial_config(layer_group):
 @tags(["service-layer-group"])
 def create_service_layer_group(term, block):
     layer_group = LayerGroup(name="server")
-    return [
-        layer_group,
-        LayerConfig(lambda x: dict(DIAL=create_dial_config(layer_group))),
-        LayerConfig(lambda x: dict(LAYER_GROUPS=get_layer_config(layer_group))),
-    ]
+    layer_group.add_child(
+        LayerConfig(lambda x: dict(DIAL=create_dial_config(layer_group)))
+    )
+    layer_group.add_child(
+        LayerConfig(lambda x: dict(LAYER_GROUPS=get_layer_config(layer_group)))
+    )
+    return layer_group
 
 
 meta = {}
