@@ -8,12 +8,12 @@ from moonleap.config import extend
 
 @dataclass
 class SrcDir(Resource):
-    location: str = "src"
+    location: str
 
 
 @tags(["src-dir"])
 def create_src_dir(term, block):
-    return SrcDir(term.data)
+    return SrcDir(location=term.data or "src")
 
 
 def meta():
