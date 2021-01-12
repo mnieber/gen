@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
 import moonleap.props as props
-from leap_mn.gitrepository import GitRepository
 from moonleap import Resource, tags
 from moonleap.config import extend
 

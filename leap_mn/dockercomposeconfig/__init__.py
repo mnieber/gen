@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 import moonleap.props as props
 import ramda as R
-from leap_mn.dockercompose import DockerCompose, DockerComposeDev
+from leap_mn.dockercompose import DockerCompose
 from moonleap import Resource
 from moonleap.config import extend
 from moonleap.merge_into_config import merge_into_config

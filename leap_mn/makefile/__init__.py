@@ -4,8 +4,7 @@ import moonleap.props as props
 from leap_mn.layerconfig import LayerConfig
 from leap_mn.pkgdependency import PkgDependency
 from leap_mn.tool import Tool
-from moonleap import Resource, output_dir_from, rule, tags
-from moonleap.config import config, extend
+from moonleap import Resource, extend, output_dir_from, rule, tags
 
 
 @dataclass

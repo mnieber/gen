@@ -1,12 +1,10 @@
 from dataclasses import dataclass
-from pathlib import Path
 
 import moonleap.props as props
 import ramda as R
 from leap_mn.layerconfig import LayerConfig
 from moonleap import Resource, rule, tags
-from moonleap.config import config, extend, output_path_from
-from moonleap.slctrs import Selector
+from moonleap.config import extend, output_path_from
 
 from .layer_configs import get_service_layer_config
 

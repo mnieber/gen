@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-import ramda as R
 from moonleap import Resource
 
 

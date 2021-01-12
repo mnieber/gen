@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from leap_mn.makefile import MakefileRule
 from leap_mn.pipdependency import PipDependency
 from leap_mn.tool import Tool
-from moonleap import chop0, rule, tags
+from moonleap import chop0, tags
 
 makefile_rule = chop0(
     """

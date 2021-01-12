@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
 import moonleap.props as props
-from leap_mn.service import Service
 from moonleap import Resource, tags
 from moonleap.config import extend
 

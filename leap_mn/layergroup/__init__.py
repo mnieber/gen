@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
 import moonleap.props as props
-from leap_mn.layer import Layer
 from leap_mn.layerconfig import LayerConfig
 from moonleap import Resource, rule, tags
 from moonleap.config import extend

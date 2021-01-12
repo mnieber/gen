@@ -2,7 +2,6 @@ import uuid
 from importlib import import_module
 
 from moonleap.slctrs import Selector
-from moonleap.utils import resource_id_from_class
 
 
 class Resource:

@@ -1,8 +1,7 @@
 import moonleap.props as props
 from leap_mn.layerconfig import LayerConfig
 from leap_mn.service import Service
-from moonleap import output_dir_from, tags
-from moonleap.config import config, extend, rule
+from moonleap import extend, output_dir_from, rule, tags
 
 from .layer_configs import get_layer_config
 from .resources import Dockerfile

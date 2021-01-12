@@ -16,9 +16,6 @@ def create_project(term, block):
 
 
 def meta():
-    from leap_mn.service import Service
-    from leap_mn.srcdir import SrcDir
-
     @extend(Project)
     class ExtendProject:
         output_dir = "src"
