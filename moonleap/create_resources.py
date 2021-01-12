@@ -6,7 +6,8 @@ from moonleap.resource import Resource
 from moonleap.slctrs import Rel
 
 
-def _get_verb_that_couples(block, a_term, b_term):
+def _get_verbs_that_couple(block, a_term, b_term):
+    result = []
     for line in block.lines:
         state = "find start"
         verb = None
@@ -29,11 +30,11 @@ def _get_verb_that_couples(block, a_term, b_term):
                 state = "find start"
                 count_other_terms = 0
             elif state == "find other term" and term and term == b_term:
-                return verb
+                result.append(verb)
             elif term and state == "find other term":
                 count_other_terms += 1
 
-    return None
+    return result
 
 
 def derive_resources(resource):
@@ -53,10 +54,9 @@ def find_relations(blocks):
                 if parent_resource is child_resource:
                     continue
 
-                verb = _get_verb_that_couples(
+                for verb in _get_verbs_that_couple(
                     block, parent_resource.term, child_resource.term
-                )
-                if verb:
+                ):
                     rel = Rel(
                         subj=parent_resource.term,
                         verb=verb,

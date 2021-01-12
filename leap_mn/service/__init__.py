@@ -6,10 +6,6 @@ from moonleap import extend, output_path_from, rule, tags
 from .layer_configs import get_service_layer_config
 from .resources import Service
 
-package_names_rdcr = R.reduce(
-    lambda acc, x: R.concat(acc, R.map(R.prop("package_names"))(x)), []
-)
-
 
 @tags(["service"])
 def create_service(term, block):

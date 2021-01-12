@@ -2,6 +2,7 @@ import moonleap.props as props
 from moonleap import tags
 from moonleap.config import extend
 
+from .localprops import merge_configs
 from .resources import Layer
 
 
@@ -19,7 +20,10 @@ def meta():
         post_init = True
         templates = "templates"
         output_dir = ".dodo_commands"
+
         parent_layer_group = props.parent(LayerGroup, "contains", "layer")
         layer_groups = props.children("has", "layer-group")
+        config = props.children("has", "layer-config", rdcr=merge_configs)
+        layer_configs = props.children("has", "layer-config")
 
     return [ExtendLayer]

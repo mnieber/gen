@@ -22,3 +22,4 @@ The backend:service /has a :dockerfile and a dev:dockerfile that /use the python
 :It /uses the default:root-dir and default:src-mount-point.
 :It also /has a :makefile for /running :pip-compile.
 :It /uses :pytest /with :pytest-html.
+:It /has :pytest.

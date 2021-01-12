@@ -28,6 +28,14 @@ class RelSelector:
         return result
 
 
+class PropSelector:
+    def __init__(self, prop_name):
+        self.prop_name = prop_name
+
+    def select_from(self, resource):
+        return getattr(resource, self.prop_name, [])
+
+
 class Selector:
     def __init__(self, slctrs):
         self.slctrs = slctrs
