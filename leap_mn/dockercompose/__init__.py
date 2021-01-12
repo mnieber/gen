@@ -4,6 +4,8 @@ import moonleap.props as props
 from leap_mn.layerconfig import LayerConfig
 from moonleap import Resource, extend, output_dir_from, rule, tags
 
+from .layer_configs import get_layer_config
+
 
 @dataclass
 class DockerCompose(Resource):
@@ -30,13 +32,6 @@ class DockerCompose(Resource):
             )
 
         return {service.name: body}
-
-
-def get_layer_config(docker_compose):
-    project = docker_compose.project
-    suffix = "_dev" if docker_compose.is_dev else ""
-    name = (project.name if project else "<INSERT NAME>") + suffix
-    return {"DOCKER_COMPOSE" + suffix.upper(): {"name": name}}
 
 
 @tags(["docker-compose"])
