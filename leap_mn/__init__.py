@@ -4,7 +4,6 @@ from . import (
     configlayer,
     dockercompose,
     dockerfile,
-    gitrepository,
     layer,
     layerconfig,
     layergroup,
@@ -25,7 +24,6 @@ def install_all():
     install(configlayer)
     install(dockercompose)
     install(dockerfile)
-    install(gitrepository)
     install(layer)
     install(layerconfig)
     install(layergroup)
