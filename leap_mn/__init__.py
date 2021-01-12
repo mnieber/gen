@@ -1,9 +1,9 @@
 from moonleap.install import install
 
 from . import (
+    configlayer,
     dockercompose,
     dockerfile,
-    dodoconfig,
     gitrepository,
     layer,
     layerconfig,
@@ -22,9 +22,9 @@ from . import (
 
 
 def install_all():
+    install(configlayer)
     install(dockercompose)
     install(dockerfile)
-    install(dodoconfig)
     install(gitrepository)
     install(layer)
     install(layerconfig)

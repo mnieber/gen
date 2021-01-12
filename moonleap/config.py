@@ -17,8 +17,9 @@ class Config:
         result = None
         for term, rule in config.create_rule_by_term.items():
             if subject_term.tag == term.tag:
-                if subject_term.data == term.data:
-                    return rule
+                if term.data:
+                    if subject_term.data == term.data:
+                        return rule
                 elif not result:
                     result = rule
         return result
