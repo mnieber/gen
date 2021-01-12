@@ -1,13 +1,8 @@
-from dataclasses import dataclass
-
 import moonleap.props as props
-from moonleap import Resource, tags
+from moonleap import tags
 from moonleap.config import extend
 
-
-@dataclass
-class SrcDir(Resource):
-    location: str
+from .resources import SrcDir
 
 
 @tags(["src-dir"])

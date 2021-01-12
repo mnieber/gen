@@ -1,11 +1,6 @@
-from dataclasses import dataclass
+from moonleap import tags
 
-from moonleap import Resource, tags
-
-
-@dataclass
-class GitRepository(Resource):
-    url: str
+from .resources import GitRepository
 
 
 @tags(["git-repository"])

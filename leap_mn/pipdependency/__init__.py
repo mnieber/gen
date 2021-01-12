@@ -1,12 +1,6 @@
-from dataclasses import dataclass
+from moonleap import tags
 
-from moonleap import Resource, tags
-
-
-@dataclass
-class PipDependency(Resource):
-    package_names: [str]
-    is_dev: bool = False
+from .resources import PipDependency
 
 
 @tags(["pip-dependency"])

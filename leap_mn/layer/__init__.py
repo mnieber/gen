@@ -1,21 +1,8 @@
-from dataclasses import dataclass
-
 import moonleap.props as props
-from moonleap import Resource, tags
+from moonleap import tags
 from moonleap.config import extend
 
-
-@dataclass
-class Layer(Resource):
-    name: str
-
-    @property
-    def basename(self):
-        return (
-            f"{self.parent_layer_group.name}.{self.name}"
-            if self.parent_layer_group
-            else self.name
-        )
+from .resources import Layer
 
 
 @tags(["layer"])

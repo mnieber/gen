@@ -1,13 +1,8 @@
-from dataclasses import dataclass
-
 import moonleap.props as props
-from moonleap import Resource, tags
+from moonleap import tags
 from moonleap.config import extend
 
-
-@dataclass
-class Project(Resource):
-    name: str
+from .resources import Project
 
 
 @tags(["project"])

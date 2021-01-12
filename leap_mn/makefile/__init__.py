@@ -1,24 +1,11 @@
-from dataclasses import dataclass
-
 import moonleap.props as props
 from leap_mn.layerconfig import LayerConfig
 from leap_mn.pkgdependency import PkgDependency
 from leap_mn.tool import Tool
-from moonleap import Resource, extend, output_dir_from, rule, tags
+from moonleap import extend, output_dir_from, rule, tags
 
-
-@dataclass
-class Makefile(Tool):
-    pass
-
-
-@dataclass
-class MakefileRule(Resource):
-    text: str
-
-
-def get_layer_config():
-    return dict(ROOT=dict(decorators=dict(docker=["make"])))
+from .layer_configs import get_layer_config
+from .resources import Makefile, MakefileRule
 
 
 @tags(["makefile"])
@@ -29,8 +16,8 @@ def create_makefile(term, block):
     return makefile
 
 
-@rule("makefile", "running", "*")
-def makefile_running_pip_compile(makefile, tool, fltr_obj=props.fltr_instance(Tool)):
+@rule("makefile", "running", "*", fltr_obj=props.fltr_instance(Tool))
+def makefile_running_tool(makefile, tool):
     makefile.service.add_to_tools(tool)
 
 

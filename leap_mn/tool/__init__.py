@@ -1,13 +1,7 @@
-from dataclasses import dataclass
-
 import moonleap.props as props
-from moonleap import Resource, rule
-from moonleap.config import extend
+from moonleap.config import extend, rule
 
-
-@dataclass
-class Tool(Resource):
-    pass
+from .resources import Tool
 
 
 @rule("service", "has", "*", fltr_obj=props.fltr_instance(Tool))

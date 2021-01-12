@@ -1,18 +1,10 @@
-from dataclasses import dataclass
-
 import moonleap.props as props
 import ramda as R
 from leap_mn.layerconfig import LayerConfig
-from moonleap import Resource, rule, tags
-from moonleap.config import extend, output_path_from
+from moonleap import extend, output_path_from, rule, tags
 
 from .layer_configs import get_service_layer_config
-
-
-@dataclass
-class Service(Resource):
-    name: str
-
+from .resources import Service
 
 package_names_rdcr = R.reduce(
     lambda acc, x: R.concat(acc, R.map(R.prop("package_names"))(x)), []

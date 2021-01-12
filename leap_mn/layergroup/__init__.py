@@ -1,16 +1,9 @@
-from dataclasses import dataclass
-
 import moonleap.props as props
 from leap_mn.layerconfig import LayerConfig
-from moonleap import Resource, rule, tags
-from moonleap.config import extend
+from moonleap import extend, rule, tags
 
 from .layer_configs import get_layer_config
-
-
-@dataclass
-class LayerGroup(Resource):
-    name: str
+from .resources import LayerGroup
 
 
 @tags(["layer-group"])
