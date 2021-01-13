@@ -16,18 +16,16 @@ def service_has_tool(service, tool):
 
 @extend(Tool)
 class ExtendTool(StoreLayerConfigs):
-    pip_dependencies = P.children("has", ":pip-dependency")
-    pip_dependencies_dev = P.children("has", "dev:pip-dependency")
-    pkg_dependencies = P.children("has", ":pkg-dependency")
-    pkg_dependencies_dev = P.children("has", "dev:pkg-dependency")
-    makefile_rules = P.children("has", ":makefile-rule")
+    pip_dependencies = P.children("has", "pip-dependency")
+    pkg_dependencies = P.children("has", "pkg-dependency")
+    makefile_rules = P.children("has", "makefile-rule")
 
 
 @extend(Service)
 class ExtendService:
     tools = P.children("has", "tool")
     pip_dependencies = get_package_names("pip_dependencies")
-    pip_dependencies_dev = get_package_names("pip_dependencies_dev")
+    pip_dependencies_dev = get_package_names("pip_dependencies", is_dev=True)
     pkg_dependencies = get_package_names("pkg_dependencies")
-    pkg_dependencies_dev = get_package_names("pkg_dependencies_dev")
+    pkg_dependencies_dev = get_package_names("pkg_dependencies", is_dev=True)
     makefile_rules = get_makefile_rules()

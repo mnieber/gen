@@ -1,10 +1,13 @@
+import ramda as R
+
 from moonleap.parser.term import Term, fuzzy_match
 from moonleap.rel import Rel
 
 
 class RelSelector:
-    def __init__(self, pattern_rel):
+    def __init__(self, pattern_rel, fltr=None):
         self.pattern_rel = pattern_rel
+        self.fltr = fltr or R.identity
 
     def select_from(self, resource):
         result = []
@@ -13,15 +16,16 @@ class RelSelector:
             if fuzzy_match(relation, self.pattern_rel):
                 result.append(object_resource)
 
-        return result
+        return self.fltr(result)
 
 
 class PropSelector:
-    def __init__(self, prop_name):
+    def __init__(self, prop_name, fltr=None):
         self.prop_name = prop_name
+        self.fltr = fltr or R.identity
 
     def select_from(self, resource):
-        return getattr(resource, self.prop_name, [])
+        return self.fltr(getattr(resource, self.prop_name, []))
 
 
 class Selector:

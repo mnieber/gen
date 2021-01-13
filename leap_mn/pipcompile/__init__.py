@@ -23,5 +23,5 @@ class PipCompile(Tool):
 def create_pip_compile(term, block):
     pip_compile = PipCompile()
     pip_compile.add_to_makefile_rules(MakefileRule(makefile_rule))
-    pip_compile.add_to_pip_dependencies_dev(PipDependency(["pip-tools"]))
+    pip_compile.add_to_pip_dependencies(PipDependency(["pip-tools"], is_dev=True))
     return pip_compile

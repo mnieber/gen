@@ -1,12 +1,14 @@
+import ramda as R
 from moonleap.prop import Prop
 from moonleap.slctrs import PropSelector, Selector
 
 
-def get_package_names(prop_name):
+def get_package_names(prop_name, is_dev=False):
+    fltr = R.filter(lambda x: x.is_dev == is_dev)
     slctr = Selector(
         [
             PropSelector("tools"),
-            PropSelector(prop_name),
+            PropSelector(prop_name, fltr=fltr),
             PropSelector("package_names"),
         ]
     )

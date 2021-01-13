@@ -12,7 +12,7 @@ from .resources import Makefile, MakefileRule
 @tags(["makefile"])
 def create_makefile(term, block):
     makefile = Makefile()
-    makefile.add_to_pkg_dependencies_dev(PkgDependency(["make"]))
+    makefile.add_to_pkg_dependencies(PkgDependency(["make"], is_dev=True))
     makefile.add_to_layer_configs(LayerConfig(LC.get_make_options()))
     return makefile
 
