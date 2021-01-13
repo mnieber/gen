@@ -19,8 +19,15 @@ def layer_has_layer_group(layer, layer_group):
 
 
 def meta():
+    from leap_mn.layer import Layer
+
     @extend(LayerGroup)
     class ExtendLayerGroup:
         layers = props.children("contains", "layer")
 
-    return [ExtendLayerGroup]
+    @extend(Layer)
+    class ExtendLayer:
+        parent_layer_group = props.parent(LayerGroup, "contains", "layer")
+        layer_groups = props.children("has", "layer-group")
+
+    return [ExtendLayerGroup, ExtendLayer]
