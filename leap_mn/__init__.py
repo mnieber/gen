@@ -11,7 +11,6 @@ from . import (
     pipdependency,
     project,
     pytest,
-    pytesthtml,
     service,
     servicelayergroup,
     srcdir,
@@ -30,7 +29,6 @@ def install_all():
     install(pipdependency)
     install(project)
     install(pytest)
-    install(pytesthtml)
     install(service)
     install(servicelayergroup)
     install(srcdir)
