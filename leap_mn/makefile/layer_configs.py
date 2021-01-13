@@ -1,2 +1,2 @@
-def get_layer_config():
+def get_make_options():
     return dict(ROOT=dict(decorators=dict(docker=["make"])))

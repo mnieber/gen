@@ -5,7 +5,7 @@ from leap_mn.service import Service
 from leap_mn.tool import Tool
 from moonleap import extend, output_dir_from, rule, tags
 
-from .layer_configs import get_layer_config
+from . import layer_configs as LC
 from .resources import Makefile, MakefileRule
 
 
@@ -13,7 +13,7 @@ from .resources import Makefile, MakefileRule
 def create_makefile(term, block):
     makefile = Makefile()
     makefile.add_to_pkg_dependencies_dev(PkgDependency(["make"]))
-    makefile.layer_config = LayerConfig(get_layer_config())
+    makefile.add_to_layer_configs(LayerConfig(LC.get_make_options()))
     return makefile
 
 

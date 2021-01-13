@@ -67,10 +67,13 @@ def install(module):
         _install_output_dir(module, resource_type, c.__dict__, dest_class_meta)
         _install_templates(module, resource_type, c.__dict__, dest_class_meta)
 
-        for prop_name, p in c.__dict__.items():
-            if isinstance(p, Prop):
-                setattr(resource_type, prop_name, property(p.get_value, p.set_value))
-                if p.add_value:
-                    setattr(resource_type, "add_to_" + prop_name, p.add_value)
-                if p.doc_as_rel:
-                    config.describe(resource_type, p.doc_as_rel)
+        for base_type in c.__mro__:
+            for prop_name, p in base_type.__dict__.items():
+                if isinstance(p, Prop):
+                    setattr(
+                        resource_type, prop_name, property(p.get_value, p.set_value)
+                    )
+                    if p.add_value:
+                        setattr(resource_type, "add_to_" + prop_name, p.add_value)
+                    if p.doc_as_rel:
+                        config.describe(resource_type, p.doc_as_rel)

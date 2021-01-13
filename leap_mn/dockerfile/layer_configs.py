@@ -1,4 +1,4 @@
-def get_layer_config(service):
+def get_docker_options(service):
     project = service.project
 
     return dict(

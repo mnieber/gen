@@ -1,6 +1,6 @@
 import moonleap.props as P
 import ramda as R
-from leap_mn.layer import LayerConfig
+from leap_mn.layer import LayerConfig, StoreLayerConfigs
 from leap_mn.project import Project
 from moonleap import extend, output_path_from, rule, tags
 
@@ -11,13 +11,8 @@ from .resources import Service
 @tags(["service"])
 def create_service(term, block):
     service = Service(term.data)
-    service.layer_config = LayerConfig(get_service_layer_config())
+    service.add_to_layer_configs(LayerConfig(get_service_layer_config()))
     return service
-
-
-@rule("service", "configured", "layer")
-def service_is_configured_in_layer(service, layer):
-    layer.add_to_layer_configs(service.layer_config)
 
 
 def get_output_dir(service):
@@ -25,8 +20,7 @@ def get_output_dir(service):
 
 
 @extend(Service)
-class ExtendService:
+class ExtendService(StoreLayerConfigs):
     output_dir = get_output_dir
     src_dir = P.child("has", "src-dir")
     project = P.parent(Project, "has", "service")
-    layer_config = P.child("has", "layer-config")

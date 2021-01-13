@@ -3,7 +3,7 @@ from leap_mn.layer import LayerConfig
 from leap_mn.project import Project
 from moonleap import extend, output_dir_from, rule, tags
 
-from .layer_configs import get_layer_config
+from . import layer_configs as LC
 from .resources import DockerCompose
 
 
@@ -24,11 +24,12 @@ def create_docker_compose_dev(term, block):
     "has",
     "docker-compose",
     description="""
-Add docker-compose settings to the root config layer in the dodo configuration.""",
+Add docker-compose dodo settings to the project.""",
 )
 def project_has_docker_compose(project, docker_compose):
-    layer_config = LayerConfig(lambda: get_layer_config(docker_compose))
-    project.config_layer.add_to_layer_configs(layer_config)
+    project.add_to_layer_configs(
+        LayerConfig(lambda: LC.get_docker_compose_options(docker_compose))
+    )
 
 
 @extend(DockerCompose)

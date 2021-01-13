@@ -7,14 +7,7 @@ from leap_mn.service import Service
 from leap_mn.tool import Tool
 from moonleap import extend, tags
 
-
-def get_layer_config(pytest):
-    result = dict(capture=False)
-
-    if pytest.service and pytest.service.src_dir:
-        result["src_dir"] = pytest.service.src_dir.location
-
-    return result
+from . import layer_configs as LC
 
 
 @dataclass
@@ -26,7 +19,10 @@ class Pytest(Tool):
 def create_pytest(term, block):
     pytest = Pytest()
     pytest.add_to_pip_dependencies(PipDependency(["pytest"]))
-    pytest.layer_config = LayerConfig(lambda: dict(PYTEST=get_layer_config(pytest)))
+    pytest.add_to_layer_configs(
+        #
+        LayerConfig(lambda: LC.get_pytest_options(pytest))
+    )
     return pytest
 
 
