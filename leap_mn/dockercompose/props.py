@@ -1,3 +1,4 @@
+import ramda as R
 from moonleap.prop import Prop
 from moonleap.utils.merge_into_config import merge_into_config
 
@@ -19,7 +20,8 @@ def merge_configs(configs):
 def docker_compose_config_prop():
     def get_value(self):
         return merge_configs(
-            self.layer_configs + [x.layer_config for x in self.layer_config_sources]
+            self.docker_compose_configs
+            + [x.docker_compose_config for x in self.docker_compose_config_sources]
         )
 
     return Prop(get_value)

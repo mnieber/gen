@@ -1,4 +1,4 @@
-def get_service_layer_config():
+def get_service_options():
     return dict(
         #
         SERVER=dict(

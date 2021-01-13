@@ -47,7 +47,7 @@ class StoreDockerComposeConfigs:
 
 
 @extend(DockerCompose)
-class ExtendDockerCompose(StoreLayerConfigs, StoreDockerComposeConfigs):
+class ExtendDockerCompose(StoreLayerConfigs):
     output_dir = output_dir_from("project")
     templates = "templates"
     services = P.children("run", "service")
