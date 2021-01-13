@@ -1,7 +1,7 @@
 import moonleap.props as P
 import ramda as R
 from leap_mn.dockercompose import DockerCompose
-from moonleap.config import extend
+from moonleap import extend
 
 from .props import merge_configs
 

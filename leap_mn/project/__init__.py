@@ -1,6 +1,5 @@
 import moonleap.props as P
-from moonleap import tags
-from moonleap.config import extend
+from moonleap import extend, tags
 
 from .resources import Project
 

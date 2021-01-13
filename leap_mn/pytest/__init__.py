@@ -5,8 +5,7 @@ from leap_mn.layerconfig import LayerConfig
 from leap_mn.pipdependency import PipDependency
 from leap_mn.service import Service
 from leap_mn.tool import Tool
-from moonleap import tags
-from moonleap.config import extend
+from moonleap import extend, tags
 
 
 def get_layer_config(pytest):

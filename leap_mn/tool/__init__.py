@@ -1,7 +1,7 @@
 import moonleap.props as P
 import ramda as R
 from leap_mn.service import Service
-from moonleap.config import extend, rule
+from moonleap import extend, rule
 
 from .props import get_makefile_rules, get_package_names
 from .resources import Tool
