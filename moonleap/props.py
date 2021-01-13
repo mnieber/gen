@@ -4,8 +4,9 @@ from dataclasses import dataclass
 import ramda as R
 
 from moonleap.parser.term import Term, word_to_term
+from moonleap.rel import Rel
 from moonleap.resource import resolve
-from moonleap.slctrs import Rel, Selector
+from moonleap.slctrs import Selector
 
 
 @dataclass(frozen=True)

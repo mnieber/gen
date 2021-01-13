@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from moonleap.parser.term import fuzzy_match, word_to_term
-from moonleap.slctrs import Rel
+from moonleap.rel import Rel
 
 
 class Config:
