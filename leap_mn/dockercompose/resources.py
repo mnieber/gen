@@ -1,3 +1,4 @@
+import typing as T
 from dataclasses import dataclass
 
 from moonleap import Resource
@@ -16,10 +17,13 @@ class DockerCompose(Resource):
         return dockerfile.name if dockerfile else ""
 
     def config(self, service):
+        volumes = dict(volumes=[f"./{service.name}:/app/src"])
+
         body = dict(
             depends_on=[],
             image=f"{service.project.name}_{service.name}",
             ports=["80:80"],
+            **(volumes if self.is_dev else {}),
         )
 
         if service.dockerfile:
@@ -28,3 +32,11 @@ class DockerCompose(Resource):
             )
 
         return {service.name: body}
+
+
+@dataclass
+class DockerComposeConfig(Resource):
+    body: T.Union[dict, T.Callable]
+
+    def get_body(self):
+        return self.body(self) if callable(self.body) else self.body

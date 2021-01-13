@@ -1,8 +1,7 @@
 import moonleap.props as P
 from moonleap import extend, tags
-from moonleap.prop import Prop
 
-from .props import merge_configs
+from .props import layer_config_prop
 from .resources import Layer, LayerConfig
 
 
@@ -10,15 +9,6 @@ from .resources import Layer, LayerConfig
 def create_layer(term, block):
     layer = Layer(name=term.data)
     return layer
-
-
-def layer_config_prop():
-    def get_value(self):
-        return merge_configs(
-            self.layer_configs + [x.layer_config for x in self.layer_config_sources]
-        )
-
-    return Prop(get_value)
 
 
 class StoreLayerConfigs:

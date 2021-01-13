@@ -4,7 +4,8 @@ from leap_mn.project import Project
 from moonleap import extend, output_dir_from, rule, tags
 
 from . import layer_configs as LC
-from .resources import DockerCompose
+from .props import docker_compose_config_prop
+from .resources import DockerCompose, DockerComposeConfig
 
 
 @tags(["docker-compose"])
@@ -39,8 +40,14 @@ def docker_compose_configured_in_layer(docker_compose, layer):
     layer.add_to_layer_config_sources(docker_compose)
 
 
+class StoreDockerComposeConfigs:
+    docker_compose_config = docker_compose_config_prop()
+    docker_compose_configs = P.children("has", "docker-compose-config")
+    docker_compose_config_sources = P.children("has", "docker-compose-config-source")
+
+
 @extend(DockerCompose)
-class ExtendDockerCompose(StoreLayerConfigs):
+class ExtendDockerCompose(StoreLayerConfigs, StoreDockerComposeConfigs):
     output_dir = output_dir_from("project")
     templates = "templates"
     services = P.children("run", "service")
