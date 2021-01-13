@@ -12,14 +12,15 @@ def create_layer(term, block):
     return layer
 
 
+@extend(Layer)
+class ExtendLayer:
+    post_init = True
+    templates = "templates"
+    output_dir = ".dodo_commands"
+
+    config = P.children("has", "layer-config", rdcr=merge_configs)
+    layer_configs = P.children("has", "layer-config")
+
+
 def meta():
-    @extend(Layer)
-    class ExtendLayer:
-        post_init = True
-        templates = "templates"
-        output_dir = ".dodo_commands"
-
-        config = P.children("has", "layer-config", rdcr=merge_configs)
-        layer_configs = P.children("has", "layer-config")
-
     return [ExtendLayer]

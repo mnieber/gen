@@ -2,27 +2,15 @@ import moonleap.props as P
 import ramda as R
 from leap_mn.dockercompose import DockerCompose
 from moonleap.config import extend
-from moonleap.merge_into_config import merge_into_config
 
-from .resources import DockerComposeConfig
-
-
-def merge(lhs, rhs):
-    new_body = dict()
-    merge_into_config(new_body, lhs.get_body())
-    merge_into_config(new_body, rhs.get_body())
-    return DockerComposeConfig(body=new_body)
+from .props import merge_configs
 
 
-def merge_configs(configs):
-    merged = R.reduce(merge, DockerComposeConfig(body={}), configs)
-    return merged.get_body()
+@extend(DockerCompose)
+class ExtendDockerCompose:
+    config = P.children("has", "docker-compose-config", rdcr=merge_configs)
+    configs = P.children("has", "docker-compose-config")
 
 
 def meta():
-    @extend(DockerCompose)
-    class ExtendDockerCompose:
-        config = P.children("has", "docker-compose-config", rdcr=merge_configs)
-        configs = P.children("has", "docker-compose-config")
-
     return [ExtendDockerCompose]

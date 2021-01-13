@@ -1,3 +1,6 @@
+import typing as T
+from dataclasses import dataclass
+
 import ramda as R
 
 from moonleap.parser.term import Term, word_to_term
@@ -5,11 +8,12 @@ from moonleap.resource import resolve
 from moonleap.slctrs import Rel, Selector
 
 
+@dataclass(frozen=True)
 class Prop:
-    def __init__(self, getter, setter=None, adder=None):
-        self.get = getter
-        self.set = setter
-        self.add = adder
+    get_value: T.Callable = None
+    set_value: T.Callable = None
+    add_value: T.Callable = None
+    doc_as_rel: Rel = None
 
 
 def fltr_instance(resource_type):
@@ -23,7 +27,7 @@ def maybe_term_to_term(maybe_term):
     return word_to_term(maybe_term, default_to_tag=True)
 
 
-def child(verb, term):
+def child(verb, term, is_doc=True):
     rel = Rel(verb=verb, obj=maybe_term_to_term(term))
     slctr = Selector([rel])
 
@@ -43,10 +47,12 @@ def child(verb, term):
         child.term = self.term
         self.add_relation(rel, child)
 
-    return Prop(get_child, setter=set_child)
+    return Prop(
+        get_value=get_child, set_value=set_child, doc_as_rel=rel if is_doc else None
+    )
 
 
-def children(verb, term, rdcr=None):
+def children(verb, term, rdcr=None, is_doc=True):
     rel = Rel(verb=verb, obj=maybe_term_to_term(term))
     slctr = Selector([rel])
 
@@ -57,16 +63,20 @@ def children(verb, term, rdcr=None):
     def add_to_children(self, child):
         self.add_relation(rel, child)
 
-    return Prop(get_children, adder=add_to_children)
+    return Prop(
+        get_value=get_children,
+        add_value=add_to_children,
+        doc_as_rel=rel if is_doc else None,
+    )
 
 
 def _fltr(resource_type):
     return R.filter(lambda x: isinstance(x, resource_type))
 
 
-def parent(parent_resource_type, verb, term):
-    rel = Rel(verb=verb, obj=maybe_term_to_term(term))
-    slctr = Selector([rel.inv()])
+def parent(parent_resource_type, verb, term, is_doc=True):
+    rel = Rel(verb=verb, obj=maybe_term_to_term(term), is_inv=True)
+    slctr = Selector([rel])
 
     def get_parent(self):
         parents = _fltr(parent_resource_type)(slctr.select_from(self))
@@ -75,14 +85,15 @@ def parent(parent_resource_type, verb, term):
 
         return None if not parents else parents[0]
 
-    return Prop(get_parent)
+    return Prop(get_value=get_parent, doc_as_rel=rel if is_doc else None)
 
 
-def parents(parent_resource_type, rel, rdcr=None):
-    slctr = Selector([rel.inv()])
+def parents(parent_resource_type, verb, term, rdcr=None, is_doc=True):
+    rel = Rel(verb=verb, obj=maybe_term_to_term(term), is_inv=True)
+    slctr = Selector([rel])
 
     def get_parents(self):
         parents = _fltr(parent_resource_type)(slctr.select_from(self))
         return rdcr(parents) if rdcr else parents
 
-    return Prop(get_parents)
+    return Prop(get_value=get_parents, doc_as_rel=rel if is_doc else None)

@@ -1,6 +1,7 @@
 import moonleap.props as P
 from leap_mn.layerconfig import LayerConfig
 from leap_mn.pkgdependency import PkgDependency
+from leap_mn.service import Service
 from leap_mn.tool import Tool
 from moonleap import extend, output_dir_from, rule, tags
 
@@ -21,14 +22,13 @@ def makefile_running_tool(makefile, tool):
     makefile.service.add_to_tools(tool)
 
 
+@extend(Makefile)
+class ExtendMakefile:
+    templates = "templates"
+    output_dir = output_dir_from("service")
+    rules = P.children("has", "makefile_rule")
+    service = P.parent(Service, "has", "makefile")
+
+
 def meta():
-    from leap_mn.service import Service
-
-    @extend(Makefile)
-    class ExtendMakefile:
-        templates = "templates"
-        output_dir = output_dir_from("service")
-        rules = P.children("has", "makefile_rule")
-        service = P.parent(Service, "has", "makefile")
-
     return [ExtendMakefile]

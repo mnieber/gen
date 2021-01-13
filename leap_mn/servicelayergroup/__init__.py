@@ -1,6 +1,7 @@
 import moonleap.props as P
 from leap_mn.layerconfig import LayerConfig
 from leap_mn.layergroup import LayerGroup, get_layer_config
+from leap_mn.service import Service
 from moonleap import extend, rule, tags
 
 from .layer_configs import get_dial_config
@@ -23,11 +24,10 @@ def service_is_configured_in_layer(service, layer):
     layer.add_to_layer_configs(service.layer_config)
 
 
+@extend(Service)
+class ExtendService:
+    layer = P.child("configured", "layer")
+
+
 def meta():
-    from leap_mn.service import Service
-
-    @extend(Service)
-    class ExtendService:
-        layer = P.child("configured", "layer")
-
     return [ExtendService]

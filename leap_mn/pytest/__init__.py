@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import moonleap.props as P
 from leap_mn.layerconfig import LayerConfig
 from leap_mn.pipdependency import PipDependency
+from leap_mn.service import Service
 from leap_mn.tool import Tool
 from moonleap import tags
 from moonleap.config import extend
@@ -30,11 +31,11 @@ def create_pytest(term, block):
     return pytest
 
 
-def meta():
-    from leap_mn.service import Service
+@extend(Pytest)
+class ExtendPytest:
+    service = P.parent(Service, "has", "pytest")
 
-    @extend(Pytest)
-    class ExtendPytest:
-        service = P.parent(Service, "has", "pytest")
+
+def meta():
 
     return [ExtendPytest]

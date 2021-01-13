@@ -48,7 +48,7 @@ def install(module):
             config.add_rule(f.moonleap_rule)
 
     for c in module.meta():
-        resource_type = c._extends_resource_type
+        resource_type = c.moonleap_extends_resource_type
         dest_class_meta = config.meta_by_resource_type.setdefault(resource_type, {})
 
         _install_output_dir(module, resource_type, c.__dict__, dest_class_meta)
@@ -56,6 +56,6 @@ def install(module):
 
         for prop_name, p in c.__dict__.items():
             if isinstance(p, Prop):
-                setattr(resource_type, prop_name, property(p.get, p.set))
-                if p.add:
-                    setattr(resource_type, "add_to_" + prop_name, p.add)
+                setattr(resource_type, prop_name, property(p.get_value, p.set_value))
+                if p.add_value:
+                    setattr(resource_type, "add_to_" + prop_name, p.add_value)

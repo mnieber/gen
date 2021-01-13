@@ -10,11 +10,12 @@ def create_project(term, block):
     return Project(term.data)
 
 
-def meta():
-    @extend(Project)
-    class ExtendProject:
-        output_dir = "src"
-        services = P.child("has", "service")
-        src_dir = P.child("has", "src-dir")
+@extend(Project)
+class ExtendProject:
+    output_dir = "src"
+    services = P.child("has", "service")
+    src_dir = P.child("has", "src-dir")
 
+
+def meta():
     return [ExtendProject]

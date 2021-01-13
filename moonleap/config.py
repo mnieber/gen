@@ -115,7 +115,7 @@ def output_path_from(prop_name):
 
 def extend(resource_type):
     def wrapped(props):
-        setattr(props, "_extends_resource_type", resource_type)
+        setattr(props, "moonleap_extends_resource_type", resource_type)
         return props
 
     return wrapped
