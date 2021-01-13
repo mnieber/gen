@@ -24,7 +24,19 @@ def create_docker_compose(term, block):
 Add docker-compose dodo settings to the project.""",
 )
 def project_has_docker_compose(project, docker_compose):
-    project.add_to_layer_config_sources(docker_compose)
+    if not docker_compose.configured_by_layer:
+        project.add_to_layer_config_sources(docker_compose)
+
+
+@rule(
+    "docker-compose",
+    "configured",
+    "layer",
+    description="""
+Docker-compose is configured in its own layer.""",
+)
+def docker_compose_configured_in_layer(docker_compose, layer):
+    layer.add_to_layer_config_sources(docker_compose)
 
 
 @extend(DockerCompose)
@@ -33,3 +45,4 @@ class ExtendDockerCompose(StoreLayerConfigs):
     templates = "templates"
     services = P.children("run", "service")
     project = P.parent(Project, "has", "docker-compose")
+    configured_by_layer = P.child("configured", "layer")

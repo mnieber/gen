@@ -9,6 +9,7 @@ The cashcog:project /has a :src-dir that /stores files from the mnieber/test:git
 The cashcog:project /has a config:layer that /has a service:layer-group that /contains the stack:layer, frontend:layer and backend:layer.
 :It /has a :docker-compose and a dev:docker-compose file that are used
 to /run the frontend:service and backend:service.
+Both :docker-compose and dev:docker-compose are /configured by the stack:layer.
 
 ## The frontend:service
 

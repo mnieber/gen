@@ -67,8 +67,16 @@ def find_relations(blocks):
                         child_resource,
                     )
 
-                    for rule in config.get_rules(rel, parent_resource, child_resource):
-                        rule.f(parent_resource, child_resource)
+
+def apply_rules(blocks):
+    root_block = blocks[0]
+    for parent_resource in root_block.get_entities(include_children=True):
+        for rel, child_resource in parent_resource.get_relations():
+            if rel.is_inv:
+                continue
+
+            for rule in config.get_rules(rel, parent_resource, child_resource):
+                rule.f(parent_resource, child_resource)
 
 
 def _create_generic_resource(term, block):
@@ -115,3 +123,4 @@ def create_resources(blocks):
                 block.add_entity(entity)
 
     find_relations(blocks)
+    apply_rules(blocks)

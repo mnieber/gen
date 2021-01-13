@@ -1,5 +1,6 @@
 import typing as T
 
+import ramda as R
 from moonleap.parser.line import Line
 
 
@@ -51,7 +52,7 @@ class Block:
         for block in self.get_blocks(include_self, include_children, include_parents):
             result += block._entities
 
-        return result
+        return R.uniq(result)
 
     def get_terms(
         self, include_self=True, include_children=False, include_parents=False
