@@ -1,4 +1,4 @@
-import moonleap.props as props
+import moonleap.props as P
 from leap_mn.layer import Layer
 from leap_mn.layerconfig import LayerConfig
 from moonleap import extend, tags
@@ -19,6 +19,6 @@ def meta():
 
     @extend(Project)
     class ExtendProject:
-        config_layer = props.child("has", "config:layer")
+        config_layer = P.child("has", "config:layer")
 
     return [ExtendProject]

@@ -1,8 +1,8 @@
-import moonleap.props as props
+import moonleap.props as P
 from moonleap import tags
 from moonleap.config import extend
 
-from .localprops import merge_configs
+from .props import merge_configs
 from .resources import Layer
 
 
@@ -19,7 +19,7 @@ def meta():
         templates = "templates"
         output_dir = ".dodo_commands"
 
-        config = props.children("has", "layer-config", rdcr=merge_configs)
-        layer_configs = props.children("has", "layer-config")
+        config = P.children("has", "layer-config", rdcr=merge_configs)
+        layer_configs = P.children("has", "layer-config")
 
     return [ExtendLayer]

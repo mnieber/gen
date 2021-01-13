@@ -1,4 +1,4 @@
-import moonleap.props as props
+import moonleap.props as P
 from leap_mn.layerconfig import LayerConfig
 from leap_mn.pkgdependency import PkgDependency
 from leap_mn.tool import Tool
@@ -16,7 +16,7 @@ def create_makefile(term, block):
     return makefile
 
 
-@rule("makefile", "running", "*", fltr_obj=props.fltr_instance(Tool))
+@rule("makefile", "running", "*", fltr_obj=P.fltr_instance(Tool))
 def makefile_running_tool(makefile, tool):
     makefile.service.add_to_tools(tool)
 
@@ -28,7 +28,7 @@ def meta():
     class ExtendMakefile:
         templates = "templates"
         output_dir = output_dir_from("service")
-        rules = props.children("has", "makefile_rule")
-        service = props.parent(Service, "has", "makefile")
+        rules = P.children("has", "makefile_rule")
+        service = P.parent(Service, "has", "makefile")
 
     return [ExtendMakefile]

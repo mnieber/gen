@@ -1,4 +1,4 @@
-import moonleap.props as props
+import moonleap.props as P
 import ramda as R
 from leap_mn.dockercompose import DockerCompose
 from moonleap.config import extend
@@ -22,7 +22,7 @@ def merge_configs(configs):
 def meta():
     @extend(DockerCompose)
     class ExtendDockerCompose:
-        config = props.children("has", "docker-compose-config", rdcr=merge_configs)
-        configs = props.children("has", "docker-compose-config")
+        config = P.children("has", "docker-compose-config", rdcr=merge_configs)
+        configs = P.children("has", "docker-compose-config")
 
     return [ExtendDockerCompose]

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-import moonleap.props as props
+import moonleap.props as P
 from leap_mn.layerconfig import LayerConfig
 from leap_mn.pipdependency import PipDependency
 from leap_mn.tool import Tool
@@ -35,6 +35,6 @@ def meta():
 
     @extend(Pytest)
     class ExtendPytest:
-        service = props.parent(Service, "has", "pytest")
+        service = P.parent(Service, "has", "pytest")
 
     return [ExtendPytest]

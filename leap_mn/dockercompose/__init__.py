@@ -1,4 +1,4 @@
-import moonleap.props as props
+import moonleap.props as P
 from leap_mn.layerconfig import LayerConfig
 from moonleap import extend, output_dir_from, rule, tags
 
@@ -37,7 +37,7 @@ def meta():
     class ExtendDockerCompose:
         output_dir = output_dir_from("project")
         templates = "templates"
-        services = props.children("run", "service")
-        project = props.parent(Project, "has", "docker-compose")
+        services = P.children("run", "service")
+        project = P.parent(Project, "has", "docker-compose")
 
     return [ExtendDockerCompose]

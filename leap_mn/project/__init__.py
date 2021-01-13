@@ -1,4 +1,4 @@
-import moonleap.props as props
+import moonleap.props as P
 from moonleap import tags
 from moonleap.config import extend
 
@@ -14,7 +14,7 @@ def meta():
     @extend(Project)
     class ExtendProject:
         output_dir = "src"
-        services = props.child("has", "service")
-        src_dir = props.child("has", "src-dir")
+        services = P.child("has", "service")
+        src_dir = P.child("has", "src-dir")
 
     return [ExtendProject]

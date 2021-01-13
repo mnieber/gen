@@ -1,4 +1,4 @@
-import moonleap.props as props
+import moonleap.props as P
 import ramda as R
 from leap_mn.layerconfig import LayerConfig
 from moonleap import extend, output_path_from, rule, tags
@@ -29,8 +29,8 @@ def meta():
     @extend(Service)
     class ExtendService:
         output_dir = get_output_dir
-        src_dir = props.child("has", "src-dir")
-        project = props.parent(Project, "has", "service")
-        layer_config = props.child("has", "layer-config")
+        src_dir = P.child("has", "src-dir")
+        project = P.parent(Project, "has", "service")
+        layer_config = P.child("has", "layer-config")
 
     return [ExtendService]

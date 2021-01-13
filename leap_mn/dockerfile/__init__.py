@@ -1,4 +1,4 @@
-import moonleap.props as props
+import moonleap.props as P
 from leap_mn.layerconfig import LayerConfig
 from leap_mn.service import Service
 from moonleap import extend, output_dir_from, rule, tags
@@ -42,13 +42,13 @@ def service_has_dockerfile(service, dockerfile):
 def meta():
     @extend(Dockerfile)
     class ExtendDockerfile:
-        service = props.parent(Service, "has", "dockerfile")
+        service = P.parent(Service, "has", "dockerfile")
         templates = "templates_{{res.term.data}}"
         output_dir = output_dir_from("service")
 
     @extend(Service)
     class ExtendService:
-        dockerfile = props.child("has", ":dockerfile")
-        dockerfile_dev = props.child("has", "dev:dockerfile")
+        dockerfile = P.child("has", ":dockerfile")
+        dockerfile_dev = P.child("has", "dev:dockerfile")
 
     return [ExtendDockerfile, ExtendService]

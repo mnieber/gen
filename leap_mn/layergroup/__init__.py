@@ -1,4 +1,4 @@
-import moonleap.props as props
+import moonleap.props as P
 from leap_mn.layerconfig import LayerConfig
 from moonleap import extend, rule, tags
 
@@ -23,11 +23,11 @@ def meta():
 
     @extend(LayerGroup)
     class ExtendLayerGroup:
-        layers = props.children("contains", "layer")
+        layers = P.children("contains", "layer")
 
     @extend(Layer)
     class ExtendLayer:
-        parent_layer_group = props.parent(LayerGroup, "contains", "layer")
-        layer_groups = props.children("has", "layer-group")
+        parent_layer_group = P.parent(LayerGroup, "contains", "layer")
+        layer_groups = P.children("has", "layer-group")
 
     return [ExtendLayerGroup, ExtendLayer]

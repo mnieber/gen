@@ -1,4 +1,4 @@
-import moonleap.props as props
+import moonleap.props as P
 from leap_mn.layerconfig import LayerConfig
 from leap_mn.layergroup import LayerGroup, get_layer_config
 from moonleap import extend, rule, tags
@@ -28,6 +28,6 @@ def meta():
 
     @extend(Service)
     class ExtendService:
-        layer = props.child("configured", "layer")
+        layer = P.child("configured", "layer")
 
     return [ExtendService]

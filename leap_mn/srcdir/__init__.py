@@ -1,4 +1,4 @@
-import moonleap.props as props
+import moonleap.props as P
 from moonleap import extend, rule, tags
 
 from .resources import SrcDir
@@ -17,6 +17,6 @@ def src_dir_stores_git_repository(src_dir, git_repository):
 def meta():
     @extend(SrcDir)
     class ExtendSrcDir:
-        git_repo = props.child("has", "git-repository")
+        git_repo = P.child("has", "git-repository")
 
     return [ExtendSrcDir]
