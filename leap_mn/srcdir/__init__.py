@@ -17,7 +17,3 @@ def src_dir_stores_git_repository(src_dir, git_repository):
 @extend(SrcDir)
 class ExtendSrcDir:
     git_repo = P.child("has", "git-repository")
-
-
-def meta():
-    return [ExtendSrcDir]

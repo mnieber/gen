@@ -15,7 +15,3 @@ class ExtendProject:
     output_dir = "src"
     services = P.child("has", "service")
     src_dir = P.child("has", "src-dir")
-
-
-def meta():
-    return [ExtendProject]

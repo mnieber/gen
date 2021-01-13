@@ -29,10 +29,12 @@ def _install_props(module, resource_type, src_class_meta, dest_class_meta):
 
 
 def install(module):
+    extensions = []
+
     for f in [
         f
         for f in module.__dict__.values()
-        if callable(f) and f.__module__ == module.__name__
+        if getattr(f, "__module__", "") == module.__name__
     ]:
         if hasattr(f, "moonleap_create_rule_by_tag"):
             for tag, create_rule in f.moonleap_create_rule_by_tag.items():
@@ -47,7 +49,18 @@ def install(module):
         if hasattr(f, "moonleap_rule"):
             config.add_rule(f.moonleap_rule)
 
-    for c in module.meta():
+        if hasattr(f, "moonleap_extends_resource_type"):
+            extensions.append(f)
+
+    if hasattr(module, "meta"):
+        if extensions:
+            raise Exception(
+                "Extensions should either be created in the module "
+                + f"or in the meta function, not both.\nIn module: {module}"
+            )
+        extensions = module.meta()
+
+    for c in extensions:
         resource_type = c.moonleap_extends_resource_type
         dest_class_meta = config.meta_by_resource_type.setdefault(resource_type, {})
 

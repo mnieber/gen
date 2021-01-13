@@ -22,7 +22,3 @@ def create_pytest_html(term, block):
         lambda: dict(PYTEST=get_layer_config(pytest_html))
     )
     return pytest_html
-
-
-def meta():
-    return []

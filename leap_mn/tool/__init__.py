@@ -30,8 +30,3 @@ class ExtendService:
     pkg_dependencies = get_package_names("pkg_dependencies")
     pkg_dependencies_dev = get_package_names("pkg_dependencies_dev")
     makefile_rules = get_makefile_rules()
-
-
-def meta():
-
-    return [ExtendTool, ExtendService]

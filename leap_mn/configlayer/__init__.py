@@ -18,7 +18,3 @@ def create_layer(term, block):
 @extend(Project)
 class ExtendProject:
     config_layer = P.child("has", "config:layer", is_doc=False)
-
-
-def meta():
-    return [ExtendProject]

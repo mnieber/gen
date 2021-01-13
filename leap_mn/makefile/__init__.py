@@ -28,7 +28,3 @@ class ExtendMakefile:
     output_dir = output_dir_from("service")
     rules = P.children("has", "makefile_rule")
     service = P.parent(Service, "has", "makefile")
-
-
-def meta():
-    return [ExtendMakefile]

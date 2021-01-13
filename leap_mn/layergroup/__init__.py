@@ -28,7 +28,3 @@ class ExtendLayerGroup:
 class ExtendLayer:
     parent_layer_group = P.parent(LayerGroup, "contains", "layer")
     layer_groups = P.children("has", "layer-group")
-
-
-def meta():
-    return [ExtendLayerGroup, ExtendLayer]

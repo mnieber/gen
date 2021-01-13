@@ -25,7 +25,3 @@ def create_pip_compile(term, block):
     pip_compile.add_to_makefile_rules(MakefileRule(makefile_rule))
     pip_compile.add_to_pip_dependencies_dev(PipDependency(["pip-tools"]))
     return pip_compile
-
-
-def meta():
-    return []

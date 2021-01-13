@@ -27,7 +27,3 @@ def service_is_configured_in_layer(service, layer):
 @extend(Service)
 class ExtendService:
     layer = P.child("configured", "layer")
-
-
-def meta():
-    return [ExtendService]

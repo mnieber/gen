@@ -37,7 +37,3 @@ class ExtendDockerCompose:
     templates = "templates"
     services = P.children("run", "service")
     project = P.parent(Project, "has", "docker-compose")
-
-
-def meta():
-    return [ExtendDockerCompose]

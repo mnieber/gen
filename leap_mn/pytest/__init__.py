@@ -34,8 +34,3 @@ def create_pytest(term, block):
 @extend(Pytest)
 class ExtendPytest:
     service = P.parent(Service, "has", "pytest")
-
-
-def meta():
-
-    return [ExtendPytest]

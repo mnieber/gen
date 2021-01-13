@@ -30,7 +30,3 @@ class ExtendService:
     src_dir = P.child("has", "src-dir")
     project = P.parent(Project, "has", "service")
     layer_config = P.child("has", "layer-config")
-
-
-def meta():
-    return [ExtendService]

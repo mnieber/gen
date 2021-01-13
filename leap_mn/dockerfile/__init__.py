@@ -50,7 +50,3 @@ class ExtendDockerfile:
 class ExtendService:
     dockerfile = P.child("has", ":dockerfile")
     dockerfile_dev = P.child("has", "dev:dockerfile")
-
-
-def meta():
-    return [ExtendDockerfile, ExtendService]

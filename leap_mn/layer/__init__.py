@@ -20,7 +20,3 @@ class ExtendLayer:
 
     config = P.children("has", "layer-config", rdcr=merge_configs)
     layer_configs = P.children("has", "layer-config")
-
-
-def meta():
-    return [ExtendLayer]

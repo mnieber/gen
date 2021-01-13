@@ -10,7 +10,3 @@ from .props import merge_configs
 class ExtendDockerCompose:
     config = P.children("has", "docker-compose-config", rdcr=merge_configs)
     configs = P.children("has", "docker-compose-config")
-
-
-def meta():
-    return [ExtendDockerCompose]
