@@ -72,3 +72,5 @@ def install(module):
                 setattr(resource_type, prop_name, property(p.get_value, p.set_value))
                 if p.add_value:
                     setattr(resource_type, "add_to_" + prop_name, p.add_value)
+                if p.doc_as_rel:
+                    config.describe(resource_type, p.doc_as_rel)

@@ -48,6 +48,13 @@ class Config:
         output_dir = self.get_meta(resource.__class__).get("output_dir", "")
         return output_dir(resource) if callable(output_dir) else output_dir
 
+    def describe(self, resource_type, rel):
+        rels = self.get_meta(resource_type).setdefault("rels", [])
+        rels.append(rel)
+
+    def get_descriptions(self, resource_type):
+        return self.get_meta(resource_type).get("rels", [])
+
 
 config = Config()
 

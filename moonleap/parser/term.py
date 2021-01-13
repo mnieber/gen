@@ -27,6 +27,12 @@ def words_to_terms(words):
     return terms
 
 
+def term_to_word(term):
+    if term.data is None:
+        return term.tag
+    return f"{term.data}:{term.tag}"
+
+
 def is_it_term(term):
     return term.tag.lower() in ["it", "its"]
 
