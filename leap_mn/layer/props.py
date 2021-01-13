@@ -1,6 +1,7 @@
 import ramda as R
-from leap_mn.layerconfig import LayerConfig
 from moonleap.utils.merge_into_config import merge_into_config
+
+from .resources import LayerConfig
 
 
 def merge(lhs, rhs):

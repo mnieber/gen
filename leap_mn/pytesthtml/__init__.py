@@ -1,4 +1,4 @@
-from leap_mn.layerconfig import LayerConfig
+from leap_mn.layer import LayerConfig
 from leap_mn.pipdependency import PipDependency
 from leap_mn.tool import Tool
 from moonleap import tags

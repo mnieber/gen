@@ -1,6 +1,6 @@
 import moonleap.props as P
 import ramda as R
-from leap_mn.layerconfig import LayerConfig
+from leap_mn.layer import LayerConfig
 from leap_mn.project import Project
 from moonleap import extend, output_path_from, rule, tags
 

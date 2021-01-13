@@ -5,7 +5,6 @@ from . import (
     dockercompose,
     dockerfile,
     layer,
-    layerconfig,
     layergroup,
     makefile,
     pipcompile,
@@ -25,7 +24,6 @@ def install_all():
     install(dockercompose)
     install(dockerfile)
     install(layer)
-    install(layerconfig)
     install(layergroup)
     install(makefile)
     install(pipcompile)

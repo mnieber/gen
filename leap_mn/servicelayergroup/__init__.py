@@ -1,5 +1,5 @@
 import moonleap.props as P
-from leap_mn.layerconfig import LayerConfig
+from leap_mn.layer import LayerConfig
 from leap_mn.layergroup import LayerGroup, get_layer_config
 from leap_mn.service import Service
 from moonleap import extend, rule, tags

@@ -1,5 +1,5 @@
 import moonleap.props as P
-from leap_mn.layerconfig import LayerConfig
+from leap_mn.layer import LayerConfig
 from leap_mn.pkgdependency import PkgDependency
 from leap_mn.service import Service
 from leap_mn.tool import Tool

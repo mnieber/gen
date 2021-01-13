@@ -1,8 +1,7 @@
 from leap_mn.dockercompose import DockerCompose  # noqa
 from leap_mn.dockerfile import Dockerfile  # noqa
 from leap_mn.gitrepository import GitRepository  # noqa
-from leap_mn.layer import Layer  # noqa
-from leap_mn.layerconfig import LayerConfig  # noqa
+from leap_mn.layer import Layer, LayerConfig  # noqa
 from leap_mn.layergroup import LayerGroup  # noqa
 from leap_mn.makefile import Makefile, MakefileRule  # noqa
 from leap_mn.pipcompile import PipCompile  # noqa
