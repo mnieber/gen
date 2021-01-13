@@ -1,4 +1,4 @@
-from moonleap.props import Prop
+from moonleap.prop import Prop
 from moonleap.slctrs import PropSelector, Selector
 
 

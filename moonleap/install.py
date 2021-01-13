@@ -2,7 +2,7 @@ from pathlib import Path
 
 from moonleap.config import config
 from moonleap.parser.term import word_to_term
-from moonleap.props import Prop
+from moonleap.prop import Prop
 
 
 def _install_templates(module, resource_type, src_class_meta, dest_class_meta):

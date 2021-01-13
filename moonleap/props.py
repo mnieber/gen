@@ -1,20 +1,10 @@
-import typing as T
-from dataclasses import dataclass
-
 import ramda as R
 
 from moonleap.parser.term import Term, word_to_term
+from moonleap.prop import Prop
 from moonleap.rel import Rel
 from moonleap.resource import resolve
 from moonleap.slctrs import Selector
-
-
-@dataclass(frozen=True)
-class Prop:
-    get_value: T.Callable = None
-    set_value: T.Callable = None
-    add_value: T.Callable = None
-    doc_as_rel: Rel = None
 
 
 def fltr_instance(resource_type):
