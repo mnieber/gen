@@ -33,3 +33,7 @@ def resource_id_from_class(x):
 def dbg(x):
     __import__("pudb").set_trace()
     return x
+
+
+def maybe_tuple_to_tuple(x):
+    return x if isinstance(x, tuple) else (x,)

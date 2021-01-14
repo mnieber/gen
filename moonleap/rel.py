@@ -1,3 +1,4 @@
+import typing as T
 from dataclasses import dataclass
 
 from moonleap.parser.term import Term
@@ -6,7 +7,7 @@ from moonleap.parser.term import Term
 @dataclass(frozen=True)
 class Rel:
     subj: Term = None
-    verb: str = None
+    verb: T.Union[str, T.Tuple[str]] = None
     obj: Term = None
     is_inv: bool = False
 

@@ -10,7 +10,7 @@ from . import props
 from .resources import Tool
 
 
-@rule("service", "has", "*", fltr_obj=P.fltr_instance(Tool))
+@rule("service", ("has", "uses"), "*", fltr_obj=P.fltr_instance(Tool))
 def service_has_tool(service, tool):
     service.add_to_tools(tool)
     service.add_to_layer_config_sources(tool)
@@ -25,7 +25,7 @@ class ExtendTool(StoreLayerConfigs):
 
 @extend(Service)
 class ExtendService:
-    tools = P.children("has", "tool")
+    tools = P.children(("has", "uses"), "tool")
     get_pip_dependencies = MemFun(props.get_package_names("pip_dependencies"))
     get_pkg_dependencies = MemFun(props.get_package_names("pkg_dependencies"))
     makefile_rules = Prop(props.get_makefile_rules())

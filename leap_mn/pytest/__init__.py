@@ -13,9 +13,7 @@ from .resources import Pytest, PytestHtml
 def create_pytest(term, block):
     pytest = Pytest()
     pytest.add_to_pip_dependencies(PipDependency(["pytest"]))
-    pytest.add_to_layer_configs(
-        #
-        LayerConfig(lambda: LC.get_pytest_options(pytest))
+    pytest.add_to_layer_configs(LayerConfig(lambda: LC.get_pytest_options(pytest)))
     )
     return pytest
 
