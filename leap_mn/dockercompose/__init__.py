@@ -41,7 +41,7 @@ def docker_compose_configured_in_layer(docker_compose, layer):
 
 
 class StoreDockerComposeConfigs:
-    docker_compose_config = docker_compose_config_prop()
+    get_docker_compose_config = docker_compose_config_prop()
     docker_compose_configs = P.children("has", "docker-compose-config")
     docker_compose_config_sources = P.children("has", "docker-compose-config-source")
 

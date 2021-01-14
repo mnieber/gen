@@ -1,5 +1,5 @@
 import ramda as R
-from moonleap.prop import Prop
+from moonleap.memfun import MemFun
 from moonleap.utils.merge_into_config import merge_into_config
 
 from .resources import DockerComposeConfig
@@ -13,15 +13,20 @@ def merge(lhs, rhs):
 
 
 def merge_configs(configs):
-    merged = R.reduce(merge, DockerComposeConfig(body={}), configs)
-    return merged.get_body()
+    return R.reduce(merge, DockerComposeConfig(body={}), configs)
 
 
-def docker_compose_config_prop(is_dev=False):
-    def get_value(self):
+def docker_compose_config_prop():
+    def f(self, is_dev=False):
+        fltr = R.filter(lambda x: x.is_dev == is_dev)
         return merge_configs(
-            self.docker_compose_configs
-            + [x.docker_compose_config for x in self.docker_compose_config_sources]
+            fltr(
+                self.docker_compose_configs
+                + [
+                    x.get_docker_compose_config(is_dev)
+                    for x in self.docker_compose_config_sources
+                ]
+            )
         )
 
-    return Prop(get_value)
+    return MemFun(f)

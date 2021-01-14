@@ -6,7 +6,6 @@ from moonleap.slctrs import PropSelector, Selector
 
 def get_package_names(prop_name):
     def f(self, is_dev=False):
-        __import__("pudb").set_trace()
         fltr = R.filter(lambda x: x.is_dev == is_dev)
         slctr = Selector(
             [
