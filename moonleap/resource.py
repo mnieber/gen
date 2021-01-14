@@ -14,7 +14,9 @@ class Resource:
     id: str = field(default_factory=lambda: uuid.uuid4().hex, init=False)
     block: Block = field(default=None, init=False)
     term: Term = field(default=None, init=False)
-    _relations: [(Rel, "Resource")] = field(default_factory=list, init=False)
+    _relations: [(Rel, "Resource")] = field(
+        default_factory=list, init=False, repr=False
+    )
 
     def __repr__(self):
         return self.__class__.__name__

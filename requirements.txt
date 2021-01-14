@@ -1,7 +1,8 @@
-ramda
-nltk
-six
-PyYAML
-mistune
+inflect
 jinja2
 jinja2-ansible-filters
+mistune
+nltk
+PyYAML
+ramda
+six

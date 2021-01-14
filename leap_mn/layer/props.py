@@ -12,8 +12,7 @@ def merge(lhs, rhs):
 
 
 def merge_configs(configs):
-    merged = R.reduce(merge, LayerConfig({}), configs)
-    return LayerConfig(merged.get_body())
+    return R.reduce(merge, LayerConfig({}), configs)
 
 
 def layer_config(self):
