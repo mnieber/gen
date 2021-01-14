@@ -2,9 +2,10 @@ import moonleap.props as P
 from leap_mn.layer import LayerConfig, StoreLayerConfigs
 from leap_mn.project import Project
 from moonleap import extend, output_dir_from, rule, tags
+from moonleap.memfun import MemFun
 
 from . import layer_configs as LC
-from .props import docker_compose_config_prop
+from . import props
 from .resources import DockerCompose, DockerComposeConfig
 
 
@@ -41,7 +42,7 @@ def docker_compose_configured_in_layer(docker_compose, layer):
 
 
 class StoreDockerComposeConfigs:
-    get_docker_compose_config = docker_compose_config_prop()
+    get_docker_compose_config = MemFun(props.get_docker_compose_config)
     docker_compose_configs = P.children("has", "docker-compose-config")
     docker_compose_config_sources = P.children("has", "docker-compose-config-source")
 

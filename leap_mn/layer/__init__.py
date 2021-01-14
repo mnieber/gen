@@ -1,7 +1,8 @@
 import moonleap.props as P
 from moonleap import extend, tags
+from moonleap.prop import Prop
 
-from .props import layer_config_prop
+from . import props
 from .resources import Layer, LayerConfig
 
 
@@ -12,7 +13,7 @@ def create_layer(term, block):
 
 
 class StoreLayerConfigs:
-    layer_config = layer_config_prop()
+    layer_config = Prop(props.layer_config)
     layer_configs = P.children("has", "layer-config")
     layer_config_sources = P.children("has", "layer-config-source")
 

@@ -3,8 +3,10 @@ import ramda as R
 from leap_mn.layer import StoreLayerConfigs
 from leap_mn.service import Service
 from moonleap import extend, rule
+from moonleap.memfun import MemFun
+from moonleap.prop import Prop
 
-from .props import get_makefile_rules, get_package_names
+from . import props
 from .resources import Tool
 
 
@@ -24,6 +26,6 @@ class ExtendTool(StoreLayerConfigs):
 @extend(Service)
 class ExtendService:
     tools = P.children("has", "tool")
-    get_pip_dependencies = get_package_names("pip_dependencies")
-    get_pkg_dependencies = get_package_names("pkg_dependencies")
-    makefile_rules = get_makefile_rules()
+    get_pip_dependencies = MemFun(props.get_package_names("pip_dependencies"))
+    get_pkg_dependencies = MemFun(props.get_package_names("pkg_dependencies"))
+    makefile_rules = Prop(props.get_makefile_rules())

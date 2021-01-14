@@ -1,6 +1,4 @@
 import ramda as R
-from moonleap.memfun import MemFun
-from moonleap.prop import Prop
 from moonleap.slctrs import PropSelector, Selector
 
 
@@ -16,7 +14,7 @@ def get_package_names(prop_name):
         )
         return slctr.select_from(self)
 
-    return MemFun(f)
+    return f
 
 
 def get_makefile_rules():
@@ -30,4 +28,4 @@ def get_makefile_rules():
     def getter(self):
         return slctr.select_from(self)
 
-    return Prop(getter)
+    return getter

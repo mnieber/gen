@@ -1,5 +1,4 @@
 import ramda as R
-from moonleap.prop import Prop
 from moonleap.utils.merge_into_config import merge_into_config
 
 from .resources import LayerConfig
@@ -17,10 +16,7 @@ def merge_configs(configs):
     return LayerConfig(merged.get_body())
 
 
-def layer_config_prop():
-    def get_value(self):
-        return merge_configs(
-            self.layer_configs + [x.layer_config for x in self.layer_config_sources]
-        )
-
-    return Prop(get_value)
+def layer_config(self):
+    return merge_configs(
+        self.layer_configs + [x.layer_config for x in self.layer_config_sources]
+    )
