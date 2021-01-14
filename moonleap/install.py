@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from moonleap.config import config
+from moonleap.memfun import MemFun
 from moonleap.parser.term import word_to_term
 from moonleap.prop import Prop
 
@@ -77,3 +78,6 @@ def install(module):
                         setattr(resource_type, "add_to_" + prop_name, p.add_value)
                     if p.doc_as_rel:
                         config.describe(resource_type, p.doc_as_rel)
+
+                elif isinstance(p, MemFun):
+                    setattr(resource_type, prop_name, p.f)

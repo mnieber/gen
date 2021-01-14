@@ -17,7 +17,7 @@ def merge_configs(configs):
     return merged.get_body()
 
 
-def docker_compose_config_prop():
+def docker_compose_config_prop(is_dev=False):
     def get_value(self):
         return merge_configs(
             self.docker_compose_configs

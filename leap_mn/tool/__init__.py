@@ -24,8 +24,6 @@ class ExtendTool(StoreLayerConfigs):
 @extend(Service)
 class ExtendService:
     tools = P.children("has", "tool")
-    pip_dependencies = get_package_names("pip_dependencies")
-    pip_dependencies_dev = get_package_names("pip_dependencies", is_dev=True)
-    pkg_dependencies = get_package_names("pkg_dependencies")
-    pkg_dependencies_dev = get_package_names("pkg_dependencies", is_dev=True)
+    get_pip_dependencies = get_package_names("pip_dependencies")
+    get_pkg_dependencies = get_package_names("pkg_dependencies")
     makefile_rules = get_makefile_rules()
