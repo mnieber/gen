@@ -1,5 +1,6 @@
 import moonleap.props as P
 from leap_mn.layer import LayerConfig
+from leap_mn.optpath import OptPath
 from leap_mn.pipdependency import PipDependency
 from leap_mn.service import Service
 from leap_mn.tool import Tool
@@ -14,6 +15,12 @@ def create_pytest(term, block):
     pytest = Pytest()
     pytest.add_to_pip_dependencies(PipDependency(["pytest"]))
     pytest.add_to_layer_configs(LayerConfig(lambda: LC.get_pytest_options(pytest)))
+    pytest.add_to_opt_paths(
+        OptPath(
+            is_dir=False,
+            from_path="/opt/prname/pytest_report.html",
+            to_path="/opt/prname/pytest_report.html",
+        )
     )
     return pytest
 

@@ -1,6 +1,7 @@
 import moonleap.props as P
 import ramda as R
 from leap_mn.layer import StoreLayerConfigs
+from leap_mn.optpath import StoreOptPaths
 from leap_mn.service import Service
 from moonleap import extend, rule
 from moonleap.memfun import MemFun
@@ -17,7 +18,7 @@ def service_has_tool(service, tool):
 
 
 @extend(Tool)
-class ExtendTool(StoreLayerConfigs):
+class ExtendTool(StoreLayerConfigs, StoreOptPaths):
     pip_dependencies = P.children("has", "pip-dependency")
     pkg_dependencies = P.children("has", "pkg-dependency")
     makefile_rules = P.children("has", "makefile-rule")
