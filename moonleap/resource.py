@@ -1,21 +1,20 @@
+import typing as T
 import uuid
+from dataclasses import dataclass, field
 from importlib import import_module
 
+from moonleap.parser.block import Block
+from moonleap.parser.term import Term
+from moonleap.rel import Rel
 from moonleap.slctrs import Selector
 
 
+@dataclass
 class Resource:
-    def __init__(self):
-        self._init()
-
-    def __post_init__(self):
-        self._init()
-
-    def _init(self):
-        self.id = uuid.uuid4().hex
-        self.block = None
-        self.term = None
-        self._relations = []
+    id: str = field(default_factory=lambda: uuid.uuid4().hex, init=False)
+    block: Block = field(default=None, init=False)
+    term: Term = field(default=None, init=False)
+    _relations: [(Rel, "Resource")] = field(default_factory=list, init=False)
 
     def __repr__(self):
         return self.__class__.__name__
