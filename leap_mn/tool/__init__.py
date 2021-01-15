@@ -14,7 +14,7 @@ from .resources import Tool
 @rule("service", ("has", "uses"), "*", fltr_obj=P.fltr_instance(Tool))
 def service_has_tool(service, tool):
     service.add_to_tools(tool)
-    service.add_to_layer_config_sources(tool)
+    service.layer_configs.add_source(tool)
 
 
 @extend(Tool)

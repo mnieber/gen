@@ -13,9 +13,9 @@ def create_layer(term, block):
 
 
 class StoreLayerConfigs:
-    layer_config = Prop(props.layer_config)
-    layer_configs = P.children("has", "layer-config")
-    layer_config_sources = P.children("has", "layer-config-source")
+    layer_configs = P.tree(
+        "has", "layer-config", merge=props.merge, initial=LayerConfig({})
+    )
 
 
 @extend(Layer)

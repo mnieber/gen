@@ -12,7 +12,7 @@ from .resources import DockerCompose, DockerComposeConfig
 @tags(["docker-compose"])
 def create_docker_compose(term, block):
     docker_compose = DockerCompose(is_dev=term.data == "dev")
-    docker_compose.add_to_layer_configs(
+    docker_compose.layer_configs.add(
         LayerConfig(lambda: LC.get_docker_compose_options(docker_compose))
     )
     return docker_compose
@@ -27,7 +27,7 @@ Add docker-compose dodo settings to the project.""",
 )
 def project_has_docker_compose(project, docker_compose):
     if not docker_compose.configured_by_layer:
-        project.add_to_layer_config_sources(docker_compose)
+        project.layer_configs.add_source(docker_compose)
 
 
 @rule(
@@ -38,7 +38,7 @@ def project_has_docker_compose(project, docker_compose):
 Docker-compose is configured in its own layer.""",
 )
 def docker_compose_configured_in_layer(docker_compose, layer):
-    layer.add_to_layer_config_sources(docker_compose)
+    layer.layer_configs.add_source(docker_compose)
 
 
 class StoreDockerComposeConfigs:

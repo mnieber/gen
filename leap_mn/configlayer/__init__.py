@@ -9,14 +9,14 @@ from .layer_configs import get_root_config
 @tags(["config:layer"])
 def create_layer(term, block):
     layer = Layer(name="config")
-    layer.add_to_layer_configs(LayerConfig(get_root_config()))
+    layer.layer_configs.add(LayerConfig(get_root_config()))
 
     return layer
 
 
 @rule("project", "has", "config:layer")
 def project_has_config_layer(project, config_layer):
-    config_layer.add_to_layer_config_sources(project)
+    config_layer.layer_configs.add_source(project)
 
 
 @extend(Project)

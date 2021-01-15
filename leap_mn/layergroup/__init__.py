@@ -9,7 +9,7 @@ from .resources import LayerGroup
 @tags(["layer-group"])
 def create_layer_group(term, block):
     layer_group = LayerGroup(name=term.data)
-    layer_group.add_to_layer_configs(
+    layer_group.layer_configs.add(
         LayerConfig(lambda: LC.get_group_layer_config(layer_group))
     )
     return layer_group
@@ -17,7 +17,7 @@ def create_layer_group(term, block):
 
 @rule("layer", "has", "layer-group")
 def layer_has_layer_group(layer, layer_group):
-    layer.add_to_layer_config_sources(layer_group)
+    layer.layer_configs.add_source(layer_group)
 
 
 @extend(LayerGroup)

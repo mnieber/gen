@@ -10,15 +10,13 @@ from . import layer_configs as LC
 @tags(["service:layer-group"])
 def create_service_layer_group(term, block):
     layer_group = create_layer_group(Term("server", "layer-group"), block)
-    layer_group.add_to_layer_configs(
-        LayerConfig(lambda: LC.get_dial_config(layer_group))
-    )
+    layer_group.layer_configs.add(LayerConfig(lambda: LC.get_dial_config(layer_group)))
     return layer_group
 
 
 @rule("service", "configured", "layer")
 def service_is_configured_in_layer(service, layer):
-    layer.add_to_layer_config_sources(service)
+    layer.layer_configs.add_source(service)
 
 
 @extend(Service)

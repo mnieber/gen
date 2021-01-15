@@ -13,7 +13,7 @@ from .resources import Service
 @tags(["service"])
 def create_service(term, block):
     service = Service(name=term.data)
-    service.add_to_layer_configs(LayerConfig(body=LC.get_service_options()))
+    service.layer_configs.add(LayerConfig(body=LC.get_service_options()))
     service.add_to_docker_compose_configs(
         DockerComposeConfig(
             lambda docker_compose_config: DCC.get_service_options(

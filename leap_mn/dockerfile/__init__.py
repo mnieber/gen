@@ -32,7 +32,7 @@ If the service has a dockerfile then we add docker options to that service.""",
 )
 def service_has_dockerfile(service, dockerfile):
     if service:
-        service.add_to_layer_configs(
+        service.layer_configs.add(
             #
             LayerConfig(lambda: LC.get_docker_options(service))
         )
