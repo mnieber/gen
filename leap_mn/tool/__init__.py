@@ -1,5 +1,4 @@
 import moonleap.props as P
-import ramda as R
 from leap_mn.layer import StoreLayerConfigs
 from leap_mn.optpath import StoreOptPaths
 from leap_mn.outputpath import StoreOutputPaths

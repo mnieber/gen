@@ -1,6 +1,6 @@
 import moonleap.props as P
 from leap_mn.layer import LayerConfig
-from leap_mn.layergroup import LayerGroup, create_layer_group
+from leap_mn.layergroup import create_layer_group
 from leap_mn.service import Service
 from moonleap import Term, extend, rule, tags
 

@@ -1,14 +1,10 @@
-from pathlib import Path
-
 from moonleap.parser.term import fuzzy_match
-from moonleap.rel import Rel
 
 
 class Config:
     def __init__(self):
         self.create_rule_by_term = {}
         self.derive_rules_by_resource_type = {}
-        self.meta_by_resource_type = {}
         self.rules = []
 
     def get_create_rule(self, subject_term):
@@ -36,20 +32,6 @@ class Config:
 
     def add_rule(self, rule):
         self.rules.append(rule)
-
-    def get_meta(self, resource_type):
-        return self.meta_by_resource_type.get(resource_type, {})
-
-    def get_templates(self, resource):
-        templates = self.get_meta(resource.__class__).get("templates", lambda x: "")
-        return templates(resource)
-
-    def describe(self, resource_type, rel):
-        rels = self.get_meta(resource_type).setdefault("rels", [])
-        rels.append(rel)
-
-    def get_descriptions(self, resource_type):
-        return self.get_meta(resource_type).get("rels", [])
 
 
 config = Config()

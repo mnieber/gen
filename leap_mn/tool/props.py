@@ -3,13 +3,11 @@ from moonleap.slctrs import PropSelector, Selector
 
 
 def get_pip_pkg_names():
-    get_pkgs = lambda tool: tool.pip_dependencies.merged
-    return _list_of_package_names(get_pkgs)
+    return _list_of_package_names(lambda tool: tool.pip_dependencies.merged)
 
 
 def get_pkg_names():
-    get_pkgs = lambda tool: tool.pkg_dependencies.merged
-    return _list_of_package_names(get_pkgs)
+    return _list_of_package_names(lambda tool: tool.pkg_dependencies.merged)
 
 
 def _list_of_package_names(get_pkgs):

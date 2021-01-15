@@ -3,7 +3,6 @@ from leap_mn.layer import LayerConfig
 from leap_mn.optpath import OptPath
 from leap_mn.pipdependency import PipDependency
 from leap_mn.service import Service
-from leap_mn.tool import Tool
 from moonleap import extend, rule, tags
 
 from . import layer_configs as LC

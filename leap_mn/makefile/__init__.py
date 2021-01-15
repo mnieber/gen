@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import moonleap.props as P
 from leap_mn.layer import LayerConfig
 from leap_mn.pkgdependency import PkgDependency
@@ -8,7 +6,7 @@ from leap_mn.tool import Tool
 from moonleap import extend, render_templates, rule, tags
 
 from . import layer_configs as LC
-from .resources import Makefile, MakefileRule
+from .resources import Makefile, MakefileRule  # noqa
 
 
 @tags(["makefile"])

@@ -2,12 +2,11 @@ import moonleap.props as P
 from leap_mn.layer import LayerConfig, StoreLayerConfigs
 from leap_mn.outputpath import StoreOutputPaths
 from leap_mn.project import Project
-from moonleap import extend, rule, tags
-from moonleap.memfun import MemFun
+from moonleap import MemFun, extend, render_templates, rule, tags
 
 from . import layer_configs as LC
 from . import props
-from .resources import DockerCompose, DockerComposeConfig
+from .resources import DockerCompose, DockerComposeConfig  # noqa
 
 
 @tags(["docker-compose"])
@@ -51,7 +50,7 @@ class StoreDockerComposeConfigs:
 
 @extend(DockerCompose)
 class ExtendDockerCompose(StoreLayerConfigs, StoreOutputPaths):
-    templates = "templates"
+    render = render_templates(__file__)
     services = P.children("run", "service")
     project = P.parent(Project, "has", "docker-compose")
     configured_by_layer = P.child("configured", "layer")

@@ -1,6 +1,6 @@
 import ramda as R
 
-from moonleap.parser.term import Term, fuzzy_match
+from moonleap.parser.term import fuzzy_match
 from moonleap.rel import Rel
 
 

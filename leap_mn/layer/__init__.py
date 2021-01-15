@@ -1,7 +1,6 @@
 import moonleap.props as P
 from leap_mn.outputpath import StoreOutputPaths
-from moonleap import extend, tags
-from moonleap.prop import Prop
+from moonleap import extend, render_templates, tags
 
 from . import props
 from .resources import Layer, LayerConfig
@@ -22,4 +21,4 @@ class StoreLayerConfigs:
 
 @extend(Layer)
 class ExtendLayer(StoreLayerConfigs, StoreOutputPaths):
-    templates = "templates"
+    render = render_templates(__file__)

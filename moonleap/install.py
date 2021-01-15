@@ -1,32 +1,7 @@
-from pathlib import Path
-
 from moonleap.config import config
 from moonleap.memfun import MemFun
 from moonleap.parser.term import word_to_term
 from moonleap.prop import Prop
-
-
-def _install_templates(module, resource_type, src_class_meta, dest_class_meta):
-    if "templates" in src_class_meta:
-        templates = src_class_meta["templates"]
-
-        def get_templates(resource):
-            return str(
-                Path(module.__file__).parent
-                / (templates(resource) if callable(templates) else templates)
-            )
-
-        dest_class_meta["templates"] = get_templates
-
-
-def _install_output_dir(module, resource_type, src_class_meta, dest_class_meta):
-    if "output_dir" in src_class_meta:
-        dest_class_meta["output_dir"] = src_class_meta["output_dir"]
-
-
-def _install_props(module, resource_type, src_class_meta, dest_class_meta):
-    for prop_name, (prop_get, prop_set) in src_class_meta.get("props", {}).items():
-        setattr(resource_type, prop_name, property(prop_get, prop_set))
 
 
 def install(module):
@@ -63,10 +38,6 @@ def install(module):
 
     for c in extensions:
         resource_type = c.moonleap_extends_resource_type
-        dest_class_meta = config.meta_by_resource_type.setdefault(resource_type, {})
-
-        _install_output_dir(module, resource_type, c.__dict__, dest_class_meta)
-        _install_templates(module, resource_type, c.__dict__, dest_class_meta)
 
         for base_type in c.__mro__:
             for prop_name, p in base_type.__dict__.items():
@@ -76,8 +47,6 @@ def install(module):
                     )
                     if p.add_value:
                         setattr(resource_type, "add_to_" + prop_name, p.add_value)
-                    if p.doc_as_rel:
-                        config.describe(resource_type, p.doc_as_rel)
 
                 elif isinstance(p, MemFun):
                     setattr(resource_type, prop_name, p.f)

@@ -1,6 +1,6 @@
 import ramda as R
 
-from moonleap.parser.term import Term, maybe_term_to_term, word_to_term
+from moonleap.parser.term import maybe_term_to_term
 from moonleap.prop import Prop
 from moonleap.rel import Rel
 from moonleap.resource import resolve

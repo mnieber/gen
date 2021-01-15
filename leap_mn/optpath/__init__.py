@@ -1,6 +1,6 @@
 import moonleap.props as P
 
-from .resources import OptPath
+from .resources import OptPath  # noqa
 
 
 class StoreOptPaths:

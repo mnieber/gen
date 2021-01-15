@@ -16,7 +16,7 @@ class TemplateRenderer:
 
     def render(self, output_subdir, resource, template_fn):
         t = load_template(template_fn)
-        output_fn = _render_template(template_fn.name, self)
+        output_fn = _render_template(template_fn.name, resource)
         output_dir = Path(self.output_root_dir) / output_subdir
         output_dir.mkdir(parents=True, exist_ok=True)
         fn = str(output_dir / output_fn)

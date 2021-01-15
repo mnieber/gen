@@ -39,7 +39,6 @@ def get_template_filename(dockerfile):
 class ExtendDockerfile(StoreOutputPaths):
     service = P.parent(Service, "has", "dockerfile")
     render = render_templates(__file__, get_template_filename)
-    templates = "templates_{{res.term.data}}"
 
 
 @extend(Service)

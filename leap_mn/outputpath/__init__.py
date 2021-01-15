@@ -1,6 +1,4 @@
 import moonleap.props as P
-from moonleap import extend, rule, tags
-from moonleap.memfun import MemFun
 
 from . import props as props
 from .resources import OutputPath
