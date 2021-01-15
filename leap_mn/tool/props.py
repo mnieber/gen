@@ -2,14 +2,24 @@ import ramda as R
 from moonleap.slctrs import PropSelector, Selector
 
 
-def get_package_names(prop_name):
+def get_pip_pkg_names():
+    get_pkgs = lambda tool: tool.pip_dependencies.merged
+    return _list_of_package_names(get_pkgs)
+
+
+def get_pkg_names():
+    get_pkgs = lambda tool: tool.pkg_dependencies.merged
+    return _list_of_package_names(get_pkgs)
+
+
+def _list_of_package_names(get_pkgs):
     def f(self, is_dev=False):
         fltr = R.filter(lambda x: x.is_dev == is_dev)
         slctr = Selector(
             [
-                PropSelector("tools"),
-                PropSelector(prop_name, fltr=fltr),
-                PropSelector("package_names"),
+                PropSelector(lambda x: x.tools),
+                PropSelector(get_pkgs, fltr=fltr),
+                PropSelector(lambda x: x.package_names),
             ]
         )
         return slctr.select_from(self)
@@ -20,8 +30,8 @@ def get_package_names(prop_name):
 def get_makefile_rules():
     slctr = Selector(
         [
-            PropSelector("tools"),
-            PropSelector("makefile_rules"),
+            PropSelector(lambda x: x.tools),
+            PropSelector(lambda x: x.makefile_rules),
         ]
     )
 

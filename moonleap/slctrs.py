@@ -20,12 +20,12 @@ class RelSelector:
 
 
 class PropSelector:
-    def __init__(self, prop_name, fltr=None):
-        self.prop_name = prop_name
+    def __init__(self, getter, fltr=None):
+        self.getter = getter
         self.fltr = fltr or R.identity
 
     def select_from(self, resource):
-        return self.fltr(getattr(resource, self.prop_name, []))
+        return self.fltr(self.getter(resource))
 
 
 class Selector:

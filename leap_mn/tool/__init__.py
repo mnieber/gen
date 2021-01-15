@@ -17,16 +17,23 @@ def service_has_tool(service, tool):
     service.layer_configs.add_source(tool)
 
 
+class StoreDependencies:
+    pip_dependencies = P.tree(
+        "has", "pip-dependency", merge=lambda acc, x: [*acc, x], initial=list()
+    )
+    pkg_dependencies = P.tree(
+        "has", "pkg-dependency", merge=lambda acc, x: [*acc, x], initial=list()
+    )
+
+
 @extend(Tool)
-class ExtendTool(StoreLayerConfigs, StoreOptPaths):
-    pip_dependencies = P.children("has", "pip-dependency")
-    pkg_dependencies = P.children("has", "pkg-dependency")
+class ExtendTool(StoreLayerConfigs, StoreOptPaths, StoreDependencies):
     makefile_rules = P.children("has", "makefile-rule")
 
 
 @extend(Service)
 class ExtendService:
     tools = P.children(("has", "uses"), "tool")
-    get_pip_dependencies = MemFun(props.get_package_names("pip_dependencies"))
-    get_pkg_dependencies = MemFun(props.get_package_names("pkg_dependencies"))
+    get_pkg_names = MemFun(props.get_pkg_names())
+    get_pip_pkg_names = MemFun(props.get_pip_pkg_names())
     makefile_rules = Prop(props.get_makefile_rules())

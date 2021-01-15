@@ -13,7 +13,7 @@ from .resources import Pytest, PytestHtml
 @tags(["pytest"])
 def create_pytest(term, block):
     pytest = Pytest()
-    pytest.add_to_pip_dependencies(PipDependency(["pytest"]))
+    pytest.pip_dependencies.add(PipDependency(["pytest"]))
     pytest.layer_configs.add(LayerConfig(lambda: LC.get_pytest_options(pytest)))
 
     pytest.opt_paths.add(
@@ -30,7 +30,7 @@ def create_pytest(term, block):
 @tags(["pytest-html"])
 def create_pytest_html(term, block):
     pytest_html = PytestHtml()
-    pytest_html.add_to_pip_dependencies(PipDependency(["pytest-html"]))
+    pytest_html.pip_dependencies.add(PipDependency(["pytest-html"]))
 
     pytest_html.layer_configs.add(
         LayerConfig(lambda: LC.get_pytest_html_options(pytest_html))
@@ -50,6 +50,8 @@ def create_pytest_html(term, block):
 def pytest_with_pytest_html(pytest, pytest_html):
     pytest.layer_configs.add_source(pytest_html)
     pytest.opt_paths.add_source(pytest_html)
+    pytest.pkg_dependencies.add_source(pytest_html)
+    pytest.pip_dependencies.add_source(pytest_html)
 
 
 @extend(Pytest)
