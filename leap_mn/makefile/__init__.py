@@ -1,9 +1,12 @@
+from pathlib import Path
+
 import moonleap.props as P
 from leap_mn.layer import LayerConfig
 from leap_mn.pkgdependency import PkgDependency
 from leap_mn.service import Service
 from leap_mn.tool import Tool
-from moonleap import extend, rule, tags
+from moonleap import MemFun, extend, rule, tags
+from moonleap.render_resources import load_template
 
 from . import layer_configs as LC
 from .resources import Makefile, MakefileRule
@@ -22,8 +25,15 @@ def makefile_running_tool(makefile, tool):
     makefile.service.add_to_tools(tool)
 
 
+def _render(self, template_renderer):
+    output_sub_dir = self.output_paths.merged.location
+    templates_path = Path(__file__).parent / "templates"
+    for template_fn in templates_path.glob("*"):
+        template_renderer.render(output_sub_dir, self, template_fn)
+
+
 @extend(Makefile)
 class ExtendMakefile:
-    templates = "templates"
+    render = MemFun(_render)
     rules = P.children("has", "makefile_rule")
     service = P.parent(Service, "has", "makefile")
