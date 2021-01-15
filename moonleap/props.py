@@ -5,7 +5,7 @@ from moonleap.prop import Prop
 from moonleap.rel import Rel
 from moonleap.resource import resolve
 from moonleap.slctrs import Selector
-from moonleap.utils.inflect import singular_noun
+from moonleap.utils.inflect import singular
 
 
 def fltr_instance(resource_type):
@@ -94,7 +94,8 @@ def parents(parent_resource_type, verb, term, rdcr=None, is_doc=True):
 def tree(verb, term, merge, initial):
     rdcr = R.reduce(merge, initial)
     children_prop = children(verb, term)
-    sources_prop = children(verb, f"{singular_noun(term)}-sources")
+    sources_term = singular(term) + "-sources"
+    sources_prop = children(verb, sources_term)
 
     def get_value(parent):
         class Inner:

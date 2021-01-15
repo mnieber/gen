@@ -4,7 +4,7 @@ from leap_mn.dockercompose import DockerComposeConfig, StoreDockerComposeConfigs
 from leap_mn.layer import LayerConfig, StoreLayerConfigs
 from leap_mn.outputpath import OutputPath, StoreOutputPaths
 from leap_mn.project import Project
-from moonleap import extend, output_path_from, rule, tags
+from moonleap import extend, rule, tags
 
 from . import docker_compose_configs as DCC
 from . import layer_configs as LC
@@ -32,10 +32,6 @@ def create_service(term, block):
         )
     )
     return service
-
-
-def get_output_dir(service):
-    return str(output_path_from("project")(service) / service.name)
 
 
 @extend(Service)

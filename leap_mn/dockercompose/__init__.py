@@ -1,7 +1,8 @@
 import moonleap.props as P
 from leap_mn.layer import LayerConfig, StoreLayerConfigs
+from leap_mn.outputpath import StoreOutputPaths
 from leap_mn.project import Project
-from moonleap import extend, output_dir_from, rule, tags
+from moonleap import extend, rule, tags
 from moonleap.memfun import MemFun
 
 from . import layer_configs as LC
@@ -28,6 +29,7 @@ Add docker-compose dodo settings to the project.""",
 def project_has_docker_compose(project, docker_compose):
     if not docker_compose.configured_by_layer:
         project.layer_configs.add_source(docker_compose)
+    docker_compose.output_paths.add_source(project)
 
 
 @rule(
@@ -48,8 +50,7 @@ class StoreDockerComposeConfigs:
 
 
 @extend(DockerCompose)
-class ExtendDockerCompose(StoreLayerConfigs):
-    output_dir = output_dir_from("project")
+class ExtendDockerCompose(StoreLayerConfigs, StoreOutputPaths):
     templates = "templates"
     services = P.children("run", "service")
     project = P.parent(Project, "has", "docker-compose")

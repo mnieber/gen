@@ -1,6 +1,4 @@
 from moonleap.config import config  # noqa; noqa; noqa; noqa
-from moonleap.config import output_dir_from  # noqa
-from moonleap.config import output_path_from  # noqa
 from moonleap.create_resources import create_resources  # noqa
 from moonleap.memfun import MemFun  # noqa
 from moonleap.parser.block_collector import get_blocks  # noqa

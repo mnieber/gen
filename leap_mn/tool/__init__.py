@@ -2,6 +2,7 @@ import moonleap.props as P
 import ramda as R
 from leap_mn.layer import StoreLayerConfigs
 from leap_mn.optpath import StoreOptPaths
+from leap_mn.outputpath import StoreOutputPaths
 from leap_mn.service import Service
 from moonleap import extend, rule
 from moonleap.memfun import MemFun
@@ -15,6 +16,7 @@ from .resources import Tool
 def service_has_tool(service, tool):
     service.add_to_tools(tool)
     service.layer_configs.add_source(tool)
+    tool.output_paths.add_source(service)
 
 
 class StoreDependencies:
@@ -27,7 +29,7 @@ class StoreDependencies:
 
 
 @extend(Tool)
-class ExtendTool(StoreLayerConfigs, StoreOptPaths, StoreDependencies):
+class ExtendTool(StoreLayerConfigs, StoreOptPaths, StoreDependencies, StoreOutputPaths):
     makefile_rules = P.children("has", "makefile-rule")
 
 

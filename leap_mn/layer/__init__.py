@@ -1,4 +1,5 @@
 import moonleap.props as P
+from leap_mn.outputpath import StoreOutputPaths
 from moonleap import extend, tags
 from moonleap.prop import Prop
 
@@ -9,6 +10,7 @@ from .resources import Layer, LayerConfig
 @tags(["layer"])
 def create_layer(term, block):
     layer = Layer(name=term.data)
+    layer.set_output_path(".dodo_commands")
     return layer
 
 
@@ -19,6 +21,5 @@ class StoreLayerConfigs:
 
 
 @extend(Layer)
-class ExtendLayer(StoreLayerConfigs):
+class ExtendLayer(StoreLayerConfigs, StoreOutputPaths):
     templates = "templates"
-    output_dir = ".dodo_commands"

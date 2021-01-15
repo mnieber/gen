@@ -62,9 +62,8 @@ def render_resources(blocks, output_root_dir):
 
             if hasattr(resource, "output_paths"):
                 output_sub_dir = resource.output_paths.merged.location
-                __import__("pudb").set_trace()
             else:
-                output_sub_dir = config.get_output_dir(resource) or ""
+                output_sub_dir = ""
 
             if templates:
                 for template_fn in Path(templates).glob("*"):

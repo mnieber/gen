@@ -44,10 +44,6 @@ class Config:
         templates = self.get_meta(resource.__class__).get("templates", lambda x: "")
         return templates(resource)
 
-    def get_output_dir(self, resource):
-        output_dir = self.get_meta(resource.__class__).get("output_dir", "")
-        return output_dir(resource) if callable(output_dir) else output_dir
-
     def describe(self, resource_type, rel):
         rels = self.get_meta(resource_type).setdefault("rels", [])
         rels.append(rel)
@@ -57,17 +53,3 @@ class Config:
 
 
 config = Config()
-
-
-def output_dir_from(prop_name):
-    def get_output_dir(resource):
-        if hasattr(resource, prop_name):
-            prop = getattr(resource, prop_name)
-            return config.get_output_dir(prop)
-        return ""
-
-    return get_output_dir
-
-
-def output_path_from(prop_name):
-    return lambda x: Path(output_dir_from(prop_name)(x))
