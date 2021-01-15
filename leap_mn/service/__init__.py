@@ -2,6 +2,7 @@ import moonleap.props as P
 import ramda as R
 from leap_mn.dockercompose import DockerComposeConfig, StoreDockerComposeConfigs
 from leap_mn.layer import LayerConfig, StoreLayerConfigs
+from leap_mn.outputpath import OutputPath, StoreOutputPaths
 from leap_mn.project import Project
 from moonleap import extend, output_path_from, rule, tags
 
@@ -13,6 +14,7 @@ from .resources import Service
 @tags(["service"])
 def create_service(term, block):
     service = Service(name=term.data)
+    service.set_output_path(service.name + "/")
     service.layer_configs.add(LayerConfig(body=LC.get_service_options()))
     service.add_to_docker_compose_configs(
         DockerComposeConfig(
@@ -37,7 +39,6 @@ def get_output_dir(service):
 
 
 @extend(Service)
-class ExtendService(StoreLayerConfigs, StoreDockerComposeConfigs):
-    output_dir = get_output_dir
+class ExtendService(StoreLayerConfigs, StoreDockerComposeConfigs, StoreOutputPaths):
     src_dir = P.child("has", "src-dir")
     project = P.parent(Project, "has", "service")

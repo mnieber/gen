@@ -1,5 +1,6 @@
 import moonleap.props as P
 from leap_mn.layer import LayerConfig
+from leap_mn.outputpath import StoreOutputPaths
 from leap_mn.service import Service
 from moonleap import extend, output_dir_from, rule, tags
 
@@ -9,13 +10,8 @@ from .resources import Dockerfile
 
 @tags(["dockerfile"])
 def create_dockerfile(term, block):
-    docker_file = Dockerfile()
+    docker_file = Dockerfile(is_dev=term.data == "dev")
     return docker_file
-
-
-@tags(["dev:dockerfile"])
-def create_dockerfile_dev(term, block):
-    return Dockerfile(is_dev=True)
 
 
 @rule("dockerfile", "use", "docker-image")
@@ -31,15 +27,12 @@ def dockerfile_use_docker_image(dockerfile, docker_image):
 If the service has a dockerfile then we add docker options to that service.""",
 )
 def service_has_dockerfile(service, dockerfile):
-    if service:
-        service.layer_configs.add(
-            #
-            LayerConfig(lambda: LC.get_docker_options(service))
-        )
+    service.layer_configs.add(LayerConfig(lambda: LC.get_docker_options(service)))
+    dockerfile.output_paths.add_source(service)
 
 
 @extend(Dockerfile)
-class ExtendDockerfile:
+class ExtendDockerfile(StoreOutputPaths):
     service = P.parent(Service, "has", "dockerfile")
     templates = "templates_{{res.term.data}}"
     output_dir = output_dir_from("service")

@@ -59,7 +59,12 @@ def render_resources(blocks, output_root_dir):
                 continue
 
             templates = _render(config.get_templates(resource), resource)
-            output_sub_dir = config.get_output_dir(resource) or ""
+
+            if hasattr(resource, "output_paths"):
+                output_sub_dir = resource.output_paths.merged.location
+                __import__("pudb").set_trace()
+            else:
+                output_sub_dir = config.get_output_dir(resource) or ""
 
             if templates:
                 for template_fn in Path(templates).glob("*"):
