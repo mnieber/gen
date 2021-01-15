@@ -15,14 +15,14 @@ def create_service(term, block):
     service = Service(name=term.data)
     service.output_path = service.name + "/"
     service.layer_configs.add(LayerConfig(body=LC.get_service_options()))
-    service.add_to_docker_compose_configs(
+    service.docker_compose_configs.add(
         DockerComposeConfig(
             lambda docker_compose_config: DCC.get_service_options(
                 service, docker_compose_config
             )
         )
     )
-    service.add_to_docker_compose_configs(
+    service.docker_compose_configs.add(
         DockerComposeConfig(
             lambda docker_compose_config: DCC.get_service_options(
                 service, docker_compose_config

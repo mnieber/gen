@@ -7,6 +7,7 @@ from . import (
     layer,
     layergroup,
     makefile,
+    optdir,
     pipcompile,
     pipdependency,
     project,
@@ -25,6 +26,7 @@ def install_all():
     install(layer)
     install(layergroup)
     install(makefile)
+    install(optdir)
     install(pipcompile)
     install(pipdependency)
     install(project)

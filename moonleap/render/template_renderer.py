@@ -10,14 +10,13 @@ def _render_template(filename, resource):
 
 
 class TemplateRenderer:
-    def __init__(self, output_root_dir):
-        self.output_root_dir = output_root_dir
+    def __init__(self):
         self.filenames = []
 
-    def render(self, output_subdir, resource, template_fn):
+    def render(self, output_root_dir, output_subdir, resource, template_fn):
         t = load_template(template_fn)
         output_fn = _render_template(template_fn.name, resource)
-        output_dir = Path(self.output_root_dir) / output_subdir
+        output_dir = Path(output_root_dir) / output_subdir
         output_dir.mkdir(parents=True, exist_ok=True)
         fn = str(output_dir / output_fn)
 
@@ -31,7 +30,7 @@ class TemplateRenderer:
 
 
 def render_templates(root_filename, location="templates"):
-    def render(self, template_renderer):
+    def render(self, output_root_dir, template_renderer):
         template_path = location(self) if callable(location) else location
 
         output_sub_dir = self.output_paths.merged.location
@@ -41,6 +40,6 @@ def render_templates(root_filename, location="templates"):
             templates_path.glob("*") if templates_path.is_dir() else [templates_path]
         )
         for template_fn in template_paths:
-            template_renderer.render(output_sub_dir, self, template_fn)
+            template_renderer.render(output_root_dir, output_sub_dir, self, template_fn)
 
     return MemFun(render)

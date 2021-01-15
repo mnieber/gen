@@ -1,11 +1,11 @@
 import moonleap.props as P
 from leap_mn.layer import LayerConfig
-from leap_mn.optpath import OptPath
 from leap_mn.pipdependency import PipDependency
 from leap_mn.service import Service
 from moonleap import extend, rule, tags
 
 from . import layer_configs as LC
+from . import opt_paths
 from .resources import Pytest, PytestHtml
 
 
@@ -14,14 +14,7 @@ def create_pytest(term, block):
     pytest = Pytest()
     pytest.pip_dependencies.add(PipDependency(["pytest"]))
     pytest.layer_configs.add(LayerConfig(lambda: LC.get_pytest_options(pytest)))
-
-    pytest.opt_paths.add(
-        OptPath(
-            is_dir=False,
-            from_path="/opt/prname/foo.html",
-            to_path="/opt/prname/foo.html",
-        )
-    )
+    pytest.opt_paths.add(opt_paths.pytest_opt_path)
 
     return pytest
 
@@ -35,13 +28,7 @@ def create_pytest_html(term, block):
         LayerConfig(lambda: LC.get_pytest_html_options(pytest_html))
     )
 
-    pytest_html.opt_paths.add(
-        OptPath(
-            is_dir=False,
-            from_path="/opt/prname/pytest_report.html",
-            to_path="/opt/prname/pytest_report.html",
-        )
-    )
+    pytest_html.opt_paths.add(opt_paths.pytest_html_opt_path)
     return pytest_html
 
 

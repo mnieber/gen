@@ -1,6 +1,7 @@
 import moonleap.props as P
+from leap_mn.dockercompose import StoreDockerComposeConfigs
 from leap_mn.layer import StoreLayerConfigs
-from leap_mn.optpath import StoreOptPaths
+from leap_mn.optdir import StoreOptPaths
 from leap_mn.outputpath import StoreOutputPaths
 from leap_mn.service import Service
 from moonleap import extend, rule
@@ -15,6 +16,7 @@ from .resources import Tool
 def service_has_tool(service, tool):
     service.add_to_tools(tool)
     service.layer_configs.add_source(tool)
+    service.docker_compose_configs.add_source(tool)
     tool.output_paths.add_source(service)
 
 
@@ -28,7 +30,13 @@ class StoreDependencies:
 
 
 @extend(Tool)
-class ExtendTool(StoreLayerConfigs, StoreOptPaths, StoreDependencies, StoreOutputPaths):
+class ExtendTool(
+    StoreLayerConfigs,
+    StoreOptPaths,
+    StoreDependencies,
+    StoreOutputPaths,
+    StoreDockerComposeConfigs,
+):
     makefile_rules = P.children("has", "makefile-rule")
 
 

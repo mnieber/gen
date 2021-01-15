@@ -43,9 +43,13 @@ def docker_compose_configured_in_layer(docker_compose, layer):
 
 
 class StoreDockerComposeConfigs:
+    docker_compose_configs = P.tree(
+        "has",
+        "docker-compose-config",
+        merge=lambda acc, x: [*acc, x],
+        initial=list(),
+    )
     get_docker_compose_config = MemFun(props.get_docker_compose_config)
-    docker_compose_configs = P.children("has", "docker-compose-config")
-    docker_compose_config_sources = P.children("has", "docker-compose-config-source")
 
 
 @extend(DockerCompose)
