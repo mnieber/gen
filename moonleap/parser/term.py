@@ -10,6 +10,12 @@ class Term:
     tag: str
 
 
+def maybe_term_to_term(maybe_term):
+    if isinstance(maybe_term, Term):
+        return maybe_term
+    return word_to_term(maybe_term, default_to_tag=True)
+
+
 def word_to_term(word, default_to_tag=False):
     parts = word.split(":")
     if len(parts) == 2:

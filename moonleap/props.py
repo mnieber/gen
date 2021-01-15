@@ -1,6 +1,6 @@
 import ramda as R
 
-from moonleap.parser.term import Term, word_to_term
+from moonleap.parser.term import Term, maybe_term_to_term, word_to_term
 from moonleap.prop import Prop
 from moonleap.rel import Rel
 from moonleap.resource import resolve
@@ -13,13 +13,7 @@ def fltr_instance(resource_type):
     return lambda x: isinstance(x, resource_type)
 
 
-def maybe_term_to_term(maybe_term):
-    if isinstance(maybe_term, Term):
-        return maybe_term
-    return word_to_term(maybe_term, default_to_tag=True)
-
-
-def child(verb, term, is_doc=True):
+def child(verb, term, readonly=False, is_doc=True):
     rel = Rel(verb=verb, obj=maybe_term_to_term(term))
     slctr = Selector([rel])
 
@@ -40,7 +34,9 @@ def child(verb, term, is_doc=True):
         self.add_relation(rel, child)
 
     return Prop(
-        get_value=get_child, set_value=set_child, doc_as_rel=rel if is_doc else None
+        get_value=get_child,
+        set_value=None if readonly else set_child,
+        doc_as_rel=rel if is_doc else None,
     )
 
 

@@ -14,7 +14,7 @@ from .resources import Service
 @tags(["service"])
 def create_service(term, block):
     service = Service(name=term.data)
-    service.set_output_path(service.name + "/")
+    service.output_path = service.name + "/"
     service.layer_configs.add(LayerConfig(body=LC.get_service_options()))
     service.add_to_docker_compose_configs(
         DockerComposeConfig(

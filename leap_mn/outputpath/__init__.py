@@ -10,4 +10,4 @@ class StoreOutputPaths:
     output_paths = P.tree(
         "has", "output-path", merge=props.merge, initial=OutputPath("")
     )
-    set_output_path = MemFun(lambda self, path: self.output_paths.add(OutputPath(path)))
+    output_path = props.output_path("has", "output-path")

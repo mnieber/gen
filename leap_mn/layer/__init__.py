@@ -10,7 +10,7 @@ from .resources import Layer, LayerConfig
 @tags(["layer"])
 def create_layer(term, block):
     layer = Layer(name=term.data)
-    layer.set_output_path(".dodo_commands")
+    layer.output_path = ".dodo_commands"
     return layer
 
 

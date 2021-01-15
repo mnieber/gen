@@ -14,7 +14,7 @@ def project_has_service(project, service):
 @tags(["project"])
 def create_project(term, block):
     project = Project(term.data)
-    project.set_output_path("src/")
+    project.output_path = "src/"
     return project
 
 

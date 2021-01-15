@@ -2,7 +2,7 @@ import moonleap.props as P
 from leap_mn.layer import LayerConfig
 from leap_mn.outputpath import StoreOutputPaths
 from leap_mn.service import Service
-from moonleap import extend, rule, tags
+from moonleap import extend, render_templates, rule, tags
 
 from . import layer_configs as LC
 from .resources import Dockerfile
@@ -31,9 +31,14 @@ def service_has_dockerfile(service, dockerfile):
     dockerfile.output_paths.add_source(service)
 
 
+def get_template_filename(dockerfile):
+    return "templates/Dockerfile" + (".dev" if dockerfile.is_dev else "")
+
+
 @extend(Dockerfile)
 class ExtendDockerfile(StoreOutputPaths):
     service = P.parent(Service, "has", "dockerfile")
+    render = render_templates(__file__, get_template_filename)
     templates = "templates_{{res.term.data}}"
 
 

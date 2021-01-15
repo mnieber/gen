@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from jinja2 import Template
+from moonleap import MemFun
 from moonleap.render.load_template import load_template
 
 
@@ -27,3 +28,19 @@ class TemplateRenderer:
 
         with open(fn, "w") as ofs:
             ofs.write(t.render(res=resource))
+
+
+def render_templates(root_filename, location="templates"):
+    def render(self, template_renderer):
+        template_path = location(self) if callable(location) else location
+
+        output_sub_dir = self.output_paths.merged.location
+        templates_path = Path(root_filename).parent / template_path
+
+        template_paths = (
+            templates_path.glob("*") if templates_path.is_dir() else [templates_path]
+        )
+        for template_fn in template_paths:
+            template_renderer.render(output_sub_dir, self, template_fn)
+
+    return MemFun(render)
