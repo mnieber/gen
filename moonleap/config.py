@@ -1,4 +1,4 @@
-from moonleap.parser.term import fuzzy_match
+from moonleap.rel import fuzzy_match
 
 
 class Config:

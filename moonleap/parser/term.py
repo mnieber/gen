@@ -1,7 +1,4 @@
 from dataclasses import dataclass
-from fnmatch import fnmatch
-
-from moonleap.utils import maybe_tuple_to_tuple
 
 
 @dataclass(frozen=True)
@@ -43,36 +40,3 @@ def term_to_word(term):
 
 def is_it_term(term):
     return term.tag.lower() in ["it", "its"]
-
-
-def match_term_to_pattern(term, pattern_term):
-    datas_match = pattern_term.data is None or fnmatch(
-        term.data or "", pattern_term.data
-    )
-    tags_match = fnmatch(term.tag, pattern_term.tag)
-    return datas_match and tags_match
-
-
-def _is_intersecting(lhs, rhs):
-    lhs = maybe_tuple_to_tuple(lhs)
-    rhs = maybe_tuple_to_tuple(rhs)
-
-    for x in lhs:
-        if x in rhs:
-            return True
-    return False
-
-
-def fuzzy_match(input_rel, pattern_rel):
-    return (
-        input_rel.is_inv == pattern_rel.is_inv
-        and _is_intersecting(input_rel.verb, pattern_rel.verb)
-        and match_term_to_pattern(input_rel.obj, pattern_rel.obj)
-        and (
-            pattern_rel.subj is None
-            or (
-                input_rel.subj
-                and match_term_to_pattern(input_rel.subj, pattern_rel.subj)
-            )
-        )
-    )
