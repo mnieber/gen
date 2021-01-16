@@ -1,8 +1,8 @@
 from pathlib import Path
 
 from jinja2 import Template
-from moonleap import MemFun
 from moonleap.render.load_template import load_template
+from moonleap.resource.memfun import MemFun
 
 
 def _render_template(filename, resource):

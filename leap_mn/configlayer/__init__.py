@@ -1,4 +1,4 @@
-import moonleap.props as P
+import moonleap.resource.props as P
 from leap_mn.layer import Layer, LayerConfig
 from leap_mn.project import Project
 from moonleap import extend, rule, tags

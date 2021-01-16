@@ -1,7 +1,7 @@
-from moonleap.config import config
-from moonleap.memfun import MemFun
+from moonleap.builder.config import config
 from moonleap.parser.term import word_to_term
-from moonleap.prop import Prop
+from moonleap.resource.memfun import MemFun
+from moonleap.resource.prop import Prop
 
 
 def install(module):

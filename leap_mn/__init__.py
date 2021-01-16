@@ -1,4 +1,4 @@
-from moonleap.install import install
+from moonleap import install
 
 from . import (
     configlayer,

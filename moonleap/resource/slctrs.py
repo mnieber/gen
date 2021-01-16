@@ -1,5 +1,4 @@
 import ramda as R
-
 from moonleap.resource.rel import Rel, fuzzy_match
 
 

@@ -1,9 +1,8 @@
 import ramda as R
-
-from moonleap.config import config
+from moonleap.builder.config import config
 from moonleap.parser.term import is_it_term, word_to_term
-from moonleap.rel import Rel
 from moonleap.resource import Resource
+from moonleap.resource.rel import Rel
 
 
 def _get_verbs_that_couple(block, a_term, b_term):

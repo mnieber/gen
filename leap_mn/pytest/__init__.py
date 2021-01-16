@@ -1,4 +1,4 @@
-import moonleap.props as P
+import moonleap.resource.props as P
 from leap_mn.layer import LayerConfig
 from leap_mn.pipdependency import PipDependency
 from leap_mn.service import Service

@@ -4,8 +4,8 @@ from importlib import import_module
 
 from moonleap.parser.block import Block
 from moonleap.parser.term import Term
-from moonleap.rel import Rel
-from moonleap.slctrs import Selector
+from moonleap.resource.rel import Rel
+from moonleap.resource.slctrs import Selector
 
 
 @dataclass

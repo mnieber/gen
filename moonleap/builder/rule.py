@@ -2,7 +2,7 @@ import typing as T
 from dataclasses import dataclass
 
 from moonleap.parser.term import word_to_term
-from moonleap.rel import Rel
+from moonleap.resource.rel import Rel
 
 
 @dataclass

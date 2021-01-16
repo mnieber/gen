@@ -1,4 +1,4 @@
-import moonleap.props as P
+import moonleap.resource.props as P
 from leap_mn.dockercompose import DockerComposeConfig, StoreDockerComposeConfigs
 from leap_mn.layer import LayerConfig, StoreLayerConfigs
 from leap_mn.outputpath import StoreOutputPaths

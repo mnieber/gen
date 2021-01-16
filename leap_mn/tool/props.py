@@ -1,5 +1,5 @@
 import ramda as R
-from moonleap.slctrs import PropSelector, Selector
+from moonleap.resource.slctrs import PropSelector, Selector
 
 
 def get_pip_pkg_names():

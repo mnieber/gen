@@ -1,7 +1,7 @@
 from moonleap.parser.term import maybe_term_to_term
-from moonleap.prop import Prop
-from moonleap.rel import Rel
-from moonleap.slctrs import Selector
+from moonleap.resource.prop import Prop
+from moonleap.resource.rel import Rel
+from moonleap.resource.slctrs import Selector
 
 from .resources import OutputPath
 

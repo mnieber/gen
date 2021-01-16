@@ -1,4 +1,4 @@
-import moonleap.props as P
+import moonleap.resource.props as P
 from leap_mn.layer import LayerConfig
 from leap_mn.layergroup import create_layer_group
 from leap_mn.service import Service

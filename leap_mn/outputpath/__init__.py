@@ -1,4 +1,4 @@
-import moonleap.props as P
+import moonleap.resource.props as P
 
 from . import props as props
 from .resources import OutputPath
