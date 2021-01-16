@@ -1,24 +1,12 @@
-import moonleap.resource.props as P
-from leap_mn.project import Project
-from leapdodo.layer import Layer, LayerConfig
-from moonleap import extend, rule, tags
+from leapdodo.layer import LayerConfig, create_layer
+from moonleap import tags
 
 from .layer_configs import get_root_config
 
 
 @tags(["config:layer"])
-def create_layer(term, block):
-    layer = Layer(name="config")
+def create_config_layer(term, block):
+    layer = create_layer(term, block)
     layer.layer_configs.add(LayerConfig(get_root_config()))
 
     return layer
-
-
-@rule("project", "has", "config:layer")
-def project_has_config_layer(project, config_layer):
-    config_layer.layer_configs.add_source(project)
-
-
-@extend(Project)
-class ExtendProject:
-    config_layer = P.child("has", "config:layer", is_doc=False)

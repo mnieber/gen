@@ -2,17 +2,9 @@ import moonleap.resource.props as P
 from leap_mn.dockercompose import StoreDockerComposeConfigs
 from leap_mn.optdir import StoreOptPaths
 from leapdodo.layer import StoreLayerConfigs
-from moonleap import StoreOutputPaths, extend, rule
+from moonleap import StoreOutputPaths, extend
 
 from .resources import Tool
-
-
-@rule("service", ("has", "uses"), "*", fltr_obj=P.fltr_instance(Tool))
-def service_has_tool(service, tool):
-    service.add_to_tools(tool)
-    service.layer_configs.add_source(tool)
-    service.docker_compose_configs.add_source(tool)
-    tool.output_paths.add_source(service)
 
 
 class StoreDependencies:

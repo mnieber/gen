@@ -1,7 +1,6 @@
 import moonleap.resource.props as P
-from leap_mn.dockercompose import DockerComposeConfig
 from leap_mn.service import Service
-from moonleap import MemFun, extend, rule, tags
+from moonleap import MemFun, extend, tags
 
 from . import props
 from .resources import OptDir, OptPath  # noqa
