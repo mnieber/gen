@@ -14,7 +14,6 @@ def create_pytest(term, block):
     pytest = Pytest()
     pytest.pip_dependencies.add(PipDependency(["pytest"]))
     pytest.layer_configs.add(LayerConfig(lambda: LC.get_pytest_options(pytest)))
-    pytest.opt_paths.add(opt_paths.pytest_opt_path)
 
     return pytest
 
