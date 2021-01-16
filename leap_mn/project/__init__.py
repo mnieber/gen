@@ -5,16 +5,16 @@ from moonleap import StoreOutputPaths, extend, rule, tags
 from .resources import Project
 
 
-@rule("project", "has", "service")
-def project_has_service(project, service):
-    service.output_paths.add_source(project)
-
-
 @tags(["project"])
 def create_project(term, block):
     project = Project(term.data)
     project.output_path = "src/"
     return project
+
+
+@rule("project", "has", "service")
+def project_has_service(project, service):
+    service.output_paths.add_source(project)
 
 
 @rule("project", "has", "config:layer")

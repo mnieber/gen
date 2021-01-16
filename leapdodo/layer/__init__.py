@@ -12,15 +12,15 @@ def create_layer(term, block):
     return layer
 
 
+@rule("layer", "has", "layer-group")
+def layer_has_layer_group(layer, layer_group):
+    layer.layer_configs.add_source(layer_group)
+
+
 class StoreLayerConfigs:
     layer_configs = P.tree(
         "has", "layer-config", merge=props.merge, initial=LayerConfig({})
     )
-
-
-@rule("layer", "has", "layer-group")
-def layer_has_layer_group(layer, layer_group):
-    layer.layer_configs.add_source(layer_group)
 
 
 @extend(Layer)

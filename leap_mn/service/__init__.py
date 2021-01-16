@@ -60,4 +60,5 @@ class ExtendService(StoreLayerConfigs, StoreDockerComposeConfigs, StoreOutputPat
     makefile_rules = Prop(props.get_makefile_rules())
     project = P.parent(Project, "has", "service")
     src_dir = P.child("has", "src-dir")
+    opt_dir = P.child("has", "opt-dir")
     tools = P.children(("has", "uses"), "tool")
