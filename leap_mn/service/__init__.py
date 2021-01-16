@@ -59,7 +59,6 @@ def service_has_setup_file(service, setup_file):
 
 @rule("service", ("has", "uses"), "*", fltr_obj=P.fltr_instance("leap_mn.tool.Tool"))
 def service_has_tool(service, tool):
-    __import__("pudb").set_trace()
     service.add_to_tools(tool)
     service.layer_configs.add_source(tool)
     service.docker_compose_configs.add_source(tool)

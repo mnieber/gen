@@ -5,33 +5,67 @@ from moonleap.resource import Resource
 from moonleap.resource.rel import Rel
 
 
+def _process_words(words, it_term, a_term, b_term, result, word_idx=0):
+    first_term = None
+    state = "find start"
+    verb = None
+    count_other_terms = 0
+    while word_idx < len(words):
+        word = words[word_idx]
+        term = None
+
+        if word.startswith("("):
+            if state == "find other term":
+                term, word_idx = _process_words(
+                    words, it_term, a_term, b_term, result, word_idx
+                )
+            else:
+                word = word[1:]
+
+        if term is None:
+            term = word_to_term(word)
+
+        must_break = False
+        if word.endswith(")"):
+            must_break = True
+            word = word[:-1]
+
+        if term and is_it_term(term):
+            term = it_term
+
+        if term and not first_term:
+            first_term = term
+
+        if term and term == a_term:
+            state = "find verb"
+        elif word.startswith("/") and state == "find verb":
+            verb = word[1:]
+            state = "find other term"
+        elif (
+            word.startswith("/")
+            and state == "find other term"
+            and count_other_terms > 0
+        ):
+            state = "find start"
+            count_other_terms = 0
+        elif state == "find other term" and term and term == b_term:
+            if verb not in result:
+                result.append(verb)
+        elif term and state == "find other term":
+            count_other_terms += 1
+
+        if must_break:
+            break
+
+        word_idx += 1
+
+    return first_term, word_idx
+
+
 def _get_verbs_that_couple(block, a_term, b_term):
     result = []
     for line in block.lines:
-        state = "find start"
-        verb = None
-        count_other_terms = 0
-        for word in line.words:
-            term = word_to_term(word)
-            if term and is_it_term(term):
-                term = line.it_term
-
-            if term and term == a_term:
-                state = "find verb"
-            elif word.startswith("/") and state == "find verb":
-                verb = word[1:]
-                state = "find other term"
-            elif (
-                word.startswith("/")
-                and state == "find other term"
-                and count_other_terms > 0
-            ):
-                state = "find start"
-                count_other_terms = 0
-            elif state == "find other term" and term and term == b_term:
-                result.append(verb)
-            elif term and state == "find other term":
-                count_other_terms += 1
+        _process_words(line.words, line.it_term, a_term, b_term, result)
 
     return result
 
