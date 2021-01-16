@@ -1,9 +1,7 @@
 import moonleap.resource.props as P
 from leap_mn.service import Service
-from leapdodo.layer import LayerConfig
 from moonleap import StoreOutputPaths, extend, render_templates, rule, tags
 
-from . import layer_configs as LC
 from .resources import Dockerfile
 
 
@@ -18,18 +16,6 @@ def dockerfile_use_docker_image(dockerfile, docker_image):
     dockerfile.image_name = docker_image.term.data
 
 
-@rule(
-    "service",
-    "has",
-    "dockerfile",
-    description="""
-If the service has a dockerfile then we add docker options to that service.""",
-)
-def service_has_dockerfile(service, dockerfile):
-    service.layer_configs.add(LayerConfig(lambda: LC.get_docker_options(service)))
-    dockerfile.output_paths.add_source(service)
-
-
 def get_template_filename(dockerfile):
     return "templates/Dockerfile" + (".dev" if dockerfile.is_dev else "")
 
@@ -38,9 +24,3 @@ def get_template_filename(dockerfile):
 class ExtendDockerfile(StoreOutputPaths):
     service = P.parent(Service, "has", "dockerfile")
     render = render_templates(__file__, get_template_filename)
-
-
-@extend(Service)
-class ExtendService:
-    dockerfile = P.child("has", ":dockerfile")
-    dockerfile_dev = P.child("has", "dev:dockerfile")

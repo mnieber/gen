@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import StoreOutputPaths, extend, render_templates, tags
+from moonleap import StoreOutputPaths, extend, render_templates, rule, tags
 
 from . import props
 from .resources import Layer, LayerConfig
@@ -18,6 +18,13 @@ class StoreLayerConfigs:
     )
 
 
+@rule("layer", "has", "layer-group")
+def layer_has_layer_group(layer, layer_group):
+    layer.layer_configs.add_source(layer_group)
+
+
 @extend(Layer)
 class ExtendLayer(StoreLayerConfigs, StoreOutputPaths):
     render = render_templates(__file__)
+    parent_layer_group = P.parent("leapdodo.layergroup.LayerGroup", "contains", "layer")
+    layer_groups = P.children("has", "layer-group")

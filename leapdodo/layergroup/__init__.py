@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
-from leapdodo.layer import Layer, LayerConfig, StoreLayerConfigs
-from moonleap import extend, rule, tags
+from leapdodo.layer import LayerConfig, StoreLayerConfigs
+from moonleap import extend, tags
 
 from . import layer_configs as LC
 from .resources import LayerGroup
@@ -15,17 +15,6 @@ def create_layer_group(term, block):
     return layer_group
 
 
-@rule("layer", "has", "layer-group")
-def layer_has_layer_group(layer, layer_group):
-    layer.layer_configs.add_source(layer_group)
-
-
 @extend(LayerGroup)
 class ExtendLayerGroup(StoreLayerConfigs):
     layers = P.children("contains", "layer")
-
-
-@extend(Layer)
-class ExtendLayer:
-    parent_layer_group = P.parent(LayerGroup, "contains", "layer")
-    layer_groups = P.children("has", "layer-group")

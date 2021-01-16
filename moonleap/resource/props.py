@@ -62,6 +62,7 @@ def _fltr(resource_type):
 
 
 def parent(parent_resource_type, verb, term, is_doc=True):
+    parent_resource_type = resolve(parent_resource_type)
     rel = Rel(verb=verb, obj=maybe_term_to_term(term), is_inv=True)
     slctr = Selector([rel])
 
@@ -76,6 +77,7 @@ def parent(parent_resource_type, verb, term, is_doc=True):
 
 
 def parents(parent_resource_type, verb, term, rdcr=None, is_doc=True):
+    parent_resource_type = resolve(parent_resource_type)
     rel = Rel(verb=verb, obj=maybe_term_to_term(term), is_inv=True)
     slctr = Selector([rel])
 

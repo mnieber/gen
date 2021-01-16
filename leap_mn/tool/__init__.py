@@ -1,11 +1,9 @@
 import moonleap.resource.props as P
 from leap_mn.dockercompose import StoreDockerComposeConfigs
 from leap_mn.optdir import StoreOptPaths
-from leap_mn.service import Service
 from leapdodo.layer import StoreLayerConfigs
-from moonleap import MemFun, Prop, StoreOutputPaths, extend, rule
+from moonleap import StoreOutputPaths, extend, rule
 
-from . import props
 from .resources import Tool
 
 
@@ -35,11 +33,3 @@ class ExtendTool(
     StoreDockerComposeConfigs,
 ):
     makefile_rules = P.children("has", "makefile-rule")
-
-
-@extend(Service)
-class ExtendService:
-    tools = P.children(("has", "uses"), "tool")
-    get_pkg_names = MemFun(props.get_pkg_names())
-    get_pip_pkg_names = MemFun(props.get_pip_pkg_names())
-    makefile_rules = Prop(props.get_makefile_rules())
