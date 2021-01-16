@@ -1,7 +1,7 @@
 import moonleap.resource.props as P
-from leap_mn.layer import LayerConfig
 from leap_mn.pipdependency import PipDependency
 from leap_mn.service import Service
+from leapdodo.layer import LayerConfig
 from moonleap import extend, rule, tags
 
 from . import layer_configs as LC

@@ -1,7 +1,7 @@
 import moonleap.resource.props as P
-from leap_mn.layer import LayerConfig
-from leap_mn.layergroup import create_layer_group
 from leap_mn.service import Service
+from leapdodo.layer import LayerConfig
+from leapdodo.layergroup import create_layer_group
 from moonleap import Term, extend, rule, tags
 
 from . import layer_configs as LC

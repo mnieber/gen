@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from leap_mn.layer import Layer, LayerConfig, StoreLayerConfigs
+from leapdodo.layer import Layer, LayerConfig, StoreLayerConfigs
 from moonleap import extend, rule, tags
 
 from . import layer_configs as LC

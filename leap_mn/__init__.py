@@ -4,8 +4,6 @@ from . import (
     configlayer,
     dockercompose,
     dockerfile,
-    layer,
-    layergroup,
     makefile,
     optdir,
     pipcompile,
@@ -23,8 +21,6 @@ def install_all():
     install(configlayer)
     install(dockercompose)
     install(dockerfile)
-    install(layer)
-    install(layergroup)
     install(makefile)
     install(optdir)
     install(pipcompile)

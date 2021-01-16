@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
-from leap_mn.layer import Layer, LayerConfig
 from leap_mn.project import Project
+from leapdodo.layer import Layer, LayerConfig
 from moonleap import extend, rule, tags
 
 from .layer_configs import get_root_config

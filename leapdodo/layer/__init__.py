@@ -1,6 +1,5 @@
 import moonleap.resource.props as P
-from leap_mn.outputpath import StoreOutputPaths
-from moonleap import extend, render_templates, tags
+from moonleap import StoreOutputPaths, extend, render_templates, tags
 
 from . import props
 from .resources import Layer, LayerConfig

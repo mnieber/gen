@@ -1,8 +1,8 @@
 import moonleap.resource.props as P
-from leap_mn.layer import LayerConfig
 from leap_mn.pkgdependency import PkgDependency
 from leap_mn.service import Service
 from leap_mn.tool import Tool
+from leapdodo.layer import LayerConfig
 from moonleap import extend, render_templates, rule, tags
 
 from . import layer_configs as LC

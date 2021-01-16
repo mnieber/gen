@@ -1,9 +1,8 @@
 import moonleap.resource.props as P
 from leap_mn.dockercompose import DockerComposeConfig, StoreDockerComposeConfigs
-from leap_mn.layer import LayerConfig, StoreLayerConfigs
-from leap_mn.outputpath import StoreOutputPaths
 from leap_mn.project import Project
-from moonleap import extend, tags
+from leapdodo.layer import LayerConfig, StoreLayerConfigs
+from moonleap import StoreOutputPaths, extend, tags
 
 from . import docker_compose_configs as DCC
 from . import layer_configs as LC

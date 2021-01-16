@@ -1,10 +1,9 @@
 import moonleap.resource.props as P
 from leap_mn.dockercompose import StoreDockerComposeConfigs
-from leap_mn.layer import StoreLayerConfigs
 from leap_mn.optdir import StoreOptPaths
-from leap_mn.outputpath import StoreOutputPaths
 from leap_mn.service import Service
-from moonleap import MemFun, Prop, extend, rule
+from leapdodo.layer import StoreLayerConfigs
+from moonleap import MemFun, Prop, StoreOutputPaths, extend, rule
 
 from . import props
 from .resources import Tool

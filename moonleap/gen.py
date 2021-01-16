@@ -3,9 +3,11 @@ import sys
 import traceback
 
 import leap_mn
+import leapdodo
 
 from moonleap import create_resources, get_blocks, render_resources
 
+leapdodo.install_all()
 leap_mn.install_all()
 
 

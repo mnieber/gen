@@ -1,8 +1,7 @@
 import moonleap.resource.props as P
-from leap_mn.layer import LayerConfig, StoreLayerConfigs
-from leap_mn.outputpath import StoreOutputPaths
 from leap_mn.project import Project
-from moonleap import MemFun, extend, render_templates, rule, tags
+from leapdodo.layer import LayerConfig, StoreLayerConfigs
+from moonleap import MemFun, StoreOutputPaths, extend, render_templates, rule, tags
 
 from . import layer_configs as LC
 from . import props

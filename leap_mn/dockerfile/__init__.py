@@ -1,8 +1,7 @@
 import moonleap.resource.props as P
-from leap_mn.layer import LayerConfig
-from leap_mn.outputpath import StoreOutputPaths
 from leap_mn.service import Service
-from moonleap import extend, render_templates, rule, tags
+from leapdodo.layer import LayerConfig
+from moonleap import StoreOutputPaths, extend, render_templates, rule, tags
 
 from . import layer_configs as LC
 from .resources import Dockerfile
