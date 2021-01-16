@@ -1,6 +1,7 @@
 import moonleap.resource.props as P
 from leap_mn.dockercompose import StoreDockerComposeConfigs
 from leap_mn.optdir import StoreOptPaths
+from leap_mn.setupfile import StoreSetupFileConfigs
 from leapdodo.layer import StoreLayerConfigs
 from moonleap import StoreOutputPaths, extend
 
@@ -23,5 +24,6 @@ class ExtendTool(
     StoreDependencies,
     StoreOutputPaths,
     StoreDockerComposeConfigs,
+    StoreSetupFileConfigs,
 ):
     makefile_rules = P.children("has", "makefile-rule")

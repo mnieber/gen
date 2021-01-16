@@ -20,7 +20,7 @@ The frontend:service /has a :dockerfile and a dev:dockerfile that /use the node_
 ## The backend:service
 
 The backend:service /has a :dockerfile and a dev:dockerfile that /use the python_3.8:docker-image.
-:It /has an :opt-dir and a :setup-cfg.
+:It /has an :opt-dir and a :setup-file.
 :It /uses the default:root-dir and default:src-mount-point.
 :It also /has a :makefile for /running :pip-compile.
 :It /uses :pytest /with :pytest-html.
