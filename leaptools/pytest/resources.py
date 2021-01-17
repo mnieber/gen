@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from leap_mn.tool import Tool
+from leaptools.tool import Tool
 
 
 @dataclass

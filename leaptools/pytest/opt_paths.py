@@ -1,4 +1,4 @@
-from leap_mn.optdir import OptPath
+from leaptools.optdir import OptPath
 
 pytest_html_opt_path = OptPath(
     is_dir=False,

@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from leap_mn.makefile import MakefileRule
-from leap_mn.pipdependency import PipDependency
-from leap_mn.tool import Tool
+from leaptools.makefile import MakefileRule
+from leaptools.pipdependency import PipDependency
+from leaptools.tool import Tool
 from moonleap import chop0, tags
 
 makefile_rule = chop0(

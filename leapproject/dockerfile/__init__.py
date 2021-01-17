@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from leap_mn.service import Service
+from leapproject.service import Service
 from moonleap import StoreOutputPaths, extend, render_templates, rule, tags
 
 from .resources import Dockerfile

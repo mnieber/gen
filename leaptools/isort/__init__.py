@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from leap_mn.pipdependency import PipDependency
-from leap_mn.setupfile import SetupFileConfig
-from leap_mn.tool import Tool
+from leaptools.pipdependency import PipDependency
+from leaptools.setupfile import SetupFileConfig
+from leaptools.tool import Tool
 from moonleap import tags
 
 setup_file_config = dict(

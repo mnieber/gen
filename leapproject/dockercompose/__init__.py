@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
-from leap_mn.project import Project
 from leapdodo.layer import LayerConfig, StoreLayerConfigs
+from leapproject.project import Project
 from moonleap import MemFun, StoreOutputPaths, extend, render_templates, rule, tags
 
 from . import layer_configs as LC

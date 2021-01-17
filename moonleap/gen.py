@@ -2,13 +2,15 @@ import os
 import sys
 import traceback
 
-import leap_mn
 import leapdodo
+import leapproject
+import leaptools
 
 from moonleap import create_resources, get_blocks, render_resources
 
 leapdodo.install_all()
-leap_mn.install_all()
+leapproject.install_all()
+leaptools.install_all()
 
 
 def main(gen_file):

@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
-from leap_mn.dockercompose import DockerComposeConfig
-from leap_mn.service import Service
+from leapproject.dockercompose import DockerComposeConfig
+from leapproject.service import Service
 from moonleap import MemFun, extend, rule, tags
 
 from . import docker_compose_configs as DCC

@@ -1,9 +1,9 @@
 import moonleap.resource.props as P
-from leap_mn.dockercompose import StoreDockerComposeConfigs
-from leap_mn.optdir import StoreOptPaths
-from leap_mn.service import Service
-from leap_mn.setupfile import StoreSetupFileConfigs
 from leapdodo.layer import StoreLayerConfigs
+from leapproject.dockercompose import StoreDockerComposeConfigs
+from leapproject.service import Service
+from leaptools.optdir import StoreOptPaths
+from leaptools.setupfile import StoreSetupFileConfigs
 from moonleap import MemFun, Prop, StoreOutputPaths, extend, rule
 
 from . import props
@@ -19,7 +19,7 @@ class StoreDependencies:
     )
 
 
-@rule("service", ("has", "uses"), "*", fltr_obj=P.fltr_instance("leap_mn.tool.Tool"))
+@rule("service", ("has", "uses"), "*", fltr_obj=P.fltr_instance("leaptools.tool.Tool"))
 def service_has_tool(service, tool):
     service.add_to_tools(tool)
     service.layer_configs.add_source(tool)
