@@ -11,8 +11,13 @@ def merge(lhs, rhs):
     return DockerComposeConfig(body=new_body)
 
 
-def get_docker_compose_config(self, is_dev=False):
-    fltr = R.filter(lambda x: x.is_dev == is_dev)
-    return R.reduce(
-        merge, DockerComposeConfig(body={}), fltr(self.docker_compose_configs.merged)
-    )
+def get_docker_compose_config(self):
+    config = {}
+    for service in self.services:
+        fltr = R.filter(lambda x: x.is_dev == self.is_dev)
+        service_configs = fltr(service.docker_compose_configs.merged)
+        merged_service_config = R.reduce(
+            merge, DockerComposeConfig(body={}), service_configs
+        )
+        config[service.name] = merged_service_config.get_body()
+    return config

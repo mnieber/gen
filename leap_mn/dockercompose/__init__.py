@@ -35,7 +35,6 @@ class StoreDockerComposeConfigs:
         merge=lambda acc, x: [*acc, x],
         initial=list(),
     )
-    get_docker_compose_config = MemFun(props.get_docker_compose_config)
 
 
 @extend(DockerCompose)
@@ -44,3 +43,4 @@ class ExtendDockerCompose(StoreLayerConfigs, StoreOutputPaths):
     services = P.children("run", "service")
     project = P.parent(Project, "has", "docker-compose")
     configured_by_layer = P.child("configured", "layer")
+    get_docker_compose_config = MemFun(props.get_docker_compose_config)
