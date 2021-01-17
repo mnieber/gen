@@ -10,7 +10,7 @@ class Block:
         self.level = level
         self.parent_block = None
         self.child_blocks = []
-        self._entities = []
+        self._resources = []
         self.lines: T.List[Line] = []
 
     def describes(self, term):
@@ -19,8 +19,8 @@ class Block:
     def mentions(self, term):
         return term in self.get_terms()
 
-    def get_entity(self, term):
-        entities = [x for x in self._entities if x.term == term]
+    def get_resource(self, term):
+        entities = [x for x in self._resources if x.term == term]
         return entities[0] if entities else None
 
     def link(self, parent_block):
@@ -50,7 +50,7 @@ class Block:
     ):
         result = []
         for block in self.get_blocks(include_self, include_children, include_parents):
-            result += block._entities
+            result += block._resources
 
         return R.uniq(result)
 
@@ -65,16 +65,16 @@ class Block:
                         result.append(term)
         return result
 
-    def add_entity(self, entity):
-        if self.get_entity(entity.term):
+    def add_resource(self, resource):
+        if self.get_resource(resource.term):
             raise Exception(
-                f"Block {self.name} already has an entity for term {entity.term}"
+                f"Block {self.name} already has an resource for term {resource.term}"
             )
 
-        self._entities.append(entity)
+        self._resources.append(resource)
 
-    def drop_entity(self, entity):
-        self._entities = [x for x in self._entities if x is not entity]
+    def drop_resource(self, resource):
+        self._resources = [x for x in self._resources if x is not resource]
 
     def __repr__(self):
         return f"Block ({self.name})"

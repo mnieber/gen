@@ -86,8 +86,8 @@ def derive_resources(resource):
 def find_relations(blocks):
     for block in blocks:
         for rel in _get_relations(block):
-            parent_resource = block.get_entity(rel.subj)
-            child_resource = block.get_entity(rel.obj)
+            parent_resource = block.get_resource(rel.subj)
+            child_resource = block.get_resource(rel.obj)
             if parent_resource and child_resource:
                 parent_resource.add_relation(
                     rel,
@@ -119,18 +119,18 @@ def create_resources(blocks):
         child_blocks = block.get_blocks(include_children=True, include_self=False)
 
         for term in block.get_terms():
-            if block.get_entity(term):
+            if block.get_resource(term):
                 continue
 
-            entity = None
+            resource = None
 
             for parent_block in parent_blocks:
-                entity = parent_block.get_entity(term)
-                if entity:
-                    block.add_entity(entity)
+                resource = parent_block.get_resource(term)
+                if resource:
+                    block.add_resource(resource)
                     break
 
-            if entity:
+            if resource:
                 continue
 
             creator_block = block
@@ -141,13 +141,13 @@ def create_resources(blocks):
                         break
 
             create_rule = config.get_create_rule(term) or _create_generic_resource
-            entity = create_rule(term, creator_block)
-            entity.term = term
-            entity.block = creator_block
+            resource = create_rule(term, creator_block)
+            resource.term = term
+            resource.block = creator_block
 
-            creator_block.add_entity(entity)
+            creator_block.add_resource(resource)
             if block is not creator_block:
-                block.add_entity(entity)
+                block.add_resource(resource)
 
     find_relations(blocks)
     apply_rules(blocks)
