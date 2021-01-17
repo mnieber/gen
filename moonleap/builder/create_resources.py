@@ -53,24 +53,10 @@ def _process_words(words, it_term, result, word_idx=0):
     return first_term, word_idx
 
 
-def _preprocess_words(words):
-    result = []
-    for word in words:
-        if word.startswith("("):
-            result.append("(")
-            word = word[1:]
-        if word.endswith(")"):
-            result.append(")")
-            word = word[-1]
-        result.append(word)
-    return result
-
-
 def _get_relations(block):
     result = []
     for line in block.lines:
-        words = _preprocess_words(line.words)
-        _process_words(words, line.it_term, result)
+        _process_words(line.words, line.it_term, result)
 
     return result
 

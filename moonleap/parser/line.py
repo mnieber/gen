@@ -21,10 +21,25 @@ class Line:
         return "Line: " + ",".join(str(x) for x in self.terms)
 
 
+def _preprocess_words(words):
+    result = []
+    for word in words:
+        if word.startswith("("):
+            result.append("(")
+            word = word[1:]
+
+        if word.endswith(")"):
+            result.append(word[:-1])
+            result.append(")")
+        else:
+            result.append(word)
+    return result
+
+
 def get_create_line():
     def create_line(text, it_term=None):
         terms = []
-        words = text.split()
+        words = _preprocess_words(text.split())
         next_it_term = None
         for term in words_to_terms(words):
             # check if :it must be replaced with it_term
