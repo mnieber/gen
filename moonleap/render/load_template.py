@@ -1,8 +1,13 @@
+import json
 import os
 
 import jinja2
 from jinja2_ansible_filters import AnsibleCoreFiltersExtension
 from moonleap.utils import chop
+
+
+def to_pretty_json(value):
+    return json.dumps(value, sort_keys=True, indent=4, separators=(",", ": "))
 
 
 def load_template(template_fn):
@@ -34,10 +39,11 @@ def load_template(template_fn):
 
         new_text = os.linesep.join(lines)
 
-        templateLoader = jinja2.FunctionLoader(lambda fn: new_text)
-        templateEnv = jinja2.Environment(
-            loader=templateLoader,
+        template_loader = jinja2.FunctionLoader(lambda fn: new_text)
+        template_env = jinja2.Environment(
+            loader=template_loader,
             extensions=[AnsibleCoreFiltersExtension],
             trim_blocks=True,
         )
-        return templateEnv.get_template("tplt")
+        template_env.filters["to_pretty_json"] = to_pretty_json
+        return template_env.get_template("tplt")
