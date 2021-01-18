@@ -2,7 +2,7 @@ import moonleap.resource.props as P
 from leapdodo.layer import LayerConfig
 from leapproject.service import Service
 from leaptools.pkgdependency import PkgDependency
-from leaptools.tool import Tool
+from leaptools.tool import Tool, service_has_tool
 from moonleap import extend, render_templates, rule, tags
 
 from . import layer_configs as LC
@@ -19,7 +19,8 @@ def create_makefile(term, block):
 
 @rule("makefile", "running", "*", fltr_obj=P.fltr_instance(Tool))
 def makefile_running_tool(makefile, tool):
-    makefile.service.add_to_tools(tool)
+    if tool not in makefile.service.tools:
+        service_has_tool(makefile.service, tool)
 
 
 @extend(Makefile)
