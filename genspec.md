@@ -15,7 +15,7 @@ Both :docker-compose and dev:docker-compose are /configured by the stack:layer.
 
 The frontend:service /has a :dockerfile and a dev:dockerfile that /use the node_14:docker-image.
 :It /uses the default:root-dir and default:src-mount-point.
-:It /runs :create-react-app.
+:It /has a :node-package that /uses :create-react-app.
 
 ## The backend:service
 

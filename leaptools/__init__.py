@@ -1,8 +1,10 @@
 from moonleap import install
 
 from . import (
+    createreactapp,
     isort,
     makefile,
+    nodepackage,
     optdir,
     pipcompile,
     pipdependency,
@@ -13,9 +15,11 @@ from . import (
 
 
 def install_all():
+    install(createreactapp)
     install(isort)
     install(makefile)
     install(optdir)
+    install(nodepackage)
     install(pipcompile)
     install(pipdependency)
     install(pytest)

@@ -6,8 +6,8 @@ from jinja2_ansible_filters import AnsibleCoreFiltersExtension
 from moonleap.utils import chop
 
 
-def to_pretty_json(value):
-    return json.dumps(value, sort_keys=True, indent=4, separators=(",", ": "))
+def to_nice_json(value):
+    return json.dumps(value, sort_keys=False, indent=4, separators=(",", ": "))
 
 
 def load_template(template_fn):
@@ -45,5 +45,5 @@ def load_template(template_fn):
             extensions=[AnsibleCoreFiltersExtension],
             trim_blocks=True,
         )
-        template_env.filters["to_pretty_json"] = to_pretty_json
+        template_env.filters["to_nice_json"] = to_nice_json
         return template_env.get_template("tplt")
