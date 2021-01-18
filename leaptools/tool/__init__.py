@@ -11,12 +11,8 @@ from .resources import Tool
 
 
 class StoreDependencies:
-    pip_dependencies = P.tree(
-        "has", "pip-dependency", merge=lambda acc, x: [*acc, x], initial=list()
-    )
-    pkg_dependencies = P.tree(
-        "has", "pkg-dependency", merge=lambda acc, x: [*acc, x], initial=list()
-    )
+    pip_dependencies = P.tree("has", "pip-dependency")
+    pkg_dependencies = P.tree("has", "pkg-dependency")
 
 
 @rule("service", ("has", "uses"), "*", fltr_obj=P.fltr_instance("leaptools.tool.Tool"))

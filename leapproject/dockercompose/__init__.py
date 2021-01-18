@@ -29,12 +29,7 @@ def docker_compose_configured_in_layer(docker_compose, layer):
 
 
 class StoreDockerComposeConfigs:
-    docker_compose_configs = P.tree(
-        "has",
-        "docker-compose-config",
-        merge=lambda acc, x: [*acc, x],
-        initial=list(),
-    )
+    docker_compose_configs = P.tree("has", "docker-compose-config")
 
 
 @extend(DockerCompose)

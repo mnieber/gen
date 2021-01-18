@@ -88,7 +88,7 @@ def parents(parent_resource_type, verb, term, rdcr=None, is_doc=True):
     return Prop(get_value=get_parents, doc_as_rel=rel if is_doc else None)
 
 
-def tree(verb, term, merge, initial):
+def tree(verb, term, merge=lambda acc, x: [*acc, x], initial=list()):
     rdcr = R.reduce(merge, initial)
     children_prop = children(verb, term)
     sources_term = singular(term) + "-sources"

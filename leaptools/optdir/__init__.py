@@ -22,9 +22,7 @@ def service_has_opt_dir(service, opt_dir):
 
 
 class StoreOptPaths:
-    opt_paths = P.tree(
-        "has", "opt-path", merge=lambda acc, x: [*acc, x], initial=list()
-    )
+    opt_paths = P.tree("has", "opt-path")
 
 
 @extend(OptDir)
