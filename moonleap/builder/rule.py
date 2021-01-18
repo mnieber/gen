@@ -14,14 +14,12 @@ class Rule:
     description: str = None
 
 
-def rule(
-    subject_term, verb, object_term, fltr_subj=None, fltr_obj=None, description=None
-):
+def rule(subj_term, verb, obj_term, fltr_subj=None, fltr_obj=None, description=None):
     def wrapped(f):
         rel = Rel(
-            subj=word_to_term(subject_term, default_to_tag=True),
+            subj=word_to_term(subj_term, default_to_tag=True),
             verb=verb,
-            obj=word_to_term(object_term, default_to_tag=True),
+            obj=word_to_term(obj_term, default_to_tag=True),
         )
         f.moonleap_rule = Rule(
             rel, f, fltr_subj=fltr_subj, fltr_obj=fltr_obj, description=description
