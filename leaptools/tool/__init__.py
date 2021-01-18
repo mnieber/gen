@@ -30,9 +30,7 @@ class ExtendTool(
 
 
 @extend(Service)
-class ExtendService(
-    StoreSetupFileConfigs,
-):
+class ExtendService:
     get_pip_pkg_names = MemFun(props.get_pip_pkg_names())
     get_pkg_names = MemFun(props.get_pkg_names())
     makefile_rules = Prop(props.get_makefile_rules())

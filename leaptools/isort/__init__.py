@@ -21,7 +21,7 @@ class ISort(Tool):
     pass
 
 
-@rule("service", "has", "isort")
+@rule("service", ("uses", "has"), "isort")
 def service_has_isort(service, isort):
     service.add_tool(isort)
 
