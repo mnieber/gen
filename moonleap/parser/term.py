@@ -15,8 +15,8 @@ def maybe_term_to_term(maybe_term):
 
 def word_to_term(word, default_to_tag=False):
     parts = word.split(":")
-    if len(parts) == 2:
-        data, tag = parts
+    if len(parts) >= 2:
+        data, tag = ":".join(parts[:-1]), parts[-1]
         return Term(data or "", tag or "")
     elif default_to_tag:
         return Term(None, word)
