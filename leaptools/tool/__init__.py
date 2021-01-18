@@ -5,7 +5,7 @@ from leapproject.service import Service
 from leaptools.nodepackage import StoreNodePackageConfigs
 from leaptools.optdir import StoreOptPaths
 from leaptools.setupfile import StoreSetupFileConfigs
-from moonleap import MemFun, Prop, StoreOutputPaths, extend, rule
+from moonleap import MemFun, Prop, StoreOutputPaths, extend
 
 from . import props
 from .resources import Tool
@@ -14,15 +14,6 @@ from .resources import Tool
 class StoreDependencies:
     pip_dependencies = P.tree("has", "pip-dependency")
     pkg_dependencies = P.tree("has", "pkg-dependency")
-
-
-@rule("service", ("has", "uses"), "*", fltr_obj=P.fltr_instance("leaptools.tool.Tool"))
-def service_has_tool(service, tool):
-    service.add_to_tools(tool)
-    service.layer_configs.add_source(tool)
-    service.docker_compose_configs.add_source(tool)
-    service.setup_file_configs.add_source(tool)
-    tool.output_paths.add_source(service)
 
 
 @extend(Tool)
@@ -47,3 +38,4 @@ class ExtendService(
     makefile_rules = Prop(props.get_makefile_rules())
     opt_dir = P.child("has", "opt-dir")
     tools = P.children(("has", "uses"), "tool")
+    add_tool = MemFun(props.add_tool)

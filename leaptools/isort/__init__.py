@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from leaptools.pipdependency import PipDependency
 from leaptools.setupfile import SetupFileConfig
 from leaptools.tool import Tool
-from moonleap import tags
+from moonleap import rule, tags
 
 setup_file_config = dict(
     isort=dict(
@@ -19,6 +19,11 @@ setup_file_config = dict(
 @dataclass
 class ISort(Tool):
     pass
+
+
+@rule("service", "has", "isort")
+def service_has_isort(service, isort):
+    service.add_tool(isort)
 
 
 @tags(["isort"])

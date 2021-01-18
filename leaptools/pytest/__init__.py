@@ -31,14 +31,14 @@ def create_pytest_html(term, block):
     return pytest_html
 
 
-@rule("pytest", "with", "pytest-html")
-def pytest_with_pytest_html(pytest, pytest_html):
-    pytest.layer_configs.add_source(pytest_html)
-    pytest.opt_paths.add_source(pytest_html)
-    pytest.pkg_dependencies.add_source(pytest_html)
-    pytest.pip_dependencies.add_source(pytest_html)
+@rule("service", ("has", "uses"), "pytest")
+def service_has_pytest(service, pytest):
+    service.add_tool(pytest)
+    if pytest.pytest_html:
+        service.add_tool(pytest.pytest_html)
 
 
 @extend(Pytest)
 class ExtendPytest:
+    pytest_html = P.child("with", "pytest-html")
     service = P.parent(Service, "has", "pytest")

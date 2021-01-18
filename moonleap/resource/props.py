@@ -39,7 +39,7 @@ def child(verb, term, readonly=False, is_doc=True):
     )
 
 
-def children(verb, term, rdcr=None, is_doc=True):
+def children(verb, term, read_only=False, rdcr=None, is_doc=True):
     rel = Rel(verb=verb, obj=maybe_term_to_term(term))
     slctr = Selector([rel])
 
@@ -52,7 +52,7 @@ def children(verb, term, rdcr=None, is_doc=True):
 
     return Prop(
         get_value=get_children,
-        add_value=add_to_children,
+        add_value=None if read_only else add_to_children,
         doc_as_rel=rel if is_doc else None,
     )
 

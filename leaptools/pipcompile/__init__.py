@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from leaptools.makefile import MakefileRule
 from leaptools.pipdependency import PipDependency
 from leaptools.tool import Tool
-from moonleap import chop0, extend, render_templates, tags
+from moonleap import chop0, extend, render_templates, rule, tags
 
 makefile_rule = chop0(
     """
@@ -17,6 +17,11 @@ pip-compile:
 @dataclass
 class PipCompile(Tool):
     pass
+
+
+@rule("service", "has", "pip-compile")
+def service_has_pip_compile(service, pip_compile):
+    service.add_tool(pip_compile)
 
 
 @tags(["pip-compile"])
