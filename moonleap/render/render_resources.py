@@ -6,7 +6,7 @@ def render_resources(blocks, output_root_dir):
     rendered_resources = []
 
     for block in blocks:
-        for resource in block.get_entities():
+        for resource in block.get_resources():
             if resource.block is not block:
                 continue
 

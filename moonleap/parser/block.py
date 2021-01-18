@@ -20,8 +20,8 @@ class Block:
         return term in self.get_terms()
 
     def get_resource(self, term):
-        entities = [x for x in self._resources if x.term == term]
-        return entities[0] if entities else None
+        resources = [x for x in self._resources if x.term == term]
+        return resources[0] if resources else None
 
     def link(self, parent_block):
         self.parent_block = parent_block
@@ -45,7 +45,7 @@ class Block:
 
         return result
 
-    def get_entities(
+    def get_resources(
         self, include_self=True, include_children=False, include_parents=False
     ):
         result = []
