@@ -4,6 +4,8 @@ from moonleap import StoreOutputPaths, extend, rule, tags
 
 from .resources import Project
 
+has = ("has", "uses")
+
 
 @tags(["project"])
 def create_project(term, block):
@@ -12,19 +14,19 @@ def create_project(term, block):
     return project
 
 
-@rule("project", "has", "service")
+@rule("project", has, "service")
 def project_has_service(project, service):
     service.output_paths.add_source(project)
 
 
-@rule("project", "has", "config:layer")
+@rule("project", has, "config:layer")
 def project_has_config_layer(project, config_layer):
     config_layer.layer_configs.add_source(project)
 
 
 @rule(
     "project",
-    "has",
+    has,
     "docker-compose",
     description="""
 Add docker-compose dodo settings to the project.""",
@@ -37,6 +39,6 @@ def project_has_docker_compose(project, docker_compose):
 
 @extend(Project)
 class ExtendProject(StoreLayerConfigs, StoreOutputPaths):
-    services = P.child("has", "service")
-    src_dir = P.child("has", "src-dir")
-    config_layer = P.child("has", "config:layer", is_doc=False)
+    services = P.child(has, "service")
+    src_dir = P.child(has, "src-dir")
+    config_layer = P.child(has, "config:layer", is_doc=False)

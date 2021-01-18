@@ -4,6 +4,8 @@ from moonleap import StoreOutputPaths, extend, render_templates, rule, tags
 
 from .resources import Dockerfile
 
+has = ("has", "uses")
+
 
 @tags(["dockerfile"])
 def create_dockerfile(term, block):
@@ -11,7 +13,7 @@ def create_dockerfile(term, block):
     return docker_file
 
 
-@rule("dockerfile", "use", "docker-image")
+@rule("dockerfile", has, "docker-image")
 def dockerfile_use_docker_image(dockerfile, docker_image):
     dockerfile.image_name = docker_image.term.data
 
@@ -22,5 +24,5 @@ def get_template_filename(dockerfile):
 
 @extend(Dockerfile)
 class ExtendDockerfile(StoreOutputPaths):
-    service = P.parent(Service, "has", "dockerfile")
+    service = P.parent(Service, has, "dockerfile")
     render = render_templates(__file__, get_template_filename)

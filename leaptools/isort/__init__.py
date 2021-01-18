@@ -5,6 +5,8 @@ from leaptools.setupfile import SetupFileConfig
 from leaptools.tool import Tool
 from moonleap import rule, tags
 
+uses = ("uses", "has")
+
 setup_file_config = dict(
     isort=dict(
         multi_line_output=3,
@@ -21,7 +23,7 @@ class ISort(Tool):
     pass
 
 
-@rule("service", ("uses", "has"), "isort")
+@rule("service", uses, "isort")
 def service_has_isort(service, isort):
     service.add_tool(isort)
 

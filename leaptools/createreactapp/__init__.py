@@ -4,6 +4,8 @@ from moonleap import rule, tags
 
 from . import node_package_configs as NPC
 
+uses = "uses"
+
 
 class CreateReactApp(Tool):
     pass
@@ -16,6 +18,6 @@ def create_cra(term, block):
     return cra
 
 
-@rule("node-package", "uses", "create-react-app")
+@rule("node-package", uses, "create-react-app")
 def node_package_uses_cra(node_package, cra):
     node_package.service.add_tool(cra)

@@ -8,6 +8,8 @@ from . import layer_configs as LC
 from . import opt_paths
 from .resources import Pytest, PytestHtml
 
+has = ("has", "uses")
+
 
 @tags(["pytest"])
 def create_pytest(term, block):
@@ -31,7 +33,7 @@ def create_pytest_html(term, block):
     return pytest_html
 
 
-@rule("service", ("has", "uses"), "pytest")
+@rule("service", has, "pytest")
 def service_has_pytest(service, pytest):
     service.add_tool(pytest)
     if pytest.pytest_html:
@@ -41,4 +43,4 @@ def service_has_pytest(service, pytest):
 @extend(Pytest)
 class ExtendPytest:
     pytest_html = P.child("with", "pytest-html")
-    service = P.parent(Service, "has", "pytest")
+    service = P.parent(Service, has, "pytest")

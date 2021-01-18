@@ -7,6 +7,8 @@ from . import layer_configs as LC
 from . import props
 from .resources import DockerCompose, DockerComposeConfig  # noqa
 
+configured = "configured"
+
 
 @tags(["docker-compose"])
 def create_docker_compose(term, block):
@@ -19,7 +21,7 @@ def create_docker_compose(term, block):
 
 @rule(
     "docker-compose",
-    "configured",
+    configured,
     "layer",
     description="""
 Docker-compose is configured in its own layer.""",

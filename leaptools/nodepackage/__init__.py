@@ -6,6 +6,8 @@ from . import node_package_configs as NPC
 from . import props
 from .resources import NodePackage, NodePackageConfig
 
+has = ("has", "uses")
+
 
 @tags(["node-package"])
 def create_node_package(term, block):
@@ -16,7 +18,7 @@ def create_node_package(term, block):
     return node_package
 
 
-@rule("service", "has", "node-package")
+@rule("service", has, "node-package")
 def service_has_node_package(service, node_package):
     node_package.output_paths.add_source(service)
 

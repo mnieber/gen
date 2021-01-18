@@ -4,6 +4,8 @@ from moonleap import StoreOutputPaths, extend, render_templates, rule, tags
 from . import props
 from .resources import Layer, LayerConfig
 
+has = ("has", "uses")
+
 
 @tags(["layer"])
 def create_layer(term, block):
@@ -12,7 +14,7 @@ def create_layer(term, block):
     return layer
 
 
-@rule("layer", "has", "layer-group")
+@rule("layer", has, "layer-group")
 def layer_has_layer_group(layer, layer_group):
     layer.layer_configs.add_source(layer_group)
 
@@ -27,4 +29,4 @@ class StoreLayerConfigs:
 class ExtendLayer(StoreLayerConfigs, StoreOutputPaths):
     render = render_templates(__file__)
     parent_layer_group = P.parent("leapdodo.layergroup.LayerGroup", "contains", "layer")
-    layer_groups = P.children("has", "layer-group")
+    layer_groups = P.children(has, "layer-group")

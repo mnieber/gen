@@ -5,6 +5,8 @@ from leaptools.pipdependency import PipDependency
 from leaptools.tool import Tool
 from moonleap import chop0, extend, render_templates, rule, tags
 
+has = ("has", "uses")
+
 makefile_rule = chop0(
     """
 pip-compile:
@@ -19,7 +21,7 @@ class PipCompile(Tool):
     pass
 
 
-@rule("service", "has", "pip-compile")
+@rule("service", has, "pip-compile")
 def service_has_pip_compile(service, pip_compile):
     service.add_tool(pip_compile)
 

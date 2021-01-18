@@ -7,6 +7,8 @@ from . import docker_compose_configs as DCC
 from . import props
 from .resources import OptDir, OptPath  # noqa
 
+has = ("has", "uses")
+
 
 @tags(["opt-dir"])
 def create_opt_dir(term, block):
@@ -14,7 +16,7 @@ def create_opt_dir(term, block):
     return opt_dir
 
 
-@rule("service", "has", "opt-dir")
+@rule("service", has, "opt-dir")
 def service_has_opt_dir(service, opt_dir):
     service.docker_compose_configs.add(
         DockerComposeConfig(lambda x: DCC.get(opt_dir), is_dev=True)
@@ -28,4 +30,4 @@ class StoreOptPaths:
 @extend(OptDir)
 class ExtendOptDir:
     render = MemFun(props.render_opt_dir)
-    service = P.parent(Service, "has", "opt-dir")
+    service = P.parent(Service, has, "opt-dir")

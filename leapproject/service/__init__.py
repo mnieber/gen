@@ -8,6 +8,9 @@ from . import docker_compose_configs as DCC
 from . import layer_configs as LC
 from .resources import Service
 
+has = "has"
+configured = "configured"
+
 
 @tags(["service"])
 def create_service(term, block):
@@ -28,7 +31,7 @@ def create_service(term, block):
 
 @rule(
     "service",
-    "has",
+    has,
     "dockerfile",
     description="""
 If the service has a dockerfile then we add docker options to that service.""",
@@ -38,7 +41,7 @@ def service_has_dockerfile(service, dockerfile):
     dockerfile.output_paths.add_source(service)
 
 
-@rule("service", "configured", "layer")
+@rule("service", configured, "layer")
 def service_is_configured_in_layer(service, layer):
     layer.layer_configs.add_source(service)
 

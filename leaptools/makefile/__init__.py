@@ -8,6 +8,9 @@ from moonleap import extend, render_templates, rule, tags
 from . import layer_configs as LC
 from .resources import Makefile, MakefileRule  # noqa
 
+has = ("has", "uses")
+running = "running"
+
 
 @tags(["makefile"])
 def create_makefile(term, block):
@@ -17,12 +20,12 @@ def create_makefile(term, block):
     return makefile
 
 
-@rule("service", "has", "makefile")
+@rule("service", has, "makefile")
 def service_has_makefile(service, makefile):
     service.add_tool(makefile)
 
 
-@rule("makefile", "running", "*", fltr_obj=P.fltr_instance(Tool))
+@rule("makefile", running, "*", fltr_obj=P.fltr_instance(Tool))
 def makefile_running_tool(makefile, tool):
     if tool not in makefile.service.tools:
         makefile.service.add_tool(tool)

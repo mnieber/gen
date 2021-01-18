@@ -5,13 +5,15 @@ from moonleap import MemFun, StoreOutputPaths, extend, render_templates, rule, t
 from . import props
 from .resources import SetupFile, SetupFileConfig  # noqa
 
+has = ("has", "uses")
+
 
 @tags(["setup-file"])
 def create_setup_file(term, block):
     return SetupFile()
 
 
-@rule("service", "has", "setup-file")
+@rule("service", has, "setup-file")
 def service_has_setup_file(service, setup_file):
     setup_file.output_paths.add_source(service)
 
@@ -23,5 +25,5 @@ class StoreSetupFileConfigs:
 @extend(SetupFile)
 class ExtendSetupFile(StoreSetupFileConfigs, StoreOutputPaths):
     render = render_templates(__file__)
-    service = P.parent(Service, "has", "setup-file")
+    service = P.parent(Service, has, "setup-file")
     get_setup_file_config = MemFun(props.get_setup_file_config)
