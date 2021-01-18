@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from leaptools.makefile import MakefileRule
 from leaptools.pipdependency import PipDependency
 from leaptools.tool import Tool
-from moonleap import chop0, tags
+from moonleap import chop0, extend, render_templates, tags
 
 makefile_rule = chop0(
     """
@@ -25,3 +25,8 @@ def create_pip_compile(term, block):
     pip_compile.add_to_makefile_rules(MakefileRule(makefile_rule))
     pip_compile.pip_dependencies.add(PipDependency(["pip-tools"], is_dev=True))
     return pip_compile
+
+
+@extend(PipCompile)
+class ExtendPipCompile:
+    render = render_templates(__file__)
