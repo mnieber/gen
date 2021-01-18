@@ -1,4 +1,5 @@
 import ramda as R
+from moonleap.parser.term import term_to_word
 from moonleap.resource.slctrs import PropSelector, Selector
 
 
@@ -12,15 +13,19 @@ def get_pkg_names():
 
 def _list_of_package_names(get_pkgs):
     def f(self, is_dev=False):
-        fltr = R.filter(lambda x: x.is_dev == is_dev)
-        slctr = Selector(
-            [
-                PropSelector(lambda x: x.tools),
-                PropSelector(get_pkgs, fltr=fltr),
-                PropSelector(lambda x: x.package_names),
-            ]
-        )
-        return slctr.select_from(self)
+        result = []
+        pkg_names = []
+
+        for tool in self.tools:
+            for pkg in get_pkgs(tool):
+                if pkg.is_dev == is_dev:
+                    for pkg_name in pkg.package_names:
+                        if pkg_name not in pkg_names:
+                            pkg_names.append(pkg_name)
+                            result.append(
+                                f"{pkg_name.ljust(20)} # via {term_to_word(tool.term)}"
+                            )
+        return result
 
     return f
 
