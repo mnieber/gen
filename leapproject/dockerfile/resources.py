@@ -12,3 +12,8 @@ class Dockerfile(Resource):
     @property
     def name(self):
         return "Dockerfile" + (".dev" if self.is_dev else "")
+
+
+@dataclass
+class DockerImage(Resource):
+    name: str = None

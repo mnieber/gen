@@ -1,11 +1,12 @@
 import moonleap.resource.props as P
 from leapdodo.layer import StoreLayerConfigs
 from leapproject.dockercompose import StoreDockerComposeConfigs
+from leapproject.dockerfile import Dockerfile, DockerImage, has
 from leapproject.service import Service
 from leaptools.nodepackage import StoreNodePackageConfigs
 from leaptools.optdir import StoreOptPaths
 from leaptools.setupfile import StoreSetupFileConfigs
-from moonleap import MemFun, Prop, StoreOutputPaths, extend
+from moonleap import MemFun, Prop, StoreOutputPaths, extend, rule
 
 from . import props
 from .resources import Tool
@@ -16,8 +17,12 @@ class StoreDependencies:
     pkg_dependencies = P.tree("has", "pkg-dependency")
 
 
-@extend(Tool)
-class ExtendTool(
+@rule("dockerfile", has, "docker-image")
+def dockerfile_use_docker_image(dockerfile, docker_image):
+    dockerfile.service.add_tool(docker_image)
+
+
+class ToolExtensions(
     StoreDependencies,
     StoreDockerComposeConfigs,
     StoreLayerConfigs,
@@ -26,6 +31,11 @@ class ExtendTool(
     StoreOutputPaths,
     StoreSetupFileConfigs,
 ):
+    pass
+
+
+@extend(Tool)
+class ExtendTool(ToolExtensions):
     makefile_rules = P.children("has", "makefile-rule")
 
 
@@ -37,3 +47,8 @@ class ExtendService:
     opt_dir = P.child("has", "opt-dir")
     tools = P.children(("has", "uses"), "tool")
     add_tool = MemFun(props.add_tool)
+
+
+@extend(DockerImage)
+class ExtendDockerImage(ToolExtensions):
+    pass
