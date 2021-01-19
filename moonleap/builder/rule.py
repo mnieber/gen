@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 from moonleap.parser.term import word_to_term
 from moonleap.resource.rel import Rel
+from moonleap.verbs import is_created_as
 
 
 @dataclass
@@ -27,6 +28,10 @@ def rule(subj_term, verb, obj_term, fltr_subj=None, fltr_obj=None, description=N
         return f
 
     return wrapped
+
+
+def created(subj_term):
+    return rule(subj_term, is_created_as, subj_term)
 
 
 def derive(resource_type):
