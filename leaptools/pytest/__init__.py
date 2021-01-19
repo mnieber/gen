@@ -3,12 +3,11 @@ from leapdodo.layer import LayerConfig
 from leapproject.service import Service
 from leaptools.pipdependency import PipDependency
 from moonleap import extend, rule, tags
+from moonleap.verbs import has, with_
 
 from . import layer_configs as LC
 from . import opt_paths
 from .resources import Pytest, PytestHtml
-
-has = ("has", "uses")
 
 
 @tags(["pytest"])
@@ -42,5 +41,5 @@ def service_has_pytest(service, pytest):
 
 @extend(Pytest)
 class ExtendPytest:
-    pytest_html = P.child("with", "pytest-html")
+    pytest_html = P.child(with_, "pytest-html")
     service = P.parent(Service, has, "pytest")

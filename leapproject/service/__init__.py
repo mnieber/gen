@@ -3,13 +3,11 @@ from leapdodo.layer import LayerConfig, StoreLayerConfigs
 from leapproject.dockercompose import DockerComposeConfig, StoreDockerComposeConfigs
 from leapproject.project import Project
 from moonleap import StoreOutputPaths, extend, rule, tags
+from moonleap.verbs import configured, has
 
 from . import docker_compose_configs as DCC
 from . import layer_configs as LC
 from .resources import Service
-
-has = "has"
-configured = "configured"
 
 
 @tags(["service"])
@@ -52,8 +50,8 @@ class ExtendService(
     StoreDockerComposeConfigs,
     StoreOutputPaths,
 ):
-    dockerfile = P.child("has", ":dockerfile")
-    dockerfile_dev = P.child("has", "dev:dockerfile")
-    layer = P.child("configured", "layer")
-    project = P.parent(Project, "has", "service")
-    src_dir = P.child("has", "src-dir")
+    dockerfile = P.child(has, ":dockerfile")
+    dockerfile_dev = P.child(has, "dev:dockerfile")
+    layer = P.child(configured, "layer")
+    project = P.parent(Project, has, "service")
+    src_dir = P.child(has, "src-dir")

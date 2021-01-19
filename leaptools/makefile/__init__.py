@@ -4,12 +4,10 @@ from leapproject.service import Service
 from leaptools.pkgdependency import PkgDependency
 from leaptools.tool import Tool
 from moonleap import extend, render_templates, rule, tags
+from moonleap.verbs import has, runs
 
 from . import layer_configs as LC
 from .resources import Makefile, MakefileRule  # noqa
-
-has = ("has", "uses")
-running = "running"
 
 
 @tags(["makefile"])
@@ -25,7 +23,7 @@ def service_has_makefile(service, makefile):
     service.add_tool(makefile)
 
 
-@rule("makefile", running, "*", fltr_obj=P.fltr_instance(Tool))
+@rule("makefile", runs, "*", fltr_obj=P.fltr_instance(Tool))
 def makefile_running_tool(makefile, tool):
     if tool not in makefile.service.tools:
         makefile.service.add_tool(tool)
@@ -34,5 +32,5 @@ def makefile_running_tool(makefile, tool):
 @extend(Makefile)
 class ExtendMakefile:
     render = render_templates(__file__)
-    rules = P.children("has", "makefile_rule")
-    service = P.parent(Service, "has", "makefile")
+    rules = P.children(has, "makefile_rule")
+    service = P.parent(Service, has, "makefile")

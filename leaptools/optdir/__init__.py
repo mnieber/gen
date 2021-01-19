@@ -2,12 +2,11 @@ import moonleap.resource.props as P
 from leapproject.dockercompose import DockerComposeConfig
 from leapproject.service import Service
 from moonleap import MemFun, extend, rule, tags
+from moonleap.verbs import has
 
 from . import docker_compose_configs as DCC
 from . import props
 from .resources import OptDir, OptPath  # noqa
-
-has = ("has", "uses")
 
 
 @tags(["opt-dir"])
@@ -24,7 +23,7 @@ def service_has_opt_dir(service, opt_dir):
 
 
 class StoreOptPaths:
-    opt_paths = P.tree("has", "opt-path")
+    opt_paths = P.tree(has, "opt-path")
 
 
 @extend(OptDir)

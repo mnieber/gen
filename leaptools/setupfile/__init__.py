@@ -1,11 +1,10 @@
 import moonleap.resource.props as P
 from leapproject.service import Service
 from moonleap import MemFun, StoreOutputPaths, extend, render_templates, rule, tags
+from moonleap.verbs import has
 
 from . import props
 from .resources import SetupFile, SetupFileConfig  # noqa
-
-has = ("has", "uses")
 
 
 @tags(["setup-file"])

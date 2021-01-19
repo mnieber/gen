@@ -1,10 +1,9 @@
 import moonleap.resource.props as P
 from leapproject.service import Service
 from moonleap import StoreOutputPaths, extend, render_templates, rule, tags
+from moonleap.verbs import has
 
 from .resources import Dockerfile, DockerImage
-
-has = ("has", "uses", "use")
 
 
 @tags(["dockerfile"])

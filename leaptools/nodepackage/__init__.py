@@ -1,12 +1,11 @@
 import moonleap.resource.props as P
 from leapproject.service import Service
 from moonleap import MemFun, StoreOutputPaths, extend, render_templates, rule, tags
+from moonleap.verbs import has, runs
 
 from . import node_package_configs as NPC
 from . import props
 from .resources import NodePackage, NodePackageConfig
-
-has = ("has", "uses")
 
 
 @tags(["node-package"])

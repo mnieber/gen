@@ -1,10 +1,9 @@
 import moonleap.resource.props as P
 from leapdodo.layer import StoreLayerConfigs
 from moonleap import StoreOutputPaths, extend, rule, tags
+from moonleap.verbs import has
 
 from .resources import Project
-
-has = ("has", "uses")
 
 
 @tags(["project"])

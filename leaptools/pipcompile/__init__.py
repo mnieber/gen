@@ -4,8 +4,7 @@ from leaptools.makefile import MakefileRule
 from leaptools.pipdependency import PipDependency
 from leaptools.tool import Tool
 from moonleap import chop0, extend, render_templates, rule, tags
-
-has = ("has", "uses")
+from moonleap.verbs import has
 
 makefile_rule = chop0(
     """

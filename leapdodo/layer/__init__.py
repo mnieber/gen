@@ -1,10 +1,9 @@
 import moonleap.resource.props as P
 from moonleap import StoreOutputPaths, extend, render_templates, rule, tags
+from moonleap.verbs import has, uses
 
 from . import props
 from .resources import Layer, LayerConfig
-
-has = ("has", "uses")
 
 
 @tags(["layer"])
@@ -14,14 +13,14 @@ def create_layer(term, block):
     return layer
 
 
-@rule("layer", has, "layer-group")
+@rule("layer", uses, "layer-group")
 def layer_has_layer_group(layer, layer_group):
     layer.layer_configs.add_source(layer_group)
 
 
 class StoreLayerConfigs:
     layer_configs = P.tree(
-        "has", "layer-config", merge=props.merge, initial=LayerConfig({})
+        has, "layer-config", merge=props.merge, initial=LayerConfig({})
     )
 
 
