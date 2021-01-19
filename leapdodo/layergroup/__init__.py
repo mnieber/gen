@@ -1,6 +1,7 @@
 import moonleap.resource.props as P
 from leapdodo.layer import LayerConfig, StoreLayerConfigs
 from moonleap import extend, tags
+from moonleap.verbs import contains
 
 from . import layer_configs as LC
 from .resources import LayerGroup
@@ -17,4 +18,4 @@ def create_layer_group(term, block):
 
 @extend(LayerGroup)
 class ExtendLayerGroup(StoreLayerConfigs):
-    layers = P.children("contains", "layer")
+    layers = P.children(contains, "layer")
