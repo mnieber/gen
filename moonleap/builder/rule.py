@@ -34,14 +34,6 @@ def created(subj_term):
     return rule(subj_term, is_created_as, subj_term)
 
 
-def derive(resource_type):
-    def wrapped(f):
-        f.moonleap_derive_resource = resource_type
-        return f
-
-    return wrapped
-
-
 def tags(tags):
     def wrapped(f):
         f.moonleap_create_rule_by_tag = {}

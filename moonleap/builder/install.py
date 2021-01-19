@@ -17,11 +17,6 @@ def install(module):
                 term = word_to_term(tag, default_to_tag=True)
                 config.create_rule_by_term[term] = create_rule
 
-        if hasattr(f, "moonleap_derive_resource"):
-            resource_type = f.moonleap_derive_resource
-            config.derive_rules_by_resource_type.setdefault(resource_type, [])
-            config.derive_rules_by_resource_type[resource_type].append(f)
-
         if hasattr(f, "moonleap_rule"):
             config.add_rule(f.moonleap_rule)
 

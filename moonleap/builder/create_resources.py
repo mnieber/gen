@@ -62,14 +62,6 @@ def _get_relations(block):
     return result
 
 
-def derive_resources(resource):
-    new_resources = []
-    derive_rules = config.get_derive_rules(resource.__class__)
-    for derive_rule in derive_rules:
-        new_resources += derive_rule(resource)
-    return new_resources
-
-
 def find_relations(blocks):
     for block in blocks:
         for rel in _get_relations(block):

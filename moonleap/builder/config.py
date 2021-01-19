@@ -4,7 +4,6 @@ from moonleap.resource.rel import fuzzy_match
 class Config:
     def __init__(self):
         self.create_rule_by_term = {}
-        self.derive_rules_by_resource_type = {}
         self.rules = []
 
     def get_create_rule(self, subj_term):
@@ -17,9 +16,6 @@ class Config:
                 elif not result:
                     result = rule
         return result
-
-    def get_derive_rules(self, resource_type):
-        return self.derive_rules_by_resource_type.get(resource_type) or {}
 
     def get_rules(self, input_rel, subj_resource, obj_resource):
         return [
