@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from leaptools.tool import Tool
 from moonleap import Resource
 
 
@@ -15,5 +16,5 @@ class Dockerfile(Resource):
 
 
 @dataclass
-class DockerImage(Resource):
+class DockerImage(Tool):
     name: str = None

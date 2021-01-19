@@ -9,8 +9,8 @@ from moonleap.verbs import has
 makefile_rule = chop0(
     """
 pip-compile:
-    pip-compile requirements.in -o requirements.txt
-    pip-compile requirements.dev.in -o requirements.dev.txt
+\tpip-compile requirements.in -o requirements.txt
+\tpip-compile requirements.dev.in -o requirements.dev.txt
 """
 )
 

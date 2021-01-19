@@ -8,6 +8,7 @@ from . import (
     service,
     servicelayergroup,
     srcdir,
+    vscodeproject,
 )
 
 
@@ -19,3 +20,4 @@ def install_all():
     install(service)
     install(servicelayergroup)
     install(srcdir)
+    install(vscodeproject)

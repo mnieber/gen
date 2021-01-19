@@ -11,7 +11,7 @@ from .resources import LayerGroup
 def create_layer_group(term, block):
     layer_group = LayerGroup(name=term.data)
     layer_group.layer_configs.add(
-        LayerConfig(lambda: LC.get_group_layer_config(layer_group))
+        LayerConfig(lambda x: LC.get_group_layer_config(layer_group))
     )
     return layer_group
 

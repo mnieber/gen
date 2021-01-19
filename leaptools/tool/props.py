@@ -1,4 +1,3 @@
-import ramda as R
 from moonleap.parser.term import term_to_word
 from moonleap.resource.slctrs import PropSelector, Selector
 
@@ -23,7 +22,7 @@ def _list_of_package_names(get_pkgs):
                         if pkg_name not in pkg_names:
                             pkg_names.append(pkg_name)
                             result.append(
-                                f"{pkg_name.ljust(20)} # via {term_to_word(tool.term)}"
+                                fr"{pkg_name.ljust(20)} `# via {term_to_word(tool.term)}`"
                             )
         return result
 

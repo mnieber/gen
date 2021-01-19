@@ -1,0 +1,8 @@
+{
+  "folders": [
+    {
+      "path": "~/sublime-projects/{{res.project.name}}/src"
+    }
+  ],
+  "settings": {}
+}

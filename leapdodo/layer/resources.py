@@ -30,5 +30,5 @@ class LayerConfig(Resource):
         return "/".join(self.get_body().keys())
 
     def get_body(self):
-        body = self.body() if callable(self.body) else self.body
+        body = self.body(self) if callable(self.body) else self.body
         return uppercase_dict_keys(body)

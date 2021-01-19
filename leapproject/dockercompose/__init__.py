@@ -14,7 +14,7 @@ configured = "configured"
 def create_docker_compose(term, block):
     docker_compose = DockerCompose(is_dev=term.data == "dev")
     docker_compose.layer_configs.add(
-        LayerConfig(lambda: LC.get_docker_compose_options(docker_compose))
+        LayerConfig(lambda x: LC.get_docker_compose_options(docker_compose))
     )
     return docker_compose
 

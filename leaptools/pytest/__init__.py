@@ -14,7 +14,7 @@ from .resources import Pytest, PytestHtml
 def create_pytest(term, block):
     pytest = Pytest()
     pytest.pip_dependencies.add(PipDependency(["pytest"]))
-    pytest.layer_configs.add(LayerConfig(lambda: LC.get_pytest_options(pytest)))
+    pytest.layer_configs.add(LayerConfig(lambda x: LC.get_pytest_options(pytest)))
 
     return pytest
 
@@ -25,7 +25,7 @@ def create_pytest_html(term, block):
     pytest_html.pip_dependencies.add(PipDependency(["pytest-html"]))
 
     pytest_html.layer_configs.add(
-        LayerConfig(lambda: LC.get_pytest_html_options(pytest_html))
+        LayerConfig(lambda x: LC.get_pytest_html_options(pytest_html))
     )
 
     pytest_html.opt_paths.add(opt_paths.pytest_html_opt_path)

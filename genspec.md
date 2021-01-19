@@ -3,6 +3,7 @@
 The donationbox:project /has a :src-dir that /stores files from the mnieber/test:git-repository.
 :It /has a frontend:service that is /configured in the frontend:layer.
 :It /has a backend:service that is /configured in the backend:layer.
+:It /uses a :vscode-project.
 
 ## The config:layer and stack:layer
 
@@ -19,7 +20,7 @@ The frontend:service /has a :dockerfile and a dev:dockerfile that /use the node:
 
 ## The backend:service
 
-The backend:service /has a :dockerfile and a dev:dockerfile that /use the python_3.8:docker-image.
+The backend:service /has a :dockerfile and a dev:dockerfile that /use the python:3.8:docker-image.
 :It /has an :opt-dir and a :setup-file.
 :It /uses the default:root-dir and default:src-mount-point.
 :It also /has a :makefile for /running :pip-compile.

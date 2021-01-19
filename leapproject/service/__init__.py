@@ -35,7 +35,7 @@ def create_service(term, block):
 If the service has a dockerfile then we add docker options to that service.""",
 )
 def service_has_dockerfile(service, dockerfile):
-    service.layer_configs.add(LayerConfig(lambda: LC.get_docker_options(service)))
+    service.layer_configs.add(LayerConfig(lambda x: LC.get_docker_options(service)))
     dockerfile.output_paths.add_source(service)
 
 

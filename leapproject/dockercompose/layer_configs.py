@@ -7,8 +7,14 @@ def get_docker_compose_options(docker_compose):
         "DOCKER_COMPOSE"
         + suffix.upper(): {
             "name": name,
-            "cwd": r"${/PROJECT/src_dir}",
+            "cwd": r"${/ROOT/src_dir}",
             "files": [docker_compose.name + ".yml"],
         },
-        "ROOT": {"aliases": {"up": "docker-compose up --detach"}},
+        "ROOT": {
+            "aliases": {
+                "up": "docker-compose up --detach",
+                "down": "docker-compose down",
+                "build": "docker-compose build",
+            }
+        },
     }
