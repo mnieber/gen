@@ -4,8 +4,7 @@ from leaptools.pipdependency import PipDependency
 from leaptools.setupfile import SetupFileConfig
 from leaptools.tool import Tool
 from moonleap import rule, tags
-
-uses = ("uses", "has")
+from moonleap.verbs import uses
 
 setup_file_config = dict(
     isort=dict(

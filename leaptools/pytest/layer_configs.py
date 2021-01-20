@@ -3,12 +3,10 @@ from leapdodo.layer import LayerConfig
 
 def get_pytest_options(pytest):
     def l():
-        result = dict(capture=False)
-
-        if pytest.service and pytest.service.src_dir:
-            result["src_dir"] = pytest.service.src_dir.location
-
-        return dict(PYTEST=result)
+        return dict(
+            PYTEST=dict(capture=False, cwd=r"${/SERVER/src_dir}"),
+            ROOT=dict(decorators=dict(docker=["pytest"])),
+        )
 
     return LayerConfig(lambda x: l())
 

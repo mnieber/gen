@@ -1,9 +1,8 @@
 from leaptools.tool import Tool
 from moonleap import rule, tags
+from moonleap.verbs import uses
 
 from . import node_package_configs
-
-uses = "uses"
 
 
 class CreateReactApp(Tool):
