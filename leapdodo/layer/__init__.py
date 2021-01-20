@@ -1,5 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import (
+    MemFun,
     StoreOutputPaths,
     extend,
     register_add,
@@ -31,9 +32,7 @@ def add_layerconfig(resource, layer_config):
 
 
 class StoreLayerConfigs:
-    layer_configs = P.tree(
-        has, "layer-config", merge=props.merge, initial=LayerConfig({})
-    )
+    layer_configs = P.tree(has, "layer-config")
 
 
 @extend(Layer)
@@ -41,3 +40,4 @@ class ExtendLayer(StoreLayerConfigs, StoreOutputPaths):
     render = render_templates(__file__)
     parent_layer_group = P.parent("leapdodo.layergroup.LayerGroup", "contains", "layer")
     layer_groups = P.children(has, "layer-group")
+    get_config = MemFun(props.get_config)

@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import ramda as R
 from jinja2 import Template
 from moonleap.render.load_template import load_template
 from moonleap.resource.memfun import MemFun
@@ -30,10 +31,16 @@ class TemplateRenderer:
 
 
 def render_templates(root_filename, location="templates"):
+    from moonleap.resources.outputpath import OutputPath
+
+    def _merge(acc, x):
+        return OutputPath(location=(x.location + acc.location))
+
     def render(self, output_root_dir, template_renderer):
         template_path = location(self) if callable(location) else location
 
-        output_sub_dir = self.output_paths.merged.location
+        output_path = R.reduce(_merge, OutputPath(""), self.output_paths.merged)
+        output_sub_dir = output_path.location
         templates_path = Path(root_filename).parent / template_path
 
         template_paths = (

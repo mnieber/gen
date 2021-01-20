@@ -6,10 +6,6 @@ from moonleap.resource.slctrs import Selector
 from .resources import OutputPath
 
 
-def merge(acc, x):
-    return OutputPath(location=(x.location + acc.location))
-
-
 def output_path(verb, term):
     rel = Rel(verb=verb, obj=maybe_term_to_term(term))
     slctr = Selector([rel])
