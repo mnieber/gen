@@ -1,31 +1,30 @@
 import moonleap.resource.props as P
 from leapdodo.layer import LayerConfig, StoreLayerConfigs
 from leapproject.project import Project
-from moonleap import MemFun, StoreOutputPaths, extend, render_templates, rule, tags
+from moonleap import (
+    MemFun,
+    StoreOutputPaths,
+    describe,
+    extend,
+    render_templates,
+    rule,
+    tags,
+)
+from moonleap.verbs import configured
 
-from . import layer_configs as LC
-from . import props
+from . import layer_configs, props
 from .resources import DockerCompose, DockerComposeConfig  # noqa
-
-configured = "configured"
 
 
 @tags(["docker-compose"])
 def create_docker_compose(term, block):
     docker_compose = DockerCompose(is_dev=term.data == "dev")
-    docker_compose.layer_configs.add(
-        LayerConfig(lambda x: LC.get_docker_compose_options(docker_compose))
-    )
+    docker_compose.layer_configs.add(layer_configs.get(docker_compose))
     return docker_compose
 
 
-@rule(
-    "docker-compose",
-    configured,
-    "layer",
-    description="""
-Docker-compose is configured in its own layer.""",
-)
+@describe("""Docker-compose is configured in its own layer.""")
+@rule("docker-compose", configured, "layer")
 def docker_compose_configured_in_layer(docker_compose, layer):
     layer.layer_configs.add_source(docker_compose)
 

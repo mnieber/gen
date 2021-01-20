@@ -1,12 +1,11 @@
 import moonleap.resource.props as P
-from leapdodo.layer import LayerConfig
 from leapproject.service import Service
 from leaptools.pkgdependency import PkgDependency
 from leaptools.tool import Tool
 from moonleap import extend, render_templates, rule, tags
 from moonleap.verbs import has, runs
 
-from . import layer_configs as LC
+from . import layer_configs
 from .resources import Makefile, MakefileRule  # noqa
 
 
@@ -14,7 +13,7 @@ from .resources import Makefile, MakefileRule  # noqa
 def create_makefile(term, block):
     makefile = Makefile()
     makefile.pkg_dependencies.add(PkgDependency(["make"], is_dev=True))
-    makefile.layer_configs.add(LayerConfig(LC.get_make_options()))
+    makefile.layer_configs.add(layer_configs.get())
     return makefile
 
 

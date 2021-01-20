@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from leapproject.dockercompose import DockerComposeConfig
+
 
 def _make_abs(service, p):
     base_path = Path("/opt") / service.project.name / service.name
@@ -10,12 +12,15 @@ def _make_abs(service, p):
 
 
 def get(opt_dir):
-    service = opt_dir.service
-    body = {}
-    volumes = body.setdefault("volumes", [])
-    for tool in service.tools:
-        for opt_path in tool.opt_paths.merged:
-            from_path = _make_abs(service, opt_path.from_path)
-            to_path = _make_abs(service, opt_path.to_path)
-            volumes.append(f"{str(from_path)}:{str(to_path)}")
-    return body
+    def l():
+        service = opt_dir.service
+        body = {}
+        volumes = body.setdefault("volumes", [])
+        for tool in service.tools:
+            for opt_path in tool.opt_paths.merged:
+                from_path = _make_abs(service, opt_path.from_path)
+                to_path = _make_abs(service, opt_path.to_path)
+                volumes.append(f"{str(from_path)}:{str(to_path)}")
+        return body
+
+    return DockerComposeConfig(lambda x: l(), is_dev=True)

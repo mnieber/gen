@@ -1,12 +1,11 @@
 import moonleap.resource.props as P
-from leapdodo.layer import LayerConfig, StoreLayerConfigs
-from leapproject.dockercompose import DockerComposeConfig, StoreDockerComposeConfigs
+from leapdodo.layer import StoreLayerConfigs
+from leapproject.dockercompose import StoreDockerComposeConfigs
 from leapproject.project import Project
 from moonleap import StoreOutputPaths, extend, rule, tags
 from moonleap.verbs import configured, has
 
-from . import docker_compose_configs as DCC
-from . import layer_configs as LC
+from . import docker_compose_configs, layer_configs
 from .resources import Service
 
 
@@ -14,15 +13,11 @@ from .resources import Service
 def create_service(term, block):
     service = Service(name=term.data)
     service.output_path = service.name + "/"
-    service.layer_configs.add(LayerConfig(body=LC.get_service_options()))
-
-    def _create_dcc(is_dev):
-        return DockerComposeConfig(
-            lambda x: DCC.get_service_options(service, is_dev=is_dev), is_dev=is_dev
-        )
-
-    for is_dev in (True, False):
-        service.docker_compose_configs.add(_create_dcc(is_dev))
+    service.layer_configs.add(layer_configs.get_service_options())
+    service.docker_compose_configs.add(docker_compose_configs.get(service, is_dev=True))
+    service.docker_compose_configs.add(
+        docker_compose_configs.get(service, is_dev=False)
+    )
 
     return service
 
@@ -35,7 +30,7 @@ def create_service(term, block):
 If the service has a dockerfile then we add docker options to that service.""",
 )
 def service_has_dockerfile(service, dockerfile):
-    service.layer_configs.add(LayerConfig(lambda x: LC.get_docker_options(service)))
+    service.layer_configs.add(layer_configs.get_docker_options(service))
     dockerfile.output_paths.add_source(service)
 
 

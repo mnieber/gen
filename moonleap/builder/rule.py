@@ -45,6 +45,14 @@ def tags(tags):
     return wrapped
 
 
+def describe(description):
+    def wrapped(f):
+        f.moonleap_description = description
+        return f
+
+    return wrapped
+
+
 def extend(resource_type):
     def wrapped(props):
         setattr(props, "moonleap_extends_resource_type", resource_type)

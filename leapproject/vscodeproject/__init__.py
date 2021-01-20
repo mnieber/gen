@@ -1,10 +1,10 @@
 import moonleap.resource.props as P
-from leapdodo.layer import LayerConfig, StoreLayerConfigs
+from leapdodo.layer import StoreLayerConfigs
 from leapproject.project import Project
 from moonleap import StoreOutputPaths, extend, render_templates, rule, tags
 from moonleap.verbs import has
 
-from . import layer_configs as LC
+from . import layer_configs
 from .resources import VsCodeProject
 
 
@@ -16,7 +16,7 @@ def create_vscode_project(term, block):
 
 @rule("project", has, "vscode-project")
 def project_has_vscode_project(project, vscode_project):
-    project.config_layer.layer_configs.add(LayerConfig(lambda x: LC.get(project)))
+    project.config_layer.layer_configs.add(layer_configs.get(project))
 
 
 @extend(VsCodeProject)

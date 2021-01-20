@@ -3,16 +3,14 @@ from leapdodo.layer import LayerConfig, StoreLayerConfigs
 from moonleap import extend, tags
 from moonleap.verbs import contains
 
-from . import layer_configs as LC
+from . import layer_configs
 from .resources import LayerGroup
 
 
 @tags(["layer-group"])
 def create_layer_group(term, block):
     layer_group = LayerGroup(name=term.data)
-    layer_group.layer_configs.add(
-        LayerConfig(lambda x: LC.get_group_layer_config(layer_group))
-    )
+    layer_group.layer_configs.add(layer_configs.get(layer_group))
     return layer_group
 
 

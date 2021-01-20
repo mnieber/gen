@@ -1,18 +1,11 @@
 from dataclasses import dataclass
 
-from leaptools.makefile import MakefileRule
 from leaptools.pipdependency import PipDependency
 from leaptools.tool import Tool
 from moonleap import chop0, extend, render_templates, rule, tags
 from moonleap.verbs import has
 
-makefile_rule = chop0(
-    """
-pip-compile:
-\tpip-compile requirements.in -o requirements.txt
-\tpip-compile requirements.dev.in -o requirements.dev.txt
-"""
-)
+from . import makefile_rules
 
 
 @dataclass
@@ -28,7 +21,7 @@ def service_has_pip_compile(service, pip_compile):
 @tags(["pip-compile"])
 def create_pip_compile(term, block):
     pip_compile = PipCompile()
-    pip_compile.add_to_makefile_rules(MakefileRule(makefile_rule))
+    pip_compile.add_to_makefile_rules(makefile_rules.get())
     pip_compile.pip_dependencies.add(PipDependency(["pip-tools"], is_dev=True))
     return pip_compile
 

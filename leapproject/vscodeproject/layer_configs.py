@@ -1,8 +1,14 @@
+from leapdodo.layer import LayerConfig
+
+
 def get(project):
-    return dict(
-        ROOT=dict(
-            aliases=dict(
-                code=f"exec -- code $HOME/sublime-projects/{project.name}.code-workspace"
+    def l():
+        return dict(
+            ROOT=dict(
+                aliases=dict(
+                    code=f"exec -- code $HOME/sublime-projects/{project.name}.code-workspace"
+                )
             )
         )
-    )
+
+    return LayerConfig(lambda x: l())

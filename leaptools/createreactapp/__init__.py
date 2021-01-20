@@ -1,8 +1,7 @@
-from leaptools.nodepackage import NodePackageConfig
 from leaptools.tool import Tool
 from moonleap import rule, tags
 
-from . import node_package_configs as NPC
+from . import node_package_configs
 
 uses = "uses"
 
@@ -14,7 +13,7 @@ class CreateReactApp(Tool):
 @tags(["create-react-app"])
 def create_cra(term, block):
     cra = CreateReactApp()
-    cra.node_package_configs.add(NodePackageConfig(NPC.get()))
+    cra.node_package_configs.add(node_package_configs.get())
     return cra
 
 

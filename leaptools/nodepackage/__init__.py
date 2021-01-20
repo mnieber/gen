@@ -3,17 +3,14 @@ from leapproject.service import Service
 from moonleap import MemFun, StoreOutputPaths, extend, render_templates, rule, tags
 from moonleap.verbs import has
 
-from . import node_package_configs as NPC
-from . import props
+from . import node_package_configs, props
 from .resources import NodePackage, NodePackageConfig
 
 
 @tags(["node-package"])
 def create_node_package(term, block):
     node_package = NodePackage()
-    node_package.node_package_configs.add(
-        NodePackageConfig(lambda x: NPC.get(node_package))
-    )
+    node_package.node_package_configs.add(node_package_configs.get(node_package))
     return node_package
 
 
