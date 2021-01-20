@@ -1,5 +1,12 @@
 import moonleap.resource.props as P
-from moonleap import StoreOutputPaths, extend, render_templates, rule, tags
+from moonleap import (
+    StoreOutputPaths,
+    extend,
+    register_add,
+    render_templates,
+    rule,
+    tags,
+)
 from moonleap.verbs import has
 
 from . import props
@@ -16,6 +23,11 @@ def create_layer(term, block):
 @rule("layer", has, "layer-group")
 def layer_has_layer_group(layer, layer_group):
     layer.layer_configs.add_source(layer_group)
+
+
+@register_add(LayerConfig)
+def add_layerconfig(resource, layer_config):
+    resource.layer_configs.add(layer_config)
 
 
 class StoreLayerConfigs:

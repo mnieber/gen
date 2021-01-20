@@ -2,7 +2,7 @@ from leapdodo.layer import LayerConfig
 
 
 def get(layer_group):
-    def l():
+    def inner():
         return dict(
             DIAL={
                 "default": {
@@ -16,4 +16,4 @@ def get(layer_group):
             }
         )
 
-    return LayerConfig(body=lambda x: l())
+    return LayerConfig(body=lambda x: inner())

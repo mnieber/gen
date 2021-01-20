@@ -1,22 +1,36 @@
 import moonleap.resource.props as P
 from leapproject.service import Service
-from moonleap import MemFun, StoreOutputPaths, extend, render_templates, rule, tags
+from moonleap import (
+    MemFun,
+    StoreOutputPaths,
+    add,
+    extend,
+    register_add,
+    render_templates,
+    rule,
+    tags,
+)
 from moonleap.verbs import has
 
 from . import node_package_configs, props
-from .resources import NodePackage, NodePackageConfig
+from .resources import NodePackage, NodePackageConfig  # noqa
 
 
 @tags(["node-package"])
 def create_node_package(term, block):
     node_package = NodePackage()
-    node_package.node_package_configs.add(node_package_configs.get(node_package))
+    add(node_package, node_package_configs.get(node_package))
     return node_package
 
 
 @rule("service", has, "node-package")
 def service_has_node_package(service, node_package):
     node_package.output_paths.add_source(service)
+
+
+@register_add(NodePackageConfig)
+def add_node_package_config(resource, node_package_config):
+    resource.node_package_configs.add(node_package_config)
 
 
 class StoreNodePackageConfigs:

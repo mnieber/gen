@@ -2,7 +2,7 @@ from leapdodo.layer import LayerConfig
 
 
 def get(docker_compose):
-    def l():
+    def inner():
         project = docker_compose.project
         suffix = "_dev" if docker_compose.is_dev else ""
         name = (project.name if project else "<INSERT NAME>") + suffix
@@ -22,4 +22,4 @@ def get(docker_compose):
             },
         }
 
-    return LayerConfig(lambda x: l())
+    return LayerConfig(lambda x: inner())

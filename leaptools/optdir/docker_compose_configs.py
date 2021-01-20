@@ -12,7 +12,7 @@ def _make_abs(service, p):
 
 
 def get(opt_dir):
-    def l():
+    def inner():
         service = opt_dir.service
         body = {}
         volumes = body.setdefault("volumes", [])
@@ -23,4 +23,4 @@ def get(opt_dir):
                 volumes.append(f"{str(from_path)}:{str(to_path)}")
         return body
 
-    return DockerComposeConfig(lambda x: l(), is_dev=True)
+    return DockerComposeConfig(lambda x: inner(), is_dev=True)

@@ -2,9 +2,11 @@ import moonleap.resource.props as props  # noqa
 from moonleap.builder.config import config  # noqa; noqa; noqa; noqa
 from moonleap.builder.create_resources import create_resources  # noqa
 from moonleap.builder.install import install  # noqa; noqa; noqa; noqa
+from moonleap.builder.rule import add  # noqa
 from moonleap.builder.rule import created  # noqa
 from moonleap.builder.rule import describe  # noqa
 from moonleap.builder.rule import extend  # noqa
+from moonleap.builder.rule import register_add  # noqa
 from moonleap.builder.rule import rule  # noqa
 from moonleap.builder.rule import tags  # noqa
 from moonleap.parser.block_collector import get_blocks  # noqa

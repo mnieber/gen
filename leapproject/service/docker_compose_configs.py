@@ -2,7 +2,7 @@ from leapproject.dockercompose import DockerComposeConfig
 
 
 def get(service, is_dev):
-    def l():
+    def inner():
         body = dict(
             depends_on=[],
             image=f"{service.project.name}_{service.name}",
@@ -21,4 +21,4 @@ def get(service, is_dev):
 
         return body
 
-    return DockerComposeConfig(lambda x: l(), is_dev=is_dev)
+    return DockerComposeConfig(lambda x: inner(), is_dev=is_dev)

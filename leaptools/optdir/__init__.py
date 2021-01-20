@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
 from leapproject.service import Service
-from moonleap import MemFun, extend, rule, tags
+from moonleap import MemFun, add, extend, register_add, rule, tags
 from moonleap.verbs import has
 
 from . import docker_compose_configs, props
@@ -15,7 +15,12 @@ def create_opt_dir(term, block):
 
 @rule("service", has, "opt-dir")
 def service_has_opt_dir(service, opt_dir):
-    service.docker_compose_configs.add(docker_compose_configs.get(opt_dir))
+    add(service, docker_compose_configs.get(opt_dir))
+
+
+@register_add(OptPath)
+def add_optpath(resource, opt_path):
+    resource.opt_paths.add(opt_path)
 
 
 class StoreOptPaths:

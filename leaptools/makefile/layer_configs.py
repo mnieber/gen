@@ -2,10 +2,10 @@ from leapdodo.layer import LayerConfig
 
 
 def get():
-    def l():
+    def inner():
         return dict(
             ROOT=dict(decorators=dict(docker=["make"])),
             MAKE=dict(cwd=r"${/SERVER/src_dir}"),
         )
 
-    return LayerConfig(lambda x: l())
+    return LayerConfig(lambda x: inner())

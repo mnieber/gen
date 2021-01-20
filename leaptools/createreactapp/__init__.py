@@ -1,5 +1,5 @@
 from leaptools.tool import Tool
-from moonleap import rule, tags
+from moonleap import add, rule, tags
 from moonleap.verbs import uses
 
 from . import node_package_configs
@@ -12,7 +12,7 @@ class CreateReactApp(Tool):
 @tags(["create-react-app"])
 def create_cra(term, block):
     cra = CreateReactApp()
-    cra.node_package_configs.add(node_package_configs.get())
+    add(cra, node_package_configs.get())
     return cra
 
 

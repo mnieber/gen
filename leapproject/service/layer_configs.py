@@ -2,7 +2,7 @@ from leapdodo.layer import LayerConfig
 
 
 def get_service_options():
-    def l():
+    def inner():
         return dict(
             #
             SERVER=dict(
@@ -12,11 +12,11 @@ def get_service_options():
             )
         )
 
-    return LayerConfig(body=lambda x: l())
+    return LayerConfig(body=lambda x: inner())
 
 
 def get_docker_options(service):
-    def l():
+    def inner():
         project = service.project
 
         return dict(
@@ -27,4 +27,4 @@ def get_docker_options(service):
             }
         )
 
-    return LayerConfig(body=lambda x: l())
+    return LayerConfig(body=lambda x: inner())

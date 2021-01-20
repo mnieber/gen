@@ -134,9 +134,9 @@ def create_resources(blocks):
             if block is not creator_block:
                 block.add_resource(resource)
 
-            # If a resource appears in the heading of the creator block, then we add it to
-            # it's parent block as well. In other words, a parent block knows about any resource
-            # that is described in its child blocks.
+            # If a resource appears in the heading of the creator block, then we add
+            # it to it's parent block as well. In other words, a parent block knows
+            # about any resource that is described in its child blocks.
             if creator_block.describes(term):
                 if (
                     creator_block.parent_block

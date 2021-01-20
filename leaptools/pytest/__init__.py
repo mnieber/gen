@@ -1,7 +1,7 @@
 import moonleap.resource.props as P
 from leapproject.service import Service
 from leaptools.pipdependency import PipDependency
-from moonleap import extend, rule, tags
+from moonleap import add, extend, rule, tags
 from moonleap.verbs import has, with_
 
 from . import layer_configs, opt_paths
@@ -11,8 +11,9 @@ from .resources import Pytest, PytestHtml
 @tags(["pytest"])
 def create_pytest(term, block):
     pytest = Pytest()
-    pytest.pip_dependencies.add(PipDependency(["pytest"]))
-    pytest.layer_configs.add(layer_configs.get_pytest_options(pytest))
+
+    add(pytest, PipDependency(["pytest"]))
+    add(pytest, layer_configs.get_pytest_options(pytest))
 
     return pytest
 
@@ -20,9 +21,12 @@ def create_pytest(term, block):
 @tags(["pytest-html"])
 def create_pytest_html(term, block):
     pytest_html = PytestHtml()
-    pytest_html.pip_dependencies.add(PipDependency(["pytest-html"]))
-    pytest_html.layer_configs.add(layer_configs.get_pytest_html_options(pytest_html))
-    pytest_html.opt_paths.add(opt_paths.pytest_html_opt_path)
+
+    add(pytest_html, PipDependency(["pytest-html"]))
+    add(pytest_html, layer_configs.get_pytest_html_options(pytest_html))
+    add(pytest_html, opt_paths.pytest_html_opt_path)
+    add(pytest_html, opt_paths.pytest_html_asset_path)
+
     return pytest_html
 
 

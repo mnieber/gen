@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from leaptools.pipdependency import PipDependency
 from leaptools.setupfile import SetupFileConfig
 from leaptools.tool import Tool
-from moonleap import rule, tags
+from moonleap import add, rule, tags
 from moonleap.verbs import uses
 
 setup_file_config = dict(
@@ -30,6 +30,8 @@ def service_has_isort(service, isort):
 @tags(["isort"])
 def create_isort(term, block):
     isort = ISort()
-    isort.setup_file_configs.add(SetupFileConfig(setup_file_config))
-    isort.pip_dependencies.add(PipDependency(["isort"], is_dev=True))
+
+    add(isort, SetupFileConfig(setup_file_config))
+    add(isort, PipDependency(["isort"], is_dev=True))
+
     return isort
