@@ -31,6 +31,7 @@ If the service has a dockerfile then we add docker options to that service.""",
 def service_has_dockerfile(service, dockerfile):
     add(service, layer_configs.get_docker_options(service))
     dockerfile.output_paths.add_source(service)
+    service.docker_compose_configs.add_source(dockerfile)
 
 
 @rule("service", configured, "layer")

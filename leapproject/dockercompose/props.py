@@ -6,19 +6,33 @@ from .resources import DockerComposeConfig
 
 def merge(lhs, rhs):
     new_body = dict()
-    merge_into_config(new_body, lhs.get_body())
-    merge_into_config(new_body, rhs.get_body())
-    return DockerComposeConfig(body=new_body)
+    merge_into_config(new_body, lhs)
+    merge_into_config(new_body, rhs)
+    return new_body
 
 
 def get_docker_compose_config(self):
     config = {}
     services = config.setdefault("services", {})
     for service in self.services:
-        services[service.name] = R.pipe(
+        docker_compose_configs = R.pipe(
             R.always(service.docker_compose_configs.merged),
             R.filter(lambda x: x.is_dev == self.is_dev),
-            R.reduce(merge, DockerComposeConfig(body={})),
-            lambda x: x.get_body(),
         )(None)
+
+        service_body = R.pipe(
+            R.always(docker_compose_configs),
+            R.map(lambda x: x.get_service_body(x, service.name)),
+            R.reduce(merge, {}),
+        )(None)
+
+        global_body = R.pipe(
+            R.always(docker_compose_configs),
+            R.map(lambda x: x.get_global_body(x, service.name)),
+            R.reduce(merge, {}),
+        )(None)
+
+        merge_into_config(services.setdefault(service.name, {}), service_body)
+        merge_into_config(config, global_body)
+
     return config

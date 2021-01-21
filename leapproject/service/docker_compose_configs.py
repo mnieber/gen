@@ -21,4 +21,8 @@ def get(service, is_dev):
 
         return body
 
-    return DockerComposeConfig(lambda x: inner(), is_dev=is_dev)
+    return DockerComposeConfig(
+        get_service_body=lambda x, service_name: inner(),
+        get_global_body=lambda x, service_name: {},
+        is_dev=is_dev,
+    )

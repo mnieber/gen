@@ -9,6 +9,7 @@ from . import (
     pipcompile,
     pipdependency,
     pytest,
+    pythondockerimage,
     setupfile,
     tool,
 )
@@ -23,5 +24,6 @@ def install_all():
     install(pipcompile)
     install(pipdependency)
     install(pytest)
+    install(pythondockerimage)
     install(setupfile)
     install(tool)

@@ -15,8 +15,6 @@ class DockerCompose(Resource):
 
 @dataclass
 class DockerComposeConfig(Resource):
-    body: T.Union[dict, T.Callable]
+    get_service_body: T.Callable
+    get_global_body: T.Callable
     is_dev: bool = False
-
-    def get_body(self):
-        return self.body(self) if callable(self.body) else self.body

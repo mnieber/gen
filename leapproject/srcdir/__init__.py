@@ -1,5 +1,4 @@
-import moonleap.resource.props as P
-from moonleap import extend, rule, tags
+from moonleap import rule, tags
 
 from .resources import SrcDir
 

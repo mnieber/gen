@@ -23,4 +23,8 @@ def get(opt_dir):
                 volumes.append(f"{str(from_path)}:{str(to_path)}")
         return body
 
-    return DockerComposeConfig(lambda x: inner(), is_dev=True)
+    return DockerComposeConfig(
+        get_service_body=lambda x, service_name: inner(),
+        get_global_body=lambda x, service_name: {},
+        is_dev=True,
+    )

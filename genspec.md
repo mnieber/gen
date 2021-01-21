@@ -20,8 +20,9 @@ The frontend:service /has a :dockerfile and a dev:dockerfile that /use the node:
 
 ## The backend:service
 
-The backend:service /has a :dockerfile and a dev:dockerfile that /use the python:3.8:docker-image.
+The backend:service /has a :dockerfile and a dev:dockerfile that /use the python:3:docker-image.
+:It /runs :django.
 :It /has an :opt-dir and a :setup-file.
 :It /uses the default:root-dir and default:src-mount-point.
-:It also /has a :makefile for /running :pip-compile.
-:It /uses (:pytest /with :pytest-html) and :isort.
+:It /has a :makefile for /running :pip-compile.
+:It /uses (:pytest /with :pytest-html), :pudb and :isort.
