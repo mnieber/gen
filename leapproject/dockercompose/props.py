@@ -15,10 +15,10 @@ def get_docker_compose_config(self):
     config = {}
     services = config.setdefault("services", {})
     for service in self.services:
-        fltr = R.filter(lambda x: x.is_dev == self.is_dev)
-        service_configs = fltr(service.docker_compose_configs.merged)
-        merged_service_config = R.reduce(
-            merge, DockerComposeConfig(body={}), service_configs
-        )
-        services[service.name] = merged_service_config.get_body()
+        services[service.name] = R.pipe(
+            R.always(service.docker_compose_configs.merged),
+            R.filter(lambda x: x.is_dev == self.is_dev),
+            R.reduce(merge, DockerComposeConfig(body={})),
+            lambda x: x.get_body(),
+        )(None)
     return config

@@ -14,8 +14,8 @@ def get(service, is_dev):
             volumes.append(f"./{service.name}:/app/src")
 
         dockerfile = service.dockerfile_dev if is_dev else service.dockerfile
-        build = body.setdefault("build", {})
         if dockerfile:
+            build = body.setdefault("build", {})
             build["context"] = f"./{service.name}"
             build["dockerfile"] = dockerfile.name
 

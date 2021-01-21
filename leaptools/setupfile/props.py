@@ -16,4 +16,10 @@ def get_setup_file_config(setup_file):
     for tool in setup_file.service.tools:
         configs.extend(tool.setup_file_configs.merged)
 
-    return R.reduce(merge, SetupFileConfig(body={}), configs)
+    config = R.reduce(merge, SetupFileConfig(body={}), configs)
+    result = ""
+    for name, body in config.get_body().items():
+        result += f"[{name}]\n"
+        for k, v in body.items():
+            result += f"{k}={v}\n"
+    return result

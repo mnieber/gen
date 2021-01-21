@@ -1,11 +1,11 @@
-from leapdodo.layer import LayerConfig, create_layer
+from leapdodo.layer import create_layer
 from moonleap import add, tags
 
-from .layer_configs import get_root_config
+from . import layer_configs
 
 
 @tags(["config:layer"])
 def create_config_layer(term, block):
     layer = create_layer(term, block)
-    add(layer, LayerConfig(get_root_config()))
+    add(layer, layer_configs.get_root_config())
     return layer

@@ -11,3 +11,5 @@ RUN {{ res.install_command }} \
 RUN pip install \
 {% body %}
     {{ pkg + (' \\' if not loop.last else '') }}
+
+WORKDIR /app/src

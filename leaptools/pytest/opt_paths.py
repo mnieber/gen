@@ -7,7 +7,7 @@ pytest_html_opt_path = OptPath(
 )
 
 pytest_html_asset_path = OptPath(
-    is_dir=False,
-    from_path="assets/style.css",
-    to_path="assets/style.css",
+    is_dir=True,
+    from_path="assets",
+    to_path="/app/assets",
 )
