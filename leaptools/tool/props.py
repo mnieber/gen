@@ -34,7 +34,7 @@ def get_makefile_rules():
     slctr = Selector(
         [
             PropSelector(lambda x: x.tools),
-            PropSelector(lambda x: x.makefile_rules),
+            PropSelector(lambda x: x.makefile_rules.merged),
         ]
     )
 

@@ -1,8 +1,6 @@
 import ramda as R
 from moonleap.utils.merge_into_config import merge_into_config
 
-from .resources import DockerComposeConfig
-
 
 def merge(lhs, rhs):
     new_body = dict()

@@ -22,10 +22,17 @@ def dockerfile_use_docker_image(dockerfile, docker_image):
     dockerfile.service.add_tool(docker_image)
 
 
+# We define this here instead of in the makefile package to work
+# around python circular import problems
+class StoreMakefileRules:
+    makefile_rules = P.tree(has, "makefile")
+
+
 class ToolExtensions(
     StoreDependencies,
     StoreDockerComposeConfigs,
     StoreLayerConfigs,
+    StoreMakefileRules,
     StoreNodePackageConfigs,
     StoreOptPaths,
     StoreOutputPaths,
@@ -39,7 +46,7 @@ def meta():
 
     @extend(Tool)
     class ExtendTool(ToolExtensions):
-        makefile_rules = P.children("has", "makefile-rule")
+        pass
 
     @extend(Service)
     class ExtendService:

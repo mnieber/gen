@@ -6,9 +6,9 @@ def get():
     return MakefileRule(
         chop0(
             """
-        pip-compile:
-        \tpip-compile requirements.in -o requirements.txt
-        \tpip-compile requirements.dev.in -o requirements.dev.txt
-        """
+pip-compile:
+\tpip-compile requirements.in -o requirements.txt
+\tpip-compile requirements.dev.in -o requirements.dev.txt
+"""
         )
     )
