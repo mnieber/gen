@@ -10,6 +10,7 @@ from . import (
     optdir,
     pipcompile,
     pipdependency,
+    pudb,
     pytest,
     pythondockerimage,
     setupfile,
@@ -27,6 +28,7 @@ def install_all():
     install(nodepackage)
     install(pipcompile)
     install(pipdependency)
+    install(pudb)
     install(pytest)
     install(pythondockerimage)
     install(setupfile)

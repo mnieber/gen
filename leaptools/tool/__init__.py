@@ -14,6 +14,7 @@ from .resources import Tool
 
 class StoreDependencies:
     pip_dependencies = P.tree("has", "pip-dependency")
+    pip_requirements = P.tree("has", "pip-requirement")
     pkg_dependencies = P.tree("has", "pkg-dependency")
 
 

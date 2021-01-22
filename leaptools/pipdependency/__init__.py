@@ -1,6 +1,6 @@
 from moonleap import register_add, tags
 
-from .resources import PipDependency
+from .resources import PipDependency, PipRequirement
 
 
 @tags(["pip-dependency"])
@@ -16,3 +16,8 @@ def create_pip_dependency_dev(term, block):
 @register_add(PipDependency)
 def add_pip_dependency(resource, pip_dependency):
     resource.pip_dependencies.add(pip_dependency)
+
+
+@register_add(PipRequirement)
+def add_pip_requirement(resource, pip_requirement):
+    resource.pip_requirements.add(pip_requirement)

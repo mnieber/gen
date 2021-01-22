@@ -5,6 +5,8 @@ from leaptools.tool import Tool
 from moonleap import add, rule, tags
 from moonleap.verbs import uses
 
+from . import opt_paths
+
 
 @dataclass
 class Fish(Tool):
@@ -22,5 +24,6 @@ def create_fish(term, block):
     fish = Fish()
 
     add(fish, PkgDependency(["fish"], is_dev=True))
+    add(fish, opt_paths.fish_opt_path)
 
     return fish

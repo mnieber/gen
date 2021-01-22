@@ -7,3 +7,9 @@ from moonleap import Resource
 class PipDependency(Resource):
     package_names: [str]
     is_dev: bool = False
+
+
+@dataclass
+class PipRequirement(Resource):
+    package_names: [str]
+    is_dev: bool = False
