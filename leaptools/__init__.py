@@ -2,6 +2,8 @@ from moonleap import install
 
 from . import (
     createreactapp,
+    django,
+    fish,
     isort,
     makefile,
     nodepackage,
@@ -17,6 +19,8 @@ from . import (
 
 def install_all():
     install(createreactapp)
+    install(django)
+    install(fish)
     install(isort)
     install(makefile)
     install(optdir)

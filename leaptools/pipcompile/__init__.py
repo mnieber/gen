@@ -5,7 +5,7 @@ from leaptools.tool import Tool
 from moonleap import add, extend, render_templates, rule, tags
 from moonleap.verbs import has
 
-from . import makefile_rules
+from . import layer_configs, makefile_rules
 
 
 @dataclass
@@ -23,6 +23,7 @@ def create_pip_compile(term, block):
     pip_compile = PipCompile()
 
     add(pip_compile, makefile_rules.get())
+    add(pip_compile, layer_configs.get())
     add(pip_compile, PipDependency(["pip-tools"], is_dev=True))
 
     return pip_compile

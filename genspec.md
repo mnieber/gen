@@ -16,6 +16,7 @@ Both :docker-compose and dev:docker-compose are /configured by the stack:layer.
 
 The frontend:service /has a :dockerfile and a dev:dockerfile that /use the node:13-alpine:docker-image.
 :It /uses the default:root-dir and default:src-mount-point.
+:It /uses the :fish shell.
 :It /has a :node-package that /uses :create-react-app.
 
 ## The backend:service
@@ -25,4 +26,5 @@ The backend:service /has a :dockerfile and a dev:dockerfile that /use the python
 :It /has an :opt-dir and a :setup-file.
 :It /uses the default:root-dir and default:src-mount-point.
 :It /has a :makefile for /running :pip-compile.
+:It /uses the :fish shell.
 :It /uses (:pytest /with :pytest-html), :pudb and :isort.

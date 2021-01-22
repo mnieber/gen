@@ -14,7 +14,7 @@ def create_service(term, block):
     service = Service(name=term.data)
     service.output_path = service.name + "/"
 
-    add(service, layer_configs.get_service_options())
+    add(service, layer_configs.get_service_options(service))
     add(service, docker_compose_configs.get(service, is_dev=True))
     add(service, docker_compose_configs.get(service, is_dev=False))
 

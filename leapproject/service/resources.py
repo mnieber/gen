@@ -6,3 +6,4 @@ from moonleap import Resource
 @dataclass
 class Service(Resource):
     name: str
+    shell: str = "sh"

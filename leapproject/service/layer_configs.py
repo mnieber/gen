@@ -1,15 +1,18 @@
 from leapdodo.layer import LayerConfig
 
 
-def get_service_options():
+def get_service_options(service):
     def inner():
         return dict(
-            #
             SERVER=dict(
                 #
                 install_dir="/app",
                 src_dir="${/SERVER/install_dir}/src",
-            )
+            ),
+            ROOT=dict(
+                decorators=dict(docker=[f"exec"]),
+                aliases=dict(shell=f"exec {service.shell}"),
+            ),
         )
 
     return LayerConfig(body=lambda x: inner())
