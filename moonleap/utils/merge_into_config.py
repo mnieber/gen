@@ -23,6 +23,8 @@ def merge_into_config(config, layer, xpath=None):
         elif _is_list(val):
             if not _is_list(config[key]):
                 _raise(new_xpath)
-            config[key].extend(val)
+            for x in val:
+                if x not in config[key]:
+                    config[key].append(x)
         else:
             config[key] = val
