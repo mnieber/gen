@@ -26,7 +26,6 @@ def _process_words(words, it_term, result, word_idx=0):
             term, word_idx = _process_words(words, it_term, result, word_idx + 1)
 
         if word == ")":
-            word_idx += 1
             break
 
         if term is None:
