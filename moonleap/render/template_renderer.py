@@ -48,9 +48,15 @@ def render_templates(root_filename, location="templates"):
         templates_path = Path(root_filename).parent / template_path
 
         template_paths = (
-            templates_path.glob("*") if templates_path.is_dir() else [templates_path]
+            templates_path.glob("**/*") if templates_path.is_dir() else [templates_path]
         )
         for template_fn in template_paths:
-            template_renderer.render(output_root_dir, output_sub_dir, self, template_fn)
+            if not template_fn.is_dir():
+                template_renderer.render(
+                    output_root_dir,
+                    output_sub_dir / template_fn.relative_to(templates_path).parent,
+                    self,
+                    template_fn,
+                )
 
     return MemFun(render)
