@@ -4,7 +4,6 @@ from moonleap.render.template_renderer import merged_output_path
 
 
 def render_module(self, output_root_dir, template_renderer):
-    __import__("pudb").set_trace()
     templates_path = Path(__file__).parent / "templates"
     output_path = merged_output_path(self.output_paths.merged)
     output_sub_dir = output_path.location

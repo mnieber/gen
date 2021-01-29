@@ -1,5 +1,6 @@
 import moonleap.resource.props as P
 from leapproject.service import Service
+from leaptools.tool import Tool
 from moonleap import (
     MemFun,
     StoreOutputPaths,
@@ -42,3 +43,8 @@ class ExtendNodePackage(StoreNodePackageConfigs, StoreOutputPaths):
     render = render_templates(__file__)
     get_config = MemFun(props.get_node_package_config)
     service = P.parent(Service, "has", "node-package")
+
+
+@extend(Tool)
+class ExtendTool(StoreNodePackageConfigs):
+    pass

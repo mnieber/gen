@@ -28,8 +28,7 @@ def get_sort_index(key):
 def get_node_package_config(self):
     service_configs = list(self.node_package_configs.merged)
     for tool in self.service.tools:
-        if hasattr(tool, "node_package_configs"):
-            service_configs.extend(tool.node_package_configs.merged)
+        service_configs.extend(tool.node_package_configs.merged)
 
     config = R.reduce(merge, NodePackageConfig(body={}), service_configs)
     return R.pipe(

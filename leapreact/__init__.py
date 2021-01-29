@@ -6,7 +6,6 @@ from . import (
     module,
     nodepackage,
     prettier,
-    reacttool,
     router,
     tailwindcss,
 )
@@ -18,6 +17,5 @@ def install_all():
     install(module)
     install(nodepackage)
     install(prettier)
-    install(reacttool)
     install(router)
     install(tailwindcss)

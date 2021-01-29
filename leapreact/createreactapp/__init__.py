@@ -1,11 +1,11 @@
-from leapreact.reacttool import ReactTool
+from leaptools.tool import Tool
 from moonleap import add, extend, render_templates, rule, tags
 from moonleap.verbs import uses
 
 from . import node_package_configs
 
 
-class CreateReactApp(ReactTool):
+class CreateReactApp(Tool):
     pass
 
 

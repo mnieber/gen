@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 
-from leapreact.reacttool import ReactTool
+from leaptools.tool import Tool
 from moonleap import MemFun, extend, tags
 
 from .render import render_module
 
 
 @dataclass
-class Module(ReactTool):
+class Module(Tool):
     name: str
 
 

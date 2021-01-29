@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from leapreact.reacttool import ReactTool
+from leaptools.tool import Tool
 from moonleap import MemFun, add, extend, rule, tags
 from moonleap.verbs import has
 
@@ -9,7 +9,7 @@ from .render import render_module
 
 
 @dataclass
-class AppModule(ReactTool):
+class AppModule(Tool):
     name: str
 
 
