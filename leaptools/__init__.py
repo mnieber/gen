@@ -10,10 +10,12 @@ from . import (
     optdir,
     pipcompile,
     pipdependency,
+    prettier,
     pudb,
     pytest,
     pythondockerimage,
     setupfile,
+    tailwindcss,
     tool,
 )
 
@@ -28,8 +30,10 @@ def install_all():
     install(nodepackage)
     install(pipcompile)
     install(pipdependency)
+    install(prettier)
     install(pudb)
     install(pytest)
     install(pythondockerimage)
     install(setupfile)
+    install(tailwindcss)
     install(tool)
