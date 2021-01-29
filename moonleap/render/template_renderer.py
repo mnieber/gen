@@ -30,16 +30,20 @@ class TemplateRenderer:
             ofs.write(t.render(res=resource))
 
 
-def render_templates(root_filename, location="templates"):
+def merged_output_path(output_paths):
     from moonleap.resources.outputpath import OutputPath
 
     def _merge(acc, x):
         return OutputPath(location=(x.location + acc.location))
 
+    return R.reduce(_merge, OutputPath(""), output_paths)
+
+
+def render_templates(root_filename, location="templates"):
     def render(self, output_root_dir, template_renderer):
         template_path = location(self) if callable(location) else location
 
-        output_path = R.reduce(_merge, OutputPath(""), self.output_paths.merged)
+        output_path = merged_output_path(self.output_paths.merged)
         output_sub_dir = output_path.location
         templates_path = Path(root_filename).parent / template_path
 

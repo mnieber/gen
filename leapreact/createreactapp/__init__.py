@@ -1,5 +1,5 @@
 from leapreact.reacttool import ReactTool
-from moonleap import add, rule, tags
+from moonleap import add, extend, render_templates, rule, tags
 from moonleap.verbs import uses
 
 from . import node_package_configs
@@ -19,3 +19,8 @@ def create_cra(term, block):
 @rule("node-package", uses, "create-react-app")
 def node_package_uses_cra(node_package, cra):
     node_package.service.add_tool(cra)
+
+
+@extend(CreateReactApp)
+class ExtendCreateReactApp:
+    render = render_templates(__file__)

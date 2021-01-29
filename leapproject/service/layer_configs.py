@@ -10,7 +10,7 @@ def get_service_options(service):
                 src_dir="${/SERVER/install_dir}/src",
             ),
             ROOT=dict(
-                decorators=dict(docker=[f"exec"]),
+                decorators=dict(docker=["exec"]),
                 aliases=dict(shell=f"exec {service.shell}"),
             ),
         )

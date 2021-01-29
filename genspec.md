@@ -18,7 +18,7 @@ The frontend:service /has a :dockerfile and a dev:dockerfile that /use the node:
 :It /uses the default:root-dir and default:src-mount-point.
 :It /uses the :fish shell.
 :It /has a :node-package that /uses :create-react-app /with :tailwind-css, :prettier.
-:It has an app:module that has a :router.
+:It /has an (app:module that /has a :router) and a donations:module.
 
 ## The backend:service
 

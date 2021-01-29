@@ -1,8 +1,6 @@
-import moonleap.resource.props as P
-from leapproject.service import Service
 from leaptools.pipdependency import PipRequirement
-from moonleap import add, extend, rule, tags
-from moonleap.verbs import has, with_
+from moonleap import add, rule, tags
+from moonleap.verbs import has
 
 from . import opt_paths
 from .resources import Pudb
