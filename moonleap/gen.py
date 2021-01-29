@@ -4,6 +4,7 @@ import traceback
 
 import leapdodo
 import leapproject
+import leapreact
 import leaptools
 
 from moonleap import create_resources, get_blocks, render_resources
@@ -11,6 +12,7 @@ from moonleap import create_resources, get_blocks, render_resources
 leapdodo.install_all()
 leapproject.install_all()
 leaptools.install_all()
+leapreact.install_all()
 
 
 def main(gen_file):

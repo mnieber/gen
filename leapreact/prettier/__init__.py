@@ -1,11 +1,11 @@
-from leaptools.tool import Tool
+from leapreact.reacttool import ReactTool
 from moonleap import add, extend, render_templates, rule, tags
 from moonleap.verbs import with_
 
 from . import node_package_configs
 
 
-class Prettier(Tool):
+class Prettier(ReactTool):
     pass
 
 

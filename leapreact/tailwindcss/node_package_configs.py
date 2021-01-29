@@ -1,4 +1,4 @@
-from leaptools.nodepackage import NodePackageConfig
+from leapreact.nodepackage import NodePackageConfig
 
 
 def get():

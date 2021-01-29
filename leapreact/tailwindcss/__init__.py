@@ -1,11 +1,11 @@
-from leaptools.tool import Tool
+from leapreact.reacttool import ReactTool
 from moonleap import add, rule, tags
 from moonleap.verbs import with_
 
 from . import node_package_configs
 
 
-class TailwindCss(Tool):
+class TailwindCss(ReactTool):
     pass
 
 

@@ -2,7 +2,6 @@ import moonleap.resource.props as P
 from leapdodo.layer import StoreLayerConfigs
 from leapproject.dockercompose import StoreDockerComposeConfigs
 from leapproject.service import Service
-from leaptools.nodepackage import StoreNodePackageConfigs
 from leaptools.optdir import StoreOptPaths
 from leaptools.setupfile import StoreSetupFileConfigs
 from moonleap import MemFun, Prop, StoreOutputPaths, extend, rule
@@ -34,7 +33,6 @@ class ToolExtensions(
     StoreDockerComposeConfigs,
     StoreLayerConfigs,
     StoreMakefileRules,
-    StoreNodePackageConfigs,
     StoreOptPaths,
     StoreOutputPaths,
     StoreSetupFileConfigs,
