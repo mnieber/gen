@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-{% for css_import_statement in res.css_import_statements %}
-{{ css_import_statement }}
-{% endfor %}
+{{ res.css_import_lines }}
 
 import App from './app/App';
 import reportWebVitals from './reportWebVitals';

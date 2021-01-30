@@ -1,22 +1,16 @@
+import os
+
 import ramda as R
+from leapreact.component.props import concat_paths
 
 
-def css_import_statements(app_module):
-    def clean(x):
-        x = x.strip()
-        if not x.endswith(";"):
-            x += ";"
-        return x
-
+def css_import_lines(app_module):
     css_imports = app_module.css_imports.merged
     for tool in app_module.service.tools:
         css_imports += tool.css_imports.merged
 
-    result = R.pipe(
-        R.always(css_imports),
-        R.map(R.prop("paths")),
-        R.chain(R.identity),
-        R.map(clean),
-    )(None)
+    return concat_paths(css_imports)
 
-    return result
+
+def add_submodule(app_module, submodule):
+    app_module.submodules.add(submodule)

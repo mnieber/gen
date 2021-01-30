@@ -36,8 +36,16 @@ class ExtendTool(StoreCssImports):
     pass
 
 
+@extend(Service)
+class ExtendService:
+    app_module = P.child(has, "app:module")
+
+
 @extend(AppModule)
-class ExtendModule(StoreCssImports):
+class ExtendAppModule(StoreCssImports):
     render = MemFun(render_module)
     service = P.parent(Service, has, "app:module")
-    css_import_statements = Prop(props.css_import_statements)
+    css_import_lines = Prop(props.css_import_lines)
+    submodules = P.tree(has, "sub-module")
+
+    add_submodule = MemFun(props.add_submodule)

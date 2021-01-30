@@ -2,7 +2,7 @@ from leaptools.tool import Tool
 from moonleap import add, extend, rule, tags
 from moonleap.verbs import has
 
-from . import css_imports
+from . import css_imports, node_package_configs
 
 
 class Antd(Tool):
