@@ -5,6 +5,7 @@ The donationbox:project /has a :src-dir that /stores files from the mnieber/test
 :It /has a backend:service that is /configured in the backend:layer.
 :It /uses a :vscode-project.
 
+
 ## The config:layer and stack:layer
 
 The donationbox:project /has a config:layer that /has a service:layer-group that /contains the stack:layer, frontend:layer and backend:layer.
@@ -12,22 +13,39 @@ The donationbox:project /has a config:layer that /has a service:layer-group that
 to /run the frontend:service and backend:service.
 Both :docker-compose and dev:docker-compose are /configured by the stack:layer.
 
+
 ## The frontend:service
 
+### Docker
+
 The frontend:service /has a :dockerfile and a dev:dockerfile that /use the node:13-alpine:docker-image.
-:It /uses the :fish shell.
 :It /uses the default:root-dir and default:src-mount-point.
-:It /has a :node-package that /uses :create-react-app /with :tailwind-css and :prettier.
+:It /uses the :fish shell.
+
+### The react application
+
+The frontend:service /has a :node-package that /uses :create-react-app /with :tailwind-css and :prettier.
 :It /uses :antd.
-:It /has an app:module that /has a :router and a app:store.
-:It /has a donations:module that /has a donations:store.
+:It /has an app:module that /has a :router and an app:store.
+:It /has a donations:module.
+
+#### The donations:module
+
+The donations:module /has a donations:store.
+
 
 ## The backend:service
 
+### Docker
+
 The backend:service /has a :dockerfile and a dev:dockerfile that /use the python:3:docker-image.
-:It /runs :django.
-:It /has an :opt-dir and a :setup-file.
 :It /uses the default:root-dir and default:src-mount-point.
-:It /has a :makefile for /running :pip-compile.
+:It /has an :opt-dir to synchronize auxiliary files with the host.
 :It /uses the :fish shell.
+
+### The Django application
+
+The backend:service /runs :django.
+:It /has a :setup-file.
+:It /has a :makefile for /running :pip-compile.
 :It /uses (:pytest /with :pytest-html), :pudb and :isort.
