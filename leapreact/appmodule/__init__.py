@@ -1,16 +1,12 @@
-from dataclasses import dataclass
-
+import moonleap.resource.props as P
+from leapproject.service import Service
 from leaptools.tool import Tool
-from moonleap import MemFun, add, extend, rule, tags
+from moonleap import MemFun, Prop, add, extend, register_add, rule, tags
 from moonleap.verbs import has
 
-from . import node_package_configs
+from . import node_package_configs, props
 from .render import render_module
-
-
-@dataclass
-class AppModule(Tool):
-    name: str
+from .resources import AppModule, CssImport  # noqa
 
 
 @tags(["app:module"])
@@ -26,6 +22,22 @@ def service_has_app_module(service, app_module):
     service.add_tool(app_module)
 
 
+class StoreCssImports:
+    css_imports = P.tree("has", "css-import")
+
+
+@register_add(CssImport)
+def add_css_import(resource, css_import):
+    resource.css_imports.add(css_import)
+
+
+@extend(Tool)
+class ExtendTool(StoreCssImports):
+    pass
+
+
 @extend(AppModule)
-class ExtendModule:
+class ExtendModule(StoreCssImports):
     render = MemFun(render_module)
+    service = P.parent(Service, has, "app:module")
+    css_import_statements = Prop(props.css_import_statements)
