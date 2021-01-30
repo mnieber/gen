@@ -15,11 +15,12 @@ Both :docker-compose and dev:docker-compose are /configured by the stack:layer.
 ## The frontend:service
 
 The frontend:service /has a :dockerfile and a dev:dockerfile that /use the node:13-alpine:docker-image.
-:It /uses the default:root-dir and default:src-mount-point.
 :It /uses the :fish shell.
-:It /has a :node-package that /uses :create-react-app /with :tailwind-css, :prettier.
+:It /uses the default:root-dir and default:src-mount-point.
+:It /has a :node-package that /uses :create-react-app /with :tailwind-css and :prettier.
 :It /uses :antd.
-:It /has an (app:module that /has a :router) and a donations:module.
+:It /has an app:module that /has a :router and a app:store.
+:It /has a donations:module that /has a donations:store.
 
 ## The backend:service
 

@@ -12,14 +12,9 @@ from .resources import AppModule, CssImport  # noqa
 @tags(["app:module"])
 def create_app_module(term, block):
     module = AppModule(name=term.data)
-    module.output_path = "src"
+    module.output_path = f"src/{module.name}"
     add(module, node_package_configs.get())
     return module
-
-
-@rule("service", has, "app:module")
-def service_has_app_module(service, app_module):
-    service.add_tool(app_module)
 
 
 class StoreCssImports:
@@ -29,6 +24,13 @@ class StoreCssImports:
 @register_add(CssImport)
 def add_css_import(resource, css_import):
     resource.css_imports.add(css_import)
+
+
+@rule("service", has, "module")
+def service_has_module(service, module):
+    if module.name != "app":
+        if service.app_module:
+            service.app_module.submodules.add(module)
 
 
 @extend(Tool)
@@ -44,8 +46,5 @@ class ExtendService:
 @extend(AppModule)
 class ExtendAppModule(StoreCssImports):
     render = MemFun(render_module)
-    service = P.parent(Service, has, "app:module")
     css_import_lines = Prop(props.css_import_lines)
     submodules = P.tree(has, "sub-module")
-
-    add_submodule = MemFun(props.add_submodule)

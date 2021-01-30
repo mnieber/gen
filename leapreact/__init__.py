@@ -3,6 +3,7 @@ from moonleap import install
 from . import (
     antd,
     appmodule,
+    appstore,
     component,
     createreactapp,
     module,
@@ -18,6 +19,7 @@ from . import (
 def install_all():
     install(antd)
     install(appmodule)
+    install(appstore)
     install(component)
     install(createreactapp)
     install(module)

@@ -1,7 +1,5 @@
 import os
 
-from leapreact.component.props import concat_paths
-
 
 def policy_lines(store_provider):
     result = []

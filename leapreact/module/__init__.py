@@ -10,14 +10,14 @@ from .resources import Module
 @tags(["module"])
 def create_module(term, block):
     module = Module(name=term.data)
+    module.output_path = f"src/{module.name}"
     return module
 
 
 @rule("service", has, "module")
 def service_has_module(service, module):
-    if module.name != "app":
-        if service.app_module:
-            service.app_module.add_submodule(module)
+    module.output_paths.add_source(service)
+    service.add_tool(module)
 
 
 @extend(Module)

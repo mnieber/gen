@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
-from leaptools.tool import Tool
+from leapreact.module import Module
 from moonleap import Resource
 
 
 @dataclass
-class AppModule(Tool):
-    name: str
+class AppModule(Module):
+    pass
 
 
 @dataclass

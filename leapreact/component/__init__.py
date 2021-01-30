@@ -1,6 +1,5 @@
 import moonleap.resource.props as P
 from moonleap import Prop, extend
-from moonleap.verbs import has
 
 from . import props
 from .resources import Component, JavascriptImport  # noqa
