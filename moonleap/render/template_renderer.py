@@ -50,11 +50,16 @@ def render_templates(root_filename, location="templates"):
         template_paths = (
             templates_path.glob("**/*") if templates_path.is_dir() else [templates_path]
         )
+
+        def prepare(template_fn):
+            result = template_fn.relative_to(templates_path).parent
+            return Path(str(result).replace("/parentdir/", "/../")).resolve()
+
         for template_fn in template_paths:
             if not template_fn.is_dir():
                 template_renderer.render(
                     output_root_dir,
-                    output_sub_dir / template_fn.relative_to(templates_path).parent,
+                    output_sub_dir / prepare(template_fn),
                     self,
                     template_fn,
                 )

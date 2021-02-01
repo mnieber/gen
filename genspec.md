@@ -31,7 +31,9 @@ The frontend:service /has a :node-package that /uses :create-react-app /with :ta
 
 #### The donations:module
 
-The donations:module /has a donations:store.
+The donations:module /has a donations:store that /stores the donations:resource.
+:It /has a graphql:api.
+:It /has a list:view that /shows the donations:resource.
 
 
 ## The backend:service

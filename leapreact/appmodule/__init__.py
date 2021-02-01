@@ -1,11 +1,19 @@
 import moonleap.resource.props as P
 from leapproject.service import Service
 from leaptools.tool import Tool
-from moonleap import MemFun, Prop, add, extend, register_add, rule, tags
+from moonleap import (
+    MemFun,
+    Prop,
+    add,
+    extend,
+    register_add,
+    render_templates,
+    rule,
+    tags,
+)
 from moonleap.verbs import has
 
 from . import node_package_configs, props
-from .render import render_module
 from .resources import AppModule, CssImport  # noqa
 
 
@@ -45,6 +53,6 @@ class ExtendService:
 
 @extend(AppModule)
 class ExtendAppModule(StoreCssImports):
-    render = MemFun(render_module)
+    render = render_templates(__file__)
     css_import_lines = Prop(props.css_import_lines)
     submodules = P.tree(has, "sub-module")

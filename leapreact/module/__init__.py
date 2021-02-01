@@ -1,9 +1,10 @@
 import moonleap.resource.props as P
 from leapproject.service import Service
-from moonleap import MemFun, extend, rule, tags
+from leapreact.component import Component
+from moonleap import MemFun, extend, register_add, render_templates, rule, tags
 from moonleap.verbs import has
 
-from .render import render_module
+from . import props
 from .resources import Module
 
 
@@ -16,11 +17,12 @@ def create_module(term, block):
 
 @rule("service", has, "module")
 def service_has_module(service, module):
-    module.output_paths.add_source(service)
     service.add_tool(module)
 
 
 @extend(Module)
 class ExtendModule:
-    render = MemFun(render_module)
+    render = render_templates(__file__)
     service = P.parent(Service, has, "module")
+
+    add_component = MemFun(props.add_component)

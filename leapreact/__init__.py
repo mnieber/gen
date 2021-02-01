@@ -6,6 +6,7 @@ from . import (
     appstore,
     component,
     createreactapp,
+    graphqlapi,
     module,
     nodepackage,
     prettier,
@@ -22,6 +23,7 @@ def install_all():
     install(appstore)
     install(component)
     install(createreactapp)
+    install(graphqlapi)
     install(module)
     install(nodepackage)
     install(prettier)
