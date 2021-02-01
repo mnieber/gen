@@ -1,5 +1,5 @@
 from leaptools.tool import Tool
-from moonleap import add, extend, render_templates, rule, tags
+from moonleap import MemFun, add, extend, render_templates, rule, tags
 from moonleap.verbs import uses
 
 from . import node_package_configs
@@ -23,4 +23,4 @@ def node_package_uses_cra(node_package, cra):
 
 @extend(CreateReactApp)
 class ExtendCreateReactApp:
-    render = render_templates(__file__)
+    render = MemFun(render_templates(__file__))

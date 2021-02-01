@@ -1,4 +1,4 @@
-from moonleap import Prop, extend, render_templates, tags
+from moonleap import MemFun, Prop, extend, render_templates, tags
 
 from . import props
 from .resources import AppStore
@@ -12,5 +12,5 @@ def create_appstore(term, block):
 
 @extend(AppStore)
 class ExtendAppStore:
-    render = render_templates(__file__)
+    render = MemFun(render_templates(__file__))
     substores = Prop(props.substores)

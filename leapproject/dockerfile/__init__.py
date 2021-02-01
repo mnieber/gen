@@ -1,7 +1,7 @@
 import moonleap.resource.props as P
 from leapproject.dockercompose import StoreDockerComposeConfigs
 from leapproject.service import Service
-from moonleap import StoreOutputPaths, extend, render_templates, rule, tags
+from moonleap import MemFun, StoreOutputPaths, extend, render_templates, rule, tags
 from moonleap.verbs import has
 
 from .resources import Dockerfile, DockerImage
@@ -37,4 +37,4 @@ class ExtendDockerImage(StoreDockerComposeConfigs):
 @extend(Dockerfile)
 class ExtendDockerfile(StoreOutputPaths, StoreDockerComposeConfigs):
     service = P.parent(Service, has, "dockerfile")
-    render = render_templates(__file__, get_template_filename)
+    render = MemFun(render_templates(__file__, get_template_filename))

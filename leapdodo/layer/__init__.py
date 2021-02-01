@@ -37,7 +37,7 @@ class StoreLayerConfigs:
 
 @extend(Layer)
 class ExtendLayer(StoreLayerConfigs, StoreOutputPaths):
-    render = render_templates(__file__)
+    render = MemFun(render_templates(__file__))
     parent_layer_group = P.parent("leapdodo.layergroup.LayerGroup", "contains", "layer")
     layer_groups = P.children(has, "layer-group")
     get_config = MemFun(props.get_config)

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from leaptools.pipdependency import PipDependency
 from leaptools.tool import Tool
-from moonleap import add, extend, render_templates, rule, tags
+from moonleap import MemFun, add, extend, render_templates, rule, tags
 from moonleap.verbs import has
 
 from . import layer_configs, makefile_rules
@@ -31,4 +31,4 @@ def create_pip_compile(term, block):
 
 @extend(PipCompile)
 class ExtendPipCompile:
-    render = render_templates(__file__)
+    render = MemFun(render_templates(__file__))

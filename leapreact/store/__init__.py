@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
 from leapreact.module import Module
-from moonleap import Prop, extend, render_templates, rule, tags
+from moonleap import MemFun, Prop, extend, render_templates, rule, tags
 from moonleap.verbs import has
 
 from . import props
@@ -26,6 +26,6 @@ class ExtendModule:
 
 @extend(Store)
 class ExtendStore:
-    render = render_templates(__file__)
+    render = MemFun(render_templates(__file__))
     module = P.parent(Module, has, "store")
     policy_lines = Prop(props.policy_lines)

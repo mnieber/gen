@@ -42,7 +42,7 @@ class StoreDockerComposeConfigs:
 
 @extend(DockerCompose)
 class ExtendDockerCompose(StoreLayerConfigs, StoreOutputPaths):
-    render = render_templates(__file__)
+    render = MemFun(render_templates(__file__))
     services = P.children("run", "service")
     project = P.parent(Project, "has", "docker-compose")
     configured_by_layer = P.child("configured", "layer")

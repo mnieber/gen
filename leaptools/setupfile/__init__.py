@@ -1,7 +1,14 @@
 import moonleap.resource.props as P
 from leapproject.service import Service
-from moonleap import (MemFun, StoreOutputPaths, extend, register_add,
-                      render_templates, rule, tags)
+from moonleap import (
+    MemFun,
+    StoreOutputPaths,
+    extend,
+    register_add,
+    render_templates,
+    rule,
+    tags,
+)
 from moonleap.verbs import has
 
 from . import props
@@ -29,6 +36,6 @@ class StoreSetupFileConfigs:
 
 @extend(SetupFile)
 class ExtendSetupFile(StoreSetupFileConfigs, StoreOutputPaths):
-    render = render_templates(__file__)
+    render = MemFun(render_templates(__file__))
     service = P.parent(Service, has, "setup-file")
     get_setup_file_config = MemFun(props.get_setup_file_config)

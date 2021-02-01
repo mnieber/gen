@@ -40,7 +40,7 @@ class StoreNodePackageConfigs:
 
 @extend(NodePackage)
 class ExtendNodePackage(StoreNodePackageConfigs, StoreOutputPaths):
-    render = render_templates(__file__)
+    render = MemFun(render_templates(__file__))
     get_config = MemFun(props.get_node_package_config)
     service = P.parent(Service, "has", "node-package")
 

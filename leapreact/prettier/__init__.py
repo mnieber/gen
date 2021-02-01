@@ -1,5 +1,5 @@
 from leaptools.tool import Tool
-from moonleap import add, extend, render_templates, rule, tags
+from moonleap import MemFun, add, extend, render_templates, rule, tags
 from moonleap.verbs import with_
 
 from . import node_package_configs
@@ -24,4 +24,4 @@ def cra_with_prettier(cra, prettier):
 
 @extend(Prettier)
 class ExtendPrettier:
-    render = render_templates(__file__, "templates/.prettierrc")
+    render = MemFun(render_templates(__file__, "templates/.prettierrc"))

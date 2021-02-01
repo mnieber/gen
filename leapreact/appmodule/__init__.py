@@ -14,6 +14,7 @@ from moonleap import (
 from moonleap.verbs import has
 
 from . import node_package_configs, props
+from .render import render_module
 from .resources import AppModule, CssImport  # noqa
 
 
@@ -53,6 +54,6 @@ class ExtendService:
 
 @extend(AppModule)
 class ExtendAppModule(StoreCssImports):
-    render = render_templates(__file__)
+    render = MemFun(render_module)
     css_import_lines = Prop(props.css_import_lines)
     submodules = P.tree(has, "sub-module")

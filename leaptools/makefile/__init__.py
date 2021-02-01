@@ -2,7 +2,7 @@ import moonleap.resource.props as P
 from leapproject.service import Service
 from leaptools.pkgdependency import PkgDependency
 from leaptools.tool import StoreMakefileRules, Tool
-from moonleap import add, extend, register_add, render_templates, rule, tags
+from moonleap import MemFun, add, extend, register_add, render_templates, rule, tags
 from moonleap.verbs import has, runs
 
 from . import layer_configs
@@ -37,5 +37,5 @@ def add_makefile_rule(resource, makefile_rule):
 
 @extend(Makefile)
 class ExtendMakefile(StoreMakefileRules):
-    render = render_templates(__file__)
+    render = MemFun(render_templates(__file__))
     service = P.parent(Service, has, "makefile")

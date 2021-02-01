@@ -1,5 +1,5 @@
 from leaptools.tool import Tool
-from moonleap import add, extend, render_templates, rule, tags
+from moonleap import MemFun, add, extend, render_templates, rule, tags
 from moonleap.verbs import has
 
 from . import node_package_configs
@@ -23,4 +23,4 @@ def module_has_graphql_api(module, graphql_api):
 
 @extend(GraphqlApi)
 class ExtendGraphqlApi:
-    render = render_templates(__file__)
+    render = MemFun(render_templates(__file__))

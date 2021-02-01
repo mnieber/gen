@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import moonleap.resource.props as P
 from leapreact.appmodule import AppModule
 from leapreact.component import Component
-from moonleap import StoreOutputPaths, add, created, extend, render_templates
+from moonleap import MemFun, StoreOutputPaths, add, created, extend, render_templates
 from moonleap.verbs import has
 
 
@@ -26,5 +26,5 @@ class ExtendAppModule:
 
 @extend(StoreProvider)
 class ExtendStoreProvider(StoreOutputPaths):
-    render = render_templates(__file__)
+    render = MemFun(render_templates(__file__))
     app_module = P.parent(AppModule, has, "store-provider")

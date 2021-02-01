@@ -22,7 +22,7 @@ def service_has_module(service, module):
 
 @extend(Module)
 class ExtendModule:
-    render = render_templates(__file__)
+    render = MemFun(render_templates(__file__))
     service = P.parent(Service, has, "module")
 
     add_component = MemFun(props.add_component)
