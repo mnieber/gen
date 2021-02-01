@@ -1,6 +1,6 @@
 from leaptools.tool import Tool
 from moonleap import MemFun, add, extend, render_templates, rule, tags
-from moonleap.verbs import with_
+from moonleap.verbs import has
 
 from . import node_package_configs
 
@@ -16,10 +16,10 @@ def create_prettier(term, block):
     return prettier
 
 
-@rule("create-react-app", with_, "prettier")
-def cra_with_prettier(cra, prettier):
-    cra.node_package_configs.add_source(prettier)
-    prettier.output_paths.add_source(cra)
+@rule("service", has, "prettier")
+def service_has_prettier(service, prettier):
+    service.add_tool(prettier)
+    prettier.output_paths.add_source(service)
 
 
 @extend(Prettier)

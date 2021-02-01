@@ -1,6 +1,6 @@
 from leaptools.tool import Tool
 from moonleap import MemFun, add, extend, render_templates, rule, tags
-from moonleap.verbs import with_
+from moonleap.verbs import has
 
 from . import node_package_configs
 
@@ -16,10 +16,10 @@ def create_tailwind_css(term, block):
     return tailwind_css
 
 
-@rule("create-react-app", with_, "tailwind-css")
-def cra_with_tailwind_css(cra, tailwind_css):
-    cra.node_package_configs.add_source(tailwind_css)
-    tailwind_css.output_paths.add_source(cra)
+@rule("service", has, "tailwind-css")
+def service_has_tailwind_css(service, tailwind_css):
+    service.add_tool(tailwind_css)
+    tailwind_css.output_paths.add_source(service)
 
 
 @extend(TailwindCss)

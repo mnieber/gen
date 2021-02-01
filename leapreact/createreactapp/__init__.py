@@ -16,9 +16,9 @@ def create_cra(term, block):
     return cra
 
 
-@rule("node-package", uses, "create-react-app")
-def node_package_uses_cra(node_package, cra):
-    node_package.service.add_tool(cra)
+@rule("service", uses, "create-react-app")
+def service_uses_cra(service, cra):
+    service.add_tool(cra)
 
 
 @extend(CreateReactApp)
