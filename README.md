@@ -58,7 +58,7 @@ Moonleap turns the spec into a set of source files as follows:
 2. :It is an alias that resolves to the first term in the preceeding sentence. In the example that
    would be "backend:service".
 
-3. Resources are rendered into artifacts. The rendering process uses of the graph-structure that connects all
+3. Resources are rendered into artifacts. The rendering process uses the graph-structure that connects all
    the resources. In the example that describes a dockerized service that uses pytest, we can set up the rendering
-   rules such that the pytest pip package is installed inside the Dockerfile (based of the `PipDependency("pytest")` and
+   rules such that the pytest pip package is installed inside the Dockerfile (based on the `PipDependency("pytest")` and
    `Dockerfile("python_3.8")` resources in the graph).
