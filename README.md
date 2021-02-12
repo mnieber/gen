@@ -34,7 +34,7 @@ To explain how this works, consider this spec
 ```
 ## The backend:service
 
-The backend:service uses a python_3.8:dockerfile. :It uses :pytest.
+The backend:service /uses a python_3.8:dockerfile. :It /uses :pytest.
 ```
 
 A developer can add a rule for turning "backend:service" into a resource:
@@ -51,10 +51,14 @@ def create_service(term, block):
 
 Moonleap turns the spec into a set of source files as follows:
 
-1. Each term is converted into one or more resources, e.g. backend:service -> Service("backend"),
-   python_3.8:dockerfile -> Dockerfile("python_3.8") and pytest -> Pytest() and PipDependency("pytest").
+1. Each term is converted into one or more resources, e.g. for backend:service we create`Service("backend")`,
+   for python_3.8:dockerfile we create `Dockerfile("python_3.8")` and for :pytest we create a `Pytest()` resource
+   that points to a `PipDependency("pytest")` resource.
 
 2. :It is an alias that resolves to the first term in the preceeding sentence. In the example that
    would be "backend:service".
 
-3. Resources are rendered into artifacts.
+3. Resources are rendered into artifacts. The rendering process uses of the graph-structure that connects all
+   the resources. In the example that describes a dockerized service that uses pytest, we can set up the rendering
+   rules such that the pytest pip package is installed inside the Dockerfile (based of the `PipDependency("pytest")` and
+   `Dockerfile("python_3.8")` resources in the graph).
