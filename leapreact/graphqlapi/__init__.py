@@ -1,11 +1,11 @@
 import moonleap.resource.props as P
 from leapreact.module import Module
+from leapreact.utilsmodule import create_utils_module
 from leaptools.tool import Tool
 from moonleap import MemFun, add, extend, render_templates, rule, tags
 from moonleap.verbs import has
 
 from . import node_package_configs
-from .render import render
 
 
 class GraphqlApi(Tool):
@@ -22,9 +22,11 @@ def create_graphql_api(term, block):
 @rule("module", has, "graphql:api")
 def module_has_graphql_api(module, graphql_api):
     module.add_component(graphql_api)
+    utils_module = create_utils_module(module.service)
+    utils_module.add_template_dir(__file__, "templates_utils")
 
 
 @extend(GraphqlApi)
 class ExtendGraphqlApi:
-    render = MemFun(render)
+    render = MemFun(render_templates(__file__))
     module = P.parent(Module, has, "graphql:api")

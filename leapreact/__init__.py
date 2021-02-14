@@ -7,6 +7,7 @@ from . import (
     component,
     createreactapp,
     graphqlapi,
+    itemlist,
     module,
     nodepackage,
     prettier,
@@ -14,6 +15,7 @@ from . import (
     store,
     storeprovider,
     tailwindcss,
+    utilsmodule,
 )
 
 
@@ -24,6 +26,7 @@ def install_all():
     install(component)
     install(createreactapp)
     install(graphqlapi)
+    install(itemlist)
     install(module)
     install(nodepackage)
     install(prettier)
@@ -31,3 +34,4 @@ def install_all():
     install(store)
     install(storeprovider)
     install(tailwindcss)
+    install(utilsmodule)
