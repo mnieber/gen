@@ -49,6 +49,6 @@ The backend:service /has a :dockerfile and a dev:dockerfile that /use the python
 ### The Django application
 
 The backend:service /runs :django.
-:It /has a :setup-file.
+:It /has a :setup.cfg file.
 :It /has a :makefile for /running :pip-compile.
 :It /uses (:pytest /with :pytest-html), :pudb and :isort.

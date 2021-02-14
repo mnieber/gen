@@ -15,12 +15,12 @@ from . import props
 from .resources import SetupFile, SetupFileConfig  # noqa
 
 
-@tags(["setup-file"])
+@tags(["setup.cfg"])
 def create_setup_file(term, block):
     return SetupFile()
 
 
-@rule("service", has, "setup-file")
+@rule("service", has, "setup.cfg")
 def service_has_setup_file(service, setup_file):
     setup_file.output_paths.add_source(service)
 
@@ -31,11 +31,11 @@ def add_setup_file_config(resource, setup_file_config):
 
 
 class StoreSetupFileConfigs:
-    setup_file_configs = P.tree("has", "setup-file-config")
+    setup_file_configs = P.tree("has", "setup.cfg-config")
 
 
 @extend(SetupFile)
 class ExtendSetupFile(StoreSetupFileConfigs, StoreOutputPaths):
     render = MemFun(render_templates(__file__))
-    service = P.parent(Service, has, "setup-file")
+    service = P.parent(Service, has, "setup.cfg")
     get_setup_file_config = MemFun(props.get_setup_file_config)
