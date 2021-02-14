@@ -1,3 +1,3 @@
-import { doQuery } from 'src/app/client';
+import { doQuery } from 'src/app/graphqlClient';
 
 {{ res.api_methods }}

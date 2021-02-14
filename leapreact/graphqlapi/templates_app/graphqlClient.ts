@@ -12,14 +12,14 @@ function _createClient() {
   });
 }
 
-let _client = _createClient();
+let _graphqlClient = _createClient();
 
-export const client = () => _client;
+export const graphqlClient = () => _graphqlClient;
 export const setToken = (authToken: string) => {
   localStorage.setItem('authToken', authToken);
-  _client = _createClient();
+  _graphqlClient = _createClient();
 };
 
 export function doQuery(query: string, variables: any) {
-  return client().request(query, variables);
+  return graphqlClient().request(query, variables);
 }
