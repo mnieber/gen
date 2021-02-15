@@ -1,15 +1,15 @@
 FROM {{ res.image_name }}
 
 # install pkg dependencies
-{% for pkg in res.service.get_pkg_names() %}
 RUN {{ res.install_command }} \
-{% body %}
-    {{ pkg + (' \\' if not loop.last else '') }}
+{% loop PKG in res.service.get_pkg_names() %}
+    PKG \
+{% endloop %}
+    PKG
 
 # install pip dependencies
-{% for pkg in res.service.get_pip_pkg_names() %}
 RUN pip install \
-{% body %}
-    {{ pkg + (' \\' if not loop.last else '') }}
-
-WORKDIR /app/src
+{% loop PKG in res.service.get_pip_pkg_names() %}
+    PKG \
+{% endloop %}
+    PKG

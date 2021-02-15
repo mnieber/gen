@@ -3,13 +3,12 @@ import { RST, resetRS } from 'utils/RST';
 {{ res.javascript_import_lines }}
 
 export class {{ res.name }} {
-{% for item_list in res.item_lists %}
-  @observable {{ item_list.name }}ById: {{ item_list.name|title }}ByIdT = {};
-{% if res.useRST %}
-  @observable {{ item_list.name }}ByIdRS: RST = resetRS();
-{% endif %}
-{% endfor %}
-{{ res.fields }}
+
+{% loop item_list in res.item_lists %}
+{% set list_name=item_list.name %}
+  @observable {{ list_name }}ById: {{ list_name|title }}ByIdT = {};
+  @observable {{ list_name }}ByIdRS: RST = resetRS(); {% onlyif res.useRST %}
+{% endloop %}
 
   constructor() {
     makeObservable(this);
