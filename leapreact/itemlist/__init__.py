@@ -14,7 +14,7 @@ def create_item_list(term, block):
 
 
 @rule("store", contains, "item-list")
-def service_has_router(app_module, router):
+def store_contains_item_list(store, item_list):
     pass
 
 
