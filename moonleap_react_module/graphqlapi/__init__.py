@@ -1,9 +1,9 @@
 import moonleap.resource.props as P
-from moonleap_react.module import Module
-from moonleap_react.utilsmodule import create_utils_module
-from moonleap_tools.tool import Tool
 from moonleap import MemFun, add, extend, render_templates, rule, tags
 from moonleap.verbs import has
+from moonleap_react.module import Module
+from moonleap_react_module.utilsmodule import create_utils_module
+from moonleap_tools.tool import Tool
 
 from . import node_package_configs
 

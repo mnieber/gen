@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from moonleap_tools.tool import Tool
 from moonleap.resource import Resource
+from moonleap_tools.tool import Tool
 
 
 @dataclass
@@ -16,4 +16,9 @@ class Component(Tool):
 
 @dataclass
 class JavascriptImport(Resource):
+    paths: [str]
+
+
+@dataclass
+class CssImport(Resource):
     paths: [str]

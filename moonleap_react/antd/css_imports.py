@@ -1,4 +1,4 @@
-from moonleap_react.appmodule import CssImport
+from moonleap_react.component import CssImport
 
 
 def get():

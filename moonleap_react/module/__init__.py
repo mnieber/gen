@@ -1,12 +1,12 @@
 import moonleap.resource.props as P
+from moonleap import MemFun, extend, render_templates, rule, tags
+from moonleap.verbs import has
 from moonleap_project.service import Service
 from moonleap_react.component import Component
-from moonleap import MemFun, extend, register_add, render_templates, rule, tags
-from moonleap.verbs import has
 
 from . import props
 from .render import render
-from .resources import Module
+from .resources import Module  # noqa
 
 
 @tags(["module"])

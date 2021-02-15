@@ -1,21 +1,13 @@
 import moonleap.resource.props as P
-from moonleap_project.service import Service
-from moonleap_tools.tool import Tool
-from moonleap import (
-    MemFun,
-    Prop,
-    add,
-    extend,
-    register_add,
-    render_templates,
-    rule,
-    tags,
-)
+from moonleap import MemFun, Prop, add, extend, render_templates, rule, tags
 from moonleap.verbs import has
+from moonleap_project.service import Service
+from moonleap_react.component import StoreCssImports
+from moonleap_tools.tool import Tool
 
 from . import node_package_configs, props
 from .render import render_module
-from .resources import AppModule, CssImport  # noqa
+from .resources import AppModule  # noqa
 
 
 @tags(["app:module"])
@@ -26,25 +18,11 @@ def create_app_module(term, block):
     return module
 
 
-class StoreCssImports:
-    css_imports = P.tree("has", "css-import")
-
-
-@register_add(CssImport)
-def add_css_import(resource, css_import):
-    resource.css_imports.add(css_import)
-
-
 @rule("service", has, "module")
 def service_has_module(service, module):
     if module.name != "app":
         if service.app_module:
             service.app_module.submodules.add(module)
-
-
-@extend(Tool)
-class ExtendTool(StoreCssImports):
-    pass
 
 
 @extend(Service)

@@ -1,8 +1,8 @@
 import moonleap.resource.props as P
-from moonleap_react.module import Module
-from moonleap_react.utilsmodule import create_utils_module
 from moonleap import MemFun, Prop, extend, render_templates, rule, tags
 from moonleap.verbs import contains, has
+from moonleap_react.module import Module
+from moonleap_react_module.utilsmodule import create_utils_module
 
 from . import props
 from .render import render
