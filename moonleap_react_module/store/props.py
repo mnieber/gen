@@ -1,10 +1,10 @@
 import os
 
 
-def policy_lines(store_provider):
+def policy_lines(store):
     result = []
     return os.linesep.join(result)
 
 
-def submodules(store_provider):
-    return store_provider.app_module.submodules.merged
+def item_names(store):
+    return [x.item_name for x in store.item_lists]

@@ -2,7 +2,7 @@ import moonleap.resource.props as P
 from moonleap import MemFun, Prop, extend, render_templates, rule, tags
 from moonleap.render.template_env import add_filter
 from moonleap.utils.inflect import plural
-from moonleap.verbs import has, shows
+from moonleap.verbs import has
 from moonleap_react.module import Module
 
 from . import props

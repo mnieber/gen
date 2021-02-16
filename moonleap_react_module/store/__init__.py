@@ -34,3 +34,4 @@ class ExtendStore:
     module = P.parent(Module, has, "store")
     policy_lines = Prop(props.policy_lines)
     item_lists = P.children(contains, "item-list")
+    item_names = Prop(props.item_names)
