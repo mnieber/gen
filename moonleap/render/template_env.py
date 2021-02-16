@@ -83,11 +83,19 @@ def load_template(template_fn):
             result += "{% endfor %}\n"
             result += os.linesep
 
-        template_loader = jinja2.FunctionLoader(lambda fn: result)
-        template_env = jinja2.Environment(
-            loader=template_loader,
-            extensions=[AnsibleCoreFiltersExtension],
-            trim_blocks=True,
-        )
-        template_env.filters["to_nice_json"] = to_nice_json
-        return template_env.get_template("tplt")
+    return result
+
+
+template_loader = jinja2.FunctionLoader(load_template)
+template_env = jinja2.Environment(
+    loader=template_loader,
+    extensions=[AnsibleCoreFiltersExtension],
+    trim_blocks=True,
+)
+
+
+def add_filter(name, f):
+    template_env.filters[name] = f
+
+
+template_env.filters["to_nice_json"] = to_nice_json

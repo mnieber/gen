@@ -1,32 +1,33 @@
-import { always, flow, map } from 'lodash/fp';
+import { always, flow, map, values } from 'lodash/fp';
 import { observer } from 'mobx-react-lite';
 import { useStore } from 'src/app/StoreProvider';
 
 export const {{ res.name }} = observer(() => {
-  const { {{ res.plural_item_name }}Store } = useStore();
+  const { {{ res.item_name|store }} } = useStore();
 
   const {{ res.item_name }}Divs = flow(
-    always({{ res.plural_item_name }}Store.all),
+    always({{ res.item_name|store }}.{{ res.item_name|byId }}),
+    values,
     map((x) => (
-      <ExpensesListViewItem
+      <{{ res.name }}Item
         key={x.uuid}
-        expense={x}
+        {{ res.item_name }}={x}
       />
     ))
   )();
 
-  const noItems = <h2>There are no expenses</h2>;
+  const noItems = <h2>There are no {{ res.item_name|plural }}</h2>;
 
   const updatedDiv = (
-    <div className="ExpensesListView flex flex-col w-full">
-      {expenseDivs.length && expenseDivs}
-      {!expenseDivs.length && noItems}
+    <div className="{{ res.name }} flex flex-col w-full">
+      { {{ res.item_name }}Divs.length && {{ res.item_name }}Divs }
+      {!{{ res.item_name }}Divs.length && noItems}
     </div>
   );
 
   return (
     <ResourceView
-      rs={expensesStore.expenseByIdRS}
+      rs={ {{ res.item_name|store }}.{{ res.item_name|byId }} }
       renderUpdated={() => updatedDiv}
       renderErrored={(message) => {
         return <div className="text-white">{message}</div>;

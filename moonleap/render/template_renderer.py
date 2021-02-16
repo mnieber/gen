@@ -2,8 +2,7 @@ from pathlib import Path
 
 import ramda as R
 from jinja2 import Template
-
-from moonleap.render.load_template import load_template
+from moonleap.render.template_env import template_env
 
 
 def _render_template(filename, resource):
@@ -15,7 +14,7 @@ class TemplateRenderer:
         self.filenames = []
 
     def render(self, output_root_dir, output_subdir, resource, template_fn):
-        t = load_template(template_fn)
+        t = template_env.get_template(str(template_fn))
         output_fn = _render_template(template_fn.name, resource)
         output_dir = (Path(output_root_dir) / output_subdir).resolve()
         output_dir.mkdir(parents=True, exist_ok=True)
