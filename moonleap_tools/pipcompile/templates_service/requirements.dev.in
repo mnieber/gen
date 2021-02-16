@@ -1,0 +1,4 @@
+-r requirements.txt
+{% for pip_requirement in res.get_pip_requirements(is_dev=True) %}
+{{ pip_requirement }}
+{% endfor %}

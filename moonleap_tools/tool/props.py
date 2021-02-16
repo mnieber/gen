@@ -6,11 +6,17 @@ def get_pip_pkg_names():
     return _list_of_package_names(lambda tool: tool.pip_dependencies.merged)
 
 
+def get_pip_requirements():
+    return _list_of_package_names(
+        lambda tool: tool.pip_requirements.merged, add_via=False
+    )
+
+
 def get_pkg_names():
     return _list_of_package_names(lambda tool: tool.pkg_dependencies.merged)
 
 
-def _list_of_package_names(get_pkgs):
+def _list_of_package_names(get_pkgs, add_via=True):
     def f(self, is_dev=False):
         result = []
         pkg_names = []
@@ -22,8 +28,12 @@ def _list_of_package_names(get_pkgs):
                         if pkg_name not in pkg_names:
                             pkg_names.append(pkg_name)
                             result.append(
-                                fr"{pkg_name.ljust(20)} "
-                                + f"`# via {term_to_word(tool.term)}`"
+                                fr"{pkg_name.ljust(20)}"
+                                + (
+                                    f"` # via {term_to_word(tool.term)}`"
+                                    if add_via
+                                    else ""
+                                )
                             )
         return result
 
@@ -45,7 +55,8 @@ def get_makefile_rules():
 
 
 def add_tool(service, tool):
-    service.add_to_tools(tool)
-    service.layer_configs.add_source(tool)
-    service.docker_compose_configs.add_source(tool)
-    tool.output_paths.add_source(service)
+    if tool not in service.tools:
+        service.add_to_tools(tool)
+        service.layer_configs.add_source(tool)
+        service.docker_compose_configs.add_source(tool)
+        tool.output_paths.add_source(service)

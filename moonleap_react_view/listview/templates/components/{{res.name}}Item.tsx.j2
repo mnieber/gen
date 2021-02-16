@@ -1,0 +1,16 @@
+import React from 'react';
+import classnames from 'classnames';
+import { observer } from 'mobx-react-lite';
+import { {{ res.item_name|title }}T } from 'src/{{ res.item_name }}/types';
+
+export type PropsT = {
+  {{ res.item_name }}: {{ res.item_name|title }}T;
+};
+
+export const {{ res.name }}Item: React.FC<PropsT> = observer(() => {
+  return (
+    <div className={classnames('{{ res.name }}Item flex flex-row flex-1 mb-2')}>
+        {props.{{ res.item_name }}.name}
+    </div>
+  );
+}

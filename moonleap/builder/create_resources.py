@@ -1,5 +1,5 @@
 import ramda as R
-from moonleap.builder.config import config
+from moonleap.builder.config import config, run_rules
 from moonleap.parser.term import is_it_term, word_to_term
 from moonleap.resource import Resource
 from moonleap.resource.rel import Rel
@@ -76,18 +76,18 @@ def find_relations(blocks):
 def apply_rules(blocks):
     root_block = blocks[0]
     for parent_resource in root_block.get_resources(include_children=True):
-        for rule in config.get_rules(
+        run_rules(
+            config,
             Rel(parent_resource.term, is_created_as, parent_resource.term),
             parent_resource,
             parent_resource,
-        ):
-            rule.f(parent_resource)
+        )
+
         for rel, child_resource in parent_resource.get_relations():
             if rel.is_inv:
                 continue
 
-            for rule in config.get_rules(rel, parent_resource, child_resource):
-                rule.f(parent_resource, child_resource)
+            run_rules(config, rel, parent_resource, child_resource)
 
 
 def _create_generic_resource(term, block):

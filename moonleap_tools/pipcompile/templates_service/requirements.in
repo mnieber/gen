@@ -1,0 +1,3 @@
+{% for pip_requirement in res.get_pip_requirements(is_dev=False) %}
+{{ pip_requirement }}
+{% endfor %}

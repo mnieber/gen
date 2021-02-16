@@ -1,11 +1,12 @@
 import moonleap.resource.props as P
+from moonleap import MemFun, StoreOutputPaths, add, extend, rule, tags
+from moonleap.verbs import configured, has
 from moonleap_dodo.layer import StoreLayerConfigs
 from moonleap_project.dockercompose import StoreDockerComposeConfigs
 from moonleap_project.project import Project
-from moonleap import StoreOutputPaths, add, extend, rule, tags
-from moonleap.verbs import configured, has
 
 from . import docker_compose_configs, layer_configs
+from .render import render
 from .resources import Service
 
 
@@ -45,6 +46,7 @@ class ExtendService(
     StoreDockerComposeConfigs,
     StoreOutputPaths,
 ):
+    render = MemFun(render)
     dockerfile = P.child(has, ":dockerfile")
     dockerfile_dev = P.child(has, "dev:dockerfile")
     layer = P.child(configured, "layer")

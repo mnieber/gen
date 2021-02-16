@@ -31,3 +31,15 @@ class Config:
 
 
 config = Config()
+
+
+def run_rules(config, rel, parent_resource, child_resource):
+    for rule in config.get_rules(
+        rel,
+        parent_resource,
+        child_resource,
+    ):
+        if parent_resource is child_resource:
+            rule.f(parent_resource)
+        else:
+            rule.f(parent_resource, child_resource)

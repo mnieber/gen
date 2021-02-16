@@ -3,13 +3,15 @@ FROM {{ res.image_name }}
 # install pkg dependencies
 RUN {{ res.install_command }} \
 {% loop PKG in res.service.get_pkg_names() %}
-    PKG \
+    {{ PKG }} \
 {% endloop %}
-    PKG
+    {{ PKG }}
 
 # install pip dependencies
 RUN pip install \
 {% loop PKG in res.service.get_pip_pkg_names() %}
-    PKG \
+    {{ PKG }} \
 {% endloop %}
-    PKG
+    {{ PKG }}
+
+WORKDIR /app/src
