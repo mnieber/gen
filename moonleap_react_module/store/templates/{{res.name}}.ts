@@ -12,9 +12,8 @@ import { {{ item_list.item_name|title }}T } from "src/{{ res.module.name }}/type
 export class {{ res.name }} {
 
 {% loop item_list in res.item_lists %}
-{% set itemById=item_list.item_name + "ById" %}
-  @observable {{ itemById }}: {{ itemById|title }}T = {};
-  @observable {{ itemById }}RS: RST = resetRS();
+  @observable {{ item_list.item_name|byId }}: {{ item_list.item_name|byId|title }}T = {};
+  @observable {{ item_list.item_name|byId }}RS: RST = resetRS();
 {% endloop %}
 
   constructor() {
@@ -22,17 +21,15 @@ export class {{ res.name }} {
   }
 
 {% loop item_list in res.item_lists %}
-{% set itemById=item_list.item_name + "ById" %}
-{% set items=item_list.plural_item_name %}
   @action load{{ items|title }} = () => {
     updateRes(
       this,
-      '{{ itemById }}',
+      '{{ item_list.item_name|byId }}',
       () => {
-        return {{ res.module.name }}Api.get{{ items|title }}();
+        return {{ res.module.name }}Api.get{{ item_list.item_name|plural|title }}();
       },
       (response: any) => {
-        this.add{{ items|title }}(response.{{ items }});
+        this.add{{ item_list.item_name|plural|title }}(response.{{ item_list.item_name|plural }});
       },
       (message: any) => {
         console.log(message);
@@ -43,8 +40,8 @@ export class {{ res.name }} {
   {{ res and "" }}
   @action add{{ items|title }} = ({{ items }}: {{ item_list.item_name|title }}T[]) => {
     forEach(({{ item_list.item_name }}) => {
-      this.{{ item_list.item_name }}ById[{{ item_list.item_name }}.uuid] = {{ item_list.item_name }};
-    }, {{ item_list.plural_item_name }});
+      this.{{ item_list.item_name|byId }}[{{ item_list.item_name }}.uuid] = {{ item_list.item_name }};
+    }, {{ item_list.item_name|plural }});
   }
 {% endloop %}
 
