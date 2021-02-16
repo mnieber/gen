@@ -6,7 +6,10 @@ from moonleap.render.template_env import template_env
 
 
 def _render_template(filename, resource):
-    return Template(filename).render(res=resource)
+    result = Template(filename).render(res=resource)
+    if result.endswith(".j2"):
+        result = result[:-3]
+    return result
 
 
 class TemplateRenderer:
@@ -16,6 +19,7 @@ class TemplateRenderer:
     def render(self, output_root_dir, output_subdir, resource, template_fn):
         t = template_env.get_template(str(template_fn))
         output_fn = _render_template(template_fn.name, resource)
+
         output_dir = (Path(output_root_dir) / output_subdir).resolve()
         output_dir.mkdir(parents=True, exist_ok=True)
         fn = str(output_dir / output_fn)
