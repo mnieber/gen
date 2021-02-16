@@ -33,8 +33,8 @@ The frontend:service /has a :node-package.
 
 The donations:module /has a donations:store that /stores the donation:item-list.
 :It /has a graphql:api.
-:It /has a list:view that /shows the donation:item-list.
-:It /has an item:view that /shows a donation:item or a donation:form.
+:It /has a donation:list-view.
+:It /has an donation:item-view that /has a donation:form.
 
 
 ## The backend:service

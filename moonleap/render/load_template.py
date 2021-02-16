@@ -58,7 +58,7 @@ def load_template(template_fn):
         for block in blocks:
             var, container = _find_loop_statement(os.linesep.join(block))
             if not var:
-                result += os.linesep.join(block) + os.linesep
+                result += "".join(block) + os.linesep
                 continue
 
             result += "{% for " + var + " in " + container + " %}\n"

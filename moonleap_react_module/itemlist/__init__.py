@@ -8,7 +8,7 @@ from .resources import ItemList
 
 @tags(["item-list"])
 def create_item_list(term, block):
-    item_list = ItemList(name=term.data)
+    item_list = ItemList(item_name=term.data)
     return item_list
 
 

@@ -4,7 +4,7 @@ import { RST, resetRS, updateRes } from 'utils/RST';
 import * as {{ res.module.name }}Api from "src/{{ res.module.name }}/api"
 
 {% loop item_list in res.item_lists %}
-import { {{ item_list.name|title }}T } from "src/{{ res.module.name }}/types"
+import { {{ item_list.item_name|title }}T } from "src/{{ res.module.name }}/types"
 {% endloop %}
 
 {{ res.javascript_import_lines }}
@@ -12,7 +12,7 @@ import { {{ item_list.name|title }}T } from "src/{{ res.module.name }}/types"
 export class {{ res.name }} {
 
 {% loop item_list in res.item_lists %}
-{% set itemById=item_list.name + "ById" %}
+{% set itemById=item_list.item_name + "ById" %}
   @observable {{ itemById }}: {{ itemById|title }}T = {};
   @observable {{ itemById }}RS: RST = resetRS();
 {% endloop %}
@@ -22,8 +22,8 @@ export class {{ res.name }} {
   }
 
 {% loop item_list in res.item_lists %}
-{% set itemById=item_list.name + "ById" %}
-{% set items=item_list.plural_name %}
+{% set itemById=item_list.item_name + "ById" %}
+{% set items=item_list.plural_item_name %}
   @action load{{ items|title }} = () => {
     updateRes(
       this,
@@ -41,10 +41,10 @@ export class {{ res.name }} {
     );
   }
   {{ res and "" }}
-  @action add{{ items|title }} = ({{ items }}: {{ item_list.name|title }}T[]) => {
-    forEach(({{ item_list.name }}) => {
-      this.{{ item_list.name }}ById[{{ item_list.name }}.uuid] = {{ item_list.name }};
-    }, {{ item_list.plural_name }});
+  @action add{{ items|title }} = ({{ items }}: {{ item_list.item_name|title }}T[]) => {
+    forEach(({{ item_list.item_name }}) => {
+      this.{{ item_list.item_name }}ById[{{ item_list.item_name }}.uuid] = {{ item_list.item_name }};
+    }, {{ item_list.plural_item_name }});
   }
 {% endloop %}
 
