@@ -1,5 +1,5 @@
 import ramda as R
-from moonleap.builder.config import config, run_rules
+from moonleap.builder.config import config
 from moonleap.parser.term import is_it_term, word_to_term
 from moonleap.resource import Resource
 from moonleap.resource.rel import Rel
@@ -73,27 +73,74 @@ def find_relations(blocks):
                 )
 
 
+def _find_or_create_resource(block, term):
+    for parent_block in block.get_blocks(include_self=True, include_parents=True):
+        resource = parent_block.get_resource(term)
+        if resource:
+            return resource
+    resource = _create_resource(term, block)
+    block.add_resource(resource)
+    return resource
+
+
+def _apply_rules(rel, parent_resource, child_resource):
+    if rel.is_inv:
+        return
+
+    for rule in config.get_rules(rel):
+        if rule.fltr_subj and not rule.fltr_subj(parent_resource):
+            continue
+
+        if rule.fltr_obj and not rule.fltr_obj(child_resource):
+            continue
+
+        result = rule.f(parent_resource, child_resource)
+
+        if isinstance(result, Rel):
+            new_rel = result
+            new_parent_resource = _find_or_create_resource(
+                child_resource.block, new_rel.subj
+            )
+            new_child_resource = _find_or_create_resource(
+                child_resource.block, new_rel.obj
+            )
+
+            if not new_parent_resource.has_relation(new_rel, new_child_resource):
+                new_parent_resource.add_relation(new_rel, new_child_resource)
+
+                _apply_rules(
+                    new_rel,
+                    new_parent_resource,
+                    new_child_resource,
+                )
+
+
 def apply_rules(blocks):
     root_block = blocks[0]
     for parent_resource in root_block.get_resources(include_children=True):
-        run_rules(
-            config,
-            Rel(parent_resource.term, is_created_as, parent_resource.term),
-            parent_resource,
-            parent_resource,
+
+        is_created_as_rel = Rel(
+            parent_resource.term, is_created_as, parent_resource.term
         )
+        for rule in config.get_rules(is_created_as_rel):
+            rule.f(parent_resource)
 
         for rel, child_resource in parent_resource.get_relations():
-            if rel.is_inv:
-                continue
-
-            run_rules(config, rel, parent_resource, child_resource)
+            _apply_rules(rel, parent_resource, child_resource)
 
 
 def _create_generic_resource(term, block):
     resource = Resource()
     resource.term = term
     resource.block = block
+    return resource
+
+
+def _create_resource(term, creator_block):
+    create_rule = config.get_create_rule(term) or _create_generic_resource
+    resource = create_rule(term, creator_block)
+    resource.term = term
+    resource.block = creator_block
     return resource
 
 
@@ -124,11 +171,7 @@ def create_resources(blocks):
                         creator_block = child_block
                         break
 
-            create_rule = config.get_create_rule(term) or _create_generic_resource
-            resource = create_rule(term, creator_block)
-            resource.term = term
-            resource.block = creator_block
-
+            resource = _create_resource(term, creator_block)
             creator_block.add_resource(resource)
             if block is not creator_block:
                 block.add_resource(resource)

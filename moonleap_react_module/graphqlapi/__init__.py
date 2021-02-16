@@ -1,8 +1,16 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, add, extend, render_templates, rule, tags
+from moonleap import (
+    MemFun,
+    Rel,
+    add,
+    extend,
+    render_templates,
+    rule,
+    tags,
+    word_to_term,
+)
 from moonleap.verbs import has
 from moonleap_react.module import Module
-from moonleap_react_module.utilsmodule import create_utils_module
 from moonleap_tools.tool import Tool
 
 from . import node_package_configs
@@ -20,10 +28,14 @@ def create_graphql_api(term, block):
 
 
 @rule("module", has, "graphql:api")
+def create_utils_module(module, graphql_api):
+    return Rel(module.service.term, has, word_to_term("utils:module"))
+
+
+@rule("module", has, "graphql:api")
 def module_has_graphql_api(module, graphql_api):
     module.add_component(graphql_api)
-    utils_module = create_utils_module(module.service)
-    utils_module.add_template_dir(__file__, "templates_utils")
+    module.service.utils_module.add_template_dir(__file__, "templates_utils")
 
 
 @extend(GraphqlApi)

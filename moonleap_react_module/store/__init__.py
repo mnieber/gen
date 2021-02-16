@@ -1,8 +1,7 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, extend, rule, tags
+from moonleap import MemFun, Prop, Rel, extend, rule, tags, word_to_term
 from moonleap.verbs import contains, has
 from moonleap_react.module import Module
-from moonleap_react_module.utilsmodule import create_utils_module
 
 from . import props
 from .render import render
@@ -16,11 +15,15 @@ def create_store(term, block):
 
 
 @rule("module", has, "store")
+def create_utils_module(module, store):
+    return Rel(module.service.term, has, word_to_term("utils:module"))
+
+
+@rule("module", has, "store")
 def module_has_store(module, store):
     store.import_path = module.import_path + "/" + f"{store.name}"
     store.output_paths.add_source(module)
-    utils_module = create_utils_module(module.service)
-    utils_module.add_template_dir(__file__, "templates_utils")
+    module.service.utils_module.add_template_dir(__file__, "templates_utils")
 
 
 @extend(Module)

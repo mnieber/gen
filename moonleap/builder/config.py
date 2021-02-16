@@ -17,29 +17,11 @@ class Config:
                     result = rule
         return result
 
-    def get_rules(self, input_rel, subj_resource, obj_resource):
-        return [
-            rule
-            for rule in self.rules
-            if fuzzy_match(input_rel, rule.rel)
-            and (not rule.fltr_subj or rule.fltr_subj(subj_resource))
-            and (not rule.fltr_obj or rule.fltr_obj(obj_resource))
-        ]
+    def get_rules(self, input_rel):
+        return [rule for rule in self.rules if fuzzy_match(input_rel, rule.rel)]
 
     def add_rule(self, rule):
         self.rules.append(rule)
 
 
 config = Config()
-
-
-def run_rules(config, rel, parent_resource, child_resource):
-    for rule in config.get_rules(
-        rel,
-        parent_resource,
-        child_resource,
-    ):
-        if parent_resource is child_resource:
-            rule.f(parent_resource)
-        else:
-            rule.f(parent_resource, child_resource)

@@ -15,7 +15,15 @@ class Rule:
     description: str = None
 
 
-def rule(subj_term, verb, obj_term, fltr_subj=None, fltr_obj=None, description=None):
+def rule(
+    subj_term, verb=None, obj_term=None, fltr_subj=None, fltr_obj=None, description=None
+):
+    if verb is None or obj_term is None:
+        if verb is not None or obj_term is not None:
+            raise Exception("Either define both verb and obj_term or neither")
+        verb = is_created_as
+        obj_term = subj_term
+
     def wrapped(f):
         rel = Rel(
             subj=word_to_term(subj_term, default_to_tag=True),
@@ -28,10 +36,6 @@ def rule(subj_term, verb, obj_term, fltr_subj=None, fltr_obj=None, description=N
         return f
 
     return wrapped
-
-
-def created(subj_term):
-    return rule(subj_term, is_created_as, subj_term)
 
 
 def tags(tags):

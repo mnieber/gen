@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, add, extend, register_add, render_templates, rule, tags
-from moonleap.builder.config import config, run_rules
+from moonleap.builder.config import config
 from moonleap.resource.rel import Rel
 from moonleap.verbs import has, runs
 from moonleap_project.service import Service
@@ -28,9 +28,7 @@ def service_has_makefile(service, makefile):
 
 @rule("makefile", runs, "*", fltr_obj=P.fltr_instance(Tool))
 def makefile_running_tool(makefile, tool):
-    run_rules(
-        config, Rel(makefile.service.term, has, tool.term), makefile.service, tool
-    )
+    return Rel(makefile.service.term, has, tool.term)
 
 
 @register_add(MakefileRule)
