@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 import moonleap.resource.props as P
-from moonleap import MemFun, StoreOutputPaths, add, created, extend, render_templates
+from moonleap import MemFun, StoreOutputPaths, created, extend, render_templates
 from moonleap.verbs import has
 from moonleap_react.component import Component
 from moonleap_react_module.appmodule import AppModule

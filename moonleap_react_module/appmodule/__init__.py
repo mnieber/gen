@@ -1,9 +1,8 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, add, extend, render_templates, rule, tags
+from moonleap import MemFun, Prop, add, extend, rule, tags
 from moonleap.verbs import has
 from moonleap_project.service import Service
 from moonleap_react.component import StoreCssImports
-from moonleap_tools.tool import Tool
 
 from . import node_package_configs, props
 from .render import render_module

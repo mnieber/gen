@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from moonleap.render.template_renderer import merged_output_path, render_templates
 
 

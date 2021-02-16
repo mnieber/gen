@@ -1,7 +1,6 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, add, extend, render_templates, rule, tags
+from moonleap import extend, rule, tags
 from moonleap.verbs import contains
-from moonleap_react.component import Component
 from moonleap_react_module.store import Store
 
 from .resources import ItemList

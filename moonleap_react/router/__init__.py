@@ -1,6 +1,6 @@
-from moonleap_react.component import Component
 from moonleap import MemFun, add, extend, render_templates, rule, tags
-from moonleap.verbs import has, with_
+from moonleap.verbs import has
+from moonleap_react.component import Component
 
 from . import node_package_configs
 

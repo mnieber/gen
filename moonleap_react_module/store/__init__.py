@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, extend, render_templates, rule, tags
+from moonleap import MemFun, Prop, extend, rule, tags
 from moonleap.verbs import contains, has
 from moonleap_react.module import Module
 from moonleap_react_module.utilsmodule import create_utils_module
