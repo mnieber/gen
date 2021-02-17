@@ -7,7 +7,6 @@ from . import (
     module,
     nodepackage,
     prettier,
-    router,
     tailwindcss,
 )
 
@@ -19,5 +18,4 @@ def install_all():
     install(module)
     install(nodepackage)
     install(prettier)
-    install(router)
     install(tailwindcss)

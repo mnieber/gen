@@ -1,5 +1,14 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, extend, render_templates, rule, tags
+from moonleap import (
+    MemFun,
+    Prop,
+    Rel,
+    extend,
+    render_templates,
+    rule,
+    tags,
+    word_to_term,
+)
 from moonleap.render.template_env import add_filter
 from moonleap.utils.inflect import plural
 from moonleap.verbs import has
@@ -28,6 +37,11 @@ class ExtendListView:
     render = MemFun(render_templates(__file__))
     module = P.parent(Module, has, "list-view")
     item_list = Prop(props.item_list)
+
+
+@extend(Module)
+class ExtendModule:
+    views = P.tree(has, "list-view")
 
 
 add_filter("store", lambda x: plural(x) + "Store")

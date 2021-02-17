@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, add, extend, rule, tags
+from moonleap import MemFun, Prop, Rel, add, extend, rule, tags
 from moonleap.verbs import has
 from moonleap_project.service import Service
 from moonleap_react.component import StoreCssImports
@@ -20,8 +20,8 @@ def create_app_module(term, block):
 @rule("service", has, "module")
 def service_has_module(service, module):
     if module.name != "app":
-        if service.app_module:
-            service.app_module.submodules.add(module)
+        service.app_module.views.add_source(module)
+        return Rel(service.app_module.term, has, module.term)
 
 
 @extend(Service)
@@ -33,4 +33,4 @@ class ExtendService:
 class ExtendAppModule(StoreCssImports):
     render = MemFun(render_module)
     css_import_lines = Prop(props.css_import_lines)
-    submodules = P.tree(has, "sub-module")
+    submodules = P.tree(has, "module")
