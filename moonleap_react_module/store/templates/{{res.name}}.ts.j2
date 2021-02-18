@@ -21,7 +21,7 @@ export class {{ res.name }} {
   }
 
 {% loop item_list in res.item_lists %}
-  @action load{{ items|title }} = () => {
+  @action load{{ item_list.item_name|plural|title }} = () => {
     updateRes(
       this,
       '{{ item_list.item_name|byId }}',
@@ -33,14 +33,14 @@ export class {{ res.name }} {
       },
       (message: any) => {
         console.log(message);
-        return 'Oops, there was an error getting the {{ items }} data';
+        return 'Oops, there was an error getting the {{ item_list.item_name|plural }} data';
       }
     );
   }
   {{ res and "" }}
-  @action add{{ items|title }} = ({{ items }}: {{ item_list.item_name|title }}T[]) => {
-    forEach(({{ item_list.item_name }}) => {
-      this.{{ item_list.item_name|byId }}[{{ item_list.item_name }}.uuid] = {{ item_list.item_name }};
+  @action add{{ item_list.item_name|plural|title }} = ({{ item_list.item_name|plural }}: {{ item_list.item_name|title }}T[]) => {
+    forEach(({{ item_list.item_name }}: {{ item_list.item_name|title }}T) => {
+      this.{{ item_list.item_name|byId }}[{{ item_list.item_name }}.id] = {{ item_list.item_name }};
     }, {{ item_list.item_name|plural }});
   }
 {% endloop %}

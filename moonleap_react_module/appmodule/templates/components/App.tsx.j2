@@ -1,0 +1,20 @@
+import React from 'react';
+
+import './App.scss';
+{% if res.router %}
+import { UrlRouter } from 'src/app/components/UrlRouter';
+{% endif %}
+
+function App() {
+  return (
+    <div className="App w-screen">
+      <header className="App-header px-4">
+{% if res.router %}
+        <UrlRouter />
+{% endif %}
+      </header>
+    </div>
+  );
+}
+
+export default App;

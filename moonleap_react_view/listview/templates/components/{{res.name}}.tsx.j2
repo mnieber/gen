@@ -2,6 +2,8 @@ import React from 'react';
 import { always, flow, map, values } from 'lodash/fp';
 import { observer } from 'mobx-react-lite';
 import { useStore } from 'src/app/StoreProvider';
+import { ResourceView } from 'src/utils/components';
+import { {{ res.name }}Item } from 'src/{{ res.item_name|plural }}/components';
 
 export const {{ res.name }} = observer(() => {
   const { {{ res.module.store.name|untitle }} } = useStore();
@@ -11,7 +13,7 @@ export const {{ res.name }} = observer(() => {
     values,
     map((x) => (
       <{{ res.name }}Item
-        key={x.uuid}
+        key={x.id}
         {{ res.item_name }}={x}
       />
     ))
@@ -35,4 +37,4 @@ export const {{ res.name }} = observer(() => {
       }}
     />
   );
-}
+});

@@ -6,7 +6,7 @@ export function get{{ item_list.item_name|plural|title }}() {
   const query = `query query{{ item_list.item_name|plural|title }} {
     {{ item_list.item_name|plural }} {
       {{ item_list.item_name }} {
-        uuid
+        id
         name
       }
     }

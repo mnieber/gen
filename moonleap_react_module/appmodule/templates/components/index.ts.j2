@@ -1,3 +1,5 @@
-{% for component in res.components %}
-import { {{ component.name }} } from "./{{ component.name }}.tsx"
-{% endfor %}
+export { App } from "./App.tsx"
+export { StoreProvider } from "./StoreProvider"
+{% if res.router %}
+import { UrlRouter } from 'src/app/components/UrlRouter';
+{% endif %}

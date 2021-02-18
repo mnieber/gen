@@ -7,10 +7,10 @@ export type PropsT = {
   {{ res.item_name }}: {{ res.item_name|title }}T;
 };
 
-export const {{ res.name }}Item: React.FC<PropsT> = observer(() => {
+export const {{ res.name }}Item: React.FC<PropsT> = observer((props: PropsT) => {
   return (
     <div className={classnames('{{ res.name }}Item flex flex-row flex-1 mb-2')}>
         {props.{{ res.item_name }}.name}
     </div>
   );
-}
+});

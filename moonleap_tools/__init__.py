@@ -5,6 +5,7 @@ from . import (
     fish,
     isort,
     makefile,
+    nodedockerimage,
     optdir,
     pipcompile,
     pipdependency,
@@ -21,6 +22,7 @@ def install_all():
     install(fish)
     install(isort)
     install(makefile)
+    install(nodedockerimage)
     install(optdir)
     install(pipcompile)
     install(pipdependency)

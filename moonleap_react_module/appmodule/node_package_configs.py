@@ -9,8 +9,8 @@ def get():
                 "jquery": "^3.1.1",
                 "lodash": "^4.17.20",
                 "micro-signals": "^2.1.0",
-                "mobx-react": "^6.1.4",
-                "mobx": "^5.14.0",
+                "mobx-react-lite": "^3.1.6",
+                "mobx": "^6.0.4",
             },
         }
     )

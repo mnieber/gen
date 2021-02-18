@@ -1,1 +1,2 @@
-import { EffectWithoutArgs } from "./Effect"
+export { EffectWithoutArgs } from "./Effect"
+export { ResourceView } from "./ResourceView"

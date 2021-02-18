@@ -39,8 +39,4 @@ if __name__ == "__main__":
         report("Genspec file not found: " + gen_file)
         sys.exit(1)
 
-    try:
-        main(gen_file)
-    except Exception as e:
-        report(f"Error: {e}")
-        report(traceback.format_exc(e))
+    main(gen_file)

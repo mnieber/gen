@@ -3,6 +3,7 @@ from moonleap import MemFun, add, extend, render_templates, rule, tags
 from moonleap.verbs import has
 from moonleap_react.component import Component
 from moonleap_react.module import Module
+from moonleap_react_module.appmodule import AppModule
 
 from . import node_package_configs, props
 
@@ -28,3 +29,8 @@ class ExtendRouter:
     module = P.parent(Module, has, "router")
     get_views = MemFun(props.get_views)
     render = MemFun(render_templates(__file__))
+
+
+@extend(AppModule)
+class ExtendAppModule:
+    router = P.child(has, "router")

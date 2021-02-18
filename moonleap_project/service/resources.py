@@ -7,6 +7,7 @@ from moonleap import Resource
 class Service(Resource):
     name: str
     shell: str = "sh"
+    port: str = "80"
     template_dirs: [(str, str)] = field(default_factory=list)
 
     def add_template_dir(self, root_filename, location):

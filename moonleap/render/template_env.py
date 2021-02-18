@@ -8,7 +8,7 @@ from moonleap.utils import chop
 
 
 def to_nice_json(value):
-    return json.dumps(value, sort_keys=False, indent=4, separators=(",", ": "))
+    return json.dumps(value, sort_keys=False, indent=2, separators=(",", ": "))
 
 
 def _find_loop_statement(block):
@@ -56,20 +56,26 @@ def load_template(template_fn):
             blocks.append(block)
 
         for block in blocks:
-            var, container = _find_loop_statement(os.linesep.join(block))
+            block_text = os.linesep.join(block)
+            var, container = _find_loop_statement(block_text)
             if not var:
                 result += "".join(block) + os.linesep
                 continue
 
+            has_final_var_usage = block_text.rfind(var) > block_text.rfind(
+                "{% endloop %}"
+            )
             result += "{% for " + var + " in " + container + " %}\n"
             result += "{% if loop.first %}\n"
 
             for block_line in block:
                 if block_line.startswith(r"{% loop"):
                     result += "{% endif %}\n"
-                    result += "{% if loop.first or not loop.last %}\n"
-                elif block_line.startswith(r"{% endloop"):
-                    result += "{% else %}\n"
+                    if has_final_var_usage:
+                        result += "{% if not loop.last %}\n"
+                elif block_line.startswith(r"{% endloop %}"):
+                    if has_final_var_usage:
+                        result += "{% else %}\n"
                 else:
                     expr, line = _find_onlyif_statement(block_line)
                     if expr:
@@ -79,7 +85,8 @@ def load_template(template_fn):
                     else:
                         result += line
 
-            result += "{% endif %}\n"
+            if has_final_var_usage:
+                result += "{% endif %}\n"
             result += "{% endfor %}\n"
             result += os.linesep
 

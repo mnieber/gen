@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, StoreOutputPaths, add, extend, rule, tags
-from moonleap.verbs import configured, has
+from moonleap.verbs import configured, has, uses
 from moonleap_dodo.layer import StoreLayerConfigs
 from moonleap_project.dockercompose import StoreDockerComposeConfigs
 from moonleap_project.project import Project
@@ -38,6 +38,11 @@ def service_has_dockerfile(service, dockerfile):
 @rule("service", configured, "layer")
 def service_is_configured_in_layer(service, layer):
     layer.layer_configs.add_source(service)
+
+
+@rule("service", uses, "port")
+def service_uses_port(service, port):
+    service.port = port.term.data
 
 
 @extend(Service)

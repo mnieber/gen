@@ -15,9 +15,9 @@ def get(docker_compose):
             },
             "ROOT": {
                 "aliases": {
-                    "up": "docker-compose up --detach",
-                    "down": "docker-compose down",
-                    "build": "docker-compose build",
+                    "up": "docker-compose --dev up --detach",
+                    "down": "docker-compose --dev down",
+                    "build": "docker-compose --dev build",
                 }
             },
         }

@@ -31,10 +31,11 @@ def get_template_filename(dockerfile):
 
 @extend(DockerImage)
 class ExtendDockerImage(StoreDockerComposeConfigs):
-    dockerfile = P.parent(Dockerfile, has, "docker-image")
+    pass
 
 
 @extend(Dockerfile)
 class ExtendDockerfile(StoreOutputPaths, StoreDockerComposeConfigs):
     service = P.parent(Service, has, "dockerfile")
     render = MemFun(render_templates(__file__, get_template_filename))
+    docker_image = P.child(has, "docker-image")

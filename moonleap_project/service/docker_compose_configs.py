@@ -6,7 +6,7 @@ def get(service, is_dev):
         body = dict(
             depends_on=[],
             image=f"{service.project.name}_{service.name}",
-            ports=["80:80"],
+            ports=[f"{service.port}:{service.port}"],
         )
 
         volumes = body.setdefault("volumes", [])
@@ -18,6 +18,9 @@ def get(service, is_dev):
             build = body.setdefault("build", {})
             build["context"] = f"./{service.name}"
             build["dockerfile"] = dockerfile.name
+
+        if is_dev:
+            body["command"] = "sleep infinity"
 
         return body
 

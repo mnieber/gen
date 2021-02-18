@@ -7,7 +7,7 @@ def get(project):
             ROOT=dict(
                 aliases=dict(
                     code="exec -- code $HOME/sublime-projects/"
-                    + f"{project.name}.code-workspace"
+                    + f"{project.name}.code-workspace --"
                 )
             )
         )

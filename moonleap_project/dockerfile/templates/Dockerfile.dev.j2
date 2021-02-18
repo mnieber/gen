@@ -1,7 +1,7 @@
 FROM {{ res.image_name }}
 
 # install pkg dependencies
-RUN {{ res.install_command }} \
+RUN {{ res.docker_image.install_command }} \
 {% loop PKG in res.service.get_pkg_names() %}
     {{ PKG }} \
 {% endloop %}
@@ -15,7 +15,7 @@ RUN pip install \
     {{ PKG }}
 
 # install dev pkg dependencies
-RUN {{ res.install_command }} \
+RUN {{ res.docker_image.install_command }} \
 {% loop PKG in res.service.get_pkg_names(is_dev=True) %}
     {{ PKG }} \
 {% endloop %}

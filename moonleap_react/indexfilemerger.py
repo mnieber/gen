@@ -9,15 +9,17 @@ class IndexFileMerger(FileMerger):
         return Path(fn).name in ["index.ts", "index.tsx", "index.js", "index.jsx"]
 
     def merge(self, lhs_content, rhs_content):
-        header = ""
-        footer = ""
+        header = []
+        footer = []
 
         for content in (lhs_content, rhs_content):
             for line in content.split(os.linesep):
+                if not line:
+                    continue
                 if line.startswith("import"):
                     if line not in header:
-                        header += line
+                        header.append(line)
                 else:
-                    footer += line
+                    footer.append(line)
 
-        return header + footer
+        return os.linesep.join(header) + os.linesep.join(footer)

@@ -87,6 +87,13 @@ def _apply_rules(rel, parent_resource, child_resource):
     if rel.is_inv:
         return
 
+    block = (
+        child_resource.block
+        if child_resource.block
+        in parent_resource.block.get_blocks(include_children=True)
+        else parent_resource.block
+    )
+
     for rule in config.get_rules(rel):
         if rule.fltr_subj and not rule.fltr_subj(parent_resource):
             continue
@@ -98,12 +105,8 @@ def _apply_rules(rel, parent_resource, child_resource):
 
         if isinstance(result, Rel):
             new_rel = result
-            new_parent_resource = _find_or_create_resource(
-                child_resource.block, new_rel.subj
-            )
-            new_child_resource = _find_or_create_resource(
-                child_resource.block, new_rel.obj
-            )
+            new_parent_resource = _find_or_create_resource(block, new_rel.subj)
+            new_child_resource = _find_or_create_resource(block, new_rel.obj)
 
             if not new_parent_resource.has_relation(new_rel, new_child_resource):
                 new_parent_resource.add_relation(new_rel, new_child_resource)

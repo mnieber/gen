@@ -3,7 +3,7 @@ import React from 'react';
 import { {{ substore.name }} } from "{{ substore.import_path }}"
 {% endfor %}
 
-class AppStore {
+export class AppStore {
 {% for substore in res.substores %}
   @observable {{ substore.name|untitle }}: {{ substore.name }};
 {% endfor %}

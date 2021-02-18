@@ -1,3 +1,3 @@
 def substores(app_store):
     submodules = app_store.module.submodules.merged
-    return [x.store for x in submodules]
+    return [x.store for x in submodules if x.store]

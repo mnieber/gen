@@ -1,3 +1,5 @@
+import os
+
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
@@ -49,3 +51,4 @@ add_filter("store", lambda x: plural(x) + "Store")
 add_filter("byId", lambda x: x + "ById")
 add_filter("plural", lambda x: plural(x))
 add_filter("untitle", lambda x: x[0].lower() + x[1:])
+add_filter("expand_vars", lambda x: os.path.expandvars(x))
