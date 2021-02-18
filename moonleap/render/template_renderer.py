@@ -2,6 +2,7 @@ from pathlib import Path
 
 import ramda as R
 from jinja2 import Template
+from moonleap.render.merge import get_file_merger
 from moonleap.render.template_env import template_env
 
 
@@ -23,14 +24,23 @@ class TemplateRenderer:
         output_dir = (Path(output_root_dir) / output_subdir).resolve()
         output_dir.mkdir(parents=True, exist_ok=True)
         fn = str(output_dir / output_fn)
+        content = t.render(res=resource)
 
         if fn in self.filenames:
-            print(f"Warning: writing twice to {fn}")
+            file_merger = get_file_merger(fn)
+            if file_merger:
+                with open(fn) as ifs:
+                    lhs_content = ifs.read()
+                    content = file_merger.merge(lhs_content, content)
+            else:
+                print(f"Warning: writing twice to {fn}")
         else:
             self.filenames.append(fn)
 
         with open(fn, "w") as ofs:
-            ofs.write(t.render(res=resource))
+            ofs.write(content)
+
+        return fn
 
 
 def merged_output_path(resource):
@@ -45,6 +55,7 @@ def merged_output_path(resource):
 
 def render_templates(root_filename, location="templates", output_subdir=None):
     def render(self, output_root_dir, template_renderer):
+        output_filenames = []
         template_path = location(self) if callable(location) else location
 
         nonlocal output_subdir
@@ -63,11 +74,15 @@ def render_templates(root_filename, location="templates", output_subdir=None):
 
         for template_fn in template_paths:
             if not template_fn.is_dir():
-                template_renderer.render(
-                    output_root_dir,
-                    local_output_subdir / prepare(template_fn),
-                    self,
-                    template_fn,
+                output_filenames.append(
+                    template_renderer.render(
+                        output_root_dir,
+                        local_output_subdir / prepare(template_fn),
+                        self,
+                        template_fn,
+                    )
                 )
+
+        return output_filenames
 
     return render
