@@ -5,14 +5,14 @@ import { {{ substore.name }} } from "{{ substore.import_path }}"
 
 class AppStore {
 {% for substore in res.substores %}
-  @observable {{ substore.var_name }}: {{ substore.name }};
+  @observable {{ substore.name|untitle }}: {{ substore.name }};
 {% endfor %}
 
   constructor() {
     makeObservable(this);
 
 {% for substore in res.substores %}
-    this.{{ substore.var_name }} = new {{ substore.name }}();
+    this.{{ substore.name|untitle }} = new {{ substore.name }}();
 {% endfor %}
 
     this.applyPolicies();

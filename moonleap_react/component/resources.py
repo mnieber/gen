@@ -9,10 +9,6 @@ class Component(Tool):
     name: str
     import_path: str
 
-    @property
-    def var_name(self):
-        return self.name[0].lower() + self.name[1:]
-
 
 @dataclass
 class JavascriptImport(Resource):

@@ -3,7 +3,7 @@ import { Router, Switch, Route } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { createBrowserHistory } from 'history';
 {% for view in res.get_views() %}
-import { {{ view.name }}, Load{{ view.item_name|plural|title }}Effect } from 'src/{{ view.item_name|plural }}/components';
+import { {{ view.name }}, Load{{ view.item_name|plural|title }}Effect } from 'src/{{ view.module.name }}/components';
 {% endfor %}
 
 type PropsT = {};

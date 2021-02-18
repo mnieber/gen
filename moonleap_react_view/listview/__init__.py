@@ -30,6 +30,7 @@ def create_list_view(term, block):
 @rule("module", has, "list-view")
 def module_has_list_view(module, list_view):
     module.add_component(list_view)
+    module.service.utils_module.add_template_dir(__file__, "templates_utils")
 
 
 @extend(ListView)
@@ -47,3 +48,4 @@ class ExtendModule:
 add_filter("store", lambda x: plural(x) + "Store")
 add_filter("byId", lambda x: x + "ById")
 add_filter("plural", lambda x: plural(x))
+add_filter("untitle", lambda x: x[0].lower() + x[1:])

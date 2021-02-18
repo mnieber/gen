@@ -1,0 +1,1 @@
+import { EffectWithoutArgs } from "./Effect"
