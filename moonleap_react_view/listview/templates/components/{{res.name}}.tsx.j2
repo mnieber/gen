@@ -1,36 +1,38 @@
+{% magicwith res.item_name as yellowTulip %}
+{% magicwith res.module.name as gardenFlowers %}
 import React from 'react';
 import { always, flow, map, values } from 'lodash/fp';
 import { observer } from 'mobx-react-lite';
 import { useStore } from 'src/app/components/StoreProvider';
 import { ResourceView } from 'src/utils/components';
-import { {{ res.name }}Item } from 'src/{{ res.item_name|plural }}/components';
+import { YellowTulipListViewItem } from 'src/gardenFlowers/components';
 
-export const {{ res.name }} = observer(() => {
-  const { {{ res.module.store.name|untitle }} } = useStore();
+export const YellowTulipListView = observer(() => {
+  const { gardenFlowersStore } = useStore();
 
-  const {{ res.item_name }}Divs = flow(
-    always({{ res.item_name|store }}.{{ res.item_name|byId }}),
+  const yellowTulipDivs = flow(
+    always(gardenFlowersStore.yellowTulipById),
     values,
     map((x) => (
-      <{{ res.name }}Item
+      <YellowTulipListViewItem
         key={x.id}
-        {{ res.item_name }}={x}
+        yellowTulip={x}
       />
     ))
   )();
 
-  const noItems = <h2>There are no {{ res.item_name|plural }}</h2>;
+  const noItems = <h2>There are no yellowTulips</h2>;
 
   const updatedDiv = (
     <div className="{{ res.name }} flex flex-col w-full">
-      { {{ res.item_name }}Divs.length && {{ res.item_name }}Divs }
-      {!{{ res.item_name }}Divs.length && noItems}
+      {yellowTulipDivs.length && yellowTulipDivs}
+      {!yellowTulipDivs.length && noItems}
     </div>
   );
 
   return (
     <ResourceView
-      rs={ {{ res.item_name|store }}.{{ res.item_name|byId }}RS }
+      rs={gardenFlowersStore.yellowTulipByIdRS}
       renderUpdated={() => updatedDiv}
       renderErrored={(message) => {
         return <div className="text-white">{message}</div>;
@@ -38,3 +40,5 @@ export const {{ res.name }} = observer(() => {
     />
   );
 });
+{% endmagicwith %}
+{% endmagicwith %}

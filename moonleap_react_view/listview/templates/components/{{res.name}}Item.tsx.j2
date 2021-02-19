@@ -1,16 +1,20 @@
+{% magicwith res.item_name as yellowTulip %}
+{% magicwith res.module.name as gardenFlowers %}
 import React from 'react';
 import classnames from 'classnames';
 import { observer } from 'mobx-react-lite';
-import { {{ res.item_name|title }}T } from 'src/{{ res.module.name }}/types';
+import { YellowTulipT } from 'src/gardenFlowers/types';
 
 export type PropsT = {
-  {{ res.item_name }}: {{ res.item_name|title }}T;
+  yellowTulip: YellowTulipT;
 };
 
 export const {{ res.name }}Item: React.FC<PropsT> = observer((props: PropsT) => {
   return (
     <div className={classnames('{{ res.name }}Item flex flex-row flex-1 mb-2')}>
-        {props.{{ res.item_name }}.name}
+        {props.yellowTulip.name}
     </div>
   );
 });
+{% endmagicwith %}
+{% endmagicwith %}

@@ -1,9 +1,11 @@
+{% magicwith view.item_name as yellowTulip %}
+{% magicwith view.module.name as gardenFlowers %}
 import React from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { createBrowserHistory } from 'history';
 {% for view in res.get_views() %}
-import { {{ view.name }}, Load{{ view.item_name|plural|title }}Effect } from 'src/{{ view.module.name }}/components';
+import { {{ view.name }}, LoadYellowTulipsEffect } from 'src/gardenFlowers/components';
 {% endfor %}
 
 type PropsT = {};
@@ -15,8 +17,8 @@ export const UrlRouter: React.FC<PropsT> = observer((props: PropsT) => {
     <Router history={history}>
       <Switch>
 {% for view in res.get_views() %}
-        <Route path="/{{ view.item_name|plural }}">
-          <Load{{ view.item_name|plural|title }}Effect />
+        <Route path="/yellowTulips">
+          <LoadYellowTulipsEffect />
           <{{ view.name }} />
         </Route>
 {% endfor %}
@@ -24,3 +26,5 @@ export const UrlRouter: React.FC<PropsT> = observer((props: PropsT) => {
     </Router>
   );
 });
+{% endmagicwith %}
+{% endmagicwith %}

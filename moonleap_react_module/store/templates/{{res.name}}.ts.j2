@@ -1,10 +1,12 @@
+{% magicwith item_list.item_name as yellowTulip %}
+{% magicwith res.module.name as gardenFlowers %}
 import { action, observable, makeObservable } from 'mobx';
 import { forEach } from 'lodash/fp';
 import { RST, resetRS, updateRes } from 'src/utils/RST';
-import * as {{ res.module.name }}Api from "src/{{ res.module.name }}/api"
+import * as gardenFlowersApi from "src/gardenFlowers/api"
 
 {% loop item_list in res.item_lists %}
-import { {{ item_list.item_name|title }}T, {{ item_list.item_name|title|byId }}T } from "src/{{ res.module.name }}/types"
+import { YellowTulipT, YellowTulipByIdT } from "src/gardenFlowers/types"
 {% endloop %}
 
 {{ res.javascript_import_lines }}
@@ -12,8 +14,8 @@ import { {{ item_list.item_name|title }}T, {{ item_list.item_name|title|byId }}T
 export class {{ res.name }} {
 
 {% loop item_list in res.item_lists %}
-  @observable {{ item_list.item_name|byId }}: {{ item_list.item_name|title|byId }}T = {};
-  @observable {{ item_list.item_name|byId }}RS: RST = resetRS();
+  @observable yellowTulipById: YellowTulipByIdT = {};
+  @observable yellowTulipByIdRS: RST = resetRS();
 {% endloop %}
 
   constructor() {
@@ -21,28 +23,30 @@ export class {{ res.name }} {
   }
 
 {% loop item_list in res.item_lists %}
-  @action load{{ item_list.item_name|plural|title }} = () => {
+  @action loadYellowTulips = () => {
     updateRes(
       this,
-      '{{ item_list.item_name|byId }}',
+      'yellowTulipByIdRS',
       () => {
-        return {{ res.module.name }}Api.get{{ item_list.item_name|plural|title }}();
+        return gardenFlowersApi.getYellowTulips();
       },
       (response: any) => {
-        this.add{{ item_list.item_name|plural|title }}(response.{{ item_list.item_name|plural }});
+        this.addYellowTulips(response.yellowTulips);
       },
       (message: any) => {
         console.log(message);
-        return 'Oops, there was an error getting the {{ item_list.item_name|plural }} data';
+        return 'Oops, there was an error getting the yellowTulips data';
       }
     );
   }
   {{ res and "" }}
-  @action add{{ item_list.item_name|plural|title }} = ({{ item_list.item_name|plural }}: {{ item_list.item_name|title }}T[]) => {
-    forEach(({{ item_list.item_name }}: {{ item_list.item_name|title }}T) => {
-      this.{{ item_list.item_name|byId }}[{{ item_list.item_name }}.id] = {{ item_list.item_name }};
-    }, {{ item_list.item_name|plural }});
+  @action addYellowTulips = (yellowTulips: YellowTulipT[]) => {
+    forEach((yellowTulip: YellowTulipT) => {
+      this.yellowTulipById[yellowTulip.id] = yellowTulip;
+    }, yellowTulips);
   }
 {% endloop %}
 
 }
+{% endmagicwith %}
+{% endmagicwith %}

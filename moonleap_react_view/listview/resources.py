@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from moonleap.utils import title
 from moonleap.utils.inflect import plural
 from moonleap_react.component import Component
 
@@ -10,4 +11,4 @@ class ListView(Component):
 
     @property
     def loader_name(self):
-        return f"Load{plural(self.item_name).title()}Effect"
+        return f"Load{plural(title(self.item_name))}Effect"

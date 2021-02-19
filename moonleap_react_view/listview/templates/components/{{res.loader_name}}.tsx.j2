@@ -1,3 +1,5 @@
+{% magicwith res.item_name as yellowTulip %}
+{% magicwith res.module.name as gardenFlowers %}
 import React from 'react';
 
 import { EffectWithoutArgs } from 'src/utils/components';
@@ -6,12 +8,14 @@ import { useStore } from 'src/app/components/StoreProvider';
 type PropsT = {};
 
 export const {{ res.loader_name }}: React.FC<PropsT> = (p: PropsT) => {
-  const { {{ res.module.store.name|untitle }} } = useStore();
+  const { gardenFlowersStore } = useStore();
   return (
     <EffectWithoutArgs
       f={() => {
-        {{ res.module.store.name|untitle }}.load{{ res.item_name|plural|title }}();
+        gardenFlowersStore.loadYellowTulips();
       }}
     />
   );
 };
+{% endmagicwith %}
+{% endmagicwith %}

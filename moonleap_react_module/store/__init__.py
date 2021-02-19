@@ -1,5 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, Prop, Rel, extend, rule, tags, word_to_term
+from moonleap.utils import title
 from moonleap.verbs import contains, has
 from moonleap_react.module import Module
 
@@ -10,7 +11,7 @@ from .resources import Store
 
 @tags(["store"])
 def create_store(term, block):
-    store = Store(name=f"{term.data.title()}Store", import_path="")
+    store = Store(name=f"{title(term.data)}Store", import_path="")
     return store
 
 

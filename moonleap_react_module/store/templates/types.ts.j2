@@ -1,9 +1,11 @@
+{% magicwith item_name as yellowTulip %}
 {% for item_name in res.item_names %}
-export type {{ item_name|title }}T = {
+export type YellowTulipT = {
     id: string,
     name: string
 }
 
-export type {{ item_name|title|byId }}T = {[id:string]: {{ item_name|title }}T};
+export type YellowTulipByIdT = {[id:string]: YellowTulipT};
 
 {% endfor %}
+{% endmagicwith %}

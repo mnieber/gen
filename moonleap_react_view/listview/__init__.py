@@ -12,6 +12,7 @@ from moonleap import (
     word_to_term,
 )
 from moonleap.render.template_env import add_filter
+from moonleap.utils import title
 from moonleap.utils.inflect import plural
 from moonleap.verbs import has
 from moonleap_react.module import Module
@@ -24,7 +25,7 @@ from .resources import ListView
 def create_list_view(term, block):
     plural_name = plural(term.data)
     list_view = ListView(
-        item_name=term.data, name=f"{plural_name.title()}ListView", import_path=""
+        item_name=term.data, name=f"{title(plural_name)}ListView", import_path=""
     )
     return list_view
 

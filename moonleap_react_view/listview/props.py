@@ -1,5 +1,8 @@
+from moonleap.utils import title
+
+
 def name(self):
-    return self.item_list.name.title() + "ListView"
+    return title(self.item_list.name) + "ListView"
 
 
 def item_list(self):
