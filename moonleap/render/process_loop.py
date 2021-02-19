@@ -1,8 +1,6 @@
 import os
 import re
 
-from moonleap.utils import chop
-
 
 def _find_loop_statement(block):
     regex_loop = (
@@ -36,11 +34,10 @@ def process_loop(lines):
     result = []
 
     for line in lines:
-        if not chop(line):
+        block.append(line)
+        if not line:
             blocks.append(block)
             block = []
-        else:
-            block.append(line)
 
     if block:
         blocks.append(block)
@@ -51,7 +48,6 @@ def process_loop(lines):
         var, container = _find_loop_statement(block_text)
         if not var:
             result.extend(block)
-            result.append(os.linesep)
             continue
 
         has_final_var_usage = block_text.rfind(var) > block_text.rfind("{% endloop %}")
@@ -84,6 +80,5 @@ def process_loop(lines):
         if has_final_var_usage:
             result += ["{% endif %}"]
         result += ["{% endfor %}"]
-        result.append(os.linesep)
 
     return result

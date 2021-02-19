@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import ramda as R
@@ -6,25 +7,22 @@ from moonleap.render.merge import get_file_merger
 from moonleap.render.template_env import template_env
 
 
-def _render_template(filename, resource):
-    result = Template(filename).render(res=resource)
-    if result.endswith(".j2"):
-        result = result[:-3]
-    return result
+def merged_output_path(resource):
+    from moonleap.resources.outputpath import OutputPath
+
+    def _merge(acc, x):
+        return OutputPath(location=(x.location + acc.location))
+
+    merged = R.reduce(_merge, OutputPath(""), resource.output_paths.merged)
+    return Path(merged.location)
 
 
 class TemplateRenderer:
     def __init__(self):
         self.filenames = []
 
-    def render(self, output_root_dir, output_subdir, resource, template_fn):
-        t = template_env.get_template(str(template_fn))
-        output_fn = _render_template(template_fn.name, resource)
-
-        output_dir = (Path(output_root_dir) / output_subdir).resolve()
-        output_dir.mkdir(parents=True, exist_ok=True)
-        fn = str(output_dir / output_fn)
-        content = t.render(res=resource)
+    def render(self, resource, template, fn):
+        content = template.render(res=resource)
 
         if fn in self.filenames:
             file_merger = get_file_merger(fn)
@@ -43,46 +41,58 @@ class TemplateRenderer:
         return fn
 
 
-def merged_output_path(resource):
-    from moonleap.resources.outputpath import OutputPath
+def _get_output_dir(output_root_dir, output_subdir, templates_path, template_fn):
+    return (
+        Path(output_root_dir)
+        / output_subdir
+        / template_fn.relative_to(templates_path).parent
+    ).resolve()
 
-    def _merge(acc, x):
-        return OutputPath(location=(x.location + acc.location))
 
-    merged = R.reduce(_merge, OutputPath(""), resource.output_paths.merged)
-    return Path(merged.location)
+def _get_output_fn(output_dir, resource, template_fn):
+    meta_filename = str(template_fn) + ".fn"
+    if Path(meta_filename).exists():
+        fn = (
+            template_env.get_template(meta_filename)
+            .render(res=resource)
+            .split(os.linesep)[0]
+        )
+    else:
+        fn = Template(template_fn.name).render(res=resource)
+        if fn.endswith(".j2"):
+            fn = fn[:-3]
+    return str(output_dir / fn)
 
 
 def render_templates(root_filename, location="templates", output_subdir=None):
-    def render(self, output_root_dir, template_renderer):
-        output_filenames = []
-        template_path = location(self) if callable(location) else location
-
+    def render(resource, output_root_dir, template_renderer):
         nonlocal output_subdir
-        local_output_subdir = (
-            output_subdir if output_subdir else merged_output_path(self)
-        )
 
+        template_path = location(resource) if callable(location) else location
         templates_path = Path(root_filename).parent / template_path
-
         template_paths = (
             templates_path.glob("**/*") if templates_path.is_dir() else [templates_path]
         )
 
-        def prepare(template_fn):
-            return template_fn.relative_to(templates_path).parent
-
+        output_filenames = []
         for template_fn in template_paths:
+            if template_fn.suffix == ".fn":
+                continue
             if not template_fn.is_dir():
-                output_filenames.append(
-                    template_renderer.render(
-                        output_root_dir,
-                        local_output_subdir / prepare(template_fn),
-                        self,
-                        template_fn,
-                    )
+                output_dir = _get_output_dir(
+                    output_root_dir,
+                    output_subdir or merged_output_path(resource),
+                    templates_path,
+                    template_fn,
                 )
+                output_dir.mkdir(parents=True, exist_ok=True)
 
+                output_filename = template_renderer.render(
+                    resource,
+                    template_env.get_template(str(template_fn)),
+                    _get_output_fn(output_dir, resource, template_fn),
+                )
+                output_filenames.append(output_filename)
         return output_filenames
 
     return render

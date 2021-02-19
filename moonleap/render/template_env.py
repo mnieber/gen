@@ -4,6 +4,7 @@ import os
 import jinja2
 from jinja2_ansible_filters import AnsibleCoreFiltersExtension
 from moonleap.render.transforms import transforms
+from moonleap.utils import chop
 
 
 def to_nice_json(value):
@@ -12,13 +13,13 @@ def to_nice_json(value):
 
 def load_template(template_fn):
     with open(template_fn) as ifs:
-        lines = [x for x in ifs.readlines()]
+        lines = [chop(x) for x in ifs.readlines()]
 
     transformed_lines = lines
     for t in transforms:
         transformed_lines = t(transformed_lines)
 
-    return "".join(transformed_lines) + os.linesep
+    return os.linesep.join(transformed_lines)
 
 
 template_loader = jinja2.FunctionLoader(load_template)
