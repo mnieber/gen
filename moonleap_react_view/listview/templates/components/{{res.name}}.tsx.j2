@@ -1,7 +1,7 @@
 import React from 'react';
 import { always, flow, map, values } from 'lodash/fp';
 import { observer } from 'mobx-react-lite';
-import { useStore } from 'src/app/StoreProvider';
+import { useStore } from 'src/app/components/StoreProvider';
 import { ResourceView } from 'src/utils/components';
 import { {{ res.name }}Item } from 'src/{{ res.item_name|plural }}/components';
 
@@ -30,7 +30,7 @@ export const {{ res.name }} = observer(() => {
 
   return (
     <ResourceView
-      rs={ {{ res.item_name|store }}.{{ res.item_name|byId }} }
+      rs={ {{ res.item_name|store }}.{{ res.item_name|byId }}RS }
       renderUpdated={() => updatedDiv}
       renderErrored={(message) => {
         return <div className="text-white">{message}</div>;

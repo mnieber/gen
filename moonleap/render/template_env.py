@@ -105,4 +105,4 @@ def add_filter(name, f):
     template_env.filters[name] = f
 
 
-template_env.filters["to_nice_json"] = to_nice_json
+add_filter("to_nice_json", to_nice_json)

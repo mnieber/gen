@@ -31,9 +31,20 @@ def get_node_package_config(self):
         service_configs.extend(tool.node_package_configs.merged)
 
     config = R.reduce(merge, NodePackageConfig(body={}), service_configs)
-    return R.pipe(
+    result = R.pipe(
         R.always(config.get_body()),
         R.to_pairs,
         R.sort_by(lambda x: get_sort_index(x[0])),
         R.from_pairs,
     )(None)
+
+    for k in ("dependencies", "dependenciesDev"):
+        if result.get(k):
+            result[k] = R.pipe(
+                R.always(result[k]),
+                R.to_pairs,
+                R.sort_by(lambda x: x[0]),
+                R.from_pairs,
+            )(None)
+
+    return result

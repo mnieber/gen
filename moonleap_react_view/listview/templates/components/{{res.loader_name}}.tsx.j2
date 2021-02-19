@@ -1,16 +1,16 @@
 import React from 'react';
 
 import { EffectWithoutArgs } from 'src/utils/components';
-import { useStore } from 'src/app/StoreProvider';
+import { useStore } from 'src/app/components/StoreProvider';
 
 type PropsT = {};
 
 export const {{ res.loader_name }}: React.FC<PropsT> = (p: PropsT) => {
-  const { {{ res.module.store.name }} } = useStore();
+  const { {{ res.module.store.name|untitle }} } = useStore();
   return (
     <EffectWithoutArgs
       f={() => {
-        expensesStore.loadExpenses();
+        {{ res.module.store.name|untitle }}.load{{ res.item_name|plural|title }}();
       }}
     />
   );

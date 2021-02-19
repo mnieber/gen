@@ -1,4 +1,4 @@
-import React from 'react';
+import { observable, makeObservable } from "mobx"
 {% for substore in res.substores %}
 import { {{ substore.name }} } from "{{ substore.import_path }}"
 {% endfor %}
