@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, add, extend, register_add, render_templates, rule, tags
-from moonleap.builder.config import config
+from moonleap import (MemFun, add, extend, register_add, render_templates,
+                      rule, tags)
 from moonleap.resource.rel import Rel
 from moonleap.verbs import has, runs
 from moonleap_project.service import Service

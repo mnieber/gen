@@ -1,8 +1,7 @@
 import moonleap.resource.props as P
-from moonleap import Term, extend
+from moonleap import extend
 from moonleap.verbs import has
 from moonleap_project.service import Service
-from moonleap_react.module import create_module
 
 
 @extend(Service)

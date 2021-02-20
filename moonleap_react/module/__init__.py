@@ -3,7 +3,6 @@ from moonleap import MemFun, extend, rule, tags
 from moonleap.verbs import has
 from moonleap_project.service import Service
 
-from . import props
 from .render import render
 from .resources import Module  # noqa
 
@@ -24,5 +23,3 @@ def service_has_module(service, module):
 class ExtendModule:
     render = MemFun(render)
     service = P.parent(Service, has, "module")
-
-    add_component = MemFun(props.add_component)

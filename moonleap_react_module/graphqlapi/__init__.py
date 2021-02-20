@@ -34,7 +34,8 @@ def create_utils_module(module, graphql_api):
 
 @rule("module", has, "graphql:api")
 def module_has_graphql_api(module, graphql_api):
-    module.add_component(graphql_api)
+    graphql_api.output_path = module.output_path
+    module.service.add_tool(graphql_api)
     module.service.utils_module.add_template_dir(__file__, "templates_utils")
 
 

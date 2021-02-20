@@ -1,6 +1,5 @@
 import os
 import sys
-import traceback
 
 import moonleap_dodo
 import moonleap_project

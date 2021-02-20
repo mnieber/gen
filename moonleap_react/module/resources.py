@@ -1,13 +1,11 @@
 from dataclasses import dataclass, field
 
-from moonleap_react.component import Component
 from moonleap_tools.tool import Tool
 
 
 @dataclass
 class Module(Tool):
     name: str
-    components: [Component] = field(default_factory=list)
     template_dirs: [(str, str)] = field(default_factory=list)
 
     @property

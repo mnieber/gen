@@ -21,7 +21,8 @@ def create_router(term, block):
 
 @rule("app:module", has, "router")
 def service_has_router(app_module, router):
-    app_module.add_component(router)
+    router.output_path = app_module.output_path
+    app_module.service.add_tool(router)
 
 
 @extend(Router)
