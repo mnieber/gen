@@ -3,8 +3,9 @@ from moonleap import MemFun, Prop, Rel, add, extend, rule, tags
 from moonleap.verbs import has
 from moonleap_project.service import Service
 from moonleap_react.component import StoreCssImports
+from moonleap_react.nodepackage import load_node_package_config
 
-from . import node_package_configs, props
+from . import props
 from .render import render_module
 from .resources import AppModule  # noqa
 
@@ -13,7 +14,7 @@ from .resources import AppModule  # noqa
 def create_app_module(term, block):
     module = AppModule(name=term.data)
     module.output_path = f"src/{module.name}"
-    add(module, node_package_configs.get())
+    add(module, load_node_package_config(__file__))
     return module
 
 

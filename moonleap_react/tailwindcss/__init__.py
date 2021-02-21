@@ -1,8 +1,7 @@
-from moonleap_tools.tool import Tool
 from moonleap import MemFun, add, extend, render_templates, rule, tags
 from moonleap.verbs import has
-
-from . import node_package_configs
+from moonleap_react.nodepackage import load_node_package_config
+from moonleap_tools.tool import Tool
 
 
 class TailwindCss(Tool):
@@ -12,7 +11,7 @@ class TailwindCss(Tool):
 @tags(["tailwind-css"])
 def create_tailwind_css(term, block):
     tailwind_css = TailwindCss()
-    add(tailwind_css, node_package_configs.get())
+    add(tailwind_css, load_node_package_config(__file__))
     return tailwind_css
 
 

@@ -11,9 +11,8 @@ from moonleap import (
 )
 from moonleap.verbs import has
 from moonleap_react.module import Module
+from moonleap_react.nodepackage import load_node_package_config
 from moonleap_tools.tool import Tool
-
-from . import node_package_configs
 
 
 class GraphqlApi(Tool):
@@ -23,7 +22,7 @@ class GraphqlApi(Tool):
 @tags(["graphql:api"])
 def create_graphql_api(term, block):
     graphql_api = GraphqlApi()
-    add(graphql_api, node_package_configs.get())
+    add(graphql_api, load_node_package_config(__file__))
     return graphql_api
 
 

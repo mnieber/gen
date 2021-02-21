@@ -1,8 +1,7 @@
-from moonleap_tools.tool import Tool
 from moonleap import MemFun, add, extend, render_templates, rule, tags
 from moonleap.verbs import uses
-
-from . import node_package_configs
+from moonleap_react.nodepackage import load_node_package_config
+from moonleap_tools.tool import Tool
 
 
 class CreateReactApp(Tool):
@@ -12,7 +11,7 @@ class CreateReactApp(Tool):
 @tags(["create-react-app"])
 def create_cra(term, block):
     cra = CreateReactApp()
-    add(cra, node_package_configs.get())
+    add(cra, load_node_package_config(__file__))
     return cra
 
 

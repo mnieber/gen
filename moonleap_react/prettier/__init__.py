@@ -1,8 +1,7 @@
-from moonleap_tools.tool import Tool
 from moonleap import MemFun, add, extend, render_templates, rule, tags
 from moonleap.verbs import has
-
-from . import node_package_configs
+from moonleap_react.nodepackage import load_node_package_config
+from moonleap_tools.tool import Tool
 
 
 class Prettier(Tool):
@@ -12,7 +11,7 @@ class Prettier(Tool):
 @tags(["prettier"])
 def create_prettier(term, block):
     prettier = Prettier()
-    add(prettier, node_package_configs.get())
+    add(prettier, load_node_package_config(__file__))
     return prettier
 
 

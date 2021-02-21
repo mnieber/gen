@@ -1,8 +1,9 @@
-from moonleap_tools.tool import Tool
 from moonleap import add, extend, rule, tags
 from moonleap.verbs import has
+from moonleap_react.nodepackage import load_node_package_config
+from moonleap_tools.tool import Tool
 
-from . import css_imports, node_package_configs
+from . import css_imports
 
 
 class Antd(Tool):
@@ -13,7 +14,7 @@ class Antd(Tool):
 def create_antd(term, block):
     antd = Antd()
     add(antd, css_imports.get())
-    add(antd, node_package_configs.get())
+    add(antd, load_node_package_config(__file__))
     return antd
 
 
