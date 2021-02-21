@@ -6,6 +6,7 @@ from . import (
     component,
     createreactapp,
     indexfilemerger,
+    mockgraphqlserver,
     module,
     nodepackage,
     prettier,
@@ -17,6 +18,7 @@ def install_all():
     install(antd)
     install(component)
     install(createreactapp)
+    install(mockgraphqlserver)
     install(module)
     install(nodepackage)
     install(prettier)

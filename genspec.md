@@ -28,6 +28,7 @@ The frontend:service /has a :node-package.
 :It /uses :create-react-app, :tailwind-css, :prettier and :antd.
 :It /has an app:module that /has a :router and an app:store.
 :It /has a donations:module.
+:It /uses a :mock-graphql-server.
 
 #### The donations:module
 

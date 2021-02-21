@@ -13,6 +13,7 @@ from moonleap.parser.term import Term, word_to_term  # noqa
 from moonleap.render.render_resources import render_resources  # noqa
 from moonleap.render.template_renderer import render_templates  # noqa
 from moonleap.resource import Resource, resolve  # noqa
+from moonleap.resource.memfield import MemField  # noqa
 from moonleap.resource.memfun import MemFun  # noqa
 from moonleap.resource.prop import Prop  # noqa
 from moonleap.resource.rel import Rel  # noqa

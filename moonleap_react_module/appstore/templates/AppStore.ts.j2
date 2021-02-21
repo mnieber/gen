@@ -1,6 +1,6 @@
-import { observable, makeObservable } from "mobx"
+import { observable, makeObservable } from 'mobx'
 {% for substore in res.substores %}
-import { {{ substore.name }} } from "{{ substore.import_path }}"
+import { {{ substore.name }} } from '{{ substore.import_path }}'
 {% endfor %}
 
 export class AppStore {

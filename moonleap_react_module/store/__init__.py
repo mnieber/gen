@@ -1,17 +1,18 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, Prop, Rel, extend, rule, tags, word_to_term
+from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.utils import title
 from moonleap.verbs import contains, has
 from moonleap_react.module import Module
 
 from . import props
-from .render import render
 from .resources import Store
 
 
 @tags(["store"])
 def create_store(term, block):
     store = Store(name=f"{title(term.data)}Store", import_path="")
+    store.add_template_dir(__file__, "templates")
     return store
 
 
@@ -33,8 +34,7 @@ class ExtendModule:
 
 
 @extend(Store)
-class ExtendStore:
-    render = MemFun(render)
+class ExtendStore(StoreTemplateDirs):
     module = P.parent(Module, has, "store")
     policy_lines = Prop(props.policy_lines)
     item_lists = P.children(contains, "item-list")

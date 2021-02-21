@@ -1,31 +1,39 @@
 FROM {{ res.image_name }}
 
+{% for PKG in res.service.get_pkg_names() %}{% if loop.first %}
 # install pkg dependencies
 RUN {{ res.docker_image.install_command }} \
-{% loop PKG in res.service.get_pkg_names() %}
+{% endif %}{% if not loop.last %}
     {{ PKG }} \
-{% endloop %}
+{% else %}
     {{ PKG }}
+{% endif %}{% endfor %}
 
+{% for PKG in res.service.get_pip_pkg_names() %}{% if loop.first %}
 # install pip dependencies
 RUN pip install \
-{% loop PKG in res.service.get_pip_pkg_names() %}
+{% endif %}{% if not loop.last %}
     {{ PKG }} \
-{% endloop %}
+{% else %}
     {{ PKG }}
+{% endif %}{% endfor %}
 
+{% for PKG in res.service.get_pkg_names(is_dev=True) %}{% if loop.first %}
 # install dev pkg dependencies
 RUN {{ res.docker_image.install_command }} \
-{% loop PKG in res.service.get_pkg_names(is_dev=True) %}
+{% endif %}{% if not loop.last %}
     {{ PKG }} \
-{% endloop %}
+{% else %}
     {{ PKG }}
+{% endif %}{% endfor %}
 
+{% for PKG in res.service.get_pip_pkg_names(is_dev=True) %}{% if loop.first %}
 # install dev pip dependencies
 RUN pip install \
-{% loop PKG in res.service.get_pip_pkg_names(is_dev=True) %}
+{% endif %}{% if not loop.last %}
     {{ PKG }} \
-{% endloop %}
+{% else %}
     {{ PKG }}
+{% endif %}{% endfor %}
 
 WORKDIR /app/src

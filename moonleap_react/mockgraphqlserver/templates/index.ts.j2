@@ -1,0 +1,25 @@
+{% magicwith substore.module.name as gardenFlowers %}
+import { ApolloServer } from 'apollo-server';
+
+{% for substore in res.service.app_module.store.substores %}
+import { typeDefs as gardenFlowersTypeDefs } from '../src/gardenFlowers/schema'
+{% endfor %}
+
+{% for substore in res.service.app_module.store.substores %}{% if loop.first %}
+const typeDefs =
+{% endif %}{% if not loop.last %}
+    gardenFlowersTypeDefs +
+{% else %}
+    gardenFlowersTypeDefs;
+{% endif %}{% endfor %}
+
+const server = new ApolloServer({
+  typeDefs,
+  mocks: true,
+});
+
+server.listen().then(({ url }) => {
+    console.log(`Mock graphql server ready at ${url}`)
+});
+
+{% endmagicwith %}

@@ -1,9 +1,9 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, extend, rule, tags
+from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has
 from moonleap_project.service import Service
 
-from .render import render
 from .resources import Module  # noqa
 
 
@@ -11,6 +11,7 @@ from .resources import Module  # noqa
 def create_module(term, block):
     module = Module(name=term.data)
     module.output_path = f"src/{module.name}"
+    module.add_template_dir(__file__, "templates")
     return module
 
 
@@ -20,6 +21,5 @@ def service_has_module(service, module):
 
 
 @extend(Module)
-class ExtendModule:
-    render = MemFun(render)
+class ExtendModule(StoreTemplateDirs):
     service = P.parent(Service, has, "module")

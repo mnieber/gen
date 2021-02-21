@@ -1,7 +1,7 @@
 import { always, flow } from 'lodash/fp';
 import { doQuery } from 'src/utils/graphqlClient';
 
-{% loop item_list in res.module.store.item_lists %}
+{% for item_list in res.module.store.item_lists %}
 {% magicwith item_list.item_name as yellowTulip %}
 export function getYellowTulips() {
   const query = `query queryYellowTulips {
@@ -22,4 +22,4 @@ export function getYellowTulips() {
   });
 }
 {% endmagicwith %}
-{% endloop %}
+{% endfor %}

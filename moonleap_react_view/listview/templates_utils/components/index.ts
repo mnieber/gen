@@ -1,2 +1,2 @@
-export { EffectWithoutArgs } from "./Effect"
-export { ResourceView } from "./ResourceView"
+export { EffectWithoutArgs } from './Effect'
+export { ResourceView } from './ResourceView'

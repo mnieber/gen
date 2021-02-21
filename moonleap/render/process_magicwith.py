@@ -4,8 +4,8 @@ from moonleap.utils import title
 
 
 def _find_magicwith_statement(text):
-    regex_loop = r"{% magicwith (?P<var>[A-Za-z_\.]+) as (?P<as>.+)\s* %}"
-    matches = list(re.finditer(regex_loop, text, re.MULTILINE))
+    regex = r"{% magicwith (?P<var>[A-Za-z_\.]+) as (?P<as>.+)\s* %}"
+    matches = list(re.finditer(regex, text, re.MULTILINE))
     return (
         (
             matches[0].group("var"),
