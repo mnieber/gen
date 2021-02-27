@@ -3,9 +3,10 @@ from moonleap_project.dockercompose import DockerComposeConfig
 
 def get(service, is_dev):
     def inner():
+        image_postfix = "_dev" if is_dev else ""
         body = dict(
             depends_on=[],
-            image=f"{service.project.name}_{service.name}",
+            image=f"{service.project.name}_{service.name}{image_postfix}",
             ports=[f"{service.port}:{service.port}"],
         )
 
