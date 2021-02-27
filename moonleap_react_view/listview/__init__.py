@@ -41,6 +41,7 @@ class ExtendModule:
 
 
 add_filter("plural", lambda x: plural(x))
-add_filter("untitle", lambda x: x[0].lower() + x[1:])
+add_filter("untitle0", lambda x: x[0].lower() + x[1:])
+add_filter("title0", lambda x: x[0].upper() + x[1:])
 add_filter("expand_vars", lambda x: os.path.expandvars(x))
 add_filter("dbg", lambda x: __import__("pudb").set_trace())
