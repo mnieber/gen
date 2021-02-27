@@ -1,5 +1,4 @@
 import moonleap.resource.props as P
-from moonleap_project.service import Service
 from moonleap import (
     MemFun,
     StoreOutputPaths,
@@ -10,6 +9,7 @@ from moonleap import (
     tags,
 )
 from moonleap.verbs import has
+from moonleap_project.service import Service
 
 from . import props
 from .resources import SetupFile, SetupFileConfig  # noqa

@@ -1,18 +1,16 @@
-# The titan:project
+# The donationbox:project
 
-The titan:project /has a :src-dir that /stores files from the mnieber/test:git-repository.
+The donationbox:project /has a :src-dir that /stores files from the mnieber/test:git-repository.
 :It /has a frontend:service that is /configured in the frontend:layer.
 :It /has a backend:service that is /configured in the backend:layer.
 :It /uses a :vscode-project.
 
-
 ## The config:layer and stack:layer
 
-The titan:project /has a config:layer that /has a service:layer-group that /contains the stack:layer, frontend:layer and backend:layer.
+The donationbox:project /has a config:layer that /has a service:layer-group that /contains the stack:layer, frontend:layer and backend:layer.
 :It /has a :docker-compose and a dev:docker-compose file that are used
 to /run the frontend:service and backend:service.
 Both :docker-compose and dev:docker-compose are /configured by the stack:layer.
-
 
 ## The frontend:service
 
@@ -36,7 +34,6 @@ The donations:module /has a donations:store that /stores the donation:item-list.
 :It /has a graphql:api.
 :It /has a donation:list-view.
 :It /has an donation:item-view that /has a donation:form.
-
 
 ## The backend:service
 

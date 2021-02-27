@@ -11,7 +11,6 @@ from .resources import Module  # noqa
 def create_module(term, block):
     module = Module(name=term.data)
     module.output_path = f"src/{module.name}"
-    module.add_template_dir(__file__, "templates")
     return module
 
 
