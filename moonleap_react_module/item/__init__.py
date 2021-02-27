@@ -1,7 +1,6 @@
 import moonleap.resource.props as P
-from moonleap import extend, tags
+from moonleap import Rel, extend, rule, tags, word_to_term
 from moonleap.verbs import contains
-from moonleap_react_module.store import Store
 
 from .resources import Item
 
@@ -12,6 +11,7 @@ def create_item(term, block):
     return item
 
 
-@extend(Store)
-class ExtendStore:
-    items = P.children(contains, "item")
+@rule("store", contains, "item")
+def store_contains_item(store, item):
+    item_type_term = word_to_term(f"{item.name}:item-type")
+    return Rel(store.term, contains, item_type_term)

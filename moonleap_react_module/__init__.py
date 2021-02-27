@@ -7,6 +7,7 @@ from . import (
     graphqlapi,
     item,
     itemlist,
+    itemtype,
     store,
     storeprovider,
     utilsmodule,
@@ -20,6 +21,7 @@ def install_all():
     install(graphqlapi)
     install(item)
     install(itemlist)
+    install(itemtype)
     install(store)
     install(storeprovider)
     install(utilsmodule)

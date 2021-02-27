@@ -27,8 +27,8 @@ def add_flag(service, mock_server):
     mock_server.output_paths.add_source(service)
 
 
-@rule("store", contains, "item")
-def store_stores_itemlist(store, item):
+@rule("store", uses, "item-type")
+def store_uses_item_type(store, item_type):
     if store.module.service.mock_graphql_server:
         store.add_template_dir(__file__, "templates_store")
 
