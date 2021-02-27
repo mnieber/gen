@@ -5,6 +5,7 @@ from . import (
     appstore,
     flags,
     graphqlapi,
+    item,
     itemlist,
     store,
     storeprovider,
@@ -17,6 +18,7 @@ def install_all():
     install(appstore)
     install(flags)
     install(graphqlapi)
+    install(item)
     install(itemlist)
     install(store)
     install(storeprovider)

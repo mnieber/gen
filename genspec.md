@@ -30,10 +30,9 @@ The frontend:service /has a :node-package.
 
 #### The donations:module
 
-The donations:module /has a donations:store that /stores the donation:item-list.
+The donations:module /has a donation:store that /stores the donation:item and the foobar:item-list.
 :It /has a graphql:api.
-:It /has a donation:list-view.
-:It /has an donation:item-view that /has a donation:form.
+:It /has a donation:form-view.
 
 ## The backend:service
 

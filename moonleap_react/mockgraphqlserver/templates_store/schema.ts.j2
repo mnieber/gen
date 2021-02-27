@@ -1,8 +1,8 @@
-{% magicwith item_name as yellowTulip %}
+{% magicwith item.name as yellowTulip %}
 import { gql } from 'apollo-server';
 
 export const typeDefs = gql`
-{% for item_name in res.item_names %}
+{% for item in res.items %}
   type YellowTulip {
     id: String!
     name: String

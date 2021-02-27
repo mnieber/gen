@@ -1,5 +1,5 @@
-{% magicwith item_name as yellowTulip %}
-{% for item_name in res.item_names %}
+{% magicwith item.name as yellowTulip %}
+{% for item in res.items %}
 export type YellowTulipT = {
     id: string,
     name: string
