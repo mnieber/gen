@@ -26,12 +26,6 @@ class ExtendFormView:
     module = P.parent(Module, has, "form-view")
 
 
-@rule("service", has, "module")
-def service_has_module(service, module):
-    if module.name != "app":
-        service.app_module.form_views.add_source(module)
-
-
 @extend(Module)
 class ExtendModule:
-    form_views = P.tree(has, "form-view")
+    form_views = P.children(has, "form-view")

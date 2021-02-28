@@ -26,12 +26,6 @@ class ExtendListView:
     module = P.parent(Module, has, "list-view")
 
 
-@rule("service", has, "module")
-def service_has_module(service, module):
-    if module.name != "app":
-        service.app_module.list_views.add_source(module)
-
-
 @extend(Module)
 class ExtendModule:
-    list_views = P.tree(has, "list-view")
+    list_views = P.children(has, "list-view")

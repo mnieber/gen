@@ -2,19 +2,32 @@ from moonleap.utils.case import title0, untitle0
 from moonleap.utils.inflect import plural
 
 
+def get_modules(self):
+    modules = [self.module] + list(self.module.submodules.merged)
+    return [x for x in modules if x.store]
+
+
 def get_item_types(self):
-    result = list(self.module.store.item_types)
-    for substore in self.module.store.substores:
-        result.extend(substore.item_types)
+    result = []
+    for module in get_modules(self):
+        result.extend(module.store.item_types)
     return result
 
 
 def has_list_view(self, name):
-    return bool([x for x in self.module.list_views.merged if x.item_name == name])
+    for module in get_modules(self):
+        for list_view in module.list_views:
+            if list_view.item_name == name:
+                return True
+    return False
 
 
 def has_form_view(self, name):
-    return bool([x for x in self.module.form_views.merged if x.item_name == name])
+    for module in get_modules(self):
+        for form_view in module.form_views:
+            if form_view.item_name == name:
+                return True
+    return False
 
 
 def get_imports(self, name):
@@ -29,6 +42,6 @@ def get_imports(self, name):
         result.append(f"{title0(plural(name))}ListView")
 
     if has_form_view:
-        result.append(f"{title0(plural(name))}FormView")
+        result.append(f"{title0(name)}FormView")
 
     return ", ".join(result)
