@@ -29,7 +29,10 @@ def service_has_router(app_module, router):
 @extend(Router)
 class ExtendRouter:
     module = P.parent(Module, has, "router")
-    get_views = MemFun(props.get_views)
+    get_item_types = MemFun(props.get_item_types)
+    has_list_view = MemFun(props.has_list_view)
+    has_form_view = MemFun(props.has_form_view)
+    get_imports = MemFun(props.get_imports)
     render = MemFun(render_templates(__file__))
 
 

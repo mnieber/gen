@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, StoreOutputPaths, add, extend, rule, tags
+from moonleap import StoreOutputPaths, add, extend, rule, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import configured, has, uses
 from moonleap_dodo.layer import StoreLayerConfigs

@@ -1,11 +1,11 @@
-{% magicwith view.item_name as yellowTulip %}
-{% magicwith view.module.name as gardenFlowers %}
+{% magicwith item_type.name as redRose %}
+{% magicwith item_type.store.module.name as gardenFlowers %}
 import React from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { createBrowserHistory } from 'history';
-{% for view in res.get_views() %}
-import { {{ view.name }}, LoadYellowTulipsEffect } from 'src/gardenFlowers/components';
+{% for item_type in res.get_item_types() %}
+import { {{ res.get_imports(item_type.name) }} } from 'src/gardenFlowers/components';
 {% endfor %}
 
 type PropsT = {};
@@ -16,10 +16,21 @@ export const UrlRouter: React.FC<PropsT> = observer((props: PropsT) => {
   return (
     <Router history={history}>
       <Switch>
-{% for view in res.get_views() %}
-        <Route path="/yellowTulips">
-          <LoadYellowTulipsEffect />
-          <{{ view.name }} />
+{% for item_type in res.get_item_types() %}
+        <Route path="/redRoses">
+          <LoadRedRosesEffect />
+          <Switch>
+{% if res.has_list_view(item_type.name) %}
+            <Route path="/redRoses">
+              <RedRoseListView />
+            </Route>
+{% endif %}
+{% if res.has_form_view(item_type.name) %}
+            <Route path="/redRoses/:redRoseId/edit">
+              <RedRoseFormView />
+            </Route>
+{% endif %}
+          <Switch>
         </Route>
 {% endfor %}
       </Switch>

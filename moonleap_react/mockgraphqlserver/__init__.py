@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Rel, add, extend, render_templates, rule, tags
-from moonleap.verbs import contains, has, uses
+from moonleap import MemFun, add, extend, render_templates, rule, tags
+from moonleap.verbs import uses
 from moonleap_project.service import Service
 from moonleap_react_module.flags import Flags
 from moonleap_tools.tool import Tool

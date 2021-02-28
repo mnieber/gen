@@ -1,13 +1,8 @@
-import os
-
 import moonleap.resource.props as P
 from moonleap import MemFun, Prop, extend, render_templates, rule, tags
-from moonleap.render.template_env import add_filter
-from moonleap.utils.inflect import plural
 from moonleap.verbs import has
 from moonleap_react.module import Module
 
-from . import props
 from .resources import ListView
 
 
@@ -29,16 +24,14 @@ def module_has_list_view(module, list_view):
 class ExtendListView:
     render = MemFun(render_templates(__file__))
     module = P.parent(Module, has, "list-view")
-    item_list = Prop(props.item_list)
+
+
+@rule("service", has, "module")
+def service_has_module(service, module):
+    if module.name != "app":
+        service.app_module.list_views.add_source(module)
 
 
 @extend(Module)
 class ExtendModule:
-    views = P.tree(has, "list-view")
-
-
-add_filter("plural", lambda x: plural(x))
-add_filter("untitle0", lambda x: x[0].lower() + x[1:])
-add_filter("title0", lambda x: x[0].upper() + x[1:])
-add_filter("expand_vars", lambda x: os.path.expandvars(x))
-add_filter("dbg", lambda x: __import__("pudb").set_trace())
+    list_views = P.tree(has, "list-view")

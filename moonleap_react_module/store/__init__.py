@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, Rel, extend, rule, tags, word_to_term
+from moonleap import Prop, Rel, extend, rule, tags, word_to_term
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.utils import title
 from moonleap.verbs import contains, has

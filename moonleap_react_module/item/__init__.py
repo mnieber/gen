@@ -1,5 +1,4 @@
-import moonleap.resource.props as P
-from moonleap import Rel, extend, rule, tags, word_to_term
+from moonleap import Rel, rule, tags, word_to_term
 from moonleap.verbs import contains
 
 from .resources import Item
