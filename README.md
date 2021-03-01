@@ -5,7 +5,7 @@ a project specification and turn it into a set of source files. Based on the wor
 used in the project description, they are able to:
 
 1. imagine the structure of the project
-2. determine tools and software that needs to be installed
+2. determine tools and software that need to be installed
 3. create a minimal configuration for these tools
 4. progressively fill in more details to make the system work as suggested
 
@@ -13,16 +13,17 @@ To what extent would a computer program be able to do this automatically? The pr
 that - by using a clever and pragmatic approach - a useful skeleton project can be created from a specification
 automatically. The key ideas behind this approach are:
 
-- the spec is written in natural language, but the author helps the code generator by prefixing each noun with a
+- the spec is written in natural language, where the author helps the code generator by prefixing each noun with a
   colon and each verb with a slash, e.g. "the :project /has a backend:service". This makes for highly readable
   specs that are also easy to process programmatically.
 
 - the code generator turns these nouns and verbs into a directed graph of resources. For every resource, code is generated
   by rendering text templates that have access to the information in that resource.
 
-- the result is treated as a skeleton example project. This skeleton serves as the starting point for the real project.
+- the result is treated as a skeleton example project that serves as the starting point for the real project.
   Changes in the skeleton can be copied to the real project using a diff/merge tool such as Meld. This way, the spec, the
-  skeleton and the real project evolve side by side.
+  skeleton and the real project evolve side by side. More importantly, it means that the skeleton project does not have to be
+  perfect, it only has to be useful.
 
 - Moonleap is intended to be customized. A developer can introduce their own set of nouns and vers, and add rules and
   templates that turn these into first resources and then source code.
@@ -42,11 +43,18 @@ A developer can add a rule for turning "backend:service" into a resource:
 ```
 @dataclass
 class Service:
-   name: str
+    name: str
 
 @tags(["service"])
 def create_service(term, block):
-   return Service(name=term.data)
+    return Service(name=term.data)
+```
+The developer can then configure the set of the templates that take this resource as input:
+
+```
+@extend(Service)
+class ExtendService:
+    render = render_templates(__file__, "templates")  
 ```
 
 Moonleap turns the spec into a set of source files as follows:
@@ -59,6 +67,5 @@ Moonleap turns the spec into a set of source files as follows:
    would be "backend:service".
 
 3. Resources are rendered into artifacts. The rendering process uses the graph-structure that connects all
-   the resources. In the example that describes a dockerized service that uses pytest, we can set up the rendering
-   rules such that the pytest pip package is installed inside the Dockerfile (based on the `PipDependency("pytest")` and
-   `Dockerfile("python_3.8")` resources in the graph).
+   the resources. In our example we can set up the rendering rules such that the pytest pip package is installed inside the Dockerfile 
+   (based on the `PipDependency("pytest")` and `Dockerfile("python_3.8")` resources in the graph).
