@@ -4,7 +4,7 @@ from moonleap_dodo.layer import LayerConfig
 def get():
     def inner():
         return dict(
-            ROOT=dict(aliases=dict(serve="make runserver")),
+            ROOT=dict(aliases={"serve-mocks": "exec sh /app/src/mockServer/start.sh"}),
         )
 
     return LayerConfig(lambda x: inner())
@@ -17,7 +17,7 @@ def get_for_project(service_name):
                 #
                 commands=dict(
                     #
-                    serve=[f"dodo {service_name}.serve"]
+                    serve=[f"dodo {service_name}.serve-mocks"]
                 )
             ),
         )

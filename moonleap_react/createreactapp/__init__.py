@@ -3,6 +3,8 @@ from moonleap.verbs import uses
 from moonleap_react.nodepackage import load_node_package_config
 from moonleap_tools.tool import Tool
 
+from . import layer_configs
+
 
 class CreateReactApp(Tool):
     pass
@@ -17,6 +19,7 @@ def create_cra(term, block):
 
 @rule("service", uses, "create-react-app")
 def service_uses_cra(service, cra):
+    add(service.project, layer_configs.get_for_project(service.name))
     service.add_tool(cra)
 
 

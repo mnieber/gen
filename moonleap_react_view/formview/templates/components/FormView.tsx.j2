@@ -1,16 +1,33 @@
 {% magicwith res.item_name as yellowTulip %}
 {% magicwith res.module.name as gardenFlowers %}
 import React from 'react';
-import { always, flow, map, values } from 'lodash/fp';
 import { observer } from 'mobx-react-lite';
+import {
+  FormStateProvider,
+  HandleValidateArgsT,
+  HandleSubmitArgsT,
+} from 'react-form-state-context';
 import { useStore } from 'src/app/components/StoreProvider';
 
 export const YellowTulipFormView = observer(() => {
   const { gardenFlowersStore } = useStore();
+  if (gardenFlowersStore) {}
+
+  const initialValues = {
+    name: null
+  };
+  const initialErrors = {};
+  const handleValidate = ({values, setError} : HandleValidateArgsT) => {};
+  const handleSubmit = ({values}: HandleSubmitArgsT) => {};
 
   const formDiv = (
     <div className="YellowTulipFormView flex flex-col w-full">
-      <FormStateProvider>
+      <FormStateProvider
+        initialValues={initialValues}
+        initialErrors={initialErrors}
+        handleValidate={handleValidate}
+        handleSubmit={handleSubmit}
+      >
       </FormStateProvider>
     </div>
   );

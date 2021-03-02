@@ -1,12 +1,12 @@
 {% magicwith item_type.name as yellowTulip %}
-import { gql } from 'apollo-server';
 
-export const typeDefs = gql`
+export const typeDefsStr = `
 {% for item_type in res.item_types %}
   type YellowTulip {
-    id: String!
+    id: ID!
     name: String
   }
 `;
+
 {% endfor %}
 {% endmagicwith %}

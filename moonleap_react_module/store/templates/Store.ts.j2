@@ -1,5 +1,4 @@
-{% magicwith item_list.item_name as yellowTulip %}
-{% magicwith item_type.name as redRose %}
+{% magicwith item_type.name as yellowTulip %}
 {% magicwith item.name as blueDaisy %}
 {% magicwith res.module.name as gardenFlowers %}
 import { action, observable, makeObservable } from 'mobx';
@@ -8,13 +7,13 @@ import { RST, resetRS, updateRes } from 'src/utils/RST';
 import * as gardenFlowersApi from 'src/gardenFlowers/api'
 
 {% for item_type in res.item_types %}
-import { RedRoseT, RedRoseByIdT } from 'src/gardenFlowers/types'
+import { YellowTulipT, YellowTulipByIdT } from 'src/gardenFlowers/types'
 {% endfor %}
 {{ res.javascript_import_lines }}
 
 export class {{ res.name }} {
 
-{% for item_list in res.item_lists %}
+{% for item_type in res.item_types %}
   @observable yellowTulipById: YellowTulipByIdT = {};
   @observable yellowTulipByIdRS: RST = resetRS();
 {% endfor %}
@@ -26,7 +25,7 @@ export class {{ res.name }} {
     makeObservable(this);
   }
 
-{% for item_list in res.item_lists %}
+{% for item_type in res.item_types %}
   @action loadYellowTulips = () => {
     updateRes(
       this,
@@ -52,7 +51,6 @@ export class {{ res.name }} {
 {% endfor %}
 
 }
-{% endmagicwith %}
 {% endmagicwith %}
 {% endmagicwith %}
 {% endmagicwith %}

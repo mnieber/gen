@@ -5,16 +5,16 @@ import { always, flow, map, values } from 'lodash/fp';
 import { observer } from 'mobx-react-lite';
 import { useStore } from 'src/app/components/StoreProvider';
 import { ResourceView } from 'src/utils/components';
-import { YellowTulipsListViewItem } from 'src/gardenFlowers/components';
+import { YellowTulipListViewItem } from 'src/gardenFlowers/components';
 
-export const YellowTulipsListView = observer(() => {
+export const YellowTulipListView = observer(() => {
   const { gardenFlowersStore } = useStore();
 
   const yellowTulipDivs = flow(
     always(gardenFlowersStore.yellowTulipById),
     values,
     map((x) => (
-      <YellowTulipsListViewItem
+      <YellowTulipListViewItem
         key={x.id}
         yellowTulip={x}
       />
@@ -24,7 +24,7 @@ export const YellowTulipsListView = observer(() => {
   const noItems = <h2>There are no yellowTulips</h2>;
 
   const updatedDiv = (
-    <div className="YellowTulipsListView flex flex-col w-full">
+    <div className="YellowTulipListView flex flex-col w-full">
       {yellowTulipDivs.length && yellowTulipDivs}
       {!yellowTulipDivs.length && noItems}
     </div>

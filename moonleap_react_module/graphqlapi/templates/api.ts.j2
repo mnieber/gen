@@ -1,15 +1,17 @@
+{% if not res.module.store.item_types %}
+export {}
+{% endif %}
+{% for item_type in res.module.store.item_types %}
+{% magicwith item_type.name as yellowTulip %}
+{% if loop.first %}
 import { always, flow } from 'lodash/fp';
 import { doQuery } from 'src/utils/graphqlClient';
-
-{% for item_list in res.module.store.item_lists %}
-{% magicwith item_list.item_name as yellowTulip %}
+{% endif %}
 export function getYellowTulips() {
   const query = `query queryYellowTulips {
     yellowTulips {
-      yellowTulip {
-        id
-        name
-      }
+      id
+      name
     }
   }`;
   const vars = {};

@@ -39,7 +39,7 @@ def get_imports(self, name):
         result.append(f"Load{title0(plural(name))}Effect")
 
     if has_list_view:
-        result.append(f"{title0(plural(name))}ListView")
+        result.append(f"{title0(name)}ListView")
 
     if has_form_view:
         result.append(f"{title0(name)}FormView")

@@ -9,9 +9,9 @@ export type PropsT = {
   yellowTulip: YellowTulipT;
 };
 
-export const {{ res.name }}Item: React.FC<PropsT> = observer((props: PropsT) => {
+export const YellowTulipListViewItem: React.FC<PropsT> = observer((props: PropsT) => {
   return (
-    <div className={classnames('{{ res.name }}Item flex flex-row flex-1 mb-2')}>
+    <div className={classnames('YellowTulipListViewItem flex flex-row flex-1 mb-2')}>
         {props.yellowTulip.name}
     </div>
   );
