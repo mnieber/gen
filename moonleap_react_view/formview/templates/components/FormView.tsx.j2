@@ -8,17 +8,23 @@ import {
   HandleSubmitArgsT,
 } from 'react-form-state-context';
 import { useStore } from 'src/app/components/StoreProvider';
+import { Field } from 'src/forms/components/Field';
+import { GlobalError } from 'src/forms/components/GlobalError';
+import { TextField } from 'src/forms/components/TextField';
+import { SaveButton } from 'src/forms/components/SaveButton';
+
 
 export const YellowTulipFormView = observer(() => {
   const { gardenFlowersStore } = useStore();
-  if (gardenFlowersStore) {}
 
   const initialValues = {
-    name: null
+    name: null,
   };
   const initialErrors = {};
   const handleValidate = ({values, setError} : HandleValidateArgsT) => {};
-  const handleSubmit = ({values}: HandleSubmitArgsT) => {};
+  const handleSubmit = ({values}: HandleSubmitArgsT) => {
+    gardenFlowersStore.saveYellowTulip(values);
+  };
 
   const formDiv = (
     <div className="YellowTulipFormView flex flex-col w-full">
@@ -28,6 +34,14 @@ export const YellowTulipFormView = observer(() => {
         handleValidate={handleValidate}
         handleSubmit={handleSubmit}
       >
+        <GlobalError />
+        <Field fieldName="name" label="Name">
+          <TextField />
+        </Field>
+        <SaveButton
+          label="Save"
+          disabled={false}
+        />
       </FormStateProvider>
     </div>
   );

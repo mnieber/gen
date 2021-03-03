@@ -1,8 +1,16 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, add, extend, render_templates, rule, tags
+from moonleap import (
+    MemFun,
+    Rel,
+    add,
+    extend,
+    render_templates,
+    rule,
+    tags,
+    word_to_term,
+)
 from moonleap.verbs import has
 from moonleap_react.module import Module
-from moonleap_react.nodepackage import load_node_package_config
 
 from .resources import FormView
 
@@ -11,8 +19,12 @@ from .resources import FormView
 def create_form_view(term, block):
     name = term.data
     form_view = FormView(item_name=name, name=f"{name}FormView", import_path="")
-    add(form_view, load_node_package_config(__file__))
     return form_view
+
+
+@rule("module", has, "form-view")
+def add_forms_module(module, form_view):
+    return Rel(module.service.term, has, word_to_term("forms:module"))
 
 
 @rule("module", has, "form-view")

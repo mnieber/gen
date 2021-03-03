@@ -42,11 +42,15 @@ export class {{ res.name }} {
       }
     );
   }
-  {{ res and '' }}
+
   @action addYellowTulips = (yellowTulips: YellowTulipT[]) => {
     forEach((yellowTulip: YellowTulipT) => {
       this.yellowTulipById[yellowTulip.id] = yellowTulip;
     }, yellowTulips);
+  }
+
+  @action saveYellowTulip = (values: any) => {
+    gardenFlowersApi.saveYellowTulip(values);
   }
 {% endfor %}
 

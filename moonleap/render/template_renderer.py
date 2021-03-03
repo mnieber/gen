@@ -21,8 +21,13 @@ class TemplateRenderer:
     def __init__(self):
         self.filenames = []
 
-    def render(self, resource, template, fn):
-        content = template.render(res=resource)
+    def render(self, resource, template_fn, fn):
+        if template_fn.suffix == ".j2":
+            template = template_env.get_template(str(template_fn))
+            content = template.render(res=resource)
+        else:
+            with open(template_fn) as ifs:
+                content = ifs.read()
 
         if fn in self.filenames:
             file_merger = get_file_merger(fn)
@@ -89,7 +94,7 @@ def render_templates(root_filename, location="templates", output_subdir=None):
 
                 output_filename = template_renderer.render(
                     resource,
-                    template_env.get_template(str(template_fn)),
+                    template_fn,
                     _get_output_fn(output_dir, resource, template_fn),
                 )
                 output_filenames.append(output_filename)
