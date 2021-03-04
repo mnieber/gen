@@ -1,6 +1,6 @@
 import re
 
-from moonleap.utils import title
+from moonleap.utils.case import title0
 
 
 def _find_magicwith_statement(text):
@@ -32,9 +32,9 @@ def process_magicwith(lines):
         x = block_line
         for var, as_ in vars:
             x = x.replace(as_ + "s", "{{ " + var + "|plural }}")
-            x = x.replace(title(as_) + "s", "{{ " + var + "|plural|title0 }}")
+            x = x.replace(title0(as_) + "s", "{{ " + var + "|plural|title0 }}")
             x = x.replace(as_, "{{ " + var + " }}")
-            x = x.replace(title(as_), "{{ " + var + "|title0 }}")
+            x = x.replace(title0(as_), "{{ " + var + "|title0 }}")
 
             x = x.replace("{{{", "{{ '{' }}{{")
             x = x.replace("}}}", "{{ '}' }}}}")

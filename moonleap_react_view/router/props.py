@@ -1,4 +1,4 @@
-from moonleap.utils.case import title0, untitle0
+from moonleap.utils.case import title0
 from moonleap.utils.inflect import plural
 
 

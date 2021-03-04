@@ -14,7 +14,7 @@ class StoreProvider(Component):
 
 @rule("app:module")
 def app_module_created(app_module):
-    store_provider = StoreProvider(name="StoreProvider", import_path="src/app")
+    store_provider = StoreProvider(name="StoreProvider")
     store_provider.output_path = app_module.output_path
     app_module.store_provider = store_provider
     app_module.service.add_tool(store_provider)

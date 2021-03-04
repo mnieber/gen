@@ -21,7 +21,7 @@ def create_docker_image(term, block):
 
 @rule("dockerfile", has, "docker-image")
 def dockerfile_use_docker_image(dockerfile, docker_image):
-    dockerfile.image_name = docker_image.term.data
+    dockerfile.image_name = docker_image.name
     dockerfile.docker_compose_configs.add_source(docker_image)
 
 

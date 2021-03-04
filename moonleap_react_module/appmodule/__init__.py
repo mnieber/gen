@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, Rel, add, extend, rule, tags
+from moonleap import MemFun, Prop, Rel, add, extend, kebab_to_camel, rule, tags
 from moonleap.verbs import has
 from moonleap_project.service import Service
 from moonleap_react.component import StoreCssImports
@@ -12,7 +12,7 @@ from .resources import AppModule  # noqa
 
 @tags(["app:module"])
 def create_app_module(term, block):
-    module = AppModule(name=term.data)
+    module = AppModule(name=kebab_to_camel(term.data))
     module.add_template_dir(__file__, "templates")
     module.output_path = f"src/{module.name}"
     add(module, load_node_package_config(__file__))

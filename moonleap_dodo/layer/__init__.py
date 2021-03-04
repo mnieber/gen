@@ -3,6 +3,7 @@ from moonleap import (
     MemFun,
     StoreOutputPaths,
     extend,
+    kebab_to_camel,
     register_add,
     render_templates,
     rule,
@@ -16,7 +17,7 @@ from .resources import Layer, LayerConfig
 
 @tags(["layer"])
 def create_layer(term, block):
-    layer = Layer(name=term.data)
+    layer = Layer(name=kebab_to_camel(term.data))
     layer.output_path = ".dodo_commands"
     return layer
 

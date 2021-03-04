@@ -1,14 +1,14 @@
 import moonleap.resource.props as P
-from moonleap_dodo.layer import StoreLayerConfigs
-from moonleap import StoreOutputPaths, extend, rule, tags
+from moonleap import StoreOutputPaths, extend, kebab_to_camel, rule, tags
 from moonleap.verbs import has
+from moonleap_dodo.layer import StoreLayerConfigs
 
 from .resources import Project
 
 
 @tags(["project"])
 def create_project(term, block):
-    project = Project(term.data)
+    project = Project(kebab_to_camel(term.data))
     project.output_path = "src/"
     return project
 

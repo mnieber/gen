@@ -1,19 +1,20 @@
-{% magicwith substore.name|untitle0 as yellowTulip %}
+{% magicwith substore.module.name as gardenFlowers %}
+{% magicwith substore.module.name as yellowTulip %}
 import { observable, makeObservable } from 'mobx'
 {% for substore in res.substores %}
-import { YellowTulip } from '{{ substore.import_path }}'
+import { GardenFlowersStore } from 'src/gardenFlowers/GardenFlowersStore'
 {% endfor %}
 
 export class AppStore {
 {% for substore in res.substores %}
-  @observable yellowTulip: YellowTulip;
+  @observable yellowTulipStore: YellowTulipStore;
 {% endfor %}
 
   constructor() {
     makeObservable(this);
 
 {% for substore in res.substores %}
-    this.yellowTulip = new YellowTulip();
+    this.yellowTulipStore = new YellowTulipStore();
 {% endfor %}
 
     this.applyPolicies();
@@ -23,4 +24,5 @@ export class AppStore {
 {{ res.policy_lines }}
   }
 }
+{% endmagicwith %}
 {% endmagicwith %}

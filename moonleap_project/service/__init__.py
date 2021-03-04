@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import StoreOutputPaths, add, extend, rule, tags
+from moonleap import StoreOutputPaths, add, extend, kebab_to_camel, rule, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import configured, has, uses
 from moonleap_dodo.layer import StoreLayerConfigs
@@ -12,7 +12,7 @@ from .resources import Service
 
 @tags(["service"])
 def create_service(term, block):
-    service = Service(name=term.data)
+    service = Service(name=kebab_to_camel(term.data))
     service.output_path = service.name + "/"
 
     add(service, layer_configs.get_service_options(service))

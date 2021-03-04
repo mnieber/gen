@@ -1,0 +1,22 @@
+{% magicwith res.name as yellowTulip %}
+{% magicwith res.module.name as gardenFlowers %}
+import React from 'react';
+import { observer } from 'mobx-react-lite';
+import { useStore } from 'src/app/components/StoreProvider';
+
+type PropsT = {
+};
+
+export const YellowTulipView: React.FC<PropsT> = observer(() => {
+  const { gardenFlowersStore } = useStore();
+
+  const formDiv = (
+    <div className="YellowTulipView flex flex-col w-full">
+      TODO: show yellowTulip
+    </div>
+  );
+
+  return formDiv;
+});
+{% endmagicwith %}
+{% endmagicwith %}

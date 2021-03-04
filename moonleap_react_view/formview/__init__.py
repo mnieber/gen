@@ -4,6 +4,7 @@ from moonleap import (
     Rel,
     add,
     extend,
+    kebab_to_camel,
     render_templates,
     rule,
     tags,
@@ -17,8 +18,8 @@ from .resources import FormView
 
 @tags(["form-view"])
 def create_form_view(term, block):
-    name = term.data
-    form_view = FormView(item_name=name, name=f"{name}FormView", import_path="")
+    name = kebab_to_camel(term.data)
+    form_view = FormView(item_name=name, name=f"{name}FormView")
     return form_view
 
 

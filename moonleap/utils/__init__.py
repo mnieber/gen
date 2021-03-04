@@ -37,7 +37,3 @@ def dbg(x):
 
 def maybe_tuple_to_tuple(x):
     return x if isinstance(x, tuple) else (x,)
-
-
-def title(x):
-    return x[0].upper() + x[1:]

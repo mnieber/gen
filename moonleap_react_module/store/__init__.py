@@ -1,7 +1,7 @@
 import moonleap.resource.props as P
-from moonleap import Prop, Rel, extend, rule, tags, word_to_term
+from moonleap import Prop, Rel, extend, kebab_to_camel, rule, tags, word_to_term
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
-from moonleap.utils import title
+from moonleap.utils.case import title0
 from moonleap.verbs import contains, has
 from moonleap_react.module import Module
 
@@ -11,7 +11,7 @@ from .resources import Store
 
 @tags(["store"])
 def create_store(term, block):
-    store = Store(name=f"{title(term.data)}Store", import_path="")
+    store = Store(name=f"{title0(kebab_to_camel(term.data))}Store")
     store.add_template_dir(__file__, "templates")
     return store
 
@@ -23,7 +23,6 @@ def create_utils_module(module, store):
 
 @rule("module", has, "store")
 def module_has_store(module, store):
-    store.import_path = module.import_path + "/" + f"{store.name}"
     store.output_paths.add_source(module)
     module.service.utils_module.add_template_dir(__file__, "templates_utils")
 

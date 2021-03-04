@@ -6,7 +6,7 @@ from .resources import AppStore
 
 @tags(["app:store"])
 def create_appstore(term, block):
-    store = AppStore(name="AppStore", import_path="")
+    store = AppStore(name="AppStore")
     return store
 
 

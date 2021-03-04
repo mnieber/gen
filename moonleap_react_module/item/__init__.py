@@ -1,4 +1,4 @@
-from moonleap import Rel, rule, tags, word_to_term
+from moonleap import Rel, kebab_to_camel, rule, tags, word_to_term
 from moonleap.verbs import contains
 
 from .resources import Item
@@ -6,7 +6,7 @@ from .resources import Item
 
 @tags(["item"])
 def create_item(term, block):
-    item = Item(name=term.data)
+    item = Item(name=kebab_to_camel(term.data))
     return item
 
 

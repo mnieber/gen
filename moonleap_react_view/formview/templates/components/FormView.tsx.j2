@@ -13,8 +13,10 @@ import { GlobalError } from 'src/forms/components/GlobalError';
 import { TextField } from 'src/forms/components/TextField';
 import { SaveButton } from 'src/forms/components/SaveButton';
 
+type PropsT = {
+};
 
-export const YellowTulipFormView = observer(() => {
+export const YellowTulipFormView: React.FC<PropsT> = observer(() => {
   const { gardenFlowersStore } = useStore();
 
   const initialValues = {

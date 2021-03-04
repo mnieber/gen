@@ -1,11 +1,18 @@
-{% magicwith item_type.name as redRose %}
 {% magicwith item_type.store.module.name as gardenFlowers %}
+{% magicwith item_type.name as redRose %}
+{% magicwith view.name as blueDaisy %}
+{% magicwith view.module.name as yellowTulips %}
 import React from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { createBrowserHistory } from 'history';
 {% for item_type in res.get_item_types() %}
 import { {{ res.get_imports(item_type.name) }} } from 'src/gardenFlowers/components';
+{% endfor %}
+{% for submodule in res.module.submodules.merged %}
+{% for view in submodule.views %}
+import { BlueDaisyView } from 'src/yellowTulips/components';
+{% endfor %}
 {% endfor %}
 
 type PropsT = {};
@@ -33,9 +40,17 @@ export const UrlRouter: React.FC<PropsT> = observer((props: PropsT) => {
           </Switch>
         </Route>
 {% endfor %}
+{% for submodule in res.module.submodules.merged %}
+{% for view in submodule.views %}
+        <Route path="/yellowTulips/{{ view.kebab_name }}">
+          <BlueDaisyView />
+        </Route>
+{% endfor %}
+{% endfor %}
       </Switch>
     </Router>
   );
 });
+{% endmagicwith %}
 {% endmagicwith %}
 {% endmagicwith %}

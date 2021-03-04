@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, extend, render_templates, rule, tags
+from moonleap import MemFun, Prop, extend, kebab_to_camel, render_templates, rule, tags
 from moonleap.verbs import has
 from moonleap_react.module import Module
 
@@ -8,8 +8,8 @@ from .resources import ListView
 
 @tags(["list-view"])
 def create_list_view(term, block):
-    name = term.data
-    list_view = ListView(item_name=name, name=f"{name}ListView", import_path="")
+    name = kebab_to_camel(term.data)
+    list_view = ListView(item_name=name, name=f"{name}ListView")
     return list_view
 
 

@@ -1,5 +1,13 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, StoreOutputPaths, extend, render_templates, rule, tags
+from moonleap import (
+    MemFun,
+    StoreOutputPaths,
+    extend,
+    kebab_to_camel,
+    render_templates,
+    rule,
+    tags,
+)
 from moonleap.verbs import contains
 from moonleap_react_module.store import Store
 
@@ -8,7 +16,7 @@ from .resources import ItemType
 
 @tags(["item-type"])
 def create_item_type(term, block):
-    item_type = ItemType(name=term.data)
+    item_type = ItemType(name=kebab_to_camel(term.data))
     return item_type
 
 

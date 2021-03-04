@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import extend, rule, tags
+from moonleap import extend, kebab_to_camel, rule, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has
 from moonleap_project.service import Service
@@ -9,7 +9,7 @@ from .resources import Module  # noqa
 
 @tags(["module"])
 def create_module(term, block):
-    module = Module(name=term.data)
+    module = Module(name=kebab_to_camel(term.data))
     module.output_path = f"src/{module.name}"
     return module
 
