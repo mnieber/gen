@@ -6,10 +6,6 @@ from . import props
 from .resources import Component, CssImport, JavascriptImport  # noqa
 
 
-class StoreJavascriptImports:
-    javascript_imports = P.tree("has", "javascript-import")
-
-
 class StoreCssImports:
     css_imports = P.tree("has", "css-import")
 
