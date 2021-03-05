@@ -18,11 +18,3 @@ def concat_paths(path_stores):
     )(None)
 
     return os.linesep.join(result)
-
-
-def javascript_import_lines(component):
-    javascript_imports = component.javascript_imports.merged
-    for tool in component.service.tools:
-        javascript_imports += tool.javascript_imports.merged
-
-    return concat_paths(javascript_imports)

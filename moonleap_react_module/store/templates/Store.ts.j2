@@ -9,7 +9,6 @@ import * as gardenFlowersApi from 'src/gardenFlowers/api'
 {% for item_type in res.item_types %}
 import { YellowTulipT, YellowTulipByIdT } from 'src/gardenFlowers/types'
 {% endfor %}
-{{ res.javascript_import_lines }}
 
 export class {{ res.name }} {
 

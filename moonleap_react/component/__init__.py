@@ -18,8 +18,3 @@ def add_css_import(resource, css_import):
 @extend(Tool)
 class ExtendTool(StoreCssImports):
     pass
-
-
-@extend(Component)
-class ExtendComponent:
-    javascript_import_lines = Prop(props.javascript_import_lines)
