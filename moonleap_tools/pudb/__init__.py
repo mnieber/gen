@@ -1,5 +1,6 @@
 from moonleap import add, rule, tags
 from moonleap.verbs import has
+from moonleap_project.service import service_has_tool_rel
 from moonleap_tools.pipdependency import PipRequirement
 
 from . import opt_paths
@@ -19,4 +20,4 @@ def create_pudb(term, block):
 
 @rule("service", has, "pudb")
 def service_has_pudb(service, pudb):
-    service.add_tool(pudb)
+    return service_has_tool_rel(service, pudb)

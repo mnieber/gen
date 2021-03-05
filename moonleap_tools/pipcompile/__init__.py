@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from moonleap import add, extend, rule, tags
 from moonleap.verbs import has
+from moonleap_project.service import service_has_tool_rel
 from moonleap_tools.pipdependency import PipDependency
 from moonleap_tools.tool import Tool
 
@@ -15,8 +16,8 @@ class PipCompile(Tool):
 
 @rule("service", has, "pip-compile")
 def service_has_pip_compile(service, pip_compile):
-    service.add_tool(pip_compile)
     service.add_template_dir(__file__, "templates_service")
+    return service_has_tool_rel(service, pip_compile)
 
 
 @tags(["pip-compile"])

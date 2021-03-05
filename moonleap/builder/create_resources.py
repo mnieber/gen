@@ -2,7 +2,7 @@ import ramda as R
 from moonleap.builder.config import config
 from moonleap.parser.term import is_it_term, word_to_term
 from moonleap.resource import Resource
-from moonleap.resource.rel import Rel
+from moonleap.resource.rel import Forward, Rel
 from moonleap.verbs import is_created_as
 
 
@@ -83,6 +83,22 @@ def _find_or_create_resource(block, term):
     return resource
 
 
+def _process_forward(forward, block):
+    new_rel = forward.rel
+    new_parent_resource = forward.subj_res or _find_or_create_resource(
+        block, new_rel.subj
+    )
+    new_child_resource = forward.obj_res or _find_or_create_resource(block, new_rel.obj)
+
+    if not new_parent_resource.has_relation(new_rel, new_child_resource):
+        new_parent_resource.add_relation(new_rel, new_child_resource)
+        _apply_rules(
+            new_rel,
+            new_parent_resource,
+            new_child_resource,
+        )
+
+
 def _apply_rules(rel, parent_resource, child_resource):
     if rel.is_inv:
         return
@@ -103,19 +119,8 @@ def _apply_rules(rel, parent_resource, child_resource):
 
         result = rule.f(parent_resource, child_resource)
 
-        if isinstance(result, Rel):
-            new_rel = result
-            new_parent_resource = _find_or_create_resource(block, new_rel.subj)
-            new_child_resource = _find_or_create_resource(block, new_rel.obj)
-
-            if not new_parent_resource.has_relation(new_rel, new_child_resource):
-                new_parent_resource.add_relation(new_rel, new_child_resource)
-
-                _apply_rules(
-                    new_rel,
-                    new_parent_resource,
-                    new_child_resource,
-                )
+        if isinstance(result, Forward):
+            _process_forward(result, block)
 
 
 def apply_rules(blocks):
@@ -126,7 +131,9 @@ def apply_rules(blocks):
             parent_resource.term, is_created_as, parent_resource.term
         )
         for rule in config.get_rules(is_created_as_rel):
-            rule.f(parent_resource)
+            result = rule.f(parent_resource)
+            if isinstance(result, Forward):
+                _process_forward(result, parent_resource.block)
 
         for rel, child_resource in parent_resource.get_relations():
             _apply_rules(rel, parent_resource, child_resource)

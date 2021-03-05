@@ -16,7 +16,7 @@ from moonleap.resource import Resource, resolve  # noqa
 from moonleap.resource.memfield import MemField  # noqa
 from moonleap.resource.memfun import MemFun  # noqa
 from moonleap.resource.prop import Prop  # noqa
-from moonleap.resource.rel import Rel  # noqa
+from moonleap.resource.rel import Forward, Rel  # noqa
 from moonleap.resources.outputpath import StoreOutputPaths  # noqa
 from moonleap.utils import chop0, yaml2dict  # noqa
-from moonleap.utils.case import kebab_to_camel  # noqa
+from moonleap.utils.case import kebab_to_camel, title0  # noqa

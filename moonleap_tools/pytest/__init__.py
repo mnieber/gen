@@ -1,7 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import add, extend, rule, tags
 from moonleap.verbs import has, with_
-from moonleap_project.service import Service
+from moonleap_project.service import Service, service_has_tool_rel
 from moonleap_tools.pipdependency import PipRequirement
 
 from . import layer_configs, opt_paths
@@ -32,9 +32,13 @@ def create_pytest_html(term, block):
 
 @rule("service", has, "pytest")
 def service_has_pytest(service, pytest):
-    service.add_tool(pytest)
+    return service_has_tool_rel(service, pytest)
+
+
+@rule("service", has, "pytest")
+def service_has_pytest_html(service, pytest):
     if pytest.pytest_html:
-        service.add_tool(pytest.pytest_html)
+        return service_has_tool_rel(service, pytest.pytest_html)
 
 
 @extend(Pytest)

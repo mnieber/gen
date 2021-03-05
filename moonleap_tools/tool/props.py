@@ -52,11 +52,3 @@ def get_makefile_rules():
         return slctr.select_from(self)
 
     return getter
-
-
-def add_tool(service, tool):
-    if tool not in service.tools:
-        service.add_to_tools(tool)
-        service.layer_configs.add_source(tool)
-        service.docker_compose_configs.add_source(tool)
-        tool.output_paths.add_source(service)

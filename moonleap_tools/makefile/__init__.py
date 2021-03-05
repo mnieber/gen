@@ -1,9 +1,17 @@
 import moonleap.resource.props as P
-from moonleap import (MemFun, add, extend, register_add, render_templates,
-                      rule, tags)
+from moonleap import (
+    Forward,
+    MemFun,
+    add,
+    extend,
+    register_add,
+    render_templates,
+    rule,
+    tags,
+)
 from moonleap.resource.rel import Rel
 from moonleap.verbs import has, runs
-from moonleap_project.service import Service
+from moonleap_project.service import Service, service_has_tool_rel
 from moonleap_tools.pkgdependency import PkgDependency
 from moonleap_tools.tool import StoreMakefileRules, Tool
 
@@ -23,12 +31,12 @@ def create_makefile(term, block):
 
 @rule("service", has, "makefile")
 def service_has_makefile(service, makefile):
-    service.add_tool(makefile)
+    return service_has_tool_rel(service, makefile)
 
 
 @rule("makefile", runs, "*", fltr_obj=P.fltr_instance(Tool))
 def makefile_running_tool(makefile, tool):
-    return Rel(makefile.service.term, has, tool.term)
+    return Forward(Rel(makefile.service.term, has, tool.term))
 
 
 @register_add(MakefileRule)

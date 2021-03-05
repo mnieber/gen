@@ -1,5 +1,15 @@
 import moonleap.resource.props as P
-from moonleap import StoreOutputPaths, add, extend, kebab_to_camel, rule, tags
+from moonleap import (
+    Forward,
+    Rel,
+    StoreOutputPaths,
+    add,
+    extend,
+    kebab_to_camel,
+    rule,
+    tags,
+    word_to_term,
+)
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import configured, has, uses
 from moonleap_dodo.layer import StoreLayerConfigs
@@ -43,6 +53,14 @@ def service_is_configured_in_layer(service, layer):
 @rule("service", uses, "port")
 def service_uses_port(service, port):
     service.port = port.term.data
+
+
+def service_has_tool_rel(service, tool):
+    return Forward(
+        rel=Rel(service.term, has, word_to_term(":tool")),
+        subj_res=service,
+        obj_res=tool,
+    )
 
 
 @extend(Service)

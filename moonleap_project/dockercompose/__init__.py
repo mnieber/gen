@@ -1,6 +1,4 @@
 import moonleap.resource.props as P
-from moonleap_dodo.layer import StoreLayerConfigs
-from moonleap_project.project import Project
 from moonleap import (
     MemFun,
     StoreOutputPaths,
@@ -12,7 +10,9 @@ from moonleap import (
     rule,
     tags,
 )
-from moonleap.verbs import configured
+from moonleap.verbs import configured, has
+from moonleap_dodo.layer import StoreLayerConfigs
+from moonleap_project.project import Project
 
 from . import layer_configs, props
 from .resources import DockerCompose, DockerComposeConfig  # noqa
@@ -34,6 +34,11 @@ def add_docker_compose_config(resource, docker_compose_config):
 @rule("docker-compose", configured, "layer")
 def docker_compose_configured_in_layer(docker_compose, layer):
     layer.layer_configs.add_source(docker_compose)
+
+
+@rule("service", has, "tool")
+def service_has_tool(service, tool):
+    service.docker_compose_configs.add_source(tool)
 
 
 class StoreDockerComposeConfigs:

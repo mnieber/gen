@@ -27,6 +27,11 @@ def layer_has_layer_group(layer, layer_group):
     layer.layer_configs.add_source(layer_group)
 
 
+@rule("service", has, "tool")
+def service_has_tool(service, tool):
+    service.layer_configs.add_source(tool)
+
+
 @register_add(LayerConfig)
 def add_layerconfig(resource, layer_config):
     resource.layer_configs.add(layer_config)

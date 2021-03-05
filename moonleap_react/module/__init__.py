@@ -2,7 +2,7 @@ import moonleap.resource.props as P
 from moonleap import extend, kebab_to_camel, rule, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has
-from moonleap_project.service import Service
+from moonleap_project.service import Service, service_has_tool_rel
 
 from .resources import Module  # noqa
 
@@ -16,7 +16,7 @@ def create_module(term, block):
 
 @rule("service", has, "module")
 def service_has_module(service, module):
-    service.add_tool(module)
+    return service_has_tool_rel(service, module)
 
 
 @extend(Module)

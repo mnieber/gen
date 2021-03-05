@@ -1,7 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, add, extend, render_templates, rule, tags
 from moonleap.verbs import contains, uses
-from moonleap_project.service import Service
+from moonleap_project.service import Service, service_has_tool_rel
 from moonleap_react_module.flags import Flags
 from moonleap_tools.tool import Tool
 
@@ -29,7 +29,7 @@ def create_mock_server(term, block):
 def add_flag(service, mock_server):
     add(service.app_module, Flags({"useMockServer": True}))
     add(service.project, layer_configs.get_for_project(service.name))
-    service.add_tool(mock_server)
+    return service_has_tool_rel(service, mock_server)
 
 
 @rule("store", contains, "item-type")

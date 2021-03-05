@@ -3,7 +3,7 @@ from moonleap import MemFun, Prop, StoreOutputPaths, extend, rule
 from moonleap.verbs import has
 from moonleap_dodo.layer import StoreLayerConfigs
 from moonleap_project.dockercompose import StoreDockerComposeConfigs
-from moonleap_project.service import Service
+from moonleap_project.service import Service, service_has_tool_rel
 from moonleap_tools.optdir import StoreOptPaths
 from moonleap_tools.setupfile import StoreSetupFileConfigs
 
@@ -19,7 +19,12 @@ class StoreDependencies:
 
 @rule("dockerfile", has, "docker-image")
 def dockerfile_use_docker_image(dockerfile, docker_image):
-    dockerfile.service.add_tool(docker_image)
+    return service_has_tool_rel(dockerfile.service, docker_image)
+
+
+@rule("service", has, "tool")
+def service_has_tool(service, tool):
+    tool.output_paths.add_source(service)
 
 
 # We define this here instead of in the makefile package to work
@@ -55,7 +60,6 @@ def meta():
         makefile_rules = Prop(props.get_makefile_rules())
         opt_dir = P.child(has, "opt-dir")
         tools = P.children(has, "tool")
-        add_tool = MemFun(props.add_tool)
 
     @extend(DockerImage)
     class ExtendDockerImage(ToolExtensions):

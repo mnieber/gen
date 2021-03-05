@@ -48,3 +48,10 @@ def fuzzy_match(input_rel, pattern_rel):
             )
         )
     )
+
+
+@dataclass
+class Forward:
+    rel: Rel
+    subj_res: T.Any = None
+    obj_res: T.Any = None

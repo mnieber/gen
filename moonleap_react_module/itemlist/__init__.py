@@ -1,4 +1,4 @@
-from moonleap import Rel, kebab_to_camel, rule, tags, word_to_term
+from moonleap import Forward, Rel, kebab_to_camel, rule, tags, word_to_term
 from moonleap.verbs import contains
 
 from .resources import ItemList
@@ -13,4 +13,4 @@ def create_item_list(term, block):
 @rule("store", contains, "item-list")
 def store_contains_item_list(store, item_list):
     item_type_term = word_to_term(f"{item_list.item_name}:item-type")
-    return Rel(store.term, contains, item_type_term)
+    return Forward(Rel(store.term, contains, item_type_term))
