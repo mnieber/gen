@@ -5,12 +5,13 @@ from moonleap.render.template_env import add_filter
 from moonleap.utils.case import title0
 from moonleap.utils.inflect import plural
 
-from . import formsmodule, formview, listview, router, view
+from . import formsmodule, formview, itemview, listview, router, view
 
 
 def install_all():
     install(formsmodule)
     install(formview)
+    install(itemview)
     install(listview)
     install(router)
     install(view)

@@ -1,17 +1,6 @@
 import moonleap.resource.props as P
-from moonleap import (
-    Forward,
-    MemFun,
-    Rel,
-    add,
-    extend,
-    kebab_to_camel,
-    render_templates,
-    rule,
-    tags,
-    title0,
-    word_to_term,
-)
+from moonleap import (Forward, MemFun, Rel, add, extend, kebab_to_camel,
+                      render_templates, rule, tags, title0, word_to_term)
 from moonleap.verbs import has
 from moonleap_project.service import service_has_tool_rel
 from moonleap_react.module import Module
@@ -43,7 +32,6 @@ def add_forms_view(module, form_view):
 @rule("module", has, "form-view")
 def module_has_form_view(module, form_view):
     form_view.output_path = module.output_path
-    module.service.utils_module.add_template_dir(__file__, "templates_utils")
     return service_has_tool_rel(module.service, form_view)
 
 
@@ -51,8 +39,3 @@ def module_has_form_view(module, form_view):
 class ExtendFormView:
     render = MemFun(render_templates(__file__))
     module = P.parent(Module, has, "form-view")
-
-
-@extend(Module)
-class ExtendModule:
-    form_views = P.children(has, "form-view")

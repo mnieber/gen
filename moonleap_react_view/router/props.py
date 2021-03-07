@@ -2,7 +2,6 @@ import os
 
 import ramda as R
 from moonleap.utils.case import title0
-from moonleap.utils.inflect import plural
 
 
 def get_route_imports(self):
@@ -57,12 +56,12 @@ def get_routes(self):
         child_route_configs = get_child_router_configs(route_config)
 
         if route_config.wraps:
-            result.append(" " * (indent + 2) + f"<Switch>")
+            result.append(" " * (indent + 2) + "<Switch>")
             for child_route_config in child_route_configs:
                 add_routes(child_route_config, indent + 4)
-            result.append(" " * (indent + 2) + f"</Switch>")
+            result.append(" " * (indent + 2) + "</Switch>")
 
-        result.append(" " * indent + f"</Route>")
+        result.append(" " * indent + "</Route>")
 
         if not route_config.wraps:
             for child_route_config in child_route_configs:

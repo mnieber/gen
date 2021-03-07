@@ -1,14 +1,6 @@
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    add,
-    extend,
-    kebab_to_camel,
-    render_templates,
-    rule,
-    tags,
-    title0,
-)
+from moonleap import (MemFun, add, extend, kebab_to_camel, render_templates,
+                      rule, tags, title0)
 from moonleap.verbs import has
 from moonleap_project.service import service_has_tool_rel
 from moonleap_react.module import Module
@@ -45,8 +37,3 @@ def module_has_list_view(module, list_view):
 class ExtendListView:
     render = MemFun(render_templates(__file__))
     module = P.parent(Module, has, "list-view")
-
-
-@extend(Module)
-class ExtendModule:
-    list_views = P.children(has, "list-view")

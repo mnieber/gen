@@ -1,8 +1,7 @@
 import moonleap.resource.props as P
-from moonleap import Prop, extend, register_add
+from moonleap import extend, register_add
 from moonleap_tools.tool import Tool
 
-from . import props
 from .resources import Component, CssImport, JavascriptImport  # noqa
 
 
