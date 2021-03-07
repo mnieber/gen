@@ -1,14 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import (
-    Forward,
-    Prop,
-    Rel,
-    extend,
-    kebab_to_camel,
-    rule,
-    tags,
-    word_to_term,
-)
+from moonleap import Prop, create_forward, extend, kebab_to_camel, rule, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.utils.case import title0
 from moonleap.verbs import contains, has
@@ -27,7 +18,7 @@ def create_store(term, block):
 
 @rule("module", has, "store")
 def create_utils_module(module, store):
-    return Forward(Rel(module.service.term, has, word_to_term("utils:module")))
+    return create_forward(module.service, has, "utils:module")
 
 
 @rule("module", has, "store")

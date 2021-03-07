@@ -1,6 +1,15 @@
 import moonleap.resource.props as P
-from moonleap import (Forward, MemFun, Rel, add, extend, kebab_to_camel,
-                      render_templates, rule, tags, title0, word_to_term)
+from moonleap import (
+    MemFun,
+    add,
+    create_forward,
+    extend,
+    kebab_to_camel,
+    render_templates,
+    rule,
+    tags,
+    title0,
+)
 from moonleap.verbs import has
 from moonleap_project.service import service_has_tool_rel
 from moonleap_react.module import Module
@@ -26,7 +35,7 @@ def add_forms_view(module, form_view):
             module_name=module.name,
         ),
     )
-    return Forward(Rel(module.service.term, has, word_to_term("forms:module")))
+    return create_forward(module.service, has, "forms:module")
 
 
 @rule("module", has, "form-view")

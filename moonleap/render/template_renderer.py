@@ -46,58 +46,62 @@ class TemplateRenderer:
         return fn
 
 
-def _get_output_dir(output_root_dir, output_subdir, templates_path, template_fn):
-    return (
-        Path(output_root_dir)
-        / output_subdir
-        / template_fn.relative_to(templates_path).parent
-    ).resolve()
+def _resolve_output_fn(templates_path, resource, template_fn):
+    if str(template_fn) == ".":
+        return template_fn
 
-
-def _get_output_fn(output_dir, resource, template_fn):
-    meta_filename = str(template_fn) + ".fn"
-    if Path(meta_filename).exists():
-        fn = (
+    meta_filename = str(templates_path / template_fn) + ".fn"
+    name = (
+        (
             template_env.get_template(meta_filename)
             .render(res=resource)
             .split(os.linesep)[0]
         )
-    else:
-        fn = Template(template_fn.name).render(res=resource)
-        if fn.endswith(".j2"):
-            fn = fn[:-3]
-    return str(output_dir / fn)
+        if Path(meta_filename).exists()
+        else Template(template_fn.name).render(res=resource)
+    )
+
+    if name.endswith(".j2"):
+        name = name[:-3]
+
+    return _resolve_output_fn(templates_path, resource, template_fn.parent) / name
 
 
-def render_templates(root_filename, location="templates", output_subdir=None):
+def _get_output_fn(output_root_dir, output_subdir, template_fn):
+    return (Path(output_root_dir) / output_subdir / template_fn).resolve()
+
+
+def render_templates(root_filename, location="templates"):
     def render(resource, output_root_dir, template_renderer):
-        nonlocal output_subdir
-
-        template_path = location(resource) if callable(location) else location
-        templates_path = Path(root_filename).parent / template_path
-        template_paths = (
-            templates_path.glob("**/*") if templates_path.is_dir() else [templates_path]
+        location_path = Path(root_filename).parent / (
+            location(resource) if callable(location) else location
         )
+        if location_path.is_dir():
+            templates_path = location_path
+            template_paths = templates_path.glob("**/*")
+        else:
+            templates_path = location_path.parent
+            template_paths = [location_path]
 
         output_filenames = []
         for template_fn in template_paths:
             if template_fn.suffix == ".fn":
                 continue
             if not template_fn.is_dir():
-                output_dir = _get_output_dir(
+                output_fn = _get_output_fn(
                     output_root_dir,
-                    output_subdir or merged_output_path(resource),
-                    templates_path,
-                    template_fn,
+                    merged_output_path(resource),
+                    _resolve_output_fn(
+                        templates_path,
+                        resource,
+                        template_fn.relative_to(templates_path),
+                    ),
                 )
-                output_dir.mkdir(parents=True, exist_ok=True)
 
-                output_filename = template_renderer.render(
-                    resource,
-                    template_fn,
-                    _get_output_fn(output_dir, resource, template_fn),
+                output_fn.parent.mkdir(parents=True, exist_ok=True)
+                output_filenames.append(
+                    template_renderer.render(resource, template_fn, output_fn)
                 )
-                output_filenames.append(output_filename)
         return output_filenames
 
     return render

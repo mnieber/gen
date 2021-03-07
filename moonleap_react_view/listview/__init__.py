@@ -1,6 +1,16 @@
 import moonleap.resource.props as P
-from moonleap import (MemFun, add, extend, kebab_to_camel, render_templates,
-                      rule, tags, title0)
+from moonleap import (
+    MemFun,
+    add,
+    create_forward,
+    extend,
+    kebab_to_camel,
+    render_templates,
+    rule,
+    tags,
+    title0,
+    word_to_term,
+)
 from moonleap.verbs import has
 from moonleap_project.service import service_has_tool_rel
 from moonleap_react.module import Module
@@ -28,9 +38,14 @@ def module_has_list_view(module, list_view):
                 module_name=module.name,
             ),
         )
-        module.service.utils_module.add_template_dir(__file__, "templates_utils")
 
     return service_has_tool_rel(module.service, list_view)
+
+
+@rule("list-view", has, "behavior")
+def create_container(list_view, behavior):
+    module = list_view.module
+    return create_forward(module, has, f"{module.name}:container")
 
 
 @extend(ListView)

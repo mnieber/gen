@@ -1,16 +1,14 @@
 import moonleap.resource.props as P
 from moonleap import (
-    Forward,
     MemFun,
-    Rel,
     add,
+    create_forward,
     extend,
     kebab_to_camel,
     render_templates,
     rule,
     tags,
     title0,
-    word_to_term,
 )
 from moonleap.verbs import has
 from moonleap_project.service import service_has_tool_rel
@@ -37,7 +35,7 @@ def add_items_view(module, item_view):
             module_name=module.name,
         ),
     )
-    return Forward(Rel(module.service.term, has, word_to_term("items:module")))
+    return create_forward(module.service, has, "items:module")
 
 
 @rule("module", has, "item-view")

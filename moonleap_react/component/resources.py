@@ -10,10 +10,5 @@ class Component(Tool):
 
 
 @dataclass
-class JavascriptImport(Resource):
-    paths: [str]
-
-
-@dataclass
 class CssImport(Resource):
     paths: [str]

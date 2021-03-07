@@ -1,8 +1,8 @@
 import moonleap.resource.props as P
 from moonleap import (
-    Forward,
     MemFun,
     add,
+    create_forward,
     extend,
     register_add,
     render_templates,
@@ -36,7 +36,7 @@ def service_has_makefile(service, makefile):
 
 @rule("makefile", runs, "*", fltr_obj=P.fltr_instance(Tool))
 def makefile_running_tool(makefile, tool):
-    return Forward(Rel(makefile.service.term, has, tool.term))
+    return create_forward(makefile.service, has, tool)
 
 
 @register_add(MakefileRule)

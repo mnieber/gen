@@ -1,5 +1,14 @@
 import moonleap.resource.props as P
-from moonleap import Forward, MemFun, Prop, Rel, add, extend, kebab_to_camel, rule, tags
+from moonleap import (
+    MemFun,
+    Prop,
+    add,
+    create_forward,
+    extend,
+    kebab_to_camel,
+    rule,
+    tags,
+)
 from moonleap.verbs import has
 from moonleap_project.service import Service
 from moonleap_react.component import StoreCssImports
@@ -24,7 +33,7 @@ def service_has_module(service, module):
     if module.name == "app":
         service.add_template_dir(__file__, "templates_service")
     else:
-        return Forward(Rel(service.app_module.term, has, module.term))
+        return create_forward(service.app_module, has, module)
 
 
 @extend(Service)

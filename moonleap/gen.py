@@ -1,6 +1,7 @@
 import os
 import sys
 
+import moonleap_behaviors
 import moonleap_dodo
 import moonleap_project
 import moonleap_react
@@ -16,6 +17,7 @@ moonleap_tools.install_all()
 moonleap_react.install_all()
 moonleap_react_module.install_all()
 moonleap_react_view.install_all()
+moonleap_behaviors.install_all()
 
 
 def main(gen_file):

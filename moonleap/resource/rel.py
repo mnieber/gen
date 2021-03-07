@@ -2,7 +2,7 @@ import typing as T
 from dataclasses import dataclass
 from fnmatch import fnmatch
 
-from moonleap.parser.term import Term
+from moonleap.parser.term import Term, word_to_term
 from moonleap.utils import maybe_tuple_to_tuple
 
 
@@ -55,3 +55,21 @@ class Forward:
     rel: Rel
     subj_res: T.Any = None
     obj_res: T.Any = None
+
+
+def _to_term(x: T.Union[object, Term, str]):
+    if isinstance(x, str):
+        return word_to_term(x)
+
+    if isinstance(x, Term):
+        return x
+
+    return x.term
+
+
+def create_forward(
+    subj: T.Union[object, Term, str],
+    verb: T.Union[str, T.Tuple[str]],
+    obj: T.Union[object, Term, str],
+):
+    return Forward(Rel(_to_term(subj), verb, _to_term(obj)))
