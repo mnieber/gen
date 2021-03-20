@@ -5,4 +5,4 @@ from moonleap import Resource
 
 @dataclass
 class Behavior(Resource):
-    pass
+    name: str

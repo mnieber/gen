@@ -1,6 +1,8 @@
 import moonleap.resource.props as P
 from moonleap import (
+    Forward,
     MemFun,
+    Rel,
     add,
     create_forward,
     extend,
@@ -46,6 +48,11 @@ def module_has_list_view(module, list_view):
 def create_container(list_view, behavior):
     module = list_view.module
     return create_forward(module, has, f"{module.name}:container")
+
+
+@rule("list-view", has, "behavior")
+def list_view_has_behavior(list_view, behavior):
+    return Forward(Rel(list_view.module.term, "has", behavior.term))
 
 
 @extend(ListView)
