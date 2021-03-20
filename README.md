@@ -28,6 +28,14 @@ automatically. The key ideas behind this approach are:
 - Moonleap is intended to be customized. A developer can introduce their own set of nouns and vers, and add rules and
   templates that turn these into first resources and then source code.
 
+## Running
+
+```
+pip install requirements.txt
+python gen.py specs/titan.md
+ls output  # or better: tree output
+```
+
 ## A short example
 
 To explain how this works, consider this spec
@@ -49,12 +57,13 @@ class Service:
 def create_service(term, block):
     return Service(name=term.data)
 ```
+
 The developer can then configure the set of the templates that take this resource as input:
 
 ```
 @extend(Service)
 class ExtendService:
-    render = render_templates(__file__, "templates")  
+    render = render_templates(__file__, "templates")
 ```
 
 Moonleap turns the spec into a set of source files as follows:
@@ -67,5 +76,5 @@ Moonleap turns the spec into a set of source files as follows:
    would be "backend:service".
 
 3. Resources are rendered into artifacts. The rendering process uses the graph-structure that connects all
-   the resources. In our example we can set up the rendering rules such that the pytest pip package is installed inside the Dockerfile 
+   the resources. In our example we can set up the rendering rules such that the pytest pip package is installed inside the Dockerfile
    (based on the `PipDependency("pytest")` and `Dockerfile("python_3.8")` resources in the graph).
