@@ -25,7 +25,7 @@ automatically. The key ideas behind this approach are:
   skeleton and the real project evolve side by side. More importantly, it means that the skeleton project does not have to be
   perfect, it only has to be useful.
 
-- Moonleap is intended to be customized. A developer can introduce their own set of nouns and vers, and add rules and
+- Moonleap is intended to be customized. A developer can introduce their own set of nouns and verbs, and add rules and
   templates that turn these into first resources and then source code.
 
 ## Running
