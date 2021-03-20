@@ -1,5 +1,6 @@
 import os
 import sys
+from argparse import ArgumentParser
 
 import moonleap_behaviors
 import moonleap_dodo
@@ -35,9 +36,12 @@ def report(x):
 
 
 if __name__ == "__main__":
-    gen_file = "genspec.md"
-    if not os.path.exists(gen_file):
-        report("Genspec file not found: " + gen_file)
+    parser = ArgumentParser()
+    parser.add_argument("spec_file")
+    args = parser.parse_args()
+
+    if not os.path.exists(args.spec_file):
+        report("Genspec file not found: " + args.spec_file)
         sys.exit(1)
 
-    main(gen_file)
+    main(args.spec_file)
