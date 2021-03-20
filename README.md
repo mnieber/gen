@@ -63,7 +63,7 @@ The developer can then configure the set of the templates that take this resourc
 ```
 @extend(Service)
 class ExtendService:
-    render = render_templates(__file__, "templates")
+    render = MemFun(render_templates(__file__), "templates")
 ```
 
 Moonleap turns the spec into a set of source files as follows:
