@@ -19,6 +19,7 @@ Both :docker-compose and dev:docker-compose are /configured by the stack:layer.
 The frontend:service /has a :dockerfile and a dev:dockerfile that /use the node:14-alpine:docker-image.
 :It /uses the default:root-dir and default:src-mount-point.
 :It /uses the :fish shell.
+:It /uses the 3000:port.
 
 ### The react application
 
