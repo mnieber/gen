@@ -11,7 +11,7 @@ from moonleap import (
 from moonleap.verbs import has
 from moonleap_project.dockercompose import StoreDockerComposeConfigs
 from moonleap_project.service import Service
-from moonleap_tools.tool import ToolExtensions
+from moonleap_tools.tool_extensions import ToolExtensions
 
 from .resources import Dockerfile, DockerImage
 

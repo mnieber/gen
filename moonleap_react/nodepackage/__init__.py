@@ -11,10 +11,18 @@ from moonleap import (
 )
 from moonleap.verbs import has
 from moonleap_project.service import Service
-from moonleap_tools.tool import Tool
 
 from . import node_package_configs, props
 from .resources import NodePackage, NodePackageConfig, load_node_package_config  # noqa
+
+
+class StoreNodePackageConfigs:
+    node_package_configs = P.tree("has", "node-package-config")
+
+
+@register_add(NodePackageConfig)
+def add_node_package_config(resource, node_package_config):
+    resource.node_package_configs.add(node_package_config)
 
 
 @tags(["node-package"])
@@ -29,22 +37,8 @@ def service_has_node_package(service, node_package):
     node_package.output_paths.add_source(service)
 
 
-@register_add(NodePackageConfig)
-def add_node_package_config(resource, node_package_config):
-    resource.node_package_configs.add(node_package_config)
-
-
-class StoreNodePackageConfigs:
-    node_package_configs = P.tree("has", "node-package-config")
-
-
 @extend(NodePackage)
 class ExtendNodePackage(StoreNodePackageConfigs, StoreOutputPaths):
     render = MemFun(render_templates(__file__))
     get_config = MemFun(props.get_node_package_config)
     service = P.parent(Service, "has", "node-package")
-
-
-@extend(Tool)
-class ExtendTool(StoreNodePackageConfigs):
-    pass

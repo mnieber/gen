@@ -14,6 +14,7 @@ from . import (
     pythondockerimage,
     setupfile,
     tool,
+    tool_extensions,
 )
 
 
@@ -31,3 +32,4 @@ def install_all():
     install(pythondockerimage)
     install(setupfile)
     install(tool)
+    install(tool_extensions)

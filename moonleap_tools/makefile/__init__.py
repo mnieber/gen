@@ -13,10 +13,19 @@ from moonleap.resource.rel import Rel
 from moonleap.verbs import has, runs
 from moonleap_project.service import Service, service_has_tool_rel
 from moonleap_tools.pkgdependency import PkgDependency
-from moonleap_tools.tool import StoreMakefileRules, Tool
+from moonleap_tools.tool import Tool
 
 from . import layer_configs
 from .resources import Makefile, MakefileRule  # noqa
+
+
+@register_add(MakefileRule)
+def add_makefile_rule(resource, makefile_rule):
+    resource.makefile_rules.add(makefile_rule)
+
+
+class StoreMakefileRules:
+    makefile_rules = P.tree(has, "makefile")
 
 
 @tags(["makefile"])
@@ -37,11 +46,6 @@ def service_has_makefile(service, makefile):
 @rule("makefile", runs, "*", fltr_obj=P.fltr_instance(Tool))
 def makefile_running_tool(makefile, tool):
     return create_forward(makefile.service, has, tool)
-
-
-@register_add(MakefileRule)
-def add_makefile_rule(resource, makefile_rule):
-    resource.makefile_rules.add(makefile_rule)
 
 
 @extend(Makefile)

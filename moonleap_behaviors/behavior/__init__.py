@@ -2,9 +2,7 @@ import moonleap.resource.props as P
 from moonleap import add, extend, rule, tags
 from moonleap.verbs import has
 from moonleap_react.module import Module
-from moonleap_react.nodepackage import load_node_package_config
-from moonleap_react.nodepackage.__init__ import StoreNodePackageConfigs
-from moonleap_tools.tool import Tool
+from moonleap_react.nodepackage import StoreNodePackageConfigs, load_node_package_config
 
 from .resources import Behavior
 
