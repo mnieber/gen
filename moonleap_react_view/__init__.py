@@ -5,7 +5,17 @@ from moonleap.render.template_env import add_filter
 from moonleap.utils.case import title0
 from moonleap.utils.inflect import plural
 
-from . import formsmodule, formview, itemview, listview, router, view
+from . import (
+    formsmodule,
+    formview,
+    itemview,
+    listview,
+    router,
+    router_and_module,
+    router_and_service,
+    view,
+    view_and_module,
+)
 
 
 def install_all():
@@ -14,7 +24,10 @@ def install_all():
     install(itemview)
     install(listview)
     install(router)
+    install(router_and_module)
+    install(router_and_service)
     install(view)
+    install(view_and_module)
 
 
 add_filter("plural", lambda x: plural(x))

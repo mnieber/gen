@@ -34,6 +34,7 @@ def add_items_view(module, item_view):
             component_name=title0(item_view.name),
             module_name=module.name,
         ),
+        "The :item-view has a router config",
     )
     return create_forward(module.service, has, "items:module")
 

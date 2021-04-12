@@ -34,6 +34,7 @@ def add_forms_view(module, form_view):
             component_name=title0(form_view.name),
             module_name=module.name,
         ),
+        "The :form-view has a router config",
     )
     return create_forward(module.service, has, "forms:module")
 

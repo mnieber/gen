@@ -39,6 +39,7 @@ def module_has_list_view(module, list_view):
                 component_name=f"{title0(list_view.name)}",
                 module_name=module.name,
             ),
+            "The :list-view has a router config",
         )
 
     return service_has_tool_rel(module.service, list_view)
