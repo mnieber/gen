@@ -11,6 +11,7 @@ from moonleap import (
 from moonleap.verbs import has
 from moonleap_project.dockercompose import StoreDockerComposeConfigs
 from moonleap_project.service import Service
+from moonleap_tools.tool import ToolExtensions
 
 from .resources import Dockerfile, DockerImage
 
@@ -42,7 +43,7 @@ def get_template_filename(dockerfile):
 
 
 @extend(DockerImage)
-class ExtendDockerImage(StoreDockerComposeConfigs):
+class ExtendDockerImage(ToolExtensions):
     pass
 
 
