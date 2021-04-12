@@ -1,5 +1,13 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, StoreOutputPaths, extend, render_templates, rule, tags
+from moonleap import (
+    MemFun,
+    StoreOutputPaths,
+    add_source,
+    extend,
+    render_templates,
+    rule,
+    tags,
+)
 from moonleap.verbs import has
 from moonleap_project.dockercompose import StoreDockerComposeConfigs
 from moonleap_project.service import Service
@@ -22,7 +30,11 @@ def create_docker_image(term, block):
 @rule("dockerfile", has, "docker-image")
 def dockerfile_use_docker_image(dockerfile, docker_image):
     dockerfile.image_name = docker_image.name
-    dockerfile.docker_compose_configs.add_source(docker_image)
+    add_source(
+        [dockerfile, "docker_compose_configs"],
+        docker_image,
+        "A :dockerfile receives docker compose configs from a :docker-image",
+    )
 
 
 def get_template_filename(dockerfile):

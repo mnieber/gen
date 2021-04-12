@@ -1,6 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
+    Prop,
     StoreOutputPaths,
     extend,
     kebab_to_camel,
