@@ -3,14 +3,13 @@ from moonleap import (
     MemFun,
     StoreOutputPaths,
     add,
-    describe,
     extend,
     register_add,
     render_templates,
     rule,
     tags,
 )
-from moonleap.verbs import configured, has
+from moonleap.verbs import configured_by, has
 from moonleap_dodo.layer import StoreLayerConfigs
 from moonleap_project.project import Project
 
@@ -30,8 +29,7 @@ def add_docker_compose_config(resource, docker_compose_config):
     resource.docker_compose_configs.add(docker_compose_config)
 
 
-@describe("""Docker-compose is configured in its own layer.""")
-@rule("docker-compose", configured, "layer")
+@rule("docker-compose", configured_by, "layer")
 def docker_compose_configured_in_layer(docker_compose, layer):
     layer.layer_configs.add_source(docker_compose)
 
@@ -50,5 +48,5 @@ class ExtendDockerCompose(StoreLayerConfigs, StoreOutputPaths):
     render = MemFun(render_templates(__file__))
     services = P.children("run", "service")
     project = P.parent(Project, "has", "docker-compose")
-    configured_by_layer = P.child("configured", "layer")
+    configured_by_layer = P.child(configured_by, "layer")
     get_config = MemFun(props.get_docker_compose_config)

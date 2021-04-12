@@ -124,3 +124,8 @@ def tree(verb, term):
         return Inner()
 
     return Prop(get_value)
+
+
+def add_source(target_and_prop_name, source, description):
+    target, prop_name = target_and_prop_name
+    getattr(target, prop_name).add_source(source)

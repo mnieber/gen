@@ -1,4 +1,4 @@
-configured = "configured"
+configured_by = "configured"
 uses = ("use", "uses")
 contains = ("has", "have", "contain", "contains", "stores")
 has = contains + uses

@@ -2,6 +2,7 @@ import moonleap.resource.props as P
 from moonleap import (
     MemFun,
     StoreOutputPaths,
+    add_source,
     extend,
     kebab_to_camel,
     register_add,
@@ -14,6 +15,9 @@ from moonleap.verbs import has
 from . import props
 from .resources import Layer, LayerConfig
 
+# forward declarations
+LayerGroup = "moonleap_dodo.layergroup.LayerGroup"
+
 
 @tags(["layer"])
 def create_layer(term, block):
@@ -24,12 +28,11 @@ def create_layer(term, block):
 
 @rule("layer", has, "layer-group")
 def layer_has_layer_group(layer, layer_group):
-    layer.layer_configs.add_source(layer_group)
-
-
-@rule("service", has, "tool")
-def service_has_tool(service, tool):
-    service.layer_configs.add_source(tool)
+    add_source(
+        [layer, "layer_configs"],
+        layer_group,
+        "This layer receives layer configs from a layer-group",
+    )
 
 
 @register_add(LayerConfig)
@@ -44,8 +47,6 @@ class StoreLayerConfigs:
 @extend(Layer)
 class ExtendLayer(StoreLayerConfigs, StoreOutputPaths):
     render = MemFun(render_templates(__file__))
-    parent_layer_group = P.parent(
-        "moonleap_dodo.layergroup.LayerGroup", "contains", "layer"
-    )
+    parent_layer_group = P.parent(LayerGroup, "contains", "layer")
     layer_groups = P.children(has, "layer-group")
     get_config = MemFun(props.get_config)
