@@ -2,37 +2,16 @@ import moonleap.resource.props as P
 from moonleap import (
     MemFun,
     StoreOutputPaths,
-    add_source,
     extend,
     kebab_to_camel,
     register_add,
     render_templates,
-    rule,
     tags,
 )
 from moonleap.verbs import has
 
 from . import props
 from .resources import Layer, LayerConfig
-
-# forward declarations
-LayerGroup = "moonleap_dodo.layergroup.LayerGroup"
-
-
-@tags(["layer"])
-def create_layer(term, block):
-    layer = Layer(name=kebab_to_camel(term.data))
-    layer.output_path = ".dodo_commands"
-    return layer
-
-
-@rule("layer", has, "layer-group")
-def layer_has_layer_group(layer, layer_group):
-    add_source(
-        [layer, "layer_configs"],
-        layer_group,
-        "This layer receives layer configs from a layer-group",
-    )
 
 
 @register_add(LayerConfig)
@@ -44,9 +23,14 @@ class StoreLayerConfigs:
     layer_configs = P.tree(has, "layer-config")
 
 
+@tags(["layer"])
+def create_layer(term, block):
+    layer = Layer(name=kebab_to_camel(term.data))
+    layer.output_path = ".dodo_commands"
+    return layer
+
+
 @extend(Layer)
 class ExtendLayer(StoreLayerConfigs, StoreOutputPaths):
     render = MemFun(render_templates(__file__))
-    parent_layer_group = P.parent(LayerGroup, "contains", "layer")
-    layer_groups = P.children(has, "layer-group")
     get_config = MemFun(props.get_config)
