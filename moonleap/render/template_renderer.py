@@ -21,10 +21,10 @@ class TemplateRenderer:
     def __init__(self):
         self.filenames = []
 
-    def render(self, resource, template_fn, fn):
+    def render(self, resource, settings, template_fn, fn):
         if template_fn.suffix == ".j2":
             template = template_env.get_template(str(template_fn))
-            content = template.render(res=resource)
+            content = template.render(res=resource, settings=settings)
         else:
             with open(template_fn) as ifs:
                 content = ifs.read()
@@ -72,7 +72,7 @@ def _get_output_fn(output_root_dir, output_subdir, template_fn):
 
 
 def render_templates(root_filename, location="templates"):
-    def render(resource, output_root_dir, template_renderer):
+    def render(resource, settings, output_root_dir, template_renderer):
         location_path = Path(root_filename).parent / (
             location(resource) if callable(location) else location
         )
@@ -100,7 +100,7 @@ def render_templates(root_filename, location="templates"):
 
                 output_fn.parent.mkdir(parents=True, exist_ok=True)
                 output_filenames.append(
-                    template_renderer.render(resource, template_fn, output_fn)
+                    template_renderer.render(resource, settings, template_fn, output_fn)
                 )
         return output_filenames
 

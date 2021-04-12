@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-def render_opt_dir(opt_dir, output_root_dir, **kwargs):
+def render_opt_dir(opt_dir, settings, output_root_dir, **kwargs):
     service = opt_dir.service
     if service:
         for tool in service.tools:
