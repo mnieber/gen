@@ -1,3 +1,4 @@
+{% trim_newlines %}
 FROM {{ res.image_name }}
 
 {% for PKG in res.service.get_pkg_names() %}{% if loop.first %}
@@ -37,3 +38,4 @@ RUN pip install \
 {% endif %}{% endfor %}
 
 WORKDIR /app/src
+{% end_trim_newlines %}

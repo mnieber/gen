@@ -5,6 +5,7 @@ import ramda as R
 from jinja2 import Template
 from moonleap.render.merge import get_file_merger
 from moonleap.render.template_env import template_env
+from moonleap.render.transforms import post_transforms
 
 
 def merged_output_path(resource):
@@ -25,6 +26,12 @@ class TemplateRenderer:
         if template_fn.suffix == ".j2":
             template = template_env.get_template(str(template_fn))
             content = template.render(res=resource, settings=settings)
+
+            lines = content.split(os.linesep)
+            for post_transform in post_transforms:
+                lines = post_transform(lines)
+            content = os.linesep.join(lines)
+
         else:
             with open(template_fn) as ifs:
                 content = ifs.read()
