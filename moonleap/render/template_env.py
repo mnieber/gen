@@ -27,6 +27,7 @@ template_env = jinja2.Environment(
     loader=template_loader,
     extensions=[AnsibleCoreFiltersExtension],
     trim_blocks=True,
+    lstrip_blocks=True,
 )
 
 
