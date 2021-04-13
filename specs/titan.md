@@ -24,7 +24,7 @@ The frontend:service /has a :dockerfile and a dev:dockerfile that /use the node:
 ### The react application
 
 The frontend:service /has a :node-package.
-:It /uses :create-react-app, :tailwind-css, :prettier and :antd.
+:It /uses :create-react-app, :tailwind-css, :prettier, js:vandelay and :antd.
 :It /has an app:module that /has a :router and an app:store.
 :It /has a donations:module and a donors:module.
 :It /uses a :mock-graphql-server.

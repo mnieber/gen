@@ -15,6 +15,7 @@ from . import (
     setupfile,
     tool,
     tool_extensions,
+    vandelay,
 )
 
 
@@ -33,3 +34,4 @@ def install_all():
     install(setupfile)
     install(tool)
     install(tool_extensions)
+    install(vandelay)
