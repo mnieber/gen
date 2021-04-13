@@ -4,10 +4,10 @@
 import { action, observable, makeObservable } from 'mobx';
 import { forEach } from 'lodash/fp';
 import { RST, resetRS, updateRes } from 'src/utils/RST';
-import * as gardenFlowersApi from 'src/gardenFlowers/api'
+import * as gardenFlowersApi from 'src/gardenFlowers/api';
 
 {% for item_type in res.item_types %}
-import { YellowTulipT, YellowTulipByIdT } from 'src/gardenFlowers/types'
+import { YellowTulipT, YellowTulipByIdT } from 'src/gardenFlowers/types';
 {% endfor %}
 
 export class {{ res.name }} {

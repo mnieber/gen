@@ -1,8 +1,8 @@
 {% magicwith substore.module.name as gardenFlowers %}
 {% magicwith substore.module.name as yellowTulip %}
-import { observable, makeObservable } from 'mobx'
+import { observable, makeObservable } from 'mobx';
 {% for substore in res.substores %}
-import { GardenFlowersStore } from 'src/gardenFlowers/GardenFlowersStore'
+import { GardenFlowersStore } from 'src/gardenFlowers/GardenFlowersStore';
 {% endfor %}
 
 export class AppStore {
