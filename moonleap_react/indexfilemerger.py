@@ -22,4 +22,6 @@ class IndexFileMerger(FileMerger):
                 else:
                     footer.append(line)
 
-        return os.linesep.join(header) + os.linesep.join(footer)
+        return (
+            os.linesep.join(header) + os.linesep + os.linesep + os.linesep.join(footer)
+        )
