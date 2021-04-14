@@ -1,0 +1,36 @@
+{% magicwith res.basename as yellowTulip %}
+import classnames from 'classnames';
+import { observer } from 'mobx-react';
+
+import { PickerValueT, ValuePicker } from 'src/utils/components/ValuePicker';
+import { YellowTulipT } from 'src/yellowTulips/types';
+
+export const YellowTulipPicker: React.FC<PropsT> = observer(
+  (props: PropsT) => {
+    const { yellowTulipsContainer } = useYellowTulipsContainer();
+
+    const onChange = (value: PickerValueT) => {
+      if (value.__isNew__) {
+        // TODO: add yellowTulip
+      } else if (value.value) {
+        container.selection.selectItem({
+          itemId: value.value.id,
+        });
+      }
+    };
+
+    return (
+      <div className={classnames('YellowTulipPicker mt-2', props.className)}>
+        <ValuePicker
+          isMulti={false}
+          isCreatable={true}
+          pickableValues={yellowTulipContainer.outputs.display}
+          labelFromValue={(x: any) => x.name}
+          pickableValue={container.selection.item}
+          onChange={onChange}
+        />
+      </div>
+    );
+  }
+);
+{% endmagicwith %}

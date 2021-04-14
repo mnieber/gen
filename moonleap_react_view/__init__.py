@@ -12,6 +12,7 @@ from . import (
     itemview,
     listview,
     panel,
+    picker,
     router,
     router_and_module,
     router_and_service,
@@ -27,6 +28,7 @@ def install_all():
     install(itemview)
     install(listview)
     install(panel)
+    install(picker)
     install(router)
     install(router_and_module)
     install(router_and_service)
