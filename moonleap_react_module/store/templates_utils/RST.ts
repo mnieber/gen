@@ -1,8 +1,10 @@
-const RESET = 'RESET';
-const UPDATING = 'UPDATING';
-const ERRORED = 'ERRORED';
-const UPDATED = 'UPDATED';
-const LOADING = 'LOADING';
+import { action } from "mobx";
+
+const RESET = "RESET";
+const UPDATING = "UPDATING";
+const ERRORED = "ERRORED";
+const UPDATED = "UPDATED";
+const LOADING = "LOADING";
 
 export type ResetRST = {
   type: typeof RESET;
@@ -68,22 +70,28 @@ export type RST<UpdatingT = LoadingT> =
   | ErroredRST
   | UpdatedRST;
 
-export function updateRes(
-  rsMap: { [k: string]: any },
-  id: string,
-  update: Function,
-  then: Function,
-  getErrorMsg?: Function
-) {
-  rsMap[id] = loadingRS();
-  return update()
-    .then((result: any) => {
-      then(result);
-      rsMap[id] = updatedRS();
-    })
-    .catch((e: any) => {
-      rsMap[id] = erroredRS(
-        getErrorMsg ? getErrorMsg(e) : `Could not load ${id}`
+export const updateRes = action(
+  (
+    rsMap: { [k: string]: any },
+    id: string,
+    update: Function,
+    then: Function,
+    getErrorMsg?: Function
+  ) => {
+    rsMap[id] = loadingRS();
+    return update()
+      .then(
+        action((result: any) => {
+          then(result);
+          rsMap[id] = updatedRS();
+        })
+      )
+      .catch(
+        action((e: any) => {
+          rsMap[id] = erroredRS(
+            getErrorMsg ? getErrorMsg(e) : `Could not load ${id}`
+          );
+        })
       );
-    });
-}
+  }
+);
