@@ -11,7 +11,6 @@ from moonleap import (
 )
 from moonleap.verbs import has
 from moonleap_project.service import Service
-from moonleap_react.component import StoreCssImports
 from moonleap_react.nodepackage import load_node_package_config
 from moonleap_react_module.flags import StoreFlags
 
@@ -42,7 +41,7 @@ class ExtendService:
 
 
 @extend(AppModule)
-class ExtendAppModule(StoreCssImports, StoreFlags):
+class ExtendAppModule(StoreFlags):
     css_import_lines = Prop(props.css_import_lines)
     get_flags = MemFun(props.get_flags)
     submodules = P.tree(has, "module")

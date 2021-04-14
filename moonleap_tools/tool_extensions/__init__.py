@@ -2,7 +2,6 @@ import moonleap.resource.props as P
 from moonleap import StoreOutputPaths, extend
 from moonleap_dodo.layer import StoreLayerConfigs
 from moonleap_project.dockercompose import StoreDockerComposeConfigs
-from moonleap_react.component import StoreCssImports
 from moonleap_react.nodepackage import StoreNodePackageConfigs
 from moonleap_tools.makefile import StoreMakefileRules
 from moonleap_tools.optdir import StoreOptPaths
@@ -17,7 +16,6 @@ class StoreDependencies:
 
 
 class ToolExtensions(
-    StoreCssImports,
     StoreDependencies,
     StoreDockerComposeConfigs,
     StoreLayerConfigs,
