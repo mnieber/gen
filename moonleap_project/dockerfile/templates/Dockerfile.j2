@@ -1,4 +1,4 @@
-{% trim_newlines %}
+{% trim_newlines keep=1 %}
 FROM {{ res.image_name }}
 
 {% for PKG in res.service.get_pkg_names() %}{% if loop.first %}

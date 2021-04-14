@@ -1,4 +1,4 @@
-{% trim_newlines %}
+{% trim_newlines keep=1 %}
 {% for name, section in res.get_config().get_body().items() %}
 {{ {name: section} | to_nice_yaml }}
 {% endfor %}

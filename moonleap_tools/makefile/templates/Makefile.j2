@@ -1,4 +1,4 @@
-{% trim_newlines %}
+{% trim_newlines keep=1 %}
 {% for rule in res.service.makefile_rules %}
 {{ rule.text }}
 {% endfor %}
