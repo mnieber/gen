@@ -8,8 +8,10 @@ from moonleap.utils.inflect import plural
 from . import (
     formsmodule,
     formview,
+    frame,
     itemview,
     listview,
+    panel,
     router,
     router_and_module,
     router_and_service,
@@ -21,8 +23,10 @@ from . import (
 def install_all():
     install(formsmodule)
     install(formview)
+    install(frame)
     install(itemview)
     install(listview)
+    install(panel)
     install(router)
     install(router_and_module)
     install(router_and_service)

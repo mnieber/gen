@@ -1,0 +1,36 @@
+{% magicwith res.name as yellowTulip %}
+{% magicwith dep.name as redRose %}
+import React from 'react';
+import classNames from 'classnames';
+import { observer } from 'mobx-react-lite';
+{% trim_newlines keep=1 %}
+
+{% for dep in res.dependencies %}
+import { RedRose } from "{{ dep.import_path }}/RedRose"
+{% endfor %}
+
+import "./YellowTulip.scss"
+
+{% end_trim_newlines %}
+type PropsT = React.PropsWithChildren<{}>;
+
+{% trim_newlines keep=0 %}
+export const YellowTulip: React.FC<PropsT> = observer(() => {
+  return (
+    <div
+      className={classnames('YellowTulip flex flex-col')}
+    >
+      {{ res.top_panel.react_tag }}
+      <div
+        className={classnames('YellowTulip__MidSection flex flex-row')}
+      >
+        {{ res.left_panel.react_tag }}
+        {props.children}
+        {{ res.right_panel.react_tag }}
+      </div>
+      {{ res.bottom_panel.react_tag }}
+    </div>
+  );
+});
+{% end_trim_newlines %}
+{% endmagicwith %}

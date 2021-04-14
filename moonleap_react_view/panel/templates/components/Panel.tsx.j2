@@ -1,0 +1,17 @@
+{% magicwith res.name as yellowTulip %}
+import React from 'react';
+import classNames from 'classnames';
+import { observer } from 'mobx-react-lite';
+
+type PropsT = React.PropsWithChildren<{
+}>;
+
+export const YellowTulip: React.FC<PropsT> = observer(() => {
+  return (
+    <div
+      className={classnames('YellowTulip')}
+    >
+    </div>
+  );
+});
+{% endmagicwith %}
