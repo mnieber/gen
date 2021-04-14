@@ -1,0 +1,41 @@
+{% magicwith res.name as yellowTulip %}
+import React from "react";
+import { observer } from 'mobx-react-lite';
+import { action, reaction } from "mobx";
+import { YellowTulipCtr } from "src/yellowTulip/YellowTulipCtr";
+import { useStore } from "src/app/components/StoreProvider";
+
+const YellowTulipCtrContext = React.createContext<YellowTulipCtr | undefined>(undefined);
+
+export const YellowTulipCtrProvider: React.FC = observer(({ children }) => {
+  const { yellowTulipStore } = useStore();
+  const [ctr] = React.useState(() => {
+    const ctr = new YellowTulipCtr();
+    return ctr;
+  });
+
+  React.useEffect(() => {
+    const cleanUp = reaction(
+      () => {
+        return yellowTulipStore.yellowTulipById
+      },
+      action((yellowTulipById: YellowTulipByIdT) => {
+        ctr.inputs.yellowTulipById = yellowTulipById;
+      })
+    );
+    return cleanUp;
+  });
+
+  return (
+    <YellowTulipCtrContext.Provider value={ctr}>{children}</YellowTulipCtrContext.Provider>
+  );
+});
+
+export const useYellowTulipCtr = () => {
+  const ctr = React.useContext(YellowTulipCtrContext);
+  if (!ctr) {
+    throw new Error("useYellowTulipCtr must be used within a YellowTulipCtrProvider.");
+  }
+  return ctr;
+};
+{% endmagicwith %}
