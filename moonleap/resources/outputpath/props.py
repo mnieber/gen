@@ -1,3 +1,6 @@
+from pathlib import Path
+
+import ramda as R
 from moonleap.parser.term import maybe_term_to_term
 from moonleap.resource.prop import Prop
 from moonleap.resource.rel import Rel
@@ -28,3 +31,15 @@ def output_path(verb, term):
         self.add_relation(rel, child)
 
     return Prop(get_value=get_child, set_value=set_child)
+
+
+def merged_output_path():
+    def _merge(acc, x):
+        return OutputPath(location=(x.location + acc.location))
+
+    def get_value(resource):
+        return Path(
+            R.reduce(_merge, OutputPath(""), resource.output_paths.merged).location
+        )
+
+    return Prop(get_value=get_value)

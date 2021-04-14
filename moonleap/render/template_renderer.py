@@ -1,21 +1,10 @@
 import os
 from pathlib import Path
 
-import ramda as R
 from jinja2 import Template
 from moonleap.render.merge import get_file_merger
 from moonleap.render.template_env import template_env
 from moonleap.render.transforms import post_transforms
-
-
-def merged_output_path(resource):
-    from moonleap.resources.outputpath import OutputPath
-
-    def _merge(acc, x):
-        return OutputPath(location=(x.location + acc.location))
-
-    merged = R.reduce(_merge, OutputPath(""), resource.output_paths.merged)
-    return Path(merged.location)
 
 
 class TemplateRenderer:
@@ -97,7 +86,7 @@ def render_templates(root_filename, location="templates"):
             if not template_fn.is_dir():
                 output_fn = _get_output_fn(
                     output_root_dir,
-                    merged_output_path(resource),
+                    resource.merged_output_path,
                     _resolve_output_fn(
                         templates_path,
                         resource,
