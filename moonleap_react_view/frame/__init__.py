@@ -10,7 +10,7 @@ from .resources import Frame
 @tags(["frame"])
 def create_frame(term, block):
     name = kebab_to_camel(term.data)
-    frame = Frame(basename=name, name=f"{name}Frame")
+    frame = Frame(item_type_name=name, name=f"{name}Frame")
     return frame
 
 

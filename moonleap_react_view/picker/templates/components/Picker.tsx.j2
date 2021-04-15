@@ -1,9 +1,9 @@
-{% magic_with res.basename as yellowTulip %}
+{% magic_with res.item_type_name as yellowTulip %}
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 
 import { PickerValueT, ValuePicker } from 'src/utils/components/ValuePicker';
-import { YellowTulipT } from 'src/yellowTulips/types';
+import { YellowTulipT } from '{{ res.item_type.import_path }}';
 
 export const YellowTulipPicker: React.FC<PropsT> = observer(
   (props: PropsT) => {
