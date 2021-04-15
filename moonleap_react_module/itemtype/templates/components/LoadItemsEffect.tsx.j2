@@ -1,5 +1,5 @@
-{% magicwith res.name as yellowTulip %}
-{% magicwith res.store.module.name as gardenFlowers %}
+{% magic_with res.name as yellowTulip %}
+{% magic_with res.store.module.name as gardenFlowers %}
 import React from 'react';
 
 import { EffectWithoutArgs } from 'src/utils/components';
@@ -17,5 +17,5 @@ export const LoadYellowTulipsEffect: React.FC<PropsT> = (p: PropsT) => {
     />
   );
 };
-{% endmagicwith %}
-{% endmagicwith %}
+{% end_magic_with %}
+{% end_magic_with %}

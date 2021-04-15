@@ -1,5 +1,5 @@
-{% magicwith res.item_name as yellowTulip %}
-{% magicwith res.module.name as gardenFlowers %}
+{% magic_with res.item_name as yellowTulip %}
+{% magic_with res.module.name as gardenFlowers %}
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
@@ -30,5 +30,5 @@ export const YellowTulipView: React.FC<PropsT> = observer(() => {
     />
   );
 });
-{% endmagicwith %}
-{% endmagicwith %}
+{% end_magic_with %}
+{% end_magic_with %}

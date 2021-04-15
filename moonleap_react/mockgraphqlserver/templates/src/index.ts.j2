@@ -1,5 +1,5 @@
-{% magicwith substore.module.name as gardenFlowers %}
-{% magicwith item_type.name as yellowTulip %}
+{% magic_with substore.module.name as gardenFlowers %}
+{% magic_with item_type.name as yellowTulip %}
 import { gql, ApolloServer } from 'apollo-server';
 import faker from 'faker';
 
@@ -46,5 +46,5 @@ server.listen().then(({ url }: any) => {
   console.log(`Using schema ${typeDefsStr}`);
 });
 
-{% endmagicwith %}
-{% endmagicwith %}
+{% end_magic_with %}
+{% end_magic_with %}

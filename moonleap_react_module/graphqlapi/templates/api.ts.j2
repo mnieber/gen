@@ -2,7 +2,7 @@
 export {}
 {% endif %}
 {% for item_type in res.module.store.item_types %}
-{% magicwith item_type.name as yellowTulip %}
+{% magic_with item_type.name as yellowTulip %}
 {% if loop.first %}
 import { always, flow } from 'lodash/fp';
 import { doQuery } from 'src/utils/graphqlClient';
@@ -27,5 +27,5 @@ export function getYellowTulips() {
 export function saveYellowTulip(values: any) {
     console.log("TODO: save", values);
 }
-{% endmagicwith %}
+{% end_magic_with %}
 {% endfor %}

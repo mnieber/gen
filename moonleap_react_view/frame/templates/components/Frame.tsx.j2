@@ -1,5 +1,5 @@
-{% magicwith res.name as yellowTulip %}
-{% magicwith dep.name as redRose %}
+{% magic_with res.name as yellowTulip %}
+{% magic_with dep.name as redRose %}
 import React from 'react';
 import classNames from 'classnames';
 import { observer } from 'mobx-react-lite';
@@ -33,4 +33,4 @@ export const YellowTulip: React.FC<PropsT> = observer(() => {
   );
 });
 {% end_trim_newlines %}
-{% endmagicwith %}
+{% end_magic_with %}

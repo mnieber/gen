@@ -1,4 +1,4 @@
-{% magicwith item_type.name as yellowTulip %}
+{% magic_with item_type.name as yellowTulip %}
 {% for item_type in res.item_types %}
 export type YellowTulipT = {
     id: string,
@@ -8,4 +8,4 @@ export type YellowTulipT = {
 export type YellowTulipByIdT = {[id:string]: YellowTulipT};
 
 {% endfor %}
-{% endmagicwith %}
+{% end_magic_with %}

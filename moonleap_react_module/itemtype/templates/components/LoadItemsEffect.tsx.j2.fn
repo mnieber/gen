@@ -1,3 +1,3 @@
-{% magicwith res.name as yellowTulip %}
+{% magic_with res.name as yellowTulip %}
 LoadYellowTulipsEffect.tsx
-{% endmagicwith %}
+{% end_magic_with %}

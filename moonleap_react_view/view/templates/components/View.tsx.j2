@@ -1,5 +1,5 @@
-{% magicwith res.name as yellowTulip %}
-{% magicwith res.module.name as gardenFlowers %}
+{% magic_with res.name as yellowTulip %}
+{% magic_with res.module.name as gardenFlowers %}
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from 'src/app/components/StoreProvider';
@@ -18,5 +18,5 @@ export const YellowTulip: React.FC<PropsT> = observer(() => {
 
   return formDiv;
 });
-{% endmagicwith %}
-{% endmagicwith %}
+{% end_magic_with %}
+{% end_magic_with %}

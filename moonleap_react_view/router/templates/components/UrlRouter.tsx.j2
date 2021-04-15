@@ -1,5 +1,5 @@
-{% magicwith item_type.store.module.name as gardenFlowers %}
-{% magicwith rc.component_name as redRose %}
+{% magic_with item_type.store.module.name as gardenFlowers %}
+{% magic_with rc.component_name as redRose %}
 import React from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
@@ -19,5 +19,5 @@ export const UrlRouter: React.FC<PropsT> = observer((props: PropsT) => {
     </Router>
   );
 });
-{% endmagicwith %}
-{% endmagicwith %}
+{% end_magic_with %}
+{% end_magic_with %}

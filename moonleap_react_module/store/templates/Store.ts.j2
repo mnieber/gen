@@ -1,6 +1,6 @@
-{% magicwith item_type.name as yellowTulip %}
-{% magicwith item.name as blueDaisy %}
-{% magicwith res.module.name as gardenFlowers %}
+{% magic_with item_type.name as yellowTulip %}
+{% magic_with item.name as blueDaisy %}
+{% magic_with res.module.name as gardenFlowers %}
 import { action, observable, makeObservable } from 'mobx';
 import { forEach } from 'lodash/fp';
 import { RST, resetRS, updateRes } from 'src/utils/RST';
@@ -54,6 +54,6 @@ export class {{ res.name }} {
 {% endfor %}
 
 }
-{% endmagicwith %}
-{% endmagicwith %}
-{% endmagicwith %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}

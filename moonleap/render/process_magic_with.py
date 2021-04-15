@@ -3,8 +3,8 @@ import re
 from moonleap.utils.case import title0
 
 
-def _find_magicwith_statement(text):
-    regex = r"{% magicwith (?P<var>[A-Za-z0-9_\.\|]+) as (?P<as>.+)\s* %}"
+def _find_magic_with_statement(text):
+    regex = r"{% magic_with (?P<var>[A-Za-z0-9_\.\|]+) as (?P<as>.+)\s* %}"
     matches = list(re.finditer(regex, text, re.MULTILINE))
     return (
         (
@@ -16,16 +16,16 @@ def _find_magicwith_statement(text):
     )
 
 
-def process_magicwith(lines):
+def process_magic_with(lines):
     result = []
     vars = []
     for block_line in lines:
-        var, as_ = _find_magicwith_statement(block_line)
+        var, as_ = _find_magic_with_statement(block_line)
         if var:
             vars.append((var, as_))
             continue
 
-        if "{% endmagicwith %}" in block_line:
+        if "{% end_magic_with %}" in block_line:
             vars.pop()
             continue
 
