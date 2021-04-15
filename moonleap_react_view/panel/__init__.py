@@ -25,8 +25,8 @@ def create_panel(term, block):
 @rule("frame", has, "panel")
 def frame_has_panel(frame, panel):
     panel.output_paths.add_source(frame)
-    panel.react_base_path = frame.react_base_path
     panel.name = frame.basename + title0(panel.type) + "Panel"
+    panel.module = frame.module
     frame.dependencies.append(panel)
     return frame
 

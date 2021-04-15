@@ -1,4 +1,8 @@
-import moonleap.resource.props as P
-from moonleap import register_add
+from moonleap import extend
 
 from .resources import Component  # noqa
+
+
+@extend(Component)
+class ExtendComponent:
+    pass

@@ -1,6 +1,8 @@
+import moonleap.resource.props as P
 from moonleap import MemFun, extend, kebab_to_camel, render_templates, rule, tags
 from moonleap.verbs import has
 from moonleap_project.service import service_has_tool_rel
+from moonleap_react.module import Module
 
 from .resources import Frame
 
@@ -15,7 +17,7 @@ def create_frame(term, block):
 @rule("module", has, "frame")
 def module_has_frame(module, frame):
     frame.output_path = module.output_path
-    frame.react_base_path = module.service.merged_output_path
+    frame.module = module
     return service_has_tool_rel(module.service, frame)
 
 

@@ -1,5 +1,4 @@
-from moonleap import (MemFun, add, extend, kebab_to_camel, render_templates,
-                      rule, tags)
+from moonleap import MemFun, add, extend, kebab_to_camel, render_templates, rule, tags
 from moonleap.verbs import has
 from moonleap_project.service import service_has_tool_rel
 from moonleap_react.nodepackage import load_node_package_config
@@ -18,7 +17,7 @@ def create_frame(term, block):
 @rule("panel", has, "picker")
 def panel_has_picker(panel, picker):
     picker.output_paths.add_source(panel)
-    picker.react_base_path = panel.react_base_path
+    picker.module = panel.module
 
 
 @extend(Picker)
