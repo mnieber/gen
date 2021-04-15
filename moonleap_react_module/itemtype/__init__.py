@@ -1,6 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
+    Prop,
     StoreOutputPaths,
     add,
     extend,
@@ -15,6 +16,7 @@ from moonleap_project.service import service_has_tool_rel
 from moonleap_react_module.store import Store
 from moonleap_react_view.router import RouterConfig
 
+from . import props
 from .resources import ItemType
 
 
@@ -44,3 +46,4 @@ def store_contains_item_type(store, item_type):
 class ExtendItemType(StoreOutputPaths):
     render = MemFun(render_templates(__file__))
     store = P.parent(Store, contains, "item-type")
+    import_path = Prop(props.import_path)
