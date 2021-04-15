@@ -38,7 +38,7 @@ def get_node_package_config(self):
         R.from_pairs,
     )(None)
 
-    for k in ("dependencies", "dependenciesDev"):
+    for k in ("dependencies", "devDependencies"):
         if result.get(k):
             result[k] = R.pipe(
                 R.always(result[k]),
