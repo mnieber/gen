@@ -9,8 +9,9 @@ from . import docker_compose_configs
 
 @rule("service")
 def service_created(service):
-    add(service, docker_compose_configs.get(service, is_dev=True))
-    add(service, docker_compose_configs.get(service, is_dev=False))
+    if service.use_default_config:
+        add(service, docker_compose_configs.get(service, is_dev=True))
+        add(service, docker_compose_configs.get(service, is_dev=False))
 
 
 @rule("service", has, "dockerfile")

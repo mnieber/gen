@@ -17,7 +17,7 @@ from .resources import Service
 
 @tags(["service"])
 def create_service(term, block):
-    service = Service(name=kebab_to_camel(term.data))
+    service = Service(name=kebab_to_camel(term.data), use_default_config=True)
     service.output_path = service.name + "/"
     return service
 

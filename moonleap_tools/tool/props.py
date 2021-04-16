@@ -35,7 +35,7 @@ def _list_of_package_names(get_pkgs, add_via=True):
                                     else ""
                                 )
                             )
-        return result
+        return sorted(result)
 
     return f
 

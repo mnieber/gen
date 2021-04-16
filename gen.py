@@ -2,6 +2,8 @@ import os
 import sys
 from argparse import ArgumentParser
 
+import moonleap_django
+
 import moonleap_behaviors
 import moonleap_dodo
 import moonleap_project
@@ -19,6 +21,7 @@ moonleap_react.install_all()
 moonleap_react_module.install_all()
 moonleap_react_view.install_all()
 moonleap_behaviors.install_all()
+moonleap_django.install_all()
 
 
 def main(gen_file):

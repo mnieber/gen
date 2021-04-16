@@ -1,7 +1,6 @@
 from moonleap import install
 
 from . import (
-    django,
     fish,
     isort,
     makefile,
@@ -20,7 +19,6 @@ from . import (
 
 
 def install_all():
-    install(django)
     install(fish)
     install(isort)
     install(makefile)
