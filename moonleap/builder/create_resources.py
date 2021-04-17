@@ -154,7 +154,7 @@ def _create_resource(term, creator_block):
     return resource
 
 
-def create_resources(blocks):
+def add_resources_to_blocks(blocks):
     for block in R.sort_by(lambda x: x.level)(blocks):
         parent_blocks = block.get_blocks(include_parents=True, include_self=False)
         child_blocks = block.get_blocks(include_children=True, include_self=False)
@@ -196,5 +196,8 @@ def create_resources(blocks):
                 ):
                     creator_block.parent_block.add_resource(resource)
 
+
+def create_resources(blocks):
+    add_resources_to_blocks(blocks)
     find_relations(blocks)
     apply_rules(blocks)

@@ -2,6 +2,7 @@ import typing as T
 
 import ramda as R
 from moonleap.parser.line import Line
+from moonleap.parser.term import Term
 
 
 class Block:
@@ -14,7 +15,11 @@ class Block:
         self.lines: T.List[Line] = []
 
     def describes(self, term):
-        return term in self.lines[0].terms
+        generic_term = Term(term.data, "x")
+        return term in self.lines[0].terms or (
+            generic_term in self.lines[0].terms
+            and [line for line in self.lines if term in line.terms]
+        )
 
     def mentions(self, term):
         return term in self.get_terms()
