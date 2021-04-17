@@ -17,4 +17,3 @@ def create_view(term, block):
 @extend(View)
 class ExtendView:
     render = MemFun(render_templates(__file__))
-    module = P.parent(Module, has, "view")

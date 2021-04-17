@@ -1,23 +1,26 @@
 import moonleap.resource.props as P
-from moonleap import extend, rule
+from moonleap import add, extend, rule
 from moonleap.verbs import has
-from moonleap_project.service import service_has_tool_rel
+from moonleap_react.component import Component
 from moonleap_react.module import Module
 from moonleap_react_module.appmodule import AppModule
-from moonleap_react_view.router.resources import Router
+from moonleap_react_view.router import RouterConfig, StoreRouterConfigs
 
 
-@rule("app:module", has, "router")
-def service_has_router(app_module, router):
-    router.output_path = app_module.output_path
-    return service_has_tool_rel(app_module.service, router)
-
-
-@extend(Router)
-class ExtendRouter:
-    module = P.parent(Module, has, "router")
+@rule("*", has, "route", fltr_subj=P.fltr_instance(Component))
+def component_has_route(component, route):
+    add(
+        component.module,
+        RouterConfig(component=component),
+        "The :component has a router config",
+    )
 
 
 @extend(AppModule)
 class ExtendAppModule:
     router = P.child(has, "router")
+
+
+@extend(Module)
+class ExtendModule(StoreRouterConfigs):
+    pass

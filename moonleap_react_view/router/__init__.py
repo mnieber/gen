@@ -1,7 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, add, extend, register_add, render_templates, tags
 from moonleap_react.nodepackage import load_node_package_config
-from moonleap_tools.tool import Tool
 
 from . import props
 from .resources import Router, RouterConfig
@@ -28,8 +27,3 @@ class ExtendRouter:
     get_route_imports = MemFun(props.get_route_imports)
     get_routes = MemFun(props.get_routes)
     render = MemFun(render_templates(__file__))
-
-
-@extend(Tool)
-class ExtendTool(StoreRouterConfigs):
-    pass

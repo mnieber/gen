@@ -10,7 +10,5 @@ class Router(Component):
 
 @dataclass
 class RouterConfig(Resource):
-    url: str
-    component_name: str
-    module_name: str
+    component: Component
     wraps: bool = False

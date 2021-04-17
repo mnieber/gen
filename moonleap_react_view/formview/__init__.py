@@ -1,19 +1,13 @@
-import moonleap.resource.props as P
 from moonleap import (
     MemFun,
-    add,
     create_forward,
     extend,
     kebab_to_camel,
     render_templates,
     rule,
     tags,
-    title0,
 )
 from moonleap.verbs import has
-from moonleap_project.service import service_has_tool_rel
-from moonleap_react.module import Module
-from moonleap_react_view.router import RouterConfig
 
 from .resources import FormView
 
@@ -26,26 +20,10 @@ def create_form_view(term, block):
 
 
 @rule("module", has, "form-view")
-def add_forms_view(module, form_view):
-    add(
-        form_view,
-        RouterConfig(
-            url=f"/{module.name}/:{form_view.item_name}Id/edit",
-            component_name=title0(form_view.name),
-            module_name=module.name,
-        ),
-        "The :form-view has a router config",
-    )
+def service_has_forms_module(module, form_view):
     return create_forward(module.service, has, "forms:module")
-
-
-@rule("module", has, "form-view")
-def module_has_form_view(module, form_view):
-    form_view.output_path = module.output_path
-    return service_has_tool_rel(module.service, form_view)
 
 
 @extend(FormView)
 class ExtendFormView:
     render = MemFun(render_templates(__file__))
-    module = P.parent(Module, has, "form-view")

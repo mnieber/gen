@@ -15,9 +15,7 @@ from . import (
     picker,
     router,
     router_and_module,
-    router_and_service,
     view,
-    view_and_module,
 )
 
 
@@ -31,9 +29,7 @@ def install_all():
     install(picker)
     install(router)
     install(router_and_module)
-    install(router_and_service)
     install(view)
-    install(view_and_module)
 
 
 add_filter("plural", lambda x: plural(x))

@@ -10,6 +10,7 @@ from moonleap_tools.tool import Tool
 @dataclass
 class Component(Tool):
     name: str
+    url: T.Optional[str] = field(init=False)
     module: Module = field(init=False, compare=False)
     dependencies: [T.Any] = field(
         default_factory=lambda: list(), init=False, repr=False
