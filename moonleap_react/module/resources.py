@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from moonleap_tools.tool import Tool
+from moonleap import Resource
 
 
 @dataclass
-class Module(Tool):
+class Module(Resource):
     name: str

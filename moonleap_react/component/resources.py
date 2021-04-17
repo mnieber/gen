@@ -1,16 +1,15 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap import title0
+from moonleap import Resource, title0
 from moonleap.resources.outputpath.props import merged_output_path
 from moonleap_react.module import Module
-from moonleap_tools.tool import Tool
 
 
 @dataclass
-class Component(Tool):
+class Component(Resource):
     name: str
-    url: T.Optional[str] = field(init=False)
+    url: T.Optional[str] = field(init=False, compare=False)
     module: Module = field(init=False, compare=False)
     dependencies: [T.Any] = field(
         default_factory=lambda: list(), init=False, repr=False
