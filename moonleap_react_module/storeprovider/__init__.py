@@ -1,7 +1,15 @@
 from dataclasses import dataclass
 
 import moonleap.resource.props as P
-from moonleap import MemFun, StoreOutputPaths, extend, render_templates, rule
+from moonleap import (
+    MemFun,
+    StoreOutputPaths,
+    create_forward,
+    extend,
+    render_templates,
+    rule,
+    tags,
+)
 from moonleap.verbs import has
 from moonleap_react.component import Component
 from moonleap_react.module import module_has_component_rel
@@ -13,11 +21,15 @@ class StoreProvider(Component):
     pass
 
 
+@tags(["store-provider"])
+def create_store_provider(block, term):
+    store_provider = StoreProvider(name="StoreProvider")
+    return store_provider
+
+
 @rule("app:module")
 def app_module_created(app_module):
-    store_provider = StoreProvider(name="StoreProvider")
-    app_module.store_provider = store_provider
-    return module_has_component_rel(app_module, store_provider)
+    return create_forward(app_module, has, ":store-provider")
 
 
 @extend(AppModule)

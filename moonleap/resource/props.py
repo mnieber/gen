@@ -23,18 +23,8 @@ def child(verb, term, readonly=False, is_doc=True):
 
         return None if not children else children[0]
 
-    def set_child(self, child):
-        children = slctr.select_from(self)
-        if len(children) > 0:
-            raise Exception("Already has a child")
-
-        child.block = self.block
-        child.term = self.term
-        self.add_relation(rel, child)
-
     return Prop(
         get_value=get_child,
-        set_value=None if readonly else set_child,
         doc_as_rel=rel if is_doc else None,
     )
 
