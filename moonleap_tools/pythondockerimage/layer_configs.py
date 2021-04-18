@@ -8,7 +8,7 @@ def get():
                 aliases=dict(install=r"install-packages --pip-requirements default"),
                 decorators=dict(docker=["install-packages"]),
             ),
-            SERVER=dict(pip_requirements=r"${/SERVER/src_dir}/requirements.dev.txt"),
+            PYTHON=dict(pip_requirements=r"${/SERVER/src_dir}/requirements.dev.txt"),
         )
 
     return LayerConfig(lambda x: inner())

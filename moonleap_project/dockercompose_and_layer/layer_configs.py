@@ -9,7 +9,7 @@ def get(docker_compose):
         return {
             "DOCKER_COMPOSE"
             + suffix.upper(): {
-                "name": name,
+                "compose_project_name": name,
                 "cwd": r"${/ROOT/src_dir}",
                 "files": [docker_compose.name + ".yml"],
             },
