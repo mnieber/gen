@@ -1,10 +1,55 @@
-{% if not res.module.store.item_types %}
+{% trim_newlines keep=1 %}
+{% magic_with item_type.name as yellowTulip %}
+{% magic_with item_list.item_name as redRose %}
+{% if not res.module.store.item_types  %}
 export {}
 {% endif %}
-{% for dataloader in res.dataloaders %}
-{% if loop.first %}
 import { always, flow } from 'lodash/fp';
 import { doQuery } from 'src/utils/graphqlClient';
-{% endif %}
-{{ dataloader.body }}
+
+{% for item_type in res.module.store.items %}
+export function getYellowTulip() {
+  const query = `query queryYellowTulip {
+    id
+    name
+  }`;
+  const vars = {};
+  return doQuery(query, vars).then((response) => {
+    return {
+      yellowTulip: flow(
+        always(response.yellowTulip),
+      )(),
+    };
+  });
+}
+
+export function saveYellowTulip(values: any) {
+    console.log("TODO: save", values);
+}
 {% endfor %}
+
+{% for item_list in res.module.store.item_lists %}
+export function getRedRoses() {
+  const query = `query queryRedRoses {
+    redRoses {
+      id
+      name
+    }
+  }`;
+  const vars = {};
+  return doQuery(query, vars).then((response) => {
+    return {
+      redRoses: flow(
+        always(response.redRoses),
+      )(),
+    };
+  });
+}
+
+export function saveRedRose(values: any) {
+    console.log("TODO: save", values);
+}
+{% endfor %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_trim_newlines %}

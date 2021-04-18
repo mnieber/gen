@@ -18,8 +18,12 @@ def create_store(term, block):
 
 @rule("module", has, "store")
 def create_utils_module(module, store):
-    module.service.utils_module.add_template_dir(__file__, "templates_utils")
     return create_forward(module.service, has, "utils:module")
+
+
+@rule("module", has, "store")
+def add_utils_templates(module, store):
+    module.service.utils_module.add_template_dir(__file__, "templates_utils")
 
 
 @extend(Module)

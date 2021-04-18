@@ -1,31 +1,34 @@
-{% magic_with item_type.name as yellowTulip %}
+{% trim_newlines keep=1 %}
+{% magic_with item_list.item_name as yellowTulip %}
 {% magic_with item.name as blueDaisy %}
-{% magic_with dataloader.functionname as redRose %}
 {% magic_with res.module.name as gardenFlowers %}
 import { action, observable, makeObservable } from 'mobx';
 import { forEach } from 'lodash/fp';
 import { RST, resetRS, updateRes } from 'src/utils/RST';
 import * as gardenFlowersApi from 'src/gardenFlowers/api';
 
-{% for item_type in res.item_types %}
+{% for item in res.items %}
+import { BlueDaisyT } from 'src/gardenFlowers/types';
+{% endfor %}
+{% for item_list in res.item_lists %}
 import { YellowTulipT, YellowTulipByIdT } from 'src/gardenFlowers/types';
 {% endfor %}
 
 export class {{ res.name }} {
-
-{% for item_type in res.item_types %}
+{% for item_list in res.item_lists %}
   @observable yellowTulipById: YellowTulipByIdT = {};
   @observable yellowTulipByIdRS: RST = resetRS();
 {% endfor %}
 {% for item in res.items %}
   @observable blueDaisy?: BlueDaisyT = undefined;
+  @observable blueDaisyRS: RST = resetRS();
 {% endfor %}
 
   constructor() {
     makeObservable(this);
   }
 
-{% for item_type in res.item_types %}
+{% for item_list in res.item_lists %}
   @action addYellowTulips = (yellowTulips: YellowTulipT[]) => {
     forEach((yellowTulip: YellowTulipT) => {
       this.yellowTulipById[yellowTulip.id] = yellowTulip;
@@ -33,9 +36,31 @@ export class {{ res.name }} {
   }
 {% endfor %}
 
-{% for dataloader in res.dataloaders %}
-  @action loadRedRose = () => {
-{% for item in dataloader.items %}
+{% for item in res.items %}
+  @action loadBlueDaisy = () => {
+    updateRes(
+      this,
+      'blueDaisyRS',
+      () => {
+        return gardenFlowersApi.getBlueDaisy();
+      },
+      (response: any) => {
+        this.blueDaisy = response.blueDaisy;
+      },
+      (message: any) => {
+        console.log(message);
+        return 'Oops, there was an error getting the blueDaisy data';
+      }
+    );
+  }
+
+  @action saveBlueDaisy = (values: any) => {
+    gardenFlowersApi.saveBlueDaisy(values);
+  }
+{% endfor %}
+
+{% for item_list in res.item_lists %}
+  @action loadYellowTulips = () => {
     updateRes(
       this,
       'yellowTulipByIdRS',
@@ -52,7 +77,6 @@ export class {{ res.name }} {
     );
   }
 
-
   @action saveYellowTulip = (values: any) => {
     gardenFlowersApi.saveYellowTulip(values);
   }
@@ -62,4 +86,4 @@ export class {{ res.name }} {
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
-{% end_magic_with %}
+{% end_trim_newlines %}

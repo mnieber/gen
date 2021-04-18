@@ -6,7 +6,6 @@ from . import (
     dataloader,
     flags,
     graphqlapi,
-    graphqlapi_and_dataloader,
     item,
     itemlist,
     itemtype,
@@ -22,7 +21,6 @@ def install_all():
     install(dataloader)
     install(flags)
     install(graphqlapi)
-    install(graphqlapi_and_dataloader)
     install(item)
     install(itemlist)
     install(itemtype)
