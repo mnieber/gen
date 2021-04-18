@@ -1,8 +1,8 @@
 import moonleap.resource.props as P
-from moonleap import add, extend, rule
+from moonleap import add, create_forward, extend, rule
 from moonleap.verbs import has
 from moonleap_project.dockercompose import StoreDockerComposeConfigs
-from moonleap_project.service import Service, service_has_tool_rel
+from moonleap_project.service import Service
 
 from . import docker_compose_configs
 
@@ -14,14 +14,9 @@ def service_created(service):
         add(service, docker_compose_configs.get(service, is_dev=False))
 
 
-@rule("service", has, "dockerfile")
-def service_has_dockerfile(service, dockerfile):
-    return service_has_tool_rel(service, dockerfile)
-
-
 @rule("dockerfile", has, "docker-image")
 def dockerfile_use_docker_image(dockerfile, docker_image):
-    return service_has_tool_rel(dockerfile.service, docker_image)
+    return create_forward(dockerfile.service, has, docker_image)
 
 
 @extend(Service)

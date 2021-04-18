@@ -1,7 +1,5 @@
 from moonleap import (
-    Forward,
     MemFun,
-    Rel,
     create_forward,
     extend,
     kebab_to_camel,
@@ -29,7 +27,7 @@ def create_container(list_view, behavior):
 
 @rule("list-view", has, "behavior")
 def list_view_has_behavior(list_view, behavior):
-    return Forward(Rel(list_view.module.term, "has", behavior.term))
+    return create_forward(list_view.module.term, "has", behavior.term)
 
 
 @extend(ListView)

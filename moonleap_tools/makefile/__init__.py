@@ -11,7 +11,7 @@ from moonleap import (
 )
 from moonleap.resource.rel import Rel
 from moonleap.verbs import has, runs
-from moonleap_project.service import Service, service_has_tool_rel
+from moonleap_project.service import Service
 from moonleap_tools.pkgdependency import PkgDependency
 from moonleap_tools.tool import Tool
 
@@ -36,11 +36,6 @@ def create_makefile(term, block):
     add(makefile, layer_configs.get())
 
     return makefile
-
-
-@rule("service", has, "makefile")
-def service_has_makefile(service, makefile):
-    return service_has_tool_rel(service, makefile)
 
 
 @rule("makefile", runs, "*", fltr_obj=P.fltr_instance(Tool))

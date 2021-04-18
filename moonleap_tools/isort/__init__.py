@@ -2,7 +2,6 @@ from dataclasses import dataclass
 
 from moonleap import add, rule, tags
 from moonleap.verbs import uses
-from moonleap_project.service import service_has_tool_rel
 from moonleap_tools.pipdependency import PipDependency
 from moonleap_tools.setupfile import SetupFileConfig
 from moonleap_tools.tool import Tool
@@ -21,11 +20,6 @@ setup_file_config = dict(
 @dataclass
 class ISort(Tool):
     pass
-
-
-@rule("service", uses, "isort")
-def service_has_isort(service, isort):
-    return service_has_tool_rel(service, isort)
 
 
 @tags(["isort"])

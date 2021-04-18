@@ -10,7 +10,8 @@ from moonleap import (
     word_to_term,
 )
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
-from moonleap.verbs import has, uses
+from moonleap.verbs import has, runs, uses
+from moonleap_tools.tool import Tool
 
 from .resources import Service
 
@@ -27,7 +28,8 @@ def service_uses_port(service, port):
     service.port = port.term.data
 
 
-def service_has_tool_rel(service, tool):
+@rule("service", uses + runs + has, "*", fltr_obj=P.fltr_instance(Tool))
+def service_has_tool(service, tool):
     return Forward(
         rel=Rel(service.term, has, word_to_term(":tool")),
         subj_res=service,

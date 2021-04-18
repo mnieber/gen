@@ -1,7 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, add, extend, render_templates, rule, tags
 from moonleap.verbs import has
-from moonleap_project.service import Service, service_has_tool_rel
+from moonleap_project.service import Service
 from moonleap_react.nodepackage import load_node_package_config
 
 from . import props
@@ -13,11 +13,6 @@ def create_vandelay(term, block):
     vandelay = Vandelay(type=term.data)
     vandelay.output_path = ".vandelay"
     return vandelay
-
-
-@rule("service", has, "vandelay")
-def service_has_vandelay(service, vandelay):
-    return service_has_tool_rel(service, vandelay)
 
 
 def get_template_filename(vandelay):

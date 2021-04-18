@@ -27,7 +27,8 @@ def create_module(term, block):
 @rule("service", has, "module")
 def service_has_module(service, module):
     module.output_paths.add_source(service)
-    service.cra.node_package_configs.add_source(module)
+    if hasattr(service, "cra"):
+        service.cra.node_package_configs.add_source(module)
 
 
 def module_has_component_rel(module, component):

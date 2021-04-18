@@ -2,7 +2,6 @@ from dataclasses import dataclass
 
 from moonleap import add, rule, tags
 from moonleap.verbs import uses
-from moonleap_project.service import service_has_tool_rel
 from moonleap_tools.pkgdependency import PkgDependency
 from moonleap_tools.tool import Tool
 
@@ -17,7 +16,6 @@ class Fish(Tool):
 @rule("service", uses, "fish")
 def service_has_fish(service, fish):
     service.shell = "fish"
-    return service_has_tool_rel(service, fish)
 
 
 @tags(["fish"])
