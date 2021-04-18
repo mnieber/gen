@@ -20,9 +20,5 @@ class Component(Resource):
         return f"<{title0(self.name)}/>"
 
     @property
-    def react_base_path(self):
-        return self.module.service.merged_output_path
-
-    @property
     def import_path(self):
-        return self.merged_output_path.relative_to(self.react_base_path)
+        return self.merged_output_path

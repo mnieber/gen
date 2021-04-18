@@ -12,14 +12,13 @@ class Antd(Tool):
 @tags(["antd"])
 def create_antd(term, block):
     antd = Antd()
+    antd.output_path = "src"
     add(antd, load_node_package_config(__file__))
     return antd
 
 
 @rule("service", has, "antd")
 def service_with_antd(service, antd):
-    antd.output_path = "src"
-    antd.output_paths.add_source(service)
     return service_has_tool_rel(service, antd)
 
 

@@ -1,11 +1,10 @@
 from dataclasses import dataclass
 
-from moonleap import Resource
 from moonleap_tools.tool import Tool
 
 
 @dataclass
-class Dockerfile(Resource):
+class Dockerfile(Tool):
     is_dev: bool = False
     image_name: str = None
 

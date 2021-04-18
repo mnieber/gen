@@ -17,7 +17,6 @@ def create_vandelay(term, block):
 
 @rule("service", has, "vandelay")
 def service_has_vandelay(service, vandelay):
-    vandelay.output_paths.add_source(service)
     return service_has_tool_rel(service, vandelay)
 
 

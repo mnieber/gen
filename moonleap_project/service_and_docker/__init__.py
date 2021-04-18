@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import add, add_source, extend, rule
+from moonleap import add, extend, rule
 from moonleap.verbs import has
 from moonleap_project.dockercompose import StoreDockerComposeConfigs
 from moonleap_project.service import Service, service_has_tool_rel
@@ -16,12 +16,7 @@ def service_created(service):
 
 @rule("service", has, "dockerfile")
 def service_has_dockerfile(service, dockerfile):
-    dockerfile.output_paths.add_source(service)
-    add_source(
-        [service, "docker_compose_configs"],
-        dockerfile,
-        "The :service receives docker compose configs from a :dockerfile",
-    )
+    return service_has_tool_rel(service, dockerfile)
 
 
 @rule("dockerfile", has, "docker-image")

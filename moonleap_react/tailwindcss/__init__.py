@@ -18,7 +18,6 @@ def create_tailwind_css(term, block):
 
 @rule("service", has, "tailwind-css")
 def service_has_tailwind_css(service, tailwind_css):
-    tailwind_css.output_paths.add_source(service)
     return service_has_tool_rel(service, tailwind_css)
 
 

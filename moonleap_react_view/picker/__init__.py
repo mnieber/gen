@@ -9,7 +9,6 @@ from moonleap import (
     tags,
 )
 from moonleap.verbs import has
-from moonleap_project.service import service_has_tool_rel
 from moonleap_react.nodepackage import load_node_package_config
 
 from . import props

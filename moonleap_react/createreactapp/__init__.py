@@ -1,6 +1,7 @@
+import moonleap.resource.props as P
 from moonleap import MemFun, add, extend, render_templates, rule, tags
-from moonleap.verbs import uses
-from moonleap_project.service import service_has_tool_rel
+from moonleap.verbs import has, uses
+from moonleap_project.service import Service, service_has_tool_rel
 from moonleap_react.nodepackage import load_node_package_config
 from moonleap_tools.tool import Tool
 
@@ -27,3 +28,8 @@ def service_uses_cra(service, cra):
 @extend(CreateReactApp)
 class ExtendCreateReactApp:
     render = MemFun(render_templates(__file__))
+
+
+@extend(Service)
+class ExtendService:
+    cra = P.child(has, "create-react-app")

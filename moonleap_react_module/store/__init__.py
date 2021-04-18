@@ -23,7 +23,6 @@ def create_utils_module(module, store):
 
 @rule("module", has, "store")
 def module_has_store(module, store):
-    store.output_paths.add_source(module)
     module.service.utils_module.add_template_dir(__file__, "templates_utils")
 
 
@@ -34,7 +33,6 @@ class ExtendModule:
 
 @extend(Store)
 class ExtendStore(StoreTemplateDirs):
-    module = P.parent(Module, has, "store")
     policy_lines = Prop(props.policy_lines)
     items = P.children(contains, "item")
     item_lists = P.children(contains, "item-list")

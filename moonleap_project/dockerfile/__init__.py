@@ -1,17 +1,7 @@
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    StoreOutputPaths,
-    add_source,
-    extend,
-    render_templates,
-    rule,
-    tags,
-)
+from moonleap import MemFun, add_source, extend, render_templates, rule, tags
 from moonleap.verbs import has
-from moonleap_project.dockercompose import StoreDockerComposeConfigs
 from moonleap_project.service import Service
-from moonleap_tools.tool_extensions import ToolExtensions
 
 from .resources import Dockerfile, DockerImage
 
@@ -42,13 +32,8 @@ def get_template_filename(dockerfile):
     return "templates/Dockerfile" + (".dev" if dockerfile.is_dev else "") + ".j2"
 
 
-@extend(DockerImage)
-class ExtendDockerImage(ToolExtensions):
-    pass
-
-
 @extend(Dockerfile)
-class ExtendDockerfile(StoreOutputPaths, StoreDockerComposeConfigs):
+class ExtendDockerfile:
     service = P.parent(Service, has, "dockerfile")
     render = MemFun(render_templates(__file__, get_template_filename))
     docker_image = P.child(has, "docker-image")

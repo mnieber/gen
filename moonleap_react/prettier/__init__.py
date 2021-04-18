@@ -18,7 +18,6 @@ def create_prettier(term, block):
 
 @rule("service", has, "prettier")
 def service_has_prettier(service, prettier):
-    prettier.output_paths.add_source(service)
     return service_has_tool_rel(service, prettier)
 
 

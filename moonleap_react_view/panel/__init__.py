@@ -10,7 +10,6 @@ from moonleap import (
 )
 from moonleap.resources.outputpath.props import output_path
 from moonleap.verbs import has
-from moonleap_project.service import service_has_tool_rel
 from moonleap_react_view.frame.resources import Frame
 
 from .resources import Panel

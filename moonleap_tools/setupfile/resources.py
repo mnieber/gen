@@ -2,10 +2,11 @@ import typing as T
 from dataclasses import dataclass
 
 from moonleap import Resource
+from moonleap_tools.tool import Tool
 
 
 @dataclass
-class SetupFile(Resource):
+class SetupFile(Tool):
     pass
 
 

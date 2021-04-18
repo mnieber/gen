@@ -12,7 +12,6 @@ from moonleap import (
     title0,
 )
 from moonleap.verbs import contains
-from moonleap_project.service import service_has_tool_rel
 from moonleap_react_module.store import Store
 from moonleap_react_view.router import RouterConfig
 
@@ -30,16 +29,14 @@ def create_item_type(term, block):
 def store_contains_item_type(store, item_type):
     if not item_type.output_path:
         item_type.output_path = store.module.output_path
-        add(
-            item_type,
-            RouterConfig(
-                url=f"/{store.module.name}",
-                component_name=f"Load{title0(store.module.name)}Effect",
-                module_name=store.module.name,
-                wraps=True,
-            ),
-        )
-    return service_has_tool_rel(store.module.service, item_type)
+        # TODO
+        # add(
+        #     item_type,
+        #     RouterConfig(
+        #         component=loader_effect,
+        #         wraps=True,
+        #     ),
+        # )
 
 
 @extend(ItemType)
