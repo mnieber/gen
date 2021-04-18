@@ -5,4 +5,5 @@ has = contains + uses
 is_created_as = "is-created-as"
 runs = ("run", "runs", "running")
 with_ = "with"
+loads = "loads"
 shows = ("shows", "displays")

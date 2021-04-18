@@ -57,6 +57,11 @@ class Forward:
     obj_res: T.Any = None
 
 
+@dataclass
+class Forwards:
+    forwards: [Forward]
+
+
 def _to_term(x: T.Union[object, Term, str]):
     if isinstance(x, str):
         return word_to_term(x)

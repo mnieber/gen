@@ -1,5 +1,6 @@
 {% magic_with item_type.name as yellowTulip %}
 {% magic_with item.name as blueDaisy %}
+{% magic_with dataloader.functionname as redRose %}
 {% magic_with res.module.name as gardenFlowers %}
 import { action, observable, makeObservable } from 'mobx';
 import { forEach } from 'lodash/fp';
@@ -25,7 +26,16 @@ export class {{ res.name }} {
   }
 
 {% for item_type in res.item_types %}
-  @action loadYellowTulips = () => {
+  @action addYellowTulips = (yellowTulips: YellowTulipT[]) => {
+    forEach((yellowTulip: YellowTulipT) => {
+      this.yellowTulipById[yellowTulip.id] = yellowTulip;
+    }, yellowTulips);
+  }
+{% endfor %}
+
+{% for dataloader in res.dataloaders %}
+  @action loadRedRose = () => {
+{% for item in dataloader.items %}
     updateRes(
       this,
       'yellowTulipByIdRS',
@@ -42,11 +52,6 @@ export class {{ res.name }} {
     );
   }
 
-  @action addYellowTulips = (yellowTulips: YellowTulipT[]) => {
-    forEach((yellowTulip: YellowTulipT) => {
-      this.yellowTulipById[yellowTulip.id] = yellowTulip;
-    }, yellowTulips);
-  }
 
   @action saveYellowTulip = (values: any) => {
     gardenFlowersApi.saveYellowTulip(values);
@@ -54,6 +59,7 @@ export class {{ res.name }} {
 {% endfor %}
 
 }
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

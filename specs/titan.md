@@ -39,7 +39,7 @@ The donations:module /has a donations:store that /stores the donation:item.
 
 The donors:module /has a donors:store that /stores the donor:item-list.
 :It /has a graphql:api.
-:It /has a donor:list-view that /has selection:behavior.
+:It /has a donor:list-view that /has a selection:behavior.
 :It /has a donor:item-view and a welcome-donor:view.
 
 ## The backend:service

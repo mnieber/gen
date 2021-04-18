@@ -1,31 +1,10 @@
 {% if not res.module.store.item_types %}
 export {}
 {% endif %}
-{% for item_type in res.module.store.item_types %}
-{% magic_with item_type.name as yellowTulip %}
+{% for dataloader in res.dataloaders %}
 {% if loop.first %}
 import { always, flow } from 'lodash/fp';
 import { doQuery } from 'src/utils/graphqlClient';
 {% endif %}
-export function getYellowTulips() {
-  const query = `query queryYellowTulips {
-    yellowTulips {
-      id
-      name
-    }
-  }`;
-  const vars = {};
-  return doQuery(query, vars).then((response) => {
-    return {
-      yellowTulips: flow(
-        always(response.yellowTulips),
-      )(),
-    };
-  });
-}
-
-export function saveYellowTulip(values: any) {
-    console.log("TODO: save", values);
-}
-{% end_magic_with %}
+{{ dataloader.body }}
 {% endfor %}

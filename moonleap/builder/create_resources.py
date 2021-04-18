@@ -2,7 +2,7 @@ import ramda as R
 from moonleap.builder.config import config
 from moonleap.parser.term import is_it_term, word_to_term
 from moonleap.resource import Resource
-from moonleap.resource.rel import Forward, Rel
+from moonleap.resource.rel import Forward, Forwards, Rel
 from moonleap.verbs import is_created_as
 
 
@@ -83,20 +83,23 @@ def _find_or_create_resource(block, term):
     return resource
 
 
-def _process_forward(forward, block):
-    new_rel = forward.rel
-    new_parent_resource = forward.subj_res or _find_or_create_resource(
-        block, new_rel.subj
-    )
-    new_child_resource = forward.obj_res or _find_or_create_resource(block, new_rel.obj)
-
-    if not new_parent_resource.has_relation(new_rel, new_child_resource):
-        new_parent_resource.add_relation(new_rel, new_child_resource)
-        _apply_rules(
-            new_rel,
-            new_parent_resource,
-            new_child_resource,
+def _process_forwards(forwards: Forwards, block):
+    for forward in forwards:
+        new_rel = forward.rel
+        new_parent_resource = forward.subj_res or _find_or_create_resource(
+            block, new_rel.subj
         )
+        new_child_resource = forward.obj_res or _find_or_create_resource(
+            block, new_rel.obj
+        )
+
+        if not new_parent_resource.has_relation(new_rel, new_child_resource):
+            new_parent_resource.add_relation(new_rel, new_child_resource)
+            _apply_rules(
+                new_rel,
+                new_parent_resource,
+                new_child_resource,
+            )
 
 
 def _apply_rules(rel, parent_resource, child_resource):
@@ -120,7 +123,9 @@ def _apply_rules(rel, parent_resource, child_resource):
         result = rule.f(parent_resource, child_resource)
 
         if isinstance(result, Forward):
-            _process_forward(result, block)
+            _process_forwards([result], block)
+        elif isinstance(result, Forwards):
+            _process_forwards(result.forwards, block)
 
 
 def apply_rules(blocks):
@@ -133,7 +138,9 @@ def apply_rules(blocks):
         for rule in config.get_rules(is_created_as_rel):
             result = rule.f(parent_resource)
             if isinstance(result, Forward):
-                _process_forward(result, parent_resource.block)
+                _process_forwards([result], parent_resource.block)
+            elif isinstance(result, Forwards):
+                _process_forwards(result.forwards, parent_resource.block)
 
         for rel, child_resource in parent_resource.get_relations():
             _apply_rules(rel, parent_resource, child_resource)
