@@ -7,7 +7,6 @@ from moonleap import (
     rule,
     tags,
 )
-from moonleap.resource.rel import Forwards
 from moonleap.verbs import has
 
 from .resources import ListView
@@ -23,12 +22,10 @@ def create_list_view(term, block):
 @rule("list-view", has, "behavior")
 def create_container(list_view, behavior):
     module = list_view.module
-    return Forwards(
-        [
-            create_forward(module, has, f"{module.name}:container"),
-            create_forward(list_view.module, "has", behavior),
-        ]
-    )
+    return [
+        create_forward(module, has, f"{module.name}:container"),
+        create_forward(list_view.module, "has", behavior),
+    ]
 
 
 @extend(ListView)

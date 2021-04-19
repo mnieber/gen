@@ -2,7 +2,7 @@ import ramda as R
 from moonleap.builder.config import config
 from moonleap.parser.term import is_it_term, word_to_term
 from moonleap.resource import Resource
-from moonleap.resource.rel import Forward, Forwards, Rel
+from moonleap.resource.rel import Forward, Rel
 from moonleap.verbs import is_created_as
 
 
@@ -83,7 +83,7 @@ def _find_or_create_resource(block, term):
     return resource
 
 
-def _process_forwards(forwards: Forwards, block):
+def _process_forwards(forwards: [Forward], block):
     for forward in forwards:
         new_rel = forward.rel
         new_parent_resource = forward.subj_res or _find_or_create_resource(
@@ -100,6 +100,16 @@ def _process_forwards(forwards: Forwards, block):
                 new_parent_resource,
                 new_child_resource,
             )
+
+
+def _to_list_of_forward(x, rule):
+    result = x if (isinstance(x, list) or isinstance(x, tuple)) else [x]
+    for forward in result:
+        if not isinstance(forward, Forward):
+            raise Exception(
+                f"A rule ({rule}) should either return a Forward or a list of Forward"
+            )
+    return result
 
 
 def _apply_rules(rel, parent_resource, child_resource):
@@ -121,11 +131,8 @@ def _apply_rules(rel, parent_resource, child_resource):
             continue
 
         result = rule.f(parent_resource, child_resource)
-
-        if isinstance(result, Forward):
-            _process_forwards([result], block)
-        elif isinstance(result, Forwards):
-            _process_forwards(result.forwards, block)
+        if result:
+            _process_forwards(_to_list_of_forward(result, rule), block)
 
 
 def apply_rules(blocks):
@@ -137,10 +144,10 @@ def apply_rules(blocks):
         )
         for rule in config.get_rules(is_created_as_rel):
             result = rule.f(parent_resource)
-            if isinstance(result, Forward):
-                _process_forwards([result], parent_resource.block)
-            elif isinstance(result, Forwards):
-                _process_forwards(result.forwards, parent_resource.block)
+            if result:
+                _process_forwards(
+                    _to_list_of_forward(result, rule), parent_resource.block
+                )
 
         for rel, child_resource in parent_resource.get_relations():
             _apply_rules(rel, parent_resource, child_resource)
