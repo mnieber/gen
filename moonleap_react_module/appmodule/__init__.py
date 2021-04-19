@@ -1,16 +1,6 @@
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    Prop,
-    add,
-    create_forward,
-    extend,
-    kebab_to_camel,
-    rule,
-    tags,
-)
+from moonleap import MemFun, add, create_forward, extend, kebab_to_camel, rule, tags
 from moonleap.verbs import has
-from moonleap_project.service import Service
 from moonleap_react.nodepackage import load_node_package_config
 from moonleap_react_module.flags import StoreFlags
 
@@ -35,13 +25,16 @@ def service_has_module(service, module):
         return create_forward(service.app_module, has, module)
 
 
-@extend(Service)
-class ExtendService:
-    app_module = P.child(has, "app:module")
+def meta():
+    from moonleap_project.service import Service
 
+    @extend(Service)
+    class ExtendService:
+        app_module = P.child(has, "app:module")
 
-@extend(AppModule)
-class ExtendAppModule(StoreFlags):
-    css_import_lines = Prop(props.css_import_lines)
-    get_flags = MemFun(props.get_flags)
-    submodules = P.tree(has, "module")
+    @extend(AppModule)
+    class ExtendAppModule(StoreFlags):
+        get_flags = MemFun(props.get_flags)
+        submodules = P.tree(has, "module")
+
+    return [ExtendService, ExtendAppModule]

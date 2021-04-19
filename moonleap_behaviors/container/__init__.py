@@ -1,4 +1,7 @@
-from moonleap import MemFun, extend, kebab_to_camel, render_templates, tags
+import moonleap.resource.props as P
+from moonleap import MemFun, extend, kebab_to_camel, render_templates, rule, tags
+from moonleap.verbs import has
+from moonleap_react.module import Module
 
 from .resources import Container
 
@@ -11,6 +14,16 @@ def create_container(term, block):
     return container
 
 
+@rule("module", has, "container")
+def module_has_container(module, container):
+    container.output_paths.add_source(module)
+
+
 @extend(Container)
 class ExtendContainer:
     render = MemFun(render_templates(__file__))
+
+
+@extend(Module)
+class ExtendModule:
+    container = P.child(has, "container")

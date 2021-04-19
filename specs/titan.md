@@ -25,13 +25,17 @@ The frontend:service /has a :dockerfile and a dev:dockerfile that /use the node:
 
 The frontend:service /has a :node-package.
 :It /uses :create-react-app, :tailwind-css, :prettier, js:vandelay and :antd.
-:It /has an app:module that /has a :router and an app:store.
-:It /has a donations:module and a donors:module.
+:It /has an app:module, donations:module and a donors:module.
 :It /uses a :mock-graphql-server.
+
+#### The app:module (app:x)
+
+The app:module /defines an app:frame that /has a top:panel.
+:It /has a :router and an app:store.
 
 #### The donations:module
 
-The donations:module /has a donations:store that /stores the donation:item.
+The donations:module /has a donations:store that /stores the donation:item-list.
 :It /has a graphql:api.
 :It /has a donation:form-view, cancel-donation:view and a thank-you:view.
 

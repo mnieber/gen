@@ -1,77 +1,120 @@
 import os
+import uuid
+from dataclasses import dataclass, field
 
 import ramda as R
 from moonleap.utils.case import title0
+from moonleap_react_view.router.resources import RouterConfig, prepend_router_configs
+from slugify import slugify
+
+
+def group_by(get_key, xs):
+    acc = []
+    for x in xs:
+        key = get_key(x)
+        group = R.find(lambda x: x[0] is key, acc)
+        if not group:
+            group = [key, []]
+            acc.append(group)
+        group[1].append(x)
+    return acc
 
 
 def get_route_imports(self):
-    router_configs = self.module.router_configs.merged
-    imports_by_module_name = R.pipe(
-        R.always(router_configs),
-        R.group_by(lambda x: x.module.name),
-    )(None)
+    components = []
+    for module in self.module.service.modules:
+        for component in module.routed_components:
+            for router_config in component.create_router_configs():
+                if router_config.component not in components:
+                    components.append(router_config.component)
 
     result = []
-    for module_name, router_configs in imports_by_module_name.items():
-        components = ", ".join(R.map(lambda x: x.component.name)(router_configs))
-        result.append(f"import {{ {components} }} from 'src/{module_name}/components'")
+    imports_by_module_name = R.group_by(lambda x: x.module.name, components)
+    for module_name, components in imports_by_module_name.items():
+        component_names = ", ".join(R.map(lambda x: x.name)(components))
+        result.append(
+            f"import {{ {component_names} }} from 'src/{module_name}/components'"
+        )
 
     return os.linesep.join(result)
 
 
-def get_parent_url(router_configs, url):
-    result = None
-    for router_config in router_configs:
-        component = router_config.component
-        if url.startswith(component.url):
-            if result is None or len(result) < len(component.url):
-                if url != component.url:
-                    result = component.url
-    return result
+def _append(x, indent, result):
+    result.append(" " * (indent) + x)
 
 
-def get_url_to_parent_url(router_configs):
-    result = {}
-    for router_config in router_configs:
-        component = router_config.component
-        parent_url = get_parent_url(router_configs, component.url)
-        if parent_url:
-            result[component.url] = parent_url
-    return result
+@dataclass
+class Route:
+    configs: [RouterConfig]
+
+    @property
+    def components(self):
+        return [x.component for x in self.configs]
+
+    id: str = field(default_factory=lambda: uuid.uuid4().hex, init=False)
 
 
 def get_routes(self):
-    router_configs = self.module.router_configs.merged
-    url_to_parent_url = get_url_to_parent_url(router_configs)
+    routes = []
+
+    for module in self.module.service.modules:
+        for component in module.routed_components:
+            router_configs = component.create_router_configs()
+            if router_configs:
+                add_route(router_configs, routes)
+
     result = []
+    add_result(routes, "", 0, 8, result)
 
-    def get_child_router_configs(router_config):
-        return [
-            x
-            for x in router_configs
-            if url_to_parent_url.get(x.component.url) == router_config.component.url
-        ]
+    result_str = os.linesep.join(result)
+    return result_str
 
-    def add_routes(router_config, indent=0):
-        component = router_config.component
-        result.append(" " * indent + f'<Route path="{component.url}">')
-        result.append(" " * (indent + 2) + f"<{title0(component.name)}/>")
-        child_router_configs = get_child_router_configs(router_config)
 
-        if router_config.wraps:
-            result.append(" " * (indent + 2) + "<Switch>")
-            for child_router_config in child_router_configs:
-                add_routes(child_router_config, indent + 4)
-            result.append(" " * (indent + 2) + "</Switch>")
+def add_route(router_configs, routes):
+    wrapped_children = router_configs[-1].component.wrapped_children
+    if not wrapped_children:
+        routes.append(Route(configs=router_configs))
+        return
 
-        result.append(" " * indent + "</Route>")
+    for wrapped_child in wrapped_children:
+        more_router_configs = wrapped_child.create_router_configs()
+        if more_router_configs:
+            add_route(
+                prepend_router_configs(router_configs, more_router_configs), routes
+            )
+
+
+def add_result(routes, url, level, indent, result):
+    routes_by_first_component = group_by(lambda x: x.components[level], routes)
+
+    for _, group in routes_by_first_component:
+        router_config = group[0].configs[level]
+        url_memo = url
+        if router_config.url:
+            url += "/" + router_config.url
+            _append(f'<Route path="{url}/">', indent, result)
+            indent += 2
 
         if not router_config.wraps:
-            for child_router_config in child_router_configs:
-                add_routes(child_router_config, indent)
+            _append(f"<{title0(router_config.component.name)}/>", indent, result)
 
-    for router_config in router_configs:
-        if not url_to_parent_url.get(router_config.component.url):
-            add_routes(router_config, indent=8)
+        if router_config.wraps:
+            _append(f"<{title0(router_config.component.name)}>", indent, result)
+            indent += 2
 
-    return os.linesep.join(result)
+        add_result(
+            [x for x in group if len(x.configs) > level + 1],
+            url,
+            level + 1,
+            indent,
+            result,
+        )
+
+        if router_config.wraps:
+            indent -= 2
+            _append(f"</{title0(router_config.component.name)}>", indent, result)
+
+        if router_config.url:
+            url = url_memo
+            indent -= 2
+            _append(f"</Route>", indent, result)

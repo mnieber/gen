@@ -12,7 +12,6 @@ from moonleap import (
 )
 from moonleap.verbs import has
 from moonleap_react.component import Component
-from moonleap_react.module import module_has_component_rel
 from moonleap_react_module.appmodule import AppModule
 
 

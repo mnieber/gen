@@ -6,3 +6,4 @@ nltk
 PyYAML
 ramda
 six
+python-slugify

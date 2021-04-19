@@ -1,17 +1,9 @@
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    extend,
-    kebab_to_camel,
-    render_templates,
-    rule,
-    tags,
-    title0,
-)
-from moonleap.resources.outputpath.props import output_path
+from moonleap import MemFun, extend, tags
 from moonleap.verbs import has
 from moonleap_react_view.frame.resources import Frame
 
+from . import props
 from .resources import Panel
 
 
@@ -21,23 +13,7 @@ def create_panel(term, block):
     return panel
 
 
-@rule("frame", has, "panel")
-def frame_has_panel(frame, panel):
-    panel.output_paths.add_source(frame)
-    panel.name = frame.item_type_name + title0(panel.type) + "Panel"
-    panel.module = frame.module
-    frame.dependencies.append(panel)
-    return frame
-
-
-@extend(Frame)
-class ExtendFrame:
-    left_panel = P.child(has, "left:panel")
-    right_panel = P.child(has, "right:panel")
-    top_panel = P.child(has, "top:panel")
-    bottom_panel = P.child(has, "bottom:panel")
-
-
 @extend(Panel)
 class ExtendPanel:
     frame = P.parent(Frame, has, "panel")
+    create_router_configs = MemFun(props.create_router_configs)

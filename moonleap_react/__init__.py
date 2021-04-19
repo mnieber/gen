@@ -8,6 +8,7 @@ from . import (
     indexfilemerger,
     mockgraphqlserver,
     module,
+    module_and_component,
     nodepackage,
     prettier,
     tailwindcss,
@@ -20,6 +21,7 @@ def install_all():
     install(createreactapp)
     install(mockgraphqlserver)
     install(module)
+    install(module_and_component)
     install(nodepackage)
     install(prettier)
     install(tailwindcss)

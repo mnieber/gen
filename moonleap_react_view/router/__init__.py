@@ -11,8 +11,8 @@ class StoreRouterConfigs:
 
 
 @register_add(RouterConfig)
-def add_router_config(resource, router_config):
-    resource.router_configs.add(router_config)
+def add_router_config(resource, router_configs):
+    resource.router_configs.add(router_configs)
 
 
 @tags(["router"])

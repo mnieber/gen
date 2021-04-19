@@ -9,6 +9,7 @@ from . import (
     formsmodule,
     formview,
     frame,
+    frame_and_panel,
     itemview,
     listview,
     panel,
@@ -23,6 +24,7 @@ def install_all():
     install(formsmodule)
     install(formview)
     install(frame)
+    install(frame_and_panel)
     install(itemview)
     install(listview)
     install(panel)

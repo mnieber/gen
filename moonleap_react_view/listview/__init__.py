@@ -1,5 +1,7 @@
+import moonleap.resource.props as P
 from moonleap import (
     MemFun,
+    Term,
     create_forward,
     extend,
     kebab_to_camel,
@@ -7,8 +9,10 @@ from moonleap import (
     rule,
     tags,
 )
-from moonleap.verbs import has
+from moonleap.utils.inflect import plural
+from moonleap.verbs import has, uses
 
+from . import props
 from .resources import ListView
 
 
@@ -20,14 +24,21 @@ def create_list_view(term, block):
 
 
 @rule("list-view", has, "behavior")
-def create_container(list_view, behavior):
-    module = list_view.module
-    return [
-        create_forward(module, has, f"{module.name}:container"),
-        create_forward(list_view.module, "has", behavior),
-    ]
+def list_view_uses_container(list_view, behavior):
+    items_str = plural(list_view.item_name)
+    container_term_str = f"{items_str}:container"
+    return (create_forward(list_view, uses, container_term_str),)
+
+
+@rule("list-view", has, "behavior")
+def list_view_has_behavior(list_view, behavior):
+    items_str = plural(list_view.item_name)
+    container_term_str = f"{items_str}:container"
+    return [create_forward(container_term_str, has, behavior)]
 
 
 @extend(ListView)
 class ExtendListView:
     render = MemFun(render_templates(__file__))
+    create_router_configs = MemFun(props.create_router_configs)
+    container = P.child(uses, "container")

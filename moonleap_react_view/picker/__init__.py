@@ -18,7 +18,7 @@ from .resources import Picker
 @tags(["picker"])
 def create_picker(term, block):
     name = kebab_to_camel(term.data)
-    picker = Picker(item_type_name=name, name=f"{name}Picker")
+    picker = Picker(item_name=name, name=f"{name}Picker")
     add(picker, load_node_package_config(__file__))
     return picker
 
@@ -33,3 +33,4 @@ def panel_has_picker(panel, picker):
 class ExtendPicker:
     render = MemFun(render_templates(__file__))
     item_type = Prop(props.item_type)
+    create_router_configs = MemFun(props.create_router_configs)

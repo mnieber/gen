@@ -5,4 +5,4 @@ from moonleap_react.component import Component
 
 @dataclass
 class Picker(Component):
-    item_type_name: str
+    item_name: str

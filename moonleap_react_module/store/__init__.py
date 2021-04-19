@@ -18,7 +18,8 @@ def create_store(term, block):
 
 @rule("module", has, "store")
 def create_utils_module(module, store):
-    return create_forward(module.service, has, "utils:module")
+    if not module.service.utils_module:
+        return create_forward(module.service, has, "utils:module")
 
 
 @rule("module", has, "store")
@@ -34,6 +35,5 @@ class ExtendModule:
 @extend(Store)
 class ExtendStore(StoreTemplateDirs):
     policy_lines = Prop(props.policy_lines)
-    items = P.children(contains, "item")
     item_lists = P.children(contains, "item-list")
     item_types = P.children(contains, "item-type")

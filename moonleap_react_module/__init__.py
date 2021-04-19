@@ -3,12 +3,12 @@ from moonleap import install
 from . import (
     appmodule,
     appstore,
-    dataloader,
     flags,
     graphqlapi,
-    item,
     itemlist,
     itemtype,
+    loaditemseffect,
+    selectitemeffect,
     store,
     storeprovider,
     utilsmodule,
@@ -18,12 +18,12 @@ from . import (
 def install_all():
     install(appmodule)
     install(appstore)
-    install(dataloader)
+    install(loaditemseffect)
     install(flags)
     install(graphqlapi)
-    install(item)
     install(itemlist)
     install(itemtype)
+    install(selectitemeffect)
     install(store)
     install(storeprovider)
     install(utilsmodule)

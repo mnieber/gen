@@ -11,7 +11,6 @@ from moonleap import (
 )
 from moonleap.resource.rel import Rel
 from moonleap.verbs import has, runs
-from moonleap_project.service import Service
 from moonleap_tools.pkgdependency import PkgDependency
 from moonleap_tools.tool import Tool
 
@@ -43,7 +42,12 @@ def makefile_running_tool(makefile, tool):
     return create_forward(makefile.service, has, tool)
 
 
-@extend(Makefile)
-class ExtendMakefile(StoreMakefileRules):
-    render = MemFun(render_templates(__file__))
-    service = P.parent(Service, has, "makefile")
+def meta():
+    from moonleap_project.service import Service
+
+    @extend(Makefile)
+    class ExtendMakefile(StoreMakefileRules):
+        render = MemFun(render_templates(__file__))
+        service = P.parent(Service, has, "makefile")
+
+    return [ExtendMakefile]
