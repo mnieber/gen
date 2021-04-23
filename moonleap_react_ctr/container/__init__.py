@@ -22,6 +22,7 @@ def module_has_container(module, container):
 @extend(Container)
 class ExtendContainer:
     render = MemFun(render_templates(__file__))
+    behaviors = P.children("has", "behavior")
 
 
 @extend(Module)

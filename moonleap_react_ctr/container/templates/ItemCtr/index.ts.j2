@@ -1,12 +1,12 @@
 {% magic_with res.name as yellowTulip %}
 {% magic_with behavior.name as blueDaisy %}
 import { facet } from "skandha";
-{% for behavior in res.module.behaviors %}
+{% for behavior in res.behaviors %}
 import { BlueDaisy } from "skandha-facets/BlueDaisy";
 {% endfor %}
 
 export class YellowTulipCtr {
-{% for behavior in res.module.behaviors %}
+{% for behavior in res.behaviors %}
     @facet blueDaisy: BlueDaisy = new BlueDaisy();
 {% endfor %}
 }
