@@ -31,13 +31,5 @@ export const YellowTulipsCtrProvider: React.FC = observer(({ children }) => {
     <YellowTulipsCtrContext.Provider value={ctr}>{children}</YellowTulipsCtrContext.Provider>
   );
 });
-
-export const useYellowTulipsCtr = () => {
-  const ctr = React.useContext(YellowTulipsCtrContext);
-  if (!ctr) {
-    throw new Error("useYellowTulipsCtr must be used within a YellowTulipsCtrProvider.");
-  }
-  return ctr;
-};
 {% end_magic_with %}
 {% end_magic_with %}

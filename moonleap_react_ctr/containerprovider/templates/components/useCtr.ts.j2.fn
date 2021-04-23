@@ -1,3 +1,3 @@
 {% magic_with res.item_name as yellowTulip %}
-useYellowTulipsCtr.tsx
+useYellowTulipsCtr.ts
 {% end_magic_with %}
