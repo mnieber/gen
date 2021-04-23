@@ -1,21 +1,27 @@
 {% magic_with res.item_name as yellowTulip %}
 {% magic_with res.module.name as gardenFlowers %}
 import React from 'react';
-import { always, flow, map, values } from 'lodash/fp';
+import { always, flow, map } from 'lodash/fp';
 import { observer } from 'mobx-react-lite';
-import { useStore } from 'src/app/components/StoreProvider';
+import { useDefaultProps, FC } from 'react-default-props-context';
 import { ResourceView } from 'src/utils/components';
 import { YellowTulipListViewItem } from 'src/gardenFlowers/components';
+import { RST } from 'src/utils/RST';
+import { YellowTulipT } from 'src/gardenFlowers/types'
 
 type PropsT = {
 };
 
-export const YellowTulipListView: React.FC<PropsT> = observer(() => {
-  const { gardenFlowersStore } = useStore();
+type DefaultPropsT = {
+  yellowTulips: YellowTulipT[]
+  yellowTulipsRS: RST
+};
+
+export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
+  const props = useDefaultProps<PropsT, DefaultPropsT>(p);
 
   const yellowTulipDivs = flow(
-    always(gardenFlowersStore.yellowTulipById),
-    values,
+    always(props.yellowTulips),
     map((x) => (
       <YellowTulipListViewItem
         key={x.id}
@@ -35,7 +41,7 @@ export const YellowTulipListView: React.FC<PropsT> = observer(() => {
 
   return (
     <ResourceView
-      rs={gardenFlowersStore.yellowTulipByIdRS}
+      rs={props.yellowTulipsRS}
       renderUpdated={() => updatedDiv}
       renderErrored={(message) => {
         return <div className="text-white">{message}</div>;

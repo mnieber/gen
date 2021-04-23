@@ -1,28 +1,32 @@
 {% magic_with res.item_name as yellowTulip %}
 {% magic_with res.module.name as gardenFlowers %}
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
-import { useStore } from 'src/app/components/StoreProvider';
+import { useDefaultProps, FC } from 'react-default-props-context';
 import { ResourceView } from 'src/utils/components';
+import { RST } from 'src/utils/RST';
+import { YellowTulipT } from 'src/gardenFlowers/types'
 
 type PropsT = {
 };
 
-export const YellowTulipView: React.FC<PropsT> = observer(() => {
-  const params: any = useParams();
-  const { gardenFlowersStore } = useStore();
-  const yellowTulip = gardenFlowersStore.yellowTulipById[params.yellowTulipId];
+type DefaultPropsT = {
+  yellowTulip: YellowTulipT
+  yellowTulipRS: RST
+};
+
+export const YellowTulipView: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
+  const props = useDefaultProps<PropsT, DefaultPropsT>(p);
 
   const updatedDiv = (
     <div className="YellowTulipView flex flex-col w-full">
-      To do: show yellowTulip with name {yellowTulip.name}
+      To do: show yellowTulip with name {props.yellowTulip.name}
     </div>
   );
 
   return (
     <ResourceView
-      rs={gardenFlowersStore.yellowTulipByIdRS}
+      rs={props.yellowTulipRS}
       renderUpdated={() => updatedDiv}
       renderErrored={(message) => {
         return <div className="text-white">{message}</div>;

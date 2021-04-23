@@ -1,35 +1,60 @@
 {% magic_with res.item_name as yellowTulip %}
 {% magic_with res.module.name as gardenFlowers %}
-import React from "react";
-import { observer } from 'mobx-react-lite';
-import { action, reaction } from "mobx";
-import { YellowTulipsCtr } from "src/gardenFlowers/YellowTulipsCtr";
-import { useStore } from "src/app/components/StoreProvider";
+import * as React from 'react';
+import { values } from 'lodash/fp';
+import { reaction } from 'mobx';
 
-const YellowTulipsCtrContext = React.createContext<YellowTulipsCtr | undefined>(undefined);
+import { YellowTulipsContainer } from 'src/gardenFlowers/YellowTulipsCtr';
+import { CtrProvider } from 'react-default-props-context';
+import { useStore } from 'src/app/components';
 
-export const YellowTulipsCtrProvider: React.FC = observer(({ children }) => {
+type PropsT = React.PropsWithChildren<{}>;
+
+// Note: don't observe this with MobX
+export const YellowTulipsCtrProvider: React.FC<PropsT> = (props: PropsT) => {
   const { yellowTulipsStore } = useStore();
-  const [ctr] = React.useState(() => {
-    const ctr = new YellowTulipsCtr();
-    return ctr;
-  });
 
-  React.useEffect(() => {
-    const cleanUp = reaction(
-      () => {
-        return yellowTulipsStore.yellowTulipById
+  const createCtr = () => {
+    return new YellowTulipsContainer({
+      yellowTulipsStore: yellowTulipsStore,
+    });
+  };
+
+  const updateCtr = (ctr: YellowTulipsContainer) => {
+    reaction(
+      () => ({
+        yellowTulipById: yellowTulipsStore.yellowTulipById
+      }),
+      ({ yellowTulipById }) => {
+        ctr.inputs.setYellowTulips(values(yellowTulipById));
       },
-      action((yellowTulipById: YellowTulipByIdT) => {
-        ctr.inputs.yellowTulipById = yellowTulipById;
-      })
+      {
+        fireImmediately: true,
+      }
     );
-    return cleanUp;
-  });
+  };
+
+  const getDefaultProps = (ctr: YellowTulipsContainer) => {
+    return {
+      yellowTulipsCtr: () => ctr,
+      yellowTulip: () => ctr.highlight.item,
+      yellowTulipRS: () => yellowTulipsStore.yellowTulipByIdRS,
+      yellowTulips: () => ctr.outputs.display,
+      yellowTulipsRS: () => yellowTulipsStore.yellowTulipByIdRS,
+      yellowTulipsSelection: () => ctr.selection,
+    };
+  };
 
   return (
-    <YellowTulipsCtrContext.Provider value={ctr}>{children}</YellowTulipsCtrContext.Provider>
+    <CtrProvider
+      createCtr={createCtr}
+      updateCtr={updateCtr}
+      destroyCtr={(ctr) => ctr.destroy()}
+      getDefaultProps={getDefaultProps}
+    >
+      {props.children}
+    </CtrProvider>
   );
-});
+};
 {% end_magic_with %}
 {% end_magic_with %}

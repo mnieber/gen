@@ -2,12 +2,6 @@ from moonleap_react_view.router.resources import prepend_router_configs
 from moonleap_react_view.router_and_module.props import create_component_router_config
 
 
-def item_type(self):
-    store = self.module.store
-    item_types = [x for x in store.item_types if x.name == self.item_name]
-    return item_types[0] if item_types else None
-
-
 def create_router_configs(self):
     router_configs = create_component_router_config(self)
     result = [router_configs]

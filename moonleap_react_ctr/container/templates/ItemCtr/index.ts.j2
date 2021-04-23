@@ -1,14 +1,54 @@
 {% magic_with res.name as yellowTulip %}
+{% magic_with res.module.name as gardenFlowers %}
 {% magic_with behavior.name as blueDaisy %}
-import { facet } from "skandha";
+import { setCallbacks } from 'aspiration';
+import {
+  getm,
+  mapDataToFacet,
+  facet,
+  installPolicies,
+  registerFacets,
+  ClassMemberT as CMT,
+} from 'skandha';
+import { makeCtrObservable } from 'skandha-mobx';
+import * as Facets from 'skandha-facets';
+import * as FacetPolicies from 'skandha-facets/policies';
+
+{{ res.facet_imports }}
+import { YellowTulipStore } from 'src/gardenFlowers/YellowTulipStore';
+import { Container } from 'src/utils/Container';
+import { Inputs } from 'src/gardenFlowers/facets/Inputs';
+import { Outputs } from 'src/gardenFlowers/facets/Outputs';
+import * as Policies from './policies';
+import * as Handlers from './handlers';
+
+type PropsT = {
+  yellowTulipStore: YellowTulipStore;
+};
+
+export class YellowTulipCtr extends Container {
 {% for behavior in res.behaviors %}
-import { BlueDaisy } from "skandha-facets/BlueDaisy";
+  @facet blueDaisy: BlueDaisy = new BlueDaisy();
 {% endfor %}
 
-export class YellowTulipCtr {
-{% for behavior in res.behaviors %}
-    @facet blueDaisy: BlueDaisy = new BlueDaisy();
-{% endfor %}
+  _setCallbacks(props: PropsT) {
+    const ctr = this;
+{{ res.callbacks }}
+  }
+
+  _applyPolicies(props: PropsT) {
+{{ res.policies }}
+  }
+
+  constructor(props: PropsT) {
+    super();
+
+    registerFacets(this);
+    this._setCallbacks(props);
+    this._applyPolicies(props);
+    makeCtrObservable(this);
+  }
 }
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

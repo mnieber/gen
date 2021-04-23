@@ -1,36 +1,47 @@
 {% magic_with res.item_name as yellowTulip %}
+{% magic_with res.module.name as gardenFlowers %}
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
+import { useDefaultProps, FC } from 'react-default-props-context';
+import { Selection } from 'skandha-facets/Selection';
 
 import { PickerValueT, ValuePicker } from 'src/utils/components/ValuePicker';
-import { YellowTulipT } from '{{ res.item_type.import_path }}';
+import { YellowTulipT } from 'src/gardenFlowers/types';
 
-export const YellowTulipPicker: React.FC<PropsT> = observer(
-  (props: PropsT) => {
-    const { yellowTulipsContainer } = useYellowTulipsContainer();
+type PropsT = {
+};
 
-    const onChange = (value: PickerValueT) => {
-      if (value.__isNew__) {
-        // TODO: add yellowTulip
-      } else if (value.value) {
-        container.selection.selectItem({
-          itemId: value.value.id,
-        });
-      }
-    };
+type DefaultPropsT = {
+  yellowTulips: YellowTulipT[]
+  yellowTulipsSelection: Selection
+};
 
-    return (
-      <div className={classnames('YellowTulipPicker mt-2', props.className)}>
-        <ValuePicker
-          isMulti={false}
-          isCreatable={true}
-          pickableValues={yellowTulipContainer.outputs.display}
-          labelFromValue={(x: any) => x.name}
-          pickableValue={container.selection.item}
-          onChange={onChange}
-        />
-      </div>
-    );
-  }
-);
+export const YellowTulipPicker: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
+  const props = useDefaultProps<PropsT, DefaultPropsT>(p);
+
+  const onChange = (value: PickerValueT) => {
+    if (value.__isNew__) {
+      // TODO: add yellowTulip
+    } else if (value.value) {
+      props.yellowTulipsSelection.selectItem({
+        itemId: value.value.id,
+      });
+    }
+  };
+
+  return (
+    <div className={classnames('YellowTulipPicker mt-2', props.className)}>
+      <ValuePicker
+        isMulti={false}
+        isCreatable={true}
+        pickableValues={props.yellowTulips}
+        labelFromValue={(x: any) => x.name}
+        pickableValue={container.selection.item}
+        onChange={onChange}
+      />
+    </div>
+  );
+});
+
+{% end_magic_with %}
 {% end_magic_with %}

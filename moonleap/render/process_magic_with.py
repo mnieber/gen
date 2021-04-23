@@ -32,7 +32,7 @@ def process_magic_with(lines):
 
         x = block_line
         for var_name, as_ in var_names:
-            char0 = var_name[0]
+            char0 = as_[0]
             starts_low = char0.lower() == char0
             change0, change0_str = (
                 (upper0, "upper0") if starts_low else (lower0, "lower0")
@@ -46,7 +46,7 @@ def process_magic_with(lines):
             x = x.replace(change0(as_), "{{ " + var_name + "|%s }}" % change0_str)
 
             x = x.replace("{{{", "{{ '{' }}{{")
-            x = x.replace("}}}", "{{ '}' }}}}")
+            x = x.replace("}}}", "}}{{ '}' }}")
 
         result.append(x)
 

@@ -1,6 +1,4 @@
-{% magic_with res.item_name as yellowTulip %}
-{% magic_with res.module.name as gardenFlowers %}
-export { YellowTulipListView } from './YellowTulipListView'
-export { YellowTulipListViewItem } from './YellowTulipListViewItem'
-{% end_magic_with %}
+{% magic_with res.name as YellowTulip %}
+export { YellowTulip } from './YellowTulip'
+export { YellowTulipItem } from './YellowTulipItem'
 {% end_magic_with %}
