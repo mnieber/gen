@@ -8,7 +8,7 @@ from moonleap import (
     render_templates,
     rule,
     tags,
-    title0,
+    upper0,
 )
 from moonleap.utils.inflect import singular
 from moonleap.verbs import has
@@ -21,7 +21,7 @@ from .resources import SelectItemEffect
 @tags(["select-item-effect"])
 def create_select_item_effect(term, block):
     item_name = kebab_to_camel(term.data)
-    name = f"Select{title0(item_name)}Effect"
+    name = f"Select{upper0(item_name)}Effect"
     select_item_effect = SelectItemEffect(item_name=item_name, name=name)
     return select_item_effect
 

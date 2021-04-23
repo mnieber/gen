@@ -6,7 +6,7 @@ from moonleap import (
     render_templates,
     rule,
     tags,
-    title0,
+    upper0,
 )
 from moonleap.utils.inflect import plural
 from moonleap.verbs import has
@@ -19,7 +19,7 @@ from .resources import LoadItemsEffect
 @tags(["load-items-effect"])
 def create_loadItemsEffect(term, block):
     item_name = kebab_to_camel(term.data)
-    name = f"Load{title0(item_name)}Effect"
+    name = f"Load{upper0(item_name)}Effect"
     loadItemsEffect = LoadItemsEffect(item_name=item_name, name=name)
     return loadItemsEffect
 

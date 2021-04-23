@@ -1,7 +1,7 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap import Resource, title0
+from moonleap import Resource, upper0
 from moonleap_react.module import Module
 
 
@@ -15,7 +15,7 @@ class Component(Resource):
 
     @property
     def react_tag(self):
-        return f"<{title0(self.name)}/>"
+        return f"<{upper0(self.name)}/>"
 
     @property
     def import_path(self):

@@ -1,4 +1,4 @@
-def title0(x):
+def upper0(x):
     return x[0].upper() + x[1:]
 
 

@@ -3,7 +3,7 @@ import uuid
 from dataclasses import dataclass, field
 
 import ramda as R
-from moonleap.utils.case import title0
+from moonleap.utils.case import upper0
 from moonleap_react_view.router.resources import RouterConfig, prepend_router_configs
 from slugify import slugify
 
@@ -96,10 +96,10 @@ def add_result(routes, url, level, indent, result):
             indent += 2
 
         if not router_config.wraps:
-            _append(f"<{title0(router_config.component.name)}/>", indent, result)
+            _append(f"<{upper0(router_config.component.name)}/>", indent, result)
 
         if router_config.wraps:
-            _append(f"<{title0(router_config.component.name)}>", indent, result)
+            _append(f"<{upper0(router_config.component.name)}>", indent, result)
             indent += 2
 
         add_result(
@@ -112,7 +112,7 @@ def add_result(routes, url, level, indent, result):
 
         if router_config.wraps:
             indent -= 2
-            _append(f"</{title0(router_config.component.name)}>", indent, result)
+            _append(f"</{upper0(router_config.component.name)}>", indent, result)
 
         if router_config.url:
             url = url_memo

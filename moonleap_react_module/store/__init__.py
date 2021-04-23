@@ -1,7 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import Prop, create_forward, extend, kebab_to_camel, rule, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
-from moonleap.utils.case import title0
+from moonleap.utils.case import upper0
 from moonleap.verbs import contains, has
 from moonleap_react.module import Module
 
@@ -11,7 +11,7 @@ from .resources import Store
 
 @tags(["store"])
 def create_store(term, block):
-    store = Store(name=f"{title0(kebab_to_camel(term.data))}Store")
+    store = Store(name=f"{upper0(kebab_to_camel(term.data))}Store")
     store.add_template_dir(__file__, "templates")
     return store
 
