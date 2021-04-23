@@ -1,16 +1,25 @@
-from moonleap import add, extend, tags
-from moonleap_react.nodepackage import StoreNodePackageConfigs, load_node_package_config
+import moonleap.resource.props as P
+from moonleap import Prop, extend, tags
+from moonleap.verbs import has
+from moonleap_react.nodepackage import StoreNodePackageConfigs
+from moonleap_react_ctr.container.resources import Container
 
+from . import props
 from .resources import Behavior
 
 
 @tags(["behavior"])
 def create_behavior(term, block):
     behavior = Behavior(name=term.data)
-    add(behavior, load_node_package_config(__file__))
     return behavior
 
 
 @extend(Behavior)
 class ExtendBehavior(StoreNodePackageConfigs):
-    pass
+    container = P.parent(Container, has, "behavior")
+
+    imports_section = Prop(props.imports_section)
+    constructor_section = Prop(props.constructor_section)
+    callbacks_section = Prop(props.callbacks_section)
+    declare_policies_section = Prop(props.declare_policies_section)
+    policies_section = Prop(props.policies_section)

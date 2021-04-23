@@ -13,8 +13,10 @@ import {
 import { makeCtrObservable } from 'skandha-mobx';
 import * as Facets from 'skandha-facets';
 import * as FacetPolicies from 'skandha-facets/policies';
+{% for behavior in res.behaviors %}
+{{ behavior.imports_section }}
+{% endfor %}
 
-{{ res.facet_imports }}
 import { YellowTulipStore } from 'src/gardenFlowers/YellowTulipStore';
 import { Container } from 'src/utils/Container';
 import { Inputs } from 'src/gardenFlowers/facets/Inputs';
@@ -28,16 +30,26 @@ type PropsT = {
 
 export class YellowTulipCtr extends Container {
 {% for behavior in res.behaviors %}
-  @facet blueDaisy: BlueDaisy = new BlueDaisy();
+{{ behavior.constructor_section }}
 {% endfor %}
 
   _setCallbacks(props: PropsT) {
     const ctr = this;
-{{ res.callbacks }}
+{% for behavior in res.behaviors %}
+{{ behavior.callbacks_section }}
+{% endfor %}
   }
 
   _applyPolicies(props: PropsT) {
-{{ res.policies }}
+{% remove_duplicates %}
+{% for behavior in res.behaviors %}
+{{ behavior.declare_policies_section }}
+{% endfor %}
+{% end_remove_duplicates %}
+
+{% for behavior in res.behaviors %}
+{{ behavior.policies_section }}
+{% endfor %}
   }
 
   constructor(props: PropsT) {

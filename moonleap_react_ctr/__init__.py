@@ -2,7 +2,15 @@ import os
 
 from moonleap import install
 
-from . import behavior, container, containerprovider, itemview, listview, picker
+from . import (
+    behavior,
+    container,
+    containerprovider,
+    itemview,
+    listview,
+    picker,
+    selectionbehavior,
+)
 
 
 def install_all():
@@ -12,3 +20,4 @@ def install_all():
     install(itemview)
     install(listview)
     install(picker)
+    install(selectionbehavior)
