@@ -1,14 +1,4 @@
-from moonleap import (
-    MemFun,
-    Prop,
-    add,
-    extend,
-    kebab_to_camel,
-    render_templates,
-    rule,
-    tags,
-)
-from moonleap.verbs import has
+from moonleap import MemFun, Prop, add, extend, kebab_to_camel, render_templates, tags
 from moonleap_react.nodepackage import load_node_package_config
 
 from . import props
@@ -21,12 +11,6 @@ def create_picker(term, block):
     picker = Picker(item_name=name, name=f"{name}Picker")
     add(picker, load_node_package_config(__file__))
     return picker
-
-
-@rule("panel", has, "picker")
-def panel_has_picker(panel, picker):
-    picker.output_paths.add_source(panel)
-    picker.module = panel.module
 
 
 @extend(Picker)

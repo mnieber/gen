@@ -10,10 +10,7 @@ from . import (
     formview,
     frame,
     frame_and_panel,
-    itemview,
-    listview,
     panel,
-    picker,
     router,
     router_and_module,
     view,
@@ -25,10 +22,7 @@ def install_all():
     install(formview)
     install(frame)
     install(frame_and_panel)
-    install(itemview)
-    install(listview)
     install(panel)
-    install(picker)
     install(router)
     install(router_and_module)
     install(view)

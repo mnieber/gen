@@ -11,7 +11,7 @@ from moonleap import (
 )
 from moonleap.utils.inflect import singular
 from moonleap.verbs import has
-from moonleap_behaviors.container.resources import Container
+from moonleap_react_ctr.container.resources import Container
 
 from . import props
 from .resources import ContainerProvider
