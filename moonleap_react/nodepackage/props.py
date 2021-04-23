@@ -27,6 +27,8 @@ def get_sort_index(key):
 
 def get_node_package_config(self):
     service_configs = list(self.node_package_configs.merged)
+    for module in self.service.modules:
+        service_configs.extend(module.node_package_configs.merged)
     for tool in self.service.tools:
         service_configs.extend(tool.node_package_configs.merged)
 
