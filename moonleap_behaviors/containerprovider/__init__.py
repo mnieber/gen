@@ -7,6 +7,7 @@ from moonleap import (
     render_templates,
     rule,
     tags,
+    upper0,
 )
 from moonleap.utils.inflect import singular
 from moonleap.verbs import has
@@ -22,7 +23,7 @@ def create_container_provider(term, block):
     items_name = kebab_to_camel(kebab_name)
     item_name = singular(items_name)
     container_provider = ContainerProvider(
-        name=f"{items_name}CtrProvider", item_name=item_name
+        name=f"{upper0(items_name)}CtrProvider", item_name=item_name
     )
     return container_provider
 

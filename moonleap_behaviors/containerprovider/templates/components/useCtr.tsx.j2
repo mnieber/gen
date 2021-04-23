@@ -1,23 +1,24 @@
 {% magic_with res.item_name as yellowTulip %}
+{% magic_with res.module.name as gardenFlowers %}
 import React from "react";
 import { observer } from 'mobx-react-lite';
 import { action, reaction } from "mobx";
-import { YellowTulipCtr } from "src/yellowTulip/YellowTulipCtr";
+import { YellowTulipsCtr } from "src/gardenFlowers/YellowTulipsCtr";
 import { useStore } from "src/app/components/StoreProvider";
 
-const YellowTulipCtrContext = React.createContext<YellowTulipCtr | undefined>(undefined);
+const YellowTulipsCtrContext = React.createContext<YellowTulipsCtr | undefined>(undefined);
 
-export const YellowTulipCtrProvider: React.FC = observer(({ children }) => {
-  const { yellowTulipStore } = useStore();
+export const YellowTulipsCtrProvider: React.FC = observer(({ children }) => {
+  const { yellowTulipsStore } = useStore();
   const [ctr] = React.useState(() => {
-    const ctr = new YellowTulipCtr();
+    const ctr = new YellowTulipsCtr();
     return ctr;
   });
 
   React.useEffect(() => {
     const cleanUp = reaction(
       () => {
-        return yellowTulipStore.yellowTulipById
+        return yellowTulipsStore.yellowTulipById
       },
       action((yellowTulipById: YellowTulipByIdT) => {
         ctr.inputs.yellowTulipById = yellowTulipById;
@@ -27,15 +28,16 @@ export const YellowTulipCtrProvider: React.FC = observer(({ children }) => {
   });
 
   return (
-    <YellowTulipCtrContext.Provider value={ctr}>{children}</YellowTulipCtrContext.Provider>
+    <YellowTulipsCtrContext.Provider value={ctr}>{children}</YellowTulipsCtrContext.Provider>
   );
 });
 
-export const useYellowTulipCtr = () => {
-  const ctr = React.useContext(YellowTulipCtrContext);
+export const useYellowTulipsCtr = () => {
+  const ctr = React.useContext(YellowTulipsCtrContext);
   if (!ctr) {
-    throw new Error("useYellowTulipCtr must be used within a YellowTulipCtrProvider.");
+    throw new Error("useYellowTulipsCtr must be used within a YellowTulipsCtrProvider.");
   }
   return ctr;
 };
+{% end_magic_with %}
 {% end_magic_with %}

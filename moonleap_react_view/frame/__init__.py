@@ -1,4 +1,4 @@
-from moonleap import MemFun, extend, kebab_to_camel, render_templates, tags
+from moonleap import MemFun, extend, kebab_to_camel, render_templates, tags, upper0
 
 from . import props
 from .resources import Frame
@@ -7,7 +7,7 @@ from .resources import Frame
 @tags(["frame"])
 def create_frame(term, block):
     name = kebab_to_camel(term.data)
-    frame = Frame(item_name=name, name=f"{name}Frame")
+    frame = Frame(item_name=name, name=f"{upper0(name)}Frame")
     return frame
 
 
