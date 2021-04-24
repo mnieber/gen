@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
-from moonleap import add, rule, tags
-from moonleap.verbs import uses
+from moonleap import add, tags
 from moonleap_tools.pipdependency import PipDependency
 from moonleap_tools.setupfile import SetupFileConfig
 from moonleap_tools.tool import Tool

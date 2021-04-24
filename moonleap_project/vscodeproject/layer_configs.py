@@ -1,5 +1,4 @@
 from moonleap.render.settings import load_settings_file
-from moonleap.resources.outputpath.props import merged_output_path
 from moonleap_dodo.layer import LayerConfig
 
 

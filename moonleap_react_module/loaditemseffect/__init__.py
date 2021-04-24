@@ -8,7 +8,6 @@ from moonleap import (
     tags,
     upper0,
 )
-from moonleap.utils.inflect import plural
 from moonleap.verbs import has
 from moonleap_react_module.store import Store
 

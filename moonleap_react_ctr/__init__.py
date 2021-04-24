@@ -1,5 +1,3 @@
-import os
-
 from moonleap import install
 
 from . import (

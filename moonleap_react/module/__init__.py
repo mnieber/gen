@@ -1,14 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import (
-    Forward,
-    Rel,
-    StoreOutputPaths,
-    extend,
-    kebab_to_camel,
-    rule,
-    tags,
-    word_to_term,
-)
+from moonleap import StoreOutputPaths, extend, kebab_to_camel, rule, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has
 from moonleap_react.nodepackage import StoreNodePackageConfigs

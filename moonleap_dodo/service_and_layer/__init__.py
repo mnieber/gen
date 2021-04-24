@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
-from moonleap import add, add_source, describe, extend, rule
-from moonleap.verbs import configured_by, has, uses
+from moonleap import add, add_source, extend, rule
+from moonleap.verbs import configured_by, has
 from moonleap_dodo.layer import StoreLayerConfigs
 from moonleap_project.service import Service
 

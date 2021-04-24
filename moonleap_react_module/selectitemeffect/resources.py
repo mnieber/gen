@@ -1,5 +1,4 @@
-import typing as T
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from moonleap_react.component import Component
 

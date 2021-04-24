@@ -1,5 +1,4 @@
-from moonleap import MemFun, add, extend, render_templates, rule, tags
-from moonleap.verbs import has
+from moonleap import MemFun, add, extend, render_templates, tags
 from moonleap_react.nodepackage import load_node_package_config
 from moonleap_tools.tool import Tool
 

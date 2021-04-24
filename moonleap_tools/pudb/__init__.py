@@ -1,5 +1,4 @@
-from moonleap import add, rule, tags
-from moonleap.verbs import has
+from moonleap import add, tags
 from moonleap_tools.pipdependency import PipRequirement
 
 from . import opt_paths

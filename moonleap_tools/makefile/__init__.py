@@ -9,7 +9,6 @@ from moonleap import (
     rule,
     tags,
 )
-from moonleap.resource.rel import Rel
 from moonleap.verbs import has, runs
 from moonleap_tools.pkgdependency import PkgDependency
 from moonleap_tools.tool import Tool

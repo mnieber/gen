@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, add, create_forward, extend, kebab_to_camel, rule, tags
-from moonleap.verbs import has
+from moonleap.verbs import has, uses
 from moonleap_react.nodepackage import load_node_package_config
 from moonleap_react_module.flags import StoreFlags
 
@@ -17,12 +17,20 @@ def create_app_module(term, block):
     return module
 
 
+@rule("service", has, "app:module")
+def service_has_app_module(service, module):
+    service.add_template_dir(__file__, "templates_service")
+
+
 @rule("service", has, "module")
 def service_has_module(service, module):
-    if module.name == "app":
-        service.add_template_dir(__file__, "templates_service")
-    else:
+    if module.name != "app" and hasattr(service, "app_module"):
         return create_forward(service.app_module, has, module)
+
+
+@rule("service", uses, "create-react-app")
+def service_uses_cra(service, cra):
+    return create_forward(service, has, "app:module")
 
 
 def meta():

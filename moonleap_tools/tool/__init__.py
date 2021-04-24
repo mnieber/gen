@@ -1,9 +1,9 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, StoreOutputPaths, extend, rule
+from moonleap import MemFun, Prop, extend, rule
 from moonleap.verbs import has
 
 from . import props
-from .resources import Tool
+from .resources import Tool  # noqa
 
 
 @rule("service", has, "tool")

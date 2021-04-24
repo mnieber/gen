@@ -1,4 +1,4 @@
-from moonleap import add, rule, tags
+from moonleap import add, tags
 from moonleap_project.service.resources import Service
 
 from . import docker_compose_configs

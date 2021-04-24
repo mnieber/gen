@@ -1,6 +1,6 @@
 from moonleap import Prop, add, create_forward, extend, rule, tags
 from moonleap.verbs import has
-from moonleap_react.nodepackage import StoreNodePackageConfigs, load_node_package_config
+from moonleap_react.nodepackage import load_node_package_config
 
 from . import props
 from .resources import SelectionBehavior
@@ -20,7 +20,7 @@ def selection_behavior_created(selection_behavior):
 
 
 @extend(SelectionBehavior)
-class ExtendBehavior(StoreNodePackageConfigs):
+class ExtendBehavior:
     imports_section = Prop(props.imports_section)
     callbacks_section = Prop(props.callbacks_section)
     declare_policies_section = Prop(props.declare_policies_section)

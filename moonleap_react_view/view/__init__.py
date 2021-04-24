@@ -1,7 +1,4 @@
-import moonleap.resource.props as P
 from moonleap import MemFun, extend, kebab_to_camel, render_templates, tags
-from moonleap.verbs import has
-from moonleap_react.module import Module
 
 from .resources import View
 

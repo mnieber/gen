@@ -5,7 +5,6 @@ from dataclasses import dataclass, field
 import ramda as R
 from moonleap.utils.case import upper0
 from moonleap_react_view.router.resources import RouterConfig, prepend_router_configs
-from slugify import slugify
 
 
 def group_by(get_key, xs):
@@ -117,4 +116,4 @@ def add_result(routes, url, level, indent, result):
         if router_config.url:
             url = url_memo
             indent -= 2
-            _append(f"</Route>", indent, result)
+            _append("</Route>", indent, result)
