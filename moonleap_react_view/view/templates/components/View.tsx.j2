@@ -2,17 +2,22 @@
 {% magic_with res.module.name as gardenFlowers %}
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { useStore } from 'src/app/components/StoreProvider';
+import { useDefaultProps, FC } from 'react-default-props-context';
+
+import "./YellowTulip.css"
 
 type PropsT = {
 };
 
-export const YellowTulip: React.FC<PropsT> = observer(() => {
-  const { gardenFlowersStore } = useStore();
+type DefaultPropsT = {
+};
 
+export const YellowTulip: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
+  const props = useDefaultProps<PropsT, DefaultPropsT>(p);
+
+  // TODO: Implement YellowTulip
   const formDiv = (
     <div className="YellowTulip flex flex-col w-full">
-      TODO: Implement YellowTulip
     </div>
   );
 

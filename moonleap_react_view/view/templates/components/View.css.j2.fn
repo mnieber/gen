@@ -1,0 +1,3 @@
+{% magic_with res.name as yellowTulip %}
+YellowTulip.css
+{% end_magic_with %}
