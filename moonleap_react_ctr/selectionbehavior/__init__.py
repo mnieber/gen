@@ -1,5 +1,5 @@
 from moonleap import Prop, add, create_forward, extend, rule, tags
-from moonleap.verbs import has
+from moonleap.verbs import has, with_
 from moonleap_react.nodepackage import load_node_package_config
 
 from . import props
@@ -13,7 +13,7 @@ def create_behavior(term, block):
     return behavior
 
 
-@rule("container", has, "selection:behavior")
+@rule("container", has + with_, "selection:behavior")
 def container_has_selection_behavior(container, selection_behavior):
     highlight_behaviour_str = "highlight:behavior"
     return create_forward(container, has, highlight_behaviour_str)
