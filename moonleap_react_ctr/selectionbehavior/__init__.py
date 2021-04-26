@@ -13,10 +13,10 @@ def create_behavior(term, block):
     return behavior
 
 
-@rule("selection:behavior")
-def selection_behavior_created(selection_behavior):
+@rule("container", has, "selection:behavior")
+def container_has_selection_behavior(container, selection_behavior):
     highlight_behaviour_str = "highlight:behavior"
-    return create_forward(selection_behavior.container, has, highlight_behaviour_str)
+    return create_forward(container, has, highlight_behaviour_str)
 
 
 @extend(SelectionBehavior)
