@@ -8,5 +8,5 @@ from moonleap.render.process_trim_newlines import (
     process_trim_newlines,
 )
 
-transforms = [process_magic_with, process_trim_newlines, process_remove_duplicates]
-post_transforms = [post_process_trim_newlines, post_process_remove_duplicates]
+transforms = [process_magic_with, process_remove_duplicates, process_trim_newlines]
+post_transforms = [post_process_remove_duplicates, post_process_trim_newlines]
