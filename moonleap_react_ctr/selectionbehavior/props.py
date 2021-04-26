@@ -43,7 +43,7 @@ def declare_policies_section(self):
     indent = "      "
     result = [
         f"const Outputs_itemById = [Outputs, '{self.container.item_name}ById'] as CMT;",
-        f"const Outputs_ids = [Outputs, '{self.container.item_name}Ids'] as CMT;",
+        f"const Outputs_display = [Outputs, 'display'] as CMT;",
     ]
     return os.linesep.join([(indent + x) for x in result])
 
@@ -52,7 +52,7 @@ def policies_section(self):
     indent = "      "
     result = [
         r"// selection",
-        r"Facets.selectionUsesSelectableIds(getm(Outputs_ids)),",
+        r"Facets.selectionUsesSelectableIds(getm(Outputs_display), getIds),",
         r"Facets.selectionUsesItemLookUpTable(getm(Outputs_itemById)),",
     ]
     return os.linesep.join([(indent + x) for x in result])

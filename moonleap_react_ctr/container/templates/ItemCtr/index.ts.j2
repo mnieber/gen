@@ -1,6 +1,7 @@
 {% magic_with res.name as yellowTulip %}
 {% magic_with res.module.name as gardenFlowers %}
 {% magic_with behavior.name as blueDaisy %}
+{% trim_newlines keep=1 %}
 import { setCallbacks } from 'aspiration';
 import {
   getm,
@@ -11,6 +12,7 @@ import {
   ClassMemberT as CMT,
 } from 'skandha';
 import { makeCtrObservable } from 'skandha-mobx';
+import { getIds } from 'src/utils/ids.ts';
 import * as Facets from 'skandha-facets';
 import * as FacetPolicies from 'skandha-facets/policies';
 {% for behavior in res.behaviors %}
@@ -19,8 +21,8 @@ import * as FacetPolicies from 'skandha-facets/policies';
 
 import { YellowTulipStore } from 'src/gardenFlowers/YellowTulipStore';
 import { Container } from 'src/utils/Container';
-import { Inputs } from 'src/gardenFlowers/facets/Inputs';
-import { Outputs } from 'src/gardenFlowers/facets/Outputs';
+import { Inputs } from 'src/gardenFlowers/YellowTulipCtr/facets/Inputs';
+import { Outputs } from 'src/gardenFlowers/YellowTulipCtr/facets/Outputs';
 import * as Policies from './policies';
 import * as Handlers from './handlers';
 
@@ -61,6 +63,7 @@ export class YellowTulipCtr extends Container {
     makeCtrObservable(this);
   }
 }
+{% end_trim_newlines %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

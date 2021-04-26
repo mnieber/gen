@@ -1,0 +1,10 @@
+{% magic_with res.item_name as yellowTulip %}
+{% magic_with res.module.name as gardenFlowers %}
+import { YellowTulipT } from "src/gardenFlowers/types";
+import { input } from "skandha";
+
+export class Inputs {
+  @input yellowTulips: Array<YellowTulipT> = [];
+}
+{% end_magic_with %}
+{% end_magic_with %}

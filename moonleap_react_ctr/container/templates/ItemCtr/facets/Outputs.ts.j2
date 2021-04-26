@@ -1,0 +1,16 @@
+{% magic_with res.item_name as yellowTulip %}
+{% magic_with res.module.name as gardenFlowers %}
+import { computed } from 'mobx';
+import { YellowTulipT, YellowTulipByIdT } from 'src/yellowTulips/types';
+import { listToItemById } from 'src/utils/utils';
+import { output } from 'skandha';
+
+export class Outputs {
+  @output display: Array<YellowTulipT> = [];
+
+  @computed get yellowTulipById(): YellowTulipByIdT {
+    return listToItemById(this.display);
+  }
+}
+{% end_magic_with %}
+{% end_magic_with %}

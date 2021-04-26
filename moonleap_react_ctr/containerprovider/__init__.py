@@ -1,14 +1,6 @@
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    create_forward,
-    extend,
-    kebab_to_camel,
-    render_templates,
-    rule,
-    tags,
-    upper0,
-)
+from moonleap import (MemFun, create_forward, extend, kebab_to_camel,
+                      render_templates, rule, tags, upper0)
 from moonleap.utils.inflect import singular
 from moonleap.verbs import has
 from moonleap_react_ctr.container.resources import Container
