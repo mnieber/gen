@@ -14,12 +14,6 @@ def create_panel(term, block):
     return panel
 
 
-@rule("panel", has, "*", fltr_obj=P.fltr_instance(Component))
-def panel_has_component(panel, component):
-    component.output_paths.add_source(panel)
-    component.module = panel.module
-
-
 @extend(Panel)
 class ExtendPanel:
     frame = P.parent(Frame, has, "panel")
