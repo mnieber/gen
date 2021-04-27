@@ -1,5 +1,7 @@
 import os
 
+from moonleap.render.process_lines import process_lines
+
 
 def imports_section(self):
     return (
@@ -10,33 +12,23 @@ def imports_section(self):
 
 def callbacks_section(self):
     facet_names = [x.name for x in self.container.behaviors]
-    indent = "    "
-    result = []
-
-    if True:
-        result += [
-            f"setCallbacks(this.{self.name}, {{",
-            r"  selectItem: {",
-            r"    selectItem(this: SelectionCbs['selectItem']) {",
-            r"      handleSelectItem(ctr.selection, this.selectionParams);",
-        ]
-
-    if "highlight" in facet_names:
-        result += [
-            r"      FacetPolicies.highlightFollowsSelection(",
-            r"        ctr.selection,",
-            r"        this.selectionParams",
-            r"      );",
-        ]
-
-    if True:
-        result += [
-            r"    };",
-            r"  },",
-            r"} as SelectionCbs);",
-        ]
-
-    return os.linesep.join([(indent + x) for x in result])
+    return process_lines(
+        {
+            101: r"setCallbacks(this.selection, {{",
+            102: r"  selectItem: {",
+            103: r"    selectItem(this: SelectionCbs['selectItem']) {",
+            104: r"      handleSelectItem(ctr.selection, this.selectionParams);",
+            105: r"      FacetPolicies.highlightFollowsSelection(",
+            106: r"        ctr.selection,",
+            107: r"        this.selectionParams",
+            108: r"      );",
+            109: r"    }",
+            110: r"  },",
+            111: r"} as SelectionCbs);",
+        },
+        remove={(105, 108): "highlight" not in facet_names},
+        indent=4,
+    )
 
 
 def declare_policies_section(self):
@@ -49,7 +41,7 @@ def declare_policies_section(self):
 
 
 def policies_section(self):
-    indent = "      "
+    indent = "        "
     result = [
         r"// selection",
         r"Facets.selectionUsesSelectableIds(getm(Outputs_display), getIds),",
