@@ -1,6 +1,6 @@
 {% magic_with res.name as yellowTulip %}
 {% magic_with res.module.name as gardenFlowers %}
-{% magic_with behavior.name as blueDaisy %}
+{% magic_with item_name as redRose %}
 import { setCallbacks } from 'aspiration';
 import {
   getm,
@@ -29,27 +29,46 @@ type PropsT = {
 };
 
 export class YellowTulipState {
+{{ res.constructor_section }}
+
 {% for item_name, bvrs in res.bvrs_by_item_name.items() %}
   {{ item_name | plural }} = {
 {% for bvr in bvrs %}
-    {{ bvr.constructor_section }}
+{{ bvr.constructor_section }}
 {% endfor %}
   }
-{% endfor %}
 
-  _setCallbacks(props: PropsT) {
-{{ res.callbacks_section }}
+  _setRedRosesCallbacks(props: PropsT) {
+    const ctr = this.redRoses;
+
+{% for bvr in bvrs %}
+{{ bvr.callbacks_section }}
+{% endfor %}
   }
 
-  _applyPolicies(props: PropsT) {
-{{ res.declare_policies_section }}
-    }
+  _applyRedRosesPolicies(props: PropsT) {
+{{ res.declare_policies_section(item_name) }}
+{% for bvr in res.behaviors %}
+{{ bvr.declare_policies_section }}
+{% endfor %}
+
+    const policies = [
+{{ res.policies_section }}
+{% for bvr in res.behaviors %}
+{{ bvr.policies_section }}
+{% endfor %}
+    ];
+  }
+{% endfor %}
 
   constructor(props: PropsT) {
-    registerFacets(this);
-    this._setCallbacks(props);
-    this._applyPolicies(props);
-    makeCtrObservable(this);
+{% for item_name, bvrs in res.bvrs_by_item_name.items() %}
+
+    registerFacets(this.redRoses);
+    this._setRedRosesCallbacks(props);
+    this._applyRedRosesPolicies(props);
+    makeCtrObservable(this.redRoses);
+{% endfor %}
   }
 }
 {% end_magic_with %}

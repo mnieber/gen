@@ -37,8 +37,10 @@ class ExtendState:
     render = MemFun(render_templates(__file__))
     behaviors = P.children(has, "behavior")
     bvrs_by_item_name = Prop(props.bvrs_by_item_name)
-    declare_policies_section = Prop(props.declare_policies_section)
+    declare_policies_section = MemFun(props.declare_policies_section)
     policies_section = Prop(props.policies_section)
+    constructor_section = Prop(props.constructor_section)
+    type_import_path = MemFun(props.type_import_path)
 
 
 @extend(Module)

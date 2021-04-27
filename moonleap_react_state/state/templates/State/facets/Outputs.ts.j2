@@ -1,16 +1,19 @@
-{% magic_with res.item_name as yellowTulip %}
-{% magic_with res.module.name as gardenFlowers %}
+{% magic_with item_name as redRose %}
 import { computed } from 'mobx';
-import { YellowTulipT, YellowTulipByIdT } from 'src/yellowTulips/types';
+{% for item_name, bvrs in res.bvrs_by_item_name.items() %}
+import { RedRoseT, RedRoseByIdT } from '{{ res.type_import_path(item_name) }}';
+{% endfor %}
 import { listToItemById } from 'src/utils/utils';
 import { output } from 'skandha';
 
 export class Outputs {
-  @output display: Array<YellowTulipT> = [];
+{% for item_name, bvrs in res.bvrs_by_item_name.items() %}
+  @output redRosesDisplay: Array<RedRoseT> = [];
 
-  @computed get yellowTulipById(): YellowTulipByIdT {
+  @computed get redRoseById(): RedRoseByIdT {
     return listToItemById(this.display);
   }
+
+{% endfor %}
 }
-{% end_magic_with %}
 {% end_magic_with %}

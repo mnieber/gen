@@ -1,10 +1,12 @@
-{% magic_with res.item_name as yellowTulip %}
-{% magic_with res.module.name as gardenFlowers %}
-import { YellowTulipT } from "src/gardenFlowers/types";
+{% magic_with item_name as redRose %}
+{% for item_name, bvrs in res.bvrs_by_item_name.items() %}
+import { RedRoseT } from "{{ res.type_import_path(item_name) }}";
+{% endfor %}
 import { input } from "skandha";
 
 export class Inputs {
-  @input yellowTulips: Array<YellowTulipT> = [];
+{% for item_name, bvrs in res.bvrs_by_item_name.items() %}
+  @input redRoses: Array<RedRoseT> = [];
+{% endfor %}
 }
-{% end_magic_with %}
 {% end_magic_with %}

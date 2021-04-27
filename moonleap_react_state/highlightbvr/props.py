@@ -7,7 +7,7 @@ def callbacks_section(self):
     facet_names = [x.name for x in self.state.behaviors]
     return process_lines(
         {
-            101: r"setCallbacks(this.highlight, {",
+            101: r"setCallbacks(ctr.highlight, {",
             102: r"  highlightItem: {",
             103: r"    enter(this: HighlightCbs['highlightItem']) {",
             104: r"      FacetPolicies.cancelNewItemOnHighlightChange(ctr.highlight, this.id);",
@@ -21,7 +21,7 @@ def callbacks_section(self):
 
 
 def policies_section(self):
-    indent = "        "
+    indent = "      "
     result = [
         r"// highlight",
         r"Facets.highlightUsesItemLookUpTable(getm(Outputs_itemById)),",

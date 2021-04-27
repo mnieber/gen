@@ -10,7 +10,7 @@ def imports_section(self):
 
 def constructor_section(self):
     facet_name = upper0(self.name)
-    return f"  @facet {self.name}: {facet_name} = new {facet_name}();"
+    return f"    @facet {self.name}: {facet_name} = new {facet_name}();"
 
 
 def callbacks_section(self):

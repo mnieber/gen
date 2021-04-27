@@ -14,7 +14,7 @@ def callbacks_section(self):
     facet_names = [x.name for x in self.state.behaviors]
     return process_lines(
         {
-            101: r"setCallbacks(this.selection, {{",
+            101: r"setCallbacks(ctr.selection, {{",
             102: r"  selectItem: {",
             103: r"    selectItem(this: SelectionCbs['selectItem']) {",
             104: r"      handleSelectItem(ctr.selection, this.selectionParams);",
@@ -32,16 +32,15 @@ def callbacks_section(self):
 
 
 def declare_policies_section(self):
-    indent = "      "
+    indent = "    "
     result = [
-        f"const Outputs_itemById = [Outputs, '{self.state.item_name}ById'] as CMT;",
-        f"const Outputs_display = [Outputs, 'display'] as CMT;",
+        f"const Outputs_itemById = [Outputs, '{self.state.item_name}ById', this] as CMT;",
     ]
     return os.linesep.join([(indent + x) for x in result])
 
 
 def policies_section(self):
-    indent = "        "
+    indent = "      "
     result = [
         r"// selection",
         r"Facets.selectionUsesSelectableIds(getm(Outputs_display), getIds),",
