@@ -1,7 +1,0 @@
-{
-    "dependencies": {
-        "skandha": "^0.3.0",
-        "skandha-facets": "^0.3.0",
-        "skandha-mobx": "^0.3.0"
-    }
-}

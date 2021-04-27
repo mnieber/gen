@@ -1,6 +1,5 @@
-from moonleap import Prop, add, create_forward, extend, rule, tags
+from moonleap import Prop, create_forward, extend, rule, tags
 from moonleap.verbs import has, with_
-from moonleap_react.nodepackage import load_node_package_config
 
 from . import props
 from .resources import SelectionBehavior
@@ -9,7 +8,6 @@ from .resources import SelectionBehavior
 @tags(["selection:behavior"])
 def create_behavior(term, block):
     behavior = SelectionBehavior(name=term.data)
-    add(behavior, load_node_package_config(__file__))
     return behavior
 
 
