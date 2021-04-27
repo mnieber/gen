@@ -1,7 +1,6 @@
 {% magic_with res.name as yellowTulip %}
 {% magic_with res.module.name as gardenFlowers %}
 {% magic_with behavior.name as blueDaisy %}
-{% trim_newlines keep=1 %}
 import { setCallbacks } from 'aspiration';
 import {
   getm,
@@ -63,7 +62,6 @@ export class YellowTulipCtr extends Container {
     makeCtrObservable(this);
   }
 }
-{% end_trim_newlines %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

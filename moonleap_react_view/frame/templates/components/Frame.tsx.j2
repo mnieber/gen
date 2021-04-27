@@ -3,7 +3,6 @@
 import React from 'react';
 import classNames from 'classnames';
 import { observer } from 'mobx-react-lite';
-{% trim_newlines keep=1 %}
 
 {% for dep in res.dependencies %}
 import { RedRose } from "{{ dep.import_path }}/RedRose"
@@ -11,10 +10,8 @@ import { RedRose } from "{{ dep.import_path }}/RedRose"
 
 import "./YellowTulip.scss"
 
-{% end_trim_newlines %}
 type PropsT = React.PropsWithChildren<{}>;
 
-{% trim_newlines keep=0 %}
 export const YellowTulip: React.FC<PropsT> = observer(() => {
   return (
     <div
@@ -32,5 +29,4 @@ export const YellowTulip: React.FC<PropsT> = observer(() => {
     </div>
   );
 });
-{% end_trim_newlines %}
 {% end_magic_with %}
