@@ -4,5 +4,5 @@ from moonleap_react.component import Component
 
 
 @dataclass
-class ContainerProvider(Component):
+class StateProvider(Component):
     item_name: str

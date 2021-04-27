@@ -23,12 +23,12 @@ def create_list_view(term, block):
 
 
 @rule("list-view", has, "behavior")
-def list_view_uses_container(list_view, behavior):
+def list_view_uses_state(list_view, behavior):
     items_str = plural(list_view.item_name)
-    container_term_str = f"{items_str}:container"
+    state_term_str = f"{items_str}:state"
     return [
-        create_forward(list_view, uses, container_term_str),
-        create_forward(container_term_str, has, behavior),
+        create_forward(list_view, uses, state_term_str),
+        create_forward(state_term_str, has, behavior),
     ]
 
 
@@ -36,4 +36,4 @@ def list_view_uses_container(list_view, behavior):
 class ExtendListView:
     render = MemFun(render_templates(__file__))
     create_router_configs = MemFun(props.create_router_configs)
-    container = P.child(uses, "container")
+    state = P.child(uses, "state")

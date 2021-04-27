@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from moonleap_react_ctr.behavior.resources import Behavior
+from moonleap_react_state.behavior.resources import Behavior
 
 
 @dataclass

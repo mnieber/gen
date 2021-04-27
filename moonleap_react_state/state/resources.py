@@ -5,7 +5,7 @@ from moonleap_react.component import Component
 
 
 @dataclass
-class Container(Component):
+class State(Component):
     @property
     def item_name(self):
         return singular(self.name)

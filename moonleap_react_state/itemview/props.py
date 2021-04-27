@@ -7,18 +7,16 @@ def create_router_configs(self):
     router_config.url = "view"
     result = [router_config]
 
-    container = self.module.container
+    state = self.module.state
 
-    select_item_effect = container.select_item_effect if container else None
+    select_item_effect = state.select_item_effect if state else None
     if select_item_effect:
         result = prepend_router_configs(
             select_item_effect.create_router_configs(), result
         )
 
-    container_provider = container.container_provider if container else None
-    if container_provider:
-        result = prepend_router_configs(
-            container_provider.create_router_configs(), result
-        )
+    state_provider = state.state_provider if state else None
+    if state_provider:
+        result = prepend_router_configs(state_provider.create_router_configs(), result)
 
     return result

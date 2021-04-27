@@ -11,7 +11,7 @@ def imports_section(self):
 
 
 def callbacks_section(self):
-    facet_names = [x.name for x in self.container.behaviors]
+    facet_names = [x.name for x in self.state.behaviors]
     return process_lines(
         {
             101: r"setCallbacks(this.selection, {{",
@@ -34,7 +34,7 @@ def callbacks_section(self):
 def declare_policies_section(self):
     indent = "      "
     result = [
-        f"const Outputs_itemById = [Outputs, '{self.container.item_name}ById'] as CMT;",
+        f"const Outputs_itemById = [Outputs, '{self.state.item_name}ById'] as CMT;",
         f"const Outputs_display = [Outputs, 'display'] as CMT;",
     ]
     return os.linesep.join([(indent + x) for x in result])

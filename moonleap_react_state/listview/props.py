@@ -6,11 +6,9 @@ def create_router_configs(self):
     router_configs = create_component_router_config(self)
     result = [router_configs]
 
-    container = self.module.container
-    container_provider = container.container_provider if container else None
-    if container_provider:
-        result = prepend_router_configs(
-            container_provider.create_router_configs(), result
-        )
+    state = self.module.state
+    state_provider = state.state_provider if state else None
+    if state_provider:
+        result = prepend_router_configs(state_provider.create_router_configs(), result)
 
     return result

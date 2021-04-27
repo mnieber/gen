@@ -14,26 +14,26 @@ from moonleap_react.module import Module
 from moonleap_react.nodepackage import load_node_package_config
 
 from . import props
-from .resources import Container
+from .resources import State
 
 
-@tags(["container"])
-def create_container(term, block):
+@tags(["state"])
+def create_state(term, block):
     kebab_name = term.data
     name = kebab_to_camel(kebab_name)
-    container = Container(name=name)
-    add(container, load_node_package_config(__file__))
-    return container
+    state = State(name=name)
+    add(state, load_node_package_config(__file__))
+    return state
 
 
-@rule("module", has, "container")
-def module_has_container(module, container):
-    container.output_paths.add_source(module)
+@rule("module", has, "state")
+def module_has_state(module, state):
+    state.output_paths.add_source(module)
     module.service.utils_module.add_template_dir(__file__, "templates_utils")
 
 
-@extend(Container)
-class ExtendContainer:
+@extend(State)
+class ExtendState:
     render = MemFun(render_templates(__file__))
     behaviors = P.children(has, "behavior")
     bvrs_by_item_name = Prop(props.bvrs_by_item_name)
@@ -43,4 +43,4 @@ class ExtendContainer:
 
 @extend(Module)
 class ExtendModule:
-    container = P.child(has, "container")
+    state = P.child(has, "state")

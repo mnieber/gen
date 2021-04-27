@@ -4,7 +4,7 @@ from moonleap.render.process_lines import process_lines
 
 
 def callbacks_section(self):
-    facet_names = [x.name for x in self.container.behaviors]
+    facet_names = [x.name for x in self.state.behaviors]
     return process_lines(
         {
             101: r"setCallbacks(this.highlight, {",

@@ -11,9 +11,9 @@ def create_behavior(term, block):
     return behavior
 
 
-@rule("container", supports, "selection")
-def container_supports_selection(container, selection):
-    return create_forward(container, supports, f"{selection.item_name}:highlight")
+@rule("state", supports, "selection")
+def state_supports_selection(state, selection):
+    return create_forward(state, supports, f"{selection.item_name}:highlight")
 
 
 @extend(SelectionBvr)

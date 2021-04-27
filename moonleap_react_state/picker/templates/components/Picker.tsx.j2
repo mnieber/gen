@@ -36,7 +36,7 @@ export const YellowTulipPicker: FC<PropsT, DefaultPropsT> = observer((p: PropsT)
         isCreatable={true}
         pickableValues={props.yellowTulips}
         labelFromValue={(x: any) => x.name}
-        pickableValue={container.selection.item}
+        pickableValue={props.yellowTulipsSelection.item}
         onChange={onChange}
       />
     </div>

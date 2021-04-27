@@ -19,8 +19,8 @@ import * as FacetPolicies from 'skandha-facets/policies';
 {% endfor %}
 
 import { YellowTulipStore } from 'src/gardenFlowers/YellowTulipStore';
-import { Inputs } from 'src/gardenFlowers/YellowTulipCtr/facets/Inputs';
-import { Outputs } from 'src/gardenFlowers/YellowTulipCtr/facets/Outputs';
+import { Inputs } from 'src/gardenFlowers/YellowTulipState/facets/Inputs';
+import { Outputs } from 'src/gardenFlowers/YellowTulipState/facets/Outputs';
 import * as Policies from './policies';
 import * as Handlers from './handlers';
 
@@ -28,7 +28,7 @@ type PropsT = {
   yellowTulipStore: YellowTulipStore;
 };
 
-export class YellowTulipCtr {
+export class YellowTulipState {
 {% for item_name, bvrs in res.bvrs_by_item_name.items() %}
   {{ item_name | plural }} = {
 {% for bvr in bvrs %}
