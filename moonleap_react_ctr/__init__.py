@@ -4,11 +4,11 @@ from . import (
     behavior,
     container,
     containerprovider,
-    highlightbehavior,
+    highlightbvr,
     itemview,
     listview,
     picker,
-    selectionbehavior,
+    selectionbvr,
 )
 
 
@@ -16,8 +16,8 @@ def install_all():
     install(behavior)
     install(container)
     install(containerprovider)
-    install(highlightbehavior)
+    install(highlightbvr)
     install(itemview)
     install(listview)
     install(picker)
-    install(selectionbehavior)
+    install(selectionbvr)

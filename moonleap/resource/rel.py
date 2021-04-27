@@ -71,5 +71,7 @@ def create_forward(
     subj: T.Union[object, Term, str],
     verb: T.Union[str, T.Tuple[str]],
     obj: T.Union[object, Term, str],
+    subj_res: T.Any = None,
+    obj_res: T.Any = None,
 ):
-    return Forward(Rel(_to_term(subj), verb, _to_term(obj)))
+    return Forward(Rel(_to_term(subj), verb, _to_term(obj)), subj_res, obj_res)

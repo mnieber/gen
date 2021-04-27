@@ -4,5 +4,5 @@ from moonleap_react_ctr.behavior.resources import Behavior
 
 
 @dataclass
-class HighlightBehavior(Behavior):
+class HighlightBvr(Behavior):
     pass

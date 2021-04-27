@@ -2,7 +2,7 @@ from moonleap import upper0
 
 
 def imports_section(self):
-    facet_name = upper0(self.name)
+    facet_name = upper0(self.term.tag)
     return (
         f"import {{ {facet_name}, {facet_name}Cbs }} from 'skandha-facets/{facet_name}'"
     )

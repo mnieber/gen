@@ -19,7 +19,6 @@ import * as FacetPolicies from 'skandha-facets/policies';
 {% endfor %}
 
 import { YellowTulipStore } from 'src/gardenFlowers/YellowTulipStore';
-import { Container } from 'src/utils/Container';
 import { Inputs } from 'src/gardenFlowers/YellowTulipCtr/facets/Inputs';
 import { Outputs } from 'src/gardenFlowers/YellowTulipCtr/facets/Outputs';
 import * as Policies from './policies';
@@ -29,40 +28,24 @@ type PropsT = {
   yellowTulipStore: YellowTulipStore;
 };
 
-export class YellowTulipCtr extends Container {
-{% for behavior in res.behaviors %}
-{{ behavior.constructor_section }}
+export class YellowTulipCtr {
+{% for item_name, bvrs in res.bvrs_by_item_name.items() %}
+  {{ item_name | plural }} = {
+{% for bvr in bvrs %}
+    {{ bvr.constructor_section }}
+{% endfor %}
+  }
 {% endfor %}
 
   _setCallbacks(props: PropsT) {
-    const ctr = this;
-{% for behavior in res.behaviors %}
-
-{{ behavior.callbacks_section }}
-{% endfor %}
+{{ res.callbacks_section }}
   }
 
   _applyPolicies(props: PropsT) {
-{% remove_duplicates %}
 {{ res.declare_policies_section }}
-{% for behavior in res.behaviors %}
-{{ behavior.declare_policies_section }}
-{% endfor %}
-{% end_remove_duplicates %}
-
-      const policies = [
-{{ res.policies_section }}
-{% for behavior in res.behaviors %}
-{{ behavior.policies_section }}
-{% endfor %}
-      ];
-
-      installPolicies<YellowTulipCtr>(policies, this);
     }
 
   constructor(props: PropsT) {
-    super();
-
     registerFacets(this);
     this._setCallbacks(props);
     this._applyPolicies(props);

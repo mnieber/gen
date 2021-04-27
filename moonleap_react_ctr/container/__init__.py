@@ -9,7 +9,7 @@ from moonleap import (
     rule,
     tags,
 )
-from moonleap.verbs import has, with_
+from moonleap.verbs import has
 from moonleap_react.module import Module
 from moonleap_react.nodepackage import load_node_package_config
 
@@ -35,7 +35,8 @@ def module_has_container(module, container):
 @extend(Container)
 class ExtendContainer:
     render = MemFun(render_templates(__file__))
-    behaviors = P.children(has + with_, "behavior")
+    behaviors = P.children(has, "behavior")
+    bvrs_by_item_name = Prop(props.bvrs_by_item_name)
     declare_policies_section = Prop(props.declare_policies_section)
     policies_section = Prop(props.policies_section)
 

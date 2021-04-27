@@ -1,8 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import (
-    Forward,
-    Rel,
     StoreOutputPaths,
+    create_forward,
     extend,
     kebab_to_camel,
     rule,
@@ -30,8 +29,10 @@ def service_uses_port(service, port):
 
 @rule("service", uses + runs + has, "*", fltr_obj=P.fltr_instance(Tool))
 def service_has_tool(service, tool):
-    return Forward(
-        rel=Rel(service.term, has, word_to_term(":tool")),
+    return create_forward(
+        service,
+        has,
+        ":tool",
         subj_res=service,
         obj_res=tool,
     )

@@ -1,13 +1,15 @@
 import moonleap.resource.props as P
-from moonleap import Forward, Rel, extend, rule, word_to_term
+from moonleap import create_forward, extend, rule, word_to_term
 from moonleap.verbs import has, shows
 from moonleap_react.component import Component
 from moonleap_react.module import Module
 
 
 def module_has_component_rel(module, component):
-    return Forward(
-        rel=Rel(module.term, has, word_to_term(":component")),
+    return create_forward(
+        module,
+        has,
+        ":component",
         subj_res=module,
         obj_res=component,
     )

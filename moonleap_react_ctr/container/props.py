@@ -1,4 +1,14 @@
 import os
+from collections import defaultdict
+
+
+def bvrs_by_item_name(self):
+    __import__("pudb").set_trace()
+    result = defaultdict(lambda: [])
+    for bvr in self.behaviors:
+        item_name = bvr.item_name or self.item_name
+        result[item_name].append(bvr)
+    return result
 
 
 def declare_policies_section(self):
