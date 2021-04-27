@@ -37,21 +37,28 @@ export class YellowTulipCtr extends Container {
   _setCallbacks(props: PropsT) {
     const ctr = this;
 {% for behavior in res.behaviors %}
+
 {{ behavior.callbacks_section }}
 {% endfor %}
   }
 
   _applyPolicies(props: PropsT) {
 {% remove_duplicates %}
+{{ res.declare_policies_section }}
 {% for behavior in res.behaviors %}
 {{ behavior.declare_policies_section }}
 {% endfor %}
 {% end_remove_duplicates %}
 
+      const policies = [
+{{ res.policies_section }}
 {% for behavior in res.behaviors %}
 {{ behavior.policies_section }}
 {% endfor %}
-  }
+      ];
+
+      installPolicies<YellowTulipCtr>(policies, this);
+    }
 
   constructor(props: PropsT) {
     super();

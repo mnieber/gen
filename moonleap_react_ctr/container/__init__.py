@@ -1,9 +1,19 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, add, extend, kebab_to_camel, render_templates, rule, tags
+from moonleap import (
+    MemFun,
+    Prop,
+    add,
+    extend,
+    kebab_to_camel,
+    render_templates,
+    rule,
+    tags,
+)
 from moonleap.verbs import has, with_
 from moonleap_react.module import Module
 from moonleap_react.nodepackage import load_node_package_config
 
+from . import props
 from .resources import Container
 
 
@@ -26,6 +36,8 @@ def module_has_container(module, container):
 class ExtendContainer:
     render = MemFun(render_templates(__file__))
     behaviors = P.children(has + with_, "behavior")
+    declare_policies_section = Prop(props.declare_policies_section)
+    policies_section = Prop(props.policies_section)
 
 
 @extend(Module)
