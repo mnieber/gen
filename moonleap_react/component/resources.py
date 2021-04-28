@@ -8,7 +8,7 @@ from moonleap_react.module import Module
 @dataclass
 class Component(Resource):
     name: str
-    module: Module = field(init=False, compare=False)
+    module: Module = field(default=None, init=False, compare=False)
     dependencies: [T.Any] = field(
         default_factory=lambda: list(), init=False, repr=False
     )

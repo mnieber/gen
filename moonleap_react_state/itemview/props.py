@@ -15,8 +15,4 @@ def create_router_configs(self):
             select_item_effect.create_router_configs(), result
         )
 
-    state_provider = state.state_provider if state else None
-    if state_provider:
-        result = prepend_router_configs(state_provider.create_router_configs(), result)
-
     return result

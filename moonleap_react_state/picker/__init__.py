@@ -1,7 +1,6 @@
 from moonleap import MemFun, add, extend, kebab_to_camel, render_templates, tags, upper0
 from moonleap_react.nodepackage import load_node_package_config
 
-from . import props
 from .resources import Picker
 
 
@@ -17,4 +16,3 @@ def create_picker(term, block):
 @extend(Picker)
 class ExtendPicker:
     render = MemFun(render_templates(__file__))
-    create_router_configs = MemFun(props.create_router_configs)

@@ -15,13 +15,6 @@ class RouterConfig(Resource):
     wraps: bool = False
 
 
-def merge_router_configs(lhs, rhs):
-    return RouterConfig(
-        component=lhs.component,
-        url=lhs.url + rhs.url,
-    )
-
-
 def reduce_router_configs(router_configs):
     result = list(router_configs)
 

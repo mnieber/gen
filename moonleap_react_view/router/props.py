@@ -1,6 +1,5 @@
 import os
-import uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import ramda as R
 from moonleap.utils.case import upper0
@@ -46,12 +45,6 @@ def _append(x, indent, result):
 class Route:
     configs: [RouterConfig]
 
-    @property
-    def components(self):
-        return [x.component for x in self.configs]
-
-    id: str = field(default_factory=lambda: uuid.uuid4().hex, init=False)
-
 
 def get_routes(self):
     routes = []
@@ -69,10 +62,17 @@ def get_routes(self):
     return result_str
 
 
+def _move_url_values_up(route_configs):
+    urls = [x.url for x in route_configs if x.url]
+    for x in route_configs:
+        x.url = urls.pop(0) if urls else None
+    return route_configs
+
+
 def add_route(router_configs, routes):
     wrapped_children = router_configs[-1].component.wrapped_children
     if not wrapped_children:
-        routes.append(Route(configs=router_configs))
+        routes.append(Route(configs=_move_url_values_up(router_configs)))
         return
 
     for wrapped_child in wrapped_children:
@@ -84,7 +84,7 @@ def add_route(router_configs, routes):
 
 
 def add_result(routes, url, level, indent, result):
-    routes_by_first_component = group_by(lambda x: x.components[level], routes)
+    routes_by_first_component = group_by(lambda x: x.configs[level].component, routes)
 
     for _, group in routes_by_first_component:
         router_config = group[0].configs[level]
