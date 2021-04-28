@@ -1,14 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    Prop,
-    add,
-    extend,
-    kebab_to_camel,
-    render_templates,
-    rule,
-    tags,
-)
+from moonleap import MemFun, Prop, add, extend, kebab_to_camel, render_templates, tags
 from moonleap.verbs import has
 from moonleap_react.module import Module
 from moonleap_react.nodepackage import load_node_package_config
@@ -24,12 +15,6 @@ def create_state(term, block):
     state = State(name=name)
     add(state, load_node_package_config(__file__))
     return state
-
-
-@rule("module", has, "state")
-def module_has_state(module, state):
-    state.output_paths.add_source(module)
-    module.service.utils_module.add_template_dir(__file__, "templates_utils")
 
 
 @extend(State)

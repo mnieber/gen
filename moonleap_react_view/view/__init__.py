@@ -1,5 +1,6 @@
 from moonleap import MemFun, extend, kebab_to_camel, render_templates, tags
 
+from . import props
 from .resources import View
 
 
@@ -14,3 +15,4 @@ def create_view(term, block):
 @extend(View)
 class ExtendView:
     render = MemFun(render_templates(__file__))
+    create_router_configs = MemFun(props.create_router_configs)
