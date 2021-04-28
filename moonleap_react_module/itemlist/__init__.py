@@ -17,5 +17,5 @@ def store_contains_item_list(store, item_list):
     load_effect_term_str = f"{items_name}:load-items-effect"
     return [
         create_forward(store, contains, f"{item_list.item_name}:item-type"),
-        create_forward(store, has, load_effect_term_str),
+        create_forward(store.module, has, load_effect_term_str),
     ]

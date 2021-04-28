@@ -9,8 +9,8 @@ def create_router_configs(self):
 
     state = self.module.state
 
-    select_item_effect = state.select_item_effect if state else None
-    if select_item_effect:
+    select_item_effects = state.module.select_item_effects if state else None
+    for select_item_effect in select_item_effects:
         result = prepend_router_configs(
             select_item_effect.create_router_configs(), result
         )

@@ -10,8 +10,8 @@ def create_router_configs(self):
     result = [router_configs]
 
     store = self.module.store
-    load_items_effect = store.load_items_effect if store else None
-    if load_items_effect:
+    load_items_effects = (store.module.load_items_effects) if store else None
+    for load_items_effect in load_items_effects or []:
         result = prepend_router_configs(
             result, load_items_effect.create_router_configs()
         )

@@ -10,9 +10,8 @@ from moonleap import (
     tags,
     upper0,
 )
-from moonleap.utils.inflect import singular
 from moonleap.verbs import has, supports
-from moonleap_react_state.state.resources import State
+from moonleap_react.module import Module
 
 from . import props
 from .resources import SelectItemEffect
@@ -28,8 +27,10 @@ def create_select_item_effect(term, block):
 
 @rule("state", supports, "selection")
 def state_has_selection_behavior(state, behavior):
-    item_name = singular(state.name)
-    return create_forward(state, has, Term(item_name, "select-item-effect"))
+    item_name = kebab_to_camel(behavior.term.data) or state.item_name
+    module = state.module
+    if not [x for x in module.select_item_effects if x.item_name == item_name]:
+        return create_forward(module, has, Term(item_name, "select-item-effect"))
 
 
 @extend(SelectItemEffect)
@@ -38,6 +39,6 @@ class ExtendSelectItemEffect:
     create_router_configs = MemFun(props.create_router_configs)
 
 
-@extend(State)
-class ExtendState:
-    select_item_effect = P.child(has, "select-item-effect")
+@extend(Module)
+class ExtendModule:
+    select_item_effects = P.children(has, "select-item-effect")
