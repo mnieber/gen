@@ -1,9 +1,10 @@
 {% magic_with item_list.item_name as yellowTulip %}
 {% magic_with res.module.name as gardenFlowers %}
-import { action, observable, makeObservable } from 'mobx';
-import { forEach } from 'lodash/fp';
-import { RST, resetRS, updateRes } from 'src/utils/RST';
-import * as gardenFlowersApi from 'src/gardenFlowers/api';
+{% remove_duplicate_lines %}
+{% for api in res.apis %}
+{{ api.import_api_section }}
+{% endfor %}
+{% end_remove_duplicate_lines %}
 
 {% for item_list in res.item_lists %}
 import { YellowTulipT, YellowTulipByIdT } from 'src/gardenFlowers/types';
@@ -18,17 +19,8 @@ export class {{ res.name }} {
     makeObservable(this);
   }
 
-{% for item_list in res.item_lists %}
-  @action addYellowTulips = (yellowTulips: YellowTulipT[]) => {
-    forEach((yellowTulip: YellowTulipT) => {
-      this.yellowTulipById[yellowTulip.id] = yellowTulip;
-    }, yellowTulips);
-  }
-{% endfor %}
-
 {% for item_list, api in res.item_list_and_api_pairs %}
-{{ api.load_item_list_section(item_list) }}
-{{ api.save_list_item_section(item_list) }}
+{{ api.item_list_io_section(item_list) }}
 {% endfor %}
 
 }

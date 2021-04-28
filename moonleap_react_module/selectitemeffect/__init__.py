@@ -11,7 +11,7 @@ from moonleap import (
     upper0,
 )
 from moonleap.utils.inflect import singular
-from moonleap.verbs import has
+from moonleap.verbs import has, supports
 from moonleap_react_state.state.resources import State
 
 from . import props
@@ -26,7 +26,7 @@ def create_select_item_effect(term, block):
     return select_item_effect
 
 
-@rule("state", has, "selection:behavior")
+@rule("state", supports, "selection")
 def state_has_selection_behavior(state, behavior):
     item_name = singular(state.name)
     return create_forward(state, has, Term(item_name, "select-item-effect"))

@@ -16,6 +16,7 @@ def state_supports_a_behavior(state, behavior):
 @extend(Behavior)
 class ExtendBehavior(StoreNodePackageConfigs):
     state = P.parent(State, has, "behavior")
+    item_name = Prop(props.item_name)
 
     imports_section = Prop(props.imports_section)
     constructor_section = Prop(props.constructor_section)

@@ -6,4 +6,3 @@ from moonleap import Resource
 @dataclass
 class Behavior(Resource):
     name: str
-    item_name: str

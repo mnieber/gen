@@ -34,7 +34,7 @@ def callbacks_section(self):
 def declare_policies_section(self):
     indent = "    "
     result = [
-        f"const Outputs_itemById = [Outputs, '{self.state.item_name}ById', this] as CMT;",
+        f"const Outputs_itemById = [Outputs, '{self.item_name}ById', this] as CMT;",
     ]
     return os.linesep.join([(indent + x) for x in result])
 

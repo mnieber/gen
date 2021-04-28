@@ -2,33 +2,33 @@ import os
 
 import ramda as R
 
-remove_duplicates_tag = "{% remove_duplicates %}"
-end_remove_duplicates_tag = "{% end_remove_duplicates %}"
+remove_duplicate_lines_tag = "{% remove_duplicate_lines %}"
+end_remove_duplicate_lines_tag = "{% end_remove_duplicate_lines %}"
 
 
-def process_remove_duplicates(lines):
+def process_remove_duplicate_lines(lines):
     def t(x):
-        has_tag = x == remove_duplicates_tag or x == end_remove_duplicates_tag
+        has_tag = x == remove_duplicate_lines_tag or x == end_remove_duplicate_lines_tag
 
         return ("{% raw %}" + x + "{% endraw %}" + os.linesep) if has_tag else x
 
     return R.map(t, lines)
 
 
-def post_process_remove_duplicates(lines):
+def post_process_remove_duplicate_lines(lines):
     result = []
     removing = False
     known_lines = []
     count = 0
 
     for line in lines:
-        if line == remove_duplicates_tag:
+        if line == remove_duplicate_lines_tag:
             count += 1
             removing = True
             known_lines.clear()
             continue
 
-        if line == end_remove_duplicates_tag:
+        if line == end_remove_duplicate_lines_tag:
             count -= 1
             removing = False
             continue
@@ -43,7 +43,7 @@ def post_process_remove_duplicates(lines):
 
     if count != 0:
         raise Exception(
-            "{% remove_duplicates %} not matched equally by {% end_remove_duplicates %}"
+            "{% remove_duplicate_lines %} not matched equally by {% end_remove_duplicate_lines %}"
         )
 
     return result

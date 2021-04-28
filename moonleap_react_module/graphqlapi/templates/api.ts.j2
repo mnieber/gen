@@ -1,8 +1,5 @@
 {% magic_with item_type.name as yellowTulip %}
 {% magic_with item_list.item_name as redRose %}
-{% if not res.module.store.item_types  %}
-export {}
-{% endif %}
 import { always, flow } from 'lodash/fp';
 import { doQuery } from 'src/utils/graphqlClient';
 

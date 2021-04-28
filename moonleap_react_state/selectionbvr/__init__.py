@@ -7,7 +7,7 @@ from .resources import SelectionBvr
 
 @tags(["selection"])
 def create_behavior(term, block):
-    behavior = SelectionBvr(item_name=term.data, name=term.tag)
+    behavior = SelectionBvr(name=term.tag)
     return behavior
 
 

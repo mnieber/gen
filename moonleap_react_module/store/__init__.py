@@ -38,3 +38,4 @@ class ExtendStore(StoreTemplateDirs):
     item_lists = P.children(contains, "item-list")
     item_types = P.children(contains, "item-type")
     item_list_and_api_pairs = Prop(props.item_list_and_api_pairs)
+    apis = Prop(props.apis)

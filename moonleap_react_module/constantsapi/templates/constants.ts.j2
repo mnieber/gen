@@ -1,19 +1,15 @@
-{% magic_with item_type.name as yellowTulip %}
-{% if not res.module.store.item_types  %}
-export {}
-{% endif %}
-
-{% for item_type in res.module.store.items %}
-export const yellowTulipById = {
-  "1": {
+{% magic_with item_list.item_name as yellowTulip %}
+{% for item_list in res.module.store.item_lists %}
+export const yellowTulips: YellowTulipT[] = [
+  {
     id: "1",
     name: "first",
   },
-  "2": {
+  {
     id: "2",
     name: "second",
   },
-}
+]
 
 {% endfor %}
 {% end_magic_with %}

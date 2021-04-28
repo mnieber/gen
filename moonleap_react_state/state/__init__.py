@@ -40,6 +40,7 @@ class ExtendState:
     declare_policies_section = MemFun(props.declare_policies_section)
     policies_section = Prop(props.policies_section)
     constructor_section = Prop(props.constructor_section)
+    callbacks_section = Prop(props.callbacks_section)
     type_import_path = MemFun(props.type_import_path)
 
 

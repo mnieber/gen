@@ -1,7 +1,7 @@
 import os
 from collections import defaultdict
 
-from moonleap import Term
+from moonleap import Term, upper0
 from moonleap.utils.inflect import plural
 
 
@@ -20,19 +20,38 @@ def constructor_section(self):
         f"outputs = new Outputs();",
     ]
 
+    for item_name, bvrs in self.bvrs_by_item_name.items():
+        result += [f"{plural(item_name)} = {{"]
+        for bvr in bvrs:
+            result += [bvr.constructor_section]
+        result += [r"}"]
+
+    return os.linesep.join([(indent + x) for x in result])
+
+
+def callbacks_section(self):
+    indent = "  "
+    result = []
+
+    for item_name, bvrs in self.bvrs_by_item_name.items():
+        redRoses = upper0(plural(item_name))
+        result += [
+            f"_set{upper0(redRoses)}Callbacks(props: PropsT) {{",
+            f"  const ctr = this.{redRoses};",
+        ]
+        for bvr in bvrs:
+            result += [bvr.callbacks_section]
+        result += [r"}", ""]
+
     return os.linesep.join([(indent + x) for x in result])
 
 
 def declare_policies_section(self, item_name):
-    facet_names = [x.name for x in self.behaviors]
     indent = "    "
     result = [
         f"const Inputs_items = [Inputs, '{plural(item_name)}', this] as CMT;",
+        f"const Outputs_display = [Outputs, '{plural(item_name)}Display', this] as CMT;",
     ]
-    if "filtering" not in facet_names:
-        result += [
-            f"const Outputs_display = [Outputs, '{plural(item_name)}Display', this] as CMT;",
-        ]
 
     return os.linesep.join([(indent + x) for x in result])
 

@@ -1,4 +1,9 @@
-from moonleap import upper0
+from moonleap import kebab_to_camel, upper0
+
+
+def item_name(self):
+    item_name = kebab_to_camel(self.term.data)
+    return item_name or self.state.item_name
 
 
 def imports_section(self):

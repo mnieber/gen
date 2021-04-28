@@ -1,5 +1,14 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, add, create_forward, extend, render_templates, rule, tags
+from moonleap import (
+    MemFun,
+    Prop,
+    add,
+    create_forward,
+    extend,
+    render_templates,
+    rule,
+    tags,
+)
 from moonleap.verbs import has
 from moonleap_react.component import Component
 from moonleap_react.module import Module
@@ -31,8 +40,8 @@ def create_utils_module(module, graphql_api):
 class ExtendGraphqlApi:
     render = MemFun(render_templates(__file__))
     construct_item_list_section = MemFun(props.construct_item_list_section)
-    load_item_list_section = MemFun(props.load_item_list_section)
-    save_list_item_section = MemFun(props.save_list_item_section)
+    item_list_io_section = MemFun(props.item_list_io_section)
+    import_api_section = Prop(props.import_api_section)
 
 
 @extend(Module)

@@ -14,9 +14,11 @@ import { makeCtrObservable } from 'skandha-mobx';
 import { getIds } from 'src/utils/ids.ts';
 import * as Facets from 'skandha-facets';
 import * as FacetPolicies from 'skandha-facets/policies';
-{% for behavior in res.behaviors %}
-{{ behavior.imports_section }}
+{% remove_duplicate_lines %}
+{% for bvr in res.behaviors %}
+{{ bvr.imports_section }}
 {% endfor %}
+{% end_remove_duplicate_lines %}
 
 import { YellowTulipStore } from 'src/gardenFlowers/YellowTulipStore';
 import { Inputs } from 'src/gardenFlowers/YellowTulipState/facets/Inputs';
@@ -31,34 +33,23 @@ type PropsT = {
 export class YellowTulipState {
 {{ res.constructor_section }}
 
+{{ res.callbacks_section }}
+
 {% for item_name, bvrs in res.bvrs_by_item_name.items() %}
-  {{ item_name | plural }} = {
-{% for bvr in bvrs %}
-{{ bvr.constructor_section }}
-{% endfor %}
-  }
-
-  _setRedRosesCallbacks(props: PropsT) {
-    const ctr = this.redRoses;
-
-{% for bvr in bvrs %}
-{{ bvr.callbacks_section }}
-{% endfor %}
-  }
-
   _applyRedRosesPolicies(props: PropsT) {
 {{ res.declare_policies_section(item_name) }}
-{% for bvr in res.behaviors %}
+{% for bvr in bvrs %}
 {{ bvr.declare_policies_section }}
 {% endfor %}
 
     const policies = [
 {{ res.policies_section }}
-{% for bvr in res.behaviors %}
+{% for bvr in bvrs %}
 {{ bvr.policies_section }}
 {% endfor %}
     ];
   }
+
 {% endfor %}
 
   constructor(props: PropsT) {

@@ -6,7 +6,7 @@ from .resources import HighlightBvr
 
 @tags(["highlight"])
 def create_behavior(term, block):
-    behavior = HighlightBvr(item_name=term.data, name=term.tag)
+    behavior = HighlightBvr(name=term.tag)
     return behavior
 
 
