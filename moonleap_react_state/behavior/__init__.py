@@ -1,17 +1,11 @@
 import moonleap.resource.props as P
-from moonleap import Prop, create_forward, extend, rule, tags
+from moonleap import Prop, create_forward, extend, rule
 from moonleap.verbs import has, supports
 from moonleap_react.nodepackage import StoreNodePackageConfigs
 from moonleap_react_state.state.resources import State
 
 from . import props
 from .resources import Behavior
-
-
-@tags(["behavior"])
-def create_behavior(term, block):
-    behavior = Behavior(name=term.data)
-    return behavior
 
 
 @rule("state", supports, "*", fltr_obj=P.fltr_instance(Behavior))

@@ -6,27 +6,6 @@ export {}
 import { always, flow } from 'lodash/fp';
 import { doQuery } from 'src/utils/graphqlClient';
 
-{% for item_type in res.module.store.items %}
-export function getYellowTulip() {
-  const query = `query queryYellowTulip {
-    id
-    name
-  }`;
-  const vars = {};
-  return doQuery(query, vars).then((response) => {
-    return {
-      yellowTulip: flow(
-        always(response.yellowTulip),
-      )(),
-    };
-  });
-}
-
-export function saveYellowTulip(values: any) {
-    console.log("TODO: save", values);
-}
-{% endfor %}
-
 {% for item_list in res.module.store.item_lists %}
 export function getRedRoses() {
   const query = `query queryRedRoses {

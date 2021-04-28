@@ -10,9 +10,8 @@ import { YellowTulipT, YellowTulipByIdT } from 'src/gardenFlowers/types';
 {% endfor %}
 
 export class {{ res.name }} {
-{% for item_list in res.item_lists %}
-  @observable yellowTulipById: YellowTulipByIdT = {};
-  @observable yellowTulipByIdRS: RST = resetRS();
+{% for item_list, api in res.item_list_and_api_pairs %}
+{{ api.construct_item_list_section(item_list) }}
 {% endfor %}
 
   constructor() {
@@ -27,27 +26,9 @@ export class {{ res.name }} {
   }
 {% endfor %}
 
-{% for item_list in res.item_lists %}
-  @action loadYellowTulips = () => {
-    updateRes(
-      this,
-      'yellowTulipByIdRS',
-      () => {
-        return gardenFlowersApi.getYellowTulips();
-      },
-      (response: any) => {
-        this.addYellowTulips(response.yellowTulips);
-      },
-      (message: any) => {
-        console.log(message);
-        return 'Oops, there was an error getting the yellowTulips data';
-      }
-    );
-  }
-
-  @action saveYellowTulip = (values: any) => {
-    gardenFlowersApi.saveYellowTulip(values);
-  }
+{% for item_list, api in res.item_list_and_api_pairs %}
+{{ api.load_item_list_section(item_list) }}
+{{ api.save_list_item_section(item_list) }}
 {% endfor %}
 
 }

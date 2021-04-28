@@ -4,9 +4,12 @@ from moonleap.verbs import has
 from moonleap_react.component import Component
 from moonleap_react.module import Module
 from moonleap_react.nodepackage import load_node_package_config
+from moonleap_react_module.api import Api
+
+from . import props
 
 
-class GraphqlApi(Component):
+class GraphqlApi(Api):
     pass
 
 
@@ -27,8 +30,11 @@ def create_utils_module(module, graphql_api):
 @extend(GraphqlApi)
 class ExtendGraphqlApi:
     render = MemFun(render_templates(__file__))
+    construct_item_list_section = MemFun(props.construct_item_list_section)
+    load_item_list_section = MemFun(props.load_item_list_section)
+    save_list_item_section = MemFun(props.save_list_item_section)
 
 
 @extend(Module)
 class ExtendModule:
-    api = P.child(has, "api")
+    graphql_api = P.child(has, "graphql:api")
