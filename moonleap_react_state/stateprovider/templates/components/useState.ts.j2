@@ -1,0 +1,12 @@
+{% magic_with res.item_name as yellowTulip %}
+import React from "react";
+import { YellowTulipsStateContext } from "./YellowTulipsStateProvider";
+
+export const useYellowTulipsState = () => {
+  const state = React.useContext(YellowTulipsStateContext);
+  if (!state) {
+    throw new Error("useYellowTulipsState must be used within a YellowTulipsStateProvider.");
+  }
+  return state;
+};
+{% end_magic_with %}

@@ -23,7 +23,7 @@ def create_state_provider(term, block):
     items_name = kebab_to_camel(kebab_name)
     item_name = singular(items_name)
     state_provider = StateProvider(
-        name=f"{upper0(items_name)}CtrProvider", item_name=item_name
+        name=f"{upper0(items_name)}StateProvider", item_name=item_name
     )
     return state_provider
 

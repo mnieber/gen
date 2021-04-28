@@ -4,29 +4,29 @@ import * as React from 'react';
 import { values } from 'lodash/fp';
 import { reaction } from 'mobx';
 
-import { YellowTulipsContainer } from 'src/gardenFlowers/YellowTulipsCtr';
-import { CtrProvider } from 'react-default-props-context';
+import { YellowTulipsState } from 'src/gardenFlowers/YellowTulipsState';
+import { StateProvider } from 'react-default-props-context';
 import { useStore } from 'src/app/components';
 
 type PropsT = React.PropsWithChildren<{}>;
 
 // Note: don't observe this with MobX
-export const YellowTulipsCtrProvider: React.FC<PropsT> = (props: PropsT) => {
+export const YellowTulipsStateProvider: React.FC<PropsT> = (props: PropsT) => {
   const { yellowTulipsStore } = useStore();
 
-  const createCtr = () => {
-    return new YellowTulipsContainer({
+  const createState = () => {
+    return new YellowTulipsState({
       yellowTulipsStore: yellowTulipsStore,
     });
   };
 
-  const updateCtr = (ctr: YellowTulipsContainer) => {
+  const updateState = (state: YellowTulipsState) => {
     reaction(
       () => ({
         yellowTulipById: yellowTulipsStore.yellowTulipById
       }),
       ({ yellowTulipById }) => {
-        ctr.inputs.yellowTulips = values(yellowTulipById);
+        state.inputs.yellowTulips = values(yellowTulipById);
       },
       {
         fireImmediately: true,
@@ -34,26 +34,26 @@ export const YellowTulipsCtrProvider: React.FC<PropsT> = (props: PropsT) => {
     );
   };
 
-  const getDefaultProps = (ctr: YellowTulipsContainer) => {
+  const getDefaultProps = (state: YellowTulipsState) => {
     return {
-      yellowTulipsCtr: () => ctr,
-      yellowTulip: () => ctr.highlight.item,
+      yellowTulipsState: () => state,
+      yellowTulip: () => state.highlight.item,
       yellowTulipRS: () => yellowTulipsStore.yellowTulipByIdRS,
-      yellowTulips: () => ctr.outputs.display,
+      yellowTulips: () => state.outputs.display,
       yellowTulipsRS: () => yellowTulipsStore.yellowTulipByIdRS,
-      yellowTulipsSelection: () => ctr.selection,
+      yellowTulipsSelection: () => state.selection,
     };
   };
 
   return (
-    <CtrProvider
-      createCtr={createCtr}
-      updateCtr={updateCtr}
-      destroyCtr={(ctr) => ctr.destroy()}
+    <StateProvider
+      createState={createState}
+      updateState={updateState}
+      destroyState={(state) => state.destroy()}
       getDefaultProps={getDefaultProps}
     >
       {props.children}
-    </CtrProvider>
+    </StateProvider>
   );
 };
 {% end_magic_with %}
