@@ -30,12 +30,10 @@ def create_state_provider(term, block):
 
 @rule("state")
 def state_created(state):
-    return create_forward(state, has, f"{state.name}:state-provider")
-
-
-@rule("state", has, "state-provider")
-def state_has_state_provider(state, state_provider):
-    state_provider.output_paths.add_source(state)
+    return [
+        create_forward(state.module, has, f"{state.name}:state-provider"),
+        create_forward(state, has, f"{state.name}:state-provider"),
+    ]
 
 
 @extend(State)

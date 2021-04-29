@@ -1,15 +1,14 @@
 import moonleap.resource.props as P
-from moonleap import extend, rule, upper0
+from moonleap import create_forward, extend, rule, upper0
 from moonleap.verbs import has
 from moonleap_react_view.frame.resources import Frame
 
 
 @rule("frame", has, "panel")
 def frame_has_panel(frame, panel):
-    panel.output_paths.add_source(frame)
-    panel.name = frame.item_name + upper0(panel.type) + "Panel"
-    panel.module = frame.module
+    panel.name = frame.name + upper0(panel.type) + "Panel"
     frame.dependencies.append(panel)
+    return create_forward(frame.module, has, panel)
 
 
 @extend(Frame)

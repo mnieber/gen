@@ -1,18 +1,8 @@
 import moonleap.resource.props as P
-from moonleap import create_forward, extend, rule, word_to_term
+from moonleap import extend, rule
 from moonleap.verbs import has, shows
 from moonleap_react.component import Component
 from moonleap_react.module import Module
-
-
-def module_has_component_rel(module, component):
-    return create_forward(
-        module,
-        has,
-        ":component",
-        subj_res=module,
-        obj_res=component,
-    )
 
 
 @rule("module", has, "*", fltr_obj=P.fltr_instance(Component))
