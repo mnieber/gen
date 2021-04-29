@@ -4,13 +4,10 @@ from moonleap_react_view.router_and_module.props import create_component_router_
 
 def create_router_configs(self):
     router_config = create_component_router_config(self)
-    router_config.url = "view"
+    router_config.url = f"{self.item_name}"
     result = [router_config]
 
-    state = self.module.state
-
-    select_item_effects = state.module.select_item_effects if state else None
-    for select_item_effect in select_item_effects:
+    for select_item_effect in self.module.select_item_effects:
         result = prepend_router_configs(
             select_item_effect.create_router_configs(), result
         )
