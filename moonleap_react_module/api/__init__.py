@@ -1,14 +1,16 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, extend
+from moonleap import MemFun, Prop, extend, tags
 from moonleap.verbs import has, provides
-from moonleap_react.component import Component
 from moonleap_react.module import Module
 
 from . import props
+from .resources import Api  # noqa
 
 
-class Api(Component):
-    pass
+@tags(["api"])
+def create_api(block, term):
+    api = Api(name="api")
+    return api
 
 
 @extend(Api)

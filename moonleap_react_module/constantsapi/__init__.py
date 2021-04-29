@@ -15,6 +15,7 @@ class ConstantsApi(Api):
 @tags(["constants:api"])
 def create_constants_api(term, block):
     constants_api = ConstantsApi(name="api")
+    constants_api.has_load_effects = False
     return constants_api
 
 
