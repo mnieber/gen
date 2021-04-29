@@ -70,12 +70,12 @@ def _move_url_values_up(route_configs):
 
 
 def add_route(router_configs, routes):
-    wrapped_children = router_configs[-1].component.wrapped_children
-    if not wrapped_children:
+    wrapped_child_components = router_configs[-1].component.wrapped_child_components
+    if not wrapped_child_components:
         routes.append(Route(configs=_move_url_values_up(router_configs)))
         return
 
-    for wrapped_child in wrapped_children:
+    for wrapped_child in wrapped_child_components:
         more_router_configs = wrapped_child.create_router_configs()
         if more_router_configs:
             add_route(

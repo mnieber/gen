@@ -19,7 +19,7 @@ def reduce_router_configs(router_configs):
     result = list(router_configs)
 
     for router_config in router_configs:
-        for child_component in router_config.component.children:
+        for child_component in router_config.component.child_components:
             child_router_configs = child_component.create_router_configs()
             if not child_router_configs or len(child_router_configs) < 2:
                 continue
