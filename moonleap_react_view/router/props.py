@@ -20,11 +20,19 @@ def group_by(get_key, xs):
 
 def get_route_imports(self):
     components = []
+
+    def add(component):
+        queue = [component]
+        while queue:
+            component = queue.pop()
+            if component not in components:
+                components.append(component)
+            queue.extend(component.wrapped_child_components)
+
     for module in self.module.service.modules:
         for component in module.routed_components:
             for router_config in component.create_router_configs():
-                if router_config.component not in components:
-                    components.append(router_config.component)
+                add(router_config.component)
 
     result = []
     imports_by_module_name = R.group_by(lambda x: x.module.name, components)
