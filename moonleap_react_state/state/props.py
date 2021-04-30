@@ -13,6 +13,18 @@ def bvrs_by_item_name(self):
     return result
 
 
+def store_by_item_name(self):
+    result = {}
+    stores = [x.store for x in self.module.service.modules if x.store]
+
+    for item_name in bvrs_by_item_name(self).keys():
+        for store in stores:
+            if [x for x in store.item_lists if x.item_name == item_name]:
+                result[item_name] = store
+                break
+    return result
+
+
 def constructor_section(self):
     indent = "  "
     result = [
@@ -40,7 +52,7 @@ def callbacks_section(self):
             f"  const ctr = this.{redRoses};",
         ]
         for bvr in bvrs:
-            result += [bvr.callbacks_section]
+            result += [bvr.callbacks_section(self.behaviors)]
         result += [r"}", ""]
 
     return os.linesep.join([(indent + x) for x in result])

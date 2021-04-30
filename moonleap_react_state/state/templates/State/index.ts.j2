@@ -4,6 +4,7 @@
 import { setCallbacks } from 'aspiration';
 import {
   getm,
+  cleanUpCtr,
   mapDataToFacet,
   facet,
   installPolicies,
@@ -39,18 +40,26 @@ export class YellowTulipState {
   _applyRedRosesPolicies(props: PropsT) {
 {{ res.declare_policies_section(item_name) }}
 {% for bvr in bvrs %}
-{{ bvr.declare_policies_section }}
+{{ bvr.declare_policies_section(bvrs) }}
 {% endfor %}
 
     const policies = [
 {{ res.policies_section }}
 {% for bvr in bvrs %}
-{{ bvr.policies_section }}
+{{ bvr.policies_section(bvrs) }}
 {% endfor %}
     ];
+
+    installPolicies(this.redRoses, policies);
   }
 
 {% endfor %}
+
+  destroy() {
+{% for item_name, bvrs in res.bvrs_by_item_name.items() %}
+    cleanUpCtr(this.redRoses);
+{% endfor %}
+  }
 
   constructor(props: PropsT) {
 {% for item_name, bvrs in res.bvrs_by_item_name.items() %}

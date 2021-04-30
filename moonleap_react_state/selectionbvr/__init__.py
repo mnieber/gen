@@ -1,5 +1,5 @@
-from moonleap import Prop, create_forward, extend, rule, tags
-from moonleap.verbs import supports
+from moonleap import MemFun, Prop, create_forward, extend, rule, tags
+from moonleap.verbs import provides
 
 from . import props
 from .resources import SelectionBvr
@@ -11,14 +11,14 @@ def create_behavior(term, block):
     return behavior
 
 
-@rule("state", supports, "selection")
-def state_supports_selection(state, selection):
-    return create_forward(state, supports, f"{selection.item_name}:highlight")
+@rule("state", provides, "selection")
+def state_provides_selection(state, selection):
+    return create_forward(state, provides, f"{selection.item_name}:highlight")
 
 
 @extend(SelectionBvr)
 class ExtendSelectionBvr:
     imports_section = Prop(props.imports_section)
-    callbacks_section = Prop(props.callbacks_section)
-    declare_policies_section = Prop(props.declare_policies_section)
-    policies_section = Prop(props.policies_section)
+    callbacks_section = MemFun(props.callbacks_section)
+    declare_policies_section = MemFun(props.declare_policies_section)
+    policies_section = MemFun(props.policies_section)

@@ -3,8 +3,8 @@ import os
 from moonleap.render.process_lines import process_lines
 
 
-def callbacks_section(self):
-    facet_names = [x.name for x in self.state.behaviors]
+def callbacks_section(self, bvrs):
+    facet_names = [x.name for x in bvrs]
     return process_lines(
         {
             101: r"setCallbacks(ctr.highlight, {",
@@ -20,7 +20,7 @@ def callbacks_section(self):
     )
 
 
-def policies_section(self):
+def policies_section(self, bvrs):
     indent = "      "
     result = [
         r"// highlight",

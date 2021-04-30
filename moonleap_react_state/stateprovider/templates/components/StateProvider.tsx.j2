@@ -1,32 +1,43 @@
-{% magic_with res.item_name as yellowTulip %}
+{% magic_with res.state.name as yellowTulip %}
+{% magic_with item_name as redRose %}
+{% magic_with store.name as BlueDaisy %}
 {% magic_with res.module.name as gardenFlowers %}
 import * as React from 'react';
-import { values } from 'lodash/fp';
 import { reaction } from 'mobx';
 
-import { YellowTulipsState } from 'src/gardenFlowers/YellowTulipsState';
+import { YellowTulipState } from 'src/gardenFlowers/YellowTulipState';
 import { StateProvider } from 'react-default-props-context';
 import { useStore } from 'src/app/components';
 
 type PropsT = React.PropsWithChildren<{}>;
 
 // Note: don't observe this with MobX
-export const YellowTulipsStateProvider: React.FC<PropsT> = (props: PropsT) => {
-  const { yellowTulipsStore } = useStore();
+export const YellowTulipStateProvider: React.FC<PropsT> = (props: PropsT) => {
+  const {
+{% for item_name, store in res.state.store_by_item_name.items() %}
+    blueDaisy,
+{% endfor %}
+  } = useStore();
 
   const createState = () => {
-    return new YellowTulipsState({
-      yellowTulipsStore: yellowTulipsStore,
+    return new YellowTulipState({
+{% for item_name, store in res.state.store_by_item_name.items() %}
+      blueDaisy,
+{% endfor %}
     });
   };
 
   const updateState = (state: YellowTulipsState) => {
     reaction(
       () => ({
-        yellowTulipById: yellowTulipsStore.yellowTulipById
+{% for item_name, store in res.state.store_by_item_name.items() %}
+        redRoses = values(blueDaisy.redRoseById),
+{% endfor %}
       }),
-      ({ yellowTulipById }) => {
-        state.inputs.yellowTulips = values(yellowTulipById);
+      (inputs) => {
+{% for item_name, store in res.state.store_by_item_name.items() %}
+        state.inputs.redRoses = inputs.redRoses;
+{% endfor %}
       },
       {
         fireImmediately: true,
@@ -34,13 +45,13 @@ export const YellowTulipsStateProvider: React.FC<PropsT> = (props: PropsT) => {
     );
   };
 
-  const getDefaultProps = (state: YellowTulipsState) => {
+  const getDefaultProps = (state: YellowTulipState) => {
     return {
-      yellowTulipsState: () => state,
+      yellowTulipState: () => state,
       yellowTulip: () => state.highlight.item,
-      yellowTulipRS: () => yellowTulipsStore.yellowTulipByIdRS,
+      yellowTulipRS: () => gardenFlowersStore.yellowTulipByIdRS,
       yellowTulips: () => state.outputs.display,
-      yellowTulipsRS: () => yellowTulipsStore.yellowTulipByIdRS,
+      yellowTulipsRS: () => gardenFlowersStore.yellowTulipByIdRS,
       yellowTulipsSelection: () => state.selection,
     };
   };
@@ -56,5 +67,7 @@ export const YellowTulipsStateProvider: React.FC<PropsT> = (props: PropsT) => {
     </StateProvider>
   );
 };
+{% end_magic_with %}
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

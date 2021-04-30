@@ -1,11 +1,10 @@
-from moonleap.utils.inflect import plural
 from moonleap_react_view.router.resources import prepend_router_configs
 from moonleap_react_view.router_and_module.props import create_component_router_config
 
 
 def create_router_configs(self):
     router_configs = create_component_router_config(
-        self, wraps=True, url=plural(self.item_name)
+        self, wraps=True, url=self.state.name
     )
     result = [router_configs]
 

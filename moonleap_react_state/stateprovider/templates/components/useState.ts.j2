@@ -1,11 +1,11 @@
-{% magic_with res.item_name as yellowTulip %}
+{% magic_with res.state.name as yellowTulip %}
 import React from "react";
-import { YellowTulipsStateContext } from "./YellowTulipsStateProvider";
+import { YellowTulipStateContext } from "./YellowTulipStateProvider";
 
-export const useYellowTulipsState = () => {
-  const state = React.useContext(YellowTulipsStateContext);
+export const useYellowTulipState = () => {
+  const state = React.useContext(YellowTulipStateContext);
   if (!state) {
-    throw new Error("useYellowTulipsState must be used within a YellowTulipsStateProvider.");
+    throw new Error("useYellowTulipState must be used within a YellowTulipStateProvider.");
   }
   return state;
 };

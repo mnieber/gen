@@ -10,7 +10,7 @@ from moonleap import (
     tags,
     upper0,
 )
-from moonleap.verbs import has, supports
+from moonleap.verbs import has, provides
 from moonleap_react.module import Module
 
 from . import props
@@ -25,12 +25,11 @@ def create_select_item_effect(term, block):
     return select_item_effect
 
 
-@rule("state", supports, "selection")
-def state_has_selection_behavior(state, behavior):
-    item_name = kebab_to_camel(behavior.term.data) or state.item_name
-    module = state.module
-    if not [x for x in module.select_item_effects if x.item_name == item_name]:
-        return create_forward(module, has, Term(item_name, "select-item-effect"))
+@rule("state", provides, "selection")
+def state_provides_selection(state, selectionbvr):
+    return create_forward(
+        state.module, has, Term(selectionbvr.item_name, "select-item-effect")
+    )
 
 
 @extend(SelectItemEffect)

@@ -1,4 +1,4 @@
-from moonleap import Prop, extend, tags
+from moonleap import MemFun, extend, tags
 
 from . import props
 from .resources import HighlightBvr
@@ -12,5 +12,5 @@ def create_behavior(term, block):
 
 @extend(HighlightBvr)
 class ExtendHighlightBvr:
-    callbacks_section = Prop(props.callbacks_section)
-    policies_section = Prop(props.policies_section)
+    callbacks_section = MemFun(props.callbacks_section)
+    policies_section = MemFun(props.policies_section)

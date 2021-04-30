@@ -18,19 +18,15 @@ from .resources import Frame
 @tags(["frame"])
 def create_frame(term, block):
     name = kebab_to_camel(term.data)
-    frame = Frame(item_name=name, name=f"{upper0(name)}Frame")
+    frame = Frame(name=f"{upper0(name)}Frame")
     return frame
 
 
 @rule("frame")
 def frame_created(frame):
-    if frame.item_name == frame.module.name:
-        return create_forward(frame, uses, f"{frame.item_name}:state")
-
-
-@rule("frame", uses, "state")
-def frame_uses_state(frame, state):
-    return create_forward(frame, uses, f"{state.name}:state-provider")
+    name = kebab_to_camel(frame.term.data)
+    if [x for x in frame.module.states if x.name == name]:
+        return create_forward(frame, uses, f"{name}:state-provider")
 
 
 @extend(Frame)

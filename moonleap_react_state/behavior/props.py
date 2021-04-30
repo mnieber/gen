@@ -2,8 +2,7 @@ from moonleap import kebab_to_camel, upper0
 
 
 def item_name(self):
-    item_name = kebab_to_camel(self.term.data)
-    return item_name or self.state.item_name
+    return kebab_to_camel(self.term.data)
 
 
 def imports_section(self):
@@ -18,13 +17,13 @@ def constructor_section(self):
     return f"    @facet {self.name}: {facet_name} = new {facet_name}();"
 
 
-def callbacks_section(self):
+def callbacks_section(self, bvrs):
     return ""
 
 
-def declare_policies_section(self):
+def declare_policies_section(self, bvrs):
     return ""
 
 
-def policies_section(self):
+def policies_section(self, bvrs):
     return ""

@@ -19,12 +19,8 @@ from .resources import StateProvider
 
 @tags(["state-provider"])
 def create_state_provider(term, block):
-    kebab_name = term.data
-    items_name = kebab_to_camel(kebab_name)
-    item_name = singular(items_name)
-    state_provider = StateProvider(
-        name=f"{upper0(items_name)}StateProvider", item_name=item_name
-    )
+    base_name = kebab_to_camel(term.data)
+    state_provider = StateProvider(name=f"{upper0(base_name)}StateProvider")
     return state_provider
 
 
@@ -45,3 +41,4 @@ class ExtendState:
 class ExtendStateProvider:
     render = MemFun(render_templates(__file__))
     create_router_configs = MemFun(props.create_router_configs)
+    state = P.parent(State, has, "state-provider")
