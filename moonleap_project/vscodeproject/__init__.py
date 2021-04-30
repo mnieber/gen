@@ -1,10 +1,8 @@
 import moonleap.resource.props as P
-from moonleap_dodo.layer import StoreLayerConfigs
-from moonleap_project.project import Project
-from moonleap import MemFun, StoreOutputPaths, add, extend, render_templates, rule, tags
+from moonleap import MemFun, StoreOutputPaths, extend, render_templates, tags
 from moonleap.verbs import has
+from moonleap_project.project import Project
 
-from . import layer_configs
 from .resources import VsCodeProject
 
 
@@ -14,12 +12,7 @@ def create_vscode_project(term, block):
     return vscode_project
 
 
-@rule("project", has, "vscode-project")
-def project_has_vscode_project(project, vscode_project):
-    add(project, layer_configs.get(project))
-
-
 @extend(VsCodeProject)
-class ExtendVsCodeProject(StoreOutputPaths, StoreLayerConfigs):
+class ExtendVsCodeProject(StoreOutputPaths):
     render = MemFun(render_templates(__file__))
     project = P.parent(Project, has, "vscode-project")

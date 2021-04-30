@@ -5,6 +5,7 @@ from argparse import ArgumentParser
 import moonleap_django
 import moonleap_dodo
 import moonleap_project
+import moonleap_project_and_dodo
 import moonleap_react
 import moonleap_react_module
 import moonleap_react_state
@@ -15,6 +16,7 @@ from moonleap.render.settings import load_settings_file
 
 moonleap_dodo.install_all()
 moonleap_project.install_all()
+moonleap_project_and_dodo.install_all()
 moonleap_tools.install_all()
 moonleap_react.install_all()
 moonleap_react_module.install_all()

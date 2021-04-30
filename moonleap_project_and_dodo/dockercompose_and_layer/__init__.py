@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import add, add_source, extend, rule
-from moonleap.verbs import configured_by
+from moonleap.verbs import configured_by, has
 from moonleap_dodo.layer import StoreLayerConfigs
 from moonleap_project.dockercompose.resources import DockerCompose
 
@@ -23,6 +23,12 @@ def docker_compose_configured_in_layer(docker_compose, layer):
         docker_compose,
         "The :layer receives layer configs from a :docker-compose",
     )
+
+
+@rule("project", has, "docker-compose")
+def project_has_docker_compose(project, docker_compose):
+    if not docker_compose.configured_by_layer:
+        project.layer_configs.add_source(docker_compose)
 
 
 @extend(DockerCompose)
