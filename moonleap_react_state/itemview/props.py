@@ -8,8 +8,9 @@ def create_router_configs(self):
     result = [router_config]
 
     for select_item_effect in self.module.select_item_effects:
-        result = prepend_router_configs(
-            select_item_effect.create_router_configs(), result
-        )
+        if select_item_effect.item_name == self.item_name:
+            result = prepend_router_configs(
+                select_item_effect.create_router_configs(), result
+            )
 
     return result
