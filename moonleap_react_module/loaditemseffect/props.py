@@ -2,7 +2,6 @@ from moonleap_react_view.router_and_module.props import create_component_router_
 
 
 def create_router_configs(self):
-    router_configs = create_component_router_config(self, url="")
-    router_configs.url = ""
-    result = [router_configs]
+    router_config = create_component_router_config(self, url="")
+    result = [router_config]
     return result

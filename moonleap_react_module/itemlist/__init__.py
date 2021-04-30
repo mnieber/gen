@@ -19,9 +19,13 @@ def store_contains_item_list(store, item_list):
 
     for api in store.apis:
         if api.provides_item_list(item_list) and api.has_load_effects:
-            items_name = plural(item_list.item_name)
-            load_effect_term_str = f"{items_name}:load-items-effect"
-            forwards.append(create_forward(store.module, has, load_effect_term_str))
+            forwards.append(
+                create_forward(
+                    store.module,
+                    has,
+                    f"{plural(item_list.item_name)}:load-items-effect",
+                )
+            )
             break
 
     return forwards
