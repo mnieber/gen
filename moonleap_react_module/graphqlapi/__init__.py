@@ -32,8 +32,7 @@ def create_graphql_api(term, block):
 @rule("module", has, "graphql:api")
 def create_utils_module(module, graphql_api):
     module.service.utils_module.add_template_dir(__file__, "templates_utils")
-    if not module.service.utils_module:
-        return create_forward(module.service, has, "utils:module")
+    return create_forward(module.service, has, "utils:module")
 
 
 @extend(GraphqlApi)

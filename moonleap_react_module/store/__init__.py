@@ -18,8 +18,7 @@ def create_store(term, block):
 
 @rule("module", has, "store")
 def create_utils_module(module, store):
-    if not module.service.utils_module:
-        return create_forward(module.service, has, "utils:module")
+    return create_forward(module.service, has, "utils:module")
 
 
 @rule("module", has, "store")
