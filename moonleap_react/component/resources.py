@@ -19,4 +19,6 @@ class Component(Resource):
 
     @property
     def import_path(self):
-        return self.merged_output_path
+        return self.merged_output_path.relative_to(
+            self.module.service.merged_output_path
+        )
