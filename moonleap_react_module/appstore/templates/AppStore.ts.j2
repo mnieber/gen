@@ -1,9 +1,12 @@
-{% magic_with substore.module.name as gardenFlowers %}
 {% magic_with substore.module.name as yellowTulip %}
+{% magic_with substore.name as RedRose %}
 import { observable, makeObservable } from 'mobx';
 {% for substore in res.substores %}
-import { GardenFlowersStore } from 'src/gardenFlowers/GardenFlowersStore';
+import { RedRose } from '{{ substore.import_path }}/RedRose';
 {% endfor %}
+{% if res.policies %}
+import * as Policies from '{{ res.import_path }}/policies';
+{% endif %}
 
 export class AppStore {
 {% for substore in res.substores %}
@@ -21,7 +24,9 @@ export class AppStore {
   }
 
   applyPolicies() {
-{{ res.policy_lines }}
+{% for policy in res.policies %}
+    Policies.{{ policy.name }}()(this);
+{% endfor %}
   }
 }
 {% end_magic_with %}

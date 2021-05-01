@@ -1,11 +1,6 @@
 import os
 
 
-def policy_lines(store):
-    result = []
-    return os.linesep.join(result)
-
-
 def item_list_and_api_pairs(self):
     result = []
     for api in self.module.apis:

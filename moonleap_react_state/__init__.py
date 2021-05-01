@@ -1,7 +1,16 @@
 from moonleap import install
 
-from . import (behavior, highlightbvr, itemview, listview, picker,
-               selectionbvr, state, stateprovider)
+from . import (
+    behavior,
+    highlightbvr,
+    itemview,
+    listview,
+    picker,
+    selectionbvr,
+    selectitemeffect,
+    state,
+    stateprovider,
+)
 
 
 def install_all():
@@ -13,3 +22,4 @@ def install_all():
     install(listview)
     install(picker)
     install(selectionbvr)
+    install(selectitemeffect)

@@ -10,7 +10,7 @@ from . import (
     itemlist,
     itemtype,
     loaditemseffect,
-    selectitemeffect,
+    policy,
     store,
     storeprovider,
     utilsmodule,
@@ -22,12 +22,12 @@ def install_all():
     install(appmodule)
     install(appstore)
     install(constantsapi)
-    install(loaditemseffect)
     install(flags)
     install(graphqlapi)
     install(itemlist)
     install(itemtype)
-    install(selectitemeffect)
+    install(loaditemseffect)
+    install(policy)
     install(store)
     install(storeprovider)
     install(utilsmodule)

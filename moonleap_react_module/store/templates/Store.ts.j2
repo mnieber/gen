@@ -4,6 +4,9 @@
 {% for api in res.apis %}
 {{ api.import_api_section }}
 {% endfor %}
+{% if res.policies %}
+import * as Policies from '{{ res.import_path }}/policies';
+{% endif %}
 {% end_remove_duplicate_lines %}
 
 {% for item_list in res.item_lists %}
@@ -17,6 +20,10 @@ export class {{ res.name }} {
 
   constructor() {
     makeObservable(this);
+{% for policy in res.policies %}
+    Policies.{{ policy.name }}()(this);
+{% endfor %}
+
   }
 
 {% for item_list, api in res.item_list_and_api_pairs %}

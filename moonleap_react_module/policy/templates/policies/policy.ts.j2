@@ -1,0 +1,16 @@
+{% magic_with res.name as yellowTulip %}
+{% magic_with res.store.name as RedRose %}
+import { reaction } from 'mobx';
+import { redRose } from '{{ res.store.import_path }}';
+
+export const yellowTulip = () => (redRose: RedRose) => {
+  reaction(
+    () => redRose,
+    (redRose) => {
+      // TODO
+    },
+    { fireImmediately: true }
+  );
+};
+{% end_magic_with %}
+{% end_magic_with %}

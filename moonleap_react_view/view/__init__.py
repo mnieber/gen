@@ -8,7 +8,7 @@ from .resources import View
 def create_view(term, block):
     kebab_name = term.data
     name = upper0(kebab_to_camel(kebab_name))
-    view = View(name=name + "View")
+    view = View(name=name)
     return view
 
 
