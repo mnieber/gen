@@ -16,4 +16,4 @@ def create_item_type(term, block):
 @extend(ItemType)
 class ExtendItemType(StoreOutputPaths):
     store = P.parent(Store, contains, "item-type")
-    import_path = Prop(props.import_path)
+    module_path = Prop(props.module_path)
