@@ -10,7 +10,6 @@ from moonleap import (
     tags,
 )
 from moonleap.verbs import has
-from moonleap_react.component import Component
 from moonleap_react.module import Module
 from moonleap_react.nodepackage import load_node_package_config
 from moonleap_react_module.api import Api

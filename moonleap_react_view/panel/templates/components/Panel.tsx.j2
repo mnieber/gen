@@ -1,18 +1,23 @@
 {% magic_with res.name as yellowTulip %}
 import React from 'react';
-import classNames from 'classnames';
+import { useDefaultProps, FC } from 'react-default-props-context';
+import classnames from 'classnames';
 import { observer } from 'mobx-react-lite';
 
-import "./YellowTulip.scss"
+import './YellowTulip.scss';
 
 type PropsT = React.PropsWithChildren<{
+  className?: any
 }>;
 
-export const YellowTulip: React.FC<PropsT> = observer(() => {
+type DefaultPropsT = {
+};
+
+export const YellowTulip: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
+  const props = useDefaultProps<PropsT, DefaultPropsT>(p);
+
   return (
-    <div
-      className={classnames('YellowTulip')}
-    >
+    <div className={classnames('YellowTulip'), props.classNames}>
     </div>
   );
 });

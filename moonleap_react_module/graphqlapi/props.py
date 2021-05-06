@@ -59,5 +59,5 @@ def item_list_io_section(self, item_list):
 def import_api_section(self):
     return magic_replace(
         import_api_template,
-        [("gardenFlowers", self.module.name), ("yellowTulip", item_list.item_name)],
+        [("gardenFlowers", self.module.name)],
     )

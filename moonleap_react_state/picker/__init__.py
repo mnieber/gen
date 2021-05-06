@@ -1,4 +1,15 @@
-from moonleap import MemFun, add, extend, kebab_to_camel, render_templates, tags, upper0
+from moonleap import (
+    MemFun,
+    add,
+    create_forward,
+    extend,
+    kebab_to_camel,
+    render_templates,
+    rule,
+    tags,
+    upper0,
+)
+from moonleap.verbs import has
 from moonleap_react.nodepackage import load_node_package_config
 
 from .resources import Picker
@@ -11,6 +22,12 @@ def create_picker(term, block):
     picker = Picker(item_name=item_name, name=name)
     add(picker, load_node_package_config(__file__))
     return picker
+
+
+@rule("module", has, "picker")
+def create_utils_module(module, picker):
+    module.service.utils_module.add_template_dir(__file__, "templates_utils")
+    return create_forward(module.service, has, "utils:module")
 
 
 @extend(Picker)

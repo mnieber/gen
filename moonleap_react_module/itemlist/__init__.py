@@ -1,8 +1,6 @@
 from moonleap import create_forward, kebab_to_camel, rule, tags
 from moonleap.utils.inflect import plural
 from moonleap.verbs import contains, has
-from moonleap_react_module.api.props import provides_item_list
-from moonleap_react_module.constantsapi import ConstantsApi
 
 from .resources import ItemList
 

@@ -14,7 +14,7 @@ def callbacks_section(self, bvrs):
     facet_names = [x.name for x in bvrs]
     return process_lines(
         {
-            101: r"setCallbacks(ctr.selection, {{",
+            101: r"setCallbacks(ctr.selection, {",
             102: r"  selectItem: {",
             103: r"    selectItem(this: SelectionCbs['selectItem']) {",
             104: r"      handleSelectItem(ctr.selection, this.selectionParams);",
@@ -47,3 +47,11 @@ def policies_section(self, bvrs):
         r"Facets.selectionUsesItemLookUpTable(getm(Outputs_itemById)),",
     ]
     return os.linesep.join([(indent + x) for x in result])
+
+
+def default_props_section(self, store):
+    indent = "      "
+    result = [
+        f"{self.item_names}Selection: () => state.{self.item_names}.selection,",
+    ]
+    return os.linesep.join([(indent + x) for x in result]) + os.linesep

@@ -1,12 +1,13 @@
 {% magic_with res.name as yellowTulip %}
 {% magic_with res.module.name as gardenFlowers %}
-import React from 'react';
 import { observer } from 'mobx-react-lite';
+import classnames from 'classnames';
 import { useDefaultProps, FC } from 'react-default-props-context';
 
 import "./YellowTulip.scss"
 
 type PropsT = {
+  className?: any
 };
 
 type DefaultPropsT = {
@@ -16,12 +17,12 @@ export const YellowTulip: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
   const props = useDefaultProps<PropsT, DefaultPropsT>(p);
 
   // TODO: Implement YellowTulip
-  const formDiv = (
-    <div className="YellowTulip flex flex-col w-full">
+  const div = (
+    <div className=classnames("YellowTulip flex flex-col w-full", props.className)>
     </div>
   );
 
-  return formDiv;
+  return div;
 });
 {% end_magic_with %}
 {% end_magic_with %}

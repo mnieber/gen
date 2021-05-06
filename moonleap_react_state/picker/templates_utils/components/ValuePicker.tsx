@@ -1,9 +1,7 @@
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import { isNil } from 'lodash/fp';
-import { observer } from 'mobx-react';
-
-import { handleEnterAsTabToNext } from 'src/utils/form_utils';
+import { observer } from 'mobx-react-lite';
 
 export interface PickerValueT {
   value: any;
@@ -53,9 +51,6 @@ export const ValuePicker = observer(
         ? (pickableValue as any).map(toPickerValue)
         : toPickerValue(pickableValue),
       onKeyDown: (e: any) => {
-        if (props.tabOnEnter ?? true) {
-          handleEnterAsTabToNext(e, false);
-        }
         if (others.onKeyDown) {
           others.onKeyDown(e);
         }

@@ -22,3 +22,4 @@ class ExtendSelectionBvr:
     callbacks_section = MemFun(props.callbacks_section)
     declare_policies_section = MemFun(props.declare_policies_section)
     policies_section = MemFun(props.policies_section)
+    default_props_section = MemFun(props.default_props_section)

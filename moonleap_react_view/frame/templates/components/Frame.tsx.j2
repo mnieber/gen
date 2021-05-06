@@ -1,21 +1,28 @@
 {% magic_with res.name as yellowTulip %}
 {% magic_with dep.name as redRose %}
 import React from 'react';
-import classNames from 'classnames';
+import { useDefaultProps, FC } from 'react-default-props-context';
+import classnames from 'classnames';
 import { observer } from 'mobx-react-lite';
 
 {% for dep in res.dependencies %}
-import { RedRose } from "{{ dep.import_path }}/RedRose"
+import { RedRose } from '{{ dep.module_path }}/components';
 {% endfor %}
 
-import "./YellowTulip.scss"
+import './YellowTulip.scss';
 
-type PropsT = React.PropsWithChildren<{}>;
+type PropsT = React.PropsWithChildren<{
+  className?: any
+}>;
 
-export const YellowTulip: React.FC<PropsT> = observer(() => {
+type DefaultPropsT = {
+};
+
+export const YellowTulip: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
+  const props = useDefaultProps<PropsT, DefaultPropsT>(p);
   return (
     <div
-      className={classnames('YellowTulip flex flex-col')}
+      className={classnames('YellowTulip flex flex-col', props.className)}
     >
       {{ res.top_panel.react_tag }}
       <div

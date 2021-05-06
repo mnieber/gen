@@ -1,7 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, Prop, extend, render_templates, tags
 from moonleap.verbs import has
-from moonleap_react.component import Component
 from moonleap_react.module import Module
 from moonleap_react_module.api import Api
 

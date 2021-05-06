@@ -5,3 +5,7 @@ export function listToItemById(qsList: Array<any>, key: string = "id") {
   });
   return result;
 }
+
+export function getIds(x: Array<any>): Array<string> {
+  return x.map((x) => x.id);
+}

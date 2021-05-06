@@ -6,7 +6,6 @@ from moonleap import (
     kebab_to_camel,
     rule,
     tags,
-    word_to_term,
 )
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has, runs, uses

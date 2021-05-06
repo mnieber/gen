@@ -1,8 +1,9 @@
 {% magic_with res.name as yellowTulip %}
-{% magic_with res.module.name as gardenFlowers %}
+{% magic_with store.name as BlueDaisy %}
 {% magic_with item_name as redRose %}
 import { setCallbacks } from 'aspiration';
 import {
+  facet,
   getm,
   cleanUpCtr,
   mapDataToFacet,
@@ -12,7 +13,7 @@ import {
   ClassMemberT as CMT,
 } from 'skandha';
 import { makeCtrObservable } from 'skandha-mobx';
-import { getIds } from 'src/utils/ids.ts';
+import { getIds } from 'src/utils/ids';
 import * as Facets from 'skandha-facets';
 import * as FacetPolicies from 'skandha-facets/policies';
 {% remove_duplicate_lines %}
@@ -21,17 +22,23 @@ import * as FacetPolicies from 'skandha-facets/policies';
 {% endfor %}
 {% end_remove_duplicate_lines %}
 
-import { YellowTulipStore } from 'src/gardenFlowers/YellowTulipStore';
-import { Inputs } from 'src/gardenFlowers/YellowTulipState/facets/Inputs';
-import { Outputs } from 'src/gardenFlowers/YellowTulipState/facets/Outputs';
+{% for item_name, store in res.store_by_item_name.items() %}
+import { BlueDaisy } from '{{ store.module_path }}/BlueDaisy';
+{% endfor %}
+import { Inputs } from '{{ res.module_path }}/YellowTulipState/facets/Inputs';
+import { Outputs } from '{{ res.module_path }}/YellowTulipState/facets/Outputs';
 import * as Policies from './policies';
 import * as Handlers from './handlers';
 
 type PropsT = {
-  yellowTulipStore: YellowTulipStore;
+{% for item_name, store in res.store_by_item_name.items() %}
+  blueDaisy: BlueDaisy;
+{% endfor %}
 };
 
 export class YellowTulipState {
+  @facet inputs = new Inputs();
+  @facet outputs = new Outputs();
 {{ res.constructor_section }}
 
 {{ res.callbacks_section }}
@@ -50,7 +57,7 @@ export class YellowTulipState {
 {% endfor %}
     ];
 
-    installPolicies(this.redRoses, policies);
+    installPolicies(policies, this.redRoses);
   }
 
 {% endfor %}
@@ -62,12 +69,14 @@ export class YellowTulipState {
   }
 
   constructor(props: PropsT) {
-{% for item_name, bvrs in res.bvrs_by_item_name.items() %}
+    registerFacets(this, {});
 
-    registerFacets(this.redRoses);
+{% for item_name, bvrs in res.bvrs_by_item_name.items() %}
+    registerFacets(this.redRoses, { name: 'RedRoses' });
     this._setRedRosesCallbacks(props);
     this._applyRedRosesPolicies(props);
     makeCtrObservable(this.redRoses);
+
 {% endfor %}
   }
 }

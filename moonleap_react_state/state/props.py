@@ -27,16 +27,13 @@ def store_by_item_name(self):
 
 def constructor_section(self):
     indent = "  "
-    result = [
-        f"inputs = new Inputs();",
-        f"outputs = new Outputs();",
-    ]
+    result = []
 
     for item_name, bvrs in self.bvrs_by_item_name.items():
         result += [f"{plural(item_name)} = {{"]
         for bvr in bvrs:
             result += [bvr.constructor_section]
-        result += [r"}"]
+        result += [r"};"]
 
     return os.linesep.join([(indent + x) for x in result])
 
@@ -46,7 +43,7 @@ def callbacks_section(self):
     result = []
 
     for item_name, bvrs in self.bvrs_by_item_name.items():
-        redRoses = upper0(plural(item_name))
+        redRoses = plural(item_name)
         result += [
             f"_set{upper0(redRoses)}Callbacks(props: PropsT) {{",
             f"  const ctr = this.{redRoses};",
@@ -86,5 +83,5 @@ def type_import_path(self, type_name):
     for parent_block in self.block.get_blocks(include_self=True, include_parents=True):
         resource = parent_block.get_resource(term)
         if resource:
-            return resource.import_path
+            return resource.module_path + "/types"
     return None

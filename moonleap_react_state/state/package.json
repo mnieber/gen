@@ -1,5 +1,6 @@
 {
     "dependencies": {
+        "aspiration": "^0.2.1",
         "skandha": "^0.3.0",
         "skandha-facets": "^0.3.0",
         "skandha-mobx": "^0.3.0"

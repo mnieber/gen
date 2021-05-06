@@ -43,7 +43,8 @@ def post_process_remove_duplicate_lines(lines):
 
     if count != 0:
         raise Exception(
-            "{% remove_duplicate_lines %} not matched equally by {% end_remove_duplicate_lines %}"
+            "{% remove_duplicate_lines %} not matched equally by "
+            + "{% end_remove_duplicate_lines %}"
         )
 
     return result

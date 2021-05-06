@@ -1,8 +1,8 @@
-import classNames from 'classnames';
-import React from 'react';
+import classnames from "classnames";
+import React from "react";
 
-import { useFormStateContext } from 'react-form-state-context';
-import { useFormFieldContext } from 'src/forms/components/FormFieldContext';
+import { useFormStateContext } from "react-form-state-context";
+import { useFormFieldContext } from "src/forms/components/FormFieldContext";
 
 interface IProps {
   extraClass?: string;
@@ -22,8 +22,8 @@ export const FormFieldError: React.FC<IProps> = ({
 
   return (
     <p
-      className={classNames(
-        'text-sm text-red-400',
+      className={classnames(
+        "text-sm text-red-400",
         extraClass,
         extraClassOnError
           ? {

@@ -2,10 +2,10 @@
 {% magic_with substore.name as RedRose %}
 import { observable, makeObservable } from 'mobx';
 {% for substore in res.substores %}
-import { RedRose } from '{{ substore.import_path }}/RedRose';
+import { RedRose } from '{{ substore.module_path }}/RedRose';
 {% endfor %}
 {% if res.policies %}
-import * as Policies from '{{ res.import_path }}/policies';
+import * as Policies from '{{ res.module_path }}/policies';
 {% endif %}
 
 export class AppStore {

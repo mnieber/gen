@@ -1,12 +1,12 @@
 {% magic_with res.state.name as yellowTulip %}
 {% magic_with item_name as redRose %}
 {% magic_with store.name as BlueDaisy %}
-{% magic_with res.module.name as gardenFlowers %}
 import * as React from 'react';
 import { reaction } from 'mobx';
+import { values } from 'lodash/fp';
 
-import { YellowTulipState } from 'src/gardenFlowers/YellowTulipState';
-import { StateProvider } from 'react-default-props-context';
+import { YellowTulipState } from '{{ res.module_path }}/YellowTulipState';
+import { CtrProvider } from 'react-default-props-context';
 import { useStore } from 'src/app/components';
 
 type PropsT = React.PropsWithChildren<{}>;
@@ -27,11 +27,11 @@ export const YellowTulipStateProvider: React.FC<PropsT> = (props: PropsT) => {
     });
   };
 
-  const updateState = (state: YellowTulipsState) => {
+  const updateState = (state: YellowTulipState) => {
     reaction(
       () => ({
 {% for item_name, store in res.state.store_by_item_name.items() %}
-        redRoses = values(blueDaisy.redRoseById),
+        redRoses: values(blueDaisy.redRoseById),
 {% endfor %}
       }),
       (inputs) => {
@@ -47,27 +47,21 @@ export const YellowTulipStateProvider: React.FC<PropsT> = (props: PropsT) => {
 
   const getDefaultProps = (state: YellowTulipState) => {
     return {
-      yellowTulipState: () => state,
-      yellowTulip: () => state.highlight.item,
-      yellowTulipRS: () => gardenFlowersStore.yellowTulipByIdRS,
-      yellowTulips: () => state.outputs.display,
-      yellowTulipsRS: () => gardenFlowersStore.yellowTulipByIdRS,
-      yellowTulipsSelection: () => state.selection,
+{{ res.default_props_section }}
     };
   };
 
   return (
-    <StateProvider
-      createState={createState}
-      updateState={updateState}
-      destroyState={(state) => state.destroy()}
+    <CtrProvider
+      createCtr={createState}
+      updateCtr={updateState}
+      destroyCtr={(state: YellowTulipState) => state.destroy()}
       getDefaultProps={getDefaultProps}
     >
       {props.children}
-    </StateProvider>
+    </CtrProvider>
   );
 };
-{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

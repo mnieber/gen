@@ -15,9 +15,11 @@ def state_provides_a_behavior(state, behavior):
 @extend(Behavior)
 class ExtendBehavior(StoreNodePackageConfigs):
     item_name = Prop(props.item_name)
+    item_names = Prop(props.item_names)
 
     imports_section = Prop(props.imports_section)
     constructor_section = Prop(props.constructor_section)
     callbacks_section = MemFun(props.callbacks_section)
     declare_policies_section = MemFun(props.declare_policies_section)
     policies_section = MemFun(props.policies_section)
+    default_props_section = MemFun(props.default_props_section)

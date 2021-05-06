@@ -1,6 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
+    Prop,
     create_forward,
     extend,
     kebab_to_camel,
@@ -9,7 +10,6 @@ from moonleap import (
     tags,
     upper0,
 )
-from moonleap.utils.inflect import singular
 from moonleap.verbs import has
 from moonleap_react_state.state.resources import State
 
@@ -41,4 +41,5 @@ class ExtendState:
 class ExtendStateProvider:
     render = MemFun(render_templates(__file__))
     create_router_configs = MemFun(props.create_router_configs)
+    default_props_section = Prop(props.default_props_section)
     state = P.parent(State, has, "state-provider")

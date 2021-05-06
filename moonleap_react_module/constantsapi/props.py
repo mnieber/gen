@@ -2,11 +2,11 @@ from moonleap.utils.magic_replace import magic_replace
 
 construct_item_list_template = """
   @observable yellowTulipById: YellowTulipByIdT = listToItemById(gardenFlowersConstants.yellowTulips);
-"""
+"""  # noqa
 
 import_api_template = """
 import * from 'src/gardenFlowers/api' as gardenFlowersConstants;
-import { listToItemById } from 'src/utils/utils';
+import { listToItemById } from 'src/utils/ids';
 """
 
 
