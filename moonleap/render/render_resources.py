@@ -6,15 +6,12 @@ def render_resources(blocks, settings, output_root_dir):
     rendered_resources = []
 
     for block in blocks:
-        for resource in block.get_resources():
-            if resource.block is not block:
-                continue
-
+        resources = [x for x in block.get_resources() if x.block == block]
+        for resource in resources:
             if resource in rendered_resources:
                 raise Exception(f"Logical error. Resource in two blocks: {resource}")
-            else:
-                rendered_resources.append(resource)
 
+            rendered_resources.append(resource)
             if hasattr(resource, "render"):
                 resource.render(
                     settings=settings,
@@ -23,13 +20,12 @@ def render_resources(blocks, settings, output_root_dir):
                 )
 
     for rendered_resource in list(rendered_resources):
-        for _, resource in rendered_resource.get_relations():
-
+        resources = [x for _, x in rendered_resource.get_relations()]
+        for resource in resources:
             if resource in rendered_resources:
                 continue
-            else:
-                rendered_resources.append(resource)
 
+            rendered_resources.append(resource)
             if hasattr(resource, "render"):
                 resource.render(
                     settings=settings,

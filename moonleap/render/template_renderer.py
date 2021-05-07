@@ -12,27 +12,16 @@ class TemplateRenderer:
         self.filenames = []
 
     def render(self, resource, settings, template_fn, fn):
-        if template_fn.suffix == ".j2":
-            template = template_env.get_template(str(template_fn))
-            content = template.render(res=resource, settings=settings)
-
-            lines = content.split(os.linesep)
-            for post_transform in post_transforms:
-                lines = post_transform(lines)
-            content = os.linesep.join(lines)
-
-        else:
-            with open(template_fn) as ifs:
-                content = ifs.read()
+        content = (
+            _render(template_fn, resource, settings)
+            if template_fn.suffix == ".j2"
+            else _get_file_content(template_fn)
+        )
 
         if fn in self.filenames:
-            file_merger = get_file_merger(fn)
-            if file_merger:
-                with open(fn) as ifs:
-                    lhs_content = ifs.read()
-                    content = file_merger.merge(lhs_content, content)
-            else:
-                print(f"Warning: writing twice to {fn}")
+            content, warnings = _merge(fn, content)
+            for w in warnings:
+                print(w)
         else:
             self.filenames.append(fn)
 
@@ -40,6 +29,37 @@ class TemplateRenderer:
             ofs.write(content)
 
         return fn
+
+
+def _render(template_fn, resource, settings):
+    template = template_env.get_template(str(template_fn))
+    content = template.render(res=resource, settings=settings)
+
+    lines = content.split(os.linesep)
+    for post_transform in post_transforms:
+        lines = post_transform(lines)
+    content = os.linesep.join(lines)
+    return content
+
+
+def _get_file_content(template_fn):
+    with open(template_fn) as ifs:
+        content = ifs.read()
+    return content
+
+
+def _merge(fn, content):
+    warnings = []
+
+    file_merger = get_file_merger(fn)
+    if file_merger:
+        with open(fn) as ifs:
+            lhs_content = ifs.read()
+            content = file_merger.merge(lhs_content, content)
+    else:
+        warnings.append(f"Warning: writing twice to {fn}")
+
+    return content, warnings
 
 
 def _resolve_output_fn(templates_path, resource, template_fn):

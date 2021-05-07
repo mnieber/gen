@@ -7,3 +7,4 @@ PyYAML
 ramda
 six
 python-slugify
+markdown

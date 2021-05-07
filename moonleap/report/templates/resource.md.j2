@@ -1,0 +1,28 @@
+# {{ res.__class__.__name__ }}({{ res.term | term_to_word }})
+
+---
+## Properties
+
+|               |        |                                |
+| ------------- | ------ | ------------------------------:|
+| output path   | :      |   {{ res.merged_output_path }} |
+
+## Relations (child)
+
+|                               |                              |
+| ----------------------------- | ----------------------------:|
+{% for rel, rhs in res.get_relations() %}
+{% if rel.subj and not rel.is_inv %}
+| {{ rel.verb | verb_to_word }} | <a href="{{ rhs.id }}.html">{{ rel.obj | term_to_word }}</a> |
+{% endif %}
+{% endfor %}
+
+## Relations (parent)
+
+|                               |                              |
+| ----------------------------- | ----------------------------:|
+{% for rel, rhs in res.get_relations() %}
+{% if rel.subj and rel.is_inv %}
+| <a href="{{ rhs.id }}.html">{{ rel.subj | term_to_word }}</a> | {{ rel.verb | verb_to_word }} |
+{% endif %}
+{% endfor %}

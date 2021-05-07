@@ -1,3 +1,4 @@
+import random
 import uuid
 from dataclasses import dataclass, field
 from importlib import import_module
@@ -6,6 +7,11 @@ from moonleap.parser.block import Block
 from moonleap.parser.term import Term
 from moonleap.resource.rel import Rel
 from moonleap.resource.slctrs import Selector
+
+# Use a fixed seed for the id generator
+rd = random.Random()
+rd.seed(0)
+uuid.uuid4 = lambda: uuid.UUID(int=rd.getrandbits(128))
 
 
 @dataclass

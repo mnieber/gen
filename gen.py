@@ -11,7 +11,7 @@ import moonleap_react_module
 import moonleap_react_state
 import moonleap_react_view
 import moonleap_tools
-from moonleap import create_resources, get_blocks, render_resources
+from moonleap import create_resources, get_blocks, render_resources, report_resources
 from moonleap.render.settings import load_settings_file
 
 moonleap_dodo.install_all()
@@ -34,6 +34,7 @@ def main(gen_file):
 
     settings = load_settings_file()
     render_resources(blocks, settings, output_root_dir="output")
+    report_resources(blocks, settings, output_root_dir="output")
 
 
 def report(x):
