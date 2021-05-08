@@ -2,7 +2,7 @@ from moonleap.builder.config import config
 from moonleap.parser.term import word_to_term
 from moonleap.resource.memfield import MemField
 from moonleap.resource.memfun import MemFun
-from moonleap.resource.prop import Prop
+from moonleap.resource.prop import DocMeta, Prop
 
 
 def install(module):
@@ -34,10 +34,14 @@ def install(module):
 
     for c in extensions:
         resource_type = c.moonleap_extends_resource_type
+        if not hasattr(resource_type, "doc_meta"):
+            setattr(resource_type, "doc_meta", DocMeta())
 
         for base_type in c.__mro__:
             for prop_name, p in base_type.__dict__.items():
                 if isinstance(p, Prop):
+                    if p.update_doc_meta:
+                        p.update_doc_meta(prop_name, resource_type.doc_meta)
                     setattr(
                         resource_type, prop_name, property(p.get_value, p.set_value)
                     )

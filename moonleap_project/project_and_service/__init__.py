@@ -12,7 +12,7 @@ def project_has_service(project, service):
 
 @extend(Project)
 class ExtendProject:
-    services = P.child(has, "service")
+    services = P.children(has, "service")
 
 
 @extend(Service)

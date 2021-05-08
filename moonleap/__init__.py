@@ -15,7 +15,7 @@ from moonleap.report.report_resources import report_resources  # noqa
 from moonleap.resource import Resource, resolve  # noqa
 from moonleap.resource.memfield import MemField  # noqa
 from moonleap.resource.memfun import MemFun  # noqa
-from moonleap.resource.prop import Prop  # noqa
+from moonleap.resource.prop import DocMeta, Prop  # noqa
 from moonleap.resource.props import add_source  # noqa
 from moonleap.resource.rel import Forward, Rel, create_forward  # noqa
 from moonleap.resources.outputpath import StoreOutputPaths  # noqa

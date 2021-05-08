@@ -7,7 +7,9 @@ from moonleap import (
     rule,
     tags,
 )
+from moonleap.parser.term import word_to_term
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
+from moonleap.resource.rel import Rel
 from moonleap.verbs import has, runs, uses
 from moonleap_tools.tool import Tool
 
@@ -18,6 +20,9 @@ from .resources import Service
 def create_service(term, block):
     service = Service(name=kebab_to_camel(term.data), use_default_config=True)
     service.output_path = service.name + "/"
+    # service.doc_meta.private_rel(
+    #     Rel(word_to_term("service"), has, word_to_term(":tool"))
+    # )
     return service
 
 

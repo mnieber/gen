@@ -5,6 +5,7 @@ from importlib import import_module
 
 from moonleap.parser.block import Block
 from moonleap.parser.term import Term
+from moonleap.resource.prop import DocMeta
 from moonleap.resource.rel import Rel
 from moonleap.resource.slctrs import Selector
 
@@ -22,6 +23,7 @@ class Resource:
     _relations: [(Rel, "Resource")] = field(
         default_factory=list, init=False, repr=False
     )
+    doc_meta: DocMeta = field(default_factory=lambda: DocMeta(), init=False)
 
     def __repr__(self):
         return self.__class__.__name__

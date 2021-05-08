@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, extend, rule
+from moonleap import DocMeta, MemFun, Prop, extend, rule
 from moonleap.verbs import has
 
 from . import props
@@ -21,6 +21,6 @@ def meta():
         get_pkg_names = MemFun(props.get_pkg_names())
         makefile_rules = Prop(props.get_makefile_rules())
         opt_dir = P.child(has, "opt-dir")
-        tools = P.children(has, "tool")
+        tools = P.children(has, "tool", is_private_rel=True)
 
     return [ExtendService]

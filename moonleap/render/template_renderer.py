@@ -13,7 +13,7 @@ class TemplateRenderer:
 
     def render(self, resource, settings, template_fn, fn):
         content = (
-            _render(template_fn, resource, settings)
+            _render(template_fn, resource, settings=settings)
             if template_fn.suffix == ".j2"
             else _get_file_content(template_fn)
         )
@@ -31,9 +31,9 @@ class TemplateRenderer:
         return fn
 
 
-def _render(template_fn, resource, settings):
+def _render(template_fn, resource, **kwargs):
     template = template_env.get_template(str(template_fn))
-    content = template.render(res=resource, settings=settings)
+    content = template.render(res=resource, **kwargs)
 
     lines = content.split(os.linesep)
     for post_transform in post_transforms:

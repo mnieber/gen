@@ -1,7 +1,7 @@
 import ramda as R
 from moonleap.parser.term import maybe_term_to_term
 from moonleap.resource import resolve
-from moonleap.resource.prop import Prop
+from moonleap.resource.prop import DocMeta, Prop
 from moonleap.resource.rel import Rel
 from moonleap.resource.slctrs import Selector
 from moonleap.utils.inflect import singular
@@ -12,7 +12,7 @@ def fltr_instance(resource_type):
     return lambda x: isinstance(x, resource_type)
 
 
-def child(verb, term, readonly=False):
+def child(verb, term, readonly=False, is_doc_prop=False, is_private_rel=False):
     rel = Rel(verb=verb, obj=maybe_term_to_term(term))
     slctr = Selector([rel])
 
@@ -23,10 +23,18 @@ def child(verb, term, readonly=False):
 
         return None if not children else children[0]
 
-    return Prop(get_value=get_child)
+    def update_doc_meta(prop_name, doc_meta):
+        if is_doc_prop:
+            doc_meta.doc_prop(prop_name)
+        if is_private_rel:
+            doc_meta.private_rel(rel)
+
+    return Prop(get_value=get_child, update_doc_meta=update_doc_meta)
 
 
-def children(verb, term, read_only=False, rdcr=None):
+def children(
+    verb, term, read_only=False, rdcr=None, is_doc_prop=False, is_private_rel=False
+):
     rel = Rel(verb=verb, obj=maybe_term_to_term(term))
     slctr = Selector([rel])
 
@@ -37,9 +45,16 @@ def children(verb, term, read_only=False, rdcr=None):
     def add_to_children(self, child):
         self.add_relation(rel, child)
 
+    def update_doc_meta(prop_name, doc_meta):
+        if is_doc_prop:
+            doc_meta.doc_prop(prop_name)
+        if is_private_rel:
+            doc_meta.private_rel(rel)
+
     return Prop(
         get_value=get_children,
         add_value=None if read_only else add_to_children,
+        update_doc_meta=update_doc_meta,
     )
 
 
@@ -47,7 +62,7 @@ def _fltr(resource_type):
     return R.filter(lambda x: isinstance(x, resource_type))
 
 
-def parent(parent_resource_type, verb, term):
+def parent(parent_resource_type, verb, term, is_doc_prop=False, is_private_rel=False):
     parent_resource_type = resolve(parent_resource_type)
     rel = Rel(verb=verb, obj=maybe_term_to_term(term), is_inv=True)
     slctr = Selector([rel])
@@ -59,10 +74,18 @@ def parent(parent_resource_type, verb, term):
 
         return None if not parents else parents[0]
 
-    return Prop(get_value=get_parent)
+    def update_doc_meta(prop_name, doc_meta):
+        if is_doc_prop:
+            doc_meta.doc_prop(prop_name)
+        if is_private_rel:
+            doc_meta.private_rel(rel)
+
+    return Prop(get_value=get_parent, update_doc_meta=update_doc_meta)
 
 
-def parents(parent_resource_type, verb, term, rdcr=None):
+def parents(
+    parent_resource_type, verb, term, rdcr=None, is_doc_prop=False, is_private_rel=False
+):
     parent_resource_type = resolve(parent_resource_type)
     rel = Rel(verb=verb, obj=maybe_term_to_term(term), is_inv=True)
     slctr = Selector([rel])
@@ -71,7 +94,13 @@ def parents(parent_resource_type, verb, term, rdcr=None):
         parents = _fltr(parent_resource_type)(slctr.select_from(self))
         return rdcr(parents) if rdcr else parents
 
-    return Prop(get_value=get_parents)
+    def update_doc_meta(prop_name, doc_meta):
+        if is_doc_prop:
+            doc_meta.doc_prop(prop_name)
+        if is_private_rel:
+            doc_meta.private_rel(rel)
+
+    return Prop(get_value=get_parents, update_doc_meta=update_doc_meta)
 
 
 def tree(verb, term):
