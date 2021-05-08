@@ -16,4 +16,4 @@ def project_has_config_layer(project, config_layer):
 
 @extend(Project)
 class ExtendProject(StoreLayerConfigs):
-    config_layer = P.child(has, "config:layer", is_doc=False)
+    config_layer = P.child(has, "config:layer")

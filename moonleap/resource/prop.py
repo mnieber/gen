@@ -9,4 +9,3 @@ class Prop:
     get_value: T.Callable = None
     set_value: T.Callable = None
     add_value: T.Callable = None
-    doc_as_rel: Rel = None

@@ -12,7 +12,7 @@ def fltr_instance(resource_type):
     return lambda x: isinstance(x, resource_type)
 
 
-def child(verb, term, readonly=False, is_doc=True):
+def child(verb, term, readonly=False):
     rel = Rel(verb=verb, obj=maybe_term_to_term(term))
     slctr = Selector([rel])
 
@@ -23,13 +23,10 @@ def child(verb, term, readonly=False, is_doc=True):
 
         return None if not children else children[0]
 
-    return Prop(
-        get_value=get_child,
-        doc_as_rel=rel if is_doc else None,
-    )
+    return Prop(get_value=get_child)
 
 
-def children(verb, term, read_only=False, rdcr=None, is_doc=True):
+def children(verb, term, read_only=False, rdcr=None):
     rel = Rel(verb=verb, obj=maybe_term_to_term(term))
     slctr = Selector([rel])
 
@@ -43,7 +40,6 @@ def children(verb, term, read_only=False, rdcr=None, is_doc=True):
     return Prop(
         get_value=get_children,
         add_value=None if read_only else add_to_children,
-        doc_as_rel=rel if is_doc else None,
     )
 
 
@@ -51,7 +47,7 @@ def _fltr(resource_type):
     return R.filter(lambda x: isinstance(x, resource_type))
 
 
-def parent(parent_resource_type, verb, term, is_doc=True):
+def parent(parent_resource_type, verb, term):
     parent_resource_type = resolve(parent_resource_type)
     rel = Rel(verb=verb, obj=maybe_term_to_term(term), is_inv=True)
     slctr = Selector([rel])
@@ -63,10 +59,10 @@ def parent(parent_resource_type, verb, term, is_doc=True):
 
         return None if not parents else parents[0]
 
-    return Prop(get_value=get_parent, doc_as_rel=rel if is_doc else None)
+    return Prop(get_value=get_parent)
 
 
-def parents(parent_resource_type, verb, term, rdcr=None, is_doc=True):
+def parents(parent_resource_type, verb, term, rdcr=None):
     parent_resource_type = resolve(parent_resource_type)
     rel = Rel(verb=verb, obj=maybe_term_to_term(term), is_inv=True)
     slctr = Selector([rel])
@@ -75,7 +71,7 @@ def parents(parent_resource_type, verb, term, rdcr=None, is_doc=True):
         parents = _fltr(parent_resource_type)(slctr.select_from(self))
         return rdcr(parents) if rdcr else parents
 
-    return Prop(get_value=get_parents, doc_as_rel=rel if is_doc else None)
+    return Prop(get_value=get_parents)
 
 
 def tree(verb, term):
