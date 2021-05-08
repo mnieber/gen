@@ -113,9 +113,6 @@ def _to_list_of_forward(x, rule):
 
 
 def _apply_rules(rel, parent_resource, child_resource):
-    if rel.is_inv:
-        return
-
     block = (
         child_resource.block
         if child_resource.block
@@ -123,6 +120,7 @@ def _apply_rules(rel, parent_resource, child_resource):
         else parent_resource.block
     )
 
+    has_rule = False
     for rule in config.get_rules(rel):
         if rule.fltr_subj and not rule.fltr_subj(parent_resource):
             continue
@@ -130,12 +128,15 @@ def _apply_rules(rel, parent_resource, child_resource):
         if rule.fltr_obj and not rule.fltr_obj(child_resource):
             continue
 
+        has_rule = True
         result = rule.f(parent_resource, child_resource)
         if result:
             _process_forwards(_to_list_of_forward(result, rule), block)
 
+    return has_rule
 
-def apply_rules(blocks):
+
+def apply_rules(blocks, unmatched_rels):
     root_block = blocks[0]
     for parent_resource in root_block.get_resources(include_children=True):
 
@@ -150,7 +151,9 @@ def apply_rules(blocks):
                 )
 
         for rel, child_resource in parent_resource.get_relations():
-            _apply_rules(rel, parent_resource, child_resource)
+            if not rel.is_inv:
+                if not _apply_rules(rel, parent_resource, child_resource):
+                    unmatched_rels.append(rel)
 
 
 def _create_generic_resource(term, block):
@@ -211,7 +214,7 @@ def add_resources_to_blocks(blocks):
                     creator_block.parent_block.add_resource(resource)
 
 
-def create_resources(blocks):
+def create_resources(blocks, session):
     add_resources_to_blocks(blocks)
     find_relations(blocks)
-    apply_rules(blocks)
+    apply_rules(blocks, session.unmatched_rels)

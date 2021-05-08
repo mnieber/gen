@@ -40,3 +40,7 @@ def term_to_word(term):
 
 def is_it_term(term):
     return term.tag.lower() in ["it", "its"]
+
+
+def verb_to_word(verb):
+    return verb[0] if isinstance(verb, tuple) else verb

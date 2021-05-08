@@ -1,7 +1,7 @@
 from moonleap.render.template_renderer import TemplateRenderer
 
 
-def render_resources(blocks, settings, output_root_dir):
+def render_resources(blocks, session):
     template_renderer = TemplateRenderer()
     rendered_resources = []
 
@@ -14,8 +14,8 @@ def render_resources(blocks, settings, output_root_dir):
             rendered_resources.append(resource)
             if hasattr(resource, "render"):
                 resource.render(
-                    settings=settings,
-                    output_root_dir=output_root_dir,
+                    settings=session.settings,
+                    output_root_dir=session.output_root_dir,
                     template_renderer=template_renderer,
                 )
 
@@ -28,7 +28,7 @@ def render_resources(blocks, settings, output_root_dir):
             rendered_resources.append(resource)
             if hasattr(resource, "render"):
                 resource.render(
-                    settings=settings,
-                    output_root_dir=output_root_dir,
+                    settings=session.settings,
+                    output_root_dir=session.output_root_dir,
                     template_renderer=template_renderer,
                 )
