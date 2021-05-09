@@ -16,6 +16,8 @@ class IndexFileMerger(FileMerger):
             for line in content.split(os.linesep):
                 if not line:
                     continue
+                if line == "export {};":
+                    continue
                 if line.startswith("import"):
                     if line not in header:
                         header.append(line)
