@@ -3,13 +3,13 @@
 import { gql, ApolloServer } from 'apollo-server';
 import faker from 'faker';
 
-{% for substore in res.service.app_module.store.substores %}
+{% for substore in res.service.app_module.app_store.substores %}
 import { typeDefsStr as gardenFlowersTypeDefsStr } from '../../src/gardenFlowers/schema';
 {% endfor %}
 
 const rootQueryStr = `
   type Query {
-{% for substore in res.service.app_module.store.substores %}
+{% for substore in res.service.app_module.app_store.substores %}
 {% for item_type in substore.item_types %}
     yellowTulips: [YellowTulip]
 {% endfor %}
@@ -17,7 +17,7 @@ const rootQueryStr = `
   }
 `;
 
-{% for substore in res.service.app_module.store.substores %}{% if loop.first %}
+{% for substore in res.service.app_module.app_store.substores %}{% if loop.first %}
 const typeDefsStr =
 {% endif %}{% if not loop.last %}
   gardenFlowersTypeDefsStr +
@@ -27,7 +27,7 @@ const typeDefsStr =
 {% endif %}{% endfor %}
 
 const mocks = {
-{% for substore in res.service.app_module.store.substores %}
+{% for substore in res.service.app_module.app_store.substores %}
 {% for item_type in substore.item_types %}
   YellowTulip: () => ({
     name: faker.name.findName(),

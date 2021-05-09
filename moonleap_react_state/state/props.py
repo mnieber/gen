@@ -15,7 +15,9 @@ def bvrs_by_item_name(self):
 
 def store_by_item_name(self):
     result = {}
-    stores = [x.store for x in self.module.service.modules if x.store]
+    stores = []
+    for x in self.module.service.modules:
+        stores.extend(x.stores)
 
     for item_name in bvrs_by_item_name(self).keys():
         for store in stores:

@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import DocMeta, MemFun, Prop, extend, rule
+from moonleap import MemFun, Prop, extend, rule
 from moonleap.verbs import has
 
 from . import props

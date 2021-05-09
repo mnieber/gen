@@ -31,4 +31,3 @@ class ExtendAppModule:
 @extend(StoreProvider)
 class ExtendStoreProvider:
     render = MemFun(render_templates(__file__))
-    app_module = P.parent(AppModule, has, "store-provider")

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import ramda as R
 from moonleap.parser.term import maybe_term_to_term
-from moonleap.resource.prop import DocMeta, Prop
+from moonleap.resource.prop import Prop
 from moonleap.resource.rel import Rel
 from moonleap.resource.slctrs import Selector
 

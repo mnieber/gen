@@ -28,7 +28,7 @@ def add_utils_templates(module, store):
 
 @extend(Module)
 class ExtendModule:
-    store = P.child(has, "store")
+    stores = P.children(has, "store")
 
 
 @extend(Store)

@@ -7,9 +7,7 @@ from moonleap import (
     rule,
     tags,
 )
-from moonleap.parser.term import word_to_term
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
-from moonleap.resource.rel import Rel
 from moonleap.verbs import has, runs, uses
 from moonleap_tools.tool import Tool
 

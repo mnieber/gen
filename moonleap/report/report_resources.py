@@ -77,7 +77,11 @@ def create_report(resource, settings):
         child_relations=child_relations,
         parent_relations=parent_relations,
     )
-    return f"""<html><body>{markdown.markdown(body, extensions=['tables'])}</body></html>"""
+    return (
+        "<html><body>"
+        + f"""{markdown.markdown(body, extensions=['tables'])}"""
+        + "</body></html>"
+    )
 
 
 def create_index(blocks, unmatched_rels, settings):
@@ -98,4 +102,8 @@ def create_index(blocks, unmatched_rels, settings):
         resources=[x for x in resources if x.term],
         unmatched_rel_strs=unmatched_rel_strs,
     )
-    return f"""<html><body>{markdown.markdown(body, extensions=['tables'])}</body></html>"""
+    return (
+        "<html><body>"
+        + f"""{markdown.markdown(body, extensions=['tables'])}"""
+        + "</body></html>"
+    )
