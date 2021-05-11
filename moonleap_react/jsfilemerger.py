@@ -4,9 +4,11 @@ from pathlib import Path
 from moonleap.render.merge import FileMerger
 
 
-class IndexFileMerger(FileMerger):
+class JsFileMerger(FileMerger):
+    patterns = ["index.ts", "index.tsx", "index.js", "index.jsx"]
+
     def matches(self, fn):
-        return Path(fn).name in ["index.ts", "index.tsx", "index.js", "index.jsx"]
+        return Path(fn).name in JsFileMerger.patterns
 
     def merge(self, lhs_content, rhs_content):
         header = []

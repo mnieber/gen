@@ -3,6 +3,7 @@ from moonleap import Prop, create_forward, extend, kebab_to_camel, rule, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.utils.case import upper0
 from moonleap.verbs import contains, has
+from moonleap_react.jsfilemerger import JsFileMerger
 from moonleap_react.module import Module
 
 from . import props
@@ -38,3 +39,7 @@ class ExtendStore(StoreTemplateDirs):
     item_list_and_api_pairs = Prop(props.item_list_and_api_pairs)
     construct_item_lists_section = Prop(props.construct_item_lists_section)
     apis = Prop(props.apis)
+
+
+if "types.ts" not in JsFileMerger.patterns:
+    JsFileMerger.patterns.append("types.ts")

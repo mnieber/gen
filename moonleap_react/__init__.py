@@ -5,7 +5,7 @@ from . import (
     antd,
     component,
     createreactapp,
-    indexfilemerger,
+    jsfilemerger,
     mockgraphqlserver,
     module,
     module_and_component,
@@ -26,4 +26,4 @@ def install_all():
     install(prettier)
     install(tailwindcss)
 
-    add_file_merger(indexfilemerger.IndexFileMerger())
+    add_file_merger(jsfilemerger.JsFileMerger())
