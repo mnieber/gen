@@ -13,7 +13,7 @@ class StoreProvider(Component):
 
 
 @tags(["store-provider"])
-def create_store_provider(block, term):
+def create_store_provider(term, block):
     store_provider = StoreProvider(name="StoreProvider")
     return store_provider
 

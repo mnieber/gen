@@ -8,7 +8,7 @@ from .resources import Api  # noqa
 
 
 @tags(["api"])
-def create_api(block, term):
+def create_api(term, block):
     api = Api(name="api")
     return api
 
