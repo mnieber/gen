@@ -4,17 +4,9 @@ from moonleap_project.dockercompose import DockerComposeConfig
 def get(is_dev: bool):
     def service_body():
         body = {}
-
         volumes = body.setdefault("volumes", [])
-        volumes.append("postgres_data:/var/lib/postgresql/data")
-
-        ports = body.setdefault("ports", [])
-        ports.append("5432:5432")
-
-        env_file = body.setdefault("env_file", [])
-        env_file.append("./env/postgres.env")
-
-        body["image"] = "postgres:11.5"
+        if is_dev:
+            volumes.append("postgres_data:/var/lib/postgresql/data")
         return body
 
     def global_body():

@@ -1,6 +1,14 @@
 {% trim_newlines keep=1 %}
 FROM {{ res.image_name }}
 
+{% for ENVVAR in res.env_vars %}
+ENV {{ ENVVAR }}
+{% endfor %}
+
+{% for ENVVAR in res.env_vars_dev %}
+ENV {{ ENVVAR }}
+{% endfor %}
+
 {% for PKG in res.service.get_pkg_names() %}{% if loop.first %}
 # install pkg dependencies
 RUN {{ res.docker_image.install_command }} \
@@ -12,7 +20,7 @@ RUN {{ res.docker_image.install_command }} \
 
 {% for PKG in res.service.get_pip_pkg_names() %}{% if loop.first %}
 # install pip dependencies
-RUN pip install \
+RUN {{ res.docker_image.pip }} install \
 {% endif %}{% if not loop.last %}
     {{ PKG }} \
 {% else %}
@@ -30,7 +38,7 @@ RUN {{ res.docker_image.install_command }} \
 
 {% for PKG in res.service.get_pip_pkg_names(is_dev=True) %}{% if loop.first %}
 # install dev pip dependencies
-RUN pip install \
+RUN {{ res.docker_image.pip }} install \
 {% endif %}{% if not loop.last %}
     {{ PKG }} \
 {% else %}

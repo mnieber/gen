@@ -1,5 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import StoreOutputPaths, extend, kebab_to_camel, tags
+from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has
 
 from .resources import Project
@@ -13,5 +14,5 @@ def create_project(term, block):
 
 
 @extend(Project)
-class ExtendProject(StoreOutputPaths):
+class ExtendProject(StoreOutputPaths, StoreTemplateDirs):
     src_dir = P.child(has, "src-dir")
