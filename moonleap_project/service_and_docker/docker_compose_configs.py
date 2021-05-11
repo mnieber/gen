@@ -12,7 +12,7 @@ def get(service, is_dev):
 
         volumes = body.setdefault("volumes", [])
         if is_dev:
-            volumes.append(f"./{service.name}:/app/src")
+            volumes.append(f"./{service.name}:{service.install_dir}/src")
 
         dockerfile = service.dockerfile_dev if is_dev else service.dockerfile
         if dockerfile:

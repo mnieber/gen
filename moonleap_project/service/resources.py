@@ -9,3 +9,4 @@ class Service(Resource):
     use_default_config: bool
     shell: str = "sh"
     port: str = "80"
+    install_dir: str = "/app"

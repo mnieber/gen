@@ -6,7 +6,7 @@ def get_service_options(service):
         return dict(
             SERVER=dict(
                 #
-                install_dir="/app",
+                install_dir=service.install_dir,
                 src_dir="${/SERVER/install_dir}/src",
             ),
             ROOT=dict(
