@@ -70,6 +70,7 @@ export class YellowTulipState {
 
   constructor(props: PropsT) {
     registerFacets(this, {});
+    makeObservable(this);
 
 {% for item_name, bvrs in res.bvrs_by_item_name.items() %}
     registerFacets(this.redRoses, { name: 'RedRoses' });
