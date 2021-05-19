@@ -1,7 +1,6 @@
 {
     "dependencies": {
         "classnames": "^2.2.6",
-        "@types/lodash": "^4.14.165",
         "lodash": "^4.17.20",
         "mobx-react-lite": "^3.1.6",
         "mobx": "^6.0.4",

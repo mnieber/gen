@@ -1,8 +1,0 @@
-{
-  "folders": [
-    {
-      "path": "{{ '$HOME'|expand_vars }}/projects/{{res.project.name}}/src"
-    }
-  ],
-  "settings": {}
-}

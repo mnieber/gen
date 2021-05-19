@@ -24,7 +24,7 @@ def get(service, is_dev):
                     env_file_section.append(env_file)
 
         if is_dev and service.env_files_dev:
-            env_file = body.setdefault("env_file", [])
+            env_file_section = body.setdefault("env_file", [])
             for env_file in service.env_files_dev:
                 if env_file not in env_file_section:
                     env_file_section.append(env_file)

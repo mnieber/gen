@@ -19,6 +19,12 @@ def dockerfile_uses_postgres_docker_image(dockerfile, docker_image):
         _postgres_docker_image_used(docker_image, dockerfile.service)
 
 
+@rule("service", uses, "postgres:service")
+def service_uses_postgres(service, postgres_service):
+    if postgres_env_fn not in service.env_files:
+        service.env_files_dev.append(postgres_env_fn)
+
+
 def _postgres_docker_image_used(docker_image, service):
     service.port = "5432"
     service.env_files.append(postgres_env_fn)

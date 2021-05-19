@@ -4,10 +4,10 @@ import { observer } from 'mobx-react-lite';
 import classnames from 'classnames';
 import { useDefaultProps, FC } from 'react-default-props-context';
 
-import "./YellowTulip.scss"
+import './YellowTulip.scss';
 
 type PropsT = {
-  className?: any
+  className?: any;
 };
 
 type DefaultPropsT = {
@@ -18,7 +18,7 @@ export const YellowTulip: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
 
   // TODO: Implement YellowTulip
   const div = (
-    <div className=classnames("YellowTulip flex flex-col w-full", props.className)>
+    <div className={classnames("YellowTulip flex flex-col w-full", props.className)}>
     </div>
   );
 

@@ -4,7 +4,7 @@ import_api_template = """
 import { action, observable, makeObservable } from 'mobx';
 import { RST, resetRS, updateRes } from 'src/utils/RST';
 import { forEach } from 'lodash/fp';
-import * from 'src/gardenFlowers/api' as gardenFlowersApi;
+import * as gardenFlowersApi from 'src/gardenFlowers/api';
 """
 
 construct_item_list_template = """

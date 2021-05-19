@@ -14,4 +14,5 @@ def render_opt_dir(opt_dir, settings, output_root_dir, **kwargs):
                         / opt_path.from_path
                     )
                     p.parent.mkdir(parents=True, exist_ok=True)
-                    p.touch()
+                    if not opt_path.is_dir:
+                        p.touch()

@@ -5,7 +5,7 @@ construct_item_list_template = """
 """  # noqa
 
 import_api_template = """
-import * from 'src/gardenFlowers/api' as gardenFlowersConstants;
+import * as gardenFlowersConstants from 'src/gardenFlowers/api';
 import { listToItemById } from 'src/utils/ids';
 """
 

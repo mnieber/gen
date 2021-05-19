@@ -39,7 +39,7 @@ def get_route_imports(self):
     for module_name, components in imports_by_module_name.items():
         component_names = ", ".join(R.map(lambda x: x.name)(components))
         result.append(
-            f"import {{ {component_names} }} from 'src/{module_name}/components'"
+            f"import {{ {component_names} }} from 'src/{module_name}/components';"
         )
 
     return os.linesep.join(result)
