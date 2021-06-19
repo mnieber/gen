@@ -10,6 +10,8 @@ def bvrs_by_item_name(self):
     for bvr in self.behaviors:
         item_name = bvr.item_name or self.item_name
         result[item_name].append(bvr)
+    for item_list in self.item_lists:
+        result.setdefault(item_list.item_name, [])
     return result
 
 

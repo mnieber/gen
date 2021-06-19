@@ -1,9 +1,9 @@
-from moonleap.render.settings import load_settings_file
+from moonleap import get_settings
 from moonleap_dodo.layer import LayerConfig
 
 
 def get(project):
-    settings = load_settings_file()
+    settings = get_settings()
     base_dir = settings.get("code_workspaces_dir", settings["target_dir"])
 
     def inner():

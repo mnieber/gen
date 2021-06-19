@@ -27,7 +27,6 @@ def create_picker(term, block):
 @rule("module", has, "picker")
 def create_utils_module(module, picker):
     module.service.utils_module.add_template_dir(__file__, "templates_utils")
-    return create_forward(module.service, has, "utils:module")
 
 
 @extend(Picker)

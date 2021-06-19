@@ -1,9 +1,10 @@
+import typing as T
 from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
 class Term:
-    data: str
+    data: T.Optional[str]
     tag: str
 
 
@@ -13,7 +14,7 @@ def maybe_term_to_term(maybe_term):
     return word_to_term(maybe_term, default_to_tag=True)
 
 
-def word_to_term(word, default_to_tag=False):
+def word_to_term(word, default_to_tag=False) -> T.Optional[Term]:
     parts = word.split(":")
     if len(parts) >= 2:
         data, tag = ":".join(parts[:-1]), parts[-1]

@@ -20,6 +20,7 @@ def create_app_module(term, block):
 @rule("service", has, "app:module")
 def service_has_app_module(service, module):
     service.add_template_dir(__file__, "templates_service")
+    return create_forward(service, has, "utils:module")
 
 
 @rule("service", has, "module")

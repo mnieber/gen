@@ -8,9 +8,9 @@ from moonleap.utils import maybe_tuple_to_tuple
 
 @dataclass(frozen=True)
 class Rel:
-    subj: Term = None
-    verb: T.Union[str, T.Tuple[str]] = None
-    obj: Term = None
+    subj: T.Optional[Term] = None
+    verb: T.Optional[T.Union[str, T.Tuple[str, ...]]] = None
+    obj: T.Optional[Term] = None
     is_inv: bool = False
 
     def inv(self):
@@ -57,19 +57,19 @@ class Forward:
     obj_res: T.Any = None
 
 
-def _to_term(x: T.Union[object, Term, str]):
+def _to_term(x: T.Union[object, Term, str]) -> Term:
     if isinstance(x, str):
         return word_to_term(x)
 
     if isinstance(x, Term):
         return x
 
-    return x.term
+    return T.cast(T.Any, x).term
 
 
 def create_forward(
     subj: T.Union[object, Term, str],
-    verb: T.Union[str, T.Tuple[str]],
+    verb: T.Union[str, T.Tuple[str, ...]],
     obj: T.Union[object, Term, str],
     subj_res: T.Any = None,
     obj_res: T.Any = None,

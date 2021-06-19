@@ -15,11 +15,11 @@ import { makeCtrObservable } from 'skandha-mobx';
 import { getIds } from 'src/utils/ids';
 import * as Facets from 'skandha-facets';
 import * as FacetPolicies from 'skandha-facets/policies';
-{% remove_duplicate_lines %}
+{% clean_up_js_imports %}
 {% for bvr in res.behaviors %}
 {{ bvr.imports_section }}
 {% endfor %}
-{% end_remove_duplicate_lines %}
+{% end_clean_up_js_imports %}
 
 {% for item_name, store in res.store_by_item_name.items() %}
 import { BlueDaisy } from '{{ store.module_path }}/BlueDaisy';

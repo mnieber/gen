@@ -2,18 +2,22 @@ import os
 
 from moonleap.utils import yaml2dict
 
-settings = None
+_settings = None
 
 
-def load_settings_file():
-    global settings
+def get_settings():
+    global _settings
 
-    if settings is None:
+    if _settings is None:
         fn = "moonleap.yml"
         if not os.path.exists(fn):
             return dict()
 
         with open("moonleap.yml") as ifs:
-            settings = yaml2dict(ifs.read())
+            _settings = yaml2dict(ifs.read())
 
-    return settings
+    return _settings
+
+
+def get_tweaks():
+    return _settings.get("tweaks", {})

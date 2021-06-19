@@ -2,8 +2,13 @@ import os
 from dataclasses import dataclass
 
 import ramda as R
+from moonleap import get_tweaks
 from moonleap.utils.case import upper0
 from moonleap_react_view.router.resources import RouterConfig, prepend_router_configs
+
+
+def tweak_url(url):
+    return get_tweaks().get("urls", {}).get(url, url)
 
 
 def group_by(get_key, xs):
@@ -98,7 +103,7 @@ def add_result(routes, url, level, indent, result):
         router_config = group[0].configs[level]
         url_memo = url
         if router_config.url:
-            url += "/" + router_config.url
+            url += "/" + tweak_url(router_config.url)
             _append(f'<Route path="{url}/">', indent, result)
             indent += 2
 

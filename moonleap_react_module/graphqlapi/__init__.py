@@ -24,14 +24,19 @@ class GraphqlApi(Api):
 @tags(["graphql:api"])
 def create_graphql_api(term, block):
     graphql_api = GraphqlApi(name="api")
+    graphql_api.output_path = "api"
     add(graphql_api, load_node_package_config(__file__))
     return graphql_api
 
 
-@rule("module", has, "graphql:api")
-def create_utils_module(module, graphql_api):
-    module.service.utils_module.add_template_dir(__file__, "templates_utils")
-    return create_forward(module.service, has, "utils:module")
+@rule("service", has, "graphql:api")
+def create_utils_module(service, graphql_api):
+    graphql_api.output_paths.add_source(service)
+
+
+@rule("service", has, "graphql:api")
+def add_templates_utils(service, graphql_api):
+    service.utils_module.add_template_dir(__file__, "templates_utils")
 
 
 @extend(GraphqlApi)

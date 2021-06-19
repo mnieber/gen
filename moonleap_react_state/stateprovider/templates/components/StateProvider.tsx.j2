@@ -3,6 +3,7 @@
 {% magic_with store.name as BlueDaisy %}
 import * as React from 'react';
 import { reaction } from 'mobx';
+import { observer } from 'mobx-react-lite';
 import { values } from 'lodash/fp';
 
 import { YellowTulipState } from '{{ res.module_path }}/YellowTulipState';
@@ -11,8 +12,7 @@ import { useStore } from 'src/app/components';
 
 type PropsT = React.PropsWithChildren<{}>;
 
-// Note: don't observe this with MobX
-export const YellowTulipStateProvider: React.FC<PropsT> = (props: PropsT) => {
+export const YellowTulipStateProvider: React.FC<PropsT> = observer((props: PropsT) => {
   const {
 {% for item_name, store in res.state.store_by_item_name.items() %}
     blueDaisy,
@@ -61,7 +61,7 @@ export const YellowTulipStateProvider: React.FC<PropsT> = (props: PropsT) => {
       {props.children}
     </CtrProvider>
   );
-};
+});
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

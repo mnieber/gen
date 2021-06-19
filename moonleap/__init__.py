@@ -10,6 +10,7 @@ from moonleap.builder.rule import tags  # noqa
 from moonleap.parser.block_collector import get_blocks  # noqa
 from moonleap.parser.term import Term, word_to_term  # noqa
 from moonleap.render.render_resources import render_resources  # noqa
+from moonleap.render.settings import get_settings, get_tweaks  # noqa
 from moonleap.render.template_renderer import render_templates  # noqa
 from moonleap.report.report_resources import report_resources  # noqa
 from moonleap.resource import Resource, resolve  # noqa

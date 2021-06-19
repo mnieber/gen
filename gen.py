@@ -11,8 +11,13 @@ import moonleap_react_module
 import moonleap_react_state
 import moonleap_react_view
 import moonleap_tools
-from moonleap import create_resources, get_blocks, render_resources, report_resources
-from moonleap.render.settings import load_settings_file
+from moonleap import (
+    create_resources,
+    get_blocks,
+    get_settings,
+    render_resources,
+    report_resources,
+)
 from moonleap.session import Session
 
 moonleap_dodo.install_all()
@@ -27,13 +32,12 @@ moonleap_django.install_all()
 
 
 def main(gen_file):
+    session = Session(get_settings(), output_root_dir="output")
+
     with open(gen_file) as ifs:
         raw_markdown = ifs.read()
 
     blocks = get_blocks(raw_markdown)
-
-    settings = load_settings_file()
-    session = Session(settings, output_root_dir="output")
 
     create_resources(blocks, session)
     render_resources(blocks, session)

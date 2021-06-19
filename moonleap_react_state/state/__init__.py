@@ -27,6 +27,7 @@ class ExtendState:
     render = MemFun(render_templates(__file__))
 
     behaviors = P.children(provides, "behavior")
+    item_lists = P.children(provides, "item-list")
     bvrs_by_item_name = Prop(props.bvrs_by_item_name)
     store_by_item_name = Prop(props.store_by_item_name)
 

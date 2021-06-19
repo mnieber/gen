@@ -1,14 +1,14 @@
 {% magic_with item_list.item_name as yellowTulip %}
 {% magic_with res.module.name as gardenFlowers %}
-{% remove_duplicate_lines %}
-import { makeObservable } from 'mobx'
+{% clean_up_js_imports %}
+import { makeObservable } from 'mobx';
 {% for api in res.apis %}
 {{ api.import_api_section }}
 {% endfor %}
 {% if res.policies %}
 import * as Policies from '{{ res.module_path }}/policies';
 {% endif %}
-{% end_remove_duplicate_lines %}
+{% end_clean_up_js_imports %}
 
 {% for item_list in res.item_lists %}
 import { YellowTulipT, YellowTulipByIdT } from 'src/gardenFlowers/types';

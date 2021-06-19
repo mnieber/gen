@@ -8,3 +8,4 @@ ramda
 six
 python-slugify
 markdown
+parsimonious
