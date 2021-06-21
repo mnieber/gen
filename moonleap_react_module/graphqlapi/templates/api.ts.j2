@@ -3,8 +3,7 @@
 import { always, flow } from 'lodash/fp';
 import { doQuery } from 'src/utils/graphqlClient';
 
-{% for store in res.module.stores %}
-{% for item_list in store.item_lists %}
+{% for item_list in res.item_lists %}
 export function getRedRoses() {
   const query = `query queryRedRoses {
     redRoses {
@@ -25,7 +24,6 @@ export function getRedRoses() {
 export function saveRedRose(values: any) {
     console.log("TODO: save", values);
 }
-{% endfor %}
 {% endfor %}
 {% end_magic_with %}
 {% end_magic_with %}

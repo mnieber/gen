@@ -7,6 +7,11 @@ from moonleap.render.merge import FileMerger
 class JsFileMerger(FileMerger):
     patterns = ["index.ts", "index.tsx", "index.js", "index.jsx"]
 
+    @classmethod
+    def add_pattern(cls, pattern):
+        if pattern not in cls.patterns:
+            cls.patterns.append(pattern)
+
     def matches(self, fn):
         return Path(fn).name in JsFileMerger.patterns
 

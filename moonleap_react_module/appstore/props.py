@@ -1,6 +1,6 @@
 def substores(app_store):
-    submodules = app_store.module.submodules.merged
+    modules = app_store.module.service.modules.merged
     stores = []
-    for x in submodules:
+    for x in modules:
         stores.extend(x.stores)
     return stores

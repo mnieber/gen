@@ -1,21 +1,23 @@
 {% magic_with item_list.item_name as yellowTulip %}
 {% magic_with res.module.name as gardenFlowers %}
 {% clean_up_js_imports %}
-import { makeObservable } from 'mobx';
-{% for api in res.apis %}
-{{ api.import_api_section }}
-{% endfor %}
-{% if res.policies %}
-import * as Policies from '{{ res.module_path }}/policies';
-{% endif %}
-{% end_clean_up_js_imports %}
-
+import { action, observable, makeObservable } from 'mobx';
+import { rsStore } from 'src/api/ResourceStatesStore';
+import { isUpdatedRS, RST } from 'src/utils/RST';
+{% if res.policies %}import * as Policies from '{{ res.module_path }}/policies';{% endif %}
 {% for item_list in res.item_lists %}
 import { YellowTulipT, YellowTulipByIdT } from 'src/gardenFlowers/types';
 {% endfor %}
+{% end_clean_up_js_imports %}
+
+export const resourceUrls = {
+{% for item_list in res.item_lists %}
+  yellowTulips: `{{ res.name }}/yellowTulips`,
+{% endfor %}
+};
 
 export class {{ res.name }} {
-{{ res.construct_item_lists_section }}
+{{ res.item_list_fields_section }}
 
   constructor() {
     makeObservable(this);
@@ -24,10 +26,9 @@ export class {{ res.name }} {
 {% endfor %}
   }
 
-{% for item_list, api in res.item_list_and_api_pairs %}
-{{ api.item_list_io_section(item_list) }}
-{% endfor %}
-
+  @action onLoadData(event: any, state: RST, queryName: string) {
+{{ res.on_load_data_section }}
+  }
 }
 {% end_magic_with %}
 {% end_magic_with %}

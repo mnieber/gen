@@ -13,17 +13,4 @@ def create_item_list(term, block):
 
 @rule("store", contains, "item-list")
 def store_contains_item_list(store, item_list):
-    forwards = [create_forward(store, contains, f"{item_list.item_name}:item-type")]
-
-    for api in store.apis:
-        if api.provides_item_list(item_list) and api.has_load_effects:
-            forwards.append(
-                create_forward(
-                    store.module,
-                    has,
-                    f"{plural(item_list.item_name)}:load-items-effect",
-                )
-            )
-            break
-
-    return forwards
+    return create_forward(store, contains, f"{item_list.item_name}:item-type")

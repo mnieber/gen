@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import Prop, create_forward, extend, kebab_to_camel, rule, tags
+from moonleap import Prop, extend, kebab_to_camel, rule, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.utils.case import upper0
 from moonleap.verbs import contains, has
@@ -8,6 +8,8 @@ from moonleap_react.module import Module
 
 from . import props
 from .resources import Store
+
+JsFileMerger.add_pattern("types.ts")
 
 
 @tags(["store"])
@@ -31,10 +33,5 @@ class ExtendModule:
 class ExtendStore(StoreTemplateDirs):
     item_lists = P.children(contains, "item-list")
     item_types = P.children(contains, "item-type")
-    item_list_and_api_pairs = Prop(props.item_list_and_api_pairs)
     construct_item_lists_section = Prop(props.construct_item_lists_section)
-    apis = Prop(props.apis)
-
-
-if "types.ts" not in JsFileMerger.patterns:
-    JsFileMerger.patterns.append("types.ts")
+    on_load_data_section = Prop(props.on_load_data_section)

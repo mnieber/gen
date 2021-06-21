@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, add, create_forward, extend, kebab_to_camel, rule, tags
+from moonleap import MemFun, add, extend, kebab_to_camel, rule, tags
 from moonleap.verbs import has, uses
 from moonleap_react.nodepackage import load_node_package_config
 from moonleap_react_module.flags import StoreFlags
@@ -20,18 +20,6 @@ def create_app_module(term, block):
 @rule("service", has, "app:module")
 def service_has_app_module(service, module):
     service.add_template_dir(__file__, "templates_service")
-    return create_forward(service, has, "utils:module")
-
-
-@rule("service", has, "module")
-def service_has_module(service, module):
-    if module.name != "app" and hasattr(service, "app_module"):
-        return create_forward(service.app_module, has, module)
-
-
-@rule("service", uses, "create-react-app")
-def service_uses_cra(service, cra):
-    return create_forward(service, has, "app:module")
 
 
 def meta():
@@ -44,6 +32,5 @@ def meta():
     @extend(AppModule)
     class ExtendAppModule(StoreFlags):
         get_flags = MemFun(props.get_flags)
-        submodules = P.tree(has, "module")
 
     return [ExtendService, ExtendAppModule]
