@@ -1,6 +1,5 @@
 from moonleap import add, rule, tags
-from moonleap.verbs import has, uses
-from moonleap_django.postgresservice import postgres_env_fn
+from moonleap.verbs import uses
 from moonleap_project.dockerfile import create_docker_image
 from moonleap_tools.pipdependency import PipDependency
 from moonleap_tools.pkgdependency import PkgDependency

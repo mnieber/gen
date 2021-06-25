@@ -1,7 +1,6 @@
 import os
 
 import ramda as R
-import six
 from parsimonious import Grammar, NodeVisitor
 
 clean_up_js_imports_tag = "{% clean_up_js_imports %}"

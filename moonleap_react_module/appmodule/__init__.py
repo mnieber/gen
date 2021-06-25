@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, add, extend, kebab_to_camel, rule, tags
-from moonleap.verbs import has, uses
+from moonleap.verbs import has
 from moonleap_react.nodepackage import load_node_package_config
 from moonleap_react_module.flags import StoreFlags
 

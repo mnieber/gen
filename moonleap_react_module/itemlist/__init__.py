@@ -1,6 +1,5 @@
 from moonleap import create_forward, kebab_to_camel, rule, tags
-from moonleap.utils.inflect import plural
-from moonleap.verbs import contains, has
+from moonleap.verbs import contains
 
 from .resources import ItemList
 

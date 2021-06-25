@@ -1,5 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, add, create_forward, extend, render_templates, rule, tags
+from moonleap.utils.inflect import plural
 from moonleap.verbs import has, provides
 from moonleap_project.service import Service
 from moonleap_react.nodepackage import load_node_package_config

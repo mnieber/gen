@@ -1,10 +1,8 @@
 from moonleap import install
 
 from . import (
-    api,
     appmodule,
     appstore,
-    constantsapi,
     flags,
     graphqlapi,
     itemlist,
@@ -18,10 +16,8 @@ from . import (
 
 
 def install_all():
-    install(api)
     install(appmodule)
     install(appstore)
-    install(constantsapi)
     install(flags)
     install(graphqlapi)
     install(itemlist)

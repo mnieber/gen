@@ -1,4 +1,3 @@
-import ramda as R
 from moonleap_project.dockercompose import DockerComposeConfig
 
 

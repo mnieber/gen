@@ -1,6 +1,5 @@
-from moonleap import add, rule, tags
+from moonleap import add, rule
 from moonleap.verbs import uses
-from moonleap_project.service.resources import Service
 
 from . import docker_compose_configs
 
