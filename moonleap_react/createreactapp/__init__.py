@@ -24,7 +24,6 @@ def service_uses_cra(service, cra):
     return [
         create_forward(service, has, "app:module"),
         create_forward(service, has, "utils:module"),
-        create_forward(service, has, "api:module"),
     ]
 
 

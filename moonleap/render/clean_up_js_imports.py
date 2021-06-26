@@ -94,7 +94,9 @@ def post_process_clean_up_js_imports(lines):
                 bracketed_atoms = ", ".join(record["bracketed_atoms"])
                 infix = ", " if bare_atoms and bracketed_atoms else ""
                 result.extend(
-                    [f"import {bare_atoms + infix + bracketed_atoms} from {location};"]
+                    [
+                        f"import {{ {bare_atoms + infix + bracketed_atoms} }} from {location};"
+                    ]
                 )
             continue
 
@@ -113,16 +115,6 @@ def post_process_clean_up_js_imports(lines):
 
 
 if __name__ == "__main__":
-    # x = parse_imports(
-    #     """
-    #     import doit as foobar, { yes as confirmation, please } from 'hello';
-    #     import okay from 'hello';
-    #     import okay from 'hi';
-    #     import { okay, than } from 'hello';
-    # """
-    # )
-    # print(x)
-
     x = parse_imports(
         """
         import { makeObservable } from 'mobx';

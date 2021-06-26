@@ -45,5 +45,10 @@ RUN {{ res.docker_image.pip }} install \
     {{ PKG }}
 {% endif %}{% endfor %}
 
+# TODO: automate this
+# create a python venv that we can easily store inside a docker volume
+# RUN python3 -m venv /app/env
+# ENV PATH="/app/env/bin:${PATH}"
+
 WORKDIR {{ res.service.install_dir }}/src
 {% end_trim_newlines %}

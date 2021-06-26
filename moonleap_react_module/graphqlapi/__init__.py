@@ -12,7 +12,6 @@ from .resources import GraphqlApi
 @tags(["graphql:api"])
 def create_graphql_api(term, block):
     graphql_api = GraphqlApi(name="api")
-    graphql_api.output_path = "api"
     add(graphql_api, load_node_package_config(__file__))
     return graphql_api
 
@@ -23,10 +22,10 @@ def api_provides_item_list(api, item_list):
     return create_forward(api.module.term, has, load_items_effect)
 
 
-@rule("service", has, "graphql:api")
-def create_utils_module(service, graphql_api):
-    graphql_api.output_paths.add_source(service)
+@rule("service", has, "api:module")
+def service_has_api_module(service, api_module):
     service.utils_module.add_template_dir(__file__, "templates_utils")
+    service.app_module.add_template_dir(__file__, "templates_appstore")
 
 
 @extend(GraphqlApi)
@@ -38,4 +37,4 @@ class ExtendGraphqlApi:
 
 @extend(Service)
 class ExtendService:
-    graphql_api = P.child(has, "graphql:api")
+    api_module = P.child(has, "api:module")

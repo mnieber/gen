@@ -1,37 +1,29 @@
+{% magic_with item_list.item_name as redRose %}
 import { normalize, schema } from 'normalizr';
 import { ApiBase } from 'src/api/ApiBase';
 import { ObjT } from 'src/utils/types';
 
-const milestone = new schema.Entity('milestones');
-const milestoneList = new schema.Array(milestone);
-const project = new schema.Entity('projects', { milestones: milestoneList });
+{% for item_list in res.item_lists %}
+const redRose = new schema.Entity('redRose');
+const redRoseList = new schema.Array(redRose);
+{% endfor %}
 
 export class Api extends ApiBase {
-  loadProjectBySlug(slug: string) {
+{% for item_list in res.item_lists %}
+  getRedRoses() {
     return this._doQuery(
-      'loadProjectBySlug',
-      `query loadProjectBySlug(
-      $slug: String
-    ) {
-      project(
-        slug: $slug
-      ) {
-        id
-        name
-        imageHash
-        imageProps
-        content
-        milestones {
+      'getRedRoses',
+      `query getRedRoses {
+        redRoses {
           id
           name
-          content
-          isCompleted
         }
-      }
-    }`,
-      { slug },
-      (response: ObjT) => normalize(response.project, project).entities,
+      }`,
+      {},
+      (response: ObjT) => normalize(response.redRoses, redRoseList).entities,
       (error: ObjT) => error.response.errors[0].message
     );
   }
+{% endfor %}
 }
+{% end_magic_with %}

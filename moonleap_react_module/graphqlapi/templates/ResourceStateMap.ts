@@ -1,8 +1,8 @@
-import { action, makeObservable, observable } from 'mobx';
 import { forEach } from 'lodash/fp';
+import { action, makeObservable, observable } from 'mobx';
 import { resetRS, RST } from 'src/utils/RST';
 
-export class ResourceStatesStore {
+export class ResourceStateMap {
   @observable resourceStateByUrl: { [key: string]: RST } = {};
 
   constructor() {
@@ -20,4 +20,4 @@ export class ResourceStatesStore {
   }
 }
 
-export const rsStore = new ResourceStatesStore();
+export const rsMap = new ResourceStateMap();

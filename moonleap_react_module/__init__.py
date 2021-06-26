@@ -1,6 +1,7 @@
 from moonleap import install
 
 from . import (
+    apimodule,
     appmodule,
     appstore,
     flags,
@@ -16,6 +17,7 @@ from . import (
 
 
 def install_all():
+    install(apimodule)
     install(appmodule)
     install(appstore)
     install(flags)

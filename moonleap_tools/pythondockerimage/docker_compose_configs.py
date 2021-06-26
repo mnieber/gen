@@ -7,8 +7,7 @@ def get(docker_image):
         volumes = body.setdefault("volumes", [])
         volumes.extend(
             [
-                f"{service_name}_site_packages:/usr/local/lib/python3.9/site-packages",
-                f"{service_name}_usr_local_bin:/usr/local/bin",
+                f"{service_name}_venv:/app/env",
             ]
         )
         return body
@@ -16,8 +15,7 @@ def get(docker_image):
     def get_global_body(service_name):
         body = {}
         volumes = body.setdefault("volumes", {})
-        volumes[f"{service_name}_site_packages"] = {}
-        volumes[f"{service_name}_usr_local_bin"] = {}
+        volumes[f"{service_name}_venv"] = {}
         return body
 
     return DockerComposeConfig(

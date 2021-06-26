@@ -1,14 +1,12 @@
 {% magic_with res.item_name as yellowTulip %}
 {% magic_with res.module.name as gardenFlowers %}
+import classnames from 'classnames';
 import { always, flow, map } from 'lodash/fp';
 import { observer } from 'mobx-react-lite';
-import { useDefaultProps, FC } from 'react-default-props-context';
-import { ResourceView } from 'src/utils/components';
+import { FC, useDefaultProps } from 'react-default-props-context';
 import { YellowTulipListViewItem } from 'src/gardenFlowers/components';
-import { RST } from 'src/utils/RST';
 import { YellowTulipT } from 'src/gardenFlowers/types'
-import classnames from 'classnames';
-
+import { getResourceView } from 'src/utils/components';
 import './YellowTulipListView.scss';
 
 type PropsT = {
@@ -17,7 +15,7 @@ type PropsT = {
 
 type DefaultPropsT = {
   yellowTulips: YellowTulipT[]
-  yellowTulipsRS: RST
+  yellowTulipsResUrl: string
 };
 
 export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
@@ -35,7 +33,10 @@ export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: Props
 
   const noItems = <h2>There are no yellowTulips</h2>;
 
-  const updatedDiv = (
+  const resourceView = getResourceView({ resourceUrl: props.yellowTulipsResUrl });
+  if (resourceView) return resourceView;
+
+  return (
     <div
       className={classnames(
         "YellowTulipListView flex flex-col w-full",
@@ -45,16 +46,6 @@ export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: Props
       {yellowTulipDivs.length && yellowTulipDivs}
       {!yellowTulipDivs.length && noItems}
     </div>
-  );
-
-  return (
-    <ResourceView
-      rs={props.yellowTulipsRS}
-      renderUpdated={() => updatedDiv}
-      renderErrored={(message) => {
-        return <div className="text-white">{message}</div>;
-      }}
-    />
   );
 });
 {% end_magic_with %}

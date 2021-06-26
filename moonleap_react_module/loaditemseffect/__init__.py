@@ -5,7 +5,7 @@ from .resources import LoadItemsEffect
 
 
 @tags(["load-items-effect"])
-def create_loadItemsEffect(term, block):
+def create_load_items_effect(term, block):
     item_name = kebab_to_camel(term.data)
     name = f"Load{upper0(item_name)}Effect"
     loadItemsEffect = LoadItemsEffect(item_name=item_name, name=name)

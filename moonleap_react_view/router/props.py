@@ -7,8 +7,8 @@ from moonleap.utils.case import upper0
 from moonleap_react_view.router.resources import RouterConfig, prepend_router_configs
 
 
-def tweak_url(url):
-    return get_tweaks().get("urls", {}).get(url, url)
+def tweak_url(service, url):
+    return R.path_or(url, ["services", service.name, "urls", url])(get_tweaks())
 
 
 def group_by(get_key, xs):
@@ -69,7 +69,7 @@ def get_routes(self):
                 add_route(router_configs, routes)
 
     result = []
-    add_result(routes, "", 0, 8, result)
+    add_result(self.module.service, routes, "", 0, 8, result)
 
     result_str = os.linesep.join(result)
     return result_str
@@ -96,14 +96,14 @@ def add_route(router_configs, routes):
             )
 
 
-def add_result(routes, url, level, indent, result):
+def add_result(service, routes, url, level, indent, result):
     routes_by_first_component = group_by(lambda x: x.configs[level].component, routes)
 
     for _, group in routes_by_first_component:
         router_config = group[0].configs[level]
         url_memo = url
         if router_config.url:
-            url += "/" + tweak_url(router_config.url)
+            url += "/" + tweak_url(service, router_config.url)
             _append(f'<Route path="{url}/">', indent, result)
             indent += 2
 
@@ -115,6 +115,7 @@ def add_result(routes, url, level, indent, result):
             indent += 2
 
         add_result(
+            service,
             [x for x in group if len(x.configs) > level + 1],
             url,
             level + 1,

@@ -2,7 +2,7 @@
 {% magic_with res.module.name as gardenFlowers %}
 {% clean_up_js_imports %}
 import { action, observable, makeObservable } from 'mobx';
-import { rsStore } from 'src/api/ResourceStatesStore';
+import { rsMap } from 'src/api/ResourceStateMap';
 import { isUpdatedRS, RST } from 'src/utils/RST';
 {% if res.policies %}import * as Policies from '{{ res.module_path }}/policies';{% endif %}
 {% for item_list in res.item_lists %}
@@ -18,7 +18,6 @@ export const resourceUrls = {
 
 export class {{ res.name }} {
 {{ res.item_list_fields_section }}
-
   constructor() {
     makeObservable(this);
 {% for policy in res.policies %}

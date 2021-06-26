@@ -1,8 +1,8 @@
 import { Signal } from 'micro-signals';
-import { ObjT } from 'src/utils/types';
+import { LoadDataEventT } from 'src/api/events';
 import { doQuery } from 'src/utils/graphqlClient';
-import { EventT } from 'src/utils/events';
 import { erroredRS, loadingRS, updatedRS } from 'src/utils/RST';
+import { ObjT } from 'src/utils/types';
 
 export class ApiBase {
   signal: Signal<any> = new Signal();
@@ -11,7 +11,7 @@ export class ApiBase {
     this.signal.dispatch({
       topic: `Loading.${queryName}`,
       state: loadingRS(),
-    } as EventT);
+    } as LoadDataEventT);
     return Promise.resolve();
   }
 
@@ -20,14 +20,14 @@ export class ApiBase {
       topic: `Loading.${queryName}`,
       state: updatedRS(),
       payload,
-    } as EventT);
+    } as LoadDataEventT);
   }
 
   _dispatchError(queryName: string, error: string) {
     this.signal.dispatch({
       topic: `Errored.${queryName}`,
       state: erroredRS(error),
-    } as EventT);
+    } as LoadDataEventT);
   }
 
   _doQuery(
