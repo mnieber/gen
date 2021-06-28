@@ -1,4 +1,5 @@
 import os
+import re
 
 import ramda as R
 from parsimonious import Grammar, NodeVisitor
@@ -18,7 +19,7 @@ def parse_imports(text):
       atoms           = (atom ", " atoms) / atom
       atom            = term (" as " term)?
       term            = ~r"[*a-zA-Z_0-9]+"
-      location        = "'" ~r"[*a-zA-Z_0-9/]+" "';"
+      location        = "'" ~r"[*a-zA-Z_\-\.0-9/]+" "';"
       ws              = ~r"\s*"
       """
     )
@@ -72,11 +73,47 @@ def process_clean_up_js_imports(lines):
     return R.map(t, lines)
 
 
+def get_other_text(lines):
+    result = []
+    removing = False
+
+    for line in lines:
+        if line == clean_up_js_imports_tag:
+            removing = True
+        elif line == end_clean_up_js_imports_tag:
+            removing = False
+        elif not removing:
+            result.append(line)
+
+    return os.linesep.join(result)
+
+
+def has_symbol(x, text):
+    parts = x.split()
+    if len(parts) == 3 and parts[1] == "as":
+        symbol = parts[2]
+    elif len(parts) == 1:
+        symbol = x
+    else:
+        raise Exception("Expected import to be either <x> or <x> as <y>")
+    return re.search(r"\b" + symbol + r"\b", text)
+
+
+def filter_atoms(record, other_text):
+    record["bare_atoms"] = [
+        x for x in record["bare_atoms"] if has_symbol(x, other_text)
+    ]
+    record["bracketed_atoms"] = [
+        x for x in record["bracketed_atoms"] if x in other_text
+    ]
+
+
 def post_process_clean_up_js_imports(lines):
     result = []
     removing = False
     block = []
     count = 0
+    other_text = get_other_text(lines)
 
     for line in lines:
         if line == clean_up_js_imports_tag:
@@ -90,14 +127,16 @@ def post_process_clean_up_js_imports(lines):
             removing = False
             block_text = os.linesep.join(block)
             for location, record in parse_imports(block_text).items():
-                bare_atoms = ", ".join(record["bare_atoms"])
-                bracketed_atoms = ", ".join(record["bracketed_atoms"])
-                infix = ", " if bare_atoms and bracketed_atoms else ""
-                result.extend(
-                    [
-                        f"import {{ {bare_atoms + infix + bracketed_atoms} }} from {location};"
-                    ]
-                )
+                filter_atoms(record, other_text)
+                if record["bare_atoms"] or record["bracketed_atoms"]:
+                    bare_atoms = ", ".join(record["bare_atoms"])
+                    bracketed_atoms = ", ".join(record["bracketed_atoms"])
+                    infix = ", " if bare_atoms and bracketed_atoms else ""
+                    result.extend(
+                        [
+                            f"import {{ {bare_atoms + infix + bracketed_atoms} }} from {location};"
+                        ]
+                    )
             continue
 
         if removing:
