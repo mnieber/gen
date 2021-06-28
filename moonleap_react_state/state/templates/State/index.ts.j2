@@ -1,6 +1,7 @@
 {% magic_with res.name as yellowTulip %}
 {% magic_with store.name as BlueDaisy %}
 {% magic_with item_name as redRose %}
+
 {% clean_up_js_imports %}
 import { setCallbacks } from 'aspiration';
 import { makeObservable } from 'mobx';
@@ -10,6 +11,7 @@ import { makeCtrObservable } from 'skandha-mobx';
 import { getIds } from 'src/utils/ids';
 import * as Facets from 'skandha-facets';
 import * as FacetPolicies from 'skandha-facets/policies';
+
 {% for bvr in res.behaviors %}
 {{ bvr.imports_section }}
 {% endfor %}
@@ -17,6 +19,7 @@ import * as FacetPolicies from 'skandha-facets/policies';
 {% for item_name, store in res.store_by_item_name.items() %}
 import { BlueDaisy } from '{{ store.module_path }}/BlueDaisy';
 {% endfor %}
+
 import { Inputs } from '{{ res.module_path }}/YellowTulipState/facets/Inputs';
 import { Outputs } from '{{ res.module_path }}/YellowTulipState/facets/Outputs';
 import * as Policies from './policies';

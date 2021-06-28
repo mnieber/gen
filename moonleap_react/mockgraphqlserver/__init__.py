@@ -11,10 +11,6 @@ class MockGrapqhlServer(Tool):
     pass
 
 
-def _server_name(service):
-    return f"{service.name}-mock-graphql-server"
-
-
 @tags(["mock-graphql-server"])
 def create_mock_server(term, block):
     mock_server = MockGrapqhlServer()

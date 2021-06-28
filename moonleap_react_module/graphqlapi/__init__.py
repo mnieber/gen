@@ -3,6 +3,7 @@ from moonleap import MemFun, add, create_forward, extend, render_templates, rule
 from moonleap.utils.inflect import plural
 from moonleap.verbs import has, provides
 from moonleap_project.service import Service
+from moonleap_react.module import Module
 from moonleap_react.nodepackage import load_node_package_config
 
 from . import props
@@ -33,6 +34,7 @@ class ExtendGraphqlApi:
     render = MemFun(render_templates(__file__))
     item_lists = P.children(provides, "item-list")
     provides_item_list = MemFun(props.provides_item_list)
+    api_module = P.parent(Module, has, "graphql:api")
 
 
 @extend(Service)

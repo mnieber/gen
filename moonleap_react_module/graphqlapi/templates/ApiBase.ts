@@ -7,23 +7,25 @@ import { ObjT } from 'src/utils/types';
 export class ApiBase {
   signal: Signal<any> = new Signal();
 
-  _dispatchLoading(queryName: string) {
+  _dispatchUpdating(queryName: string) {
     this.signal.dispatch({
-      topic: `Loading.${queryName}`,
+      topic: `Updating.${queryName}`,
       state: loadingRS(),
     } as LoadDataEventT);
     return Promise.resolve();
   }
 
-  _dispatchPayload(queryName: string, payload: any) {
+  _dispatchUpdated(queryName: string, payload: any) {
     this.signal.dispatch({
-      topic: `Loading.${queryName}`,
+      topic: `Updated.${queryName}`,
       state: updatedRS(),
-      payload,
+      details: {
+        payload,
+      }
     } as LoadDataEventT);
   }
 
-  _dispatchError(queryName: string, error: string) {
+  _dispatchErrored(queryName: string, error: string) {
     this.signal.dispatch({
       topic: `Errored.${queryName}`,
       state: erroredRS(error),
@@ -37,13 +39,13 @@ export class ApiBase {
     getPayload: Function,
     getErrorMsg: (error: ObjT) => string
   ) {
-    return this._dispatchLoading(queryName).then(() =>
+    return this._dispatchUpdating(queryName).then(() =>
       doQuery(query, vars)
         .then((response) => {
-          this._dispatchPayload(queryName, getPayload(response));
+          this._dispatchUpdated(queryName, getPayload(response));
         })
         .catch((error) => {
-          this._dispatchError(queryName, getErrorMsg(error));
+          this._dispatchErrored(queryName, getErrorMsg(error));
         })
     );
   }

@@ -6,7 +6,7 @@ from moonleap.render.process_lines import process_lines
 def imports_section(self):
     return (
         "import { Selection, SelectionCbs, handleSelectItem } "
-        + "from 'skandha-facets/Selection'"
+        + "from 'skandha-facets/Selection';"
     )
 
 

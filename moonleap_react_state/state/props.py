@@ -48,12 +48,20 @@ def callbacks_section(self):
 
     for item_name, bvrs in self.bvrs_by_item_name.items():
         redRoses = plural(item_name)
-        result += [
-            f"_set{upper0(redRoses)}Callbacks(props: PropsT) {{",
-            f"  const ctr = this.{redRoses};",
-        ]
+
+        body = []
         for bvr in bvrs:
-            result += [bvr.callbacks_section(self.behaviors)]
+            body += [bvr.callbacks_section(self.behaviors)]
+
+        result += [f"_set{upper0(redRoses)}Callbacks(props: PropsT) {{"]
+
+        if body:
+            result += [
+                f"  const ctr = this.{redRoses};",
+                #
+                *body,
+            ]
+
         result += [r"}", ""]
 
     return os.linesep.join([(indent + x) for x in result])
