@@ -21,9 +21,12 @@ type DefaultPropsT = {
 export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
   const props = useDefaultProps<PropsT, DefaultPropsT>(p);
 
+  const resourceView = getResourceView({ resourceUrl: props.yellowTulipsResUrl });
+  if (resourceView) return resourceView;
+
   const yellowTulipDivs = flow(
     always(props.yellowTulips),
-    map((x) => (
+    map((x: YellowTulipT) => (
       <YellowTulipListViewItem
         key={x.id}
         yellowTulip={x}
@@ -32,9 +35,6 @@ export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: Props
   )();
 
   const noItems = <h2>There are no yellowTulips</h2>;
-
-  const resourceView = getResourceView({ resourceUrl: props.yellowTulipsResUrl });
-  if (resourceView) return resourceView;
 
   return (
     <div

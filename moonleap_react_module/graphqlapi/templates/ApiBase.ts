@@ -19,9 +19,7 @@ export class ApiBase {
     this.signal.dispatch({
       topic: `Updated.${queryName}`,
       state: updatedRS(),
-      details: {
-        payload,
-      }
+      payload,
     } as LoadDataEventT);
   }
 
