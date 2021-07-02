@@ -5,19 +5,27 @@ from moonleap.utils import yaml2dict
 _settings = None
 
 
-def get_settings():
+def load_settings(fn):
     global _settings
 
     if _settings is None:
-        fn = "moonleap.yml"
         if not os.path.exists(fn):
-            return dict()
+            raise Exception(f"Settings file not found: {fn}")
 
-        with open("moonleap.yml") as ifs:
+        with open(fn) as ifs:
             _settings = yaml2dict(ifs.read())
 
     return _settings
 
 
+def get_settings():
+    global _settings
+
+    if _settings is None:
+        raise Exception(f"No settings file has been loaded")
+
+    return _settings
+
+
 def get_tweaks():
-    return _settings.get("tweaks", {})
+    return get_settings().get("tweaks", {})

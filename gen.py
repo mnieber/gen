@@ -1,6 +1,7 @@
 import os
 import sys
 from argparse import ArgumentParser
+from pathlib import Path
 
 import moonleap_django
 import moonleap_dodo
@@ -11,13 +12,8 @@ import moonleap_react_module
 import moonleap_react_state
 import moonleap_react_view
 import moonleap_tools
-from moonleap import (
-    create_resources,
-    get_blocks,
-    get_settings,
-    render_resources,
-    report_resources,
-)
+from moonleap import create_resources, get_blocks, render_resources, report_resources
+from moonleap.render.settings import load_settings
 from moonleap.session import Session
 
 moonleap_dodo.install_all()
@@ -32,7 +28,9 @@ moonleap_django.install_all()
 
 
 def main(gen_file):
-    session = Session(get_settings(), output_root_dir="output")
+    session = Session(
+        load_settings(Path(gen_file).with_suffix(".yml")), output_root_dir="output"
+    )
 
     with open(gen_file) as ifs:
         raw_markdown = ifs.read()
