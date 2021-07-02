@@ -19,7 +19,7 @@ def parse_imports(text):
       atoms           = (atom ", " atoms) / atom
       atom            = term (" as " term)?
       term            = ~r"[*a-zA-Z_0-9]+"
-      location        = "'" ~r"[*a-zA-Z_\-\.0-9/]+" "';"
+      location        = "'" ~r"[*a-zA-Z_\-\.0-9/]+" "'" ";"?
       ws              = ~r"\s*"
       """
     )
@@ -46,6 +46,9 @@ def parse_imports(text):
 
         def visit_location(self, node, visited_children):
             location = node.text
+            if not location.endswith(";"):
+                location += ";"
+
             record = self.imports.setdefault(
                 location,
                 {"location": location, "bare_atoms": [], "bracketed_atoms": []},
