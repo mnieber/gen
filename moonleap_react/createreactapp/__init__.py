@@ -4,7 +4,7 @@ from moonleap.verbs import has, uses
 from moonleap_react.nodepackage import load_node_package_config
 from moonleap_tools.tool import Tool
 
-from . import layer_configs
+from . import docker_compose_configs, layer_configs
 
 
 class CreateReactApp(Tool):
@@ -15,6 +15,8 @@ class CreateReactApp(Tool):
 def create_cra(term, block):
     cra = CreateReactApp()
     add(cra, load_node_package_config(__file__))
+    add(cra, docker_compose_configs.get(is_dev=True))
+    add(cra, docker_compose_configs.get(is_dev=False))
     return cra
 
 

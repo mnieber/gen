@@ -23,5 +23,7 @@ RUN pip install \
     {{ PKG }}
 {% endif %}{% endfor %}
 
+{{ res.custom_steps }}
+
 WORKDIR {{ res.service.install_dir }}/src
 {% end_trim_newlines %}
