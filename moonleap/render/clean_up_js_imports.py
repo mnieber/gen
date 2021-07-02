@@ -12,11 +12,11 @@ def parse_imports(text):
     grammar = Grammar(
         r"""
       imports         = ws import* ws
-      import          = "import " something " from " location ws
-      something       = (thing ", " something) / thing
+      import          = "import" ws something ws "from" ws location ws
+      something       = (thing ws "," ws something) / thing
       thing           = bracketed_atoms / atom
-      bracketed_atoms = "{ " atoms " }"
-      atoms           = (atom ", " atoms) / atom
+      bracketed_atoms = "{" ws atoms ws "}"
+      atoms           = (atom ws "," ws atoms) / atom
       atom            = term (" as " term)?
       term            = ~r"[*a-zA-Z_0-9]+"
       location        = "'" ~r"[*a-zA-Z_\-\.0-9/]+" "'" ";"?
