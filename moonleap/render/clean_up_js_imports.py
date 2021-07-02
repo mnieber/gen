@@ -134,7 +134,7 @@ def post_process_clean_up_js_imports(lines):
                     infix = ", " if bare_atoms and bracketed_atoms else ""
                     result.extend(
                         [
-                            f"import {{ {bare_atoms + infix + bracketed_atoms} }} from {location};"
+                            f"import {{ {bare_atoms + infix + bracketed_atoms} }} from {location}"
                         ]
                     )
             continue
