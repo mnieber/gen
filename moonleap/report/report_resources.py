@@ -40,6 +40,7 @@ def _match_rel_to_rels(rel, other_rels):
 
 def report_resources(blocks, session):
     report_dir = os.path.join(session.output_root_dir, ".report")
+    index_fn = os.path.abspath(os.path.join(report_dir, "index.html"))
 
     if not os.path.exists(report_dir):
         os.mkdir(report_dir)
@@ -49,16 +50,15 @@ def report_resources(blocks, session):
         for resource in resources:
             if hasattr(resource.__class__, "doc_meta"):
                 resource.doc_meta.add(resource.__class__.doc_meta)
-            report_file = _fn(resource, report_dir)
-            with open(report_file, "w") as ofs:
-                ofs.write(create_report(resource, session.settings))
+            report_fn = _fn(resource, report_dir)
+            with open(report_fn, "w") as ofs:
+                ofs.write(create_report(resource, session.settings, index_fn))
 
-    index_file = os.path.join(report_dir, "index.html")
-    with open(index_file, "w") as ofs:
+    with open(index_fn, "w") as ofs:
         ofs.write(create_index(blocks, session.unmatched_rels, session.settings))
 
 
-def create_report(resource, settings):
+def create_report(resource, settings, index_fn):
     default_template_fn = Path(__file__).parent / "templates" / "resource.md.j2"
     props = {
         prop_name: getattr(resource, prop_name) for prop_name in resource.doc_meta.props
@@ -76,6 +76,7 @@ def create_report(resource, settings):
         props=props,
         child_relations=child_relations,
         parent_relations=parent_relations,
+        index_fn=index_fn,
     )
     return (
         "<html><body>"
