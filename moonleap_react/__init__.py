@@ -6,7 +6,6 @@ from . import (
     component,
     createreactapp,
     jsfilemerger,
-    mockgraphqlserver,
     module,
     module_and_component,
     nodepackage,
@@ -19,7 +18,6 @@ def install_all():
     install(antd)
     install(component)
     install(createreactapp)
-    install(mockgraphqlserver)
     install(module)
     install(module_and_component)
     install(nodepackage)
