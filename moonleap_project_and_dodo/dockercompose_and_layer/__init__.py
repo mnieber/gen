@@ -9,11 +9,7 @@ from . import layer_configs
 
 @rule("docker-compose")
 def docker_compose_created(docker_compose):
-    add(
-        docker_compose,
-        layer_configs.get(docker_compose),
-        "The :docker-compose has a layer config",
-    )
+    add(docker_compose, layer_configs.get(docker_compose))
 
 
 @rule("docker-compose", configured_by, "layer")

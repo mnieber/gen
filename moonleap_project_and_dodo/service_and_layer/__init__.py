@@ -9,11 +9,7 @@ from . import layer_configs
 
 @rule("service")
 def service_created(service):
-    add(
-        service,
-        layer_configs.get_service_options(service),
-        "This service has a layer config",
-    )
+    add(service, layer_configs.get_service_options(service))
 
 
 @rule("service", configured_by, "layer")
@@ -27,11 +23,7 @@ def service_is_configured_in_layer(service, layer):
 
 @rule("service", has, "dockerfile")
 def service_has_dockerfile(service, dockerfile):
-    add(
-        service,
-        layer_configs.get_docker_options(service),
-        "This service has a layer config with docker-specific settings",
-    )
+    add(service, layer_configs.get_docker_options(service))
 
 
 @rule("service", has, "tool")

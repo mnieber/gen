@@ -12,12 +12,9 @@ class Rule:
     f: T.Callable
     fltr_subj: T.Callable = None
     fltr_obj: T.Callable = None
-    description: str = None
 
 
-def rule(
-    subj_term, verb=None, obj_term=None, fltr_subj=None, fltr_obj=None, description=None
-):
+def rule(subj_term, verb=None, obj_term=None, fltr_subj=None, fltr_obj=None):
     if verb is None or obj_term is None:
         if verb is not None or obj_term is not None:
             raise Exception("Either define both verb and obj_term or neither")
@@ -30,9 +27,7 @@ def rule(
             verb=verb,
             obj=word_to_term(obj_term, default_to_tag=True),
         )
-        f.moonleap_rule = Rule(
-            rel, f, fltr_subj=fltr_subj, fltr_obj=fltr_obj, description=description
-        )
+        f.moonleap_rule = Rule(rel, f, fltr_subj=fltr_subj, fltr_obj=fltr_obj)
         return f
 
     return wrapped
@@ -52,7 +47,7 @@ def tags(tags):
 _add_function_by_resource_type = {}
 
 
-def add(resource, child_resource, description=None):
+def add(resource, child_resource):
     f = _add_function_by_resource_type.get(child_resource.__class__)
     if not f:
         raise Exception(f"No add rule is registered for {child_resource.__class__}")
