@@ -1,13 +1,7 @@
 {% trim_newlines keep=1 %}
 FROM {{ res.image_name }}
 
-{% for ENVVAR in res.env_vars %}
-ENV {{ ENVVAR }}
-{% endfor %}
-
-{% for ENVVAR in res.env_vars_dev %}
-ENV {{ ENVVAR }}
-{% endfor %}
+{{ res.custom_steps_pre_dev }}
 
 {% for PKG in res.service.get_pkg_names() %}{% if loop.first %}
 # install pkg dependencies

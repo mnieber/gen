@@ -1,5 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import (
+    Priorities,
     StoreOutputPaths,
     create_forward,
     extend,
@@ -12,6 +13,7 @@ from moonleap.verbs import has, runs, uses
 from moonleap_tools.tool import Tool
 
 from .resources import Service
+from .tweaks import tweak
 
 
 @tags(["service"])
@@ -21,9 +23,9 @@ def create_service(term, block):
     return service
 
 
-@rule("service", uses, "port")
-def service_uses_port(service, port):
-    service.port = port.term.data
+@rule("service", priority=Priorities.TWEAK.value)
+def service_uses_tweaks(service):
+    tweak(service)
 
 
 @rule("service", uses + runs + has, "*", fltr_obj=P.fltr_instance(Tool))

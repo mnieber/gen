@@ -1,20 +1,34 @@
 import typing as T
 from dataclasses import dataclass
+from enum import Enum
+from functools import total_ordering
 
 from moonleap.parser.term import word_to_term
 from moonleap.resource.rel import Rel
 from moonleap.verbs import is_created_as
 
 
+class Priorities(Enum):
+    DEFAULT = 1
+    TWEAK = 100
+
+
+@total_ordering
 @dataclass
 class Rule:
     rel: Rel
     f: T.Callable
-    fltr_subj: T.Callable = None
-    fltr_obj: T.Callable = None
+    priority: int = 1
+    fltr_subj: T.Optional[T.Callable] = None
+    fltr_obj: T.Optional[T.Callable] = None
+
+    def __lt__(self, other):
+        return self.priority > other.priority
 
 
-def rule(subj_term, verb=None, obj_term=None, fltr_subj=None, fltr_obj=None):
+def rule(
+    subj_term, verb=None, obj_term=None, fltr_subj=None, fltr_obj=None, priority=1
+):
     if verb is None or obj_term is None:
         if verb is not None or obj_term is not None:
             raise Exception("Either define both verb and obj_term or neither")
@@ -27,7 +41,9 @@ def rule(subj_term, verb=None, obj_term=None, fltr_subj=None, fltr_obj=None):
             verb=verb,
             obj=word_to_term(obj_term, default_to_tag=True),
         )
-        f.moonleap_rule = Rule(rel, f, fltr_subj=fltr_subj, fltr_obj=fltr_obj)
+        f.moonleap_rule = Rule(
+            rel, f, fltr_subj=fltr_subj, fltr_obj=fltr_obj, priority=priority
+        )
         return f
 
     return wrapped

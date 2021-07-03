@@ -1,3 +1,5 @@
+import bisect
+
 from moonleap.resource.rel import fuzzy_match
 
 
@@ -21,7 +23,7 @@ class Config:
         return [rule for rule in self.rules if fuzzy_match(input_rel, rule.rel)]
 
     def add_rule(self, rule):
-        self.rules.append(rule)
+        bisect.insort(self.rules, rule)
 
 
 config = Config()
