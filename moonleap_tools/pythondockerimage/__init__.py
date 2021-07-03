@@ -8,6 +8,9 @@ RUN python3 -m venv /app/env
 ENV PATH="/app/env/bin:${PATH}"
 """
 
+custom_steps_pre_dev = """RUN pip install --upgrade pip
+"""
+
 
 @rule("docker-image")
 def python_docker_image_created(docker_image):
@@ -19,4 +22,5 @@ def python_docker_image_created(docker_image):
 @rule("dockerfile", has, "docker-image")
 def dockerfile_use_docker_image(dockerfile, docker_image):
     if docker_image.name.startswith("python:"):
-        dockerfile.custom_steps_dev = (dockerfile.custom_steps or "") + custom_steps_dev
+        dockerfile.custom_steps_pre_dev += custom_steps_pre_dev
+        dockerfile.custom_steps_dev += custom_steps_dev
