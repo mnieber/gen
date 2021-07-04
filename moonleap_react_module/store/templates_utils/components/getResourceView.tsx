@@ -3,7 +3,7 @@ import { rsMap } from "src/api/ResourceStateMap";
 import { isErroredRS, isResetRS, isUpdatingRS, LoadingT } from "src/utils/RST";
 
 type PropsT = {
-  resourceUrl: string;
+  resUrl: string;
   renderUpdating?: (updating_state: LoadingT) => JSX.Element;
   renderErrored?: (message: string) => JSX.Element;
 };
@@ -23,7 +23,7 @@ export const getResourceView = (props: PropsT) => {
     return <React.Fragment />;
   };
 
-  const rs = rsMap.getState(props.resourceUrl);
+  const rs = rsMap.getState(props.resUrl);
   return isErroredRS(rs)
     ? renderErrored(rs.message)
     : isUpdatingRS(rs)

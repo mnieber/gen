@@ -16,7 +16,7 @@ type DefaultPropsT = {
 export const YellowTulipView: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
   const props = useDefaultProps<PropsT, DefaultPropsT>(p);
 
-  const resourceView = getResourceView({ resourceUrl: props.yellowTulipResUrl });
+  const resourceView = getResourceView({ resUrl: props.yellowTulipResUrl });
   if (resourceView) return resourceView;
 
   return (
