@@ -7,11 +7,16 @@ from moonleap.utils.case import upper0
 from moonleap_react_view.router.resources import RouterConfig, prepend_router_configs
 
 
-def tweak_url(service, url):
+@dataclass
+class Route:
+    configs: [RouterConfig]
+
+
+def _tweak_url(service, url):
     return R.path_or(url, ["services", service.name, "urls", url])(get_tweaks())
 
 
-def group_by(get_key, xs):
+def _group_by(get_key, xs):
     acc = []
     for x in xs:
         key = get_key(x)
@@ -21,6 +26,17 @@ def group_by(get_key, xs):
             acc.append(group)
         group[1].append(x)
     return acc
+
+
+def _move_url_values_up(route_configs):
+    urls = [x.url for x in route_configs if x.url]
+    for x in route_configs:
+        x.url = urls.pop(0) if urls else None
+    return route_configs
+
+
+def _append(x, indent, result):
+    result.append(" " * (indent) + x)
 
 
 def get_route_imports(self):
@@ -50,15 +66,6 @@ def get_route_imports(self):
     return os.linesep.join(result)
 
 
-def _append(x, indent, result):
-    result.append(" " * (indent) + x)
-
-
-@dataclass
-class Route:
-    configs: [RouterConfig]
-
-
 def get_routes(self):
     routes = []
 
@@ -73,13 +80,6 @@ def get_routes(self):
 
     result_str = os.linesep.join(result)
     return result_str
-
-
-def _move_url_values_up(route_configs):
-    urls = [x.url for x in route_configs if x.url]
-    for x in route_configs:
-        x.url = urls.pop(0) if urls else None
-    return route_configs
 
 
 def add_route(router_configs, routes):
@@ -97,22 +97,23 @@ def add_route(router_configs, routes):
 
 
 def add_result(service, routes, url, level, indent, result):
-    routes_by_first_component = group_by(lambda x: x.configs[level].component, routes)
+    # all the routes that share their first component should be grouped inside a
+    # route for that first component
+    routes_by_first_component = _group_by(lambda x: x.configs[level].component, routes)
 
     for _, group in routes_by_first_component:
         router_config = group[0].configs[level]
         url_memo = url
         if router_config.url:
-            url += "/" + tweak_url(service, router_config.url)
+            url += "/" + _tweak_url(service, router_config.url)
             _append(f'<Route path="{url}/">', indent, result)
             indent += 2
-
-        if not router_config.wraps:
-            _append(f"<{upper0(router_config.component.name)}/>", indent, result)
 
         if router_config.wraps:
             _append(f"<{upper0(router_config.component.name)}>", indent, result)
             indent += 2
+        else:
+            _append(f"<{upper0(router_config.component.name)}/>", indent, result)
 
         add_result(
             service,
