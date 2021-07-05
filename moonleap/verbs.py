@@ -6,6 +6,7 @@ is_created_as = "is-created-as"
 runs = ("run", "runs", "running")
 with_ = ("with",)
 wraps = ("wraps",)
+loads = ("loads",)
 shows = ("shows", "displays")
 supports = ("supports",)
 provides = ("provides",)
