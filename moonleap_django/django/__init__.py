@@ -5,7 +5,7 @@ from moonleap.verbs import runs, uses
 from moonleap_tools.pipdependency import PipRequirement
 from moonleap_tools.tool import Tool
 
-from . import layer_configs, makefile_rules, opt_paths
+from . import docker_compose_configs, layer_configs, makefile_rules, opt_paths
 
 
 @dataclass
@@ -20,6 +20,8 @@ def create_django(term, block):
     add(django, layer_configs.get())
     add(django, opt_paths.static_opt_path)
     add(django, PipRequirement(["Django"], is_dev=False))
+    add(django, docker_compose_configs.get(is_dev=True))
+    add(django, docker_compose_configs.get(is_dev=False))
     return django
 
 
