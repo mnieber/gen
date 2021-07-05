@@ -11,14 +11,13 @@ end_clean_up_js_imports_tag = "{% end_clean_up_js_imports %}"
 def parse_imports(text):
     grammar = Grammar(
         r"""
-      imports         = ws import* ws
-      import          = "import" ws something ws "from" ws location ws
-      something       = (thing ws "," ws something) / thing
-      thing           = bracketed_atoms / atom
-      bracketed_atoms = "{" ws atoms ws "}"
-      atoms           = (atom ws "," ws atoms) / atom
-      atom            = term (" as " term)?
-      term            = ~r"[*a-zA-Z_0-9]+"
+      imports         = (ws import ws)*
+      import          = "import" ws (bracketed / star) ws "from" ws location
+      bracketed       = "{" ws packages ws "}"
+      star            = "*" ws "as" ws term
+      packages        = (package ws "," ws packages) / package
+      package         = term (ws "as" ws term)?
+      term            = ~r"[a-zA-Z_0-9]+"
       location        = "'" ~r"[*a-zA-Z_\-\.0-9/]+" "'" ";"?
       ws              = ~r"\s*"
       """
@@ -31,18 +30,18 @@ def parse_imports(text):
 
         def clear(self):
             self.location = ""
-            self.bare_atoms = []
-            self.bracketed_atoms = []
-            self.atoms = []
+            self.star = []
+            self.packages = []
+            self.term = None
 
-        def visit_thing(self, node, visited_children):
-            if len(node.children) == 1:
-                self.bare_atoms.extend(self.atoms)
-            else:
-                self.bracketed_atoms.extend(self.atoms)
+        def visit_star(self, node, visited_children):
+            self.star.append(self.term)
 
-        def visit_atom(self, node, visited_children):
-            self.atoms.append(node.text)
+        def visit_package(self, node, visited_children):
+            self.packages.append(node.text)
+
+        def visit_term(self, node, visited_children):
+            self.term = node.text
 
         def visit_location(self, node, visited_children):
             location = node.text
@@ -51,10 +50,10 @@ def parse_imports(text):
 
             record = self.imports.setdefault(
                 location,
-                {"location": location, "bare_atoms": [], "bracketed_atoms": []},
+                {"location": location, "packages": [], "star": []},
             )
-            record["bare_atoms"].extend(self.bare_atoms)
-            record["bracketed_atoms"].extend(self.bracketed_atoms)
+            record["packages"].extend(self.packages)
+            record["star"].extend(self.star)
             self.clear()
 
         def generic_visit(self, node, visited_children):
@@ -102,13 +101,9 @@ def has_symbol(x, text):
     return re.search(r"\b" + symbol + r"\b", text)
 
 
-def filter_atoms(record, other_text):
-    record["bare_atoms"] = [
-        x for x in record["bare_atoms"] if has_symbol(x, other_text)
-    ]
-    record["bracketed_atoms"] = [
-        x for x in record["bracketed_atoms"] if x in other_text
-    ]
+def filter_packages(record, other_text):
+    record["packages"] = [x for x in record["packages"] if has_symbol(x, other_text)]
+    record["star"] = [x for x in record["star"] if has_symbol(x, other_text)]
 
 
 def post_process_clean_up_js_imports(lines):
@@ -123,26 +118,19 @@ def post_process_clean_up_js_imports(lines):
             count += 1
             removing = True
             block.clear()
-            continue
-
-        if line == end_clean_up_js_imports_tag:
+        elif line == end_clean_up_js_imports_tag:
             count -= 1
             removing = False
             block_text = os.linesep.join(block)
             for location, record in parse_imports(block_text).items():
-                filter_atoms(record, other_text)
-                if record["bare_atoms"] or record["bracketed_atoms"]:
-                    bare_atoms = ", ".join(record["bare_atoms"])
-                    bracketed_atoms = ", ".join(record["bracketed_atoms"])
-                    infix = ", " if bare_atoms and bracketed_atoms else ""
-                    result.extend(
-                        [
-                            f"import {{ {bare_atoms + infix + bracketed_atoms} }} from {location}"
-                        ]
-                    )
-            continue
+                filter_packages(record, other_text)
+                for star in record["star"]:
+                    result.extend([f"import * as {star} from {location}"])
 
-        if removing:
+                if record["packages"]:
+                    package_list = ", ".join(record["packages"])
+                    result.extend([f"import {{ {package_list} }} from {location}"])
+        elif removing:
             block.append(line)
         else:
             result.append(line)
