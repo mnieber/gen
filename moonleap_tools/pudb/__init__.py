@@ -10,7 +10,7 @@ def create_pudb(term, block):
     pudb = Pudb()
 
     add(pudb, PipRequirement(["pudb", "ipython"], is_dev=True))
-    add(pudb, opt_paths.pudb_opt_path)
-    add(pudb, opt_paths.ipython_opt_path)
+    add(pudb, opt_paths.pudb_opt_path())
+    add(pudb, opt_paths.ipython_opt_path())
 
     return pudb

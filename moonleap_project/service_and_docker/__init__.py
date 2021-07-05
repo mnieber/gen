@@ -20,7 +20,7 @@ def dockerfile_use_docker_image(dockerfile, docker_image):
 
 
 @rule("service", uses, "service")
-def strapi_service_uses_postgres(client_service, server_service):
+def service_uses_other_service(client_service, server_service):
     add(
         client_service,
         docker_compose_configs.add_depends_on(server_service, is_dev=True),

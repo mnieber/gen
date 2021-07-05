@@ -4,8 +4,8 @@ from moonleap_project.dockercompose import DockerComposeConfig
 def get(is_dev: bool):
     def service_body():
         body = {}
-        environment = body.setdefault("environment", [])
         if is_dev:
+            environment = body.setdefault("environment", [])
             environment.append("CHOKIDAR_USEPOLLING=true")
         return body
 

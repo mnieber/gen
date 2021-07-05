@@ -1,12 +1,13 @@
+import os
 from pathlib import Path
 
 from moonleap_project.dockercompose import DockerComposeConfig
 
 
 def _make_abs(service, p):
-    base_path = Path("/opt") / service.project.name / service.name
     result = Path(p)
-    if not result.is_absolute():
+    if not Path(os.path.expandvars(p)).is_absolute():
+        base_path = Path("/opt") / service.project.name / service.name
         result = base_path / p
     return result
 
