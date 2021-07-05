@@ -10,7 +10,7 @@ class DockerCompose(Resource):
 
     @property
     def name(self):
-        return "docker-compose" + (".dev" if self.is_dev else "")
+        return "docker-compose" + (".dev" if self.is_dev else ".prod")
 
 
 @dataclass

@@ -29,7 +29,7 @@ def dockerfile_use_docker_image(dockerfile, docker_image):
 
 
 def get_template_filename(dockerfile):
-    return "templates/Dockerfile" + (".dev" if dockerfile.is_dev else "") + ".j2"
+    return "templates/Dockerfile" + (".dev" if dockerfile.is_dev else ".prod") + ".j2"
 
 
 @extend(Dockerfile)

@@ -15,7 +15,7 @@ class Dockerfile(Tool):
 
     @property
     def name(self):
-        return "Dockerfile" + (".dev" if self.is_dev else "")
+        return "Dockerfile" + (".dev" if self.is_dev else ".prod")
 
 
 @dataclass
