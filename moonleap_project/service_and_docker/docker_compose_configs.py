@@ -3,7 +3,6 @@ from moonleap_project.dockercompose import DockerComposeConfig
 
 def get(service, is_dev):
     def inner():
-        dockerfile = service.dockerfile_dev if is_dev else service.dockerfile
         image_postfix = "_dev" if is_dev else ""
 
         port = service.port or "80"
@@ -12,7 +11,7 @@ def get(service, is_dev):
             ports=[f"{port}:{port}"],
             image=(
                 f"{service.project.name}_{service.name}{image_postfix}"
-                if dockerfile
+                if service.dockerfile
                 else service.docker_image.name
             ),
         )
@@ -30,14 +29,14 @@ def get(service, is_dev):
                     env_file_section.append(env_file)
 
         volumes = body.setdefault("volumes", [])
-        if is_dev and dockerfile:
+        if is_dev and service.dockerfile:
             volumes.append(f"./{service.name}:{service.install_dir}/src")
             body["command"] = "sleep infinity"
 
-        if dockerfile:
+        if service.dockerfile:
             build = body.setdefault("build", {})
             build["context"] = f"./{service.name}"
-            build["dockerfile"] = dockerfile.name
+            build["dockerfile"] = "Dockerfile" + (".dev" if is_dev else ".prod")
 
         return body
 

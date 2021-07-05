@@ -28,12 +28,8 @@ def dockerfile_use_docker_image(dockerfile, docker_image):
     )
 
 
-def get_template_filename(dockerfile):
-    return "templates/Dockerfile" + (".dev" if dockerfile.is_dev else ".prod") + ".j2"
-
-
 @extend(Dockerfile)
 class ExtendDockerfile:
     service = P.parent(Service, has, "dockerfile")
-    render = MemFun(render_templates(__file__, get_template_filename))
+    render = MemFun(render_templates(__file__))
     docker_image = P.child(has, "docker-image")

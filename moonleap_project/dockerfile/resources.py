@@ -13,10 +13,6 @@ class Dockerfile(Tool):
     custom_steps: str = ""
     custom_steps_dev: str = ""
 
-    @property
-    def name(self):
-        return "Dockerfile" + (".dev" if self.is_dev else ".prod")
-
 
 @dataclass
 class DockerImage(Tool):

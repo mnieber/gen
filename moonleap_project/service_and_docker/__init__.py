@@ -35,6 +35,5 @@ def service_uses_other_service(client_service, server_service):
 class ExtendService(
     StoreDockerComposeConfigs,
 ):
-    dockerfile = P.child(has, ":dockerfile")
-    dockerfile_dev = P.child(has, "dev:dockerfile")
+    dockerfile = P.child(has, "dockerfile")
     docker_image = P.child(has, "docker-image")
