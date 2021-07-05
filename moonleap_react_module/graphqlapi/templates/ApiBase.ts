@@ -10,23 +10,29 @@ export class ApiBase {
   _dispatchUpdating(queryName: string) {
     this.signal.dispatch({
       topic: `Updating.${queryName}`,
-      state: loadingRS(),
+      payload: {
+        state: loadingRS()
+      }
     } as LoadDataEventT);
     return Promise.resolve();
   }
 
-  _dispatchUpdated(queryName: string, payload: any) {
+  _dispatchUpdated(queryName: string, data: any) {
     this.signal.dispatch({
       topic: `Updated.${queryName}`,
-      state: updatedRS(),
-      payload,
+      payload: {
+        data,
+        state: updatedRS()
+      },
     } as LoadDataEventT);
   }
 
   _dispatchErrored(queryName: string, error: string) {
     this.signal.dispatch({
       topic: `Errored.${queryName}`,
-      state: erroredRS(error),
+      payload: {
+        state: erroredRS(error)
+      }
     } as LoadDataEventT);
   }
 
@@ -34,13 +40,13 @@ export class ApiBase {
     queryName: string,
     query: string,
     vars: ObjT,
-    getPayload: Function,
+    getData: Function,
     getErrorMsg: (error: ObjT) => string
   ) {
     return this._dispatchUpdating(queryName).then(() =>
       doQuery(query, vars)
         .then((response) => {
-          this._dispatchUpdated(queryName, getPayload(response));
+          this._dispatchUpdated(queryName, getData(response));
         })
         .catch((error) => {
           this._dispatchErrored(queryName, getErrorMsg(error));
