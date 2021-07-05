@@ -1,5 +1,5 @@
-import { forEach } from 'lodash/fp';
 import { action, makeObservable, observable } from 'mobx';
+import { forEach } from 'ramda';
 import { resetRS, RST } from 'src/utils/RST';
 
 export class ResourceStateMap {

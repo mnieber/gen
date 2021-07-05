@@ -1,7 +1,7 @@
 {% magic_with res.item_name as yellowTulip %}
 {% magic_with res.module.name as gardenFlowers %}
 import classnames from 'classnames';
-import { always, flow, map } from 'lodash/fp';
+import { always, pipe, map } from 'ramda';
 import { observer } from 'mobx-react-lite';
 import { FC, useDefaultProps } from 'react-default-props-context';
 import { YellowTulipListViewItem } from 'src/gardenFlowers/components';
@@ -24,7 +24,7 @@ export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: Props
   const resourceView = getResourceView({ resUrl: props.yellowTulipsResUrl });
   if (resourceView) return resourceView;
 
-  const yellowTulipDivs = flow(
+  const yellowTulipDivs = pipe(
     always(props.yellowTulips),
     map((x: YellowTulipT) => (
       <YellowTulipListViewItem

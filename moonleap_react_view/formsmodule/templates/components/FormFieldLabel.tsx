@@ -1,7 +1,7 @@
-import React from 'react';
-import { isEmpty, isNil } from 'lodash/fp';
-import classnames from 'classnames';
-import { useFormFieldContext } from 'src/forms/components/FormFieldContext';
+import classnames from "classnames";
+import { isEmpty, isNil } from "ramda";
+import React from "react";
+import { useFormFieldContext } from "src/forms/components/FormFieldContext";
 
 type PropsT = React.PropsWithChildren<{
   classNames?: any;
@@ -29,7 +29,7 @@ export const FormFieldLabel: React.FC<PropsT> = (props: PropsT) => {
     <ColWrapper>
       <RowWrapper>
         <label
-          className={classnames('mt-2 font-bold', props.classNames)}
+          className={classnames("mt-2 font-bold", props.classNames)}
           htmlFor={fieldContext.fieldName}
         >
           {fieldContext.label}

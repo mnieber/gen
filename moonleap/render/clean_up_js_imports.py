@@ -151,7 +151,7 @@ if __name__ == "__main__":
 
         import { action, observable, makeObservable } from 'mobx';
         import { RST, resetRS, updateRes } from 'src/utils/RST';
-        import { forEach } from 'lodash/fp';
+        import { forEach } from 'ramda';
         import * as initiativesApi from 'src/initiatives/api';
     """
     )
