@@ -37,6 +37,6 @@ def strapi_docker_image_used(dockerfile, docker_image):
 @rule("service", uses, "strapi")
 def service_uses_strapi(service, strapi):
     service.install_dir = "/srv/app"
-    service.port = "1337"
+    service.port = service.port or "1337"
     service.env_files.append(strapi_env_fn)
     service.project.add_template_dir(__file__, "templates")

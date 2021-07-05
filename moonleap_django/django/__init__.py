@@ -25,4 +25,5 @@ def create_django(term, block):
 
 @rule("service", uses + runs, "django")
 def service_has_django(service, django):
+    service.port = service.port or "8000"
     add(service.project, layer_configs.get_for_project(service.name))

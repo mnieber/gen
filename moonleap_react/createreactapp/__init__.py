@@ -22,6 +22,7 @@ def create_cra(term, block):
 
 @rule("service", uses, "create-react-app")
 def service_uses_cra(service, cra):
+    service.port = service.port or "3000"
     add(service.project, layer_configs.get_for_project(service.name))
     return [
         create_forward(service, has, "app:module"),

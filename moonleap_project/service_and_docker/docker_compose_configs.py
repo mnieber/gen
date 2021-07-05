@@ -6,9 +6,10 @@ def get(service, is_dev):
         dockerfile = service.dockerfile_dev if is_dev else service.dockerfile
         image_postfix = "_dev" if is_dev else ""
 
+        port = service.port or "80"
         body = dict(
             depends_on=[],
-            ports=[f"{service.port}:{service.port}"],
+            ports=[f"{port}:{port}"],
         )
 
         if dockerfile:

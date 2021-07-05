@@ -1,3 +1,4 @@
+import typing as T
 from dataclasses import dataclass, field
 
 from moonleap import Resource
@@ -8,7 +9,7 @@ class Service(Resource):
     name: str
     use_default_config: bool
     shell: str = "sh"
-    port: str = "80"
+    port: T.Optional[str] = None
     install_dir: str = "/app"
-    env_files: [str] = field(default_factory=lambda: [])
-    env_files_dev: [str] = field(default_factory=lambda: [])
+    env_files: T.List[str] = field(default_factory=lambda: [])
+    env_files_dev: T.List[str] = field(default_factory=lambda: [])

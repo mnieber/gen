@@ -25,7 +25,7 @@ def service_uses_postgres(service, postgres_service):
 
 
 def _postgres_docker_image_used(docker_image, service):
-    service.port = "5432"
+    service.port = service.port or "5432"
     service.env_files.append(postgres_env_fn)
     add(service, docker_compose_configs.get(is_dev=True))
     add(service, docker_compose_configs.get(is_dev=False))
