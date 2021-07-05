@@ -16,7 +16,7 @@ from .resources import NodePackage, NodePackageConfig, load_node_package_config 
 
 
 class StoreNodePackageConfigs:
-    node_package_configs = P.tree("has", "node-package-config")
+    node_package_configs = P.tree(has, "node-package-config")
 
 
 @register_add(NodePackageConfig)
@@ -43,6 +43,6 @@ def meta():
     class ExtendNodePackage(StoreNodePackageConfigs, StoreOutputPaths):
         render = MemFun(render_templates(__file__))
         get_config = MemFun(props.get_node_package_config)
-        service = P.parent(Service, has, "node-package")
+        service = P.parent(Service, has)
 
     return [ExtendNodePackage]

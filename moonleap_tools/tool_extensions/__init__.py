@@ -1,5 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import StoreOutputPaths, extend
+from moonleap.verbs import has
 from moonleap_dodo.layer import StoreLayerConfigs
 from moonleap_project.dockercompose import StoreDockerComposeConfigs
 from moonleap_react.nodepackage import StoreNodePackageConfigs
@@ -10,9 +11,9 @@ from moonleap_tools.tool import Tool
 
 
 class StoreDependencies:
-    pip_dependencies = P.tree("has", "pip-dependency")
-    pip_requirements = P.tree("has", "pip-requirement")
-    pkg_dependencies = P.tree("has", "pkg-dependency")
+    pip_dependencies = P.tree(has, "pip-dependency")
+    pip_requirements = P.tree(has, "pip-requirement")
+    pkg_dependencies = P.tree(has, "pkg-dependency")
 
 
 class ToolExtensions(

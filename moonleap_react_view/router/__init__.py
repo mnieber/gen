@@ -1,5 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, add, extend, register_add, render_templates, tags
+from moonleap.verbs import has
 from moonleap_react.nodepackage import load_node_package_config
 
 from . import props
@@ -7,7 +8,7 @@ from .resources import Router, RouterConfig
 
 
 class StoreRouterConfigs:
-    router_configs = P.tree("has", "router-config")
+    router_configs = P.tree(has, "router-config")
 
 
 @register_add(RouterConfig)

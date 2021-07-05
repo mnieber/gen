@@ -17,7 +17,7 @@ def add_setup_file_config(resource, setup_file_config):
 
 
 class StoreSetupFileConfigs:
-    setup_file_configs = P.tree("has", "setup.cfg-config")
+    setup_file_configs = P.tree(has, "setup.cfg-config")
 
 
 def meta():
@@ -26,7 +26,7 @@ def meta():
     @extend(SetupFile)
     class ExtendSetupFile(StoreSetupFileConfigs):
         render = MemFun(render_templates(__file__))
-        service = P.parent(Service, has, "setup.cfg")
+        service = P.parent(Service, has)
         get_setup_file_config = MemFun(props.get_setup_file_config)
 
     return [ExtendSetupFile]

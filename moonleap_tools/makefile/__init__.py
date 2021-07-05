@@ -47,6 +47,6 @@ def meta():
     @extend(Makefile)
     class ExtendMakefile(StoreMakefileRules):
         render = MemFun(render_templates(__file__))
-        service = P.parent(Service, has, "makefile")
+        service = P.parent(Service, has)
 
     return [ExtendMakefile]

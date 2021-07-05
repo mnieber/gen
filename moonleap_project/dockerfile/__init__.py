@@ -30,6 +30,6 @@ def dockerfile_use_docker_image(dockerfile, docker_image):
 
 @extend(Dockerfile)
 class ExtendDockerfile:
-    service = P.parent(Service, has, "dockerfile")
+    service = P.parent(Service, has)
     render = MemFun(render_templates(__file__))
     docker_image = P.child(has, "docker-image")

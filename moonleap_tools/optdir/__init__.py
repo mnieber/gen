@@ -32,6 +32,6 @@ def meta():
     @extend(OptDir)
     class ExtendOptDir:
         render = MemFun(props.render_opt_dir)
-        service = P.parent(Service, has, "opt-dir")
+        service = P.parent(Service, has)
 
     return [ExtendOptDir]

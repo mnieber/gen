@@ -17,4 +17,4 @@ class ExtendProject:
 
 @extend(Service)
 class ExtendService:
-    project = P.parent(Project, has, "service")
+    project = P.parent(Project, has)

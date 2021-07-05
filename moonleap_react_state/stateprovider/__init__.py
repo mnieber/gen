@@ -42,4 +42,4 @@ class ExtendStateProvider:
     render = MemFun(render_templates(__file__))
     create_router_configs = MemFun(props.create_router_configs)
     default_props_section = Prop(props.default_props_section)
-    state = P.parent(State, has, "state-provider")
+    state = P.parent(State, has)

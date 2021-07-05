@@ -21,7 +21,7 @@ def meta():
 
     @extend(Vandelay)
     class ExtendVandelay:
-        service = P.parent(Service, has, "vandelay")
+        service = P.parent(Service, has)
         render = MemFun(render_templates(__file__, get_template_filename))
 
     return [ExtendVandelay]

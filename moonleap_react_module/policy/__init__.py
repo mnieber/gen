@@ -40,4 +40,4 @@ class ExtendStore:
 @extend(Policy)
 class ExtendPolicy:
     render = MemFun(render_templates(__file__))
-    store = P.parent(Store, has, "policy")
+    store = P.parent(Store, has)

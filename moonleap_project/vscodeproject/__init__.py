@@ -15,4 +15,4 @@ def create_vscode_project(term, block):
 @extend(VsCodeProject)
 class ExtendVsCodeProject(StoreOutputPaths):
     render = MemFun(render_templates(__file__))
-    project = P.parent(Project, has, "vscode-project")
+    project = P.parent(Project, has)

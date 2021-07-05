@@ -7,7 +7,7 @@ from moonleap_project.project import Project
 
 @extend(DockerCompose)
 class ExtendDockerCompose:
-    project = P.parent(Project, has, "docker-compose")
+    project = P.parent(Project, has)
 
 
 @extend(Project)

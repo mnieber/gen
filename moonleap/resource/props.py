@@ -2,7 +2,7 @@ import ramda as R
 from moonleap.parser.term import maybe_term_to_term
 from moonleap.resource import resolve
 from moonleap.resource.prop import Prop
-from moonleap.resource.rel import Rel
+from moonleap.resource.rel import Rel, _is_intersecting
 from moonleap.resource.slctrs import Selector
 from moonleap.utils.inflect import singular
 
@@ -62,25 +62,26 @@ def _fltr(resource_type):
     return R.filter(lambda x: isinstance(x, resource_type))
 
 
-def parent(parent_resource_type, verb, term, is_doc_prop=False, is_private_rel=False):
+def parent(parent_resource_type, verb):
     parent_resource_type = resolve(parent_resource_type)
-    rel = Rel(verb=verb, obj=maybe_term_to_term(term), is_inv=True)
-    slctr = Selector([rel])
 
     def get_parent(self):
-        parents = _fltr(parent_resource_type)(slctr.select_from(self))
+        parents = []
+        for relation, object_resource in self.get_relations():
+            if (
+                relation.is_inv
+                and isinstance(object_resource, parent_resource_type)
+                and _is_intersecting(relation.verb, verb)
+            ):
+                if object_resource not in parents:
+                    parents.append(object_resource)
+
         if len(parents) > 1:
             raise Exception("More than 1 parent")
 
         return None if not parents else parents[0]
 
-    def update_doc_meta(prop_name, doc_meta):
-        if is_doc_prop:
-            doc_meta.doc_prop(prop_name)
-        if is_private_rel:
-            doc_meta.private_rel(rel)
-
-    return Prop(get_value=get_parent, update_doc_meta=update_doc_meta)
+    return Prop(get_value=get_parent)
 
 
 def parents(

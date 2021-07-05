@@ -41,6 +41,6 @@ def meta():
     @extend(Pytest)
     class ExtendPytest:
         pytest_html = P.child(with_, "pytest-html")
-        service = P.parent(Service, has, "pytest")
+        service = P.parent(Service, has)
 
     return [ExtendPytest]

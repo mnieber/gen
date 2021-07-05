@@ -9,7 +9,6 @@ from moonleap_react.module import Module
 def module_has_component(module, component):
     module.node_package_configs.add_source(component)
     component.output_paths.add_source(module)
-    component.module = module
 
 
 @rule("module", shows, "*", fltr_obj=P.fltr_instance(Component))

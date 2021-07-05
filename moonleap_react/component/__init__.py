@@ -1,8 +1,10 @@
 import moonleap.resource.props as P
-from moonleap import StoreOutputPaths, create_forward, extend, rule
+from moonleap import Prop, StoreOutputPaths, create_forward, extend, rule
 from moonleap.verbs import has, wraps
+from moonleap_react.module import Module
 from moonleap_react.nodepackage import StoreNodePackageConfigs
 
+from . import props
 from .resources import Component  # noqa
 
 
@@ -34,3 +36,5 @@ def component_wraps_component(lhs, rhs):
 class ExtendComponent(StoreNodePackageConfigs, StoreOutputPaths):
     wrapped_child_components = P.children(wraps, "component")
     child_components = P.children(has, "component")
+    module = P.parent(Module, has)
+    module_path = Prop(props.module_path)

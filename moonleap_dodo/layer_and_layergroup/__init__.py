@@ -17,5 +17,5 @@ def layer_has_layer_group(layer, layer_group):
 
 @extend(Layer)
 class ExtendLayer(StoreLayerConfigs, StoreOutputPaths):
-    parent_layer_group = P.parent(LayerGroup, contains, "layer")
+    parent_layer_group = P.parent(LayerGroup, contains)
     layer_groups = P.children(has, "layer-group")

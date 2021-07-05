@@ -1,13 +1,6 @@
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    StoreOutputPaths,
-    extend,
-    register_add,
-    render_templates,
-    rule,
-    tags,
-)
+from moonleap import (MemFun, StoreOutputPaths, extend, register_add,
+                      render_templates, rule, tags)
 from moonleap.verbs import has
 
 from . import props
@@ -20,7 +13,7 @@ def add_docker_compose_config(resource, docker_compose_config):
 
 
 class StoreDockerComposeConfigs:
-    docker_compose_configs = P.tree("has", "docker-compose-config")
+    docker_compose_configs = P.tree(has, "docker-compose-config")
 
 
 @tags(["docker-compose"])

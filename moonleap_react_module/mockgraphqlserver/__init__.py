@@ -38,7 +38,7 @@ def meta():
     @extend(MockGrapqhlServer)
     class ExtendMockGrapqhlServer:
         render = MemFun(render_templates(__file__))
-        service = P.parent(Service, uses, "mock-graphql-server")
+        service = P.parent(Service, uses)
 
     @extend(Service)
     class ExtendService:

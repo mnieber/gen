@@ -24,7 +24,7 @@ def meta():
 
     @extend(Module)
     class ExtendModule(StoreTemplateDirs, StoreNodePackageConfigs, StoreOutputPaths):
-        service = P.parent(Service, has, "module")
+        service = P.parent(Service, has)
 
     @extend(Service)
     class ExtendService:

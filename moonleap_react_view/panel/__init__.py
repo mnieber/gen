@@ -16,5 +16,5 @@ def create_panel(term, block):
 @extend(Panel)
 class ExtendPanel:
     render = MemFun(render_templates(__file__))
-    frame = P.parent(Frame, has, "panel")
+    frame = P.parent(Frame, has)
     create_router_configs = MemFun(props.create_router_configs)
