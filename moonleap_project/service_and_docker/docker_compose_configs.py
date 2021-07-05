@@ -10,12 +10,12 @@ def get(service, is_dev):
         body = dict(
             depends_on=[],
             ports=[f"{port}:{port}"],
+            image=(
+                f"{service.project.name}_{service.name}{image_postfix}"
+                if dockerfile
+                else service.docker_image.name
+            ),
         )
-
-        if dockerfile:
-            body["image"] = f"{service.project.name}_{service.name}{image_postfix}"
-        else:
-            body["image"] = service.docker_image.name
 
         if service.env_files:
             env_file_section = body.setdefault("env_file", [])

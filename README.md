@@ -43,7 +43,7 @@ To explain how this works, consider this spec
 ```
 ## The backend:service
 
-The backend:service /uses a python_3.8:dockerfile. :It /uses :pytest.
+The backend:service /uses a python_3.8:dockerimage. :It /uses :pytest.
 ```
 
 A developer can add a rule for turning "backend:service" into a resource:
@@ -69,7 +69,7 @@ class ExtendService:
 Moonleap turns the spec into a set of source files as follows:
 
 1. Each term is converted into one or more resources, e.g. for backend:service we create`Service("backend")`,
-   for python_3.8:dockerfile we create `Dockerfile("python_3.8")` and for :pytest we create a `Pytest()` resource
+   for python_3.8:dockerimage we create `DockerImage("python_3.8")` and for :pytest we create a `Pytest()` resource
    that points to a `PipDependency("pytest")` resource.
 
 2. :It is an alias that resolves to the first term in the preceeding sentence. In the example that
