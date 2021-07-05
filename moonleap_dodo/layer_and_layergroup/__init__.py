@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import StoreOutputPaths, add_source, extend, rule
-from moonleap.verbs import has
+from moonleap.verbs import contains, has
 from moonleap_dodo.layer import StoreLayerConfigs
 from moonleap_dodo.layer.resources import Layer
 from moonleap_dodo.layergroup.resources import LayerGroup
@@ -17,5 +17,5 @@ def layer_has_layer_group(layer, layer_group):
 
 @extend(Layer)
 class ExtendLayer(StoreLayerConfigs, StoreOutputPaths):
-    parent_layer_group = P.parent(LayerGroup, "contains", "layer")
+    parent_layer_group = P.parent(LayerGroup, contains, "layer")
     layer_groups = P.children(has, "layer-group")
