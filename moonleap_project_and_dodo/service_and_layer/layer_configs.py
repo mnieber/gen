@@ -21,13 +21,12 @@ def get_service_options(service):
 def get_docker_options(service):
     def inner():
         project = service.project
-        prefix = "_dev" if project.docker_compose_dev else ""
 
         return dict(
             #
             DOCKER_OPTIONS={
                 #
-                "*": {"container": f"{project.name}{prefix}_{service.name}_1"}
+                "*": {"container": f"{project.name}_dev_{service.name}_1"}
             }
         )
 

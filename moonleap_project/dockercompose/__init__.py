@@ -25,7 +25,7 @@ class StoreDockerComposeConfigs:
 
 @tags(["docker-compose"])
 def create_docker_compose(term, block):
-    docker_compose = DockerCompose(is_dev=term.data == "dev")
+    docker_compose = DockerCompose()
     return docker_compose
 
 

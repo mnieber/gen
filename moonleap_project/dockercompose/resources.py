@@ -6,12 +6,7 @@ from moonleap import Resource
 
 @dataclass
 class DockerCompose(Resource):
-    is_dev: bool = False
-
-    @property
-    def name(self):
-        return "docker-compose" + (".dev" if self.is_dev else ".prod")
-
+    pass
 
 @dataclass
 class DockerComposeConfig(Resource):
