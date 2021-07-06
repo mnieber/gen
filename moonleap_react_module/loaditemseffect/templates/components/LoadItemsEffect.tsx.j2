@@ -5,12 +5,12 @@ import { EffectWithoutArgs } from 'src/utils/components';
 
 type PropsT = {};
 
-export const LoadYellowTulipEffect: React.FC<PropsT> = (p: PropsT) => {
+export const LoadYellowTulipsEffect: React.FC<PropsT> = (p: PropsT) => {
   const { api } = useStore();
   return (
     <EffectWithoutArgs
       f={() => {
-        api.getYellowTulip();
+        api.getYellowTulips();
       }}
     />
   );

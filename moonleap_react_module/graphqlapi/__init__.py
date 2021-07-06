@@ -9,7 +9,6 @@ from moonleap import (
     rule,
     tags,
 )
-from moonleap.utils.inflect import plural
 from moonleap.verbs import has, loads
 from moonleap_project.service import Service
 from moonleap_react.module import Module
@@ -34,7 +33,7 @@ def api_loads_item(api, item):
 
 @rule("graphql:api", loads, "item-list")
 def api_loads_item_list(api, item_list):
-    load_items_effect = f"{plural(item_list.item_name)}:load-items-effect"
+    load_items_effect = f"{item_list.item_name}:load-items-effect"
     return create_forward(api.module.term, has, load_items_effect)
 
 
