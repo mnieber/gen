@@ -1,10 +1,15 @@
+{% magic_with item_name as yellowTulip %}
 {% magic_with item_list.item_name as redRose %}
+{% magic_with item.item_name as blueDaisy %}
 import { normalize, schema } from 'normalizr';
 import { ApiBase } from 'src/api/ApiBase';
 import { ObjT } from 'src/utils/types';
 
+{% for item_name in res.item_names %}
+const yellowTulip = new schema.Entity('yellowTulip');
+{% endfor %}
+
 {% for item_list in res.item_lists %}
-const redRose = new schema.Entity('redRose');
 const redRoseList = new schema.Array(redRose);
 {% endfor %}
 
@@ -24,6 +29,26 @@ export class Api extends ApiBase {
       (error: ObjT) => error.response.errors[0].message
     );
   }
+
+{% endfor %}
+{% for item in res.items %}
+  getBlueDaisy() {
+    return this._doQuery(
+      'getBlueDaisy',
+      `query getBlueDaisy {
+        blueDaisy {
+          id
+          name
+        }
+      }`,
+      {},
+      (response: ObjT) => normalize(response.blueDaisy, blueDaisy).entities,
+      (error: ObjT) => error.response.errors[0].message
+    );
+  }
+
 {% endfor %}
 }
+{% end_magic_with %}
+{% end_magic_with %}
 {% end_magic_with %}

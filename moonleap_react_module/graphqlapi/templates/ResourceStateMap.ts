@@ -15,7 +15,7 @@ export class ResourceStateMap {
     )(resourceUrls);
   }
 
-  getState(resUrl: string): RST {
+  getRS(resUrl: string): RST {
     return this.resourceStateByResUrl[resUrl] ?? resetRS();
   }
 }

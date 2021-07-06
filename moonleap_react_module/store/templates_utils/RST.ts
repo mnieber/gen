@@ -1,8 +1,8 @@
-const RESET = 'RESET';
-const UPDATING = 'UPDATING';
-const ERRORED = 'ERRORED';
-const UPDATED = 'UPDATED';
-const LOADING = 'LOADING';
+const RESET = "RESET";
+const UPDATING = "UPDATING";
+const ERRORED = "ERRORED";
+const UPDATED = "UPDATED";
+const LOADING = "LOADING";
 
 export type ResetRST = {
   type: typeof RESET;
@@ -15,14 +15,14 @@ export const isResetRS = <UpdatingT>(rs: RST<UpdatingT>): rs is ResetRST =>
 
 export type UpdatingRST<UpdatingT> = {
   type: typeof UPDATING;
-  updating_state: UpdatingT;
+  updatingState: UpdatingT;
 };
 
 export const updatingRS = <UpdatingT>(
-  updating_state: UpdatingT
+  updatingState: UpdatingT
 ): UpdatingRST<UpdatingT> => ({
   type: UPDATING,
-  updating_state,
+  updatingState,
 });
 
 export const isUpdatingRS = <UpdatingT>(

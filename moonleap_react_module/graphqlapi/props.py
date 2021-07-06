@@ -1,2 +1,7 @@
-def loads_item_list(self, item_list):
-    return bool([x for x in self.item_lists if x.item_name == item_list.item_name])
+import ramda as R
+
+
+def item_names(self):
+    return R.uniq(
+        [x.item_name for x in self.items] + [x.item_name for x in self.item_lists]
+    )

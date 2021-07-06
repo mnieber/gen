@@ -6,6 +6,7 @@ from . import (
     appstore,
     flags,
     graphqlapi,
+    item,
     itemlist,
     itemtype,
     loaditemseffect,
@@ -23,6 +24,7 @@ def install_all():
     install(appstore)
     install(flags)
     install(graphqlapi)
+    install(item)
     install(itemlist)
     install(itemtype)
     install(loaditemseffect)
