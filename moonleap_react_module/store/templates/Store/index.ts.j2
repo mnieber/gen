@@ -2,6 +2,7 @@
 {% magic_with res.module.name as gardenFlowers %}
 {% clean_up_js_imports %}
 import { action, observable, makeObservable } from 'mobx';
+import { values } from 'ramda';
 import { rsMap } from 'src/api/ResourceStateMap';
 import { isUpdatedRS, RST } from 'src/utils/RST';
 {% if res.policies %}import * as Policies from '{{ res.module_path }}/policies';{% endif %}
@@ -10,9 +11,9 @@ import { YellowTulipT, YellowTulipByIdT } from 'src/gardenFlowers/types';
 {% endfor %}
 {% end_clean_up_js_imports %}
 
-export const resourceUrls = {
+export const resUrls = {
 {% for item_list in res.item_lists %}
-  yellowTulips: `{{ res.name }}/yellowTulips`,
+  yellowTulipById: `{{ res.name }}/yellowTulipById`,
 {% endfor %}
 };
 
@@ -25,9 +26,17 @@ export class {{ res.name }} {
 {% endfor %}
   }
 
-  @action onLoadData(event: any, state: RST, queryName: string) {
+  @action onLoadData(event: any, rs: RST, queryName: string) {
 {{ res.on_load_data_section }}
   }
+
+{% for item_list in res.item_lists %}
+  @action addYellowTulips = (yellowTulips: YellowTulipT[]) => {
+    forEach((yellowTulip: YellowTulipT) => {
+      this.yellowTulipById[yellowTulip.id] = yellowTulip;
+    }, yellowTulips);
+  };
+{% endfor %}
 }
 {% end_magic_with %}
 {% end_magic_with %}

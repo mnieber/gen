@@ -7,61 +7,73 @@ import { observer } from 'mobx-react-lite';
 import { values } from 'ramda';
 
 import { YellowTulipState } from '{{ res.module_path }}/YellowTulipState';
-import { CtrProvider } from 'react-default-props-context';
+import {
+  addCleanUpFunctionToCtr,
+  CtrProvider,
+  FC,
+  useDefaultProps,
+} from 'react-default-props-context';
 import { useStore } from 'src/app/components';
 
 type PropsT = React.PropsWithChildren<{}>;
 
-export const YellowTulipStateProvider: React.FC<PropsT> = observer((props: PropsT) => {
-  const {
-{% for item_name, store in res.state.store_by_item_name.items() %}
-    blueDaisy,
-{% endfor %}
-  } = useStore();
+type DefaultPropsT = {};
 
-  const createState = () => {
-    return new YellowTulipState({
+export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = observer(
+  (p: PropsT) => {
+    const props = useDefaultProps<PropsT, DefaultPropsT>(p);
+    const {
 {% for item_name, store in res.state.store_by_item_name.items() %}
       blueDaisy,
 {% endfor %}
-    });
-  };
+    } = useStore();
 
-  const updateState = (state: YellowTulipState) => {
-    reaction(
-      () => ({
+    const createState = () => {
+      return new YellowTulipState({
 {% for item_name, store in res.state.store_by_item_name.items() %}
-        redRoses: values(blueDaisy.redRoseById),
+        blueDaisy,
 {% endfor %}
-      }),
-      (inputs) => {
-{% for item_name, store in res.state.store_by_item_name.items() %}
-        state.inputs.redRoses = inputs.redRoses;
-{% endfor %}
-      },
-      {
-        fireImmediately: true,
-      }
-    );
-  };
-
-  const getDefaultProps = (state: YellowTulipState) => {
-    return {
-{{ res.default_props_section }}
+      });
     };
-  };
 
-  return (
-    <CtrProvider
-      createCtr={createState}
-      updateCtr={updateState}
-      destroyCtr={(state: YellowTulipState) => state.destroy()}
-      getDefaultProps={getDefaultProps}
-    >
-      {props.children}
-    </CtrProvider>
-  );
-});
+    const updateState = (state: YellowTulipState) => {
+      const cleanUpFunction = reaction(
+        () => ({
+{% for item_name, store in res.state.store_by_item_name.items() %}
+          redRoses: values(blueDaisy.redRoseById),
+{% endfor %}
+        }),
+        (inputs) => {
+{% for item_name, store in res.state.store_by_item_name.items() %}
+          state.inputs.redRoses = inputs.redRoses;
+{% endfor %}
+        },
+        {
+          fireImmediately: true,
+        }
+      );
+      addCleanUpFunctionToCtr(state, cleanUpFunction);
+    };
+
+    const getDefaultProps = (state: YellowTulipState) => {
+      return {
+  {{ res.default_props_section }}
+      };
+    };
+
+    return (
+      <CtrProvider
+        createCtr={createState}
+        updateCtr={updateState}
+        destroyCtr={(state: YellowTulipState) => state.destroy()}
+        getDefaultProps={getDefaultProps}
+      >
+        {props.children}
+      </CtrProvider>
+    );
+  }
+);
+
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

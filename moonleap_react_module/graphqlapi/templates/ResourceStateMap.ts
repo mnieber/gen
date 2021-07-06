@@ -9,10 +9,10 @@ export class ResourceStateMap {
     makeObservable(this);
   }
 
-  @action registerState(state: RST, resourceUrls: string[]) {
+  @action registerRS(state: RST, resUrls: string[]) {
     forEach(
       (resUrl: string) => {this.resourceStateByResUrl[resUrl] = state}
-    )(resourceUrls);
+    )(resUrls);
   }
 
   getRS(resUrl: string): RST {

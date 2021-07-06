@@ -84,7 +84,7 @@ def policies_section(self):
 
     if "filtering" not in facet_names:
         result += [
-            r"mapDataToFacet(Outputs_display, getm(Inputs_items)),",
+            r"Skandha.mapDataToFacet(Outputs_display, getm(Inputs_items)),",
         ]
 
     return os.linesep.join([(indent + x) for x in result])

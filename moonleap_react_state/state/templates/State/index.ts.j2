@@ -5,16 +5,10 @@
 {% clean_up_js_imports %}
 import { setCallbacks } from 'aspiration';
 import { makeObservable } from 'mobx';
-import { cleanUpCtr } from 'react-default-props-context';
-import {
-  facet,
-  getm,
-  mapDataToFacet,
-  installPolicies,
-  registerFacets,
-  ClassMemberT as CMT
-} from 'skandha';
-import { makeCtrObservable } from 'skandha-mobx';
+import { addCleanUpFunctionToCtr, cleanUpCtr } from 'react-default-props-context';
+import * as Skandha from 'skandha';
+import { ClassMemberT as CMT, facet, getm } from 'skandha';
+import { registerCtr } from 'skandha-mobx';
 import { getIds } from 'src/utils/ids';
 import * as Facets from 'skandha-facets';
 import * as FacetPolicies from 'skandha-facets/policies';
@@ -60,28 +54,32 @@ export class YellowTulipState {
 {% endfor %}
     ];
 
-    installPolicies(policies, this.redRoses);
+    Skandha.installPolicies(policies, this.redRoses);
   }
 
 {% endfor %}
 
   destroy() {
-{% for item_name, bvrs in res.bvrs_by_item_name.items() %}
-    cleanUpCtr(this.redRoses);
-{% endfor %}
+    cleanUpCtr(this);
   }
 
   constructor(props: PropsT) {
-    registerFacets(this, {});
-    makeObservable(this);
-
+    registerCtr({
+      ctr: this,
+      childCtrs: [
 {% for item_name, bvrs in res.bvrs_by_item_name.items() %}
-    registerFacets(this.redRoses, { name: 'RedRoses' });
-    this._setRedRosesCallbacks(props);
-    this._applyRedRosesPolicies(props);
-    makeCtrObservable(this.redRoses);
-
+        {
+          ctr: this.redRoses,
+          details: { name: 'RedRoses' },
+          initCtr: () => {
+            this._setRedRosesCallbacks(props);
+            this._applyRedRosesPolicies(props);
+            addCleanUpFunctionToCtr(this, () => cleanUpCtr(this.redRoses));
+          },
+        },
 {% endfor %}
+      ],
+    });
   }
 }
 {% end_magic_with %}
