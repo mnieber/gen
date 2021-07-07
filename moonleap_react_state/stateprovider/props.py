@@ -1,7 +1,6 @@
 from moonleap.utils.inflect import plural
 from moonleap_react_view.router.resources import prepend_router_configs
-from moonleap_react_view.router_and_module.props import \
-    create_component_router_config
+from moonleap_react_view.router_and_module.props import create_component_router_config
 
 
 def create_router_configs(self):
@@ -12,12 +11,6 @@ def create_router_configs(self):
             self, wraps=True, url=self.state.name
         )
         result.append(router_config)
-
-    for store in self.module.stores:
-        for load_items_effect in store.module.load_items_effects:
-            result = prepend_router_configs(
-                result, load_items_effect.create_router_configs()
-            )
 
     return result
 
