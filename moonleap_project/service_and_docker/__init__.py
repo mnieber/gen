@@ -16,7 +16,9 @@ def service_created(service):
 
 @rule("dockerfile", has, "docker-image")
 def dockerfile_use_docker_image(dockerfile, docker_image):
-    return create_forward(dockerfile.service, has, docker_image)
+    return create_forward(
+        dockerfile.service, has, ":docker-image", obj_res=docker_image
+    )
 
 
 @rule("service", uses, "service")

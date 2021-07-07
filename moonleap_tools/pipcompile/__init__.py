@@ -20,7 +20,7 @@ def service_has_pip_compile(service, pip_compile):
 
 @tags(["pip-compile"])
 def create_pip_compile(term, block):
-    pip_compile = PipCompile()
+    pip_compile = PipCompile(name="pip-compile")
 
     add(pip_compile, makefile_rules.get())
     add(pip_compile, layer_configs.get())

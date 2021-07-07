@@ -23,7 +23,7 @@ class ISort(Tool):
 
 @tags(["isort"])
 def create_isort(term, block):
-    isort = ISort()
+    isort = ISort(name="isort")
 
     add(isort, SetupFileConfig(setup_file_config))
     add(isort, PipDependency(["isort"], is_dev=True))

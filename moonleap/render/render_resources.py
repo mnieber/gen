@@ -6,7 +6,7 @@ def render_resources(blocks, session):
     rendered_resources = []
 
     for block in blocks:
-        resources = [x for x in block.get_resources() if x.block == block]
+        resources = [x[1] for x in block.get_resource_by_term() if x[2]]
         for resource in resources:
             if resource in rendered_resources:
                 raise Exception(f"Logical error. Resource in two blocks: {resource}")

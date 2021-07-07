@@ -29,11 +29,7 @@ def _list_of_package_names(get_pkgs, add_via=True):
                             pkg_names.append(pkg_name)
                             result.append(
                                 fr"{pkg_name.ljust(20)}"
-                                + (
-                                    f"` # via {term_to_word(tool.term)}`"
-                                    if add_via
-                                    else ""
-                                )
+                                + (f"` # via {tool.name}`" if add_via else "")
                             )
         return sorted(result)
 

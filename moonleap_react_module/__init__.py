@@ -9,6 +9,7 @@ from . import (
     item,
     itemlist,
     itemtype,
+    loaditemeffect,
     loaditemseffect,
     mockgraphqlserver,
     policy,
@@ -27,6 +28,7 @@ def install_all():
     install(item)
     install(itemlist)
     install(itemtype)
+    install(loaditemeffect)
     install(loaditemseffect)
     install(mockgraphqlserver)
     install(policy)

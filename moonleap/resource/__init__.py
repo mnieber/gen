@@ -1,10 +1,9 @@
 import random
+import typing as T
 import uuid
 from dataclasses import dataclass, field
 from importlib import import_module
 
-from moonleap.parser.block import Block
-from moonleap.parser.term import Term
 from moonleap.resource.prop import DocMeta
 from moonleap.resource.rel import Rel
 from moonleap.resource.slctrs import Selector
@@ -18,9 +17,7 @@ uuid.uuid4 = lambda: uuid.UUID(int=rd.getrandbits(128))
 @dataclass
 class Resource:
     id: str = field(default_factory=lambda: uuid.uuid4().hex, init=False)
-    block: Block = field(default=None, init=False)
-    term: Term = field(default=None, init=False)
-    _relations: [(Rel, "Resource")] = field(
+    _relations: T.List[T.Tuple[Rel, "Resource"]] = field(
         default_factory=list, init=False, repr=False
     )
     doc_meta: DocMeta = field(default_factory=lambda: DocMeta(), init=False)

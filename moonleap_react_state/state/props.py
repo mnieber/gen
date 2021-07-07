@@ -8,8 +8,7 @@ from moonleap.utils.inflect import plural
 def bvrs_by_item_name(self):
     result = defaultdict(lambda: [])
     for bvr in self.behaviors:
-        item_name = bvr.item_name or self.item_name
-        result[item_name].append(bvr)
+        result[self.item_name].append(bvr)
     for item_list in self.item_lists:
         result.setdefault(item_list.item_name, [])
     return result
@@ -91,9 +90,8 @@ def policies_section(self):
 
 
 def type_import_path(self, type_name):
-    term = Term(type_name, "item-type")
-    for parent_block in self.block.get_blocks(include_self=True, include_parents=True):
-        resource = parent_block.get_resource(term)
-        if resource:
-            return resource.module_path + "/types"
+    for module in self.module.service.modules:
+        for store in module.stores:
+            if [x for x in store.item_types if x.name == type_name]:
+                return f"{store.module_path}/types"
     return None

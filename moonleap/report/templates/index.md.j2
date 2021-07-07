@@ -3,8 +3,8 @@
 ---
 ## Resources
 
-{% for res in resources %}
-- <a href="{{ res.id }}.html">{{ res.term | term_to_word }}</a>
+{% for term, res, is_owner in resource_by_term %}
+- <a href="{{ res.id }}.html">{{ term | term_to_word }}</a>
 {% endfor %}
 
 ## Unmatched relations

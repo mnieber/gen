@@ -9,7 +9,7 @@ from .resources import Pytest, PytestHtml
 
 @tags(["pytest"])
 def create_pytest(term, block):
-    pytest = Pytest()
+    pytest = Pytest(name="pytest")
 
     add(pytest, PipRequirement(["pytest"], is_dev=True))
     add(pytest, layer_configs.get_pytest_options(pytest))
@@ -19,7 +19,7 @@ def create_pytest(term, block):
 
 @tags(["pytest-html"])
 def create_pytest_html(term, block):
-    pytest_html = PytestHtml()
+    pytest_html = PytestHtml(name="pytest-html")
 
     add(pytest_html, PipRequirement(["pytest-html"], is_dev=True))
     add(pytest_html, layer_configs.get_pytest_html_options(pytest_html))
@@ -32,7 +32,7 @@ def create_pytest_html(term, block):
 @rule("service", has, "pytest")
 def service_has_pytest_html(service, pytest):
     if pytest.pytest_html:
-        return create_forward(service, has, pytest.pytest_html)
+        return create_forward(service, has, ":tool", pytest.pytest_html)
 
 
 def meta():

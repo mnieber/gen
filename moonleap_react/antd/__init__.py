@@ -9,7 +9,7 @@ class Antd(Tool):
 
 @tags(["antd"])
 def create_antd(term, block):
-    antd = Antd()
+    antd = Antd(name="antd")
     antd.output_path = "src"
     add(antd, load_node_package_config(__file__))
     return antd

@@ -8,7 +8,7 @@ from moonleap_react_view.frame.resources import Frame
 def frame_has_panel(frame, panel):
     panel.name = frame.name + upper0(panel.type) + "Panel"
     frame.dependencies.append(panel)
-    return create_forward(frame.module, has, panel)
+    return create_forward(frame.module, has, ":component", panel)
 
 
 @extend(Frame)

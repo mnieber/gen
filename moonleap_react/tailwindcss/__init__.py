@@ -9,7 +9,7 @@ class TailwindCss(Tool):
 
 @tags(["tailwind-css"])
 def create_tailwind_css(term, block):
-    tailwind_css = TailwindCss()
+    tailwind_css = TailwindCss(name="tailwind")
     add(tailwind_css, load_node_package_config(__file__))
     return tailwind_css
 

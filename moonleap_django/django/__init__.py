@@ -15,7 +15,7 @@ class Django(Tool):
 
 @tags(["django"])
 def create_django(term, block):
-    django = Django()
+    django = Django(name="django")
     add(django, makefile_rules.get())
     add(django, layer_configs.get())
     add(django, opt_paths.static_opt_path)

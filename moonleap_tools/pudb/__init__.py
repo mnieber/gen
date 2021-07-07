@@ -7,7 +7,7 @@ from .resources import Pudb
 
 @tags(["pudb"])
 def create_pudb(term, block):
-    pudb = Pudb()
+    pudb = Pudb(name="pudb")
 
     add(pudb, PipRequirement(["pudb", "ipython"], is_dev=True))
     add(pudb, opt_paths.pudb_opt_path())

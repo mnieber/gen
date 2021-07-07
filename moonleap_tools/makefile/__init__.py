@@ -28,7 +28,7 @@ class StoreMakefileRules:
 
 @tags(["makefile"])
 def create_makefile(term, block):
-    makefile = Makefile()
+    makefile = Makefile(name="makefile")
 
     add(makefile, PkgDependency(["make"], is_dev=True))
     add(makefile, layer_configs.get())
@@ -38,7 +38,7 @@ def create_makefile(term, block):
 
 @rule("makefile", runs, "*", fltr_obj=P.fltr_instance(Tool))
 def makefile_running_tool(makefile, tool):
-    return create_forward(makefile.service, has, tool)
+    return create_forward(makefile.service, has, ":tool", tool)
 
 
 def meta():

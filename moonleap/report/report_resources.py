@@ -46,19 +46,19 @@ def report_resources(blocks, session):
         os.mkdir(report_dir)
 
     for block in blocks:
-        resources = [x for x in block.get_resources() if x.block == block]
-        for resource in resources:
+        resource_by_term = [x for x in block.get_resource_by_term() if x[2]]
+        for term, resource, is_owner in resource_by_term:
             if hasattr(resource.__class__, "doc_meta"):
                 resource.doc_meta.add(resource.__class__.doc_meta)
             report_fn = _fn(resource, report_dir)
             with open(report_fn, "w") as ofs:
-                ofs.write(create_report(resource, session.settings, index_fn))
+                ofs.write(create_report(resource, term, session.settings, index_fn))
 
     with open(index_fn, "w") as ofs:
         ofs.write(create_index(blocks, session.unmatched_rels, session.settings))
 
 
-def create_report(resource, settings, index_fn):
+def create_report(resource, term, settings, index_fn):
     default_template_fn = Path(__file__).parent / "templates" / "resource.md.j2"
     props = {
         prop_name: getattr(resource, prop_name) for prop_name in resource.doc_meta.props
@@ -72,6 +72,7 @@ def create_report(resource, settings, index_fn):
     body = _render(
         default_template_fn,
         resource,
+        term=term,
         settings=settings,
         props=props,
         child_relations=child_relations,
@@ -92,7 +93,12 @@ def create_index(blocks, unmatched_rels, settings):
         return f"{subj} {verb_to_word(rel.verb)} {obj}"
 
     template_fn = Path(__file__).parent / "templates" / "index.md.j2"
-    resources = blocks[0].get_resources(include_children=True)
+
+    resource_by_term = []
+    root_block = blocks[0]
+    for block in root_block.get_blocks(include_children=True):
+        resource_by_term += block.get_resource_by_term()
+
     unmatched_rel_strs = [
         to_rel_str(rel) for rel in unmatched_rels if rel.subj and rel.obj
     ]
@@ -100,7 +106,7 @@ def create_index(blocks, unmatched_rels, settings):
         template_fn,
         None,
         settings=settings,
-        resources=[x for x in resources if x.term],
+        resource_by_term=[x for x in resource_by_term if x[0]],
         unmatched_rel_strs=unmatched_rel_strs,
     )
     return (

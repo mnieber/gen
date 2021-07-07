@@ -26,8 +26,6 @@ def output_path(verb, term):
             raise Exception("Already has a child")
 
         child = OutputPath(output_path)
-        child.block = self.block
-        child.term = self.term
         self.add_relation(rel, child)
 
     def update_doc_meta(prop_name, doc_meta):

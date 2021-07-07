@@ -34,7 +34,6 @@ def service_has_tool(service, tool):
         service,
         has,
         ":tool",
-        subj_res=service,
         obj_res=tool,
     )
 

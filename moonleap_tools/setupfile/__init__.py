@@ -8,7 +8,7 @@ from .resources import SetupFile, SetupFileConfig  # noqa
 
 @tags(["setup.cfg"])
 def create_setup_file(term, block):
-    return SetupFile()
+    return SetupFile(name="setup-file")
 
 
 @register_add(SetupFileConfig)

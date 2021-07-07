@@ -13,7 +13,7 @@ class CreateReactApp(Tool):
 
 @tags(["create-react-app"])
 def create_cra(term, block):
-    cra = CreateReactApp()
+    cra = CreateReactApp(name="create-react-app")
     add(cra, load_node_package_config(__file__))
     add(cra, docker_compose_configs.get(is_dev=True))
     add(cra, docker_compose_configs.get(is_dev=False))

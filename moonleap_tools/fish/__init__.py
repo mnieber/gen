@@ -20,7 +20,7 @@ def service_has_fish(service, fish):
 
 @tags(["fish"])
 def create_fish(term, block):
-    fish = Fish()
+    fish = Fish(name="fish")
 
     add(fish, PkgDependency(["fish"], is_dev=True))
     add(fish, opt_paths.fish_opt_path)

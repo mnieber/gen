@@ -18,7 +18,7 @@ from .resources import Component  # noqa
 def component_has_component(lhs, rhs):
     lhs.add_to_child_components(rhs)
     if not rhs.module:
-        return create_forward(lhs.module, has, rhs)
+        return create_forward(lhs.module, has, ":component", obj_res=rhs)
 
 
 @rule(

@@ -29,7 +29,7 @@ def create_policy(term, block):
 
 @rule("store", has, "policy")
 def store_has_policy(store, policy):
-    return create_forward(store.module, has, policy)
+    return create_forward(store.module, has, ":component", policy)
 
 
 @extend(Store)

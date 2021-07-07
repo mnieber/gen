@@ -13,7 +13,7 @@ class MockGrapqhlServer(Tool):
 
 @tags(["mock-graphql-server"])
 def create_mock_server(term, block):
-    mock_server = MockGrapqhlServer()
+    mock_server = MockGrapqhlServer(name="mock-graphql-server")
     mock_server.output_path = "mockServer"
     add(mock_server, layer_configs.get())
     add(mock_server, docker_compose_configs.get())

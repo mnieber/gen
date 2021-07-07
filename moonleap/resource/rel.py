@@ -52,26 +52,26 @@ def fuzzy_match(input_rel, pattern_rel):
 
 @dataclass
 class Forward:
-    rel: Rel
-    subj_res: T.Any = None
-    obj_res: T.Any = None
+    subj_res: T.Any
+    verb: T.Union[str, T.Tuple[str, ...]]
+    obj: Term
+    obj_res: T.Any
 
 
-def _to_term(x: T.Union[object, Term, str]) -> Term:
-    if isinstance(x, str):
-        return word_to_term(x)
-
+def _to_term(x: T.Union[Term, str]) -> Term:
     if isinstance(x, Term):
         return x
 
-    return T.cast(T.Any, x).term
+    term = word_to_term(x)
+    if term is None:
+        raise Exception("Cannot perform _to_term on {x}")
+    return term
 
 
 def create_forward(
-    subj: T.Union[object, Term, str],
+    subj_res: object,
     verb: T.Union[str, T.Tuple[str, ...]],
-    obj: T.Union[object, Term, str],
-    subj_res: T.Any = None,
+    obj: T.Union[Term, str],
     obj_res: T.Any = None,
 ):
-    return Forward(Rel(_to_term(subj), verb, _to_term(obj)), subj_res, obj_res)
+    return Forward(subj_res=subj_res, verb=verb, obj=_to_term(obj), obj_res=obj_res)

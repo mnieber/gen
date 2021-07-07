@@ -8,7 +8,7 @@ from .resources import Dockerfile, DockerImage
 
 @tags(["dockerfile"])
 def create_dockerfile(term, block):
-    docker_file = Dockerfile(is_dev=term.data == "dev")
+    docker_file = Dockerfile(is_dev=term.data == "dev", name="dockerfile")
     return docker_file
 
 

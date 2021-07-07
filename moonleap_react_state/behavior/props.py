@@ -2,16 +2,8 @@ from moonleap import kebab_to_camel, upper0
 from moonleap.utils.inflect import plural
 
 
-def item_name(self):
-    return kebab_to_camel(self.term.data)
-
-
-def item_names(self):
-    return plural(self.item_name)
-
-
 def imports_section(self):
-    facet_name = upper0(self.term.tag)
+    facet_name = upper0(self.name)
     return (
         f"import {{ {facet_name}, {facet_name}Cbs }} "
         + f"from 'skandha-facets/{facet_name}';"

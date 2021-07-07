@@ -10,9 +10,9 @@ class RelSelector:
     def select_from(self, resource):
         result = []
 
-        for relation, object_resource in resource.get_relations():
+        for relation, obj_resource in resource.get_relations():
             if fuzzy_match(relation, self.pattern_rel):
-                result.append(object_resource)
+                result.append(obj_resource)
 
         return self.fltr(result)
 

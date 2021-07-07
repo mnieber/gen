@@ -5,4 +5,4 @@ from moonleap import Resource
 
 @dataclass
 class Tool(Resource):
-    pass
+    name: str

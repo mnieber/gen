@@ -3,16 +3,10 @@ from moonleap_react_view.router_and_module.props import create_component_router_
 
 
 def create_router_configs(self):
-    router_configs = create_component_router_config(self)
-    result = [router_configs]
-
-    api_module = getattr(self.module.service, "api_module")
-    if api_module:
-        for load_items_effect in api_module.load_items_effects:
-            if load_items_effect.item_name == self.item_name:
-                result = prepend_router_configs(
-                    load_items_effect.create_router_configs(), result
-                )
+    router_configs = [create_component_router_config(self)]
+    result = prepend_router_configs(
+        self.load_items_effect.create_router_configs(), router_configs
+    )
 
     for state in self.module.states:
         item_names = [x.item_name for x in state.item_lists]

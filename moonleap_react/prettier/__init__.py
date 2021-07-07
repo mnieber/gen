@@ -9,7 +9,7 @@ class Prettier(Tool):
 
 @tags(["prettier"])
 def create_prettier(term, block):
-    prettier = Prettier()
+    prettier = Prettier(name="prettier")
     add(prettier, load_node_package_config(__file__))
     return prettier
 
