@@ -1,6 +1,4 @@
-import moonleap.resource.props as P
 from moonleap import MemFun, extend, kebab_to_camel, render_templates, tags, upper0
-from moonleap.verbs import uses
 
 from . import props
 from .resources import Frame

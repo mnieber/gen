@@ -1,5 +1,4 @@
 from moonleap.utils.inflect import plural
-from moonleap_react_view.router.resources import prepend_router_configs
 from moonleap_react_view.router_and_module.props import create_component_router_config
 
 

@@ -8,6 +8,7 @@ from moonleap import Resource
 class DockerCompose(Resource):
     pass
 
+
 @dataclass
 class DockerComposeConfig(Resource):
     get_service_body: T.Callable

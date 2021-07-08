@@ -22,7 +22,7 @@ def get_settings():
     global _settings
 
     if _settings is None:
-        raise Exception(f"No settings file has been loaded")
+        raise Exception("No settings file has been loaded")
 
     return _settings
 
