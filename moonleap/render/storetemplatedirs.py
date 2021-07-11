@@ -1,12 +1,19 @@
 from moonleap import MemField, MemFun
+from moonleap.render.add_output_filenames import add_output_filenames
 from moonleap.render.template_renderer import render_templates
 
 
 def render(self, settings, output_root_dir, template_renderer):
+    all_output_filenames = []
+
     for root_filename, location in self.template_dirs:
-        render_templates(root_filename, location)(
-            self, settings, output_root_dir, template_renderer
+        add_output_filenames(
+            all_output_filenames,
+            render_templates(root_filename, location)(
+                self, settings, output_root_dir, template_renderer
+            ),
         )
+    return all_output_filenames
 
 
 def add_template_dir(self, root_filename, location):

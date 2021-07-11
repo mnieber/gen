@@ -5,6 +5,7 @@ import markdown
 from moonleap.parser.term import term_to_word, verb_to_word
 from moonleap.render.template_renderer import _render
 from moonleap.resource.rel import fuzzy_match
+from moonleap.session import get_session
 
 
 def _fn(resource, report_dir):
@@ -39,6 +40,8 @@ def _match_rel_to_rels(rel, other_rels):
 
 
 def report_resources(blocks, session):
+    get_session().report("Creating report...")
+
     report_dir = os.path.join(session.output_root_dir, ".report")
     index_fn = os.path.abspath(os.path.join(report_dir, "index.html"))
 

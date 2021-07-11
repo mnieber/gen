@@ -17,7 +17,7 @@ import moonleap_react_view
 import moonleap_tools
 from moonleap import create_resources, get_blocks, render_resources, report_resources
 from moonleap.report.create_expected_dir import create_expected_dir
-from moonleap.session import Session
+from moonleap.session import Session, get_session, set_session
 from moonleap.settings import get_settings, load_settings
 
 moonleap_dodo.install_all()
@@ -31,15 +31,15 @@ moonleap_react_state.install_all()
 moonleap_django.install_all()
 
 
-def gen(spec_file, session):
+def gen(spec_file):
     with open(spec_file) as ifs:
         raw_markdown = ifs.read()
 
     blocks = get_blocks(raw_markdown)
 
-    create_resources(blocks, session)
-    render_resources(blocks, session)
-    report_resources(blocks, session)
+    create_resources(blocks, get_session())
+    render_resources(blocks, get_session())
+    report_resources(blocks, get_session())
 
 
 def diff(spec_file):
@@ -68,9 +68,10 @@ if __name__ == "__main__":
         load_settings(Path(args.spec).with_suffix(".yml")),
         output_root_dir="output",
     )
+    set_session(session)
 
     if args.action == "gen":
-        gen(args.spec, session)
+        gen(args.spec)
 
     if args.action == "diff":
         diff(args.spec)
