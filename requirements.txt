@@ -8,3 +8,4 @@ ramda
 python-slugify
 markdown
 parsimonious
+plumbum
