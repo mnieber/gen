@@ -16,9 +16,9 @@ import moonleap_react_state
 import moonleap_react_view
 import moonleap_tools
 from moonleap import create_resources, get_blocks, render_resources, report_resources
-from moonleap.render.settings import get_settings, load_settings
 from moonleap.report.create_expected_dir import create_expected_dir
 from moonleap.session import Session
+from moonleap.settings import get_settings, load_settings
 
 moonleap_dodo.install_all()
 moonleap_project.install_all()

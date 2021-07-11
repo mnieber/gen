@@ -1,6 +1,6 @@
 import os
 
-from moonleap.render.settings import get_settings
+from moonleap.settings import get_settings
 
 
 def create_expected_dir(expected_dir):
