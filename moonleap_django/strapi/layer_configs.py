@@ -4,11 +4,11 @@ from moonleap_dodo.layer import LayerConfig
 def get():
     def inner():
         return dict(
-            ROOT=dict(aliases=dict(serve="make runserver")),
-            DJANGO=dict(
-                cwd="${/SERVER/src_dir}",
-                python="python",
-                settings_module="app.settings.dev",
+            ROOT=dict(
+                aliases=dict(
+                    serve="make runserver",
+                    debug="make debugserver",
+                )
             ),
         )
 

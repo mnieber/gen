@@ -6,15 +6,11 @@ def get():
         return dict(
             ROOT=dict(
                 aliases=dict(
-                    install=r"install-packages --node-modules default",
-                    serve=r"yarn start",
+                    install=r"make install",
+                    serve=r"make runserver",
                 ),
-                decorators=dict(docker=["install-packages", "yarn"]),
-            ),
-            NODE=dict(
-                cwd=r"${/SERVER/src_dir}",
-                node_modules_dir=r"${/SERVER/src_dir}/node_modules",
-            ),
+                decorators=dict(docker=["make"]),
+            )
         )
 
     return LayerConfig(lambda x: inner())

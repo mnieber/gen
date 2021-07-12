@@ -3,12 +3,6 @@ from moonleap_dodo.layer import LayerConfig
 
 def get():
     def inner():
-        return dict(
-            ROOT=dict(
-                aliases=dict(install=r"install-packages --pip-requirements default"),
-                decorators=dict(docker=["install-packages"]),
-            ),
-            PYTHON=dict(pip_requirements=r"${/SERVER/src_dir}/requirements.dev.txt"),
-        )
+        return dict()
 
     return LayerConfig(lambda x: inner())

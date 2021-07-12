@@ -1,7 +1,5 @@
 import ramda as R
-from moonleap import add, get_tweaks
-from moonleap_tools.pipdependency import PipDependency
-from moonleap_tools.pkgdependency import PkgDependency
+from moonleap import get_tweaks
 
 
 def tweak(service):
@@ -12,32 +10,3 @@ def tweak(service):
 
     if get_tweak("port"):
         service.port = get_tweak("port")
-
-    if service.dockerfile:
-        if get_tweak("pkg_dependencies"):
-            add(
-                service.dockerfile,
-                PkgDependency(package_names=get_tweak("pkg_dependencies")),
-            )
-
-        if get_tweak("pkg_dependencies_dev"):
-            add(
-                service.dockerfile,
-                PkgDependency(
-                    package_names=get_tweak("pkg_dependencies_dev"), is_dev=True
-                ),
-            )
-
-        if get_tweak("pip_dependencies"):
-            add(
-                service.dockerfile,
-                PipDependency(package_names=get_tweak("pip_dependencies")),
-            )
-
-        if get_tweak("pip_dependencies_dev"):
-            add(
-                service.dockerfile,
-                PipDependency(
-                    package_names=get_tweak("pip_dependencies_dev"), is_dev=True
-                ),
-            )

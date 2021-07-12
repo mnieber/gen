@@ -7,7 +7,11 @@ def get():
         chop0(
             """
 runserver:
-\tdocker-entrypoint.sh strapi develop
-"""
+\tyarn start
+
+install:
+\tyarn install
+
+"""  # noqa
         )
     )
