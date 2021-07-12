@@ -28,3 +28,4 @@ class ExtendGraphqlApi:
     item_lists = P.children(loads, "item-list")
     api_module = P.parent(Module, has)
     item_names = Prop(props.item_names)
+    params = MemFun(props.params)

@@ -1,6 +1,7 @@
 {% magic_with item_name as yellowTulip %}
-{% magic_with item_list.item_name as redRose %}
-{% magic_with item.item_name as blueDaisy %}
+{% magic_with load_items_effect.item_name as redRose %}
+{% magic_with load_item_effect.item_name as blueDaisy %}
+{% magic_with load_item_effect.name_postfix as Flower %}
 import { normalize, schema } from 'normalizr';
 import { ApiBase } from 'src/api/ApiBase';
 import { ObjT } from 'src/utils/types';
@@ -9,12 +10,12 @@ import { ObjT } from 'src/utils/types';
 const yellowTulip = new schema.Entity('yellowTulip');
 {% endfor %}
 
-{% for item_list in res.item_lists %}
+{% for load_items_effect in res.api_module.load_items_effects %}
 const redRoseList = new schema.Array(redRose);
 {% endfor %}
 
 export class Api extends ApiBase {
-{% for item_list in res.item_lists %}
+{% for load_items_effect in res.api_module.load_items_effects %}
   getRedRoses() {
     return this._doQuery(
       'getRedRoses',
@@ -31,24 +32,35 @@ export class Api extends ApiBase {
   }
 
 {% endfor %}
-{% for item in res.items %}
-  getBlueDaisy() {
+{% for load_item_effect in res.api_module.load_item_effects %}
+{% with params = res.params(load_item_effect) %}
+  getBlueDaisyFlower(
+    {{ params.params }}
+  ) {
     return this._doQuery(
-      'getBlueDaisy',
-      `query getBlueDaisy {
-        blueDaisy {
+      'getBlueDaisyFlower',
+      `query getBlueDaisyFlower(
+{{ params.graphql_params }}
+      ) {
+        blueDaisyFlower(
+{{ params.graphql_params_inner }}
+        ) {
           id
           name
         }
       }`,
-      {},
-      (response: ObjT) => normalize(response.blueDaisy, blueDaisy).entities,
+      {
+        {{ params.vars }}
+      },
+      (response: ObjT) => normalize(response.blueDaisyFlower, blueDaisy).entities,
       (error: ObjT) => error.response.errors[0].message
     );
   }
+{% endwith %}
 
 {% endfor %}
 }
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

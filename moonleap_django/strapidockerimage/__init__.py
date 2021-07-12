@@ -1,7 +1,6 @@
-from moonleap import add, rule, tags
+from moonleap import rule, tags
 from moonleap.verbs import uses
 from moonleap_project.dockerfile import create_docker_image
-from moonleap_tools.pkgdependency import PkgDependency
 
 custom_steps_pre_dev = """ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8

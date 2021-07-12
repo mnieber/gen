@@ -2,6 +2,7 @@ import typing as T
 from dataclasses import dataclass
 
 from moonleap import upper0
+from moonleap.utils.case import lower0
 from moonleap_react.component import Component
 
 
@@ -15,11 +16,17 @@ class LoadItemEffect(Component):
         return create_name_postfix(self.item_name, self.route_params)
 
 
-def create_name_postfix(item_name, route_params):
+def shorten_route_params(route_params, item_name):
     def _param_to_word(route_param):
         if route_param.startswith(item_name):
             cutoff_index = len(item_name)
-            route_param = route_param[cutoff_index:]
-        return upper0(route_param)
+            route_param = lower0(route_param[cutoff_index:])
+        return route_param
 
-    return "By" + "And".join([_param_to_word(x) for x in route_params])
+    return [_param_to_word(x) for x in route_params]
+
+
+def create_name_postfix(item_name, route_params):
+    return "By" + "And".join(
+        [upper0(x) for x in shorten_route_params(route_params, item_name)]
+    )

@@ -4,7 +4,7 @@ from moonleap_react_view.router.resources import prepend_router_configs
 from moonleap_react_view.router_and_module.props import create_component_router_config
 
 
-def get_route_params(self):
+def _get_route_params(self):
     default_params = [] if self.load_item_effect else [f"{self.item_name}Id"]
     return R.path_or(
         default_params,
@@ -14,7 +14,7 @@ def get_route_params(self):
 
 def create_router_configs(self):
     router_config = create_component_router_config(self)
-    prefixed_route_params = [":" + x for x in self.get_route_params()]
+    prefixed_route_params = [":" + x for x in _get_route_params(self)]
     router_config.url = "/".join([self.item_name, *prefixed_route_params])
     result = [router_config]
 

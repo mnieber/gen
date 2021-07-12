@@ -10,6 +10,7 @@ from moonleap import (
 )
 from moonleap.utils.case import upper0
 from moonleap.verbs import has, uses
+from moonleap_react_module.graphqlapi.resources import get_graphql_item_lists
 
 from . import props
 from .resources import ListView, create_load_items_effect
@@ -23,22 +24,23 @@ def create_list_view(term, block):
 
 
 @rule("list-view")
-def add_load_items_effect_to_list_view(list_view):
-    load_items_effect = create_load_items_effect(list_view)
-    return [
-        create_forward(
-            list_view.module.service.api_module,
-            has,
-            ":load-items-effect",
-            obj_res=load_items_effect,
-        ),
-        create_forward(
-            list_view,
-            uses,
-            ":load-items-effect",
-            obj_res=load_items_effect,
-        ),
-    ]
+def maybe_add_load_items_effect_to_list_view(list_view):
+    if get_graphql_item_lists(list_view.module.service.api_module, list_view.item_name):
+        load_items_effect = create_load_items_effect(list_view)
+        return [
+            create_forward(
+                list_view.module.service.api_module,
+                has,
+                ":load-items-effect",
+                obj_res=load_items_effect,
+            ),
+            create_forward(
+                list_view,
+                uses,
+                ":load-items-effect",
+                obj_res=load_items_effect,
+            ),
+        ]
 
 
 @extend(ListView)

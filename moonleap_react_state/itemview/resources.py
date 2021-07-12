@@ -25,27 +25,5 @@ def create_load_item_effect(item_view, route_params):
 
 def create_select_item_effect(item_view, route_params):
     name = f"Select{upper0(item_view.item_name)}Effect"
-    select_item_effect = SelectItemEffect(
-        item_name=item_view.item_name, route_params=route_params, name=name
-    )
+    select_item_effect = SelectItemEffect(item_name=item_view.item_name, name=name)
     return select_item_effect
-
-
-def _graphql_api(self):
-    return self.module.service.api_module.graphql_api
-
-
-def get_graphql_item_lists(self):
-    graphql_api = _graphql_api(self)
-    if not graphql_api:
-        return
-
-    return [x for x in graphql_api.item_lists if x.item_name == self.item_name]
-
-
-def get_graphql_items(self):
-    graphql_api = _graphql_api(self)
-    if not graphql_api:
-        return
-
-    return [x for x in graphql_api.items if x.item_name == self.item_name]
