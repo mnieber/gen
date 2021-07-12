@@ -1,6 +1,5 @@
 import typing as T
 
-import ramda as R
 from moonleap.parser.line import Line
 from moonleap.parser.term import Term
 

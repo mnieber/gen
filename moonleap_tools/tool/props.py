@@ -1,4 +1,3 @@
-from moonleap.parser.term import term_to_word
 from moonleap.resource.slctrs import PropSelector, Selector
 
 

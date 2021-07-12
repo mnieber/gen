@@ -18,7 +18,8 @@ class LoadItemEffect(Component):
 def create_name_postfix(item_name, route_params):
     def _param_to_word(route_param):
         if route_param.startswith(item_name):
-            route_param = route_param[len(item_name) :]
+            cutoff_index = len(item_name)
+            route_param = route_param[cutoff_index:]
         return upper0(route_param)
 
     return "By" + "And".join([_param_to_word(x) for x in route_params])

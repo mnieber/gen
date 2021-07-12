@@ -1,3 +1,4 @@
+import typing as T
 from dataclasses import dataclass
 
 from moonleap import Resource, register_add
@@ -5,7 +6,7 @@ from moonleap import Resource, register_add
 
 @dataclass
 class PkgDependency(Resource):
-    package_names: [str]
+    package_names: T.List[str]
     is_dev: bool = False
 
 

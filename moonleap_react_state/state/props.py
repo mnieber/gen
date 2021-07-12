@@ -1,7 +1,7 @@
 import os
 from collections import defaultdict
 
-from moonleap import Term, upper0
+from moonleap import upper0
 from moonleap.utils.inflect import plural
 
 
