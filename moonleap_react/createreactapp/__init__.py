@@ -4,7 +4,7 @@ from moonleap.verbs import has, uses
 from moonleap_react.nodepackage import load_node_package_config
 from moonleap_tools.tool import Tool
 
-from . import docker_compose_configs, layer_configs
+from . import docker_compose_configs, layer_configs, makefile_rules
 
 
 class CreateReactApp(Tool):
@@ -17,6 +17,7 @@ def create_cra(term, block):
     add(cra, load_node_package_config(__file__))
     add(cra, docker_compose_configs.get(is_dev=True))
     add(cra, docker_compose_configs.get(is_dev=False))
+    add(cra, makefile_rules.get())
     return cra
 
 
@@ -27,6 +28,7 @@ def service_uses_cra(service, cra):
     return [
         create_forward(service, has, "app:module"),
         create_forward(service, has, "utils:module"),
+        create_forward(service, has, ":makefile"),
     ]
 
 

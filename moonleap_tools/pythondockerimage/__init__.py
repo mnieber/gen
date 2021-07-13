@@ -1,4 +1,4 @@
-from moonleap import add, create_forward, rule
+from moonleap import add, rule
 from moonleap.verbs import has
 
 from . import docker_compose_configs, layer_configs
@@ -28,9 +28,3 @@ def dockerfile_use_docker_image(dockerfile, docker_image):
         dockerfile.custom_steps_pre_dev += custom_steps_pre_dev
         dockerfile.custom_steps_dev += custom_steps_dev
         dockerfile.custom_steps_pre += custom_steps_pre
-
-
-@rule("dockerfile", has, "docker-image")
-def add_makefile_to_service(dockerfile, docker_image):
-    if docker_image.name.startswith("python:"):
-        return create_forward(dockerfile.service, has, ":makefile")

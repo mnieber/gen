@@ -1,14 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    add,
-    create_forward,
-    extend,
-    register_add,
-    render_templates,
-    rule,
-    tags,
-)
+from moonleap import MemFun, add, extend, register_add, render_templates, tags
 from moonleap.verbs import has, runs
 from moonleap_tools.pkgdependency import PkgDependency
 from moonleap_tools.tool import Tool
@@ -34,11 +25,6 @@ def create_makefile(term, block):
     add(makefile, layer_configs.get())
 
     return makefile
-
-
-@rule("makefile", runs, "*", fltr_obj=P.fltr_instance(Tool))
-def makefile_running_tool(makefile, tool):
-    return create_forward(makefile.service, has, ":tool", tool)
 
 
 def meta():

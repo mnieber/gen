@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from moonleap import add, rule, tags
-from moonleap.verbs import connects, runs, uses
+from moonleap import add, create_forward, rule, tags
+from moonleap.verbs import connects, has, runs, uses
 from moonleap_tools.pipdependency import PipDependency, PipRequirement
 from moonleap_tools.pkgdependency import PkgDependency
 from moonleap_tools.tool import Tool
@@ -30,6 +30,7 @@ def create_django(term, block):
 def service_has_django(service, django):
     service.port = service.port or "8000"
     add(service.project, layer_configs.get_for_project(service.name))
+    return create_forward(service, has, ":makefile")
 
 
 @rule("django", connects, "postgres:service")
