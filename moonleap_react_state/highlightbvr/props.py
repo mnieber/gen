@@ -32,7 +32,7 @@ def policies_section(self, bvrs):
 def default_props_section(self, store):
     indent = "      "
     result = [
-        f"{self.item_names}Highlight: () => state.{self.item_names}.highlight,",
-        f"{self.item_name}: () => state.{self.item_names}.highlight.item,",
+        f"{self.items_name}Highlight: () => state.{self.items_name}.highlight,",
+        f"{self.item_name}: () => state.{self.items_name}.highlight.item,",
     ]
     return os.linesep.join([(indent + x) for x in result]) + os.linesep
