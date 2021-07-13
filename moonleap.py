@@ -43,11 +43,11 @@ def gen(spec_file):
 
 
 def diff(spec_file):
-    expected_dir = "./expected"
+    expected_dir = ".moonleap/expected"
     create_expected_dir(expected_dir)
     diff_tool = R.path_or("diff", ["bin", "diff_tool"])(get_settings())
     if diff_tool == "meld":
-        local["meld"]("./output", expected_dir)
+        local["meld"](".moonleap/output", expected_dir)
 
 
 def report(x):
@@ -57,7 +57,7 @@ def report(x):
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--spec", required=True)
-    parser.add_argument("action", choices=["gen", "diff"])
+    parser.add_argument("action", choices=["gen", "diff", "snap"])
     args = parser.parse_args()
 
     if not os.path.exists(args.spec):
@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
     session = Session(
         load_settings(Path(args.spec).with_suffix(".yml")),
-        output_root_dir="output",
+        output_root_dir=".moonleap/output",
     )
     set_session(session)
 
@@ -74,4 +74,7 @@ if __name__ == "__main__":
         gen(args.spec)
 
     if args.action == "diff":
+        diff(args.spec)
+
+    if args.action == "snap":
         diff(args.spec)

@@ -129,8 +129,7 @@ dmypy.json
 .pyre/
 
 # Other
-/output
 
 /specs
-/expected
-/.moonleap.yml
+/.moonleap
+.moonleap.config.yml

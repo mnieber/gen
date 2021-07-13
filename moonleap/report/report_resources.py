@@ -42,11 +42,11 @@ def _match_rel_to_rels(rel, other_rels):
 def report_resources(blocks, session):
     get_session().report("Creating report...")
 
-    report_dir = os.path.join(session.output_root_dir, ".report")
+    report_dir = ".moonleap/report"
     index_fn = os.path.abspath(os.path.join(report_dir, "index.html"))
 
     if not os.path.exists(report_dir):
-        os.mkdir(report_dir)
+        os.makedirs(report_dir)
 
     for block in blocks:
         resource_by_term = [x for x in block.get_resource_by_term() if x[2]]

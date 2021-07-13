@@ -15,7 +15,7 @@ def load_settings(fn):
     if _settings is None:
         _settings = {}
 
-        global_settings_fn = ".moonleap.yml"
+        global_settings_fn = ".moonleap.config.yml"
         if os.path.exists(global_settings_fn):
             with open(global_settings_fn) as ifs:
                 merge_into_config(_settings, yaml2dict(ifs.read()))
