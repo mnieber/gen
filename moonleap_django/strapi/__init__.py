@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 
-from moonleap import add, rule, tags
+import moonleap.resource.props as P
+from moonleap import add, extend, rule, tags
 from moonleap.verbs import connects, uses
+from moonleap_project.service import Service
 from moonleap_tools.pipdependency import PipDependency, PipRequirement
 from moonleap_tools.pkgdependency import PkgDependency
 from moonleap_tools.tool import Tool
@@ -48,3 +50,4 @@ def strapi_uses_postgres_service(strapi, postgres_service):
         ),
     )
     add(strapi, makefile_rules.get_postgres())
+    postgres_service.project.add_template_dir(__file__, "templates_project")
