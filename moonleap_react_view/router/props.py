@@ -2,7 +2,6 @@ import os
 from dataclasses import dataclass
 
 import ramda as R
-from moonleap import get_tweaks
 from moonleap.utils.case import upper0
 from moonleap_react_view.router.resources import RouterConfig, prepend_router_configs
 
@@ -10,10 +9,6 @@ from moonleap_react_view.router.resources import RouterConfig, prepend_router_co
 @dataclass
 class Route:
     configs: [RouterConfig]
-
-
-def _tweak_url(service, url):
-    return R.path_or(url, ["services", service.name, "urls", url])(get_tweaks())
 
 
 def _group_by(get_key, xs):
@@ -105,8 +100,8 @@ def add_result(service, routes, url, level, indent, result):
         router_config = group[0].configs[level]
         url_memo = url
         if router_config.url:
-            url += "/" + _tweak_url(service, router_config.url)
-            _append(f'<Route path="{url}/">', indent, result)
+            url += "/" + router_config.url
+            _append(f'<Route path="{url}">', indent, result)
             indent += 2
 
         if router_config.wraps:

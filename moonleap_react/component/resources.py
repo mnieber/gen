@@ -1,16 +1,26 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap import Resource, upper0
+import ramda as R
+from moonleap import Resource, get_tweaks, upper0
 
 
 @dataclass
 class Component(Resource):
     name: str
-    dependencies: [T.Any] = field(
+    dependencies: T.List[T.Any] = field(
         default_factory=lambda: list(), init=False, repr=False
     )
 
     @property
     def react_tag(self):
         return f"<{upper0(self.name)}/>"
+
+
+def get_component_base_url(component, default_value):
+    component_settings = R.path_or(
+        {},
+        ["services", component.module.service.name, "components", component.name],
+    )(get_tweaks())
+
+    return component_settings.get("base_url", default_value)

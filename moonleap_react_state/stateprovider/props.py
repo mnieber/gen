@@ -1,4 +1,5 @@
 from moonleap.utils.inflect import plural
+from moonleap_react.component.resources import get_component_base_url
 from moonleap_react_view.router_and_module.props import create_component_router_config
 
 
@@ -7,7 +8,7 @@ def create_router_configs(self):
 
     if self.state:
         router_config = create_component_router_config(
-            self, wraps=True, url=self.state.name
+            self, wraps=True, url=get_component_base_url(self, self.state.name)
         )
         result.append(router_config)
 

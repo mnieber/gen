@@ -1,5 +1,6 @@
 import ramda as R
 from moonleap import get_tweaks
+from moonleap_react.component.resources import get_component_base_url
 from moonleap_react_view.router.resources import prepend_router_configs
 from moonleap_react_view.router_and_module.props import create_component_router_config
 
@@ -14,8 +15,11 @@ def _get_route_params(self):
 
 def create_router_configs(self):
     router_config = create_component_router_config(self)
-    prefixed_route_params = [":" + x for x in _get_route_params(self)]
-    router_config.url = "/".join([self.item_name, *prefixed_route_params])
+    base_url = get_component_base_url(self, self.item_name)
+    router_config.url = "/".join(
+        ([base_url] if base_url else [])
+        + [":" + x for x in _get_route_params(self) if x is not None]
+    )
     result = [router_config]
 
     # Add router configs for load-item-effect
