@@ -1,17 +1,13 @@
-from dataclasses import dataclass
-
-from moonleap import add, create_forward, rule, tags
+import moonleap.resource.props as P
+from moonleap import add, create_forward, extend, rule, tags
 from moonleap.verbs import connects, has, runs, uses
+from moonleap_django.postgresservice import postgres_env_fn
+from moonleap_project.service import Service
 from moonleap_tools.pipdependency import PipDependency, PipRequirement
 from moonleap_tools.pkgdependency import PkgDependency
-from moonleap_tools.tool import Tool
 
 from . import docker_compose_configs, layer_configs, makefile_rules, opt_paths
-
-
-@dataclass
-class Django(Tool):
-    pass
+from .resources import Django
 
 
 @tags(["django"])
@@ -39,3 +35,9 @@ def django_uses_postgres_service(django, postgres_service):
     add(django, PipRequirement(["psycopg2"]))
     add(django, PipDependency(["pgcli==2.1.1"], is_dev=True))
     add(django, makefile_rules.get_postgres())
+    django.service.env_files.append(postgres_env_fn)
+
+
+@extend(Django)
+class ExtendDjango:
+    service = P.parent(Service, uses + runs)
