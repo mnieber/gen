@@ -1,4 +1,5 @@
 import os
+import typing as T
 from dataclasses import dataclass
 
 import ramda as R
@@ -8,7 +9,7 @@ from moonleap_react_view.router.resources import RouterConfig, prepend_router_co
 
 @dataclass
 class Route:
-    configs: [RouterConfig]
+    configs: T.List[RouterConfig]
 
 
 def _group_by(get_key, xs):
@@ -98,10 +99,16 @@ def add_result(service, routes, url, level, indent, result):
 
     for _, group in routes_by_first_component:
         router_config = group[0].configs[level]
+        next_routes = [x for x in group if len(x.configs) > level + 1]
         url_memo = url
         if router_config.url:
             url += "/" + router_config.url
-            _append(f'<Route path="{url}">', indent, result)
+            postfix = (
+                "/"
+                if [route for route in next_routes if route.configs[level + 1].url]
+                else ""
+            )
+            _append(f'<Route path="{url}{postfix}">', indent, result)
             indent += 2
 
         if router_config.wraps:
@@ -112,7 +119,7 @@ def add_result(service, routes, url, level, indent, result):
 
         add_result(
             service,
-            [x for x in group if len(x.configs) > level + 1],
+            next_routes,
             url,
             level + 1,
             indent,
