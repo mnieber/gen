@@ -7,12 +7,7 @@ import { observer } from 'mobx-react-lite';
 import { values } from 'ramda';
 
 import { YellowTulipState } from '{{ res.module_path }}/YellowTulipState';
-import {
-  addCleanUpFunctionToCtr,
-  CtrProvider,
-  FC,
-  useDefaultProps,
-} from 'react-default-props-context';
+import { CtrProvider, FC, useDefaultProps } from 'react-default-props-context';
 import { useStore } from 'src/app/components';
 
 type PropsT = React.PropsWithChildren<{}>;
@@ -37,7 +32,7 @@ export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = observer(
     };
 
     const updateState = (state: YellowTulipState) => {
-      const cleanUpFunction = reaction(
+      return reaction(
         () => ({
 {% for item_name, store in res.state.store_by_item_name.items() %}
           redRoses: values(blueDaisy.redRoseById),
@@ -52,7 +47,6 @@ export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = observer(
           fireImmediately: true,
         }
       );
-      addCleanUpFunctionToCtr(state, cleanUpFunction);
     };
 
     const getDefaultProps = (state: YellowTulipState) => {
