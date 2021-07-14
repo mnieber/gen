@@ -7,7 +7,7 @@ import { ApiBase } from 'src/api/ApiBase';
 import { ObjT } from 'src/utils/types';
 
 {% for item_name in res.item_names %}
-const yellowTulip = new schema.Entity('yellowTulip');
+const yellowTulip = new schema.Entity('yellowTulips');
 {% endfor %}
 
 {% for load_items_effect in res.api_module.load_items_effects %}
@@ -26,8 +26,12 @@ export class Api extends ApiBase {
         }
       }`,
       {},
-      (response: ObjT) => normalize(response.redRoses, redRoseList).entities,
-      (error: ObjT) => error.response.errors[0].message
+      (response: ObjT) => {
+        return normalize(response.redRoses, redRoseList).entities;
+      },
+      (error: ObjT) => {
+        return error.response.errors[0].message;
+      }
     );
   }
 
