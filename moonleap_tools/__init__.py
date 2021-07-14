@@ -1,6 +1,7 @@
 from moonleap import install
 
 from . import (
+    black,
     fish,
     isort,
     makefile,
@@ -19,6 +20,7 @@ from . import (
 
 
 def install_all():
+    install(black)
     install(fish)
     install(isort)
     install(makefile)
@@ -30,6 +32,6 @@ def install_all():
     install(pytest)
     install(pythondockerimage)
     install(setupfile)
-    install(tool)
     install(tool_extensions)
+    install(tool)
     install(vandelay)
