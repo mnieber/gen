@@ -14,8 +14,8 @@ interface IProps<ArgsT> {
 export const Effect: <ArgsT>(props: IProps<ArgsT>) => React.ReactElement =
   observer(({ f, getArgs }) => {
     const params = useParams();
-    const { all: search_params } = useSearchParams();
-    const args = getArgs(merge(params, search_params));
+    const { all: searchParams } = useSearchParams();
+    const args = getArgs(merge(params, searchParams));
 
     useDeepCompareEffect(() => {
       const cleanUpFunction = f(args);

@@ -22,7 +22,7 @@ export const getResourceView = (props: PropsT) => {
     return <React.Fragment />;
   };
 
-  const rs = rsMap.getState(props.resUrl);
+  const rs = rsMap.getRS(props.resUrl);
   return isErroredRS(rs)
     ? renderErrored(rs.message)
     : isUpdatingRS(rs)
