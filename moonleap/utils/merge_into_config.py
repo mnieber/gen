@@ -14,17 +14,15 @@ def merge_into_config(config, layer, xpath=None):
     for key, val in (layer or {}).items():
         new_xpath = xpath + [key]
 
-        if key not in config:
-            config[key] = val
-        elif _is_dict(val):
+        if _is_dict(val):
+            config.setdefault(key, {})
             if not _is_dict(config[key]):
                 _raise(new_xpath)
             merge_into_config(config[key], val, new_xpath)
         elif _is_list(val):
+            config.setdefault(key, [])
             if not _is_list(config[key]):
                 _raise(new_xpath)
-            for x in val:
-                if x not in config[key]:
-                    config[key].append(x)
+            config[key].extend(val)
         else:
             config[key] = val
