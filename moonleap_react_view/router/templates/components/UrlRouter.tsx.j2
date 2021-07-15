@@ -12,9 +12,7 @@ export const history = createBrowserHistory();
 export const UrlRouter: React.FC<PropsT> = observer((props: PropsT) => {
   return (
     <Router history={history}>
-      <Switch>
 {{ res.get_routes() }}
-      </Switch>
     </Router>
   );
 });

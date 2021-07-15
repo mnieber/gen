@@ -72,7 +72,7 @@ def get_routes(self):
                 add_route(router_configs, routes)
 
     result = []
-    add_result(self.module.service, routes, "", 0, 8, result)
+    add_result(self.module.service, routes, "", 0, 6, result)
 
     result_str = os.linesep.join(result)
     return result_str
@@ -96,6 +96,11 @@ def add_result(service, routes, url, level, indent, result):
     # all the routes that share their first component should be grouped inside a
     # route for that first component
     routes_by_first_component = _group_by(lambda x: x.configs[level].component, routes)
+    needs_switch = len(routes_by_first_component) > 1
+
+    if needs_switch:
+        _append("<Switch>", indent, result)
+        indent += 2
 
     for _, group in routes_by_first_component:
         router_config = group[0].configs[level]
@@ -134,3 +139,7 @@ def add_result(service, routes, url, level, indent, result):
             url = url_memo
             indent -= 2
             _append("</Route>", indent, result)
+
+    if needs_switch:
+        indent -= 2
+        _append("</Switch>", indent, result)
