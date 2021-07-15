@@ -1,4 +1,4 @@
-from moonleap import MemFun, extend, tags
+from moonleap import MemFun, extend, kebab_to_camel, tags
 
 from . import props
 from .resources import HighlightBvr
@@ -6,7 +6,8 @@ from .resources import HighlightBvr
 
 @tags(["highlight"])
 def create_behavior(term, block):
-    behavior = HighlightBvr(item_name=term.data, name=term.tag)
+    item_name = kebab_to_camel(term.data)
+    behavior = HighlightBvr(item_name=item_name, name=term.tag)
     return behavior
 
 
