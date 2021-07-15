@@ -25,6 +25,7 @@ def default_props_section(self):
             items_name = plural(item_name)
 
             result += f"      {items_name}: () => state.outputs.{items_name}Display,\n"
+            result += f"      {items_name}ResUrl: () => resUrls.{item_name}ById,\n"
 
             store = store_by_item_name.get(item_name)
             for bvr in bvrs:

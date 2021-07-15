@@ -6,6 +6,7 @@ import { reaction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { values } from 'ramda';
 
+import { resUrls } from '{{ res.module_path }}/YellowTulipStore';
 import { YellowTulipState } from '{{ res.module_path }}/YellowTulipState';
 import { CtrProvider, FC, useDefaultProps } from 'react-default-props-context';
 import { useStore } from 'src/app/components';
@@ -51,7 +52,7 @@ export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = observer(
 
     const getDefaultProps = (state: YellowTulipState) => {
       return {
-  {{ res.default_props_section }}
+{{ res.default_props_section }}
       };
     };
 
