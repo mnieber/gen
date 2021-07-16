@@ -115,11 +115,15 @@ def tree(verb, term):
             def merged(self):
                 result = list(self.children)
                 queue = list(self.sources)
+                # never use the same source twice
+                known_sources = list()
 
                 while queue:
                     source = queue.pop(0)
-                    queue.extend(sources_prop.get_value(source))
-                    result.extend(children_prop.get_value(source))
+                    if source not in known_sources:
+                        known_sources.append(source)
+                        queue.extend(sources_prop.get_value(source))
+                        result.extend(children_prop.get_value(source))
 
                 return result
 
