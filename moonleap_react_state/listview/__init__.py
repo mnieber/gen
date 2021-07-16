@@ -1,6 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
+    Prop,
     create_forward,
     extend,
     kebab_to_camel,
@@ -9,6 +10,7 @@ from moonleap import (
     tags,
 )
 from moonleap.utils.case import upper0
+from moonleap.utils.inflect import plural
 from moonleap.verbs import has, uses
 from moonleap_react_module.graphqlapi.resources import get_graphql_item_lists
 from moonleap_react_state.behavior.resources import Behavior
@@ -20,7 +22,9 @@ from .resources import ListView, create_load_items_effect
 @tags(["list-view"])
 def create_list_view(term, block):
     name = kebab_to_camel(term.data)
-    list_view = ListView(item_name=name, name=f"{upper0(name)}ListView")
+    list_view = ListView(
+        item_name=name, items_name=plural(name), name=f"{upper0(name)}ListView"
+    )
     return list_view
 
 
@@ -55,3 +59,7 @@ class ExtendListView:
     create_router_configs = MemFun(props.create_router_configs)
     load_items_effect = P.child(uses, "load-items-effect")
     behaviors = P.children(has, "behavior")
+    p_section_imports = Prop(props.p_section_imports)
+    p_section_default_props = Prop(props.p_section_default_props)
+    p_section_classnames = Prop(props.p_section_classnames)
+    p_section_on_click = Prop(props.p_section_on_click)

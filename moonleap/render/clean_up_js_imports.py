@@ -12,7 +12,8 @@ def parse_imports(text):
     grammar = Grammar(
         r"""
       imports         = (ws import ws)*
-      import          = "import" ws (bracketed / star) ws "from" ws location
+      import          = "import" ws (bracketed / star / singleton) ws "from" ws location
+      singleton       = term ""
       bracketed       = "{" ws packages ws "}"
       star            = "*" ws "as" ws term
       packages        = (package ws "," ws packages) / package
@@ -32,10 +33,14 @@ def parse_imports(text):
             self.location = ""
             self.star = []
             self.packages = []
+            self.singleton = []
             self.term = None
 
         def visit_star(self, node, visited_children):
             self.star.append(self.term)
+
+        def visit_singleton(self, node, visited_children):
+            self.singleton.append(node.text)
 
         def visit_package(self, node, visited_children):
             self.packages.append(node.text)
@@ -45,15 +50,17 @@ def parse_imports(text):
 
         def visit_location(self, node, visited_children):
             location = node.text
+
             if not location.endswith(";"):
                 location += ";"
 
             record = self.imports.setdefault(
                 location,
-                {"location": location, "packages": [], "star": []},
+                {"location": location, "packages": [], "star": [], "singleton": []},
             )
             record["packages"].extend(self.packages)
             record["star"].extend(self.star)
+            record["singleton"].extend(self.singleton)
             self.clear()
 
         def generic_visit(self, node, visited_children):
@@ -104,6 +111,7 @@ def has_symbol(x, text):
 def filter_packages(record, other_text):
     record["packages"] = [x for x in record["packages"] if has_symbol(x, other_text)]
     record["star"] = [x for x in record["star"] if has_symbol(x, other_text)]
+    record["singleton"] = [x for x in record["singleton"] if has_symbol(x, other_text)]
 
 
 def post_process_clean_up_js_imports(lines):
@@ -126,6 +134,9 @@ def post_process_clean_up_js_imports(lines):
                 filter_packages(record, other_text)
                 for star in record["star"]:
                     result.extend([f"import * as {star} from {location}"])
+
+                for singleton in record["singleton"]:
+                    result.extend([f"import {singleton} from {location}"])
 
                 if record["packages"]:
                     package_list = ", ".join(record["packages"])
