@@ -15,7 +15,7 @@ def create_router_configs(self):
     return result
 
 
-def default_props_section(self):
+def p_section_default_props(self):
     result = ""
 
     if self.state:
@@ -29,5 +29,5 @@ def default_props_section(self):
 
             store = store_by_item_name.get(item_name)
             for bvr in bvrs:
-                result += bvr.default_props_section(store)
+                result += bvr.p_section_default_props(store)
     return result

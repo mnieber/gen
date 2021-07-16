@@ -1,7 +1,7 @@
 from moonleap import upper0
 
 
-def imports_section(self):
+def p_section_imports(self):
     facet_name = upper0(self.name)
     return (
         f"import {{ {facet_name}, {facet_name}Cbs }} "
@@ -9,22 +9,22 @@ def imports_section(self):
     )
 
 
-def constructor_section(self):
+def p_section_constructor(self):
     facet_name = upper0(self.name)
     return f"  {self.name}: new {facet_name}(),"
 
 
-def callbacks_section(self, bvrs):
+def p_section_callbacks(self, bvrs):
     return ""
 
 
-def declare_policies_section(self, bvrs):
+def p_section_declare_policies(self, bvrs):
     return ""
 
 
-def policies_section(self, bvrs):
+def p_section_policies(self, bvrs):
     return ""
 
 
-def default_props_section(self, store):
+def p_section_default_props(self, store):
     return ""

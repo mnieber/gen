@@ -28,20 +28,20 @@ def store_by_item_name(self):
     return result
 
 
-def constructor_section(self):
+def p_section_constructor(self):
     indent = "  "
     result = []
 
     for item_name, bvrs in self.bvrs_by_item_name.items():
         result += [f"{plural(item_name)} = {{"]
         for bvr in bvrs:
-            result += [bvr.constructor_section]
+            result += [bvr.p_section_constructor]
         result += [r"};"]
 
     return os.linesep.join([(indent + x) for x in result])
 
 
-def callbacks_section(self):
+def p_section_callbacks(self):
     indent = "  "
     result = []
 
@@ -50,7 +50,7 @@ def callbacks_section(self):
 
         body = []
         for bvr in bvrs:
-            body += [bvr.callbacks_section(self.behaviors)]
+            body += [bvr.p_section_callbacks(self.behaviors)]
 
         result += [f"_set{upper0(redRoses)}Callbacks(props: PropsT) {{"]
 
@@ -66,7 +66,7 @@ def callbacks_section(self):
     return os.linesep.join([(indent + x) for x in result])
 
 
-def declare_policies_section(self, item_name):
+def p_section_declare_policies(self, item_name):
     indent = "    "
     result = [
         f"const Inputs_items = [Inputs, '{plural(item_name)}', this] as CMT;",
@@ -76,7 +76,7 @@ def declare_policies_section(self, item_name):
     return os.linesep.join([(indent + x) for x in result])
 
 
-def policies_section(self):
+def p_section_policies(self):
     facet_names = [x.name for x in self.behaviors]
     indent = "      "
     result = []

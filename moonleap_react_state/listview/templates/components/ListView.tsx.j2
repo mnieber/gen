@@ -22,7 +22,7 @@ type PropsT = {
 type DefaultPropsT = {
   yellowTulips: YellowTulipT[],
   yellowTulipsResUrl: string,
-{{ res.default_props_section }}
+{{ res.p_section_default_props }}
 };
 
 export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
@@ -38,9 +38,9 @@ export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: Props
         key={x.id}
         yellowTulip={x}
         className={classnames({
-{{ res.classnames_section }}
+{{ res.p_section_classnames }}
         })}
-{{ res.on_click_section }}
+{{ res.p_section_on_click }}
       />
     ))
   )();

@@ -18,7 +18,7 @@ export const resUrls = {
 };
 
 export class {{ res.name }} {
-{{ res.item_list_fields_section }}
+{{ res.p_section_item_list_fields }}
   constructor() {
     makeObservable(this);
 {% for policy in res.policies %}
@@ -27,7 +27,7 @@ export class {{ res.name }} {
   }
 
   @action onLoadData(event: any, rs: RST, queryName: string) {
-{{ res.on_load_data_section }}
+{{ res.p_section_on_load_data }}
   }
 
 {% for item_list in res.item_lists %}

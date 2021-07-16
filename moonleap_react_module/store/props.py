@@ -11,7 +11,7 @@ load_data_template = """
 """
 
 
-def item_list_fields_section(self):
+def p_section_item_list_fields(self):
     result = ""
     for item_list in self.item_lists:
         result += (
@@ -21,7 +21,7 @@ def item_list_fields_section(self):
     return result
 
 
-def on_load_data_section(self):
+def p_section_on_load_data(self):
     result = ""
     for item_list in self.item_lists:
         result += magic_replace(

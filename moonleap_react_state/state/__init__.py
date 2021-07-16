@@ -32,8 +32,8 @@ class ExtendState:
     bvrs_by_item_name = Prop(props.bvrs_by_item_name)
     store_by_item_name = Prop(props.store_by_item_name)
 
-    constructor_section = Prop(props.constructor_section)
-    callbacks_section = Prop(props.callbacks_section)
-    policies_section = Prop(props.policies_section)
-    declare_policies_section = MemFun(props.declare_policies_section)
+    p_section_constructor = Prop(props.p_section_constructor)
+    p_section_callbacks = Prop(props.p_section_callbacks)
+    p_section_policies = Prop(props.p_section_policies)
+    p_section_declare_policies = MemFun(props.p_section_declare_policies)
     type_import_path = MemFun(props.type_import_path)

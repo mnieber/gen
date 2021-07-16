@@ -13,6 +13,6 @@ def create_behavior(term, block):
 
 @extend(HighlightBvr)
 class ExtendHighlightBvr:
-    callbacks_section = MemFun(props.callbacks_section)
-    policies_section = MemFun(props.policies_section)
-    default_props_section = MemFun(props.default_props_section)
+    p_section_callbacks = MemFun(props.p_section_callbacks)
+    p_section_policies = MemFun(props.p_section_policies)
+    p_section_default_props = MemFun(props.p_section_default_props)

@@ -3,7 +3,7 @@ import os
 from moonleap.render.process_lines import process_lines
 
 
-def callbacks_section(self, bvrs):
+def p_section_callbacks(self, bvrs):
     facet_names = [x.name for x in bvrs]
     return process_lines(
         {
@@ -20,7 +20,7 @@ def callbacks_section(self, bvrs):
     )
 
 
-def policies_section(self, bvrs):
+def p_section_policies(self, bvrs):
     indent = "      "
     result = [
         r"// highlight",
@@ -29,7 +29,7 @@ def policies_section(self, bvrs):
     return os.linesep.join([(indent + x) for x in result])
 
 
-def default_props_section(self, store):
+def p_section_default_props(self, store):
     indent = "      "
     result = [
         f"{self.items_name}Highlight: () => state.{self.items_name}.highlight,",

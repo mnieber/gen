@@ -35,7 +35,7 @@ def _append(x, indent, result):
     result.append(" " * (indent) + x)
 
 
-def get_route_imports(self):
+def p_section_route_imports(self):
     components = []
 
     def add(component):
@@ -62,7 +62,7 @@ def get_route_imports(self):
     return os.linesep.join(result)
 
 
-def get_routes(self):
+def p_section_routes(self):
     routes = []
 
     for module in self.module.service.modules:

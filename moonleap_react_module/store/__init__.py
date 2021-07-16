@@ -33,5 +33,5 @@ class ExtendModule:
 class ExtendStore(StoreTemplateDirs):
     item_lists = P.children(contains, "item-list")
     item_types = P.children(contains, "item-type")
-    item_list_fields_section = Prop(props.item_list_fields_section)
-    on_load_data_section = Prop(props.on_load_data_section)
+    p_section_item_list_fields = Prop(props.p_section_item_list_fields)
+    p_section_on_load_data = Prop(props.p_section_on_load_data)

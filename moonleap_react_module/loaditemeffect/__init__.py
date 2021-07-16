@@ -7,5 +7,5 @@ from .resources import LoadItemEffect
 @extend(LoadItemEffect)
 class ExtendLoadItemEffect:
     render = MemFun(render_templates(__file__))
-    effect_section = Prop(props.effect_section)
+    p_section_effect = Prop(props.p_section_effect)
     create_router_configs = MemFun(props.create_router_configs)

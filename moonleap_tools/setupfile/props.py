@@ -11,9 +11,9 @@ def merge(lhs, rhs):
     return SetupFileConfig(new_body)
 
 
-def get_setup_file_config(setup_file):
-    configs = list(setup_file.setup_file_configs.merged)
-    for tool in setup_file.service.tools:
+def p_section_setup_file_config(self):
+    configs = list(self.setup_file_configs.merged)
+    for tool in self.service.tools:
         configs.extend(tool.setup_file_configs.merged)
 
     config = R.reduce(merge, SetupFileConfig(body={}), configs)

@@ -14,9 +14,9 @@ def state_provides_a_behavior(state, behavior):
 
 @extend(Behavior)
 class ExtendBehavior(StoreNodePackageConfigs):
-    imports_section = Prop(props.imports_section)
-    constructor_section = Prop(props.constructor_section)
-    callbacks_section = MemFun(props.callbacks_section)
-    declare_policies_section = MemFun(props.declare_policies_section)
-    policies_section = MemFun(props.policies_section)
-    default_props_section = MemFun(props.default_props_section)
+    p_section_imports = Prop(props.p_section_imports)
+    p_section_constructor = Prop(props.p_section_constructor)
+    p_section_callbacks = MemFun(props.p_section_callbacks)
+    p_section_declare_policies = MemFun(props.p_section_declare_policies)
+    p_section_policies = MemFun(props.p_section_policies)
+    p_section_default_props = MemFun(props.p_section_default_props)

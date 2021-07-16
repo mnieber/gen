@@ -18,7 +18,7 @@ effect_template = """
 """
 
 
-def effect_section(self):
+def p_section_effect(self):
     declare_params = "{ " + ", ".join(self.route_params) + " }"
     use_params = ", ".join(self.route_params)
     extract_params = ", ".join(

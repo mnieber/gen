@@ -10,7 +10,7 @@ export const LoadYellowTulipEffect: React.FC<PropsT> = (p: PropsT) => {
   return (
 {% if res.route_params %}
     <Effect
-      {{ res.effect_section }}
+      {{ res.p_section_effect }}
     />
 {% else %}
     <EffectWithoutArgs
