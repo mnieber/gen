@@ -71,7 +71,17 @@ def p_section_classnames(self):
             ]
         )
 
-    return "\n".join(result)
+    if not result:
+        return ""
+
+    return "\n".join(
+        [
+            #
+            "        className={classnames({",
+            *result,
+            "        })}",
+        ]
+    )
 
 
 def p_section_on_click(self):

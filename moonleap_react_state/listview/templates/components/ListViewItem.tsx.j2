@@ -10,7 +10,7 @@ import './YellowTulipListViewItem.scss';
 export type PropsT = {
   yellowTulip: YellowTulipT;
   className?: any;
-  onMouseDown?: any;
+  onClick?: any;
 };
 
 export const YellowTulipListViewItem: React.FC<PropsT> = observer((props: PropsT) => {
@@ -20,7 +20,7 @@ export const YellowTulipListViewItem: React.FC<PropsT> = observer((props: PropsT
         'YellowTulipListViewItem flex flex-row flex-1 mb-2',
         props.className
       )}
-      onMouseDown={props.onMouseDown}
+      onClick={props.onClick}
     >
         {props.yellowTulip.name}
     </div>

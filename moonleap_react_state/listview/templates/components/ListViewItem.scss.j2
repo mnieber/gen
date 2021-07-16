@@ -2,19 +2,18 @@
 .YellowTulipListViewItem {
   @apply cursor-pointer;
 }
-
 {% for bvr in res.behaviors %}
 {% if bvr.name == "selection" %}
+
 .YellowTulipListViewItem--selected {
   @apply bg-yellow-400;
 }
-
 {% endif %}
 {% if bvr.name == "highlight" %}
+
 .YellowTulipListViewItem--highlighted {
   @apply border-4 border-blue-300;
 }
-
 {% endif %}
 {% endfor %}
 {% end_magic_with %}
