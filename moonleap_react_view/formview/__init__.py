@@ -9,6 +9,7 @@ from moonleap import (
 )
 from moonleap.verbs import has
 
+from . import props
 from .resources import FormView
 
 
@@ -27,3 +28,4 @@ def service_has_forms_module(module, form_view):
 @extend(FormView)
 class ExtendFormView:
     render = MemFun(render_templates(__file__))
+    p_section_item_fields = MemFun(props.p_section_item_fields)

@@ -1,4 +1,5 @@
 import ramda as R
+from moonleap.resources.data_type_spec_store import data_type_spec_store
 from moonleap_react_module.loaditemeffect.resources import (
     LoadItemEffect,
     shorten_route_params,
@@ -23,3 +24,8 @@ def params(self, load_item_effect: LoadItemEffect):
         ),
         "vars": ", ".join(short_params),
     }
+
+
+def p_section_item_fields(self, item_name):
+    spec = data_type_spec_store.get_spec(item_name)
+    return "\n".join([f"          {x.name_camel}," for x in spec.fields])

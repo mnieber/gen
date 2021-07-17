@@ -21,8 +21,7 @@ export class Api extends ApiBase {
       'getRedRoses',
       `query getRedRoses {
         redRoses {
-          id
-          name
+{{ res.p_section_item_fields(load_items_effect.item_name) }}
         }
       }`,
       {},
@@ -49,8 +48,7 @@ export class Api extends ApiBase {
         blueDaisyFlower(
 {{ params.graphql_params_inner }}
         ) {
-          id
-          name
+{{ res.p_section_item_fields(load_item_effect.item_name) }}
         }
       }`,
       {

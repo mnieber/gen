@@ -4,7 +4,7 @@ from moonleap.verbs import contains, uses
 from moonleap_react_module.flags import Flags
 from moonleap_tools.tool import Tool
 
-from . import docker_compose_configs, layer_configs
+from . import docker_compose_configs, layer_configs, props
 
 
 class MockGrapqhlServer(Tool):
@@ -39,6 +39,7 @@ def meta():
     class ExtendMockGrapqhlServer:
         render = MemFun(render_templates(__file__))
         service = P.parent(Service, uses)
+        p_section_item_fields = MemFun(props.p_section_item_fields)
 
     @extend(Service)
     class ExtendService:

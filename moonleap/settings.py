@@ -9,17 +9,20 @@ from moonleap.utils.merge_into_config import merge_into_config
 _settings = None
 
 
-def load_settings(fn):
+def load_settings(spec_dir, settings_fn):
     global _settings
 
     if _settings is None:
-        _settings = {}
+        _settings = {
+            "spec_dir": spec_dir,
+        }
 
         global_settings_fn = ".moonleap.config.yml"
         if os.path.exists(global_settings_fn):
             with open(global_settings_fn) as ifs:
                 merge_into_config(_settings, yaml2dict(ifs.read()))
 
+        fn = Path(spec_dir) / settings_fn
         if not os.path.exists(fn):
             raise Exception(f"Settings file not found: {fn}")
         with open(fn) as ifs:

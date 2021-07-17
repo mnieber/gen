@@ -1,4 +1,5 @@
 from moonleap import upper0
+from moonleap.resources.data_type_spec_store import data_type_spec_store
 from moonleap.utils.magic_replace import magic_replace
 
 load_data_template = """
@@ -29,3 +30,8 @@ def p_section_on_load_data(self):
             [("yellowTulip", item_list.item_name)],
         )
     return result
+
+
+def p_section_item_fields(self, item_name):
+    spec = data_type_spec_store.get_spec(item_name)
+    return spec.fields

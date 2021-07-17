@@ -19,3 +19,8 @@ def kebab_to_camel(x):
             result += char
 
     return result
+
+
+def snake_to_camel(x):
+    components = x.split("_")
+    return components[0] + "".join(x.title() for x in components[1:])

@@ -29,3 +29,4 @@ class ExtendGraphqlApi:
     api_module = P.parent(Module, has)
     item_names = Prop(props.item_names)
     params = MemFun(props.params)
+    p_section_item_fields = MemFun(props.p_section_item_fields)

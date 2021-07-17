@@ -30,7 +30,7 @@ const mocks = {
 {% for substore in res.service.app_module.app_store.substores %}
 {% for item_type in substore.item_types %}
   YellowTulip: () => ({
-    name: faker.name.findName(),
+{{ res.p_section_item_fields(item_type.name) }}
   }),
 {% endfor %}
 {% endfor %}
