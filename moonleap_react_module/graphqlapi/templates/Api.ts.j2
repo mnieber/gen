@@ -6,7 +6,7 @@ import { normalize, schema } from 'normalizr';
 import { ApiBase } from 'src/api/ApiBase';
 import { ObjT } from 'src/utils/types';
 
-{% for item_name in res.item_names %}
+{% for item_name in res.schema_item_names %}
 const yellowTulip = new schema.Entity('yellowTulips');
 {% endfor %}
 

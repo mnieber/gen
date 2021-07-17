@@ -6,9 +6,10 @@ from moonleap_react_module.loaditemeffect.resources import (
 )
 
 
-def item_names(self):
+def schema_item_names(self):
     return R.uniq(
-        [x.item_name for x in self.items] + [x.item_name for x in self.item_lists]
+        [x.item_name for x in self.items_loaded]
+        + [x.item_name for x in self.item_lists_loaded]
     )
 
 
