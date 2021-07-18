@@ -7,7 +7,6 @@ from moonleap_react_view.frame.resources import Frame
 @rule("frame", has, "panel")
 def frame_has_panel(frame, panel):
     panel.name = frame.name + upper0(panel.type) + "Panel"
-    frame.dependencies.append(panel)
     return create_forward(frame.module, has, ":component", panel)
 
 
@@ -17,3 +16,4 @@ class ExtendFrame:
     right_panel = P.child(has, "right:panel")
     top_panel = P.child(has, "top:panel")
     bottom_panel = P.child(has, "bottom:panel")
+    middle_panel = P.child(has, "middle:panel")

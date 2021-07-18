@@ -1,13 +1,10 @@
 {% magic_with res.name as yellowTulip %}
-{% magic_with dep.name as redRose %}
 import React from 'react';
 import { useDefaultProps, FC } from 'react-default-props-context';
 import classnames from 'classnames';
 import { observer } from 'mobx-react-lite';
 
-{% for dep in res.dependencies %}
-import { RedRose } from '{{ dep.module_path }}/components';
-{% endfor %}
+{{ res.p_section_imports }}
 
 import './YellowTulip.scss';
 
@@ -21,19 +18,7 @@ type DefaultPropsT = {
 export const YellowTulip: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
   const props = useDefaultProps<PropsT, DefaultPropsT>(p);
   return (
-    <div
-      className={classnames('YellowTulip flex flex-col', props.className)}
-    >
-      {{ res.top_panel.react_tag }}
-      <div
-        className={classnames('YellowTulip__MidSection flex flex-row')}
-      >
-        {{ res.left_panel.react_tag }}
-        {props.children}
-        {{ res.right_panel.react_tag }}
-      </div>
-      {{ res.bottom_panel.react_tag }}
-    </div>
+{{ res.p_section_div }}
   );
 });
 {% end_magic_with %}

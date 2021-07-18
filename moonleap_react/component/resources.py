@@ -8,9 +8,6 @@ from moonleap import Resource, get_tweaks, upper0
 @dataclass
 class Component(Resource):
     name: str
-    dependencies: T.List[T.Any] = field(
-        default_factory=lambda: list(), init=False, repr=False
-    )
 
     @property
     def react_tag(self):

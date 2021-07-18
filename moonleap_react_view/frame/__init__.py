@@ -1,4 +1,12 @@
-from moonleap import MemFun, extend, kebab_to_camel, render_templates, tags, upper0
+from moonleap import (
+    MemFun,
+    Prop,
+    extend,
+    kebab_to_camel,
+    render_templates,
+    tags,
+    upper0,
+)
 
 from . import props
 from .resources import Frame
@@ -15,3 +23,5 @@ def create_frame(term, block):
 class ExtendFrame:
     render = MemFun(render_templates(__file__))
     create_router_configs = MemFun(props.create_router_configs)
+    p_section_div = Prop(props.p_section_div)
+    p_section_imports = Prop(props.p_section_imports)
