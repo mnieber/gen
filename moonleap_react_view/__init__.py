@@ -6,23 +6,12 @@ from moonleap.render.template_env import add_filter
 from moonleap.utils.case import lower0, upper0
 from moonleap.utils.inflect import plural
 
-from . import (
-    formsmodule,
-    formview,
-    frame,
-    frame_and_panel,
-    panel,
-    router,
-    router_and_module,
-    view,
-)
+from . import formsmodule, formview, panel, router, router_and_module, view
 
 
 def install_all():
     install(formsmodule)
     install(formview)
-    install(frame)
-    install(frame_and_panel)
     install(panel)
     install(router)
     install(router_and_module)

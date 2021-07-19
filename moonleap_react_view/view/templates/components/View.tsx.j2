@@ -1,28 +1,24 @@
 {% magic_with res.name as yellowTulip %}
-{% magic_with res.module.name as gardenFlowers %}
-import { observer } from 'mobx-react-lite';
-import classnames from 'classnames';
+import React from 'react';
 import { useDefaultProps, FC } from 'react-default-props-context';
+import classnames from 'classnames';
+import { observer } from 'mobx-react-lite';
+
+{{ res.p_section_imports }}
 
 import './YellowTulip.scss';
 
-type PropsT = {
+type PropsT = React.PropsWithChildren<{
   className?: any;
-};
+}>;
 
 type DefaultPropsT = {
 };
 
 export const YellowTulip: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
   const props = useDefaultProps<PropsT, DefaultPropsT>(p);
-
-  // TODO: Implement YellowTulip
-  const div = (
-    <div className={classnames("YellowTulip flex flex-col w-full", props.className)}>
-    </div>
+  return (
+{{ res.p_section_div }}
   );
-
-  return div;
 });
-{% end_magic_with %}
 {% end_magic_with %}
