@@ -3,6 +3,7 @@ import re
 import mistune
 import nltk
 from moonleap.parser.block import Block
+from moonleap.parser.expand_markdown import expand_markdown
 from moonleap.parser.line import get_create_line
 
 try:
@@ -75,10 +76,11 @@ def create_block(name, level, parent_block):
     return block
 
 
-def get_blocks(raw_markdown):
+def get_blocks(spec_file):
     blockCollector = BlockCollector(
         create_block=create_block,
         create_line=get_create_line(),
     )
-    mistune.Markdown(renderer=blockCollector)(raw_markdown)
+    expanded_markdown = expand_markdown(spec_file)
+    mistune.Markdown(renderer=blockCollector)(expanded_markdown)
     return blockCollector.blocks

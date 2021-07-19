@@ -32,10 +32,7 @@ moonleap_django.install_all()
 
 
 def gen(spec_file):
-    with open(spec_file) as ifs:
-        raw_markdown = ifs.read()
-
-    blocks = get_blocks(raw_markdown)
+    blocks = get_blocks(spec_file)
 
     create_resources(blocks, get_session())
     render_resources(blocks, get_session())
