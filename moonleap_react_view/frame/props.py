@@ -16,6 +16,17 @@ def _wraps(panel):
     return panel and panel.shows_children
 
 
+def _panels(self):
+    panels = [
+        self.left_panel,
+        self.right_panel,
+        self.top_panel,
+        self.bottom_panel,
+        self.middle_panel,
+    ]
+    return [x for x in panels if x]
+
+
 def create_router_configs(self):
     base_url = get_component_base_url(self, "")
     url = "/".join(
@@ -64,9 +75,12 @@ def _panel(divClassName, panel):
 
 def p_section_div(self):
     result = []
+    has_col = (
+        self.top_panel or self.bottom_panel or not (self.left_panel or self.right_panel)
+    )
 
     # top section
-    if self.top_panel or self.bottom_panel:
+    if has_col:
         rootClass = f"'{self.name}', "
         result.extend(
             [
@@ -94,12 +108,18 @@ def p_section_div(self):
     result.extend(_panel(self.name + "__leftPanel", self.left_panel))
     result.extend(_panel(self.name + "__middlePanel", self.middle_panel))
     result.extend(_panel(self.name + "__rightPanel", self.right_panel))
+
+    panels = _panels(self)
+    result.extend(
+        [f"  {x.react_tag}" for x in self.child_components if x not in panels]
+    )
+
     if self.left_panel or self.right_panel:
         result.append(r"</div>")
 
     # bottom section
     result.extend(_panel(self.name + "__bottomPanel", self.bottom_panel))
-    if self.top_panel or self.bottom_panel:
+    if has_col:
         result.append(r"</div>")
 
     return "\n".join(result)
@@ -107,17 +127,10 @@ def p_section_div(self):
 
 def p_section_imports(self):
     result = []
-    for panel in [
-        self.left_panel,
-        self.right_panel,
-        self.top_panel,
-        self.bottom_panel,
-        self.middle_panel,
-    ]:
-        if panel:
-            component = panel.root_component
-            if component:
-                result.append(
-                    f"import {{ {upper0(component.name)} }} from '{component.module_path}/components';"
-                )
+    for panel in _panels(self):
+        component = panel.root_component
+        if component:
+            result.append(
+                f"import {{ {upper0(component.name)} }} from '{component.module_path}/components';"
+            )
     return "\n".join(result)

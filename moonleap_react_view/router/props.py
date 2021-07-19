@@ -16,7 +16,7 @@ def _group_by(get_key, xs):
     acc = []
     for x in xs:
         key = get_key(x)
-        group = R.find(lambda x: x[0] is key, acc)
+        group = R.find(lambda x: x[0] == key, acc)
         if not group:
             group = [key, []]
             acc.append(group)
@@ -95,14 +95,18 @@ def add_route(router_configs, routes):
 def add_result(service, routes, url, level, indent, result):
     # all the routes that share their first component should be grouped inside a
     # route for that first component
-    routes_by_first_component = _group_by(lambda x: x.configs[level].component, routes)
-    needs_switch = len(routes_by_first_component) > 1
+    def get_component_and_url(route):
+        router_config = route.configs[level]
+        return (router_config.component, router_config.url)
+
+    routes_by_first_component_and_url = _group_by(get_component_and_url, routes)
+    needs_switch = len(routes_by_first_component_and_url) > 1
 
     if needs_switch:
         _append("<Switch>", indent, result)
         indent += 2
 
-    for _, group in routes_by_first_component:
+    for _, group in routes_by_first_component_and_url:
         router_config = group[0].configs[level]
         next_routes = [x for x in group if len(x.configs) > level + 1]
         url_memo = url
