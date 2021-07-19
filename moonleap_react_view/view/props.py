@@ -1,19 +1,5 @@
 import ramda as R
-from moonleap import get_tweaks, upper0
-from moonleap_react.component.resources import get_component_base_url
-from moonleap_react_view.router import RouterConfig
-from moonleap_react_view.router.resources import reduce_router_configs
-
-
-def _get_route_params(self):
-    return R.path_or(
-        [],
-        ["services", self.module.service.name, "components", self.name, "route_params"],
-    )(get_tweaks())
-
-
-def _wraps(panel):
-    return panel and panel.wraps_children
+from moonleap import get_tweaks, render_templates, upper0
 
 
 def _panels(self):
@@ -27,36 +13,37 @@ def _panels(self):
     return [x for x in panels if x]
 
 
-def create_router_configs(self):
-    base_url = get_component_base_url(self, "")
-    url = "/".join(
-        ([base_url] if base_url else [])
-        + [":" + x for x in _get_route_params(self) if x is not None]
+def _collapses(panel):
+    return R.path_or(
+        True,
+        ["services", panel.module.service.name, "components", panel.name, "collapses"],
+    )(get_tweaks())
+
+
+def _root_component(panel):
+    wraps = panel.wraps_children
+    if len(panel.child_components) == 0 and not wraps:
+        return None
+
+    collapses = _collapses(panel)
+    return (
+        panel.child_components[0]
+        if len(panel.child_components) == 1 and collapses
+        else panel
     )
-    router_config = RouterConfig(
-        component=self,
-        url=url,
-        wraps=_wraps(self.top_panel)
-        or _wraps(self.middle_panel)
-        or _wraps(self.bottom_panel)
-        or _wraps(self.left_panel)
-        or _wraps(self.right_panel),
-    )
-    result = reduce_router_configs([router_config])
-    return result
 
 
 def _panel(divClassName, panel):
     if not panel:
         return []
 
-    collapses = panel.collapses
+    collapses = _collapses(panel)
     indent = 2
 
     if panel.wraps_children and collapses:
         return [" " * indent + "{ props.children }"]
 
-    component = panel.root_component
+    component = _root_component(panel)
     if not component:
         return []
 
@@ -129,9 +116,18 @@ def p_section_div(self):
 def p_section_imports(self):
     result = []
     for panel in _panels(self):
-        component = panel.root_component
+        component = _root_component(panel)
         if component:
             result.append(
                 f"import {{ {upper0(component.name)} }} from '{component.module_path}/components';"
             )
     return "\n".join(result)
+
+
+def render(self, settings, output_root_dir, template_renderer):
+    if self.parent_view and len(self.child_components) == 1 and _collapses(self):
+        return []
+
+    return render_templates(__file__)(
+        self, settings, output_root_dir, template_renderer
+    )
