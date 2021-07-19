@@ -2,7 +2,6 @@ from moonleap import install
 from moonleap.render.merge import add_file_merger
 
 from . import (
-    antd,
     component,
     createreactapp,
     jsfilemerger,
@@ -11,11 +10,11 @@ from . import (
     nodepackage,
     prettier,
     tailwindcss,
+    uikit,
 )
 
 
 def install_all():
-    install(antd)
     install(component)
     install(createreactapp)
     install(module)
@@ -23,5 +22,6 @@ def install_all():
     install(nodepackage)
     install(prettier)
     install(tailwindcss)
+    install(uikit)
 
     add_file_merger(jsfilemerger.JsFileMerger())

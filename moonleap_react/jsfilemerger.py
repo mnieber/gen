@@ -21,8 +21,6 @@ class JsFileMerger(FileMerger):
 
         for content in (lhs_content, rhs_content):
             for line in content.split(os.linesep):
-                if not line:
-                    continue
                 if line == "export {};":
                     continue
                 if line.startswith("import"):
