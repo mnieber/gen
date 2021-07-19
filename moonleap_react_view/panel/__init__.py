@@ -13,7 +13,7 @@ def create_panel(term, block):
 
 
 @rule("panel", shows, "children")
-def panel_shows_children(term, block):
+def panel_wraps_children(term, block):
     pass
 
 
@@ -31,5 +31,5 @@ class ExtendPanel:
     render = MemFun(render)
     create_router_configs = MemFun(props.create_router_configs)
     root_component = Prop(props.root_component)
-    shows_children = P.child(shows, ":children")
+    wraps_children = P.child(shows, ":children")
     collapses = Prop(props.collapses)

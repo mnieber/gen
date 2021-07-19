@@ -17,7 +17,7 @@ def collapses(self):
 
 
 def root_component(self):
-    wraps = self.shows_children
+    wraps = self.wraps_children
     if len(self.child_components) == 0 and not wraps:
         return None
 

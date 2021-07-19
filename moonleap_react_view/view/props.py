@@ -13,7 +13,7 @@ def _get_route_params(self):
 
 
 def _wraps(panel):
-    return panel and panel.shows_children
+    return panel and panel.wraps_children
 
 
 def _panels(self):
@@ -50,16 +50,17 @@ def _panel(divClassName, panel):
     if not panel:
         return []
 
-    if panel.shows_children:
-        return ["{ props.children }"]
+    collapses = panel.collapses
+    indent = 2
+
+    if panel.wraps_children and collapses:
+        return [" " * indent + "{ props.children }"]
 
     component = panel.root_component
     if not component:
         return []
 
     result = []
-    collapses = panel.collapses
-    indent = 2
     if collapses:
         result.extend([f'{" " * indent}<div className="{divClassName}">'])
         indent += 2
