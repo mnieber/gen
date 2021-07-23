@@ -3,7 +3,9 @@ from moonleap.builder.apply_rules import apply_rules
 from moonleap.builder.find_relations import find_relations
 
 
-def create_resources(blocks, session):
+def create_resources(blocks):
+    unmatched_rels = []
     add_resources_to_blocks(blocks)
     find_relations(blocks)
-    apply_rules(blocks[0], session.unmatched_rels)
+    apply_rules(blocks[0], unmatched_rels)
+    return unmatched_rels

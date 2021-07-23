@@ -1,11 +1,11 @@
 import ramda as R
-from moonleap import add, get_tweaks
+from moonleap import add, get_session
 from moonleap_tools.pipdependency.resources import PipDependency, PipRequirement
 from moonleap_tools.pkgdependency import PkgDependency
 
 
 def tweak_service(service):
-    tweaks = R.path_or({}, ["services", service.name])(get_tweaks())
+    tweaks = R.path_or({}, ["services", service.name])(get_session().get_tweaks())
 
     def get_tweak(prop, default_value=None):
         return tweaks.get(prop, default_value)

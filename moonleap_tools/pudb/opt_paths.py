@@ -1,12 +1,12 @@
 import ramda as R
-from moonleap import get_tweaks
+from moonleap import get_session
 from moonleap_tools.optdir import OptPath
 
 
 def pudb_opt_path():
     return OptPath(
         is_dir=True,
-        from_path=R.path_or("pudb", ["pudb_opt_path"])(get_tweaks()),
+        from_path=R.path_or("pudb", ["pudb_opt_path"])(get_session().get_tweaks()),
         to_path="/root/.config/pudb",
     )
 

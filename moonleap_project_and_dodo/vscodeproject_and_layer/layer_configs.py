@@ -1,11 +1,11 @@
 import os
 
-from moonleap import get_settings
+from moonleap.session import get_session
 from moonleap_dodo.layer import LayerConfig
 
 
 def get(project):
-    settings = get_settings()
+    settings = get_session().settings
     base_dir = settings.get("code_workspaces_dir", settings["references"]["src"])
     code_workspace_fn = os.path.join(base_dir, f"{project.name}.code-workspace")
 

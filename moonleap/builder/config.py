@@ -25,5 +25,8 @@ class Config:
     def add_rule(self, rule):
         bisect.insort(self.rules, rule)
 
+    def drop_rule(self, rule):
+        self.rules = [x for x in self.rules if x is not rule]
+
 
 config = Config()

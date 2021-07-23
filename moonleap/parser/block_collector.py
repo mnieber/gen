@@ -5,6 +5,7 @@ import nltk
 from moonleap.parser.block import Block
 from moonleap.parser.expand_markdown import expand_markdown
 from moonleap.parser.line import get_create_line
+from moonleap.session import get_local_contexts, get_session
 
 try:
     nltk.sent_tokenize("test")
@@ -47,13 +48,23 @@ class BlockCollector(mistune.Renderer):
         return self.stack[-1] if self.stack else None
 
     def header(self, text, level, raw=None):
+        # Read contexts from the header text and pass them to the
+        # session object so that the correct moonleap packages are loaded
+        # in order to process the header and its content
+        buffer = raw
+        matches = get_local_contexts(buffer)
+        if matches:
+            buffer = buffer.replace(matches[0], "").strip()
+            local_contexts = [x.strip() for x in matches[1].split(",")]
+            get_session().set_contexts(local_contexts)
+
         while self.parent_block and self.parent_block.level >= level:
             self.stack.pop()
 
-        self.block = self.create_block(text, level, self.parent_block)
+        self.block = self.create_block(buffer, level, self.parent_block)
         self.stack.append(self.block)
 
-        self.line = self.create_line(text, it_term=None)
+        self.line = self.create_line(buffer, it_term=None)
         self.block.lines.append(self.line)
         self.blocks.append(self.block)
         return super().header(text, level, raw)

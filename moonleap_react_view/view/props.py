@@ -1,5 +1,5 @@
 import ramda as R
-from moonleap import get_tweaks, render_templates, upper0
+from moonleap import get_session, render_templates, upper0
 
 
 def _panels(self):
@@ -17,7 +17,7 @@ def _collapses(panel):
     return R.path_or(
         True,
         ["services", panel.module.service.name, "components", panel.name, "collapses"],
-    )(get_tweaks())
+    )(get_session().get_tweaks())
 
 
 def _root_component(panel):

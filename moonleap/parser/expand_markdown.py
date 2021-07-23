@@ -1,7 +1,7 @@
-import re
 from pathlib import Path
 
 import mistune
+from moonleap.session import get_local_contexts
 
 
 class Markdown(mistune.Markdown):
@@ -24,7 +24,7 @@ def expand_markdown(spec_file, base_level=0, contexts=None):
 
 
 def _update_local_contexts(raw, contexts):
-    match = _get_local_contexts(raw)
+    match = get_local_contexts(raw)
     local_contexts = match[1].replace(",", "").split() if match else []
     raw = raw.replace(match[0], "").strip() if match else raw
     new_contexts_str = ", ".join(
@@ -33,12 +33,6 @@ def _update_local_contexts(raw, contexts):
     if new_contexts_str:
         raw = raw + f" {{{new_contexts_str}}}"
     return raw
-
-
-def _get_local_contexts(raw):
-    contexts_pattern = r"(\{(((\s)*(\w)+(\,)?)+)\})"
-    matches = re.findall(contexts_pattern, raw, re.MULTILINE)
-    return matches[0] if matches else None
 
 
 def _update_external_link(sub_spec_link, raw):
@@ -57,13 +51,15 @@ class BlockExpander(mistune.Renderer):
         self.file_path = file_path
 
     def header(self, text, level, raw):
-        # Apply some transformations to the raw text
+        buffer = raw
+
+        # Apply some transformations to the buffer
         if self.sub_spec_link:
-            raw = _update_external_link(self.sub_spec_link, raw)
-        raw = _update_local_contexts(raw, self.contexts)
+            buffer = _update_external_link(self.sub_spec_link, buffer)
+        buffer = _update_local_contexts(buffer, self.contexts)
 
         # Correct the Markdown indentation level
-        self.output_text += "#" * (self.base_level + level) + " " + raw + "\n" + "\n"
+        self.output_text += "#" * (self.base_level + level) + " " + buffer + "\n" + "\n"
 
         # Add contents of the external link
         if self.sub_spec_link:

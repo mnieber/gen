@@ -3,7 +3,8 @@ import typing as T
 from dataclasses import dataclass
 
 import yaml
-from moonleap import get_settings, kebab_to_camel
+from moonleap import kebab_to_camel
+from moonleap.session import get_session
 from moonleap.utils.case import kebab_to_camel, snake_to_camel, upper0
 
 
@@ -57,7 +58,7 @@ class DataTypeSpecStore:
         data_type_name = upper0(kebab_to_camel(data_type_name))
         if data_type_name not in self.spec_by_name:
             data_type_dict = _load_data_type_dict(
-                get_settings()["spec_dir"], data_type_name
+                get_session().settings["spec_dir"], data_type_name
             )
             spec = DataTypeSpec(
                 data_type_name,

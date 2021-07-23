@@ -2,15 +2,13 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
-from moonleap.settings import get_settings
 from plumbum import local
 
 
-def _get_post_process_tools():
+def _get_post_process_tools(bin_config):
     result = {}
-    bin = get_settings().get("bin", {})
 
-    prettier = bin.get("prettier")
+    prettier = bin_config.get("prettier")
     if prettier:
         prettier_bin = local[prettier["exe"]]
         config = prettier["config"]
@@ -21,11 +19,10 @@ def _get_post_process_tools():
     return result
 
 
-def post_process_output_files(output_filenames):
-    tool_by_name = _get_post_process_tools()
+def post_process_output_files(output_filenames, post_process_configs, bin_config):
+    tool_by_name = _get_post_process_tools(bin_config)
     fns_by_tool_name = defaultdict(lambda: [])
 
-    post_process_configs = get_settings().get("post_process", {})
     for output_fn in output_filenames:
         for suffix_regex, tool_names in post_process_configs.items():
             if re.match(suffix_regex, Path(output_fn).suffix):

@@ -28,12 +28,7 @@ def output_path(verb, term):
         child = OutputPath(output_path)
         self.add_relation(rel, child)
 
-    def update_doc_meta(prop_name, doc_meta):
-        doc_meta.doc_prop(prop_name)
-
-    return Prop(
-        get_value=get_child, set_value=set_child, update_doc_meta=update_doc_meta
-    )
+    return Prop(get_value=get_child, set_value=set_child)
 
 
 def merged_output_path():
@@ -45,7 +40,4 @@ def merged_output_path():
             R.reduce(_merge, OutputPath(""), resource.output_paths.merged).location
         )
 
-    def update_doc_meta(prop_name, doc_meta):
-        doc_meta.doc_prop(prop_name)
-
-    return Prop(get_value=get_value, update_doc_meta=update_doc_meta)
+    return Prop(get_value=get_value)

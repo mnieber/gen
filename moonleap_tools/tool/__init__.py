@@ -21,6 +21,6 @@ def meta():
         get_pkg_names = MemFun(props.get_pkg_names())
         makefile_rules = Prop(props.get_makefile_rules())
         opt_dir = P.child(has, "opt-dir")
-        tools = P.children(has, "tool", is_private_rel=True)
+        tools = P.children(has, "tool")
 
     return [ExtendService]

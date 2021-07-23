@@ -12,7 +12,7 @@ def fltr_instance(resource_type):
     return lambda x: isinstance(x, resource_type)
 
 
-def child(verb, term, readonly=False, is_doc_prop=False, is_private_rel=False):
+def child(verb, term, readonly=False):
     rel = Rel(verb=verb, obj=maybe_term_to_term(term))
     slctr = Selector([rel])
 
@@ -23,18 +23,10 @@ def child(verb, term, readonly=False, is_doc_prop=False, is_private_rel=False):
 
         return None if not children else children[0]
 
-    def update_doc_meta(prop_name, doc_meta):
-        if is_doc_prop:
-            doc_meta.doc_prop(prop_name)
-        if is_private_rel:
-            doc_meta.private_rel(rel)
-
-    return Prop(get_value=get_child, update_doc_meta=update_doc_meta)
+    return Prop(get_value=get_child)
 
 
-def children(
-    verb, term, read_only=False, rdcr=None, is_doc_prop=False, is_private_rel=False
-):
+def children(verb, term, read_only=False, rdcr=None):
     rel = Rel(verb=verb, obj=maybe_term_to_term(term))
     slctr = Selector([rel])
 
@@ -45,16 +37,8 @@ def children(
     def add_to_children(self, child):
         self.add_relation(rel, child)
 
-    def update_doc_meta(prop_name, doc_meta):
-        if is_doc_prop:
-            doc_meta.doc_prop(prop_name)
-        if is_private_rel:
-            doc_meta.private_rel(rel)
-
     return Prop(
-        get_value=get_children,
-        add_value=None if read_only else add_to_children,
-        update_doc_meta=update_doc_meta,
+        get_value=get_children, add_value=None if read_only else add_to_children
     )
 
 
@@ -84,9 +68,7 @@ def parent(parent_resource_type, verb):
     return Prop(get_value=get_parent)
 
 
-def parents(
-    parent_resource_type, verb, term, rdcr=None, is_doc_prop=False, is_private_rel=False
-):
+def parents(parent_resource_type, verb, term, rdcr=None):
     parent_resource_type = resolve(parent_resource_type)
     rel = Rel(verb=verb, obj=maybe_term_to_term(term), is_inv=True)
     slctr = Selector([rel])
@@ -95,13 +77,7 @@ def parents(
         parents = _fltr(parent_resource_type)(slctr.select_from(self))
         return rdcr(parents) if rdcr else parents
 
-    def update_doc_meta(prop_name, doc_meta):
-        if is_doc_prop:
-            doc_meta.doc_prop(prop_name)
-        if is_private_rel:
-            doc_meta.private_rel(rel)
-
-    return Prop(get_value=get_parents, update_doc_meta=update_doc_meta)
+    return Prop(get_value=get_parents)
 
 
 def tree(verb, term):

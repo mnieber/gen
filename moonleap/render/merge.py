@@ -19,3 +19,8 @@ def get_file_merger(fn):
 
 def add_file_merger(file_merger):
     _file_mergers.append(file_merger)
+
+
+def drop_file_merger(file_merger):
+    global _file_mergers
+    _file_mergers = [x for x in _file_mergers if x is not file_merger]

@@ -1,14 +1,17 @@
 from moonleap.render.add_output_filenames import add_output_filenames
 from moonleap.render.post_process_output_files import post_process_output_files
 from moonleap.render.template_renderer import TemplateRenderer
-from moonleap.session import get_session
 
 
 def render_resources(blocks, session):
-    get_session().report("Rendering...")
+    session.report("Rendering...")
     all_output_filenames = _render_resources(blocks, session)
-    get_session().report("Post processing...")
-    post_process_output_files(all_output_filenames)
+    session.report("Post processing...")
+    post_process_output_files(
+        all_output_filenames,
+        session.settings.get("post_process", {}),
+        session.settings.get("bin", {}),
+    )
 
 
 def _render_resources(blocks, session):

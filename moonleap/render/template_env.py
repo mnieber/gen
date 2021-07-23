@@ -35,4 +35,12 @@ def add_filter(name, f):
     template_env.filters[name] = f
 
 
+def drop_filter(name):
+    del template_env.filters[name]
+
+
+def get_filter(name):
+    return template_env.filters.get(name)
+
+
 add_filter("to_nice_json", to_nice_json)

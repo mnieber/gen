@@ -1,5 +1,5 @@
 import ramda as R
-from moonleap import get_tweaks
+from moonleap import get_session
 from moonleap_react.component.resources import get_component_base_url
 from moonleap_react_view.router.resources import prepend_router_configs
 from moonleap_react_view.router_and_module.props import create_component_router_config
@@ -10,7 +10,7 @@ def _get_route_params(self):
     return R.path_or(
         default_params,
         ["services", self.module.service.name, "components", self.name, "route_params"],
-    )(get_tweaks())
+    )(get_session().get_tweaks())
 
 
 def create_router_configs(self):
