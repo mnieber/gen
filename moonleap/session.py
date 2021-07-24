@@ -16,8 +16,14 @@ class Session:
         self.settings_fn = settings_fn
         self.settings = None
         self.output_root_dir = output_root_dir
-        self.context_by_name = {}
-        self.package_by_name = {}
+        self._context_by_name = {}
+        self._package_by_name = {}
+
+    def get_context(self, context_name):
+        context = self._context_by_name.get(context_name)
+        if not context:
+            raise Exception(f"Context not specified in packages.yml: {context_name}")
+        return context
 
     def _load_root_settings(self):
         settings_fn = Path(self.spec_dir) / self.settings_fn
@@ -43,7 +49,7 @@ class Session:
             self._register_context(context_name, package_names)
 
     def _install_package(self, package_name):
-        if package_name in self.package_by_name:
+        if package_name in self._package_by_name:
             return
 
         def _import_package(package_name):
@@ -53,7 +59,7 @@ class Session:
                 raise
 
         package = _import_package(package_name)
-        self.package_by_name[package_name] = package
+        self._package_by_name[package_name] = package
         install_package(package)
 
     def _register_context(self, context_name, package_names):
@@ -63,13 +69,13 @@ class Session:
         def _create_context(context_name, package_names):
             context = Context(context_name)
             for package_name in package_names:
-                package = self.package_by_name[package_name]
+                package = self._package_by_name[package_name]
                 for module in getattr(package, "modules", []):
                     context.add_rules(module)
             return context
 
         context = _create_context(context_name, package_names)
-        self.context_by_name[context_name] = context
+        self._context_by_name[context_name] = context
 
     def report(self, x):
         print(x)
