@@ -5,7 +5,7 @@ import nltk
 from moonleap.parser.block import Block
 from moonleap.parser.expand_markdown import expand_markdown
 from moonleap.parser.line import get_create_line
-from moonleap.session import get_local_contexts, get_session
+from moonleap.session import get_local_context_names
 
 try:
     nltk.sent_tokenize("test")
@@ -52,16 +52,22 @@ class BlockCollector(mistune.Renderer):
         # session object so that the correct moonleap packages are loaded
         # in order to process the header and its content
         buffer = raw
-        matches = get_local_contexts(buffer)
+        matches = get_local_context_names(buffer)
         if matches:
             buffer = buffer.replace(matches[0], "").strip()
-            local_contexts = [x.strip() for x in matches[1].split(",")]
-            get_session().set_contexts(local_contexts)
+            local_context_names = [x.strip() for x in matches[1].split(",")]
+        else:
+            local_context_names = []
 
         while self.parent_block and self.parent_block.level >= level:
             self.stack.pop()
 
-        self.block = self.create_block(buffer, level, self.parent_block)
+        self.block = self.create_block(
+            buffer,
+            level,
+            self.parent_block,
+            local_context_names,
+        )
         self.stack.append(self.block)
 
         self.line = self.create_line(buffer, it_term=None)
@@ -81,8 +87,15 @@ class BlockCollector(mistune.Renderer):
         return super().paragraph(text)
 
 
-def create_block(name, level, parent_block):
-    block = Block(name, level)
+def create_block(name, level, parent_block, context_names):
+    inherited_context_names = (
+        parent_block.context_names if parent_block else ["default"]
+    )
+    block = Block(
+        name,
+        level,
+        [x for x in inherited_context_names if x not in context_names] + context_names,
+    )
     block.link(parent_block)
     return block
 

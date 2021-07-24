@@ -8,7 +8,7 @@ from .resources import ApiModule  # noqa
 
 
 @tags(["api:module"])
-def create_app_module(term, block):
+def create_api_module(term, block):
     module = ApiModule(name=kebab_to_camel(term.data))
     module.output_path = f"src/{module.name}"
     add(module, load_node_package_config(__file__))

@@ -45,3 +45,11 @@ def is_it_term(term):
 
 def verb_to_word(verb):
     return verb[0] if isinstance(verb, tuple) else verb
+
+
+def is_generic_term(term):
+    return term.data == "x" or term.tag == "x"
+
+
+def create_generic_terms(term):
+    return [Term(term.data, "x"), Term("x", term.tag)]

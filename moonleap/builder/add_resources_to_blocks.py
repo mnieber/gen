@@ -1,6 +1,7 @@
 import ramda as R
-from moonleap.builder.config import config
+from moonleap.parser.term import is_generic_term
 from moonleap.resource import Resource
+from moonleap.session import get_session
 
 
 def _create_generic_resource(term, block):
@@ -8,8 +9,18 @@ def _create_generic_resource(term, block):
 
 
 def _create_resource(term, creator_block):
-    create_rule = config.get_create_rule(term) or _create_generic_resource
-    resource = create_rule(term, creator_block)
+    session = get_session()
+    create_rule = None
+
+    for context_name in creator_block.context_names:
+        context = session.context_by_name[context_name]
+        local_create_rule = context.get_create_rule(term)
+        if local_create_rule:
+            if create_rule:
+                raise Exception(f"More than 1 create rule for {term}")
+            create_rule = local_create_rule
+
+    resource = (create_rule or _create_generic_resource)(term, creator_block)
     return resource
 
 
@@ -19,6 +30,9 @@ def add_resources_to_blocks(blocks):
         child_blocks = block.get_blocks(include_children=True, include_self=False)
 
         for term in block.get_terms():
+            if is_generic_term(term):
+                continue
+
             if block.get_resource(term):
                 continue
 

@@ -1,12 +1,13 @@
 import typing as T
 
 from moonleap.parser.line import Line
-from moonleap.parser.term import Term
+from moonleap.parser.term import create_generic_terms
 
 
 class Block:
-    def __init__(self, name, level):
+    def __init__(self, name, level, context_names):
         self.name = name
+        self.context_names = context_names
         self.level = level
         self.parent_block = None
         self.child_blocks = []
@@ -14,7 +15,7 @@ class Block:
         self.lines: T.List[Line] = []
 
     def describes(self, term):
-        generic_terms = [Term(term.data, "x"), Term("x", term.tag)]
+        generic_terms = create_generic_terms(term)
         return term in self.lines[0].terms or (
             [x for x in generic_terms if x in self.lines[0].terms]
             and [line for line in self.lines if term in line.terms]
@@ -72,3 +73,12 @@ class Block:
 
     def __repr__(self):
         return f"Block ({self.name})"
+
+
+def get_extended_context_names(root_block):
+    context_names = []
+    for block in root_block.get_blocks(include_children=True):
+        for context_name in block.context_names:
+            if context_name not in context_names:
+                context_names.append(context_name)
+    return context_names

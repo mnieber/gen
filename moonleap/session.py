@@ -1,10 +1,11 @@
+import importlib
 import re
-from importlib import import_module
 from pathlib import Path
 
+from moonleap.builder.config import Context
 from moonleap.builder.install import install_package
 from moonleap.settings import load_settings
-from moonleap.utils.merge_into_config import merge_into_config
+from moonleap.utils import yaml2dict
 
 _session = None
 
@@ -15,8 +16,8 @@ class Session:
         self.settings_fn = settings_fn
         self.settings = None
         self.output_root_dir = output_root_dir
-        self.contexts = []
-        self.uninstall_functions = []
+        self.context_by_name = {}
+        self.package_by_name = {}
 
     def _load_root_settings(self):
         settings_fn = Path(self.spec_dir) / self.settings_fn
@@ -28,36 +29,52 @@ class Session:
 
     def load_settings(self):
         self.settings = self._load_root_settings()
-        for context in self.contexts:
-            context_settings_fn = Path(self.spec_dir) / f"{context}.yml"
-            if context_settings_fn.exists:
-                merge_into_config(self.settings, load_settings(context_settings_fn))
+        self.register_context("default", self.settings)
 
-        self._install_packages()
-
-    def _install_packages(self):
-        if self.uninstall_functions:
-            raise Exception("Cannot install when there are uninstall functions pending")
-
-        for package_name in (self.settings or {}).get("moonleap_packages", []):
-            try:
-                package = import_module(package_name)
-            except ImportError:
-                raise
-            install_package(package, self.uninstall_functions)
-
-    def _uninstall_packages(self):
-        while self.uninstall_functions:
-            uninstall = self.uninstall_functions.pop()
-            uninstall()
-
-    def set_contexts(self, contexts):
-        if (self.contexts) == (contexts):
+    def _install_package(self, package_name):
+        if package_name in self.package_by_name:
             return
 
-        self._uninstall_packages()
-        self.contexts = contexts
-        self.load_settings()
+        def _import_package(package_name):
+            try:
+                return importlib.import_module(package_name)
+            except ImportError:
+                raise
+
+        package = _import_package(package_name)
+        self.package_by_name[package_name] = package
+        install_package(package)
+
+    def register_context(self, context_name, context_settings=None):
+        if context_name in self.context_by_name:
+            return
+
+        def _load_context_settings():
+            settings_fn = Path(self.spec_dir) / f"{context_name}.yml"
+            if settings_fn.exists:
+                with open(settings_fn) as ifs:
+                    return yaml2dict(ifs.read())
+            return {}
+
+        def get_package_names(context_settings):
+            return context_settings.get("moonleap_packages", [])
+
+        if not context_settings:
+            context_settings = _load_context_settings()
+        package_names = get_package_names(context_settings)
+        for package_name in package_names:
+            self._install_package(package_name)
+
+        def _create_context(context_name, package_names):
+            context = Context(context_name)
+            for package_name in package_names:
+                package = self.package_by_name[package_name]
+                for module in getattr(package, "modules", []):
+                    context.add_rules(module)
+            return context
+
+        context = _create_context(context_name, package_names)
+        self.context_by_name[context_name] = context
 
     def report(self, x):
         print(x)
@@ -82,7 +99,7 @@ def get_session():
     return _session
 
 
-def get_local_contexts(text):
-    contexts_pattern = r"(\{(((\s)*[_\w\-]+(\,)?)+)\})"
-    matches = re.findall(contexts_pattern, text, re.MULTILINE)
+def get_local_context_names(text):
+    context_names_pattern = r"(\{(((\s)*[_\w\-]+(\,)?)+)\})"
+    matches = re.findall(context_names_pattern, text, re.MULTILINE)
     return matches[0] if matches else None

@@ -1,8 +1,9 @@
 import typing as T
 
 from moonleap.builder.add_resources_to_blocks import _create_resource
-from moonleap.builder.config import config
+from moonleap.parser.block import get_extended_context_names
 from moonleap.resource.rel import Forward, Rel
+from moonleap.session import get_session
 from moonleap.verbs import is_created_as
 
 
@@ -50,18 +51,23 @@ def _to_list_of_forward(x, rule):
 
 
 def _apply_rules(rel, subj_resource, obj_resource, block):
+    session = get_session()
+
     has_rule = False
-    for rule in config.get_rules(rel):
-        if rule.fltr_subj and not rule.fltr_subj(subj_resource):
-            continue
+    for context_name in get_extended_context_names(block):
+        context = session.context_by_name[context_name]
 
-        if rule.fltr_obj and not rule.fltr_obj(obj_resource):
-            continue
+        for rule in context.get_rules(rel):
+            if rule.fltr_subj and not rule.fltr_subj(subj_resource):
+                continue
 
-        has_rule = True
-        result = rule.f(subj_resource, obj_resource)
-        if result:
-            _process_forwards(_to_list_of_forward(result, rule), block)
+            if rule.fltr_obj and not rule.fltr_obj(obj_resource):
+                continue
+
+            has_rule = True
+            result = rule.f(subj_resource, obj_resource)
+            if result:
+                _process_forwards(_to_list_of_forward(result, rule), block)
 
     return has_rule
 
@@ -71,15 +77,20 @@ def is_created_as_rel(term):
 
 
 def apply_rules(root_block, unmatched_rels):
+    session = get_session()
+
     for block in root_block.get_blocks(include_children=True):
         for term, resource, is_owner in block.get_resource_by_term():
             if not is_owner:
                 continue
 
-            for rule in config.get_rules(is_created_as_rel(term)):
-                result = rule.f(resource)
-                if result:
-                    _process_forwards(_to_list_of_forward(result, rule), block)
+            rule = None
+            for context_name in get_extended_context_names(block):
+                context = session.context_by_name[context_name]
+                for rule in context.get_rules(is_created_as_rel(term)):
+                    result = rule.f(resource)
+                    if result:
+                        _process_forwards(_to_list_of_forward(result, rule), block)
 
             for rel, obj_resource in resource.get_relations():
                 if not rel.is_inv:
