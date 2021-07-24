@@ -29,7 +29,18 @@ class Session:
 
     def load_settings(self):
         self.settings = self._load_root_settings()
-        self.register_context("default", self.settings)
+
+    def import_packages(self):
+        def _load_package_settings(packages_fn):
+            if packages_fn.exists:
+                with open(packages_fn) as ifs:
+                    return yaml2dict(ifs.read())
+            return {}
+
+        for context_name, package_names in _load_package_settings(
+            Path(self.spec_dir) / "packages.yml"
+        ).items():
+            self._register_context(context_name, package_names)
 
     def _install_package(self, package_name):
         if package_name in self.package_by_name:
@@ -45,23 +56,7 @@ class Session:
         self.package_by_name[package_name] = package
         install_package(package)
 
-    def register_context(self, context_name, context_settings=None):
-        if context_name in self.context_by_name:
-            return
-
-        def _load_context_settings():
-            settings_fn = Path(self.spec_dir) / f"{context_name}.yml"
-            if settings_fn.exists:
-                with open(settings_fn) as ifs:
-                    return yaml2dict(ifs.read())
-            return {}
-
-        def get_package_names(context_settings):
-            return context_settings.get("moonleap_packages", [])
-
-        if not context_settings:
-            context_settings = _load_context_settings()
-        package_names = get_package_names(context_settings)
+    def _register_context(self, context_name, package_names):
         for package_name in package_names:
             self._install_package(package_name)
 
