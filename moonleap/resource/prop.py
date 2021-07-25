@@ -1,7 +1,5 @@
 import typing as T
-from dataclasses import dataclass, field
-
-from moonleap.resource.rel import Rel
+from dataclasses import dataclass
 
 
 @dataclass(frozen=True)

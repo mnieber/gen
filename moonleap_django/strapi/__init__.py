@@ -1,9 +1,7 @@
 from dataclasses import dataclass
 
-import moonleap.resource.props as P
-from moonleap import add, extend, rule, tags
+from moonleap import add, rule, tags
 from moonleap.verbs import connects, uses
-from moonleap_project.service import Service
 from moonleap_tools.pipdependency import PipDependency, PipRequirement
 from moonleap_tools.pkgdependency import PkgDependency
 from moonleap_tools.tool import Tool

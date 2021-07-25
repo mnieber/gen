@@ -119,7 +119,7 @@ def p_section_imports(self):
         component = _root_component(panel)
         if component:
             result.append(
-                f"import {{ {upper0(component.name)} }} from '{component.module_path}/components';"
+                f"import {{ {upper0(component.name)} }} from '{component.module_path}/components';"  # noqa
             )
     return "\n".join(result)
 

@@ -13,7 +13,7 @@ def _create_resource(term, creator_block):
     create_rule = None
 
     for context_name in creator_block.context_names:
-        context = session.get_context(context_name)
+        context = session.context_manager.get_context(context_name)
         local_create_rule = context.get_create_rule(term)
         if local_create_rule:
             if create_rule:

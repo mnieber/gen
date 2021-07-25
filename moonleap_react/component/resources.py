@@ -1,5 +1,4 @@
-import typing as T
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import ramda as R
 from moonleap import Resource, get_session, upper0

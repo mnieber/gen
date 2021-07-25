@@ -55,7 +55,7 @@ def _apply_rules(rel, subj_resource, obj_resource, block):
 
     has_rule = False
     for context_name in get_extended_context_names(block):
-        context = session.get_context(context_name)
+        context = session.context_manager.get_context(context_name)
 
         for rule in context.get_rules(rel):
             if rule.fltr_subj and not rule.fltr_subj(subj_resource):
@@ -86,7 +86,7 @@ def apply_rules(root_block, unmatched_rels):
 
             rule = None
             for context_name in get_extended_context_names(block):
-                context = session.get_context(context_name)
+                context = session.context_manager.get_context(context_name)
 
                 for rule in context.get_rules(is_created_as_rel(term)):
                     result = rule.f(resource)

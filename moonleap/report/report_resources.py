@@ -4,7 +4,6 @@ from pathlib import Path
 import markdown
 from moonleap.parser.term import term_to_word, verb_to_word
 from moonleap.render.template_renderer import _render
-from moonleap.resource.rel import fuzzy_match
 
 
 def _fn(resource, report_dir):

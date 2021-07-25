@@ -1,8 +1,6 @@
-import ramda as R
 from moonleap.builder.add_resources_to_blocks import add_resources_to_blocks
 from moonleap.builder.apply_rules import apply_rules
 from moonleap.builder.find_relations import find_relations
-from moonleap.session import get_session
 
 
 def create_resources(blocks):

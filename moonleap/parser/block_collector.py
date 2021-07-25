@@ -2,10 +2,10 @@ import re
 
 import mistune
 import nltk
+from moonleap.context_manager import get_local_context_names
 from moonleap.parser.block import Block
 from moonleap.parser.expand_markdown import expand_markdown
 from moonleap.parser.line import get_create_line
-from moonleap.session import get_local_context_names
 
 try:
     nltk.sent_tokenize("test")

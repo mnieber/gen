@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import mistune
-from moonleap.session import get_local_context_names
+from moonleap.context_manager import get_local_context_names
 
 
 class Markdown(mistune.Markdown):
@@ -12,7 +12,7 @@ class Markdown(mistune.Markdown):
 
 
 def expand_markdown(spec_file, base_level=0, context_names=None):
-    if context_names == None:
+    if context_names is None:
         context_names = []
 
     with open(spec_file) as ifs:

@@ -1,8 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, add, extend, register_add, render_templates, tags
-from moonleap.verbs import has, runs
+from moonleap.verbs import has
 from moonleap_tools.pkgdependency import PkgDependency
-from moonleap_tools.tool import Tool
 
 from . import layer_configs
 from .resources import Makefile, MakefileRule  # noqa
