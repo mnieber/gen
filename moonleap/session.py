@@ -5,9 +5,15 @@ from pathlib import Path
 from moonleap.builder.config import Context
 from moonleap.builder.install import install_package
 from moonleap.settings import load_settings
-from moonleap.utils import yaml2dict
 
 _session = None
+
+
+def _import_package(package_name):
+    try:
+        return importlib.import_module(package_name)
+    except ImportError:
+        raise
 
 
 class Session:
@@ -25,57 +31,31 @@ class Session:
             raise Exception(f"Context not specified in packages.yml: {context_name}")
         return context
 
-    def _load_root_settings(self):
+    def load_settings(self):
         settings_fn = Path(self.spec_dir) / self.settings_fn
         if not settings_fn.exists():
             raise Exception(f"Settings file not found: {settings_fn}")
-        root_settings = load_settings(settings_fn)
-        root_settings["spec_dir"] = self.spec_dir
-        return root_settings
+        self.settings = load_settings(settings_fn)
+        self.settings["spec_dir"] = self.spec_dir
+        self._import_packages(self.settings.get("packages_by_context_name", {}))
 
-    def load_settings(self):
-        self.settings = self._load_root_settings()
+    def _import_packages(self, packages_by_context_name):
+        for context_name, package_names in packages_by_context_name.items():
+            context = self._context_by_name[context_name] = Context(context_name)
 
-    def import_packages(self):
-        def _load_package_settings(packages_fn):
-            if packages_fn.exists:
-                with open(packages_fn) as ifs:
-                    return yaml2dict(ifs.read())
-            return {}
-
-        for context_name, package_names in _load_package_settings(
-            Path(self.spec_dir) / "packages.yml"
-        ).items():
-            self._register_context(context_name, package_names)
-
-    def _install_package(self, package_name):
-        if package_name in self._package_by_name:
-            return
-
-        def _import_package(package_name):
-            try:
-                return importlib.import_module(package_name)
-            except ImportError:
-                raise
-
-        package = _import_package(package_name)
-        self._package_by_name[package_name] = package
-        install_package(package)
-
-    def _register_context(self, context_name, package_names):
-        for package_name in package_names:
-            self._install_package(package_name)
-
-        def _create_context(context_name, package_names):
-            context = Context(context_name)
             for package_name in package_names:
-                package = self._package_by_name[package_name]
+                package = self._install_package(package_name)
                 for module in getattr(package, "modules", []):
                     context.add_rules(module)
-            return context
 
-        context = _create_context(context_name, package_names)
-        self._context_by_name[context_name] = context
+    def _install_package(self, package_name):
+        package = self._package_by_name.get(package_name)
+        if package:
+            return package
+
+        self._package_by_name[package_name] = package = _import_package(package_name)
+        install_package(package)
+        return package
 
     def report(self, x):
         print(x)

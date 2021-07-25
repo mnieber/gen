@@ -6,8 +6,7 @@ from pathlib import Path
 import ramda as R
 from plumbum import local
 
-from moonleap import (create_resources, get_blocks, render_resources,
-                      report_resources)
+from moonleap import create_resources, get_blocks, render_resources, report_resources
 from moonleap.report.create_expected_dir import create_expected_dir
 from moonleap.session import Session, set_session
 
@@ -50,7 +49,6 @@ if __name__ == "__main__":
         output_root_dir=".moonleap/output",
     )
     session.load_settings()
-    session.import_packages()
     set_session(session)
 
     spec_fn = Path(args.spec_dir) / "spec.md"
