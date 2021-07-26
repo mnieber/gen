@@ -14,16 +14,21 @@ def _diff_tool(session):
     return R.path_or("diff", ["bin", "diff_tool"])(session.settings)
 
 
-def _diff(session, from_dir, to_dir):
+def _diff(session, from_dir, to_dir, sudo=False):
     diff_tool = _diff_tool(session)
     if diff_tool == "meld":
-        local["meld"](from_dir, to_dir)
+        args = ["meld", from_dir, to_dir]
     else:
         session.report(f"Unknown diff tool: {diff_tool}")
+        return
+
+    if sudo:
+        args.insert(0, "sudo")
+    local[args[0]](*args[1:])
 
 
-def diff(session):
-    _diff(session, ".moonleap/output", session.expected_dir)
+def diff(session, sudo=False):
+    _diff(session, ".moonleap/output", session.expected_dir, sudo)
 
 
 def create_snapshot():
@@ -37,7 +42,7 @@ def create_snapshot():
         json.dump(crc_by_fn, f)
 
 
-def smart_diff(session):
+def smart_diff(session, sudo=False):
     if not os.path.exists(snapshot_fn):
         raise FileNotFoundError(
             f"The snapshot file {snapshot_fn} was not found."
@@ -73,4 +78,4 @@ def smart_diff(session):
                     os.makedirs(str(smart_ref_fn.parent), exist_ok=True)
                     smart_ref_fn.symlink_to(ref_fn.absolute())
 
-    _diff(session, smart_output_dir, smart_ref_dir)
+    _diff(session, smart_output_dir, smart_ref_dir, sudo)

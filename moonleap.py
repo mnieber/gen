@@ -27,11 +27,15 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--spec", required=True, dest="spec_dir")
     parser.add_argument("--smart", required=False, action="store_true")
+    parser.add_argument("--sudo", required=False, action="store_true")
     parser.add_argument("action", choices=["gen", "diff", "snap"])
     args = parser.parse_args()
 
     if args.smart and args.action != "diff":
         raise Exception("You can only use --smart with the 'diff' action")
+
+    if args.sudo and args.action != "diff":
+        raise Exception("You can only use --sudo with the 'diff' action")
 
     if not os.path.exists(args.spec_dir):
         report("Spec directory not found: " + args.spec_dir)
@@ -51,9 +55,9 @@ if __name__ == "__main__":
 
     if args.action == "diff":
         if args.smart:
-            smart_diff(session)
+            smart_diff(session, args.sudo)
         else:
-            diff(session)
+            diff(session, args.sudo)
 
     if args.action == "snap":
         create_snapshot()
