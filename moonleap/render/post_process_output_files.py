@@ -16,6 +16,11 @@ def _get_post_process_tools(bin_config):
             ["--config", config, "--write", *fns]
         )
 
+    black = bin_config.get("black")
+    if black:
+        black_bin = local[black["exe"]]
+        result["black"] = lambda fns: black_bin([*fns])
+
     return result
 
 

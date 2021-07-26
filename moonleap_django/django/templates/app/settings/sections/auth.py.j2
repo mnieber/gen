@@ -1,3 +1,4 @@
+{% trim_newlines keep=1 %}
 import datetime
 
 AUTHENTICATION_BACKENDS = [
@@ -12,3 +13,4 @@ AUTHENTICATION_BACKENDS = [
 {% endfor %}
 
 AUTH_USER_MODEL = "users.User"
+{% end_trim_newlines %}
