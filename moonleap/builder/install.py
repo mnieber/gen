@@ -47,8 +47,6 @@ def install_module(module):
                     setattr(
                         resource_type, prop_name, property(p.get_value, p.set_value)
                     )
-                    if p.add_value:
-                        setattr(resource_type, "add_to_" + prop_name, p.add_value)
 
                 elif isinstance(p, MemFun):
                     setattr(resource_type, prop_name, p.f)

@@ -16,9 +16,10 @@ from .resources import Component  # noqa
     fltr_obj=P.fltr_instance(Component),
 )
 def component_has_component(lhs, rhs):
-    lhs.add_to_child_components(rhs)
+    forwards = [create_forward(lhs, "p-has", ":component", obj_res=rhs)]
     if not rhs.module:
-        return create_forward(lhs.module, has, ":component", obj_res=rhs)
+        forwards.append(create_forward(lhs.module, has, ":component", obj_res=rhs))
+    return forwards
 
 
 @rule(
@@ -29,12 +30,12 @@ def component_has_component(lhs, rhs):
     fltr_obj=P.fltr_instance(Component),
 )
 def component_wraps_component(lhs, rhs):
-    lhs.add_to_wrapped_child_components(rhs)
+    return create_forward(lhs, "p-wraps", ":component", obj_res=rhs)
 
 
 @extend(Component)
 class ExtendComponent(StoreNodePackageConfigs, StoreOutputPaths):
-    wrapped_child_components = P.children(wraps, "component")
-    child_components = P.children(has, "component")
+    wrapped_child_components = P.children("p-wraps", "component")
+    child_components = P.children("p-has", "component")
     module = P.parent(Module, has)
     module_path = Prop(props.module_path)

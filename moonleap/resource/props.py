@@ -23,10 +23,10 @@ def child(verb, term, readonly=False):
 
         return None if not children else children[0]
 
-    return Prop(get_value=get_child)
+    return Prop(get_value=get_child, rel=rel)
 
 
-def children(verb, term, read_only=False, rdcr=None):
+def children(verb, term, rdcr=None):
     rel = Rel(verb=verb, obj=maybe_term_to_term(term))
     slctr = Selector([rel])
 
@@ -34,12 +34,7 @@ def children(verb, term, read_only=False, rdcr=None):
         children = slctr.select_from(self)
         return rdcr(children) if rdcr else children
 
-    def add_to_children(self, child):
-        self.add_relation(rel, child)
-
-    return Prop(
-        get_value=get_children, add_value=None if read_only else add_to_children
-    )
+    return Prop(get_value=get_children, rel=rel)
 
 
 def _fltr(resource_type):
@@ -112,10 +107,10 @@ def tree(verb, term):
                 return sources_prop.get_value(parent)
 
             def add(self, child):
-                children_prop.add_value(parent, child)
+                parent.add_relation(children_prop.rel, child)
 
             def add_source(self, source):
-                sources_prop.add_value(parent, source)
+                parent.add_relation(sources_prop.rel, source)
 
         return Inner()
 
