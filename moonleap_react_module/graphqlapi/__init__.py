@@ -29,5 +29,6 @@ class ExtendGraphqlApi:
     items_posted = P.children(posts, "item")
     api_module = P.parent(Module, has)
     schema_item_names = Prop(props.schema_item_names)
-    params = MemFun(props.params)
+    p_section_load_item_effect = MemFun(props.p_section_load_item_effect)
     p_section_item_fields = MemFun(props.p_section_item_fields)
+    p_section_post_item = MemFun(props.p_section_post_item)

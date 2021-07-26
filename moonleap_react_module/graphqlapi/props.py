@@ -1,5 +1,6 @@
 import ramda as R
 from moonleap.resources.data_type_spec_store import data_type_spec_store
+from moonleap_react_module.item.resources import Item
 from moonleap_react_module.loaditemeffect.resources import (
     LoadItemEffect,
     shorten_route_params,
@@ -13,7 +14,7 @@ def schema_item_names(self):
     )
 
 
-def params(self, load_item_effect: LoadItemEffect):
+def p_section_load_item_effect(self, load_item_effect: LoadItemEffect):
     short_params = shorten_route_params(
         load_item_effect.route_params, load_item_effect.item_name
     )
@@ -24,6 +25,15 @@ def params(self, load_item_effect: LoadItemEffect):
             [f"{' ' * 10}{x}: ${x}" for x in short_params]
         ),
         "vars": ", ".join(short_params),
+    }
+
+
+def p_section_post_item(self, item: Item):
+    return {
+        "params": "",
+        "graphql_params": "",
+        "graphql_params_inner": "",
+        "vars": "",
     }
 
 

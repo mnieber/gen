@@ -2,6 +2,7 @@
 {% magic_with load_items_effect.item_name as redRose %}
 {% magic_with load_item_effect.item_name as blueDaisy %}
 {% magic_with load_item_effect.name_postfix as Flower %}
+{% magic_with item_posted.item_name as purpleOrchid %}
 import { normalize, schema } from 'normalizr';
 import { ApiBase } from 'src/api/ApiBase';
 import { ObjT } from 'src/utils/types';
@@ -35,8 +36,9 @@ export class Api extends ApiBase {
   }
 
 {% endfor %}
+
 {% for load_item_effect in res.api_module.load_item_effects %}
-{% with params = res.params(load_item_effect) %}
+{% with params = res.p_section_load_item_effect(load_item_effect) %}
   getBlueDaisyFlower(
     {{ params.params }}
   ) {
@@ -61,7 +63,35 @@ export class Api extends ApiBase {
 {% endwith %}
 
 {% endfor %}
+
+{% for item_posted in res.items_posted %}
+{% with params = res.p_section_post_item(item_posted) %}
+  postPurpleOrchid(
+    {{ params.params }}
+  ) {
+    return this._doQuery(
+      'postPurpleOrchid',
+      `query postPurpleOrchid(
+{{ params.graphql_params }}
+      ) {
+        postPurpleOrchid(
+{{ params.graphql_params_inner }}
+        ) {
+{{ res.p_section_item_fields(item_posted.item_name) }}
+        }
+      }`,
+      {
+        {{ params.vars }}
+      },
+      (response: ObjT) => normalize(response.purpleOrchid, purpleOrchid).entities,
+      (error: ObjT) => error.response.errors[0].message
+    );
+  }
+{% endwith %}
+
+{% endfor %}
 }
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
