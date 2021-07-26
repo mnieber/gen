@@ -5,7 +5,6 @@ from moonleap import (
     extend,
     register_add,
     render_templates,
-    rule,
     tags,
 )
 from moonleap.verbs import has
@@ -28,11 +27,6 @@ class StoreDockerComposeConfigs:
 def create_docker_compose(term, block):
     docker_compose = DockerCompose()
     return docker_compose
-
-
-@rule("project", has, "docker-compose")
-def project_has_docker_compose(project, docker_compose):
-    docker_compose.output_paths.add_source(project)
 
 
 @extend(DockerCompose)
