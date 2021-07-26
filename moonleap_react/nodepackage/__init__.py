@@ -35,6 +35,17 @@ def create_node_package(term, block):
 @rule("service", has, "node-package")
 def service_has_node_package(service, node_package):
     node_package.output_paths.add_source(service)
+    node_package.node_package_configs.add_source(service)
+
+
+@rule("service", has, "tool")
+def service_has_tool(service, tool):
+    service.node_package_configs.add_source(tool)
+
+
+@rule("service", has, "module")
+def service_has_module(service, module):
+    service.node_package_configs.add_source(module)
 
 
 @extend(NodePackage)
@@ -46,4 +57,9 @@ class ExtendNodePackage(StoreNodePackageConfigs, StoreOutputPaths):
 
 @extend(Tool)
 class ExtendTool(StoreNodePackageConfigs):
+    pass
+
+
+@extend(Service)
+class ExtendService(StoreNodePackageConfigs):
     pass
