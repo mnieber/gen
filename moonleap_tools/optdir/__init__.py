@@ -1,7 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, add, extend, register_add, rule, tags
 from moonleap.verbs import has
-from moonleap_project.service import Tool
+from moonleap_project.service import Service, Tool
 
 from . import docker_compose_configs, props
 from .resources import OptDir, OptPath  # noqa
@@ -27,20 +27,17 @@ class StoreOptPaths:
     opt_paths = P.tree(has, "opt-path")
 
 
-def meta():
-    from moonleap_project.service import Service
+@extend(OptDir)
+class ExtendOptDir:
+    render = MemFun(props.render_opt_dir)
+    service = P.parent(Service, has)
 
-    @extend(OptDir)
-    class ExtendOptDir:
-        render = MemFun(props.render_opt_dir)
-        service = P.parent(Service, has)
 
-    @extend(Service)
-    class ExtendService:
-        opt_dir = P.child(has, "opt-dir")
+@extend(Service)
+class ExtendService:
+    opt_dir = P.child(has, "opt-dir")
 
-    @extend(Tool)
-    class ExtendTool(StoreOptPaths):
-        pass
 
-    return [ExtendOptDir, ExtendService, ExtendTool]
+@extend(Tool)
+class ExtendTool(StoreOptPaths):
+    pass

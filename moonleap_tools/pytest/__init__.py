@@ -1,6 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import add, create_forward, extend, rule, tags
 from moonleap.verbs import has, with_
+from moonleap_project.service import Service
 from moonleap_tools.pipdependency import PipRequirement
 
 from . import layer_configs, opt_paths
@@ -35,12 +36,7 @@ def service_has_pytest_html(service, pytest):
         return create_forward(service, has, ":tool", pytest.pytest_html)
 
 
-def meta():
-    from moonleap_project.service import Service
-
-    @extend(Pytest)
-    class ExtendPytest:
-        pytest_html = P.child(with_, "pytest-html")
-        service = P.parent(Service, has)
-
-    return [ExtendPytest]
+@extend(Pytest)
+class ExtendPytest:
+    pytest_html = P.child(with_, "pytest-html")
+    service = P.parent(Service, has)

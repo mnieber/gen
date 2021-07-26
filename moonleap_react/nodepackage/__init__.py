@@ -10,7 +10,7 @@ from moonleap import (
     tags,
 )
 from moonleap.verbs import has
-from moonleap_project.service import Tool
+from moonleap_project.service import Service, Tool
 
 from . import node_package_configs, props
 from .resources import NodePackage, NodePackageConfig, load_node_package_config  # noqa
@@ -37,17 +37,13 @@ def service_has_node_package(service, node_package):
     node_package.output_paths.add_source(service)
 
 
-def meta():
-    from moonleap_project.service import Service
+@extend(NodePackage)
+class ExtendNodePackage(StoreNodePackageConfigs, StoreOutputPaths):
+    render = MemFun(render_templates(__file__))
+    get_config = MemFun(props.get_node_package_config)
+    service = P.parent(Service, has)
 
-    @extend(NodePackage)
-    class ExtendNodePackage(StoreNodePackageConfigs, StoreOutputPaths):
-        render = MemFun(render_templates(__file__))
-        get_config = MemFun(props.get_node_package_config)
-        service = P.parent(Service, has)
 
-    @extend(Tool)
-    class ExtendTool(StoreNodePackageConfigs):
-        pass
-
-    return [ExtendNodePackage, ExtendTool]
+@extend(Tool)
+class ExtendTool(StoreNodePackageConfigs):
+    pass

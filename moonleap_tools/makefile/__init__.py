@@ -1,7 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, Prop, add, extend, register_add, render_templates, tags
 from moonleap.verbs import has
-from moonleap_project.service import Tool
+from moonleap_project.service import Service, Tool
 from moonleap_tools.pkgdependency import PkgDependency
 
 from . import layer_configs, props
@@ -27,20 +27,17 @@ def create_makefile(term, block):
     return makefile
 
 
-def meta():
-    from moonleap_project.service import Service
+@extend(Makefile)
+class ExtendMakefile(StoreMakefileRules):
+    render = MemFun(render_templates(__file__))
+    service = P.parent(Service, has)
 
-    @extend(Makefile)
-    class ExtendMakefile(StoreMakefileRules):
-        render = MemFun(render_templates(__file__))
-        service = P.parent(Service, has)
 
-    @extend(Service)
-    class ExtendService:
-        makefile_rules = Prop(props.get_makefile_rules())
+@extend(Service)
+class ExtendService:
+    makefile_rules = Prop(props.get_makefile_rules())
 
-    @extend(Tool)
-    class ExtendTool(StoreMakefileRules):
-        pass
 
-    return [ExtendMakefile, ExtendService, ExtendTool]
+@extend(Tool)
+class ExtendTool(StoreMakefileRules):
+    pass

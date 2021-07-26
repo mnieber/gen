@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, add, create_forward, extend, register_add, rule, tags
+from moonleap import MemFun, Prop, add, extend, register_add, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has
 from moonleap_project.service import Tool
@@ -16,7 +16,7 @@ def create_django(term, block):
     add(django, makefile_rules.get())
     add(django, layer_configs.get())
     add(django, opt_paths.static_opt_path)
-    add(django, PipRequirement(["Django"], is_dev=False))
+    add(django, PipRequirement(["Django"]))
     add(django, docker_compose_configs.get(is_dev=True))
     add(django, docker_compose_configs.get(is_dev=False))
     return django
