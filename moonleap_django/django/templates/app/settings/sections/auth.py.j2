@@ -1,0 +1,14 @@
+import datetime
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+{% for x in res.settings.get('auth', {}).get('AUTHENTICATION_BACKENDS', []) %}
+    "{{ x }}",
+{% endfor %}
+]
+
+{% for setting_obj in res.settings.get('auth', {}).get('blocks', []) %}
+{{ block }}
+{% endfor %}
+
+AUTH_USER_MODEL = "users.User"
