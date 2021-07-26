@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from moonleap import add, tags
 from moonleap_tools.pipdependency import PipDependency
 from moonleap_tools.setupfile import SetupFileConfig
-from moonleap_tools.tool import Tool
+from moonleap_project.service import Tool
 
 setup_file_config = dict(
     isort=dict(

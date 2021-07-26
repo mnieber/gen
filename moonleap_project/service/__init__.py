@@ -10,9 +10,8 @@ from moonleap import (
 )
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has, runs, uses
-from moonleap_tools.tool import Tool
 
-from .resources import Service
+from .resources import Service, Tool
 from .tweaks import tweak
 
 
@@ -28,8 +27,13 @@ def service_uses_tweaks(service):
     tweak(service)
 
 
-@rule("service", uses + runs + has, "*", fltr_obj=P.fltr_instance(Tool))
+@rule("service", has, "tool")
 def service_has_tool(service, tool):
+    tool.output_paths.add_source(service)
+
+
+@rule("service", uses + runs + has, "*", fltr_obj=P.fltr_instance(Tool))
+def service_has_tool_instance(service, tool):
     return create_forward(
         service,
         has,
@@ -44,3 +48,9 @@ class ExtendService(
     StoreTemplateDirs,
 ):
     src_dir = P.child(has, "src-dir")
+    tools = P.children(has, "tool")
+
+
+@extend(Tool)
+class ExtendTool(StoreOutputPaths):
+    pass

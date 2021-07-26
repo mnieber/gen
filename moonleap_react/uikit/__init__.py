@@ -1,6 +1,6 @@
 from moonleap import MemFun, add, extend, render_templates, tags
 from moonleap_react.nodepackage import load_node_package_config
-from moonleap_tools.tool import Tool
+from moonleap_project.service import Tool
 
 
 class UIkit(Tool):

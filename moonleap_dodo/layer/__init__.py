@@ -8,6 +8,7 @@ from moonleap import (
     tags,
 )
 from moonleap.verbs import has
+from moonleap_project.service import Tool
 
 from . import props
 from .resources import Layer, LayerConfig
@@ -33,3 +34,8 @@ def create_layer(term, block):
 class ExtendLayer:
     render = MemFun(render_templates(__file__))
     get_config = MemFun(props.get_config)
+
+
+@extend(Tool)
+class ExtendTool(StoreLayerConfigs):
+    pass

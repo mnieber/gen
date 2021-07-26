@@ -13,3 +13,8 @@ class Service(Resource):
     install_dir: str = "/app"
     env_files: T.List[str] = field(default_factory=lambda: [])
     env_files_dev: T.List[str] = field(default_factory=lambda: [])
+
+
+@dataclass
+class Tool(Resource):
+    name: str

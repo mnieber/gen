@@ -1,6 +1,9 @@
-from moonleap import Priorities, register_add, rule, tags
+import moonleap.resource.props as P
+from moonleap import MemFun, extend, register_add, tags
 from moonleap.verbs import has
+from moonleap_project.service import Service, Tool
 
+from . import props
 from .resources import PipDependency, PipRequirement
 
 
@@ -22,3 +25,15 @@ def add_pip_dependency(resource, pip_dependency):
 @register_add(PipRequirement)
 def add_pip_requirement(resource, pip_requirement):
     resource.pip_requirements.add(pip_requirement)
+
+
+@extend(Service)
+class ExtendService:
+    get_pip_pkg_names = MemFun(props.get_pip_pkg_names())
+    get_pip_requirements = MemFun(props.get_pip_requirements())
+
+
+@extend(Tool)
+class ExtendTool:
+    pip_dependencies = P.tree(has, "pip-dependency")
+    pip_requirements = P.tree(has, "pip-requirement")

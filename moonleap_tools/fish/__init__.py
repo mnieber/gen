@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from moonleap import add, rule, tags
 from moonleap.verbs import uses
 from moonleap_tools.pkgdependency import PkgDependency
-from moonleap_tools.tool import Tool
+from moonleap_project.service import Tool
 
 from . import opt_paths
 

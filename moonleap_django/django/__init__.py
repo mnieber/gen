@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import add, create_forward, extend, rule, tags
+from moonleap import Prop, add, create_forward, extend, rule, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import connects, has, runs, uses
 from moonleap_django.postgresservice import postgres_env_fn
@@ -7,7 +7,7 @@ from moonleap_project.service import Service
 from moonleap_tools.pipdependency import PipDependency, PipRequirement
 from moonleap_tools.pkgdependency import PkgDependency
 
-from . import docker_compose_configs, layer_configs, makefile_rules, opt_paths
+from . import docker_compose_configs, layer_configs, makefile_rules, opt_paths, props
 from .resources import Django
 
 
@@ -43,3 +43,4 @@ def django_uses_postgres_service(django, postgres_service):
 @extend(Django)
 class ExtendDjango(StoreTemplateDirs):
     service = P.parent(Service, uses + runs)
+    settings = Prop(props.settings)

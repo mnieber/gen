@@ -1,7 +1,15 @@
 import moonleap.resource.props as P
-from moonleap import (MemFun, StoreOutputPaths, extend, register_add,
-                      render_templates, rule, tags)
+from moonleap import (
+    MemFun,
+    StoreOutputPaths,
+    extend,
+    register_add,
+    render_templates,
+    rule,
+    tags,
+)
 from moonleap.verbs import has
+from moonleap_project.service import Tool
 
 from . import props
 from .resources import DockerCompose, DockerComposeConfig  # noqa
@@ -31,3 +39,8 @@ def project_has_docker_compose(project, docker_compose):
 class ExtendDockerCompose(StoreOutputPaths):
     render = MemFun(render_templates(__file__))
     get_config = MemFun(props.get_docker_compose_config)
+
+
+@extend(Tool)
+class ExtendTool(StoreDockerComposeConfigs):
+    pass

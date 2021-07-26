@@ -1,7 +1,7 @@
 import typing as T
 from dataclasses import dataclass
 
-from moonleap_tools.tool import Tool
+from moonleap_project.service import Tool
 
 
 @dataclass

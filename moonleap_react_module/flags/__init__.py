@@ -1,7 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import extend, register_add
 from moonleap.verbs import has
-from moonleap_tools.tool import Tool
+from moonleap_project.service import Tool
 
 from .resources import Flags  # noqa
 

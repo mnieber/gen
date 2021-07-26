@@ -2,7 +2,7 @@ import moonleap.resource.props as P
 from moonleap import MemFun, add, create_forward, extend, render_templates, rule, tags
 from moonleap.verbs import has, uses
 from moonleap_react.nodepackage import load_node_package_config
-from moonleap_tools.tool import Tool
+from moonleap_project.service import Tool
 
 from . import docker_compose_configs, layer_configs, makefile_rules
 

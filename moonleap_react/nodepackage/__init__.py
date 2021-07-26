@@ -10,6 +10,7 @@ from moonleap import (
     tags,
 )
 from moonleap.verbs import has
+from moonleap_project.service import Tool
 
 from . import node_package_configs, props
 from .resources import NodePackage, NodePackageConfig, load_node_package_config  # noqa
@@ -45,4 +46,8 @@ def meta():
         get_config = MemFun(props.get_node_package_config)
         service = P.parent(Service, has)
 
-    return [ExtendNodePackage]
+    @extend(Tool)
+    class ExtendTool(StoreNodePackageConfigs):
+        pass
+
+    return [ExtendNodePackage, ExtendTool]

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from moonleap import add, extend, rule, tags
 from moonleap.verbs import has
 from moonleap_tools.pipdependency import PipDependency
-from moonleap_tools.tool import Tool
+from moonleap_project.service import Tool
 
 from . import layer_configs, makefile_rules
 
