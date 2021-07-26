@@ -1,7 +1,6 @@
 from moonleap import Priorities, register_add, rule, tags
 from moonleap.verbs import has
 
-from . import tweaks
 from .resources import PipDependency, PipRequirement
 
 
@@ -23,8 +22,3 @@ def add_pip_dependency(resource, pip_dependency):
 @register_add(PipRequirement)
 def add_pip_requirement(resource, pip_requirement):
     resource.pip_requirements.add(pip_requirement)
-
-
-@rule("service", has, "dockerfile", priority=Priorities.TWEAK.value)
-def service_uses_tweaks(service, dockerfile):
-    tweaks.tweak_service(service)
