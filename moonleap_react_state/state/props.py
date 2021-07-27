@@ -17,7 +17,7 @@ def bvrs_by_item_name(self):
 def store_by_item_name(self):
     result = {}
     stores = []
-    for x in self.module.service.modules:
+    for x in self.module.react_app.modules:
         stores.extend(x.stores)
 
     for item_name in bvrs_by_item_name(self).keys():
@@ -90,7 +90,7 @@ def p_section_policies(self):
 
 
 def type_import_path(self, type_name):
-    for module in self.module.service.modules:
+    for module in self.module.react_app.modules:
         for store in module.stores:
             if [x for x in store.item_types if x.name == type_name]:
                 return f"{store.module_path}/types"

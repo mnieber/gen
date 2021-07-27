@@ -12,7 +12,14 @@ def _wraps(panel):
 def _get_route_params(self):
     return R.path_or(
         [],
-        ["services", self.module.service.name, "components", self.name, "route_params"],
+        [
+            "services",
+            self.module.react_app.service.name,
+            "react_app",
+            "components",
+            self.name,
+            "route_params",
+        ],
     )(get_session().get_tweaks())
 
 

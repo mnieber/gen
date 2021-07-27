@@ -22,13 +22,13 @@ def create_mock_server(term, block):
 
 @rule("service", uses, "mock-graphql-server")
 def add_flag(service, mock_server):
-    add(service.app_module, Flags({"useMockServer": True}))
+    add(service.react_app.app_module, Flags({"useMockServer": True}))
     add(service.project, layer_configs.get_for_project(service.name))
 
 
 @rule("store", contains, "item-type")
 def store_uses_item_type(store, item_type):
-    if store.module.service.mock_graphql_server:
+    if store.module.react_app.service.mock_graphql_server:
         store.add_template_dir(__file__, "templates_store")
 
 

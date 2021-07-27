@@ -6,7 +6,7 @@ def get_flags(app_module):
     for flags in app_module.flags.merged:
         merge_into_config(result, flags.values)
 
-    for tool in app_module.service.tools:
+    for tool in app_module.react_app.service.tools:
         for flags in tool.flags.merged:
             merge_into_config(result, flags.values)
 

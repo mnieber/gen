@@ -15,10 +15,10 @@ def create_graphql_api(term, block):
     return graphql_api
 
 
-@rule("service", has, "api:module")
-def service_has_api_module(service, api_module):
-    service.utils_module.add_template_dir(__file__, "templates_utils")
-    service.app_module.add_template_dir(__file__, "templates_appstore")
+@rule("react-app", has, "api:module")
+def react_app_has_api_module(react_app, api_module):
+    react_app.utils_module.add_template_dir(__file__, "templates_utils")
+    react_app.app_module.add_template_dir(__file__, "templates_appstore")
 
 
 @extend(GraphqlApi)

@@ -22,7 +22,7 @@ def create_form_view(term, block):
 
 @rule("module", has, "form-view")
 def service_has_forms_module(module, form_view):
-    return create_forward(module.service, has, "forms:module")
+    return create_forward(module.react_app, has, "forms:module")
 
 
 @extend(FormView)

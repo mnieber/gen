@@ -43,9 +43,9 @@ def service_has_tool(service, tool):
     service.node_package_configs.add_source(tool)
 
 
-@rule("service", has, "module")
-def service_has_module(service, module):
-    service.node_package_configs.add_source(module)
+@rule("react-app", has, "module")
+def react_app_has_module(react_app, module):
+    react_app.node_package_configs.add_source(module)
 
 
 @extend(NodePackage)

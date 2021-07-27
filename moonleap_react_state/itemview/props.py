@@ -9,7 +9,14 @@ def _get_route_params(self):
     default_params = [] if self.load_item_effect else [f"{self.item_name}Id"]
     return R.path_or(
         default_params,
-        ["services", self.module.service.name, "components", self.name, "route_params"],
+        [
+            "services",
+            self.module.react_app.service.name,
+            "react_app",
+            "components",
+            self.name,
+            "route_params",
+        ],
     )(get_session().get_tweaks())
 
 
@@ -34,7 +41,7 @@ def create_router_configs(self):
         )
 
     # Add router configs for state-provider
-    for submodule in self.module.service.modules:
+    for submodule in self.module.react_app.modules:
         for state in submodule.states:
             item_names = (
                 [x.item_name for x in state.items]

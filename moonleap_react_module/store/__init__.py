@@ -21,7 +21,7 @@ def create_store(term, block):
 
 @rule("module", has, "store")
 def add_utils_templates(module, store):
-    module.service.utils_module.add_template_dir(__file__, "templates_utils")
+    module.react_app.utils_module.add_template_dir(__file__, "templates_utils")
 
 
 @extend(Module)

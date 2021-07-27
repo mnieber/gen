@@ -29,13 +29,13 @@ def create_item_view(term, block):
 @rule("item-view")
 def maybe_add_load_item_effect_to_item_view(item_view):
     # if the graphql api loads single instances of this item type
-    if get_graphql_items(item_view.module.service.api_module, item_view.item_name):
+    if get_graphql_items(item_view.module.react_app.api_module, item_view.item_name):
         load_item_effect = create_load_item_effect(
             item_view, item_view._get_route_params()
         )
         return [
             create_forward(
-                item_view.module.service.api_module,
+                item_view.module.react_app.api_module,
                 has,
                 ":load-item-effect",
                 obj_res=load_item_effect,
@@ -50,7 +50,7 @@ def maybe_add_load_item_effect_to_item_view(item_view):
 
     # else if it loads item lists of this item type
     elif get_graphql_item_lists(
-        item_view.module.service.api_module, item_view.item_name
+        item_view.module.react_app.api_module, item_view.item_name
     ):
         select_item_effect = create_select_item_effect(
             item_view, item_view._get_route_params()

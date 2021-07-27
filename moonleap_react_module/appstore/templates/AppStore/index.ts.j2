@@ -1,6 +1,6 @@
 {% magic_with substore.name as RedRose %}
 import { observable, makeObservable } from 'mobx';
-{% if res.module.service.api_module %}
+{% if res.module.react_app.api_module %}
 import { Api } from 'src/api/Api';
 import { storeConnectsToApi } from 'src/app/AppStore/policies';
 {% endif %}
@@ -15,7 +15,7 @@ export class AppStore {
 {% for substore in res.substores %}
   @observable redRose: RedRose;
 {% endfor %}
-{% if res.module.service.api_module %}
+{% if res.module.react_app.api_module %}
   @observable api: Api = new Api();
 {% endif %}
 
@@ -30,7 +30,7 @@ export class AppStore {
   }
 
   applyPolicies() {
-{% if res.module.service.api_module %}
+{% if res.module.react_app.api_module %}
 {% for substore in res.substores %}
   storeConnectsToApi(this.redRose, this.api);
 {% endfor %}

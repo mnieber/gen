@@ -16,7 +16,14 @@ def _panels(self):
 def _collapses(panel):
     return R.path_or(
         True,
-        ["services", panel.module.service.name, "components", panel.name, "collapses"],
+        [
+            "services",
+            panel.module.react_app.service.name,
+            "react_app",
+            "components",
+            panel.name,
+            "collapses",
+        ],
     )(get_session().get_tweaks())
 
 

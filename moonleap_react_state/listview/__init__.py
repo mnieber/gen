@@ -35,11 +35,13 @@ def list_view_has_a_behavior(list_view, behavior):
 
 @rule("list-view")
 def maybe_add_load_items_effect_to_list_view(list_view):
-    if get_graphql_item_lists(list_view.module.service.api_module, list_view.item_name):
+    if get_graphql_item_lists(
+        list_view.module.react_app.api_module, list_view.item_name
+    ):
         load_items_effect = create_load_items_effect(list_view)
         return [
             create_forward(
-                list_view.module.service.api_module,
+                list_view.module.react_app.api_module,
                 has,
                 ":load-items-effect",
                 obj_res=load_items_effect,

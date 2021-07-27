@@ -1,8 +1,8 @@
 import moonleap.resource.props as P
 from moonleap import add, extend, kebab_to_camel, tags
 from moonleap.verbs import has
-from moonleap_project.service import Service
 from moonleap_react.nodepackage import load_node_package_config
+from moonleap_react.reactapp import ReactApp
 
 from .resources import ApiModule  # noqa
 
@@ -22,6 +22,6 @@ class ExtendApiModule:
     graphql_api = P.child(has, "graphql:api")
 
 
-@extend(Service)
-class ExtendService:
+@extend(ReactApp)
+class ExtendReactApp:
     api_module = P.child(has, "api:module")

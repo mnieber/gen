@@ -46,7 +46,7 @@ def p_section_route_imports(self):
                 components.append(component)
             queue.extend(component.wrapped_child_components)
 
-    for module in self.module.service.modules:
+    for module in self.module.react_app.modules:
         for component in module.routed_components:
             for router_config in component.create_router_configs():
                 add(router_config.component)
@@ -65,14 +65,14 @@ def p_section_route_imports(self):
 def p_section_routes(self):
     routes = []
 
-    for module in self.module.service.modules:
+    for module in self.module.react_app.modules:
         for component in module.routed_components:
             router_configs = component.create_router_configs()
             if router_configs:
                 add_route(router_configs, routes)
 
     result = []
-    add_result(self.module.service, routes, "", 0, 6, result)
+    add_result(routes, "", 0, 6, result)
 
     result_str = os.linesep.join(result)
     return result_str
@@ -92,7 +92,7 @@ def add_route(router_configs, routes):
             )
 
 
-def add_result(service, routes, url, level, indent, result):
+def add_result(routes, url, level, indent, result):
     # all the routes that share their first component should be grouped inside a
     # route for that first component
     def get_component_and_url(route):
@@ -127,7 +127,6 @@ def add_result(service, routes, url, level, indent, result):
             _append(f"<{upper0(router_config.component.name)}/>", indent, result)
 
         add_result(
-            service,
             next_routes,
             url,
             level + 1,

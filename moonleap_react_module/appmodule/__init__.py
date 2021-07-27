@@ -1,8 +1,8 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, add, extend, kebab_to_camel, rule, tags
 from moonleap.verbs import has
-from moonleap_project.service import Service
 from moonleap_react.nodepackage import load_node_package_config
+from moonleap_react.reactapp import ReactApp
 from moonleap_react_module.flags import StoreFlags
 
 from . import props
@@ -18,13 +18,13 @@ def create_app_module(term, block):
     return module
 
 
-@rule("service", has, "app:module")
-def service_has_app_module(service, module):
-    service.add_template_dir(__file__, "templates_service")
+@rule("react-app", has, "app:module")
+def service_has_app_module(react_app, module):
+    react_app.add_template_dir(__file__, "templates_service")
 
 
-@extend(Service)
-class ExtendService:
+@extend(ReactApp)
+class ExtendReactApp:
     app_module = P.child(has, "app:module")
 
 
