@@ -15,3 +15,11 @@ def settings(self):
 
 def get_settings_or(self, default, path):
     return R.path_or(default, path, self.settings.values)
+
+
+def third_party_apps(self):
+    return sorted(self.get_settings_or([], ["installed_apps", "THIRD_PARTY_APPS"]))
+
+
+def local_apps(self):
+    return sorted(self.get_settings_or([], ["installed_apps", "LOCAL_APPS"]))

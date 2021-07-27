@@ -34,3 +34,5 @@ def add_django_config(resource, django_config):
 class ExtendDjangoApp(StoreTemplateDirs):
     settings = Prop(props.settings)
     get_settings_or = MemFun(props.get_settings_or)
+    third_party_apps = Prop(props.third_party_apps)
+    local_apps = Prop(props.local_apps)

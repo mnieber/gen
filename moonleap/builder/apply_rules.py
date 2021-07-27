@@ -7,13 +7,20 @@ from moonleap.session import get_session
 from moonleap.verbs import is_created_as
 
 
-def _find_or_create_resource(block, term):
+def _find_or_create_resource(context, block, term):
     for parent_block in block.get_blocks(include_self=True, include_parents=True):
         resource = parent_block.get_resource(term)
         if resource:
             return resource
+
     resource = _create_resource(term, block)
     block.add_resource_for_term(resource, term, True)
+
+    for rule in context.get_rules(is_created_as_rel(term)):
+        result = rule.f(resource)
+        if result:
+            _process_forwards(context, _to_list_of_forward(result, rule), block)
+
     return resource
 
 
@@ -25,10 +32,10 @@ def _find_term_for_resource(resource, block):
     return None
 
 
-def _process_forwards(forwards: T.List[Forward], block):
+def _process_forwards(context, forwards: T.List[Forward], block):
     for forward in forwards:
         new_obj_resource = forward.obj_res or _find_or_create_resource(
-            block, forward.obj
+            context, block, forward.obj
         )
         subj_term = _find_term_for_resource(forward.subj_res, block)
         if subj_term is None:
@@ -67,7 +74,7 @@ def _apply_rules(rel, subj_resource, obj_resource, block):
             has_rule = True
             result = rule.f(subj_resource, obj_resource)
             if result:
-                _process_forwards(_to_list_of_forward(result, rule), block)
+                _process_forwards(context, _to_list_of_forward(result, rule), block)
 
     return has_rule
 
@@ -91,7 +98,9 @@ def apply_rules(root_block, unmatched_rels):
                 for rule in context.get_rules(is_created_as_rel(term)):
                     result = rule.f(resource)
                     if result:
-                        _process_forwards(_to_list_of_forward(result, rule), block)
+                        _process_forwards(
+                            context, _to_list_of_forward(result, rule), block
+                        )
 
             for rel, obj_resource in resource.get_relations():
                 if not rel.is_inv:

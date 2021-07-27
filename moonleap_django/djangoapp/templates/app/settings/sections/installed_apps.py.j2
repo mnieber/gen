@@ -11,13 +11,15 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "corsheaders",
-{% for x in res.get_settings_or([], ['installed_apps', 'THIRD_PARTY_APPS']) %}
+{% for x in res.third_party_apps %}
     "{{ x }}",
 {% endfor %}
 ]
 
 LOCAL_APPS = [
-    "app.apps.MainAppConfig",
+{% for x in res.local_apps %}
+    "{{ x }}",
+{% endfor %}
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
