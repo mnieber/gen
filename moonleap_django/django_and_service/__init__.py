@@ -3,7 +3,7 @@ from moonleap import add, add_source, create_forward, extend, rule
 from moonleap.verbs import has, runs, uses
 from moonleap_django.django import StoreDjangoConfigs
 from moonleap_django.django.resources import Django
-from moonleap_project.service import Service
+from moonleap_project.service import Service, Tool
 
 from . import layer_configs
 
@@ -32,4 +32,9 @@ class ExtendDjango:
 
 @extend(Service)
 class ExtendService(StoreDjangoConfigs):
+    pass
+
+
+@extend(Tool)
+class ExtendTool(StoreDjangoConfigs):
     pass

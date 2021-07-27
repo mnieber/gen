@@ -2,7 +2,6 @@ import moonleap.resource.props as P
 from moonleap import MemFun, Prop, add, extend, register_add, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has
-from moonleap_project.service import Tool
 from moonleap_tools.pipdependency import PipRequirement
 
 from . import docker_compose_configs, layer_configs, makefile_rules, opt_paths, props
@@ -35,8 +34,3 @@ def add_django_config(resource, django_config):
 class ExtendDjango(StoreTemplateDirs):
     settings = Prop(props.settings)
     get_settings_or = MemFun(props.get_settings_or)
-
-
-@extend(Tool)
-class ExtendTool(StoreDjangoConfigs):
-    pass

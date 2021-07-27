@@ -1,6 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
+    StoreOutputPaths,
     extend,
     kebab_to_camel,
     register_add,
@@ -31,7 +32,7 @@ def create_layer(term, block):
 
 
 @extend(Layer)
-class ExtendLayer:
+class ExtendLayer(StoreLayerConfigs, StoreOutputPaths):
     render = MemFun(render_templates(__file__))
     get_config = MemFun(props.get_config)
 
