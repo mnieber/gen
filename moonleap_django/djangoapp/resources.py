@@ -5,7 +5,7 @@ from moonleap_project.service import Tool
 
 
 @dataclass
-class Django(Tool):
+class DjangoApp(Tool):
     pass
 
 

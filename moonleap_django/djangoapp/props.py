@@ -1,6 +1,6 @@
 import ramda as R
 from moonleap.utils.merge_into_config import merge_into_config
-from moonleap_django.django.resources import DjangoConfig
+from moonleap_django.djangoapp.resources import DjangoConfig
 
 
 def settings(self):

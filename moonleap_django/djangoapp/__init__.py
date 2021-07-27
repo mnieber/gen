@@ -5,24 +5,24 @@ from moonleap.verbs import has
 from moonleap_tools.pipdependency import PipRequirement
 
 from . import docker_compose_configs, layer_configs, makefile_rules, opt_paths, props
-from .resources import Django, DjangoConfig
+from .resources import DjangoApp, DjangoConfig
 
 
-@tags(["django"])
+@tags(["django-app"])
 def create_django(term, block):
-    django = Django(name="django")
-    django.add_template_dir(__file__, "templates")
-    add(django, makefile_rules.get())
-    add(django, layer_configs.get())
-    add(django, opt_paths.static_opt_path)
-    add(django, PipRequirement(["Django"]))
-    add(django, docker_compose_configs.get(is_dev=True))
-    add(django, docker_compose_configs.get(is_dev=False))
-    return django
+    django_app = DjangoApp(name="django-app")
+    django_app.add_template_dir(__file__, "templates")
+    add(django_app, makefile_rules.get())
+    add(django_app, layer_configs.get())
+    add(django_app, opt_paths.static_opt_path)
+    add(django_app, PipRequirement(["Django"]))
+    add(django_app, docker_compose_configs.get(is_dev=True))
+    add(django_app, docker_compose_configs.get(is_dev=False))
+    return django_app
 
 
 class StoreDjangoConfigs:
-    django_configs = P.tree(has, "django-config")
+    django_configs = P.tree(has, "django_app-config")
 
 
 @register_add(DjangoConfig)
@@ -30,7 +30,7 @@ def add_django_config(resource, django_config):
     resource.django_configs.add(django_config)
 
 
-@extend(Django)
-class ExtendDjango(StoreTemplateDirs):
+@extend(DjangoApp)
+class ExtendDjangoApp(StoreTemplateDirs):
     settings = Prop(props.settings)
     get_settings_or = MemFun(props.get_settings_or)

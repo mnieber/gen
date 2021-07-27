@@ -1,5 +1,5 @@
 from moonleap import chop0
-from moonleap_django.django.resources import DjangoConfig
+from moonleap_django.djangoapp.resources import DjangoConfig
 
 block = chop0(
     """

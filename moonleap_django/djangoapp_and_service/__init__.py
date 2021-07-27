@@ -1,8 +1,8 @@
 import moonleap.resource.props as P
 from moonleap import add, add_source, create_forward, extend, rule
-from moonleap.verbs import has, runs, uses
-from moonleap_django.django import StoreDjangoConfigs
-from moonleap_django.django.resources import Django
+from moonleap.verbs import has, runs
+from moonleap_django.djangoapp import StoreDjangoConfigs
+from moonleap_django.djangoapp.resources import DjangoApp
 from moonleap_project.service import Service, Tool
 
 from . import layer_configs
@@ -17,17 +17,17 @@ def service_has_tool(service, tool):
     )
 
 
-@rule("service", uses + runs, "django")
-def service_has_django(service, django):
+@rule("service", runs, "django-app")
+def service_runs_django_app(service, django_app):
     service.port = service.port or "8000"
     add(service.project, layer_configs.get(service.name))
-    django.django_configs.add_source(service)
+    django_app.django_configs.add_source(service)
     return create_forward(service, has, ":makefile")
 
 
-@extend(Django)
-class ExtendDjango:
-    service = P.parent(Service, uses + runs)
+@extend(DjangoApp)
+class ExtendDjangoApp:
+    service = P.parent(Service, runs)
 
 
 @extend(Service)
