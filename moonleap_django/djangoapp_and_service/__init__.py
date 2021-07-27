@@ -22,7 +22,10 @@ def service_runs_django_app(service, django_app):
     service.port = service.port or "8000"
     add(service.project, layer_configs.get(service.name))
     django_app.django_configs.add_source(service)
-    return create_forward(service, has, ":makefile")
+    return [
+        create_forward(service, has, ":makefile"),
+        create_forward(django_app, has, "app:module"),
+    ]
 
 
 @extend(DjangoApp)
@@ -32,7 +35,7 @@ class ExtendDjangoApp:
 
 @extend(Service)
 class ExtendService(StoreDjangoConfigs):
-    pass
+    django_app = P.child(runs, ":django-app")
 
 
 @extend(Tool)

@@ -1,11 +1,23 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, add, extend, register_add, tags
+from moonleap import (MemFun, Prop, add, create_forward, extend, register_add,
+                      tags)
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has
+from moonleap_project.service import Service
 from moonleap_tools.pipdependency import PipRequirement
 
-from . import docker_compose_configs, layer_configs, makefile_rules, opt_paths, props
+from . import (docker_compose_configs, layer_configs, makefile_rules,
+               opt_paths, props)
 from .resources import DjangoApp, DjangoConfig
+
+
+class StoreDjangoConfigs:
+    django_configs = P.tree(has, "django_app-config")
+
+
+@register_add(DjangoConfig)
+def add_django_config(resource, django_config):
+    resource.django_configs.add(django_config)
 
 
 @tags(["django-app"])
@@ -19,15 +31,6 @@ def create_django(term, block):
     add(django_app, docker_compose_configs.get(is_dev=True))
     add(django_app, docker_compose_configs.get(is_dev=False))
     return django_app
-
-
-class StoreDjangoConfigs:
-    django_configs = P.tree(has, "django_app-config")
-
-
-@register_add(DjangoConfig)
-def add_django_config(resource, django_config):
-    resource.django_configs.add(django_config)
 
 
 @extend(DjangoApp)

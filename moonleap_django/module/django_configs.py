@@ -1,4 +1,4 @@
-from moonleap.utils.case import snake_to_camel, upper0
+from moonleap.utils.case import upper0
 from moonleap_django.djangoapp.resources import DjangoConfig
 
 
@@ -7,7 +7,7 @@ def get(module):
         {
             "installed_apps": {
                 "LOCAL_APPS": [
-                    f"{module.name}.apps.{upper0(snake_to_camel(module.name))}Config",
+                    f"{module.name_snake}.apps.{upper0(module.name_camel)}Config",
                 ],
             },
         }

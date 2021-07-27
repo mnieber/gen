@@ -1,5 +1,5 @@
-from moonleap import add, extend, rule, tags
-from moonleap.verbs import uses
+from moonleap import add, create_forward, extend, rule, tags
+from moonleap.verbs import has, uses
 from moonleap_project.service import Tool
 from moonleap_tools.pipdependency import PipRequirement
 
@@ -20,7 +20,7 @@ def create_graphene_django(term, block):
 
 @rule("service", uses, "graphene-django")
 def service_uses_graphene_django(service, graphene_django):
-    pass
+    return create_forward(service.django_app, has, "api:module")
 
 
 @extend(GrapheneDjango)

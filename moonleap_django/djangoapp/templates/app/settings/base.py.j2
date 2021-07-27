@@ -26,3 +26,7 @@ CACHES = {
         "LOCATION": "unix:/tmp/memcached.sock",
     }
 }
+
+{% for setting_block in res.get_settings_or([], ['base', 'blocks']) %}
+{{ setting_block }}
+{% endfor %}

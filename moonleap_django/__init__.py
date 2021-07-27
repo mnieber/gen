@@ -1,4 +1,5 @@
 from . import (
+    apimodule,
     appmodule,
     djangoapp,
     djangoapp_and_postgres,
@@ -12,12 +13,13 @@ from . import (
 )
 
 modules = [
-    djangoapp,
-    graphene_django,
+    apimodule,
+    appmodule,
     djangoapp_and_postgres,
     djangoapp_and_service,
+    djangoapp,
+    graphene_django,
     graphql_auth,
-    appmodule,
     module,
     postgresservice,
     strapi,
