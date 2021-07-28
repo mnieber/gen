@@ -26,7 +26,7 @@ def _get_fields(data_type_dict):
             DataTypeField(
                 name_snake=field_name,
                 name_camel=snake_to_camel(field_name),
-                type=field_spec.get("type", "string"),
+                spec=field_spec,
             )
         )
     return result
@@ -36,7 +36,7 @@ def _get_fields(data_type_dict):
 class DataTypeField:
     name_snake: str
     name_camel: str
-    type: str
+    spec: T.Any
 
 
 @dataclass
@@ -49,8 +49,10 @@ class DataTypeSpecStore:
     def __init__(self):
         self.spec_by_name = {}
         self.default_fields = [
-            DataTypeField(name_snake="id", name_camel="id", type="string"),
-            DataTypeField(name_snake="name", name_camel="name", type="string"),
+            DataTypeField(name_snake="id", name_camel="id", spec=dict(type="string")),
+            DataTypeField(
+                name_snake="name", name_camel="name", spec=dict(type="string")
+            ),
         ]
 
     def get_spec(self, data_type_name):

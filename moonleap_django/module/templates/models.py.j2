@@ -1,0 +1,11 @@
+{% magic_with item_type.name as yellowTulip %}
+from django.db import models
+
+from app.models import Entity
+
+{% for item_type in res.item_types %}
+class YellowTulip(Entity):
+{{ res.p_section_fields(item_type)}}
+
+{% endfor %}
+{% end_magic_with %}
