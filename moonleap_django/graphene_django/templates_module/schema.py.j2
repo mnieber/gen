@@ -1,3 +1,5 @@
+{% magic_with item_type.name as yellowTulip %}
+{% magic_with form.item_name as redRose %}
 import graphene
 from graphene.types.datetime import Date
 from graphene_django.types import DjangoObjectType
@@ -6,48 +8,26 @@ from project_requests.models import ProjectRequest
 from project_requests.utils import create_project_request
 
 
-class ProjectRequestType(DjangoObjectType):
+{% for item_type in res.item_types %}
+class YellowTulipType(DjangoObjectType):
     class Meta:
-        model = ProjectRequest
+        model = YellowTulip
+        exclude = [{{ graphene.p_section_exclude(item_type.name) }}]
+
+{% endfor %}
+
+{% for form in res.forms %}
+class RedRoseType(graphene.InputObjectType):
+{{ graphene.p_section_graphene_fields(form.item_name) }}
+
+{% endfor %}
 
 
-class ProjectRequestsQuery(object):
-    project_requests = graphene.List(ProjectRequestType)
-
-    def resolve_project_requests(self, info, **kwargs):
-        return ProjectRequest.objects.all()
-
-
-# Mutation
-class CreateProjectRequestInput(graphene.InputObjectType):
-    location = graphene.String(required=True)
-    description = graphene.String(required=False)
-    changemaker_name = graphene.String(required=True)
-    date_of_birth = Date(required=True)
-    project_name = graphene.String(required=True)
-    email = graphene.String(required=True)
-    google_doc_url = graphene.String(required=False)
-    description_url = graphene.String(required=False)
-
-
-class CreateProjectRequest(graphene.Mutation):
-    class Arguments:
-        input = CreateProjectRequestInput()
-
-    success = graphene.Boolean()
-    project_request = graphene.Field(ProjectRequestType)
-
-    def mutate(self, info, **kwargs):
-        kwargs = kwargs["input"]
-        project_request = create_project_request(**kwargs)
-        project_request.task.transition("receive", {})
-
-        return CreateProjectRequest(project_request=project_request, success=True)
-
-
-class Query(ProjectRequestsQuery, graphene.ObjectType):
+class Query():
     pass
 
 
-class Mutation(graphene.ObjectType):
-    create_project_request = CreateProjectRequest.Field()
+class Mutation():
+    pass
+{% end_magic_with %}
+{% end_magic_with %}

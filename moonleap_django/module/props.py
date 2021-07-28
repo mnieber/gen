@@ -27,17 +27,17 @@ def _model(field):
     if t == "date":
         return f"models.DateField()"
 
-    raise Exception(f"Unknown field type: {t}")
+    raise Exception(f"Unknown model field type: {t}")
 
 
 def _fields(spec):
     return [x for x in spec.fields if x.name_snake != "id"]
 
 
-def p_section_fields(self, item_type):
+def p_section_model_fields(self, item_name):
     result = []
     indent = "    "
-    spec = data_type_spec_store.get_spec(item_type.name)
+    spec = data_type_spec_store.get_spec(item_name)
     for field in _fields(spec):
         model = _model(field)
         result.append(indent + f"{field.name_snake} = {model}")

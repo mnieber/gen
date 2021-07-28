@@ -28,3 +28,5 @@ def service_uses_graphene_django(service, graphene_django):
 class ExtendGrapheneDjango:
     render = MemFun(props.render)
     service = P.parent(Service, has)
+    p_section_graphene_fields = MemFun(props.p_section_graphene_fields)
+    p_section_exclude = MemFun(props.p_section_exclude)

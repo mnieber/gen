@@ -23,4 +23,4 @@ def module_created(module):
 
 @extend(Module)
 class ExtendModule(StoreTemplateDirs, StoreOutputPaths, StoreDjangoConfigs):
-    p_section_fields = MemFun(props.p_section_fields)
+    p_section_model_fields = MemFun(props.p_section_model_fields)
