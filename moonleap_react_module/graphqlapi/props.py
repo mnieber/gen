@@ -1,6 +1,6 @@
 import ramda as R
 from moonleap.resources.data_type_spec_store import data_type_spec_store
-from moonleap_react_module.formitem.resources import FormItem
+from moonleap_react_module.form.resources import Form
 from moonleap_react_module.loaditemeffect.resources import (
     LoadItemEffect,
     shorten_route_params,
@@ -28,9 +28,11 @@ def p_section_load_item_effect(self, load_item_effect: LoadItemEffect):
     }
 
 
-def p_section_post_form(self, form_item: FormItem):
+def p_section_post_form(self, form: Form):
+    spec = data_type_spec_store.get_spec(form.item_name)
+
     return {
-        "params": "",
+        "params": ", ".join([f"{x.name_camel}: {x.field_type}" for x in spec.fields]),
         "graphql_params": "",
         "graphql_params_inner": "",
         "vars": "",
@@ -39,4 +41,6 @@ def p_section_post_form(self, form_item: FormItem):
 
 def p_section_item_fields(self, item_name):
     spec = data_type_spec_store.get_spec(item_name)
-    return "\n".join([f"          {x.name_camel}," for x in spec.fields])
+    return "\n".join(
+        [f"          {x.name_camel}," for x in spec.fields if not x.private]
+    )

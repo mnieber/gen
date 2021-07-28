@@ -2,7 +2,7 @@
 {% magic_with load_items_effect.item_name as redRose %}
 {% magic_with load_item_effect.item_name as blueDaisy %}
 {% magic_with load_item_effect.name_postfix as Flower %}
-{% magic_with form_item.item_name as purpleOrchid %}
+{% magic_with form.item_name as purpleOrchid %}
 import { normalize, schema } from 'normalizr';
 import { ApiBase } from 'src/api/ApiBase';
 import { ObjT } from 'src/utils/types';
@@ -64,8 +64,8 @@ export class Api extends ApiBase {
 
 {% endfor %}
 
-{% for form_item in res.forms_posted %}
-{% with params = res.p_section_post_form(form_item) %}
+{% for form in res.forms_posted %}
+{% with params = res.p_section_post_form(form) %}
   postPurpleOrchid(
     {{ params.params }}
   ) {
@@ -77,7 +77,10 @@ export class Api extends ApiBase {
         postPurpleOrchid(
 {{ params.graphql_params_inner }}
         ) {
-{{ res.p_section_item_fields(form_item.item_name) }}
+          success,
+          errors {
+            message
+          }
         }
       }`,
       {

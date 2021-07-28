@@ -24,6 +24,9 @@ def _model(field):
         else:
             return f"models.TextField()"
 
+    if t == "date":
+        return f"models.DateField()"
+
     raise Exception(f"Unknown field type: {t}")
 
 

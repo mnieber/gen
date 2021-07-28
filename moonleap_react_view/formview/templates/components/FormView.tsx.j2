@@ -13,12 +13,12 @@ import { GlobalError } from 'src/forms/components/GlobalError';
 import { TextField } from 'src/forms/components/TextField';
 import { SaveButton } from 'src/forms/components/SaveButton';
 
-import './YellowTulipFormView.scss';
+import './YellowTulipView.scss';
 
 type PropsT = {
 };
 
-export const YellowTulipFormView: React.FC<PropsT> = observer(() => {
+export const YellowTulipView: React.FC<PropsT> = observer(() => {
   const { gardenFlowersStore } = useStore();
 
   const initialValues = {
@@ -31,7 +31,7 @@ export const YellowTulipFormView: React.FC<PropsT> = observer(() => {
   };
 
   const formDiv = (
-    <div className="YellowTulipFormView flex flex-col w-full">
+    <div className="YellowTulipView flex flex-col w-full">
       <FormStateProvider
         initialValues={initialValues}
         initialErrors={initialErrors}

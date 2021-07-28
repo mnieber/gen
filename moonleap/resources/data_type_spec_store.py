@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 import yaml
 from moonleap.session import get_session
-from moonleap.utils.case import kebab_to_camel, snake_to_camel, upper0
+from moonleap.utils.case import snake_to_camel, upper0
 
 
 def _type(field_spec):
@@ -94,7 +94,7 @@ class DataTypeSpecStore:
         ]
 
     def get_spec(self, data_type_name):
-        data_type_name = upper0(kebab_to_camel(data_type_name))
+        data_type_name = upper0(data_type_name)
         if data_type_name not in self.spec_by_name:
             data_type_dict = _load_data_type_dict(
                 get_session().settings["spec_dir"], data_type_name

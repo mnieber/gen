@@ -4,5 +4,5 @@ from moonleap import Resource
 
 
 @dataclass
-class FormItem(Resource):
+class Form(Resource):
     item_name: str

@@ -1,6 +1,7 @@
-from moonleap import Prop, add, create_forward, extend, rule, tags
+import moonleap.resource.props as P
+from moonleap import MemFun, add, create_forward, extend, rule, tags
 from moonleap.verbs import has, uses
-from moonleap_project.service import Tool
+from moonleap_project.service import Service, Tool
 from moonleap_tools.pipdependency import PipRequirement
 
 from . import django_configs, props
@@ -25,4 +26,5 @@ def service_uses_graphene_django(service, graphene_django):
 
 @extend(GrapheneDjango)
 class ExtendGrapheneDjango:
-    render = Prop(props.render)
+    render = MemFun(props.render)
+    service = P.parent(Service, has)

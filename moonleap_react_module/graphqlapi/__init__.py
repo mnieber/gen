@@ -26,7 +26,7 @@ class ExtendGraphqlApi:
     render = MemFun(render_templates(__file__))
     items_loaded = P.children(loads, "item")
     item_lists_loaded = P.children(loads, "item-list")
-    forms_posted = P.children(posts, "form-item")
+    forms_posted = P.children(posts, "form")
     api_module = P.parent(Module, has)
     schema_item_names = Prop(props.schema_item_names)
     p_section_load_item_effect = MemFun(props.p_section_load_item_effect)
