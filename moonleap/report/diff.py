@@ -10,12 +10,12 @@ from plumbum import local
 snapshot_fn = ".moonleap/snapshot.json"
 
 
-def _diff_tool(session):
-    return R.path_or("diff", ["bin", "diff_tool"])(session.settings)
+def _diff_tool(settings):
+    return R.path_or("diff", ["bin", "diff_tool"])(settings)
 
 
 def _diff(session, from_dir, to_dir, sudo=False):
-    diff_tool = _diff_tool(session)
+    diff_tool = _diff_tool(session.settings)
     if diff_tool == "meld":
         args = ["meld", from_dir, to_dir]
     else:

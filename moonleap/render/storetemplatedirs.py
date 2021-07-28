@@ -3,14 +3,14 @@ from moonleap.render.add_output_filenames import add_output_filenames
 from moonleap.render.template_renderer import render_templates
 
 
-def render(self, settings, output_root_dir, template_renderer):
+def render(self, output_root_dir, template_renderer):
     all_output_filenames = []
 
     for root_filename, location in self.template_dirs:
         add_output_filenames(
             all_output_filenames,
             render_templates(root_filename, location)(
-                self, settings, output_root_dir, template_renderer
+                self, output_root_dir, template_renderer
             ),
         )
     return all_output_filenames

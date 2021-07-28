@@ -7,19 +7,21 @@ from moonleap.session import get_session
 from moonleap.verbs import is_created_as
 
 
-def _find_or_create_resource(context, block, term):
+def _find_or_create_resource(context, block, term, context_manager):
     for parent_block in block.get_blocks(include_self=True, include_parents=True):
         resource = parent_block.get_resource(term)
         if resource:
             return resource
 
-    resource = _create_resource(term, block)
+    resource = _create_resource(term, block, context_manager)
     block.add_resource_for_term(resource, term, True)
 
     for rule in context.get_rules(is_created_as_rel(term)):
         result = rule.f(resource)
         if result:
-            _process_forwards(context, _to_list_of_forward(result, rule), block)
+            _process_forwards(
+                context, _to_list_of_forward(result, rule), block, context_manager
+            )
 
     return resource
 
@@ -32,10 +34,10 @@ def _find_term_for_resource(resource, block):
     return None
 
 
-def _process_forwards(context, forwards: T.List[Forward], block):
+def _process_forwards(context, forwards: T.List[Forward], block, context_manager):
     for forward in forwards:
         new_obj_resource = forward.obj_res or _find_or_create_resource(
-            context, block, forward.obj
+            context, block, forward.obj, context_manager
         )
         subj_term = _find_term_for_resource(forward.subj_res, block)
         if subj_term is None:
@@ -44,7 +46,9 @@ def _process_forwards(context, forwards: T.List[Forward], block):
         new_rel = Rel(subj_term, forward.verb, forward.obj)
         if not forward.subj_res.has_relation(new_rel, new_obj_resource):
             forward.subj_res.add_relation(new_rel, new_obj_resource)
-            _apply_rules(new_rel, forward.subj_res, new_obj_resource, block)
+            _apply_rules(
+                new_rel, forward.subj_res, new_obj_resource, block, context_manager
+            )
 
 
 def _to_list_of_forward(x, rule):
@@ -57,12 +61,10 @@ def _to_list_of_forward(x, rule):
     return result
 
 
-def _apply_rules(rel, subj_resource, obj_resource, block):
-    session = get_session()
-
+def _apply_rules(rel, subj_resource, obj_resource, block, context_manager):
     has_rule = False
     for context_name in get_extended_context_names(block):
-        context = session.context_manager.get_context(context_name)
+        context = context_manager.get_context(context_name)
 
         for rule in context.get_rules(rel):
             if rule.fltr_subj and not rule.fltr_subj(subj_resource):
@@ -74,7 +76,9 @@ def _apply_rules(rel, subj_resource, obj_resource, block):
             has_rule = True
             result = rule.f(subj_resource, obj_resource)
             if result:
-                _process_forwards(context, _to_list_of_forward(result, rule), block)
+                _process_forwards(
+                    context, _to_list_of_forward(result, rule), block, context_manager
+                )
 
     return has_rule
 
@@ -84,7 +88,7 @@ def is_created_as_rel(term):
 
 
 def apply_rules(root_block, unmatched_rels):
-    session = get_session()
+    context_manager = get_session().context_manager
 
     for block in root_block.get_blocks(include_children=True):
         for term, resource, is_owner in block.get_resource_by_term():
@@ -93,16 +97,21 @@ def apply_rules(root_block, unmatched_rels):
 
             rule = None
             for context_name in get_extended_context_names(block):
-                context = session.context_manager.get_context(context_name)
+                context = context_manager.get_context(context_name)
 
                 for rule in context.get_rules(is_created_as_rel(term)):
                     result = rule.f(resource)
                     if result:
                         _process_forwards(
-                            context, _to_list_of_forward(result, rule), block
+                            context,
+                            _to_list_of_forward(result, rule),
+                            block,
+                            context_manager,
                         )
 
             for rel, obj_resource in resource.get_relations():
                 if not rel.is_inv:
-                    if not _apply_rules(rel, resource, obj_resource, block):
+                    if not _apply_rules(
+                        rel, resource, obj_resource, block, context_manager
+                    ):
                         unmatched_rels.append(rel)

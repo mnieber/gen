@@ -8,12 +8,11 @@ def _create_generic_resource(term, block):
     return Resource()
 
 
-def _create_resource(term, creator_block):
-    session = get_session()
+def _create_resource(term, creator_block, context_manager):
     create_rule = None
 
     for context_name in creator_block.context_names:
-        context = session.context_manager.get_context(context_name)
+        context = context_manager.get_context(context_name)
         local_create_rule = context.get_create_rule(term)
         if local_create_rule:
             if create_rule:
@@ -25,6 +24,8 @@ def _create_resource(term, creator_block):
 
 
 def add_resources_to_blocks(blocks):
+    session = get_session()
+
     for block in R.sort_by(lambda x: x.level)(blocks):
         parent_blocks = block.get_blocks(include_parents=True, include_self=False)
         child_blocks = block.get_blocks(include_children=True, include_self=False)
@@ -54,7 +55,7 @@ def add_resources_to_blocks(blocks):
                         creator_block = child_block
                         break
 
-            resource = _create_resource(term, creator_block)
+            resource = _create_resource(term, creator_block, session.context_manager)
             creator_block.add_resource_for_term(resource, term, True)
             if block is not creator_block:
                 block.add_resource_for_term(resource, term, False)

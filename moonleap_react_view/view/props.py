@@ -131,10 +131,8 @@ def p_section_imports(self):
     return "\n".join(result)
 
 
-def render(self, settings, output_root_dir, template_renderer):
+def render(self, output_root_dir, template_renderer):
     if self.parent_view and len(self.child_components) == 1 and _collapses(self):
         return []
 
-    return render_templates(__file__)(
-        self, settings, output_root_dir, template_renderer
-    )
+    return render_templates(__file__)(self, output_root_dir, template_renderer)

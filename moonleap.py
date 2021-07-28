@@ -13,10 +13,8 @@ def generate_code(spec_file, session):
     blocks = get_blocks(spec_file)
 
     unmatched_rels = create_resources(blocks)
-    render_resources(blocks, session)
-    report_resources(blocks, session, unmatched_rels)
-
-    create_expected_dir(session.expected_dir, session.settings["references"])
+    render_resources(blocks)
+    report_resources(blocks, unmatched_rels)
 
 
 def report(x):
@@ -52,6 +50,7 @@ if __name__ == "__main__":
     spec_fn = Path(args.spec_dir) / "spec.md"
     if args.action == "gen":
         generate_code(spec_fn, session)
+        create_expected_dir(session.expected_dir, session.settings["references"])
 
     if args.action == "diff":
         if args.smart:
