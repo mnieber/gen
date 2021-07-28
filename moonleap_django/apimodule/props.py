@@ -1,10 +1,9 @@
 def _modules(self):
-    # TODO return modules that have a schema
-    return []
+    return [x for x in self.django_app.modules if x.item_types]
 
 
 def p_section_base_classes(self):
-    return ", ".join([f"{x.name_snake}.schema.Query" for x in _modules(self)])
+    return "".join([f"{x.name_snake}.schema.Query, " for x in _modules(self)])
 
 
 def p_section_imports(self):

@@ -1,14 +1,29 @@
-from moonleap.resources.data_type_spec_store import data_type_spec_store
+from moonleap.resources.data_type_spec_store import FK, data_type_spec_store
+
+
+def _on_delete(field):
+    return (
+        "models.CASCADE"
+        if field.spec.get("onDelete", "") == "cascade"
+        else "models.SET_NULL"
+    )
 
 
 def _model(field):
-    t = field.spec["type"]
+    t = field.field_type
+
+    if isinstance(t, FK):
+        flag = "False" if field.required else "True"
+        on_delete = _on_delete(field)
+        return f"models.ForeignKey({t.target}, on_delete={on_delete}, null={flag}, blank={flag})"
+
     if t == "string":
         max_length = field.spec.get("maxLength", None)
         if max_length is not None:
             return f"models.CharField(max_length={max_length})"
         else:
             return f"models.TextField()"
+
     raise Exception(f"Unknown field type: {t}")
 
 
@@ -24,4 +39,4 @@ def p_section_fields(self, item_type):
         model = _model(field)
         result.append(indent + f"{field.name_snake} = {model}")
 
-    return "\n".join(result)
+    return "\n".join(result or [indent + "pass"])

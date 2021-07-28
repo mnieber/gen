@@ -1,5 +1,5 @@
 from moonleap import upper0
-from moonleap.resources.data_type_spec_store import data_type_spec_store
+from moonleap.resources.data_type_spec_store import FK, data_type_spec_store
 from moonleap.utils.magic_replace import magic_replace
 
 load_data_template = """
@@ -32,6 +32,15 @@ def p_section_on_load_data(self):
     return result
 
 
-def p_section_item_fields(self, item_name):
-    spec = data_type_spec_store.get_spec(item_name)
-    return spec.fields
+def p_section_item_fields(self, item_type):
+    result = []
+    spec = data_type_spec_store.get_spec(item_type.name)
+    for field in spec.fields:
+        if field.private:
+            continue
+
+        t = field.field_type
+        t = "string" if isinstance(t, FK) else t
+        result.append(f"  {field.name_camel}: {t};")
+
+    return "\n".join(result)
