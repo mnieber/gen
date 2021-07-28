@@ -1,6 +1,6 @@
 import ramda as R
 from moonleap.resources.data_type_spec_store import data_type_spec_store
-from moonleap_react_module.item.resources import Item
+from moonleap_react_module.formitem.resources import FormItem
 from moonleap_react_module.loaditemeffect.resources import (
     LoadItemEffect,
     shorten_route_params,
@@ -28,7 +28,7 @@ def p_section_load_item_effect(self, load_item_effect: LoadItemEffect):
     }
 
 
-def p_section_post_item(self, item: Item):
+def p_section_post_form(self, form_item: FormItem):
     return {
         "params": "",
         "graphql_params": "",
