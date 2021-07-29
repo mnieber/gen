@@ -30,3 +30,5 @@ class ExtendGrapheneDjango:
     service = P.parent(Service, has)
     p_section_graphene_fields = MemFun(props.p_section_graphene_fields)
     p_section_exclude = MemFun(props.p_section_exclude)
+    p_section_mutation_fields = MemFun(props.p_section_mutation_fields)
+    p_section_query_base_types = MemFun(props.p_section_query_base_types)

@@ -1,5 +1,8 @@
-{% magic_with item_type.name as yellowTulip %}
-{% magic_with form.item_name as redRose %}
+{% magic_with item_type.name_camel as yellowTulip %}
+{% magic_with form.item_name_camel as redRose %}
+{% magic_with item.item_name_camel as blueDaisy %}
+{% magic_with item_list.item_name_camel as purpleOrchid %}
+{% magic_with item_list.item_name_snake as purple_orchid %}
 import graphene
 from graphene.types.datetime import Date
 from graphene_django.types import DjangoObjectType
@@ -12,22 +15,62 @@ from project_requests.utils import create_project_request
 class YellowTulipType(DjangoObjectType):
     class Meta:
         model = YellowTulip
-        exclude = [{{ graphene.p_section_exclude(item_type.name) }}]
+        exclude = [{{ graphene.p_section_exclude(item_type.name_camel) }}]
+
+{% endfor %}
+
+
+{% for item_list in res.item_lists_provided %}
+class PurpleOrchidsQuery:
+    purple_orchids = graphene.List(PurpleOrchidType)
+
+    def resolve_purple_orchids(self, info, **kwargs):
+        return PurpleOrchid.objects.all()
 
 {% endfor %}
 
 {% for form in res.forms %}
-class RedRoseType(graphene.InputObjectType):
-{{ graphene.p_section_graphene_fields(form.item_name) }}
+class RedRoseFormType(graphene.InputObjectType):
+{{ graphene.p_section_graphene_fields(form.item_name_camel + "Form") }}
+
+class SaveRedRose(graphene.Mutation):
+    class Arguments:
+        form = graphene.Argument(RedRoseFormType)
+
+    success = graphene.Boolean()
+
+    @staticmethod
+    def mutate(parent, info, form):
+        # TODO: save form
+        return dict(success=False)
+
+{% endfor %}
+
+{% for item in res.items_received %}
+class SaveBlueDaisy(graphene.Mutation):
+    class Arguments:
+        form = graphene.Argument(BlueDaisyType)
+
+    success = graphene.Boolean()
+
+    @staticmethod
+    def mutate(parent, info, form):
+        # TODO: save form
+        return dict(success=False)
 
 {% endfor %}
 
 
-class Query():
+class Query({{ graphene.p_section_query_base_types(res) }}graphene.ObjectType):
     pass
 
 
-class Mutation():
-    pass
+class Mutation(graphene.ObjectType):
+{{ graphene.p_section_mutation_fields(res) }}
+
+
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

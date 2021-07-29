@@ -4,6 +4,6 @@ from moonleap import Resource
 
 
 @dataclass
-class ItemType(Resource):
-    name_camel: str
-    name_snake: str
+class ItemList(Resource):
+    item_name_camel: str
+    item_name_snake: str

@@ -1,11 +1,11 @@
-{% magic_with item_type.name as yellowTulip %}
+{% magic_with item_type.name_camel as yellowTulip %}
 from django.db import models
 
 from app.models import Entity
 
 {% for item_type in res.item_types %}
 class YellowTulip(Entity):
-{{ res.p_section_model_fields(item_type.name)}}
+{{ res.p_section_model_fields(item_type.name_camel)}}
 
 {% endfor %}
 {% end_magic_with %}

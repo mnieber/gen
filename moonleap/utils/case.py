@@ -25,6 +25,10 @@ def kebab_to_snake(x):
     return x.replace("-", "_")
 
 
+def snake_to_kebab(x):
+    return x.replace("_", "-")
+
+
 def snake_to_camel(x):
     components = x.split("_")
     return components[0] + "".join(x.title() for x in components[1:])
