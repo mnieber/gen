@@ -32,6 +32,9 @@ def _graphene_field(field):
     if t == "string":
         return f"graphene.String()"
 
+    if t == "bool":
+        return f"graphene.Boolean()"
+
     if t == "date":
         return f"graphene.types.datetime.Date()"
 
@@ -60,14 +63,13 @@ def p_section_mutation_fields(self, module):
 
     for form in module.forms:
         result.append(
-            indent
-            + f"save_{form.item_name_snake}_form = Save{upper0(form.item_name_camel)}Form.Field()"
+            indent + f"{form.item_name_snake} = {upper0(form.item_name_camel)}.Field()"
         )
 
     for item in module.items_received:
         result.append(
             indent
-            + f"save_{item.item_name_snake} = Save{upper0(item.item_name_camel)}.Field()"
+            + f"post_{item.item_name_snake} = Post{upper0(item.item_name_camel)}.Field()"
         )
 
     return "\n".join(result or [indent + "pass"])
