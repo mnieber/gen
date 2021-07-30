@@ -3,6 +3,9 @@ from moonleap_project.dockercompose import DockerComposeConfig
 
 def get(service, is_dev):
     def inner():
+        if not service.dockerfile and not service.docker_image:
+            return {}
+
         image_postfix = "_dev" if is_dev else ""
 
         port = service.port or "80"
