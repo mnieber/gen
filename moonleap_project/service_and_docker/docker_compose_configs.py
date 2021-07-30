@@ -10,7 +10,7 @@ def get(service, is_dev):
             depends_on=[],
             ports=[f"{port}:{port}"],
             image=(
-                f"{service.project.name}_{service.name}{image_postfix}"
+                f"{service.project.name_snake}_{service.name}{image_postfix}"
                 if service.dockerfile
                 else service.docker_image.name
             ),

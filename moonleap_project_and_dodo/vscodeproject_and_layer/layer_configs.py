@@ -7,7 +7,7 @@ from moonleap_dodo.layer import LayerConfig
 def get(project):
     settings = get_session().settings
     base_dir = settings.get("code_workspaces_dir", settings["references"]["src"])
-    code_workspace_fn = os.path.join(base_dir, f"{project.name}.code-workspace")
+    code_workspace_fn = os.path.join(base_dir, f"{project.name_snake}.code-workspace")
 
     def inner():
         return dict(ROOT=dict(aliases=dict(code=f'exec "code {code_workspace_fn}"')))

@@ -4,7 +4,7 @@ from moonleap_dodo.layer import LayerConfig
 def get(docker_compose):
     def inner():
         project = docker_compose.project
-        name = project.name + "_dev"
+        name = project.name_snake + "_dev"
         return {
             "DOCKER_COMPOSE": {
                 "compose_project_name": name,

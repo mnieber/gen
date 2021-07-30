@@ -26,7 +26,7 @@ def get_docker_options(service):
             #
             DOCKER_OPTIONS={
                 #
-                "*": {"container": f"{project.name}_dev_{service.name}_1"}
+                "*": {"container": f"{project.name_snake}_dev_{service.name}_1"}
             }
         )
 
