@@ -13,6 +13,10 @@ def get(layer_group):
                     str(i + 1): r"${/ROOT/src_dir}/" + ("" if i == 0 else layer.name)
                     for i, layer in enumerate(layer_group.layers)
                 },
+                "ctrl": {
+                    "1": r"${/ROOT/project_dir}/",
+                    "2": r"~/",
+                },
             }
         )
 
