@@ -12,9 +12,6 @@ from . import (
     itemlist,
     itemtype,
     module,
-    postgresservice,
-    strapi,
-    strapidockerimage,
 )
 
 modules = [
@@ -31,7 +28,4 @@ modules = [
     itemlist,
     itemtype,
     module,
-    postgresservice,
-    strapi,
-    strapidockerimage,
 ]
