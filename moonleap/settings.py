@@ -10,7 +10,7 @@ from moonleap.utils.merge_into_config import merge_into_config
 def load_settings(settings_fn):
     settings = {}
 
-    global_settings_fn = ".moonleap.config.yml"
+    global_settings_fn = os.path.expanduser("~/.moonleap.config.yml")
     if os.path.exists(global_settings_fn):
         with open(global_settings_fn) as ifs:
             merge_into_config(settings, yaml2dict(ifs.read()))
