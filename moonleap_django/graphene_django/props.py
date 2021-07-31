@@ -23,7 +23,25 @@ def _fields(spec):
     return [x for x in spec.fields if x.name_snake != "id"]
 
 
-def _graphene_field(field):
+def _default_value(field, item_name_camel):
+    t = field.field_type
+
+    if isinstance(t, FK):
+        return f"{field.name_snake}_id"
+
+    if t == "string":
+        return f'"foo"'
+
+    if t == "bool":
+        return f"true or false"
+
+    if t == "date":
+        return f'"01-02-2003"'
+
+    raise Exception(f"Unknown graphene field type: {t} in spec for {item_name_camel}")
+
+
+def _graphene_field(field, item_name_camel):
     t = field.field_type
 
     if isinstance(t, FK):
@@ -38,7 +56,7 @@ def _graphene_field(field):
     if t == "date":
         return f"graphene.types.datetime.Date()"
 
-    raise Exception(f"Unknown graphene field type: {t}")
+    raise Exception(f"Unknown graphene field type: {t} in spec for {item_name_camel}")
 
 
 def p_section_graphene_fields(self, item_name_camel):
@@ -46,7 +64,7 @@ def p_section_graphene_fields(self, item_name_camel):
     indent = "    "
     spec = data_type_spec_store.get_spec(item_name_camel)
     for field in _fields(spec):
-        graphene_field = _graphene_field(field)
+        graphene_field = _graphene_field(field, item_name_camel)
         result.append(indent + f"{field.name_snake} = {graphene_field}")
 
     return "\n".join(result or [indent + "pass"])
@@ -82,3 +100,42 @@ def p_section_query_base_types(self, module):
         result.append(f"{upper0(plural(item_list.item_name_camel))}Query, ")
 
     return "".join(result)
+
+
+def p_section_form_arguments(self, item_name_camel):
+    result = []
+    indent = " " * 20
+    spec = data_type_spec_store.get_spec(item_name_camel)
+
+    for field in spec.fields:
+        quote = '"' if field.field_type == "string" else ""
+        result.append(
+            f"{indent}{field.name_camel}: {quote}{{{field.name_camel}}}{quote}, "
+        )
+
+    return "\n".join(result)
+
+
+def p_section_form_values(self, item_name_camel):
+    result = []
+    indent = " " * 16
+    spec = data_type_spec_store.get_spec(item_name_camel)
+
+    for field in spec.fields:
+        value = _default_value(field, item_name_camel)
+        result.append(f"{indent}{field.name_camel}={value}, ")
+
+    return "\n".join(result)
+
+
+def p_section_item_fields(self, item_name_camel):
+    result = []
+    indent = " " * 16
+    spec = data_type_spec_store.get_spec(item_name_camel)
+
+    for field in spec.fields:
+        if field.private:
+            continue
+        result.append(indent + field.name_camel + ", ")
+
+    return "\n".join(result)

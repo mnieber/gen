@@ -32,3 +32,6 @@ class ExtendGrapheneDjango:
     p_section_exclude = MemFun(props.p_section_exclude)
     p_section_mutation_fields = MemFun(props.p_section_mutation_fields)
     p_section_query_base_types = MemFun(props.p_section_query_base_types)
+    p_section_form_arguments = MemFun(props.p_section_form_arguments)
+    p_section_form_values = MemFun(props.p_section_form_values)
+    p_section_item_fields = MemFun(props.p_section_item_fields)

@@ -7,10 +7,6 @@ import graphene
 from graphene.types.datetime import Date
 from graphene_django.types import DjangoObjectType
 
-from project_requests.models import ProjectRequest
-from project_requests.utils import create_project_request
-
-
 {% for item_type in res.item_types %}
 class YellowTulipType(DjangoObjectType):
     class Meta:
