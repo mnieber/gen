@@ -1,0 +1,14 @@
+{% clean_up_py_imports %}
+from django.conf import settings
+from django.conf.urls.static import static
+{% for url_import in res.get_settings_or([], ["urls_imports"]) %}
+{{ url_import }}
+{% endfor %}
+{% end_clean_up_py_imports %}
+
+urlpatterns = [
+{% for url in res.get_settings_or([], ["urls"]) %}
+    {{ url}},
+{% endfor %}
+    # TODO add urls from other apps
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
