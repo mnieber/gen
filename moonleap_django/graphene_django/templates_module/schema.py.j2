@@ -29,7 +29,7 @@ class PurpleOrchidsQuery:
 class RedRoseFormType(graphene.InputObjectType):
 {{ graphene.p_section_graphene_fields(form.item_name_camel + "Form") }}
 
-class PostRedRose(graphene.Mutation):
+class RedRose(graphene.Mutation):
     class Arguments:
         form = graphene.Argument(RedRoseFormType)
 
@@ -38,7 +38,7 @@ class PostRedRose(graphene.Mutation):
     @staticmethod
     def mutate(parent, info, form):
         # TODO: post form
-        return dict(success=False)
+        return RedRose(success=False)
 
 {% endfor %}
 
@@ -52,7 +52,7 @@ class PostBlueDaisy(graphene.Mutation):
     @staticmethod
     def mutate(parent, info, form):
         # TODO: post form
-        return dict(success=False)
+        return PostBlueDaisy(success=False)
 
 {% endfor %}
 
