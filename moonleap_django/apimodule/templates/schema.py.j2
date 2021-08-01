@@ -2,8 +2,11 @@ import graphene
 
 {{ res.p_section_imports }}
 
-class Query({{ res.p_section_base_classes }}graphene.ObjectType):
+class Query({{ res.p_section_base_classes("Query") }}):
+    pass
+
+class Mutation({{ res.p_section_base_classes("Mutation") }}):
     pass
 
 
-schema = graphene.Schema(query=Query)
+schema = graphene.Schema(query=Query, mutation=Mutation)
