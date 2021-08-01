@@ -14,6 +14,9 @@ def create_layer_group(term, block):
     return layer_group
 
 
+empty_rules = [("layer-group", contains, "layer")]
+
+
 @extend(LayerGroup)
 class ExtendLayerGroup(StoreLayerConfigs):
     layers = P.children(contains, "layer")

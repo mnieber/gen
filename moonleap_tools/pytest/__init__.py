@@ -36,6 +36,9 @@ def service_has_pytest_html(service, pytest):
         return create_forward(service, has, ":tool", pytest.pytest_html)
 
 
+empty_rules = [("pytest", with_, "pytest-html")]
+
+
 @extend(Pytest)
 class ExtendPytest:
     pytest_html = P.child(with_, "pytest-html")

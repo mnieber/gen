@@ -17,6 +17,9 @@ def create_item_type(term, block):
     return item_type
 
 
+empty_rules = [("module", provides, "item-type")]
+
+
 @extend(Module)
 class ExtendModule:
     item_types = P.children(provides, "item-type")

@@ -1,6 +1,6 @@
 import bisect
 
-from moonleap.builder.install import get_symbols
+from moonleap.builder.install import get_empty_rules, get_symbols
 from moonleap.parser.term import word_to_term
 from moonleap.resource.rel import fuzzy_match
 
@@ -20,6 +20,9 @@ class Context:
 
             if hasattr(f, "moonleap_rule"):
                 bisect.insort(self.rules, f.moonleap_rule)
+
+        for rule in get_empty_rules(module):
+            bisect.insort(self.rules, rule)
 
     def get_create_rule(self, subj_term):
         result = None

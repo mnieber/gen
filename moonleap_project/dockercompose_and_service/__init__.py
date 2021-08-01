@@ -13,6 +13,9 @@ def service_has_tool(service, tool):
     )
 
 
+empty_rules = [("docker-compose", runs, "service")]
+
+
 @extend(DockerCompose)
 class ExtendDockerCompose:
     services = P.children(runs, "service")

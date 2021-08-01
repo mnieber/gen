@@ -14,6 +14,9 @@ def create_form(term, block):
     return form
 
 
+empty_rules = [("module", receives, "form")]
+
+
 @extend(Module)
 class ExtendModule:
     forms = P.children(receives, "form")
