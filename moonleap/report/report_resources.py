@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 import markdown
-from moonleap.parser.term import term_to_word, verb_to_word
+from moonleap.parser.term import term_to_word, verb_to_word, word_to_term
 from moonleap.render.template_renderer import _render
 from moonleap.session import get_session
 
@@ -69,14 +69,16 @@ def create_index(blocks, unmatched_rels):
     def to_rel_str(rel):
         subj = term_to_word(rel.subj)
         obj = term_to_word(rel.obj)
-        return f"{subj} {verb_to_word(rel.verb)} {obj}"
+        return f"{subj} /{verb_to_word(rel.verb)} {obj}"
 
     template_fn = Path(__file__).parent / "templates" / "index.md.j2"
 
-    resource_by_term = []
+    resource_by_term_str = {}
     root_block = blocks[0]
     for block in root_block.get_blocks(include_children=True):
-        resource_by_term += block.get_resource_by_term()
+        for term, resource, is_owner in block.get_resource_by_term():
+            if is_owner:
+                resource_by_term_str[term_to_word(term)] = resource
 
     unmatched_rel_strs = [
         to_rel_str(rel) for rel in unmatched_rels if rel.subj and rel.obj
@@ -85,7 +87,9 @@ def create_index(blocks, unmatched_rels):
         template_fn,
         None,
         settings=get_session().settings,
-        resource_by_term=[x for x in resource_by_term if x[0]],
+        resource_by_term_str=sorted(
+            list(resource_by_term_str.items()), key=lambda x: x[0]
+        ),
         unmatched_rel_strs=unmatched_rel_strs,
     )
     return (
