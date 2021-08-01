@@ -109,7 +109,9 @@ def has_symbol(x, text):
 
 
 def filter_packages(record, other_text):
-    record["packages"] = [x for x in record["packages"] if has_symbol(x, other_text)]
+    record["packages"] = R.uniq(
+        [x for x in record["packages"] if has_symbol(x, other_text)]
+    )
     record["star"] = [x for x in record["star"] if has_symbol(x, other_text)]
     record["singleton"] = [x for x in record["singleton"] if has_symbol(x, other_text)]
 
