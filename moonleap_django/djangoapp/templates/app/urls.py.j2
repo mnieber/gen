@@ -1,6 +1,8 @@
 {% clean_up_py_imports %}
 from django.conf import settings
 from django.conf.urls.static import static
+from django.urls import path
+from django.views.decorators.csrf import csrf_exempt
 {% for url_import in res.get_settings_or([], ["urls_imports"]) %}
 {{ url_import }}
 {% endfor %}
