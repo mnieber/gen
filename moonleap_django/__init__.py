@@ -12,6 +12,7 @@ from . import (
     itemlist,
     itemtype,
     module,
+    usersmodule,
 )
 
 modules = [
@@ -28,4 +29,5 @@ modules = [
     itemlist,
     itemtype,
     module,
+    usersmodule,
 ]

@@ -20,6 +20,8 @@ def _create_resource(term, creator_block, context_manager):
             create_rule = local_create_rule
 
     resource = (create_rule or _create_generic_resource)(term, creator_block)
+    if resource is None:
+        raise Exception(f"Resource creation rule returned None: {create_rule}")
     return resource
 
 
