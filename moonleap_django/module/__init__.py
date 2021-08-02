@@ -1,6 +1,14 @@
-from moonleap import MemFun, StoreOutputPaths, add, extend, kebab_to_snake, rule, tags
+from moonleap import (
+    MemFun,
+    StoreOutputPaths,
+    add,
+    extend,
+    kebab_to_camel,
+    kebab_to_snake,
+    rule,
+    tags,
+)
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
-from moonleap.utils.case import snake_to_camel
 from moonleap_django.djangoapp import StoreDjangoConfigs
 
 from . import django_configs, props
@@ -9,8 +17,9 @@ from .resources import Module  # noqa
 
 @tags(["module"])
 def create_module(term, block):
+    name_camel = kebab_to_camel(term.data)
     name_snake = kebab_to_snake(term.data)
-    module = Module(name_snake=name_snake, name_camel=snake_to_camel(name_snake))
+    module = Module(name_snake=name_snake, name_camel=name_camel)
     module.output_path = module.name_snake
     module.add_template_dir(__file__, "templates")
     return module
