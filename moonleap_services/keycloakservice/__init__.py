@@ -4,10 +4,11 @@ from moonleap_project.service import create_service
 keycloak_env_fn = "./env/keycloak.env"
 
 
-@tags(["keycloak"])
+@tags(["keycloak:service"])
 def create_keycloak(term, block):
     keycloak_service = create_service(term, block)
     keycloak_service.env_files.append(keycloak_env_fn)
+    return keycloak_service
 
 
 @rule("keycloak:service")
