@@ -5,6 +5,7 @@
 {% magic_with item_list.item_name_camel as purpleOrchid %}
 {% magic_with item_list.item_name_snake as purple_orchid %}
 import pytest
+from django.test import Client
 
 class TestSchema:
     @pytest.fixture()
