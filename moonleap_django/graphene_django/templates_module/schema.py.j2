@@ -6,6 +6,9 @@
 import graphene
 from graphene.types.datetime import Date
 from graphene_django.types import DjangoObjectType
+{% for item_type in res.item_types %}
+from {{ item_type.module.name_snake }}.models import YellowTulip
+{% endfor %}
 
 {% for item_type in res.item_types %}
 class YellowTulipType(DjangoObjectType):
