@@ -20,9 +20,9 @@ automatically. The key ideas behind this approach are:
 - the code generator turns these nouns and verbs into a directed graph of resources. For every resource, code is generated
   by rendering text templates that have access to the information in that resource.
 
-- the result is treated as a skeleton example project that serves as the starting point for the real project.
-  Changes in the skeleton can be copied to the real project using a diff/merge tool such as Meld. This way, the spec, the
-  skeleton and the real project evolve side by side. More importantly, it means that the skeleton project does not have to be
+- the result is treated as a shadow project that serves as the starting point for the real project.
+  Changes in the shadow can be copied to the real project using a diff/merge tool such as Meld. This way, the spec, the
+  shadow and the real project evolve side by side. More importantly, it means that the shadow project does not have to be
   perfect, it only has to be useful.
 
 - Moonleap is intended to be customized. A developer can introduce their own set of nouns and verbs, and add rules and
