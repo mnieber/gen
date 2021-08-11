@@ -13,7 +13,6 @@ from . import (
     project_and_service,
     service,
     service_and_docker,
-    srcdir,
     vscodeproject,
 )
 
@@ -26,7 +25,6 @@ modules = [
     (project_and_service),
     (service),
     (service_and_docker),
-    (srcdir),
     (vscodeproject),
 ]
 

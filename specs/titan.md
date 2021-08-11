@@ -1,7 +1,6 @@
 # The titan:project
 
-The titan:project /has a :src-dir that /stores files from the mnieber/test:git-repository.
-:It /has a frontend:service that is /configured in the frontend:layer.
+The titan:project /has a frontend:service that is /configured in the frontend:layer.
 :It /has a backend:service that is /configured in the backend:layer.
 :It /uses a :vscode-project.
 

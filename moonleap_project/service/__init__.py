@@ -47,7 +47,6 @@ class ExtendService(
     StoreOutputPaths,
     StoreTemplateDirs,
 ):
-    src_dir = P.child(has, "src-dir")
     tools = P.children(has, "tool")
 
 
