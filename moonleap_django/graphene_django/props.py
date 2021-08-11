@@ -3,6 +3,7 @@ from moonleap.render.template_renderer import render_templates
 from moonleap.resources.data_type_spec_store import FK, data_type_spec_store
 from moonleap.utils.case import upper0
 from moonleap.utils.inflect import plural
+from moonleap.utils.magic_replace import magic_replace
 
 
 def render(self, output_root_dir, template_renderer):
@@ -27,16 +28,16 @@ def _default_value(field, item_name):
     t = field.field_type
 
     if isinstance(t, FK):
-        return f"{field.name_snake}_id"
+        return f"{field.name_snake}.id"
 
     if t == "string":
-        return f'"foo"'
+        return r'"foo"'
 
     if t == "bool":
-        return f"true or false"
+        return r"True"
 
     if t == "date":
-        return f'"01-02-2003"'
+        return r'"01-02-2003"'
 
     raise Exception(f"Unknown graphene field type: {t} in spec for {item_name}")
 
@@ -45,16 +46,16 @@ def _graphene_field(field, item_name):
     t = field.field_type
 
     if isinstance(t, FK):
-        return f"graphene.ID()"
+        return r"graphene.ID()"
 
     if t == "string":
-        return f"graphene.String()"
+        return r"graphene.String()"
 
     if t == "bool":
-        return f"graphene.Boolean()"
+        return r"graphene.Boolean()"
 
     if t == "date":
-        return f"graphene.types.datetime.Date()"
+        return r"graphene.types.datetime.Date()"
 
     raise Exception(f"Unknown graphene field type: {t} in spec for {item_name}")
 
@@ -103,18 +104,6 @@ def p_section_query_base_types(self, module):
     return "".join(result)
 
 
-def p_section_form_arguments(self, item_name):
-    result = []
-    indent = " " * 20
-    spec = data_type_spec_store.get_spec(item_name)
-
-    for field in spec.fields:
-        quote = '"' if field.field_type == "string" else ""
-        result.append(f"{indent}{field.name}: {quote}{{{field.name}}}{quote}, ")
-
-    return "\n".join(result)
-
-
 def p_section_form_values(self, item_name):
     result = []
     indent = " " * 16
@@ -127,14 +116,94 @@ def p_section_form_values(self, item_name):
     return "\n".join(result)
 
 
-def p_section_item_fields(self, item_name):
+def p_section_item_list_query(self, item_list):
     result = []
-    indent = " " * 16
-    spec = data_type_spec_store.get_spec(item_name)
+    spec = data_type_spec_store.get_spec(item_list.item_name)
+    fields = [x for x in spec.fields if not x.private]
 
-    for field in spec.fields:
-        if field.private:
-            continue
-        result.append(indent + field.name + ", ")
+    if True:
+        result.append("def create_red_roses_query(self, output_values):")
+        result.append('  query = f"""')
+        result.append("      query {{")
+        result.append("        redRoses {{")
+        result.append('          ",\n          ".join(output_values)')
+        result.append("        }}")
+        result.append("      }}")
+        result.append('    """.format()')
+        result.append("  return query")
 
-    return "\n".join(result)
+    return magic_replace(
+        "\n".join(result),
+        [
+            ("red_rose", item_list.item_name_snake),
+            ("redRose", item_list.item_name),
+        ],
+    )
+
+
+def _add_mutation_fields(fields, result):
+    for field in fields:
+        if field.field_type == "bool":
+            result.append(
+                f'          {field.name}: {{"true" if {field.name_snake} else "false"}},'
+            )
+        else:
+            result.append(f'          {field.name}: "{{{field.name_snake}}}",')
+
+
+def p_section_form_mutation(self, form):
+    result = []
+    spec = data_type_spec_store.get_spec(form.item_name + "Form")
+    fields = [x for x in spec.fields if not x.private]
+    args = (", " if fields else "") + ", ".join([x.name_snake for x in fields])
+
+    if True:
+        result.append(f"def create_red_rose_mutation(self{args}, output_values):")
+        result.append(r'  query = f"""')
+        result.append(r"      mutation {{")
+        result.append(r"        redRose(")
+    _add_mutation_fields(fields, result)
+    if True:
+        result.append("        ) {{")
+        result.append('          {", ".join(output_values)}')
+        result.append("        }}")
+        result.append("      }}")
+        result.append('    """')
+        result.append("  return query")
+
+    return magic_replace(
+        "\n".join(result),
+        [
+            ("red_rose", form.item_name_snake),
+            ("redRose", form.item_name),
+        ],
+    )
+
+
+def p_section_post_item_mutation(self, item):
+    result = []
+    spec = data_type_spec_store.get_spec(item.item_name)
+    fields = [x for x in spec.fields if not x.private]
+    args = (", " if fields else "") + ", ".join([x.name_snake for x in fields])
+
+    if True:
+        result.append(f"def create_post_red_rose_mutation(self{args}, output_values):")
+        result.append(r'  query = f"""')
+        result.append(r"      mutation {{")
+        result.append(r"        postRedRose(")
+    _add_mutation_fields(fields, result)
+    if True:
+        result.append("        ) {{")
+        result.append('          {", ".join(output_values)}')
+        result.append("        }}")
+        result.append("      }}")
+        result.append('    """')
+        result.append("  return query")
+
+    return magic_replace(
+        "\n".join(result),
+        [
+            ("red_rose", item.item_name_snake),
+            ("redRose", item.item_name),
+        ],
+    )

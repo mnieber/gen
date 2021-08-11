@@ -1,0 +1,11 @@
+{% for item_list in res.item_lists_provided %}
+{{ graphene.p_section_item_list_query(item_list) }}
+{% endfor %}
+
+{% for form in res.forms %}
+{{ graphene.p_section_form_mutation(form) }}
+{% endfor %}
+
+{% for item in res.items_received %}
+{{ graphene.p_section_post_item_mutation(item) }}
+{% endfor %}

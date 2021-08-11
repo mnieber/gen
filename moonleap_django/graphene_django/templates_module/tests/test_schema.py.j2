@@ -1,7 +1,7 @@
 {% magic_with item.item_name as yellowTulip %}
 {% magic_with item.item_name_snake as yellow_tulip %}
-{% magic_with form.item_name as redRose %}
 {% magic_with form.item_name_snake as red_rose %}
+{% magic_with form.item_name as redRose %}
 {% magic_with item_list.item_name as purpleOrchid %}
 {% magic_with item_list.item_name_snake as purple_orchid %}
 import pytest
@@ -15,11 +15,7 @@ class TestSchema:
 {% for item_list in res.item_lists_provided %}
     @pytest.mark.django_db()
     def test_query_purple_orchid(self, client: Client):
-        query = """query {{ '{{' }}
-            purpleOrchids {{ '{{' }}
-{{ graphene.p_section_item_fields(item_list.item_name) }}
-            {{ '}}' }}
-        {{ '}}' }}""".format()
+        query = create_purple_orchids_query()
         response = client.get("/graphql/", dict(query=query))
 
         # check that the response is as expected
@@ -31,42 +27,28 @@ class TestSchema:
 {% for form in res.forms %}
     @pytest.mark.django_db()
     def test_red_rose(self, client: Client):
-        query = """mutation {{ '{{' }}
-            redRose(
-                form: {{ '{{' }}
-{{ graphene.p_section_form_arguments(form.item_name + "Form") }}
-                {{ '}}' }}
-            ) {{ '{{' }}
-                success
-            {{ '}}' }}
-        }""".format(
-{{ graphene.p_section_form_values(form.item_name + "Form") }}
-        )
+        query = create_red_rose_mutation(
+            {{ graphene.p_section_form_values(form.item_name + "Form") }}
+        );
         response = client.post("/graphql/", dict(query=query))
 
         # check that the response is as expected
         assert response.json() == {
-            "data": {"register": {"success": True} }
+            "data": {"redRose": {"success": True} }
         }
 
 {% endfor %}
 {% for item in res.items_received %}
     @pytest.mark.django_db()
     def test_post_yellow_tulip(self, client: Client):
-        query="""mutation {{ '{{' }}
-            postYellowTulip(
-{{ graphene.p_section_form_arguments(item.item_name) }}
-            ) {{ '{{' }}
-                success
-            {{ '}}' }}
-        {{ '}}' }}""".format(
-{{ graphene.p_section_form_values(item.item_name) }}
-        )
+        query = create_post_yellow_tulip_mutation(
+            {{ graphene.p_section_form_values(item.item_name) }}
+        );
         response = client.post("/graphql/", dict(query=query))
 
         # check that the response is as expected
         assert response.json() == {
-            "data": {"register": {"success": True}}
+            "data": {"postYellowTulip": {"success": True}}
         }
 {% endfor %}
 

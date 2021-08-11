@@ -15,17 +15,23 @@ def _model(field):
     if isinstance(t, FK):
         flag = "False" if field.required else "True"
         on_delete = _on_delete(field)
-        return f"models.ForeignKey({t.target}, on_delete={on_delete}, null={flag}, blank={flag})"
+        return (
+            f"models.ForeignKey({t.target}, on_delete={on_delete}, "
+            + f"null={flag}, blank={flag})"
+        )
 
     if t == "string":
         max_length = field.spec.get("maxLength", None)
         if max_length is not None:
             return f"models.CharField(max_length={max_length})"
         else:
-            return f"models.TextField()"
+            return r"models.TextField()"
+
+    if t == "bool":
+        return r"models.BooleanField()"
 
     if t == "date":
-        return f"models.DateField()"
+        return r"models.DateField()"
 
     raise Exception(f"Unknown model field type: {t}")
 
