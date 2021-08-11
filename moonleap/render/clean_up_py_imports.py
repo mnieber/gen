@@ -121,7 +121,9 @@ def post_process_clean_up_py_imports(lines):
             count -= 1
             removing = False
             block_text = os.linesep.join(block)
-            for location, record in parse_imports(block_text).items():
+            for location, record in sorted(
+                parse_imports(block_text).items(), key=lambda x: x[0]
+            ):
                 filter_modules(record, other_text)
                 if record["modules"]:
                     location = record["location"]
