@@ -7,7 +7,7 @@ def get(module):
         {
             "installed_apps": {
                 "LOCAL_APPS": [
-                    f"{module.name_snake}.apps.{upper0(module.name_camel)}Config",
+                    f"{module.name_snake}.apps.{upper0(module.name)}Config",
                 ],
             },
         }

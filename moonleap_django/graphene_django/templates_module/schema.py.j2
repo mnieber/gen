@@ -1,7 +1,7 @@
-{% magic_with item_type.name_camel as yellowTulip %}
-{% magic_with form.item_name_camel as redRose %}
-{% magic_with item.item_name_camel as blueDaisy %}
-{% magic_with item_list.item_name_camel as purpleOrchid %}
+{% magic_with item_type.name as yellowTulip %}
+{% magic_with form.item_name as redRose %}
+{% magic_with item.item_name as blueDaisy %}
+{% magic_with item_list.item_name as purpleOrchid %}
 {% magic_with item_list.item_name_snake as purple_orchid %}
 import graphene
 from graphene_django.types import DjangoObjectType
@@ -13,7 +13,7 @@ from {{ item_type.module.name_snake }}.models import YellowTulip
 class YellowTulipType(DjangoObjectType):
     class Meta:
         model = YellowTulip
-        exclude = [{{ graphene.p_section_exclude(item_type.name_camel) }}]
+        exclude = [{{ graphene.p_section_exclude(item_type.name) }}]
 
 {% endfor %}
 
@@ -29,7 +29,7 @@ class PurpleOrchidsQuery:
 
 {% for form in res.forms %}
 class RedRoseFormType(graphene.InputObjectType):
-{{ graphene.p_section_graphene_fields(form.item_name_camel + "Form") }}
+{{ graphene.p_section_graphene_fields(form.item_name + "Form") }}
 
 class RedRose(graphene.Mutation):
     class Arguments:

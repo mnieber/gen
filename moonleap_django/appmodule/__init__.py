@@ -10,7 +10,7 @@ from .resources import AppModule  # noqa
 @tags(["app:module"])
 def create_app_module(term, block):
     name_snake = kebab_to_snake(term.data)
-    module = AppModule(name_snake=name_snake, name_camel=snake_to_camel(name_snake))
+    module = AppModule(name_snake=name_snake, name=snake_to_camel(name_snake))
     module.output_path = module.name_snake
     return module
 

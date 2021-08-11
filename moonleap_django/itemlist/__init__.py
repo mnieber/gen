@@ -9,10 +9,10 @@ from .resources import ItemList
 
 @tags(["item-list"])
 def create_item_list(term, block):
-    name_camel = kebab_to_camel(term.data)
+    name = kebab_to_camel(term.data)
     name_snake = kebab_to_snake(term.data)
     item_list = ItemList(
-        item_name_camel=name_camel,
+        item_name=name,
         item_name_snake=name_snake,
     )
     return item_list

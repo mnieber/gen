@@ -17,9 +17,9 @@ from .resources import Module  # noqa
 
 @tags(["module"])
 def create_module(term, block):
-    name_camel = kebab_to_camel(term.data)
+    name = kebab_to_camel(term.data)
     name_snake = kebab_to_snake(term.data)
-    module = Module(name_snake=name_snake, name_camel=name_camel)
+    module = Module(name_snake=name_snake, name=name)
     module.output_path = module.name_snake
     module.add_template_dir(__file__, "templates")
     return module

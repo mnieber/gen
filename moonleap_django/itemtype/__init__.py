@@ -8,10 +8,10 @@ from .resources import ItemType
 
 @tags(["item-type"])
 def create_item_type(term, block):
-    name_camel = kebab_to_camel(term.data)
+    name = kebab_to_camel(term.data)
     name_snake = kebab_to_snake(term.data)
     item_type = ItemType(
-        name_camel=name_camel,
+        name=name,
         name_snake=name_snake,
     )
     return item_type

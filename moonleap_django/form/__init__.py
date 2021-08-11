@@ -8,9 +8,9 @@ from .resources import Form
 
 @tags(["form"])
 def create_form(term, block):
-    item_name_camel = kebab_to_camel(term.data)
+    item_name = kebab_to_camel(term.data)
     item_name_snake = kebab_to_snake(term.data)
-    form = Form(item_name_camel=item_name_camel, item_name_snake=item_name_snake)
+    form = Form(item_name=item_name, item_name_snake=item_name_snake)
     return form
 
 

@@ -11,7 +11,7 @@ from .resources import ApiModule  # noqa
 @tags(["api:module"])
 def create_api_module(term, block):
     name_snake = kebab_to_snake(term.data)
-    module = ApiModule(name_snake=name_snake, name_camel=snake_to_camel(name_snake))
+    module = ApiModule(name_snake=name_snake, name=snake_to_camel(name_snake))
     module.output_path = module.name_snake
     module.add_template_dir(__file__, "templates")
     return module

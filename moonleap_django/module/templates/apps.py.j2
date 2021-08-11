@@ -1,4 +1,4 @@
 from django.apps import AppConfig
 
-class {{ res.name_camel | upper0 }}Config(AppConfig):
+class {{ res.name | upper0 }}Config(AppConfig):
     name = "{{ res.name_snake }}"

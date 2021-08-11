@@ -1,8 +1,8 @@
-{% magic_with item.item_name_camel as yellowTulip %}
+{% magic_with item.item_name as yellowTulip %}
 {% magic_with item.item_name_snake as yellow_tulip %}
-{% magic_with form.item_name_camel as redRose %}
+{% magic_with form.item_name as redRose %}
 {% magic_with form.item_name_snake as red_rose %}
-{% magic_with item_list.item_name_camel as purpleOrchid %}
+{% magic_with item_list.item_name as purpleOrchid %}
 {% magic_with item_list.item_name_snake as purple_orchid %}
 import pytest
 from django.test import Client
@@ -17,7 +17,7 @@ class TestSchema:
     def test_query_purple_orchid(self, client: Client):
         query = """query {{ '{{' }}
             purpleOrchids {{ '{{' }}
-{{ graphene.p_section_item_fields(item_list.item_name_camel) }}
+{{ graphene.p_section_item_fields(item_list.item_name) }}
             {{ '}}' }}
         {{ '}}' }}""".format()
         response = client.get("/graphql/", dict(query=query))
@@ -34,13 +34,13 @@ class TestSchema:
         query = """mutation {{ '{{' }}
             redRose(
                 form: {{ '{{' }}
-{{ graphene.p_section_form_arguments(form.item_name_camel + "Form") }}
+{{ graphene.p_section_form_arguments(form.item_name + "Form") }}
                 {{ '}}' }}
             ) {{ '{{' }}
                 success
             {{ '}}' }}
         }""".format(
-{{ graphene.p_section_form_values(form.item_name_camel + "Form") }}
+{{ graphene.p_section_form_values(form.item_name + "Form") }}
         )
         response = client.post("/graphql/", dict(query=query))
 
@@ -55,12 +55,12 @@ class TestSchema:
     def test_post_yellow_tulip(self, client: Client):
         query="""mutation {{ '{{' }}
             postYellowTulip(
-{{ graphene.p_section_form_arguments(item.item_name_camel) }}
+{{ graphene.p_section_form_arguments(item.item_name) }}
             ) {{ '{{' }}
                 success
             {{ '}}' }}
         {{ '}}' }}""".format(
-{{ graphene.p_section_form_values(item.item_name_camel) }}
+{{ graphene.p_section_form_values(item.item_name) }}
         )
         response = client.post("/graphql/", dict(query=query))
 

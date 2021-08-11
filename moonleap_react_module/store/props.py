@@ -41,6 +41,6 @@ def p_section_item_fields(self, item_type):
 
         t = field.field_type
         t = "string" if isinstance(t, FK) else t
-        result.append(f"  {field.name_camel}: {t};")
+        result.append(f"  {field.name}: {t};")
 
     return "\n".join(result)

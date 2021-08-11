@@ -40,7 +40,7 @@ def _get_fields(data_type_dict):
         result.append(
             DataTypeField(
                 name_snake=field_name,
-                name_camel=snake_to_camel(field_name),
+                name=snake_to_camel(field_name),
                 spec=field_spec,
                 required=field_name in required,
                 private=field_name in private,
@@ -58,7 +58,7 @@ class FK:
 @dataclass
 class DataTypeField:
     name_snake: str
-    name_camel: str
+    name: str
     spec: T.Any
     required: bool
     private: bool
@@ -77,7 +77,7 @@ class DataTypeSpecStore:
         self.default_fields = [
             DataTypeField(
                 name_snake="id",
-                name_camel="id",
+                name="id",
                 spec=dict(type="string"),
                 required=True,
                 private=False,
@@ -85,7 +85,7 @@ class DataTypeSpecStore:
             ),
             DataTypeField(
                 name_snake="name",
-                name_camel="name",
+                name="name",
                 spec=dict(type="string"),
                 required=True,
                 private=False,

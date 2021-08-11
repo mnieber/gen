@@ -5,5 +5,5 @@ from moonleap import Resource
 
 @dataclass
 class ItemType(Resource):
-    name_camel: str
+    name: str
     name_snake: str

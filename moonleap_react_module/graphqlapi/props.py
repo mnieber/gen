@@ -32,7 +32,7 @@ def p_section_post_form(self, form: Form):
     spec = data_type_spec_store.get_spec(form.item_name)
 
     return {
-        "params": ", ".join([f"{x.name_camel}: {x.field_type}" for x in spec.fields]),
+        "params": ", ".join([f"{x.name}: {x.field_type}" for x in spec.fields]),
         "graphql_params": "",
         "graphql_params_inner": "",
         "vars": "",
@@ -41,6 +41,4 @@ def p_section_post_form(self, form: Form):
 
 def p_section_item_fields(self, item_name):
     spec = data_type_spec_store.get_spec(item_name)
-    return "\n".join(
-        [f"          {x.name_camel}," for x in spec.fields if not x.private]
-    )
+    return "\n".join([f"          {x.name}," for x in spec.fields if not x.private])
