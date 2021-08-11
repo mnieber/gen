@@ -4,7 +4,6 @@
 {% magic_with item_list.item_name_camel as purpleOrchid %}
 {% magic_with item_list.item_name_snake as purple_orchid %}
 import graphene
-from graphene.types.datetime import Date
 from graphene_django.types import DjangoObjectType
 {% for item_type in res.item_types %}
 from {{ item_type.module.name_snake }}.models import YellowTulip
