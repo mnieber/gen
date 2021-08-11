@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 import markdown
-from moonleap.parser.term import term_to_word, verb_to_word, word_to_term
+from moonleap.parser.term import term_to_word, verb_to_word
 from moonleap.render.template_renderer import _render
 from moonleap.session import get_session
 

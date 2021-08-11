@@ -5,7 +5,7 @@ from moonleap.render.template_env import add_filter
 from moonleap.resource.memfield import MemField
 from moonleap.resource.memfun import MemFun
 from moonleap.resource.prop import Prop
-from moonleap.resource.rel import Rel, fuzzy_match
+from moonleap.resource.rel import Rel
 
 
 def get_symbols(module):
@@ -26,8 +26,7 @@ def get_empty_rules(module):
             verb=verb,
             obj=word_to_term(obj_term, default_to_tag=True),
         )
-        f = lambda *arg, **kwargs: None
-        rules.append(Rule(rel, f))
+        rules.append(Rule(rel, lambda *arg, **kwargs: None))
     return rules
 
 

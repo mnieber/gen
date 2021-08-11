@@ -15,7 +15,7 @@ def _type(field_spec):
     t = field_spec.get("$ref")
     prefix = "/data_types/"
     if t is not None and t.startswith(prefix):
-        return FK(t[len(prefix) :])
+        return FK(t[len(prefix) :])  # noqa: E203
 
     raise Exception(f"Unknown field type: {field_spec}")
 

@@ -1,8 +1,7 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, add, create_forward, extend, register_add, tags
+from moonleap import MemFun, Prop, add, extend, register_add, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has
-from moonleap_project.service import Service
 from moonleap_tools.pipdependency import PipRequirement
 
 from . import (
