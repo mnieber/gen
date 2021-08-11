@@ -9,7 +9,7 @@ from .resources import Vandelay
 @tags(["vandelay"])
 def create_vandelay(term, block):
     vandelay = Vandelay(type=term.data, name="vandelay")
-    vandelay.output_path = ".vandelay"
+    vandelay.output_path = "../.vandelay"
     return vandelay
 
 
