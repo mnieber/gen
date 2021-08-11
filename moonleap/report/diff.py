@@ -58,7 +58,11 @@ def smart_diff(session, sudo=False):
     os.mkdir(smart_diff_dir)
 
     smart_output_dir = Path(smart_diff_dir) / "output"
+    os.makedirs(str(smart_output_dir), exist_ok=True)
+
     smart_ref_dir = Path(smart_diff_dir) / "ref"
+    os.makedirs(str(smart_ref_dir), exist_ok=True)
+
     ref_dir = Path(session.expected_dir)
 
     for fn in Path(".moonleap/output").rglob("*"):
