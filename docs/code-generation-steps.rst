@@ -21,8 +21,8 @@ The parser treats the spec file as a collection of text blocks,
 where each block corresponds to a section in the file. Every block has a title that corresponds to the
 section title.
 
-Terms and verbs
-~~~~~~~~~~~~~~~
+Terms, verbs and relations
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The parser scans the text block for nouns (words that contain a colon, such as :project and backend:service)
 and verbs (prefixed with a slash, such as /uses).
@@ -30,6 +30,11 @@ For every noun, it creates a Term object that is added as a node to the graph, a
 Rel object (short for Relation) that is added as an edge. Terms have a tag part (everything after the colon)
 and a data part (everything before). For example, the backend:service term has "service" as the tag part and
 "backend" as the data part.
+The parser understands constructions such as "the backend:service and frontend:service /have a welcome:endpoint,
+status:endpoint and about:endpoint". In this example, six relations would be created. You can use parentheses
+to limit the visibility of a term, e.g. "the (backend:service which /connects to :postgres) and frontend:service
+/have a welcome:endpoint". Note that verbs can be defined as tuples that contain different variants, such as
+("has", "have"), so that it makes no difference whether you write /has or /have.
 
 
 Finding out where terms are described
@@ -136,5 +141,16 @@ The resource creator converts every term into a resource, using the following st
 How to select rules for each scope
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can associate rules with scope by setting the packages_by_scope key of the `settings.yml`
-file that lives next to the `spec.md` file.
+You can associate rules with a scope by setting the packages_by_scope key of the `settings.yml`
+file (that is located next to the `spec.md` file). Note that the default scope is associated
+with every block:
+
+.. code-block:: yaml
+
+    packages_by_scope:
+    default:
+        - moonleap_dodo
+        - moonleap_project
+
+Every package exports a variable called `modules`. Each module in this list can contain creation
+rules and relation rules.
