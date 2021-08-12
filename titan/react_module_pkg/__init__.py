@@ -14,7 +14,6 @@ from . import (
     policy,
     store,
     storeprovider,
-    utilsmodule,
 )
 
 modules = [
@@ -33,5 +32,4 @@ modules = [
     policy,
     store,
     storeprovider,
-    utilsmodule,
 ]

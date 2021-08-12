@@ -8,6 +8,7 @@ from . import (
     reactapp,
     tailwindcss,
     uikit,
+    utilsmodule,
 )
 
 modules = [
@@ -19,6 +20,7 @@ modules = [
     prettier,
     tailwindcss,
     uikit,
+    utilsmodule,
 ]
 
 file_mergers = [jsfilemerger.JsFileMerger()]
