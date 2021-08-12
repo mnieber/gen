@@ -5,7 +5,7 @@ from moonleap.parser.term import word_to_term
 from moonleap.resource.rel import fuzzy_match
 
 
-class Context:
+class Scope:
     def __init__(self, name):
         self.name = name
         self.create_rule_by_term = {}

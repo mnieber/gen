@@ -8,12 +8,12 @@ def _create_generic_resource(term, block):
     return Resource()
 
 
-def _create_resource(term, creator_block, context_manager):
+def _create_resource(term, creator_block, scope_manager):
     create_rule = None
 
-    for context_name in creator_block.context_names:
-        context = context_manager.get_context(context_name)
-        local_create_rule = context.get_create_rule(term)
+    for scope_name in creator_block.scope_names:
+        scope = scope_manager.get_scope(scope_name)
+        local_create_rule = scope.get_create_rule(term)
         if local_create_rule:
             if create_rule:
                 raise Exception(f"More than 1 create rule for {term}")
@@ -57,7 +57,7 @@ def add_resources_to_blocks(blocks):
                         creator_block = child_block
                         break
 
-            resource = _create_resource(term, creator_block, session.context_manager)
+            resource = _create_resource(term, creator_block, session.scope_manager)
             creator_block.add_resource_for_term(resource, term, True)
             if block is not creator_block:
                 block.add_resource_for_term(resource, term, False)

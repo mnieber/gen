@@ -15,7 +15,9 @@ The parsing step
 Blocks
 ~~~~~~
 
-The format of the spec file is Markdown. The parser treats the spec file as a collection of text blocks,
+The spec file is called `spec.md` and lives in its own directory,
+together with a `settings.yml` file. The format of the spec file is Markdown.
+The parser treats the spec file as a collection of text blocks,
 where each block corresponds to a section in the file. Every block has a title that corresponds to the
 section title.
 
@@ -25,7 +27,9 @@ Terms and verbs
 The parser scans the text block for nouns (words that contain a colon, such as :project and backend:service)
 and verbs (prefixed with a slash, such as /uses).
 For every noun, it creates a Term object that is added as a node to the graph, and for every verb it adds a
-Rel object (short for Relation) that is added as an edge.
+Rel object (short for Relation) that is added as an edge. Terms have a tag part (everything after the colon)
+and a data part (everything before). For example, the backend:service term has "service" as the tag part and
+"backend" as the data part.
 
 
 Finding out where terms are described
@@ -114,3 +118,23 @@ a Backend, Cloud and Frontend scope:
 Every link (see above) automatically defines a scope. This means that if a block
 includes the bar-service.md file then all its child blocks (and the block itself)
 will have the `bar-service` scope.
+
+The resource creation step
+--------------------------
+
+The resource creator converts every term into a resource, using the following steps:
+
+- it determines which block describes the resource, and the scopes associated with that block
+- it loads the rules for these scopes (all rules are plain functions)
+- it find the best matching (i.e. the most specific) "creation" rule and calls it to create the
+  resource
+- for every relation that the resource has to other resources (the edges in the graph), the resource
+  creator executes the "relation" rules that match this relation. These "relation" rules allow you to
+  enrich the resource objects. Relation rules can return follow-up rules that are also executed.
+
+
+How to select rules for each scope
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can associate rules with scope by setting the packages_by_scope key of the `settings.yml`
+file that lives next to the `spec.md` file.

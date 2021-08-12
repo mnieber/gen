@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import mistune
-from moonleap.context_manager import get_local_context_names
+from moonleap.scope_manager import get_local_scope_names
 
 
 class Markdown(mistune.Markdown):
@@ -11,31 +11,31 @@ class Markdown(mistune.Markdown):
         )
 
 
-def expand_markdown(spec_file, base_level=0, context_names=None):
-    if context_names is None:
-        context_names = []
+def expand_markdown(spec_file, base_level=0, scope_names=None):
+    if scope_names is None:
+        scope_names = []
 
     with open(spec_file) as ifs:
         raw_markdown = ifs.read()
 
-    expander = BlockExpander(Path(spec_file).parent, base_level, context_names)
+    expander = BlockExpander(Path(spec_file).parent, base_level, scope_names)
     Markdown(renderer=expander)(raw_markdown)
     return expander.output_text
 
 
-def _update_local_context_names(raw, context_names, new_context_name):
-    match = get_local_context_names(raw)
+def _update_local_scope_names(raw, scope_names, new_scope_name):
+    match = get_local_scope_names(raw)
 
-    local_context_names = match[1].replace(",", "").split() if match else []
-    if new_context_name and new_context_name not in local_context_names:
-        local_context_names.append(new_context_name)
+    local_scope_names = match[1].replace(",", "").split() if match else []
+    if new_scope_name and new_scope_name not in local_scope_names:
+        local_scope_names.append(new_scope_name)
 
     raw = raw.replace(match[0], "").strip() if match else raw
-    new_context_names_str = ", ".join(
-        context_names + [x for x in local_context_names if x not in context_names]
+    new_scope_names_str = ", ".join(
+        scope_names + [x for x in local_scope_names if x not in scope_names]
     )
-    if new_context_names_str:
-        raw = raw + f" {{{new_context_names_str}}}"
+    if new_scope_names_str:
+        raw = raw + f" {{{new_scope_names_str}}}"
     return raw
 
 
@@ -46,12 +46,12 @@ def _update_external_link(sub_spec_link, raw):
 
 
 class BlockExpander(mistune.Renderer):
-    def __init__(self, file_path, level, context_names):
+    def __init__(self, file_path, level, scope_names):
         super().__init__(escape=True, hard_wrap=True)
         self.sub_spec_link = None
         self.output_text = ""
         self.base_level = level
-        self.context_names = context_names
+        self.scope_names = scope_names
         self.file_path = file_path
 
     def header(self, text, level, raw):
@@ -59,23 +59,23 @@ class BlockExpander(mistune.Renderer):
 
         # Determine contents of the external link
         if self.sub_spec_link:
-            sub_spec_context_name = Path(self.sub_spec_link[1]).stem
-            if sub_spec_context_name in self.context_names:
+            sub_spec_scope_name = Path(self.sub_spec_link[1]).stem
+            if sub_spec_scope_name in self.scope_names:
                 raise Exception("Every sub-spec file must have a unique name")
             sub_spec_content = expand_markdown(
                 self.file_path / self.sub_spec_link[1],
                 level,
-                self.context_names + [sub_spec_context_name],
+                self.scope_names + [sub_spec_scope_name],
             )
         else:
-            sub_spec_context_name = None
+            sub_spec_scope_name = None
             sub_spec_content = None
 
         # Apply some transformations to the buffer
         if self.sub_spec_link:
             buffer = _update_external_link(self.sub_spec_link, buffer)
-        buffer = _update_local_context_names(
-            buffer, self.context_names, sub_spec_context_name
+        buffer = _update_local_scope_names(
+            buffer, self.scope_names, sub_spec_scope_name
         )
 
         # Correct the Markdown indentation level

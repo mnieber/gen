@@ -5,9 +5,9 @@ from moonleap.parser.term import create_generic_terms
 
 
 class Block:
-    def __init__(self, name, level, context_names):
+    def __init__(self, name, level, scope_names):
         self.name = name
-        self.context_names = context_names
+        self.scope_names = scope_names
         self.level = level
         self.parent_block = None
         self.child_blocks = []
@@ -75,10 +75,10 @@ class Block:
         return f"Block ({self.name})"
 
 
-def get_extended_context_names(root_block):
-    context_names = []
+def get_extended_scope_names(root_block):
+    scope_names = []
     for block in root_block.get_blocks(include_children=True):
-        for context_name in block.context_names:
-            if context_name not in context_names:
-                context_names.append(context_name)
-    return context_names
+        for scope_name in block.scope_names:
+            if scope_name not in scope_names:
+                scope_names.append(scope_name)
+    return scope_names

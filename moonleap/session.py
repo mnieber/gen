@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from moonleap.context_manager import ContextManager
+from moonleap.scope_manager import ScopeManager
 from moonleap.settings import load_settings
 
 _session = None
@@ -11,7 +11,7 @@ class Session:
         self.spec_dir = spec_dir
         self.settings_fn = settings_fn
         self.settings = None
-        self.context_manager = ContextManager()
+        self.scope_manager = ScopeManager()
         self.output_root_dir = output_root_dir
         self.expected_dir = ".moonleap/expected"
 
@@ -21,9 +21,7 @@ class Session:
             raise Exception(f"Settings file not found: {settings_fn}")
         self.settings = load_settings(settings_fn)
         self.settings["spec_dir"] = self.spec_dir
-        self.context_manager.import_packages(
-            self.settings.get("packages_by_context_name", {})
-        )
+        self.scope_manager.import_packages(self.settings.get("packages_by_scope", {}))
 
     def report(self, x):
         print(x)
