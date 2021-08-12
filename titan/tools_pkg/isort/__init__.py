@@ -1,0 +1,31 @@
+from dataclasses import dataclass
+
+from moonleap import add, tags
+from titan.tools_pkg.pipdependency import PipDependency
+from titan.tools_pkg.setupfile import SetupFileConfig
+from titan.project_pkg.service import Tool
+
+setup_file_config = dict(
+    isort=dict(
+        multi_line_output=3,
+        include_trailing_comma=True,
+        force_grid_wrap=0,
+        use_parentheses=True,
+        line_length=88,
+    )
+)
+
+
+@dataclass
+class ISort(Tool):
+    pass
+
+
+@tags(["isort"])
+def create_isort(term, block):
+    isort = ISort(name="isort")
+
+    add(isort, SetupFileConfig(setup_file_config))
+    add(isort, PipDependency(["isort"], is_dev=True))
+
+    return isort

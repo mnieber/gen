@@ -149,8 +149,8 @@ with every block:
 
     packages_by_scope:
     default:
-        - moonleap_dodo
-        - moonleap_project
+        - titan.dodo_pkg
+        - titan.project_pkg
 
 Every package exports a variable called `modules`. Each module in this list can contain creation
 rules and relation rules.
