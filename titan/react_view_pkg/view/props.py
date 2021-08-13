@@ -135,4 +135,6 @@ def render(self, output_root_dir, template_renderer):
     if self.parent_view and len(self.child_components) == 1 and _collapses(self):
         return []
 
-    return render_templates(__file__)(self, output_root_dir, template_renderer)
+    return render_templates(self.root_filename, self.templates_dir)(
+        self, output_root_dir, template_renderer
+    )

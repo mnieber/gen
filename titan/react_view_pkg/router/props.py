@@ -92,6 +92,14 @@ def add_route(router_configs, routes):
             )
 
 
+def _needs_switch(routes_by_first_component_and_url, level):
+    count_routes = 0
+    for _, group in routes_by_first_component_and_url:
+        router_config = group[0].configs[level]
+        count_routes += 1 if router_config.url else 0
+    return count_routes > 1
+
+
 def add_result(routes, url, level, indent, result):
     # all the routes that share their first component should be grouped inside a
     # route for that first component
@@ -100,7 +108,7 @@ def add_result(routes, url, level, indent, result):
         return (router_config.component, router_config.url)
 
     routes_by_first_component_and_url = _group_by(get_component_and_url, routes)
-    needs_switch = len(routes_by_first_component_and_url) > 1
+    needs_switch = _needs_switch(routes_by_first_component_and_url, level)
 
     if needs_switch:
         _append("<Switch>", indent, result)

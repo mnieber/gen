@@ -1,4 +1,5 @@
 from . import (
+    authmodule,
     component,
     jsfilemerger,
     module,
@@ -12,6 +13,7 @@ from . import (
 )
 
 modules = [
+    authmodule,
     component,
     reactapp,
     module,
