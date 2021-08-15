@@ -41,7 +41,8 @@ def create_django(term, block):
 
 @extend(DjangoApp)
 class ExtendDjangoApp(StoreTemplateDirs):
-    settings = Prop(props.settings)
-    get_settings_or = MemFun(props.get_settings_or)
+    config = Prop(props.config)
+    get_setting_or = MemFun(props.get_setting_or)
     third_party_apps = Prop(props.third_party_apps)
     local_apps = Prop(props.local_apps)
+    cors_urls_regex = Prop(props.cors_urls_regex)

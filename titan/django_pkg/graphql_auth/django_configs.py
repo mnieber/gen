@@ -37,7 +37,7 @@ GRAPHQL_JWT = {
 
 def get():
     return DjangoConfig(
-        {
+        settings={
             "auth": {
                 "AUTHENTICATION_BACKENDS": ["graphql_auth.backends.GraphQLAuthBackend"],
                 "blocks": [block],
@@ -48,5 +48,5 @@ def get():
                     "graphql_jwt.refresh_token.apps.RefreshTokenConfig",
                 ],
             },
-        }
+        },
     )

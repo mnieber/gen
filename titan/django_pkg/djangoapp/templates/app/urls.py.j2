@@ -3,14 +3,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 from django.views.decorators.csrf import csrf_exempt
-{% for url_import in res.get_settings_or([], ["urls_imports"]) %}
+{% for url_import in res.config.urls_imports %}
 {{ url_import }}
 {% endfor %}
 {% end_clean_up_py_imports %}
 
 urlpatterns = [
-{% for url in res.get_settings_or([], ["urls"]) %}
+{% for url in res.config.urls %}
     {{ url}},
 {% endfor %}
-    # TODO add urls from other apps
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
