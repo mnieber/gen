@@ -1,8 +1,8 @@
 import ramda as R
 from moonleap import get_session
 from titan.react_pkg.component.resources import get_component_base_url
-from titan.react_view_pkg.router import RouterConfig
-from titan.react_view_pkg.router.resources import reduce_router_configs
+from titan.react_pkg.router import RouterConfig
+from titan.react_pkg.router.resources import reduce_router_configs
 
 
 def _wraps(panel):

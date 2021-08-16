@@ -30,6 +30,9 @@ def _model(field):
     if t == "bool":
         return r"models.BooleanField()"
 
+    if t == "email":
+        return r"models.EmailField()"
+
     if t == "date":
         return r"models.DateField()"
 

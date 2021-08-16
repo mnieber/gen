@@ -1,9 +1,7 @@
-from . import formsmodule, formview, router, router_and_module, view
+from . import formsmodule, formview, view
 
 modules = [
-    (formsmodule),
-    (formview),
-    (router),
-    (router_and_module),
-    (view),
+    formsmodule,
+    formview,
+    view,
 ]

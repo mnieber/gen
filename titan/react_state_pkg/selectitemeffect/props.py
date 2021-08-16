@@ -1,4 +1,4 @@
-from titan.react_view_pkg.router import RouterConfig
+from titan.react_pkg.router import RouterConfig
 
 
 def create_router_configs(self):

@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 import ramda as R
 from moonleap.utils.case import upper0
-from titan.react_view_pkg.router.resources import RouterConfig, prepend_router_configs
+from titan.react_pkg.router.resources import RouterConfig, prepend_router_configs
 
 
 @dataclass

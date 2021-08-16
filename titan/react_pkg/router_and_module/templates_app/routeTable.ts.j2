@@ -1,0 +1,11 @@
+{% clean_up_js_imports %}
+import { RouteTable } from 'src/utils/RouteTable';
+{{ res.p_section_route_table_imports }}
+{% end_clean_up_js_imports %}
+
+export const routeTable = new RouteTable();
+{% for route_table in res.route_tables.merged  %}
+routeTable.addTable({{ route_table.name }}RouteTable, '');
+{% endfor %}
+
+export const routes = routeTable.routeByName;

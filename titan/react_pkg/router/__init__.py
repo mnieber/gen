@@ -1,6 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, Prop, add, extend, register_add, render_templates, tags
 from moonleap.verbs import has
+from titan.react_pkg.component import Component
 from titan.react_pkg.nodepackage import load_node_package_config
 
 from . import props
@@ -21,6 +22,11 @@ def create_router(term, block):
     router = Router(name="UrlRouter")
     add(router, load_node_package_config(__file__))
     return router
+
+
+@extend(Component)
+class ExtendComponent(StoreRouterConfigs):
+    create_router_configs = MemFun(lambda x: None)
 
 
 @extend(Router)

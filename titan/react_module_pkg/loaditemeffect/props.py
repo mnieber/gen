@@ -1,5 +1,5 @@
 from moonleap.utils.magic_replace import magic_replace
-from titan.react_view_pkg.router_and_module.props import create_component_router_config
+from titan.react_pkg.router_and_module.props import create_component_router_config
 
 
 def create_router_configs(self):

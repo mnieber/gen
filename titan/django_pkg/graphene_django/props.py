@@ -36,6 +36,9 @@ def _default_value(field, item_name):
     if t == "bool":
         return r"True"
 
+    if t == "email":
+        return r"email@email.com"
+
     if t == "date":
         return r'"01-02-2003"'
 
@@ -53,6 +56,9 @@ def _graphene_field(field, item_name):
 
     if t == "bool":
         return r"graphene.Boolean()"
+
+    if t == "email":
+        return r"graphene.String()"
 
     if t == "date":
         return r"graphene.types.datetime.Date()"
