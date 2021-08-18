@@ -2,9 +2,9 @@ from dataclasses import dataclass
 
 from moonleap import add, rule, tags
 from moonleap.verbs import connects, uses
+from titan.project_pkg.service import Tool
 from titan.tools_pkg.pipdependency import PipDependency, PipRequirement
 from titan.tools_pkg.pkgdependency import PkgDependency
-from titan.project_pkg.service import Tool
 
 from . import layer_configs, makefile_rules
 
@@ -19,7 +19,8 @@ class Strapi(Tool):
 @tags(["strapi"])
 def create_strapi(term, block):
     strapi = Strapi(name="strapi")
-    add(strapi, makefile_rules.get())
+    add(strapi, makefile_rules.get_runserver())
+    add(strapi, makefile_rules.get_debugserver())
     add(strapi, layer_configs.get())
     return strapi
 
@@ -34,7 +35,7 @@ def service_uses_strapi(service, strapi):
 
 @rule("strapi", connects, "postgres:service")
 def strapi_uses_postgres_service(strapi, postgres_service):
-    add(strapi, PkgDependency(["postgresql-client", "psycopg2-binary"], is_dev=True))
+    add(strapi, PkgDependency(["postgresql-client"], is_dev=True))
     add(strapi, PipRequirement(["psycopg2"]))
     add(
         strapi,
@@ -47,5 +48,5 @@ def strapi_uses_postgres_service(strapi, postgres_service):
             is_dev=True,
         ),
     )
-    add(strapi, makefile_rules.get_postgres())
+    add(strapi, makefile_rules.get_createdb())
     postgres_service.project.add_template_dir(__file__, "templates_project")

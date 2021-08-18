@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from titan.project_pkg.service import Tool
 from moonleap import Resource
+from titan.project_pkg.service import Tool
 
 
 @dataclass
@@ -11,4 +11,5 @@ class Makefile(Tool):
 
 @dataclass
 class MakefileRule(Resource):
+    name: str
     text: str

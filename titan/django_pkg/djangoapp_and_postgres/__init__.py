@@ -12,7 +12,8 @@ def django_uses_postgres_service(django_app, postgres_service):
     add(django_app, PkgDependency(["postgresql-client"], is_dev=True))
     add(django_app, PipRequirement(["psycopg2"]))
     add(django_app, PipDependency(["pgcli==2.1.1"], is_dev=True))
-    add(django_app, makefile_rules.get_postgres())
+    add(django_app, makefile_rules.get_create_db())
+    add(django_app, makefile_rules.get_pgcli())
     django_app.service.env_files.append(postgres_env_fn)
 
     return create_forward(django_app.service, uses, "postgres:service")

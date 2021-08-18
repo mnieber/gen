@@ -4,11 +4,12 @@ from titan.tools_pkg.makefile import MakefileRule
 
 def get():
     return MakefileRule(
-        chop0(
+        name="runserver",
+        text=chop0(
             """
 runserver:
-\tpython manage.py runserver 0.0.0.0:8000 --nostatic
+\tpython manage.py runserver 0.0.0.0:8000
 
 """  # noqa
-        )
+        ),
     )

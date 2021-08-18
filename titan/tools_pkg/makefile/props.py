@@ -10,6 +10,6 @@ def get_makefile_rules():
     )
 
     def getter(self):
-        return slctr.select_from(self)
+        return sorted(slctr.select_from(self), key=lambda x: x.name)
 
     return getter
