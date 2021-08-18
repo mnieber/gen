@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 
 from moonleap import upper0
-from titan.react_pkg.component import Component
 from titan.react_module_pkg.loaditemeffect.resources import (
     LoadItemEffect,
     create_name_postfix,
 )
+from titan.react_pkg.component import Component
 from titan.react_state_pkg.selectitemeffect.resources import SelectItemEffect
 
 

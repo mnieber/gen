@@ -1,5 +1,5 @@
 from moonleap import add, rule, tags
-from titan.project_pkg.service.__init__ import create_service
+from titan.project_pkg.service import create_service
 
 from . import docker_compose_configs
 
