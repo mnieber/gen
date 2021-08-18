@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, add, extend, register_add, render_templates, tags
+from moonleap import MemFun, Prop, RenderTemplates, add, extend, register_add, tags
 from moonleap.verbs import has
 from titan.react_pkg.component import Component
 from titan.react_pkg.nodepackage import load_node_package_config
@@ -30,7 +30,6 @@ class ExtendComponent(StoreRouterConfigs):
 
 
 @extend(Router)
-class ExtendRouter:
+class ExtendRouter(RenderTemplates(__file__)):
     p_section_route_imports = Prop(props.p_section_route_imports)
     p_section_routes = Prop(props.p_section_routes)
-    render = MemFun(render_templates(__file__))

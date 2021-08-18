@@ -1,11 +1,11 @@
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
+    RenderTemplates,
     StoreOutputPaths,
     add,
     extend,
     register_add,
-    render_templates,
     rule,
     tags,
 )
@@ -49,8 +49,9 @@ def react_app_has_module(react_app, module):
 
 
 @extend(NodePackage)
-class ExtendNodePackage(StoreNodePackageConfigs, StoreOutputPaths):
-    render = MemFun(render_templates(__file__))
+class ExtendNodePackage(
+    StoreNodePackageConfigs, StoreOutputPaths, RenderTemplates(__file__)
+):
     get_config = MemFun(props.get_node_package_config)
     service = P.parent(Service, has)
 

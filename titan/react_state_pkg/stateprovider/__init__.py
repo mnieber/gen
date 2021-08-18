@@ -2,10 +2,10 @@ import moonleap.resource.props as P
 from moonleap import (
     MemFun,
     Prop,
+    RenderTemplates,
     create_forward,
     extend,
     kebab_to_camel,
-    render_templates,
     rule,
     tags,
     upper0,
@@ -38,8 +38,7 @@ class ExtendState:
 
 
 @extend(StateProvider)
-class ExtendStateProvider:
-    render = MemFun(render_templates(__file__))
+class ExtendStateProvider(RenderTemplates(__file__)):
     create_router_configs = MemFun(props.create_router_configs)
     p_section_default_props = Prop(props.p_section_default_props)
     state = P.parent(State, has)

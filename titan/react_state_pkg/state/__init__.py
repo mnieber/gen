@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, add, extend, kebab_to_camel, render_templates, tags
+from moonleap import MemFun, Prop, RenderTemplates, add, extend, kebab_to_camel, tags
 from moonleap.verbs import has, provides
 from titan.react_pkg.module import Module
 from titan.react_pkg.nodepackage import load_node_package_config
@@ -23,9 +23,7 @@ class ExtendModule:
 
 
 @extend(State)
-class ExtendState:
-    render = MemFun(render_templates(__file__))
-
+class ExtendState(RenderTemplates(__file__)):
     behaviors = P.children(provides, "behavior")
     item_lists = P.children(provides, "item-list")
     items = P.children(provides, "item")

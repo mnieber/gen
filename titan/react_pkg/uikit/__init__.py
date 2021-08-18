@@ -1,6 +1,6 @@
-from moonleap import MemFun, add, extend, render_templates, tags
-from titan.react_pkg.nodepackage import load_node_package_config
+from moonleap import MemFun, RenderTemplates, add, extend, tags
 from titan.project_pkg.service import Tool
+from titan.react_pkg.nodepackage import load_node_package_config
 
 
 class UIkit(Tool):
@@ -16,5 +16,5 @@ def create_uikit(term, block):
 
 
 @extend(UIkit)
-class ExtendUIkit:
-    render = MemFun(render_templates(__file__))
+class ExtendUIkit(RenderTemplates(__file__)):
+    pass

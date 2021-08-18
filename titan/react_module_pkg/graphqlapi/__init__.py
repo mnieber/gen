@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, add, extend, render_templates, rule, tags
+from moonleap import MemFun, Prop, RenderTemplates, add, extend, rule, tags
 from moonleap.verbs import has, loads, posts
 from titan.react_pkg.module import Module
 from titan.react_pkg.nodepackage import load_node_package_config
@@ -22,8 +22,7 @@ def react_app_has_api_module(react_app, api_module):
 
 
 @extend(GraphqlApi)
-class ExtendGraphqlApi:
-    render = MemFun(render_templates(__file__))
+class ExtendGraphqlApi(RenderTemplates(__file__)):
     items_loaded = P.children(loads, "item")
     item_lists_loaded = P.children(loads, "item-list")
     forms_posted = P.children(posts, "form")

@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, add, extend, register_add, render_templates, tags
+from moonleap import Prop, RenderTemplates, add, extend, register_add, tags
 from moonleap.verbs import has
 from titan.project_pkg.service import Service, Tool
 from titan.tools_pkg.pkgdependency import PkgDependency
@@ -28,8 +28,7 @@ def create_makefile(term, block):
 
 
 @extend(Makefile)
-class ExtendMakefile(StoreMakefileRules):
-    render = MemFun(render_templates(__file__))
+class ExtendMakefile(StoreMakefileRules, RenderTemplates(__file__)):
     service = P.parent(Service, has)
 
 

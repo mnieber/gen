@@ -1,6 +1,6 @@
-from moonleap import MemFun, add, extend, render_templates, tags
-from titan.react_pkg.nodepackage import load_node_package_config
+from moonleap import RenderTemplates, add, extend, tags
 from titan.project_pkg.service import Tool
+from titan.react_pkg.nodepackage import load_node_package_config
 
 
 class Prettier(Tool):
@@ -15,5 +15,5 @@ def create_prettier(term, block):
 
 
 @extend(Prettier)
-class ExtendPrettier:
-    render = MemFun(render_templates(__file__, "templates/.prettierrc"))
+class ExtendPrettier(RenderTemplates(__file__)):
+    pass

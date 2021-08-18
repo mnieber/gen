@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, add, extend, render_templates, rule, tags
+from moonleap import MemFun, RenderTemplates, add, extend, rule, tags
 from moonleap.verbs import contains, uses
 from titan.project_pkg.service import Service, Tool
 from titan.react_module_pkg.flags import Flags
@@ -33,8 +33,7 @@ def store_uses_item_type(store, item_type):
 
 
 @extend(MockGrapqhlServer)
-class ExtendMockGrapqhlServer:
-    render = MemFun(render_templates(__file__))
+class ExtendMockGrapqhlServer(RenderTemplates(__file__)):
     service = P.parent(Service, uses)
     p_section_item_fields = MemFun(props.p_section_item_fields)
 

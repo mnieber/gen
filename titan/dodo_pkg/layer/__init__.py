@@ -1,13 +1,6 @@
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    StoreOutputPaths,
-    extend,
-    kebab_to_camel,
-    register_add,
-    render_templates,
-    tags,
-)
+from moonleap import (MemFun, RenderTemplates, StoreOutputPaths, extend,
+                      kebab_to_camel, register_add, tags)
 from moonleap.verbs import has
 from titan.project_pkg.service import Tool
 
@@ -32,8 +25,7 @@ def create_layer(term, block):
 
 
 @extend(Layer)
-class ExtendLayer(StoreLayerConfigs, StoreOutputPaths):
-    render = MemFun(render_templates(__file__))
+class ExtendLayer(StoreLayerConfigs, StoreOutputPaths, RenderTemplates(__file__)):
     get_config = MemFun(props.get_config)
 
 

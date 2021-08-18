@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, add_source, extend, render_templates, rule, tags
+from moonleap import MemFun, RenderTemplates, add_source, extend, rule, tags
 from moonleap.verbs import has
 from titan.project_pkg.service import Service
 
@@ -29,7 +29,6 @@ def dockerfile_use_docker_image(dockerfile, docker_image):
 
 
 @extend(Dockerfile)
-class ExtendDockerfile:
+class ExtendDockerfile(RenderTemplates(__file__)):
     service = P.parent(Service, has)
-    render = MemFun(render_templates(__file__))
     docker_image = P.child(has, "docker-image")

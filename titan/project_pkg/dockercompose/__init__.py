@@ -1,10 +1,10 @@
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
+    RenderTemplates,
     StoreOutputPaths,
     extend,
     register_add,
-    render_templates,
     tags,
 )
 from moonleap.verbs import has
@@ -30,8 +30,7 @@ def create_docker_compose(term, block):
 
 
 @extend(DockerCompose)
-class ExtendDockerCompose(StoreOutputPaths):
-    render = MemFun(render_templates(__file__))
+class ExtendDockerCompose(StoreOutputPaths, RenderTemplates(__file__)):
     get_config = MemFun(props.get_docker_compose_config)
 
 

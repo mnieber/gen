@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, extend, render_templates, tags
+from moonleap import Prop, RenderTemplates, extend, tags
 from moonleap.verbs import has
 from titan.react_module_pkg.appmodule import AppModule
 
@@ -14,8 +14,7 @@ def create_appstore(term, block):
 
 
 @extend(AppStore)
-class ExtendAppStore:
-    render = MemFun(render_templates(__file__))
+class ExtendAppStore(RenderTemplates(__file__)):
     substores = Prop(props.substores)
 
 

@@ -1,10 +1,10 @@
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
+    RenderTemplates,
     create_forward,
     extend,
     kebab_to_camel,
-    render_templates,
     rule,
     tags,
 )
@@ -64,8 +64,7 @@ def maybe_add_load_item_effect_to_item_view(item_view):
 
 
 @extend(ItemView)
-class ExtendItemView:
-    render = MemFun(render_templates(__file__))
+class ExtendItemView(RenderTemplates(__file__)):
     _get_route_params = MemFun(props._get_route_params)
     create_router_configs = MemFun(props.create_router_configs)
     load_item_effect = P.child(uses, "load-item-effect")

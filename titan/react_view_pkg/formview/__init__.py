@@ -1,9 +1,9 @@
 from moonleap import (
     MemFun,
+    RenderTemplates,
     create_forward,
     extend,
     kebab_to_camel,
-    render_templates,
     rule,
     tags,
 )
@@ -26,6 +26,5 @@ def service_has_forms_module(module, form_view):
 
 
 @extend(FormView)
-class ExtendFormView:
-    render = MemFun(render_templates(__file__))
+class ExtendFormView(RenderTemplates(__file__)):
     p_section_item_fields = MemFun(props.p_section_item_fields)

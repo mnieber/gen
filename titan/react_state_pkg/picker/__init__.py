@@ -1,13 +1,4 @@
-from moonleap import (
-    MemFun,
-    add,
-    extend,
-    kebab_to_camel,
-    render_templates,
-    rule,
-    tags,
-    upper0,
-)
+from moonleap import RenderTemplates, add, extend, kebab_to_camel, rule, tags, upper0
 from moonleap.verbs import has
 from titan.react_pkg.nodepackage import load_node_package_config
 
@@ -29,5 +20,5 @@ def create_utils_module(module, picker):
 
 
 @extend(Picker)
-class ExtendPicker:
-    render = MemFun(render_templates(__file__))
+class ExtendPicker(RenderTemplates(__file__)):
+    pass

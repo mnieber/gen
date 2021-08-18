@@ -2,10 +2,10 @@ import moonleap.resource.props as P
 from moonleap import (
     MemFun,
     Prop,
+    RenderTemplates,
     create_forward,
     extend,
     kebab_to_camel,
-    render_templates,
     rule,
     tags,
 )
@@ -56,8 +56,7 @@ def maybe_add_load_items_effect_to_list_view(list_view):
 
 
 @extend(ListView)
-class ExtendListView:
-    render = MemFun(render_templates(__file__))
+class ExtendListView(RenderTemplates(__file__)):
     create_router_configs = MemFun(props.create_router_configs)
     load_items_effect = P.child(uses, "load-items-effect")
     behaviors = P.children(has, "behavior")

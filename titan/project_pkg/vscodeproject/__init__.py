@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, StoreOutputPaths, extend, render_templates, tags
+from moonleap import RenderTemplates, StoreOutputPaths, extend, tags
 from moonleap.verbs import has
 from titan.project_pkg.project import Project
 
@@ -13,6 +13,5 @@ def create_vscode_project(term, block):
 
 
 @extend(VsCodeProject)
-class ExtendVsCodeProject(StoreOutputPaths):
-    render = MemFun(render_templates(__file__))
+class ExtendVsCodeProject(StoreOutputPaths, RenderTemplates(__file__)):
     project = P.parent(Project, has)
