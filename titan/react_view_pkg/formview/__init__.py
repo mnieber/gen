@@ -1,5 +1,5 @@
 from moonleap import (
-    MemFun,
+    Prop,
     RenderTemplates,
     create_forward,
     extend,
@@ -27,4 +27,4 @@ def service_has_forms_module(module, form_view):
 
 @extend(FormView)
 class ExtendFormView(RenderTemplates(__file__)):
-    p_section_item_fields = MemFun(props.p_section_item_fields)
+    sections = Prop(props.Sections)

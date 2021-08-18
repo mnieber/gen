@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, RenderTemplates, add_source, extend, rule, tags
+from moonleap import RenderTemplates, add_source, extend, rule, tags
 from moonleap.verbs import has
 from titan.project_pkg.service import Service
 

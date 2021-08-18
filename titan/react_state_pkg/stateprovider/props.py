@@ -15,19 +15,25 @@ def create_router_configs(self):
     return result
 
 
-def p_section_default_props(self):
-    result = ""
+class Sections:
+    def __init__(self, res):
+        self.res = res
 
-    if self.state:
-        result = f"      {self.state.name}State: () => state,\n"
-        store_by_item_name = self.state.store_by_item_name
-        for item_name, bvrs in self.state.bvrs_by_item_name.items():
-            items_name = plural(item_name)
+    def default_props(self):
+        result = ""
 
-            result += f"      {items_name}: () => state.outputs.{items_name}Display,\n"
-            result += f"      {items_name}ResUrl: () => resUrls.{item_name}ById,\n"
+        if self.res.state:
+            result = f"      {self.res.state.name}State: () => state,\n"
+            store_by_item_name = self.res.state.store_by_item_name
+            for item_name, bvrs in self.res.state.bvrs_by_item_name.items():
+                items_name = plural(item_name)
 
-            store = store_by_item_name.get(item_name)
-            for bvr in bvrs:
-                result += bvr.p_section_default_props(store)
-    return result
+                result += (
+                    f"      {items_name}: () => state.outputs.{items_name}Display,\n"
+                )
+                result += f"      {items_name}ResUrl: () => resUrls.{item_name}ById,\n"
+
+                store = store_by_item_name.get(item_name)
+                for bvr in bvrs:
+                    result += bvr.sections.default_props(store)
+        return result

@@ -31,5 +31,4 @@ class ExtendComponent(StoreRouterConfigs):
 
 @extend(Router)
 class ExtendRouter(RenderTemplates(__file__)):
-    p_section_route_imports = Prop(props.p_section_route_imports)
-    p_section_routes = Prop(props.p_section_routes)
+    sections = Prop(props.Sections)

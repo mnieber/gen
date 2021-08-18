@@ -5,7 +5,7 @@ from app.models import Entity
 
 {% for item_type in res.item_types %}
 class YellowTulip(Entity):
-{{ res.p_section_model_fields(item_type.name)}}
+{{ res.sections.model_fields(item_type.name)}}
 
 {% endfor %}
 {% end_magic_with %}

@@ -2,13 +2,13 @@ import ramda as R
 from moonleap import get_session, render_templates, upper0
 
 
-def _panels(self):
+def _panels(res):
     panels = [
-        self.left_panel,
-        self.right_panel,
-        self.top_panel,
-        self.bottom_panel,
-        self.middle_panel,
+        res.left_panel,
+        res.right_panel,
+        res.top_panel,
+        res.bottom_panel,
+        res.middle_panel,
     ]
     return [x for x in panels if x]
 
@@ -65,66 +65,75 @@ def _panel(divClassName, panel):
     return result
 
 
-def p_section_div(self):
-    result = []
-    has_col = (
-        self.top_panel or self.bottom_panel or not (self.left_panel or self.right_panel)
-    )
+class Sections:
+    def __init__(self, res):
+        self.res = res
 
-    # top section
-    if has_col:
-        rootClass = f"'{self.name}', "
-        result.extend(
-            [
-                r"<div",
-                r"  className={classnames(",
-                f"    {rootClass}'flex flex-col w-full', props.className",
-                r"  )}",
-                r">",
-            ]
+    def div(self):
+        result = []
+        has_col = (
+            self.res.top_panel
+            or self.res.bottom_panel
+            or not (self.res.left_panel or self.res.right_panel)
         )
-    result.extend(_panel(self.name + "__topPanel", self.top_panel))
 
-    # mid section
-    if self.left_panel or self.right_panel:
-        rootClass = "" if self.top_panel or self.bottom_panel else f"'{self.name}', "
-        result.extend(
-            [
-                r"<div",
-                r"  className={classnames(",
-                f"    {rootClass}'flex flex-row', props.className",
-                r"  )}",
-                r">",
-            ]
-        )
-    result.extend(_panel(self.name + "__leftPanel", self.left_panel))
-    result.extend(_panel(self.name + "__middlePanel", self.middle_panel))
-    result.extend(_panel(self.name + "__rightPanel", self.right_panel))
-
-    panels = _panels(self)
-    result.extend(
-        [f"  {x.react_tag}" for x in self.child_components if x not in panels]
-    )
-
-    if self.left_panel or self.right_panel:
-        result.append(r"</div>")
-
-    # bottom section
-    result.extend(_panel(self.name + "__bottomPanel", self.bottom_panel))
-    if has_col:
-        result.append(r"</div>")
-
-    return "\n".join(result)
-
-
-def p_section_imports(self):
-    result = []
-    for panel in _panels(self):
-        for component in _components(panel):
-            result.append(
-                f"import {{ {upper0(component.name)} }} from '{component.module_path}/components';"  # noqa
+        # top section
+        if has_col:
+            rootClass = f"'{self.res.name}', "
+            result.extend(
+                [
+                    r"<div",
+                    r"  className={classnames(",
+                    f"    {rootClass}'flex flex-col w-full', props.className",
+                    r"  )}",
+                    r">",
+                ]
             )
-    return "\n".join(result)
+        result.extend(_panel(self.res.name + "__topPanel", self.res.top_panel))
+
+        # mid section
+        if self.res.left_panel or self.res.right_panel:
+            rootClass = (
+                ""
+                if self.res.top_panel or self.res.bottom_panel
+                else f"'{self.res.name}', "
+            )
+            result.extend(
+                [
+                    r"<div",
+                    r"  className={classnames(",
+                    f"    {rootClass}'flex flex-row', props.className",
+                    r"  )}",
+                    r">",
+                ]
+            )
+        result.extend(_panel(self.res.name + "__leftPanel", self.res.left_panel))
+        result.extend(_panel(self.res.name + "__middlePanel", self.res.middle_panel))
+        result.extend(_panel(self.res.name + "__rightPanel", self.res.right_panel))
+
+        panels = _panels(self.res)
+        result.extend(
+            [f"  {x.react_tag}" for x in self.res.child_components if x not in panels]
+        )
+
+        if self.res.left_panel or self.res.right_panel:
+            result.append(r"</div>")
+
+        # bottom section
+        result.extend(_panel(self.res.name + "__bottomPanel", self.res.bottom_panel))
+        if has_col:
+            result.append(r"</div>")
+
+        return "\n".join(result)
+
+    def imports(self):
+        result = []
+        for panel in _panels(self.res):
+            for component in _components(panel):
+                result.append(
+                    f"import {{ {upper0(component.name)} }} from '{component.module_path}/components';"  # noqa: E501
+                )
+        return "\n".join(result)
 
 
 def render(self, output_root_dir, template_renderer):

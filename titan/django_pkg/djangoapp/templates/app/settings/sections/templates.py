@@ -1,7 +1,3 @@
-import os
-
-from .paths import PROJECT_DIR
-
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",

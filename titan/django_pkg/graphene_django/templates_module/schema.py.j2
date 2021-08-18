@@ -13,7 +13,7 @@ from {{ item_type.module.name_snake }}.models import YellowTulip
 class YellowTulipType(DjangoObjectType):
     class Meta:
         model = YellowTulip
-        exclude = [{{ graphene.p_section_exclude(item_type.name) }}]
+        exclude = [{{ graphene.sections.exclude(item_type.name) }}]
 
 {% endfor %}
 
@@ -29,7 +29,7 @@ class PurpleOrchidsQuery:
 
 {% for form in res.forms %}
 class RedRoseFormType(graphene.InputObjectType):
-{{ graphene.p_section_graphene_fields(form.item_name + "Form") }}
+{{ graphene.sections.graphene_fields(form.item_name + "Form") }}
 
 class RedRose(graphene.Mutation):
     class Arguments:
@@ -59,12 +59,12 @@ class PostBlueDaisy(graphene.Mutation):
 {% endfor %}
 
 
-class Query({{ graphene.p_section_query_base_types(res) }}graphene.ObjectType):
+class Query({{ graphene.sections.query_base_types(res) }}graphene.ObjectType):
     pass
 
 
 class Mutation(graphene.ObjectType):
-{{ graphene.p_section_mutation_fields(res) }}
+{{ graphene.sections.mutation_fields(res) }}
 
 
 {% end_magic_with %}

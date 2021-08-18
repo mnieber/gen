@@ -1,11 +1,11 @@
 import graphene
 
-{{ res.p_section_imports }}
+{{ res.sections.imports() }}
 
-class Query({{ res.p_section_base_classes("Query") }}):
+class Query({{ res.sections.base_classes("Query") }}):
     pass
 
-class Mutation({{ res.p_section_base_classes("Mutation") }}):
+class Mutation({{ res.sections.base_classes("Mutation") }}):
     pass
 
 

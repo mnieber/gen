@@ -2,7 +2,6 @@ import moonleap.resource.props as P
 from moonleap.verbs import has
 
 from . import props as props
-from .resources import OutputPath  # noqa
 
 
 class StoreOutputPaths:

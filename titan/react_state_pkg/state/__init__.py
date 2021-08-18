@@ -29,9 +29,5 @@ class ExtendState(RenderTemplates(__file__)):
     items = P.children(provides, "item")
     bvrs_by_item_name = Prop(props.bvrs_by_item_name)
     store_by_item_name = Prop(props.store_by_item_name)
-
-    p_section_constructor = Prop(props.p_section_constructor)
-    p_section_callbacks = Prop(props.p_section_callbacks)
-    p_section_policies = Prop(props.p_section_policies)
-    p_section_declare_policies = MemFun(props.p_section_declare_policies)
+    sections = Prop(props.Sections)
     type_import_path = MemFun(props.type_import_path)

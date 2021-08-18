@@ -28,70 +28,71 @@ def store_by_item_name(self):
     return result
 
 
-def p_section_constructor(self):
-    indent = "  "
-    result = []
-
-    for item_name, bvrs in self.bvrs_by_item_name.items():
-        result += [f"{plural(item_name)} = {{"]
-        for bvr in bvrs:
-            result += [bvr.p_section_constructor]
-        result += [r"};"]
-
-    return os.linesep.join([(indent + x) for x in result])
-
-
-def p_section_callbacks(self):
-    indent = "  "
-    result = []
-
-    for item_name, bvrs in self.bvrs_by_item_name.items():
-        redRoses = plural(item_name)
-
-        body = []
-        for bvr in bvrs:
-            body += [bvr.p_section_callbacks(self.behaviors)]
-
-        result += [f"_set{upper0(redRoses)}Callbacks(props: PropsT) {{"]
-
-        if body:
-            result += [
-                f"  const ctr = this.{redRoses};",
-                #
-                *body,
-            ]
-
-        result += [r"}", ""]
-
-    return os.linesep.join([(indent + x) for x in result])
-
-
-def p_section_declare_policies(self, item_name):
-    indent = "    "
-    result = [
-        f"const Inputs_items = [Inputs, '{plural(item_name)}', this] as CMT;",
-        f"const Outputs_display = [Outputs, '{plural(item_name)}Display', this] as CMT;",
-    ]
-
-    return os.linesep.join([(indent + x) for x in result])
-
-
-def p_section_policies(self):
-    facet_names = [x.name for x in self.behaviors]
-    indent = "      "
-    result = []
-
-    if "filtering" not in facet_names:
-        result += [
-            r"Skandha.mapDataToFacet(Outputs_display, getm(Inputs_items)),",
-        ]
-
-    return os.linesep.join([(indent + x) for x in result])
-
-
 def type_import_path(self, type_name):
     for module in self.module.react_app.modules:
         for store in module.stores:
             if [x for x in store.item_types if x.name == type_name]:
                 return f"{store.module_path}/types"
     return None
+
+
+class Sections:
+    def __init__(self, res):
+        self.res = res
+
+    def constructor(self):
+        indent = "  "
+        result = []
+
+        for item_name, bvrs in self.res.bvrs_by_item_name.items():
+            result += [f"{plural(item_name)} = {{"]
+            for bvr in bvrs:
+                result += [bvr.sections.constructor()]
+            result += [r"};"]
+
+        return os.linesep.join([(indent + x) for x in result])
+
+    def callbacks(self):
+        indent = "  "
+        result = []
+
+        for item_name, bvrs in self.res.bvrs_by_item_name.items():
+            redRoses = plural(item_name)
+
+            body = []
+            for bvr in bvrs:
+                body += [bvr.sections.callbacks(self.res.behaviors)]
+
+            result += [f"_set{upper0(redRoses)}Callbacks(props: PropsT) {{"]
+
+            if body:
+                result += [
+                    f"  const ctr = this.{redRoses};",
+                    #
+                    *body,
+                ]
+
+            result += [r"}", ""]
+
+        return os.linesep.join([(indent + x) for x in result])
+
+    def declare_policies(self, item_name):
+        indent = "    "
+        result = [
+            f"const Inputs_items = [Inputs, '{plural(item_name)}', this] as CMT;",
+            f"const Outputs_display = [Outputs, '{plural(item_name)}Display', this] as CMT;",  # noqa: E501
+        ]
+
+        return os.linesep.join([(indent + x) for x in result])
+
+    def policies(self):
+        facet_names = [x.name for x in self.res.behaviors]
+        indent = "      "
+        result = []
+
+        if "filtering" not in facet_names:
+            result += [
+                r"Skandha.mapDataToFacet(Outputs_display, getm(Inputs_items)),",
+            ]
+
+        return os.linesep.join([(indent + x) for x in result])

@@ -36,6 +36,6 @@ create-db:
 \tenv PGPASSWORD=dev psql -h postgres -d postgres -U postgres -c "CREATE USER strapi WITH CREATEDB PASSWORD 'dev';"
 \tenv PGPASSWORD=dev psql -h postgres -d postgres -U strapi -c "CREATE DATABASE strapi;"
 \tenv PGPASSWORD=dev psql -h postgres -d postgres -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE strapi TO strapi;"
-"""  # noqa
+"""  # noqa: E501
         ),
     )

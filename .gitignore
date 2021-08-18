@@ -132,3 +132,4 @@ dmypy.json
 /specs
 /.moonleap
 .moonleap.config.yml
+.vscode

@@ -21,7 +21,7 @@ def react_app_has_auth_module(react_app, auth_module):
 @tags(["auth-switch:view"])
 def create_auth_switch(term, block):
     return View(
-        name=f"AuthSwitch",
+        name="AuthSwitch",
         root_filename=__file__,
         templates_dir="templates_auth_switch",
     )

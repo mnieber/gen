@@ -11,15 +11,19 @@ def merge(lhs, rhs):
     return SetupFileConfig(new_body)
 
 
-def p_section_setup_file_config(self):
-    configs = list(self.setup_file_configs.merged)
-    for tool in self.service.tools:
-        configs.extend(tool.setup_file_configs.merged)
+class Sections:
+    def __init__(self, res):
+        self.res = res
 
-    config = R.reduce(merge, SetupFileConfig(body={}), configs)
-    result = ""
-    for name, body in config.get_body().items():
-        result += f"[{name}]\n"
-        for k, v in body.items():
-            result += f"{k}={v}\n"
-    return result
+    def setup_file_config(self):
+        configs = list(self.res.setup_file_configs.merged)
+        for tool in self.res.service.tools:
+            configs.extend(tool.setup_file_configs.merged)
+
+        config = R.reduce(merge, SetupFileConfig(body={}), configs)
+        result = ""
+        for name, body in config.get_body().items():
+            result += f"[{name}]\n"
+            for k, v in body.items():
+                result += f"{k}={v}\n"
+        return result

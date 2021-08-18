@@ -12,11 +12,15 @@ def create_component_router_config(component, url=None, wraps=False):
     )
 
 
-def p_section_route_table_imports(self):
-    result = []
-    for route_table in self.route_tables.merged:
-        result.append(
-            f"import {{ routeTable as {route_table.name}RouteTable }}"
-            + f" from '{route_table.import_path}';"
-        )
-    return os.linesep.join(result)
+class Sections:
+    def __init__(self, res):
+        self.res = res
+
+    def route_table_imports(self):
+        result = []
+        for route_table in self.res.route_tables.merged:
+            result.append(
+                f"import {{ routeTable as {route_table.name}RouteTable }}"
+                + f" from '{route_table.import_path}';"
+            )
+        return os.linesep.join(result)

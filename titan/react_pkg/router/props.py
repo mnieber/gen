@@ -35,47 +35,50 @@ def _append(x, indent, result):
     result.append(" " * (indent) + x)
 
 
-def p_section_route_imports(self):
-    components = []
+class Sections:
+    def __init__(self, res):
+        self.res = res
 
-    def add(component):
-        queue = [component]
-        while queue:
-            component = queue.pop()
-            if component not in components:
-                components.append(component)
-            queue.extend(component.wrapped_child_components)
+    def route_imports(self):
+        components = []
 
-    for module in self.module.react_app.modules:
-        for component in module.routed_components:
-            for router_config in component.create_router_configs():
-                add(router_config.component)
+        def add(component):
+            queue = [component]
+            while queue:
+                component = queue.pop()
+                if component not in components:
+                    components.append(component)
+                queue.extend(component.wrapped_child_components)
 
-    result = []
-    imports_by_module_name = R.group_by(lambda x: x.module.name, components)
-    for module_name, components in imports_by_module_name.items():
-        component_names = ", ".join(R.map(lambda x: x.name)(components))
-        result.append(
-            f"import {{ {component_names} }} from 'src/{module_name}/components';"
-        )
+        for module in self.res.module.react_app.modules:
+            for component in module.routed_components:
+                for router_config in component.create_router_configs():
+                    add(router_config.component)
 
-    return os.linesep.join(result)
+        result = []
+        imports_by_module_name = R.group_by(lambda x: x.module.name, components)
+        for module_name, components in imports_by_module_name.items():
+            component_names = ", ".join(R.map(lambda x: x.name)(components))
+            result.append(
+                f"import {{ {component_names} }} from 'src/{module_name}/components';"
+            )
 
+        return os.linesep.join(result)
 
-def p_section_routes(self):
-    routes = []
+    def routes(self):
+        routes = []
 
-    for module in self.module.react_app.modules:
-        for component in module.routed_components:
-            router_configs = component.create_router_configs()
-            if router_configs:
-                add_route(router_configs, routes)
+        for module in self.res.module.react_app.modules:
+            for component in module.routed_components:
+                router_configs = component.create_router_configs()
+                if router_configs:
+                    add_route(router_configs, routes)
 
-    result = []
-    add_result(routes, "", 0, 6, result)
+        result = []
+        add_result(routes, "", 0, 6, result)
 
-    result_str = os.linesep.join(result)
-    return result_str
+        result_str = os.linesep.join(result)
+        return result_str
 
 
 def add_route(router_configs, routes):

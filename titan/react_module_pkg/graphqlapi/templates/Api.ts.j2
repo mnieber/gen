@@ -22,7 +22,7 @@ export class Api extends ApiBase {
       'getRedRoses',
       `query getRedRoses {
         redRoses {
-{{ res.p_section_item_fields(load_items_effect.item_name) }}
+{{ res.sections.item_fields(load_items_effect.item_name) }}
         }
       }`,
       {},
@@ -38,7 +38,7 @@ export class Api extends ApiBase {
 {% endfor %}
 
 {% for load_item_effect in res.api_module.load_item_effects %}
-{% with params = res.p_section_load_item_effect(load_item_effect) %}
+{% with params = res.sections.load_item_effect(load_item_effect) %}
   getBlueDaisyFlower(
     {{ params.params }}
   ) {
@@ -50,7 +50,7 @@ export class Api extends ApiBase {
         blueDaisyFlower(
 {{ params.graphql_params_inner }}
         ) {
-{{ res.p_section_item_fields(load_item_effect.item_name) }}
+{{ res.sections.item_fields(load_item_effect.item_name) }}
         }
       }`,
       {
@@ -65,7 +65,7 @@ export class Api extends ApiBase {
 {% endfor %}
 
 {% for form in res.forms_posted %}
-{% with params = res.p_section_post_form(form) %}
+{% with params = res.sections.post_form(form) %}
   postPurpleOrchid(
     {{ params.params }}
   ) {

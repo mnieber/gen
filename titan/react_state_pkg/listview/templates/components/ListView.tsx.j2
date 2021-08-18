@@ -9,7 +9,7 @@ import { YellowTulipListViewItem } from 'src/gardenFlowers/components';
 import { YellowTulipT } from 'src/gardenFlowers/types';
 import { getResourceView } from 'src/utils/components';
 
-{{ res.p_section_imports }}
+{{ res.sections.imports() }}
 
 {% end_clean_up_js_imports %}
 
@@ -22,7 +22,7 @@ type PropsT = {
 type DefaultPropsT = {
   yellowTulips: YellowTulipT[],
   yellowTulipsResUrl: string,
-{{ res.p_section_default_props }}
+{{ res.sections.default_props() }}
 };
 
 export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
@@ -37,8 +37,8 @@ export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: Props
       <YellowTulipListViewItem
         key={x.id}
         yellowTulip={x}
-{{ res.p_section_classnames }}
-{{ res.p_section_on_click }}
+{{ res.sections.classnames() }}
+{{ res.sections.on_click() }}
       />
     ))
   )();

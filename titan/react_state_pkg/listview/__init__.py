@@ -60,7 +60,4 @@ class ExtendListView(RenderTemplates(__file__)):
     create_router_configs = MemFun(props.create_router_configs)
     load_items_effect = P.child(uses, "load-items-effect")
     behaviors = P.children(has, "behavior")
-    p_section_imports = Prop(props.p_section_imports)
-    p_section_default_props = Prop(props.p_section_default_props)
-    p_section_classnames = Prop(props.p_section_classnames)
-    p_section_on_click = Prop(props.p_section_on_click)
+    sections = Prop(props.Sections)

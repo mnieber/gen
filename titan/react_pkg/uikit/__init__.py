@@ -1,4 +1,4 @@
-from moonleap import MemFun, RenderTemplates, add, extend, tags
+from moonleap import RenderTemplates, add, extend, tags
 from titan.project_pkg.service import Tool
 from titan.react_pkg.nodepackage import load_node_package_config
 

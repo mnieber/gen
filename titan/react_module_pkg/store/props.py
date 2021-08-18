@@ -12,35 +12,37 @@ load_data_template = """
 """
 
 
-def p_section_item_list_fields(self):
-    result = ""
-    for item_list in self.item_lists:
-        result += (
-            f"  @observable {item_list.item_name}ById: "
-            + f"{upper0(item_list.item_name)}ByIdT = {{}};\n"
-        )
-    return result
+class Sections:
+    def __init__(self, res):
+        self.res = res
 
+    def item_list_fields(self):
+        result = ""
+        for item_list in self.res.item_lists:
+            result += (
+                f"  @observable {item_list.item_name}ById: "
+                + f"{upper0(item_list.item_name)}ByIdT = {{}};\n"
+            )
+        return result
 
-def p_section_on_load_data(self):
-    result = ""
-    for item_list in self.item_lists:
-        result += magic_replace(
-            load_data_template,
-            [("yellowTulip", item_list.item_name)],
-        )
-    return result
+    def on_load_data(self):
+        result = ""
+        for item_list in self.res.item_lists:
+            result += magic_replace(
+                load_data_template,
+                [("yellowTulip", item_list.item_name)],
+            )
+        return result
 
+    def item_fields(self, item_type):
+        result = []
+        spec = data_type_spec_store.get_spec(item_type.name)
+        for field in spec.fields:
+            if field.private:
+                continue
 
-def p_section_item_fields(self, item_type):
-    result = []
-    spec = data_type_spec_store.get_spec(item_type.name)
-    for field in spec.fields:
-        if field.private:
-            continue
+            t = field.field_type
+            t = "string" if isinstance(t, FK) else t
+            result.append(f"  {field.name}: {t};")
 
-        t = field.field_type
-        t = "string" if isinstance(t, FK) else t
-        result.append(f"  {field.name}: {t};")
-
-    return "\n".join(result)
+        return "\n".join(result)

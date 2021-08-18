@@ -5,7 +5,7 @@ import { useStore } from 'src/app/components';
 import { Effect, EffectWithoutArgs } from 'src/utils/components';
 
 {% if res.route_params %}
-{{ res.p_section_effect_args }}
+{{ res.sections.effect_args() }}
 {% endif %}
 
 type PropsT = {};
@@ -15,7 +15,7 @@ export const RedRose: React.FC<PropsT> = (p: PropsT) => {
   return (
 {% if res.route_params %}
     <Effect
-      {{ res.p_section_effect }}
+      {{ res.sections.effect() }}
     />
 {% else %}
     <EffectWithoutArgs

@@ -10,6 +10,6 @@ def get():
 runserver:
 \tpython manage.py runserver 0.0.0.0:8000
 
-"""  # noqa
+"""  # noqa: E501
         ),
     )

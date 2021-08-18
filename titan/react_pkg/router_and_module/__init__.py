@@ -22,7 +22,7 @@ def add_route_table(resource, route_table):
 @extend(AppModule)
 class ExtendAppModule:
     router = P.child(has, "router")
-    p_section_route_table_imports = Prop(props.p_section_route_table_imports)
+    sections = Prop(props.Sections)
 
 
 @extend(Module)

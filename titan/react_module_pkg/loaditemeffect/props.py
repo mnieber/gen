@@ -17,25 +17,6 @@ effect_template = """
     }}
 """
 
-
-def p_section_effect(self):
-    declare_params = "{ " + ", ".join(self.route_params) + " }"
-    use_params = ", ".join(self.route_params)
-    extract_params = ", ".join(
-        [f"{route_param}: params.{route_param}" for route_param in self.route_params]
-    )
-
-    return magic_replace(
-        effect_template,
-        [
-            ("yellowTulip", self.item_name + self.name_postfix),
-            ("declare_params", declare_params),
-            ("use_params", use_params),
-            ("extract_params", extract_params),
-        ],
-    )
-
-
 effect_args_template = """
 type ArgsT = {
     yellowTulip
@@ -43,12 +24,38 @@ type ArgsT = {
 """
 
 
-def p_section_effect_args(self):
-    args = ", ".join([f"{route_param}: string" for route_param in self.route_params])
+class Sections:
+    def __init__(self, res):
+        self.res = res
 
-    return magic_replace(
-        effect_args_template,
-        [
-            ("yellowTulip", args),
-        ],
-    )
+    def effect(self):
+        declare_params = "{ " + ", ".join(self.res.route_params) + " }"
+        use_params = ", ".join(self.res.route_params)
+        extract_params = ", ".join(
+            [
+                f"{route_param}: params.{route_param}"
+                for route_param in self.res.route_params
+            ]
+        )
+
+        return magic_replace(
+            effect_template,
+            [
+                ("yellowTulip", self.res.item_name + self.res.name_postfix),
+                ("declare_params", declare_params),
+                ("use_params", use_params),
+                ("extract_params", extract_params),
+            ],
+        )
+
+    def effect_args(self):
+        args = ", ".join(
+            [f"{route_param}: string" for route_param in self.res.route_params]
+        )
+
+        return magic_replace(
+            effect_args_template,
+            [
+                ("yellowTulip", args),
+            ],
+        )

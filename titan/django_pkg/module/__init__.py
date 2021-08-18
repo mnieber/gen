@@ -1,5 +1,5 @@
 from moonleap import (
-    MemFun,
+    Prop,
     StoreOutputPaths,
     add,
     extend,
@@ -32,4 +32,4 @@ def module_created(module):
 
 @extend(Module)
 class ExtendModule(StoreTemplateDirs, StoreOutputPaths, StoreDjangoConfigs):
-    p_section_model_fields = MemFun(props.p_section_model_fields)
+    sections = Prop(props.Sections)

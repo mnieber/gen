@@ -22,7 +22,7 @@ export const YellowTulipView: React.FC<PropsT> = observer(() => {
   const { gardenFlowersStore } = useStore();
 
   const initialValues = {
-{{ res.p_section_item_fields(res.item_name) }}
+{{ res.sections.item_fields(res.item_name) }}
   };
   const initialErrors = {};
   const handleValidate = ({values, setError} : HandleValidateArgsT) => {};

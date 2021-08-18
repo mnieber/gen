@@ -24,7 +24,7 @@ class StoreSetupFileConfigs:
 @extend(SetupFile)
 class ExtendSetupFile(StoreSetupFileConfigs, RenderTemplates(__file__)):
     service = P.parent(Service, has)
-    p_section_setup_file_config = Prop(props.p_section_setup_file_config)
+    sections = Prop(props.Sections)
 
 
 @extend(Tool)

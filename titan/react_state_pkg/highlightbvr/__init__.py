@@ -1,4 +1,4 @@
-from moonleap import MemFun, extend, kebab_to_camel, tags
+from moonleap import Prop, extend, kebab_to_camel, tags
 
 from . import props
 from .resources import HighlightBvr
@@ -13,6 +13,4 @@ def create_behavior(term, block):
 
 @extend(HighlightBvr)
 class ExtendHighlightBvr:
-    p_section_callbacks = MemFun(props.p_section_callbacks)
-    p_section_policies = MemFun(props.p_section_policies)
-    p_section_default_props = MemFun(props.p_section_default_props)
+    sections = Prop(props.Sections)

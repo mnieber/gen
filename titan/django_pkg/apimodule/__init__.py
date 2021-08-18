@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, extend, kebab_to_snake, tags
+from moonleap import Prop, extend, kebab_to_snake, tags
 from moonleap.utils.case import snake_to_camel
 from moonleap.verbs import has
 from titan.django_pkg.djangoapp import DjangoApp
@@ -24,5 +24,4 @@ class ExtendDjangoApp:
 
 @extend(ApiModule)
 class ExtendApiModule:
-    p_section_base_classes = MemFun(props.p_section_base_classes)
-    p_section_imports = Prop(props.p_section_imports)
+    sections = Prop(props.Sections)

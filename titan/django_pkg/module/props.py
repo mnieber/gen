@@ -43,12 +43,16 @@ def _fields(spec):
     return [x for x in spec.fields if x.name_snake != "id"]
 
 
-def p_section_model_fields(self, item_name):
-    result = []
-    indent = "    "
-    spec = data_type_spec_store.get_spec(item_name)
-    for field in _fields(spec):
-        model = _model(field)
-        result.append(indent + f"{field.name_snake} = {model}")
+class Sections:
+    def __init__(self, res):
+        self.res = res
 
-    return "\n".join(result or [indent + "pass"])
+    def model_fields(self, item_name):
+        result = []
+        indent = "    "
+        spec = data_type_spec_store.get_spec(item_name)
+        for field in _fields(spec):
+            model = _model(field)
+            result.append(indent + f"{field.name_snake} = {model}")
+
+        return "\n".join(result or [indent + "pass"])

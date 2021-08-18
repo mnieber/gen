@@ -1,7 +1,7 @@
 {% magic_with item_type.name as yellowTulip %}
 {% for item_type in res.item_types %}
 export type YellowTulipT = {
-{{ res.p_section_item_fields(item_type) }}
+{{ res.sections.item_fields(item_type) }}
 }
 
 export type YellowTulipByIdT = {[id:string]: YellowTulipT};

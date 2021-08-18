@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, extend, kebab_to_camel, rule, tags
+from moonleap import Prop, extend, kebab_to_camel, rule, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.utils.case import upper0
 from moonleap.verbs import contains, has
@@ -33,6 +33,4 @@ class ExtendModule:
 class ExtendStore(StoreTemplateDirs):
     item_lists = P.children(contains, "item-list")
     item_types = P.children(contains, "item-type")
-    p_section_item_list_fields = Prop(props.p_section_item_list_fields)
-    p_section_on_load_data = Prop(props.p_section_on_load_data)
-    p_section_item_fields = MemFun(props.p_section_item_fields)
+    sections = Prop(props.Sections)

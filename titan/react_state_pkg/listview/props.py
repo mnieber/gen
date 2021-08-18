@@ -21,76 +21,82 @@ def create_router_configs(self):
     return result
 
 
-def _find_behavior(self, name):
-    return R.find(lambda x: x.name == name)(self.behaviors)
+class Sections:
+    def __init__(self, res):
+        self.res = res
 
+    def _find_behavior(self, name):
+        return R.find(lambda x: x.name == name)(self.res.behaviors)
 
-def p_section_imports(self):
-    result = []
-    selection_bvr = _find_behavior(self, "selection")
-    if selection_bvr:
-        result.append("import { Selection } from 'skandha-mobx/Selection';")
-        result.append("import { ClickToSelectItems } from 'skandha-facets/handlers';")
+    def imports(self):
+        result = []
+        selection_bvr = self._find_behavior("selection")
+        if selection_bvr:
+            result.append("import { Selection } from 'skandha-mobx/Selection';")
+            result.append(
+                "import { ClickToSelectItems } from 'skandha-facets/handlers';"
+            )
 
-    if _find_behavior(self, "highlight"):
-        result.append("import { Highlight } from 'skandha-mobx/Highlight';")
+        if self._find_behavior("highlight"):
+            result.append("import { Highlight } from 'skandha-mobx/Highlight';")
 
-    return "\n".join(result)
+        return "\n".join(result)
 
+    def default_props(self):
+        result = []
+        selection_bvr = self._find_behavior("selection")
+        if selection_bvr:
+            result.extend([f"          {self.res.items_name}Selection: Selection,"])
+            result.extend(
+                [f"          {self.res.items_name}HandlerClicks: ClickToSelectItems,"]
+            )
 
-def p_section_default_props(self):
-    result = []
-    selection_bvr = _find_behavior(self, "selection")
-    if selection_bvr:
-        result.extend([f"          {self.items_name}Selection: Selection,"])
-        result.extend(
-            [f"          {self.items_name}HandlerClicks: ClickToSelectItems,"]
-        )
+        if self._find_behavior("highlight"):
+            result.extend([f"          {self.res.items_name}Highlight: Highlight,"])
 
-    if _find_behavior(self, "highlight"):
-        result.extend([f"          {self.items_name}Highlight: Highlight,"])
+        return "\n".join(result)
 
-    return "\n".join(result)
+    def classnames(self):
+        result = []
+        if self._find_behavior("selection"):
+            result.extend(
+                [
+                    f"          '{self.res.name}Item--selected':",
+                    f"            x && props.{self.res.items_name}Selection.ids.includes(x.id),",  # noqa: E501
+                ]
+            )
 
+        if self._find_behavior("highlight"):
+            result.extend(
+                [
+                    f"          '{self.res.name}Item--highlighted':",
+                    f"            x && props.{self.res.items_name}Highlight.id == x.id,",  # noqa: E501
+                ]
+            )
 
-def p_section_classnames(self):
-    result = []
-    if _find_behavior(self, "selection"):
-        result.extend(
+        if not result:
+            return ""
+
+        return "\n".join(
             [
-                f"          '{self.name}Item--selected':",
-                f"            x && props.{self.items_name}Selection.ids.includes(x.id),",  # noqa
+                #
+                "        className={classnames({",
+                *result,
+                "        })}",
             ]
         )
 
-    if _find_behavior(self, "highlight"):
-        result.extend(
-            [
-                f"          '{self.name}Item--highlighted':",
-                f"            x && props.{self.items_name}Highlight.id == x.id,",  # noqa
-            ]
-        )
+    def on_click(self):
+        result = []
+        indent = " " * 10
+        if self._find_behavior("selection"):
+            result.extend([f"{indent}{{...props.{self.res.items_name}HandlerClicks}}"])
+        else:
+            result.extend(
+                [
+                    f"{indent}onClick="
+                    + f"{{() => alert('TODO: browse to {self.res.item_name}')}}"
+                ]
+            )
 
-    if not result:
-        return ""
-
-    return "\n".join(
-        [
-            #
-            "        className={classnames({",
-            *result,
-            "        })}",
-        ]
-    )
-
-
-def p_section_on_click(self):
-    result = []
-    if _find_behavior(self, "selection"):
-        result.extend([f"          {{...props.{self.items_name}HandlerClicks}}"])
-    else:
-        result.extend(
-            [f"          onClick={{() => alert('TODO: browse to {self.item_name}')}}"]
-        )
-
-    return "\n".join(result)
+        return "\n".join(result)

@@ -53,5 +53,4 @@ class ExtendView:
     top_panel = P.child(has, "top:panel")
     bottom_panel = P.child(has, "bottom:panel")
     middle_panel = P.child(has, "middle:panel")
-    p_section_div = Prop(props.p_section_div)
-    p_section_imports = Prop(props.p_section_imports)
+    sections = Prop(props.Sections)
