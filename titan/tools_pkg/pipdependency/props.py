@@ -10,7 +10,7 @@ def list_of_package_names(get_pkgs, add_via=True):
                         if pkg_name not in pkg_names:
                             pkg_names.append(pkg_name)
                             result.append(
-                                fr"{pkg_name.ljust(20)}"
+                                fr"{pkg_name.ljust(20 if add_via else 0)}"
                                 + (f"` # via {tool.name}`" if add_via else "")
                             )
         return sorted(result)
