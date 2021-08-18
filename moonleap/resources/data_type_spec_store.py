@@ -99,8 +99,6 @@ class DataTypeSpecStore:
             data_type_dict = _load_data_type_dict(
                 get_session().settings["spec_dir"], data_type_name
             )
-            if not data_type_dict:
-                raise Exception(f"Cannot load a spec for {data_type_name}")
 
             spec = DataTypeSpec(
                 type_name=data_type_name,
