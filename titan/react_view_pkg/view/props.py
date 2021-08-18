@@ -27,17 +27,13 @@ def _collapses(panel):
     )(get_session().get_tweaks())
 
 
-def _root_component(panel):
+def _components(panel):
     wraps = panel.wraps_children
     if len(panel.child_components) == 0 and not wraps:
         return None
 
     collapses = _collapses(panel)
-    return (
-        panel.child_components[0]
-        if len(panel.child_components) == 1 and collapses
-        else panel
-    )
+    return panel.child_components if collapses else [panel]
 
 
 def _panel(divClassName, panel):
@@ -50,8 +46,8 @@ def _panel(divClassName, panel):
     if panel.wraps_children and collapses:
         return [" " * indent + "{ props.children }"]
 
-    component = _root_component(panel)
-    if not component:
+    components = _components(panel)
+    if not components:
         return []
 
     result = []
@@ -59,7 +55,8 @@ def _panel(divClassName, panel):
         result.extend([f'{" " * indent}<div className="{divClassName}">'])
         indent += 2
 
-    result.extend([" " * indent + component.react_tag])
+    for component in components:
+        result.extend([" " * indent + component.react_tag])
 
     if collapses:
         indent -= 2
@@ -81,7 +78,7 @@ def p_section_div(self):
             [
                 r"<div",
                 r"  className={classnames(",
-                f"    {rootClass}'flex flex-col', props.className",
+                f"    {rootClass}'flex flex-col w-full', props.className",
                 r"  )}",
                 r">",
             ]
@@ -123,8 +120,7 @@ def p_section_div(self):
 def p_section_imports(self):
     result = []
     for panel in _panels(self):
-        component = _root_component(panel)
-        if component:
+        for component in _components(panel):
             result.append(
                 f"import {{ {upper0(component.name)} }} from '{component.module_path}/components';"  # noqa
             )
@@ -132,7 +128,7 @@ def p_section_imports(self):
 
 
 def render(self, output_root_dir, template_renderer):
-    if self.parent_view and len(self.child_components) == 1 and _collapses(self):
+    if self.parent_view and _collapses(self):
         return []
 
     return render_templates(self.root_filename, self.templates_dir)(

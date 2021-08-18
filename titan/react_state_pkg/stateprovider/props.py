@@ -8,7 +8,7 @@ def create_router_configs(self):
 
     if self.state:
         router_config = create_component_router_config(
-            self, wraps=True, url=get_component_base_url(self, self.state.name)
+            self, wraps=True, url=get_component_base_url(self, "")
         )
         result.append(router_config)
 

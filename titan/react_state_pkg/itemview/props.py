@@ -1,5 +1,6 @@
 import ramda as R
 from moonleap import get_session
+from moonleap.utils.inflect import plural
 from titan.react_pkg.component.resources import get_component_base_url
 from titan.react_pkg.router.resources import prepend_router_configs
 from titan.react_pkg.router_and_module.props import create_component_router_config
@@ -22,7 +23,7 @@ def _get_route_params(self):
 
 def create_router_configs(self):
     router_config = create_component_router_config(self)
-    base_url = get_component_base_url(self, self.item_name)
+    base_url = get_component_base_url(self, plural(self.item_name))
     router_config.url = "/".join(
         ([base_url] if base_url else [])
         + [":" + x for x in _get_route_params(self) if x is not None]
