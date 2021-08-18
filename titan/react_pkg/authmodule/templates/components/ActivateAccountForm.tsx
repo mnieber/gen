@@ -1,7 +1,7 @@
 import { FormState, FormStateProvider } from 'react-form-state-context';
 import { useParams } from 'react-router-dom';
 import { States } from 'src/api/authApi/states';
-import { Routes } from 'src/app/Routes';
+import { routes } from 'src/app/routeTable';
 import { GlobalError } from 'src/auth/components/formFields/GlobalError';
 import { PasswordField } from 'src/auth/components/formFields/PasswordField';
 import { SubmitButton } from 'src/auth/components/formFields/SubmitButton';
@@ -14,8 +14,8 @@ const _password_too_short_msg = 'Sorry, that password is too short';
 const _tokenNotFoundDiv = (
   <div>
     The activation failed, probably because your account is already active.{' '}
-    Please try to <RouterLink to={Routes.signIn()}>sign in</RouterLink> or{' '}
-    <RouterLink to={Routes.requestPasswordReset()}>
+    Please try to <RouterLink to={routes.signIn()}>sign in</RouterLink> or{' '}
+    <RouterLink to={routes.requestPasswordReset()}>
       reset your password
     </RouterLink>
     .

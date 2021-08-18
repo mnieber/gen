@@ -15,7 +15,7 @@ def create_graphql_auth(term, block):
     add(graphql_auth, django_configs.get())
     add(
         graphql_auth,
-        PipRequirement(["dgr-setpasswordonactivation"]),
+        PipRequirement(["django-rtk-green"]),
     )
     return graphql_auth
 

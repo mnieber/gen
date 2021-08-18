@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { States } from 'src/api/authApi/states';
 import { useStore } from 'src/app/components';
-import { Routes } from 'src/app/Routes';
+import { routes } from 'src/app/routeTable';
 import { useAuthStateContext } from 'src/auth/components';
 import { ActivateAccountForm } from 'src/auth/components/ActivateAccountForm';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
@@ -15,7 +15,7 @@ export const ActivateAccountPage: React.FC = observer(() => {
   const confirmationDiv = (
     <div>
       Your account was activated. You can now{' '}
-      <RouterLink dataCy={'goToSignInLink'} to={Routes.signIn()}>
+      <RouterLink dataCy={'goToSignInLink'} to={routes.signIn()}>
         sign in
       </RouterLink>
       .
