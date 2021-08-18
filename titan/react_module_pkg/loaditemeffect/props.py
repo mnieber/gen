@@ -7,7 +7,7 @@ def create_router_configs(self):
 
 
 effect_template = """
-    f={(declare_params) => {
+    f={(declare_params: ArgsT) => {
         api.getYellowTulip(use_params);
     }}
     getArgs={(params) => {
@@ -32,5 +32,23 @@ def p_section_effect(self):
             ("declare_params", declare_params),
             ("use_params", use_params),
             ("extract_params", extract_params),
+        ],
+    )
+
+
+effect_args_template = """
+type ArgsT = {
+    yellowTulip
+};
+"""
+
+
+def p_section_effect_args(self):
+    args = ", ".join([f"{route_param}: string" for route_param in self.route_params])
+
+    return magic_replace(
+        effect_args_template,
+        [
+            ("yellowTulip", args),
         ],
     )
