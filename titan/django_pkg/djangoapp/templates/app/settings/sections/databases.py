@@ -11,8 +11,8 @@ DATABASES = {
         "NAME": "django",
         "USER": "django",
         "PASSWORD": env("POSTGRES_PASSWORD"),
-        "HOST": "localhost",
-        "PORT": "",
+        "HOST": env("POSTGRES_HOST"),
+        "PORT": env("POSTGRES_PORT"),
     },
 }
 
