@@ -11,6 +11,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "corsheaders",
+    "django_extensions",
 {% for x in res.third_party_apps %}
     "{{ x }}",
 {% endfor %}
