@@ -19,11 +19,6 @@ def create_store(term, block):
     return store
 
 
-@rule("module", has, "store")
-def add_utils_templates(module, store):
-    module.react_app.utils_module.add_template_dir(__file__, "templates_utils")
-
-
 @extend(Module)
 class ExtendModule:
     stores = P.children(has, "store")

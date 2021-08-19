@@ -1,6 +1,7 @@
 from . import (
     authmodule,
     component,
+    cypress,
     jsfilemerger,
     module,
     module_and_component,
@@ -17,6 +18,7 @@ from . import (
 modules = [
     authmodule,
     component,
+    cypress,
     module_and_component,
     module,
     nodepackage,

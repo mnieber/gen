@@ -1,4 +1,4 @@
-import { EventT, EventTopic } from 'src/utils/events';
+import { EventT } from 'src/utils/events';
 import { ObjT } from 'src/utils/types';
 
 export type AuthStoreEventT = EventT & {
@@ -8,10 +8,10 @@ export type AuthStoreEventT = EventT & {
   };
 };
 
-export const ActivateAccount = new EventTopic('ActivateAccount');
-export const ChangePassword = new EventTopic('ChangePassword');
-export const LoadUserId = new EventTopic('LoadUserId');
-export const ResetPassword = new EventTopic('ResetPassword');
-export const SignIn = new EventTopic('SignIn');
-export const SignOut = new EventTopic('SignOut');
-export const SignUp = new EventTopic('SignUp');
+export const ActivateAccount = 'ActivateAccount';
+export const ChangePassword = 'ChangePassword';
+export const LoadUserId = 'LoadUserId';
+export const ResetPassword = 'ResetPassword';
+export const SignIn = 'SignIn';
+export const SignOut = 'SignOut';
+export const SignUp = 'SignUp';

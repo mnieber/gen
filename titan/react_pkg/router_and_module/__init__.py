@@ -10,7 +10,7 @@ from .resources import RouteTable
 
 @rule("app:module", has, "router")
 def app_module_has_router(app_module, router):
-    app_module.react_app.utils_module.add_template_dir(__file__, "templates_utils")
+    app_module.react_app.utils_module.use_packages(["RouteTable"])
     app_module.add_template_dir(__file__, "templates_app")
 
 

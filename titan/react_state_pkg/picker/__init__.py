@@ -1,6 +1,5 @@
-from moonleap import RenderTemplates, add, extend, kebab_to_camel, rule, tags, upper0
+from moonleap import RenderTemplates, extend, kebab_to_camel, rule, tags, upper0
 from moonleap.verbs import has
-from titan.react_pkg.nodepackage import load_node_package_config
 
 from .resources import Picker
 
@@ -10,13 +9,12 @@ def create_picker(term, block):
     item_name = kebab_to_camel(term.data)
     name = f"{upper0(item_name)}Picker"
     picker = Picker(item_name=item_name, name=name)
-    add(picker, load_node_package_config(__file__))
     return picker
 
 
 @rule("module", has, "picker")
 def create_utils_module(module, picker):
-    module.react_app.utils_module.add_template_dir(__file__, "templates_utils")
+    module.react_app.utils_module.use_packages(["ValuePicker"])
 
 
 @extend(Picker)

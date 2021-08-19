@@ -1,1 +1,0 @@
-export { storeConnectsToApi } from './storeConnectsToApi';
