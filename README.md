@@ -40,8 +40,8 @@ Just based on knowing the fields in a datatype we can create:
 - a list-view with corresponding item view
 - a form view, including field validation and skeleton end-to-end test
 
-Also, considering that operations such as selection, filtering and drag-and-drop can operate on lists of ids,
-we can create code for list-views that support these operations. It's important though that the generated code
+Also, considering that operations such as selection, filtering and drag-and-drop can operate on lists of ids (which means that they are abstract operations)
+we can generate code for list-views that support these operations. It's important though that the generated code
 looks very similar to hand-written code, otherwise it cannot serve as the basis for a nice code base.
 
 ## Running
@@ -80,7 +80,7 @@ def service_uses_pytest(service, pytest):
     pass
 ```
 
-The developer can then configure the set of the templates that take this resource as input:
+The developer can then configure the set of (jinja2) templates that take this resource as input:
 
 ```
 @extend(Service)
