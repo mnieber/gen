@@ -3,7 +3,7 @@ from titan.dodo_pkg.layer import LayerConfig
 
 def get(layer_group):
     def inner():
-        return dict(
+        result = dict(
             DIAL={
                 "default": {
                     str(i + 1): f"dodo {layer.name}."
@@ -19,5 +19,9 @@ def get(layer_group):
                 },
             }
         )
+        if len(layer_group.layers) < 12:
+            pos = min(max(6, len(layer_group.layers)), 12)
+            result["DIAL"]["default"][str(pos)] = "dodo stack.browse --url "
+        return result
 
     return LayerConfig(body=lambda x: inner())
