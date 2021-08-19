@@ -23,14 +23,11 @@ def dockerfile_use_docker_image(dockerfile, docker_image):
 
 @rule("service", uses, "service")
 def service_uses_service(client_service, server_service):
-    add(
-        client_service,
-        docker_compose_configs.add_depends_on(server_service, is_dev=True),
-    )
-    add(
-        client_service,
-        docker_compose_configs.add_depends_on(server_service, is_dev=False),
-    )
+    for is_dev in (True, False):
+        add(
+            client_service,
+            docker_compose_configs.add_depends_on(server_service, is_dev=is_dev),
+        )
 
 
 @extend(Service)
