@@ -10,7 +10,8 @@ def get():
                     serve=r"make runserver",
                 ),
                 decorators=dict(docker=["make"]),
-            )
+            ),
+            NODE=dict(node_modules_dir="${/SERVER/src_dir}/node_modules"),
         )
 
     return LayerConfig(lambda x: inner())
