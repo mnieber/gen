@@ -118,7 +118,10 @@ class Sections:
         for item_list in module.item_lists_provided:
             result.append(f"{upper0(plural(item_list.item_name))}Query, ")
 
-        return "".join(result)
+        return "".join(result + (["graphene.ObjectType"] if result else []))
+
+    def mutation_base_types(self, module):
+        return "graphene.ObjectType" if (module.forms or module.items_received) else ""
 
     def form_values(self, item_name):
         result = []

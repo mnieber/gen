@@ -59,11 +59,11 @@ class PostBlueDaisy(graphene.Mutation):
 {% endfor %}
 
 
-class Query({{ graphene.sections.query_base_types(res) }}graphene.ObjectType):
+class Query({{ graphene.sections.query_base_types(res) }}):
     pass
 
 
-class Mutation(graphene.ObjectType):
+class Mutation({{ graphene.sections.mutation_base_types(res) }}):
 {{ graphene.sections.mutation_fields(res) }}
 
 
