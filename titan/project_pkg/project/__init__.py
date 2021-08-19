@@ -15,6 +15,9 @@ def create_project(term, block):
     return project
 
 
+empty_rules = [("project", has, "src-dir")]
+
+
 @extend(Project)
 class ExtendProject(StoreOutputPaths, StoreTemplateDirs):
     src_dir = P.child(has, "src-dir")
