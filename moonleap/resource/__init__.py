@@ -10,12 +10,15 @@ from moonleap.resource.slctrs import Selector
 # Use a fixed seed for the id generator
 rd = random.Random()
 rd.seed(0)
-uuid.uuid4 = lambda: uuid.UUID(int=rd.getrandbits(128))
+
+
+def get_id():
+    return uuid.UUID(int=rd.getrandbits(128)).hex
 
 
 @dataclass
 class Resource:
-    id: str = field(default_factory=lambda: uuid.uuid4().hex, init=False)
+    id: str = field(default_factory=get_id, init=False)
     _relations: T.List[T.Tuple[Rel, "Resource"]] = field(
         default_factory=list, init=False, repr=False
     )

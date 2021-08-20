@@ -1,4 +1,6 @@
 import ramda as R
+from moonleap import get_session
+from moonleap.get_or_create_secret_key import get_or_create_secret_key
 from moonleap.utils.merge_into_config import merge_into_config
 from titan.django_pkg.djangoapp.resources import DjangoConfig
 
@@ -32,3 +34,7 @@ def local_apps(self):
 
 def cors_urls_regex(self):
     return "|".join(self.config.cors_urls)
+
+
+def secret_key(self):
+    return get_or_create_secret_key(get_session(), "django_dev")

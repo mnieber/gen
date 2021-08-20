@@ -46,3 +46,4 @@ class ExtendDjangoApp(StoreTemplateDirs):
     third_party_apps = Prop(props.third_party_apps)
     local_apps = Prop(props.local_apps)
     cors_urls_regex = Prop(props.cors_urls_regex)
+    secret_key = Prop(props.secret_key)
