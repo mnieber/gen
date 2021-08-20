@@ -7,13 +7,13 @@ from titan.react_module_pkg.flags import Flags
 from . import docker_compose_configs, layer_configs, props
 
 
-class MockGrapqhlServer(Tool):
+class MockGraphqlServer(Tool):
     pass
 
 
 @tags(["mock-graphql-server"])
 def create_mock_server(term, block):
-    mock_server = MockGrapqhlServer(name="mock-graphql-server")
+    mock_server = MockGraphqlServer(name="mock-graphql-server")
     mock_server.output_path = "mockServer"
     add(mock_server, layer_configs.get())
     add(mock_server, docker_compose_configs.get())
@@ -32,8 +32,8 @@ def store_uses_item_type(store, item_type):
         store.add_template_dir(__file__, "templates_store")
 
 
-@extend(MockGrapqhlServer)
-class ExtendMockGrapqhlServer(RenderTemplates(__file__)):
+@extend(MockGraphqlServer)
+class ExtendMockGraphqlServer(RenderTemplates(__file__)):
     service = P.parent(Service, uses)
     sections = Prop(props.Sections)
 
