@@ -1,9 +1,9 @@
-import React from "react";
-import { rsMap } from "src/api/ResourceStateMap";
-import { isErroredRS, isResetRS, isUpdatingRS, LoadingT } from "src/utils/RST";
+import React from 'react';
+import { rsMap } from 'src/api/ResourceStateMap';
+import { isErroredRS, isResetRS, isUpdatingRS, LoadingT } from 'src/utils/RST';
 
 type PropsT = {
-  resUrl: string;
+  resUrl: string | undefined;
   renderUpdating?: (updatingState: LoadingT) => JSX.Element;
   renderErrored?: (message: string) => JSX.Element;
 };
@@ -16,6 +16,8 @@ const defaultRenderUpdating = () => {
 };
 
 export const getResourceView = (props: PropsT) => {
+  if (!props.resUrl) return undefined;
+
   const renderErrored = props.renderErrored ?? defaultRenderErrored;
   const renderUpdating = props.renderUpdating ?? defaultRenderUpdating;
   const renderReset = () => {
