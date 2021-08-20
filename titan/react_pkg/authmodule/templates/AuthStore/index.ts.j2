@@ -4,7 +4,9 @@ import * as authApi from 'src/api/authApi';
 import { States } from 'src/api/authApi/states';
 import * as events from 'src/auth/AuthStore/events';
 import { AuthStoreEventT } from 'src/auth/AuthStore/events';
+{% if res.react_app.cypress %}
 import { maybeSetCypressCookie } from 'src/utils/cookies';
+{% endif %}
 import { RST } from 'src/utils/RST';
 import { ObjT } from 'src/utils/types';
 {% if res.react_app.cypress %}
