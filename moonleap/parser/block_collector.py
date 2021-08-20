@@ -3,7 +3,6 @@ import re
 import mistune
 import nltk
 from moonleap.parser.block import Block
-from moonleap.parser.expand_markdown import expand_markdown
 from moonleap.parser.line import get_create_line
 from moonleap.scope_manager import get_local_scope_names
 
@@ -98,11 +97,10 @@ def create_block(name, level, parent_block, scope_names):
     return block
 
 
-def get_blocks(spec_file):
+def get_blocks(markdown):
     blockCollector = BlockCollector(
         create_block=create_block,
         create_line=get_create_line(),
     )
-    expanded_markdown = expand_markdown(spec_file)
-    mistune.Markdown(renderer=blockCollector)(expanded_markdown)
+    mistune.Markdown(renderer=blockCollector)(markdown)
     return blockCollector.blocks

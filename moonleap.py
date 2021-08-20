@@ -4,14 +4,19 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 from moonleap import create_resources, get_blocks, render_resources, report_resources
+from moonleap.parser.expand_markdown import expand_markdown
 from moonleap.report.create_expected_dir import create_expected_dir
 from moonleap.report.diff import create_snapshot, diff, smart_diff
 from moonleap.session import Session, set_session
 
 
 def generate_code(spec_file, session):
-    blocks = get_blocks(spec_file)
+    expanded_markdown = expand_markdown(spec_file)
+    expanded_markdown_fn = os.path.join(".moonleap", "spec.md")
+    with open(expanded_markdown_fn, "w") as f:
+        f.write(expanded_markdown)
 
+    blocks = get_blocks(expanded_markdown)
     unmatched_rels = create_resources(blocks)
     render_resources(blocks)
     report_resources(blocks, unmatched_rels)
