@@ -12,7 +12,15 @@ class Block:
         self.parent_block = None
         self.child_blocks = []
         self._resource_by_term = []
+        self._relations = []
         self.lines: T.List[Line] = []
+
+    def has_relation(self, relation):
+        return relation in self._relations
+
+    def register_relation(self, relation):
+        if relation not in self._relations:
+            self._relations.append(relation)
 
     def describes(self, term):
         generic_terms = create_generic_terms(term)

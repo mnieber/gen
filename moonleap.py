@@ -17,9 +17,9 @@ def generate_code(spec_file, session):
         f.write(expanded_markdown)
 
     blocks = get_blocks(expanded_markdown)
-    unmatched_rels = create_resources(blocks)
+    create_resources(blocks)
     render_resources(blocks)
-    report_resources(blocks, unmatched_rels)
+    report_resources(blocks)
 
 
 def report(x):

@@ -6,9 +6,3 @@
 {% for term_str, res in resource_by_term_str %}
 - <a href="{{ res.id }}.html">{{ term_str }}</a>
 {% endfor %}
-
-## Unmatched relations
-
-{% for rel_str in unmatched_rel_strs %}
-- {{ rel_str }}
-{% endfor %}

@@ -19,7 +19,7 @@ def _get_relations(res, is_inv):
     ]
 
 
-def report_resources(blocks, unmatched_rels):
+def report_resources(blocks):
     session = get_session()
     session.report("Creating report...")
 
@@ -37,7 +37,7 @@ def report_resources(blocks, unmatched_rels):
                 ofs.write(create_report(resource, term, index_fn))
 
     with open(index_fn, "w") as ofs:
-        ofs.write(create_index(blocks, unmatched_rels))
+        ofs.write(create_index(blocks))
 
 
 def create_report(resource, term, index_fn):
@@ -65,7 +65,7 @@ def create_report(resource, term, index_fn):
     )
 
 
-def create_index(blocks, unmatched_rels):
+def create_index(blocks):
     def to_rel_str(rel):
         subj = term_to_word(rel.subj)
         obj = term_to_word(rel.obj)
@@ -80,9 +80,6 @@ def create_index(blocks, unmatched_rels):
             if is_owner:
                 resource_by_term_str[term_to_word(term)] = resource
 
-    unmatched_rel_strs = [
-        to_rel_str(rel) for rel in unmatched_rels if rel.subj and rel.obj
-    ]
     body = _render(
         template_fn,
         None,
@@ -90,7 +87,6 @@ def create_index(blocks, unmatched_rels):
         resource_by_term_str=sorted(
             list(resource_by_term_str.items()), key=lambda x: x[0]
         ),
-        unmatched_rel_strs=unmatched_rel_strs,
     )
     return (
         "<html><body>"
