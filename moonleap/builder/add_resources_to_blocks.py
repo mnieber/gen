@@ -31,6 +31,12 @@ def add_resources_to_blocks(blocks):
     for block in R.sort_by(lambda x: x.level)(blocks):
         parent_blocks = block.get_blocks(include_parents=True, include_self=False)
         child_blocks = block.get_blocks(include_children=True, include_self=False)
+        sibling_blocks = (
+            [x for x in block.parent_block.child_blocks if x is not block]
+            if block.parent_block
+            else []
+        )
+        competing_blocks = list(child_blocks) + list(sibling_blocks)
 
         for term in block.get_terms():
             if is_generic_term(term):
@@ -52,9 +58,9 @@ def add_resources_to_blocks(blocks):
 
             creator_block = block
             if not block.describes(term):
-                for child_block in child_blocks:
-                    if child_block.describes(term):
-                        creator_block = child_block
+                for competing_block in competing_blocks:
+                    if competing_block.describes(term):
+                        creator_block = competing_block
                         break
 
             resource = _create_resource(term, creator_block, session.scope_manager)
