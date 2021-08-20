@@ -5,7 +5,7 @@ import { useStore } from 'src/app/components';
 import { useAuthStateContext } from 'src/auth/components';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { SignUpForm } from 'src/auth/components/SignUpForm';
-import { RouterLink } from 'src/widgets/components/RouterLink';
+import { RouterLink } from 'src/utils/components/RouterLink';
 
 export const SignUpPage: React.FC = observer(() => {
   const { authStore } = useStore();

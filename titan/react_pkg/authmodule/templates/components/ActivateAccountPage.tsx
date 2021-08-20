@@ -6,7 +6,7 @@ import { routes } from 'src/app/routeTable';
 import { useAuthStateContext } from 'src/auth/components';
 import { ActivateAccountForm } from 'src/auth/components/ActivateAccountForm';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
-import { RouterLink } from 'src/widgets/components/RouterLink';
+import { RouterLink } from 'src/utils/components/RouterLink';
 
 export const ActivateAccountPage: React.FC = observer(() => {
   const { authStore } = useStore();

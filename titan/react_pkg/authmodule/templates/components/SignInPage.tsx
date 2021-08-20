@@ -5,8 +5,8 @@ import { useStore } from 'src/app/components';
 import { useAuthStateContext } from 'src/auth/components';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { SignInForm } from 'src/auth/components/SignInForm';
+import { RouterLink } from 'src/utils/components/RouterLink';
 import { getNextUrl, useNextUrl } from 'src/utils/useNextUrl';
-import { RouterLink } from 'src/widgets/components/RouterLink';
 
 export const SignInPage: React.FC = observer(() => {
   const { authStore } = useStore();

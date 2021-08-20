@@ -6,7 +6,7 @@ import { useStore } from 'src/app/components';
 import { useAuthStateContext } from 'src/auth/components';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { ResetPasswordForm } from 'src/auth/components/ResetPasswordForm';
-import { RouterLink } from 'src/widgets/components/RouterLink';
+import { RouterLink } from 'src/utils/components/RouterLink';
 
 export const ResetPasswordPage: React.FC = observer(() => {
   const { authStore } = useStore();
