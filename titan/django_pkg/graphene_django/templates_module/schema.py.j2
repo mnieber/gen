@@ -13,7 +13,7 @@ from {{ item_type.module.name_snake }}.models import YellowTulip
 class YellowTulipType(DjangoObjectType):
     class Meta:
         model = YellowTulip
-        exclude = [{{ graphene.sections.exclude(item_type.name) }}]
+        {{ graphene.sections.exclude(item_type.name) }}
 
 {% endfor %}
 

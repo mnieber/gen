@@ -20,6 +20,14 @@ def render(self, output_root_dir, template_renderer):
     return all_output_filenames
 
 
+def has_graphql_mutations(module):
+    return bool(module.forms or module.items_received)
+
+
+def has_graphql_queries(module):
+    return bool(module.item_lists_provided)
+
+
 def _fields(spec):
     return [x for x in spec.fields if x.name_snake != "id"]
 
@@ -92,8 +100,8 @@ class Sections:
 
     def exclude(self, item_name):
         spec = data_type_spec_store.get_spec(item_name)
-
-        return ", ".join([f'"{x.name_snake}"' for x in _fields(spec) if x.private])
+        list_str = ", ".join([f'"{x.name_snake}"' for x in _fields(spec) if x.private])
+        return f"exclude = [{list_str}]" if list_str else ""
 
     def mutation_fields(self, module):
         result = []
@@ -121,7 +129,7 @@ class Sections:
         return "".join(result + (["graphene.ObjectType"] if result else []))
 
     def mutation_base_types(self, module):
-        return "graphene.ObjectType" if (module.forms or module.items_received) else ""
+        return "graphene.ObjectType" if module.has_graphql_mutations else ""
 
     def form_values(self, item_name):
         result = []
