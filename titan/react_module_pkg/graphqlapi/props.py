@@ -45,4 +45,4 @@ class Sections:
 
     def item_fields(self, item_name):
         spec = data_type_spec_store.get_spec(item_name)
-        return "\n".join([f"          {x.name}," for x in spec.fields if not x.private])
+        return "\n".join([f"          {x.name}" for x in spec.fields if not x.private])
