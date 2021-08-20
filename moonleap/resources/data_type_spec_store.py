@@ -63,6 +63,7 @@ class DataTypeField:
     required: bool
     private: bool
     field_type: T.Union[str, FK]
+    default_value: str = ""
 
 
 @dataclass

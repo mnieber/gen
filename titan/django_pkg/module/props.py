@@ -15,26 +15,37 @@ def _model(field):
     if isinstance(t, FK):
         flag = "False" if field.required else "True"
         on_delete = _on_delete(field)
-        return (
-            f"models.ForeignKey({t.target}, on_delete={on_delete}, "
-            + f"null={flag}, blank={flag})"
-        )
+        args = [t.target, f"on_delete={on_delete}", f"null={flag}", f"blank={flag}"]
+
+        return f"models.ForeignKey({', '.join(args)})"
 
     if t == "string":
         max_length = field.spec.get("maxLength", None)
+        default_arg = (
+            [f'default="{field.default_value}"'] if field.default_value else []
+        )
         if max_length is not None:
-            return f"models.CharField(max_length={max_length})"
+            args = [f"max_length={max_length}", *default_arg]
+            return f"models.CharField({', '.join(args)})"
         else:
-            return r"models.TextField()"
+            return f"models.TextField({', '.join(default_arg)})"
 
     if t == "bool":
-        return r"models.BooleanField()"
+        default_arg = (
+            [f'default={"True" if field.default_value else "False"}']
+            if field.default_value
+            else []
+        )
+        return f"models.BooleanField({', '.join(default_arg)})"
 
     if t == "email":
-        return r"models.EmailField()"
+        default_arg = (
+            [f'default="{field.default_value}"'] if field.default_value else []
+        )
+        return f"models.EmailField({', '.join(default_arg)})"
 
     if t == "date":
-        return r"models.DateField()"
+        return f"models.DateField()"
 
     raise Exception(f"Unknown model field type: {t}")
 
