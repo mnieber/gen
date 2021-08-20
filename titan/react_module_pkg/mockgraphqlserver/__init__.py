@@ -34,7 +34,6 @@ def store_uses_item_type(store, item_type):
 
 @extend(MockGraphqlServer)
 class ExtendMockGraphqlServer(RenderTemplates(__file__)):
-    service = P.parent(Service, uses)
     sections = Prop(props.Sections)
 
 

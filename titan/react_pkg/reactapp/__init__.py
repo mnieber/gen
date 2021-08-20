@@ -44,7 +44,7 @@ def service_uses_react_app(service, react_app):
 
 @extend(ReactApp)
 class ExtendReactApp(StoreTemplateDirs):
-    service = P.parent(Service, runs)
+    pass
 
 
 @extend(Service)

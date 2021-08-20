@@ -29,7 +29,7 @@ def create_makefile(term, block):
 
 @extend(Makefile)
 class ExtendMakefile(StoreMakefileRules, RenderTemplates(__file__)):
-    service = P.parent(Service, has)
+    pass
 
 
 @extend(Service)

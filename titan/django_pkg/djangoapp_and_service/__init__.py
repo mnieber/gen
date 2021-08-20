@@ -2,7 +2,6 @@ import moonleap.resource.props as P
 from moonleap import add, add_source, create_forward, extend, rule
 from moonleap.verbs import has, runs
 from titan.django_pkg.djangoapp import StoreDjangoConfigs
-from titan.django_pkg.djangoapp.resources import DjangoApp
 from titan.project_pkg.service import Service, Tool
 
 from . import layer_configs
@@ -26,11 +25,6 @@ def service_runs_django_app(service, django_app):
         create_forward(service, has, ":makefile"),
         create_forward(django_app, has, "app:module"),
     ]
-
-
-@extend(DjangoApp)
-class ExtendDjangoApp:
-    service = P.parent(Service, runs)
 
 
 @extend(Service)

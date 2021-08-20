@@ -4,10 +4,11 @@ from pathlib import Path
 
 from moonleap.resource import Resource
 from moonleap.utils import yaml2dict
+from titan.project_pkg.service import Tool
 
 
 @dataclass
-class NodePackage(Resource):
+class NodePackage(Tool):
     pass
 
 

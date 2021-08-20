@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from moonleap.resource import Resource
+from titan.project_pkg.service import Tool
 
 
 @dataclass
@@ -11,5 +12,5 @@ class OptPath(Resource):
 
 
 @dataclass
-class OptDir(Resource):
+class OptDir(Tool):
     pass

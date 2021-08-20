@@ -27,14 +27,13 @@ def add_node_package_config(resource, node_package_config):
 
 @tags(["node-package"])
 def create_node_package(term, block):
-    node_package = NodePackage()
+    node_package = NodePackage(name="node-package")
     add(node_package, node_package_configs.get(node_package))
     return node_package
 
 
 @rule("service", has, "node-package")
 def service_has_node_package(service, node_package):
-    node_package.output_paths.add_source(service)
     node_package.node_package_configs.add_source(service)
 
 
@@ -53,7 +52,6 @@ class ExtendNodePackage(
     StoreNodePackageConfigs, StoreOutputPaths, RenderTemplates(__file__)
 ):
     get_config = MemFun(props.get_node_package_config)
-    service = P.parent(Service, has)
 
 
 @extend(Tool)

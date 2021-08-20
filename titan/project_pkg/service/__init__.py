@@ -52,4 +52,4 @@ class ExtendService(
 
 @extend(Tool)
 class ExtendTool(StoreOutputPaths):
-    pass
+    service = P.parent(Service, has + runs)

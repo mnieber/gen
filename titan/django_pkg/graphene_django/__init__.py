@@ -2,7 +2,7 @@ import moonleap.resource.props as P
 from moonleap import MemFun, Prop, add, create_forward, extend, rule, tags
 from moonleap.verbs import has, uses
 from titan.django_pkg.module import Module
-from titan.project_pkg.service import Service, Tool
+from titan.project_pkg.service import Tool
 from titan.tools_pkg.pipdependency import PipRequirement
 
 from . import django_configs, props
@@ -28,7 +28,6 @@ def service_uses_graphene_django(service, graphene_django):
 @extend(GrapheneDjango)
 class ExtendGrapheneDjango:
     render = MemFun(props.render)
-    service = P.parent(Service, has)
     sections = Prop(props.Sections)
 
 

@@ -1,7 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import RenderTemplates, add_source, extend, rule, tags
 from moonleap.verbs import has
-from titan.project_pkg.service import Service
 
 from .resources import Dockerfile, DockerImage
 
@@ -30,5 +29,4 @@ def dockerfile_use_docker_image(dockerfile, docker_image):
 
 @extend(Dockerfile)
 class ExtendDockerfile(RenderTemplates(__file__)):
-    service = P.parent(Service, has)
     docker_image = P.child(has, "docker-image")

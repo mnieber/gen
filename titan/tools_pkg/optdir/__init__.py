@@ -9,13 +9,9 @@ from .resources import OptDir, OptPath  # noqa
 
 @tags(["opt-dir"])
 def create_opt_dir(term, block):
-    opt_dir = OptDir()
+    opt_dir = OptDir(name="opt-dir")
+    add(opt_dir, docker_compose_configs.get(opt_dir))
     return opt_dir
-
-
-@rule("service", has, "opt-dir")
-def service_has_opt_dir(service, opt_dir):
-    add(service, docker_compose_configs.get(opt_dir))
 
 
 @register_add(OptPath)
@@ -30,7 +26,6 @@ class StoreOptPaths:
 @extend(OptDir)
 class ExtendOptDir:
     render = MemFun(props.render_opt_dir)
-    service = P.parent(Service, has)
 
 
 @extend(Service)

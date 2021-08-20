@@ -1,7 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import add, create_forward, extend, rule, tags
 from moonleap.verbs import has, with_
-from titan.project_pkg.service import Service
 from titan.tools_pkg.pipdependency import PipRequirement
 
 from . import layer_configs, opt_paths
@@ -42,4 +41,3 @@ empty_rules = [("pytest", with_, "pytest-html")]
 @extend(Pytest)
 class ExtendPytest:
     pytest_html = P.child(with_, "pytest-html")
-    service = P.parent(Service, has)
