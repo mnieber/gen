@@ -5,7 +5,7 @@ from moonleap.utils.magic_replace import magic_replace
 load_data_template = """
     if (queryName === 'getYellowTulips') {
       if (isUpdatedRS(rs)) {
-        this.addYellowTulips(values(event.payload.data.yellowTulips));
+        this.addYellowTulips(values(data.yellowTulips));
       }
       rsMap.registerRS(rs, [resUrls.yellowTulipById]);
     }

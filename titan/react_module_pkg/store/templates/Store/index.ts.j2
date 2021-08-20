@@ -8,6 +8,7 @@ import { isUpdatedRS, RST } from 'src/utils/RST';
 {% if res.policies %}import * as Policies from '{{ res.module_path }}/policies';{% endif %}
 {% for item_list in res.item_lists %}
 import { YellowTulipT, YellowTulipByIdT } from 'src/gardenFlowers/types';
+import { ObjT } from 'src/utils/types';
 {% endfor %}
 {% end_clean_up_js_imports %}
 
@@ -26,7 +27,7 @@ export class {{ res.name }} {
 {% endfor %}
   }
 
-  @action onLoadData(event: any, rs: RST, queryName: string) {
+  @action onLoadData(event: any, rs: RST, queryName: string, data: ObjT) {
 {{ res.sections.on_load_data() }}
   }
 
