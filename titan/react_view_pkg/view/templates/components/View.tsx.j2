@@ -1,9 +1,11 @@
 {% magic_with res.name as yellowTulip %}
+{% clean_up_js_imports %}
 import { useDefaultProps, FC } from 'react-default-props-context';
 import classnames from 'classnames';
 import { observer } from 'mobx-react-lite';
 
 {{ res.sections.imports() }}
+{% end_clean_up_js_imports %}
 
 import './YellowTulip.scss';
 

@@ -1,9 +1,13 @@
 {% magic_with res.item_name as yellowTulip %}
 {% magic_with res.module.name as gardenFlowers %}
+{% clean_up_js_imports %}
 import { observer } from 'mobx-react-lite';
 import { FC, useDefaultProps } from 'react-default-props-context';
 import { YellowTulipT } from 'src/gardenFlowers/types'
 import { getResourceView } from 'src/utils/components';
+{% end_clean_up_js_imports %}
+
+import './{{ res.name }}.scss';
 
 type PropsT = {
 };
