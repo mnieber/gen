@@ -87,7 +87,7 @@ def tree(verb, term):
                 result = list(self.children)
                 queue = list(self.sources)
                 # never use the same source twice
-                known_sources = list()
+                known_sources = [self]
 
                 while queue:
                     source = queue.pop(0)
