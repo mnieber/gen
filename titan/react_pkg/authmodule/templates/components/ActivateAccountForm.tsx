@@ -6,7 +6,7 @@ import { GlobalError } from 'src/auth/components/formFields/GlobalError';
 import { PasswordField } from 'src/auth/components/formFields/PasswordField';
 import { SubmitButton } from 'src/auth/components/formFields/SubmitButton';
 import { Field } from 'src/forms/components/Field';
-import { RouterLink } from 'src/utils/components/RouterLink';
+import { RouterLink } from 'src/utils/components';
 import { ObjT } from 'src/utils/types';
 
 const _password_too_short_msg = 'Sorry, that password is too short';
