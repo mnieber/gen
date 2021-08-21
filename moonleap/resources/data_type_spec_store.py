@@ -20,6 +20,10 @@ def _type(field_spec):
     raise Exception(f"Unknown field type: {field_spec}")
 
 
+def _default_value(field_spec):
+    return field_spec.get("default", None)
+
+
 def _load_data_type_dict(data_type_spec_dir, data_type_name):
     spec_fn = os.path.join(data_type_spec_dir, "data_types", data_type_name + ".json")
     if not os.path.exists(spec_fn):
@@ -45,6 +49,7 @@ def _get_fields(data_type_dict):
                 required=field_name in required,
                 private=field_name in private,
                 field_type=_type(field_spec),
+                default_value=_default_value(field_spec),
             )
         )
     return result
@@ -63,7 +68,7 @@ class DataTypeField:
     required: bool
     private: bool
     field_type: T.Union[str, FK]
-    default_value: str = ""
+    default_value: T.Any = None
 
 
 @dataclass

@@ -12,11 +12,11 @@ def _on_delete(field):
 def _model(field):
     t = field.field_type
 
-    if isinstance(t, FK):
-        flag = "False" if field.required else "True"
-        on_delete = _on_delete(field)
-        args = [t.target, f"on_delete={on_delete}", f"null={flag}", f"blank={flag}"]
+    null_blank = [] if field.required else [f"null=True", f"blank=True"]
 
+    if isinstance(t, FK):
+        on_delete = _on_delete(field)
+        args = [t.target, f"on_delete={on_delete}", *null_blank]
         return f"models.ForeignKey({', '.join(args)})"
 
     if t == "string":
@@ -25,24 +25,27 @@ def _model(field):
             [f'default="{field.default_value}"'] if field.default_value else []
         )
         if max_length is not None:
-            args = [f"max_length={max_length}", *default_arg]
+            args = [f"max_length={max_length}", *default_arg, *null_blank]
             return f"models.CharField({', '.join(args)})"
         else:
-            return f"models.TextField({', '.join(default_arg)})"
+            args = [*default_arg, *null_blank]
+            return f"models.TextField({', '.join(args)})"
 
     if t == "bool":
         default_arg = (
             [f'default={"True" if field.default_value else "False"}']
-            if field.default_value
+            if field.default_value in (True, False)
             else []
         )
-        return f"models.BooleanField({', '.join(default_arg)})"
+        args = [*default_arg, *null_blank]
+        return f"models.BooleanField({', '.join(args)})"
 
     if t == "email":
         default_arg = (
             [f'default="{field.default_value}"'] if field.default_value else []
         )
-        return f"models.EmailField({', '.join(default_arg)})"
+        args = [*default_arg, *null_blank]
+        return f"models.EmailField({', '.join(args)})"
 
     if t == "date":
         return f"models.DateField()"
