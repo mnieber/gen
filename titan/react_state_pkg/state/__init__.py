@@ -22,6 +22,13 @@ class ExtendModule:
     states = P.children(has, "state")
 
 
+empty_rules = [
+    ("state", provides, "item-list"),
+    ("state", provides, "item"),
+    ("state", provides, "behavior"),
+]
+
+
 @extend(State)
 class ExtendState(RenderTemplates(__file__)):
     behaviors = P.children(provides, "behavior")
