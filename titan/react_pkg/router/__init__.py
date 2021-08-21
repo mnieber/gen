@@ -35,6 +35,7 @@ def create_router(term, block):
 
 @rule("app:module", has, "router")
 def app_module_has_router(app_module, router):
+    app_module.react_app.utils_module.use_packages(["useNextUrl"])
     app_module.react_app.utils_module.add_template_dir(__file__, "templates_utils")
 
 
