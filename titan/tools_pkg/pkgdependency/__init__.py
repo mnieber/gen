@@ -27,4 +27,4 @@ class ExtendService:
 
 @extend(Tool)
 class ExtendTool:
-    pkg_dependencies = P.tree(has, "pkg-dependency")
+    pkg_dependencies = P.tree("p-has", "pkg-dependency")

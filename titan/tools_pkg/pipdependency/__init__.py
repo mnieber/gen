@@ -35,5 +35,5 @@ class ExtendService:
 
 @extend(Tool)
 class ExtendTool:
-    pip_dependencies = P.tree(has, "pip-dependency")
-    pip_requirements = P.tree(has, "pip-requirement")
+    pip_dependencies = P.tree("p-has", "pip-dependency")
+    pip_requirements = P.tree("p-has", "pip-requirement")

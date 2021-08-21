@@ -7,7 +7,7 @@ from .resources import Flags  # noqa
 
 
 class StoreFlags:
-    flags = P.tree(has, "flags")
+    flags = P.tree("p-has", "flags")
 
 
 @register_add(Flags)

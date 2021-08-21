@@ -14,7 +14,7 @@ def add_makefile_rule(resource, makefile_rule):
 
 
 class StoreMakefileRules:
-    makefile_rules = P.tree(has, "makefile")
+    makefile_rules = P.tree("p-has", "makefile-rules")
 
 
 @tags(["makefile"])

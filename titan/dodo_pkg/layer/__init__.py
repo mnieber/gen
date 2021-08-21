@@ -1,6 +1,13 @@
 import moonleap.resource.props as P
-from moonleap import (MemFun, RenderTemplates, StoreOutputPaths, extend,
-                      kebab_to_camel, register_add, tags)
+from moonleap import (
+    MemFun,
+    RenderTemplates,
+    StoreOutputPaths,
+    extend,
+    kebab_to_camel,
+    register_add,
+    tags,
+)
 from moonleap.verbs import has
 from titan.project_pkg.service import Tool
 
@@ -14,7 +21,7 @@ def add_layerconfig(resource, layer_config):
 
 
 class StoreLayerConfigs:
-    layer_configs = P.tree(has, "layer-config")
+    layer_configs = P.tree("p-has", "layer-config")
 
 
 @tags(["layer"])

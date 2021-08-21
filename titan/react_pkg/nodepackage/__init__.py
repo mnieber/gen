@@ -17,7 +17,7 @@ from .resources import NodePackage, NodePackageConfig, load_node_package_config 
 
 
 class StoreNodePackageConfigs:
-    node_package_configs = P.tree(has, "node-package-config")
+    node_package_configs = P.tree("p-has", "node-package-config")
 
 
 @register_add(NodePackageConfig)

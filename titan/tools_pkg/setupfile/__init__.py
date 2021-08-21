@@ -18,7 +18,7 @@ def add_setup_file_config(resource, setup_file_config):
 
 
 class StoreSetupFileConfigs:
-    setup_file_configs = P.tree(has, "setup.cfg-config")
+    setup_file_configs = P.tree("p-has", "setup.cfg-config")
 
 
 @extend(SetupFile)

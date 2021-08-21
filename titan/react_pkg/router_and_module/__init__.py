@@ -27,4 +27,4 @@ class ExtendAppModule:
 
 @extend(Module)
 class ExtendModule:
-    route_tables = P.tree(has, "route-table")
+    route_tables = P.tree("p-has", "route-table")

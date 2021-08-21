@@ -13,8 +13,10 @@ def module_has_component(module, component):
 
 @rule("module", shows, "*", fltr_obj=P.fltr_instance(Component))
 def module_shows_component(module, component):
-    module_has_component(module, component)
-    return create_forward(module, "p-shows", ":component", obj_res=component)
+    return [
+        create_forward(module, "p-shows", ":component", obj_res=component),
+        create_forward(module, "has", ":component", obj_res=component),
+    ]
 
 
 @extend(Module)
