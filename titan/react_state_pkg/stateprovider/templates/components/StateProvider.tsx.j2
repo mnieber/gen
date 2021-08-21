@@ -3,10 +3,11 @@
 {% magic_with store.name as BlueDaisy %}
 import * as React from 'react';
 import { reaction } from 'mobx';
-import { observer } from 'mobx-react-lite';
 import { values } from 'ramda';
 
-import { resUrls } from '{{ res.module_path }}/YellowTulipStore';
+{% for item_name, store in res.state.store_by_item_name.items() %}
+import { resUrls as blueDaisyResUrls } from '{{ store.module_path }}/BlueDaisy';
+{% endfor %}
 import { YellowTulipState } from '{{ res.module_path }}/YellowTulipState';
 import { CtrProvider, FC, useDefaultProps } from 'react-default-props-context';
 import { useStore } from 'src/app/components';
@@ -15,59 +16,53 @@ type PropsT = React.PropsWithChildren<{}>;
 
 type DefaultPropsT = {};
 
-export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = observer(
-  (p: PropsT) => {
-    const props = useDefaultProps<PropsT, DefaultPropsT>(p);
-    const {
+export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = (p: PropsT) => {
+  const props = useDefaultProps<PropsT, DefaultPropsT>(p);
+  const {
 {% for item_name, store in res.state.store_by_item_name.items() %}
-      blueDaisy,
+    blueDaisy,
 {% endfor %}
-    } = useStore();
+  } = useStore();
 
-    const createState = () => {
-      return new YellowTulipState({
+  const createState = () => {
+    return new YellowTulipState({});
+  };
+
+  const updateState = (state: YellowTulipState) => {
+    return reaction(
+      () => ({
 {% for item_name, store in res.state.store_by_item_name.items() %}
-        blueDaisy,
+        redRoses: values(blueDaisy.redRoseById),
 {% endfor %}
-      });
-    };
-
-    const updateState = (state: YellowTulipState) => {
-      return reaction(
-        () => ({
+      }),
+      (inputs) => {
 {% for item_name, store in res.state.store_by_item_name.items() %}
-          redRoses: values(blueDaisy.redRoseById),
+        state.inputs.redRoses = inputs.redRoses;
 {% endfor %}
-        }),
-        (inputs) => {
-{% for item_name, store in res.state.store_by_item_name.items() %}
-          state.inputs.redRoses = inputs.redRoses;
-{% endfor %}
-        },
-        {
-          fireImmediately: true,
-        }
-      );
-    };
-
-    const getDefaultProps = (state: YellowTulipState) => {
-      return {
-{{ res.sections.default_props() }}
-      };
-    };
-
-    return (
-      <CtrProvider
-        createCtr={createState}
-        updateCtr={updateState}
-        destroyCtr={(state: YellowTulipState) => state.destroy()}
-        getDefaultProps={getDefaultProps}
-      >
-        {props.children}
-      </CtrProvider>
+      },
+      {
+        fireImmediately: true,
+      }
     );
-  }
-);
+  };
+
+  const getDefaultProps = (state: YellowTulipState) => {
+    return {
+{{ res.sections.default_props() }}
+    };
+  };
+
+  return (
+    <CtrProvider
+      createCtr={createState}
+      updateCtr={updateState}
+      destroyCtr={(state: YellowTulipState) => state.destroy()}
+      getDefaultProps={getDefaultProps}
+    >
+      {props.children}
+    </CtrProvider>
+  );
+};
 
 {% end_magic_with %}
 {% end_magic_with %}

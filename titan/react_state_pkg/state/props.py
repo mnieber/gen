@@ -8,7 +8,7 @@ from moonleap.utils.inflect import plural
 def bvrs_by_item_name(self):
     result = defaultdict(lambda: [])
     for bvr in self.behaviors:
-        result[self.item_name].append(bvr)
+        result[bvr.item_name].append(bvr)
     for item_list in self.item_lists:
         result.setdefault(item_list.item_name, [])
     return result

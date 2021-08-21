@@ -17,21 +17,13 @@ import * as FacetPolicies from 'skandha-facets/policies';
 {{ bvr.sections.imports() }}
 {% endfor %}
 
-{% for item_name, store in res.store_by_item_name.items() %}
-import { BlueDaisy } from '{{ store.module_path }}/BlueDaisy';
-{% endfor %}
-
 import { Inputs } from '{{ res.module_path }}/YellowTulipState/facets/Inputs';
 import { Outputs } from '{{ res.module_path }}/YellowTulipState/facets/Outputs';
 import * as Policies from './policies';
 import * as Handlers from './handlers';
 {% end_clean_up_js_imports %}
 
-type PropsT = {
-{% for item_name, store in res.store_by_item_name.items() %}
-  blueDaisy: BlueDaisy;
-{% endfor %}
-};
+type PropsT = {};
 
 export class YellowTulipState {
   @facet inputs = new Inputs();
