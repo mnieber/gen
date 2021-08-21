@@ -1,3 +1,5 @@
+import re
+
 from moonleap.parser.term import is_it_term, words_to_terms
 
 
@@ -39,7 +41,11 @@ def _preprocess_words(words):
 def get_create_line():
     def create_line(text, it_term=None):
         terms = []
-        words = _preprocess_words(text.split())
+
+        # Repeated colons are not treated as a data/tag separator.
+        clean_text = re.sub("::+", "", text)
+        words = _preprocess_words(clean_text.split())
+
         next_it_term = None
         for term in words_to_terms(words):
             # check if :it must be replaced with it_term
