@@ -135,7 +135,9 @@ export class AuthStore {
       .requestPasswordReset(email) //
       .then((response: ObjT) => {
         if (response.errors) {
+{% if res.react_app.cypress %}
           maybeSetCypressCookie('cypressPasswordResetToken', '');
+{% endif %}
           this.signal.dispatch({
             topic: events.ResetPassword,
             payload: {
@@ -144,10 +146,12 @@ export class AuthStore {
             },
           } as AuthStoreEventT);
         } else {
+{% if res.react_app.cypress %}
           maybeSetCypressCookie(
             'cypressPasswordResetToken',
             response.passwordResetToken
           );
+{% endif %}
           this.signal.dispatch({
             topic: events.ResetPassword,
             payload: {
