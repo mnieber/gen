@@ -29,8 +29,15 @@ replaces the block body with the contents of the linked file.
 to the block
 2.0 The expanded spec file is saved to the moonleap dir.
 
-# Parsing
+## Parsing
 
 1.0 Every block is split into lines, that are split into terms.
 1.1 ..A repeated colon is ignored for creating terms (e.g. foo::bar)
 2.0 The terms :It and :it have a special meaning. They refer back to the first term in the previous sentence.
+
+# Data types
+
+1.0 A term foo:item-type denotes an item type. This type has associated item_name that is the camel-cased data part of the term.
+1.0 A term foo:item denotes a single item of the 'foo:item-type'.
+2.0 A term foo:item-list denotes a list of items of the 'foo:item-type'.
+3.0 Every item type has an associated type name, which is the capitalized item_name.
