@@ -21,6 +21,11 @@ def _get_post_process_tools(bin_config):
         black_bin = local[black["exe"]]
         result["black"] = lambda fns: black_bin([*fns])
 
+    isort = bin_config.get("isort")
+    if isort:
+        isort_bin = local[isort["exe"]]
+        result["isort"] = lambda fns: isort_bin(["--overwrite-in-place", *fns])
+
     return result
 
 
