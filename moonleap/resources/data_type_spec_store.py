@@ -26,6 +26,10 @@ def _default_value(field_spec):
     return field_spec.get("default", None)
 
 
+def _unique(field_spec):
+    return field_spec.get("unique", False)
+
+
 def _load_data_type_dict(data_type_spec_dir, data_type_name):
     spec_fn = os.path.join(data_type_spec_dir, data_type_name + ".json")
     if not os.path.exists(spec_fn):
@@ -52,6 +56,7 @@ def _get_fields(data_type_dict):
                 private=field_name in private,
                 field_type=_type(field_spec),
                 default_value=_default_value(field_spec),
+                unique=_unique(field_spec),
             )
         )
     return result
@@ -76,6 +81,7 @@ class DataTypeField:
     private: bool
     field_type: T.Union[str, FK, RelatedSet]
     default_value: T.Any = None
+    unique: bool = False
 
 
 @dataclass
