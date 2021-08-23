@@ -6,7 +6,7 @@ import ramda as R
 from moonleap import chop0, get_session, upper0
 from moonleap.parser.term import word_to_term
 from moonleap.resources.data_type_spec_store import FK, RelatedSet, data_type_spec_store
-from moonleap.utils.case import kebab_to_camel
+from moonleap.utils.case import kebab_to_camel, lower0
 from moonleap.utils.fp import ds
 from moonleap.utils.inflect import plural
 from moonleap.utils.magic_replace import magic_replace
@@ -37,13 +37,10 @@ endpoint_template = chop0(
 
 
 def get_graphql_response(query):
-    if query.out_item:
-        return f"normalize(response.{query.name}, {query.out_item}).entities"
-
-    if query.out_item_list:
-        return f"normalize(response.{query.name}, {query.out_item_list}List).entities"
-
-    raise Exception(f"Cannot deduce response for query {query.name}")
+    if query.is_list:
+        return f"normalize(response.{query.name}, {plural(query.item_name)}).entities"
+    else:
+        return f"normalize(response.{query.name}, {query.item_name}).entities"
 
 
 def get_graphql_header(query, query_type):
@@ -96,8 +93,8 @@ def input_type_to_graphql_type(arg_type):
 class Endpoint:
     name: str
     input_args: dict = field(default_factory=dict)
-    out_item: T.Any = None
-    out_item_list: T.Any = None
+    item_name: T.Optional[str] = None
+    is_list: T.Optional[bool] = None
 
 
 def add_output_to_endpoint(items, item_lists, output_value, endpoint):
@@ -106,13 +103,14 @@ def add_output_to_endpoint(items, item_lists, output_value, endpoint):
         raise Exception(f"Could not parse output value {output_value}")
 
     item_name = kebab_to_camel(term.data)
+    endpoint.item_name = item_name
 
     if term.tag == "item":
-        endpoint.out_item = item_name
+        endpoint.is_list = False
         items.append(item_name)
 
     if term.tag == "item-list":
-        endpoint.out_item_list = item_name
+        endpoint.is_list = True
         item_lists.append(item_name)
 
 
@@ -141,14 +139,20 @@ def get_queries(res):
 
     for item_loaded in res.items_loaded:
         if item_loaded.item_name not in items:
-            query = Endpoint(name=f"get{upper0(item_loaded.item_name)}")
-            query.out_item = item_loaded.item_name
+            query = Endpoint(
+                name=f"get{upper0(item_loaded.item_name)}",
+                is_list=False,
+                item_name=item_loaded.item_name,
+            )
             queries.append(query)
 
     for item_list_loaded in res.item_lists_loaded:
         if item_list_loaded.item_name not in item_lists:
-            query = Endpoint(name=f"get{upper0(plural(item_list_loaded.item_name))}")
-            query.out_item_list = item_list_loaded.item_name
+            query = Endpoint(
+                name=f"get{upper0(plural(item_list_loaded.item_name))}",
+                is_list=True,
+                item_name=item_list_loaded.item_name,
+            )
             queries.append(query)
 
     return queries
@@ -185,10 +189,8 @@ def get_mutations(res):
 def schema_item_names(queries, mutations):
     result = []
     for endpoint in [*queries, *mutations]:
-        if endpoint.out_item:
-            result.append(endpoint.out_item)
-        if endpoint.out_item_list:
-            result.append(endpoint.out_item_list)
+        if endpoint.item_name:
+            result.append(endpoint.item_name)
     return R.uniq(result)
 
 
@@ -224,15 +226,30 @@ class Sections:
         result = []
         queries = get_queries(self.res)
         mutations = get_mutations(self.res)
+        item_names = schema_item_names(queries, mutations)
 
-        for item_name in schema_item_names(queries, mutations):
+        for item_name in sorted(item_names):
             result.append(
                 f"const {item_name} = new schema.Entity('{plural(item_name)}');"
             )
-            if [q for q in queries if item_name == q.out_item_list]:
+            # TODO item_name
+            if [q for q in queries if item_name == q.item_name and q.is_list]:
                 result.append(
-                    f"const {item_name}List = new schema.Array('{item_name}');"
+                    f"const {plural(item_name)} = new schema.Array({item_name});"
                 )
+        result.append(os.linesep)
+
+        for item_name in sorted(item_names):
+            spec = data_type_spec_store.get_spec(item_name)
+            for field in spec.fields:
+                if isinstance(field.field_type, FK):
+                    result.append(
+                        f"{item_name}.define({{ {lower0(field.field_type.target)} }});"
+                    )
+                if isinstance(field.field_type, RelatedSet):
+                    result.append(
+                        f"{item_name}.define({{ {lower0(plural(field.field_type.target))} }});"
+                    )
 
         return os.linesep.join(result)
 
@@ -263,7 +280,7 @@ class Sections:
                     ),
                     (
                         "graphqlBody",
-                        get_graphql_body(upper0(query.out_item_list or query.out_item)),
+                        get_graphql_body(upper0(query.item_name)),
                     ),
                     ("blueDaisy", (os.linesep + " " * 8).join(query.input_args.keys())),
                     ("purpleOrchid", get_graphql_response(query)),
@@ -289,7 +306,7 @@ class Sections:
                     ),
                     (
                         "graphqlBody",
-                        get_graphql_body(mutation.out_item_list or mutation.out_item),
+                        get_graphql_body(upper0(mutation.item_name)),
                     ),
                 ],
             )

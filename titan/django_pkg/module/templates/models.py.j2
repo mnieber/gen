@@ -1,5 +1,8 @@
 {% magic_with item_type.name as yellowTulip %}
 from django.db import models
+{% for item_type in res.item_types %}
+{{ res.sections.model_imports(item_type.name)}}
+{% endfor %}
 
 from app.models import Entity
 
