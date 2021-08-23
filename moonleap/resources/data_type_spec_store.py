@@ -1,10 +1,12 @@
 import os
 import typing as T
 from dataclasses import dataclass
+from pathlib import Path
 
 import yaml
 from moonleap.session import get_session
-from moonleap.utils.case import snake_to_camel, upper0
+from moonleap.utils.case import camel_to_snake, lower0, snake_to_camel, upper0
+from moonleap.utils.inflect import plural
 
 
 def _type(field_spec):
@@ -25,9 +27,9 @@ def _default_value(field_spec):
 
 
 def _load_data_type_dict(data_type_spec_dir, data_type_name):
-    spec_fn = os.path.join(data_type_spec_dir, "data_types", data_type_name + ".json")
+    spec_fn = os.path.join(data_type_spec_dir, data_type_name + ".json")
     if not os.path.exists(spec_fn):
-        return None
+        raise Exception(f"File not found: {spec_fn}")
 
     with open(spec_fn) as f:
         data_type_dict = yaml.load(f, Loader=yaml.SafeLoader)
@@ -61,13 +63,18 @@ class FK:
 
 
 @dataclass
+class RelatedSet:
+    target: str
+
+
+@dataclass
 class DataTypeField:
     name_snake: str
     name: str
     spec: T.Any
     required: bool
     private: bool
-    field_type: T.Union[str, FK]
+    field_type: T.Union[str, FK, RelatedSet]
     default_value: T.Any = None
 
 
@@ -99,20 +106,43 @@ class DataTypeSpecStore:
             ),
         ]
 
-    def get_spec(self, data_type_name):
-        data_type_name = upper0(data_type_name)
-        if data_type_name not in self.spec_by_name:
-            data_type_dict = _load_data_type_dict(
-                get_session().settings["spec_dir"], data_type_name
-            )
+    def _load_specs(self, data_types_dir):
+        for spec_fn in Path(data_types_dir).glob("*.json"):
+            data_type_name = spec_fn.stem
+            data_type_dict = _load_data_type_dict(data_types_dir, data_type_name)
 
             spec = DataTypeSpec(
                 type_name=data_type_name,
-                fields=_get_fields(data_type_dict)
-                if data_type_dict
-                else self.default_fields,
+                fields=_get_fields(data_type_dict),
             )
             self.spec_by_name[data_type_name] = spec
+
+        for data_type_name, spec in list(self.spec_by_name.items()):
+            for field in spec.fields:
+                if isinstance(field.field_type, FK):
+                    fk_spec = self.get_spec(field.field_type.target)
+                    fk_spec.fields.append(
+                        DataTypeField(
+                            name=lower0(plural(spec.type_name)),
+                            name_snake=lower0(camel_to_snake(plural(spec.type_name))),
+                            spec=fk_spec,
+                            required=False,
+                            private=field.private,
+                            field_type=RelatedSet(target=spec.type_name),
+                        )
+                    )
+
+    def get_spec(self, data_type_name):
+        if not self.spec_by_name:
+            self._load_specs(
+                os.path.join(get_session().settings["spec_dir"], "data_types")
+            )
+
+        data_type_name = upper0(data_type_name)
+        if data_type_name not in self.spec_by_name:
+            self.spec_by_name[data_type_name] = DataTypeSpec(
+                type_name=data_type_name, fields=self.default_fields
+            )
 
         return self.spec_by_name[data_type_name]
 

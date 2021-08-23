@@ -9,3 +9,7 @@ def prop_or(default_value, prop_name):
         return default_value
 
     return f
+
+
+def ds(f):
+    return lambda x: f(*x)

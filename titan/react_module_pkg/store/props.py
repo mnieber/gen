@@ -1,5 +1,5 @@
 from moonleap import upper0
-from moonleap.resources.data_type_spec_store import FK, data_type_spec_store
+from moonleap.resources.data_type_spec_store import FK, RelatedSet, data_type_spec_store
 from moonleap.utils.magic_replace import magic_replace
 
 load_data_template = """
@@ -42,7 +42,7 @@ class Sections:
                 continue
 
             t = field.field_type
-            t = "string" if isinstance(t, FK) else t
+            t = "string" if (isinstance(t, FK) or isinstance(t, RelatedSet)) else t
             result.append(f"  {field.name}: {t};")
 
         return "\n".join(result)

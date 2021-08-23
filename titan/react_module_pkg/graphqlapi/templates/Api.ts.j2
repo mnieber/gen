@@ -1,101 +1,12 @@
-{% magic_with item_name as yellowTulip %}
-{% magic_with load_items_effect.item_name as redRose %}
-{% magic_with load_item_effect.item_name as blueDaisy %}
-{% magic_with load_item_effect.name_postfix as Flower %}
-{% magic_with form.item_name as purpleOrchid %}
+{% clean_up_js_imports %}
 import { normalize, schema } from 'normalizr';
 import { ApiBase } from 'src/api/ApiBase';
 import { ObjT } from 'src/utils/types';
+{% end_clean_up_js_imports %}
 
-{% for item_name in res.schema_item_names %}
-const yellowTulip = new schema.Entity('yellowTulips');
-{% endfor %}
-
-{% for load_items_effect in res.api_module.load_items_effects %}
-const redRoseList = new schema.Array(redRose);
-{% endfor %}
+{{ res.sections.schemas() }}
 
 export class Api extends ApiBase {
-{% for load_items_effect in res.api_module.load_items_effects %}
-  getRedRoses() {
-    return this._doQuery(
-      'getRedRoses',
-      `query getRedRoses {
-        redRoses {
-{{ res.sections.item_fields(load_items_effect.item_name) }}
-        }
-      }`,
-      {},
-      (response: ObjT) => {
-        return normalize(response.redRoses, redRoseList).entities;
-      },
-      (error: ObjT) => {
-        return error.response.errors[0].message;
-      }
-    );
-  }
-
-{% endfor %}
-
-{% for load_item_effect in res.api_module.load_item_effects %}
-{% with params = res.sections.load_item_effect(load_item_effect) %}
-  getBlueDaisyFlower(
-    {{ params.params }}
-  ) {
-    return this._doQuery(
-      'getBlueDaisyFlower',
-      `query getBlueDaisyFlower(
-{{ params.graphql_params }}
-      ) {
-        blueDaisyFlower(
-{{ params.graphql_params_inner }}
-        ) {
-{{ res.sections.item_fields(load_item_effect.item_name) }}
-        }
-      }`,
-      {
-        {{ params.vars }}
-      },
-      (response: ObjT) => normalize(response.blueDaisyFlower, blueDaisy).entities,
-      (error: ObjT) => error.response.errors[0].message
-    );
-  }
-{% endwith %}
-
-{% endfor %}
-
-{% for form in res.forms_posted %}
-{% with params = res.sections.post_form(form) %}
-  postPurpleOrchid(
-    {{ params.params }}
-  ) {
-    return this._doQuery(
-      'postPurpleOrchid',
-      `query postPurpleOrchid(
-{{ params.graphql_params }}
-      ) {
-        postPurpleOrchid(
-{{ params.graphql_params_inner }}
-        ) {
-          success,
-          errors {
-            message
-          }
-        }
-      }`,
-      {
-        {{ params.vars }}
-      },
-      (response: ObjT) => normalize(response.purpleOrchid, purpleOrchid).entities,
-      (error: ObjT) => error.response.errors[0].message
-    );
-  }
-{% endwith %}
-
-{% endfor %}
+{{ res.sections.queries() }}
+{{ res.sections.mutations() }}
 }
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}

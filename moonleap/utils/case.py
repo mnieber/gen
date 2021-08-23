@@ -1,9 +1,12 @@
+import re
+
+
 def lower0(x):
-    return x[0].lower() + x[1:]
+    return x[0].lower() + x[1:] if x else x
 
 
 def upper0(x):
-    return x[0].upper() + x[1:]
+    return x[0].upper() + x[1:] if x else x
 
 
 def kebab_to_camel(x):
@@ -32,3 +35,12 @@ def snake_to_kebab(x):
 def snake_to_camel(x):
     components = x.split("_")
     return components[0] + "".join(x.title() for x in components[1:])
+
+
+_underscorer1 = re.compile(r"(.)([A-Z][a-z]+)")
+_underscorer2 = re.compile("([a-z0-9])([A-Z])")
+
+
+def camel_to_snake(s):
+    subbed = _underscorer1.sub(r"\1_\2", s)
+    return _underscorer2.sub(r"\1_\2", subbed).lower()

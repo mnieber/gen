@@ -21,8 +21,8 @@ def react_app_has_api_module(react_app, api_module):
 @extend(GraphqlApi)
 class ExtendGraphqlApi(RenderTemplates(__file__)):
     items_loaded = P.children(loads, "item")
+    items_posted = P.children(posts, "item")
     item_lists_loaded = P.children(loads, "item-list")
     forms_posted = P.children(posts, "form")
     api_module = P.parent(Module, has)
-    schema_item_names = Prop(props.schema_item_names)
     sections = Prop(props.Sections)

@@ -1,4 +1,4 @@
-from moonleap.resources.data_type_spec_store import FK, data_type_spec_store
+from moonleap.resources.data_type_spec_store import FK, RelatedSet, data_type_spec_store
 
 
 def _on_delete(field):
@@ -66,6 +66,8 @@ class Sections:
         indent = "    "
         spec = data_type_spec_store.get_spec(item_name)
         for field in _fields(spec):
+            if isinstance(field.field_type, RelatedSet):
+                continue
             model = _model(field)
             result.append(indent + f"{field.name_snake} = {model}")
 

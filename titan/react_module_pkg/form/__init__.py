@@ -5,5 +5,5 @@ from .resources import Form
 
 @tags(["form"])
 def create_form(term, block):
-    form = Form(item_name=kebab_to_camel(term.data) + "Form")
+    form = Form(name=kebab_to_camel(term.data) + "Form")
     return form
