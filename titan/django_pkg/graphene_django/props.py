@@ -38,17 +38,23 @@ def _default_value(field, item_name):
     if isinstance(t, FK):
         return f"{field.name_snake}.id"
 
-    if t == "string":
-        return r'"foo"'
-
     if t == "bool":
         return r"True"
+
+    if t == "date":
+        return r'"01-02-2003"'
 
     if t == "email":
         return r"email@email.com"
 
-    if t == "date":
-        return r'"01-02-2003"'
+    if t == "slug":
+        return r"foo-bar"
+
+    if t == "string":
+        return r'"foo"'
+
+    if t == "url":
+        return r'"https://foo.bar.com"'
 
     raise Exception(f"Unknown graphene field type: {t} in spec for {item_name}")
 
@@ -65,7 +71,7 @@ def _graphene_field(field, item_name):
     if t == "bool":
         return r"graphene.Boolean()"
 
-    if t == "email":
+    if t in ("email", "slug", "url"):
         return r"graphene.String()"
 
     if t == "date":

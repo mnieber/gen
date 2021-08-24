@@ -40,6 +40,17 @@ def _model(field):
         args = [*default_arg, *null_blank, *unique]
         return f"models.JSONField({', '.join(args)})"
 
+    if t in ("slug", "url"):
+        default_arg = (
+            [f'default="{field.default_value}"'] if field.default_value else []
+        )
+        max_length = field.spec.get("maxLength", None)
+        max_length_arg = [f"max_length={max_length}"] if max_length else []
+
+        args = [*default_arg, *max_length_arg, *null_blank, *unique]
+        model = "SlugField" if t == "slug" else "URLField"
+        return f"models.{model}({', '.join(args)})"
+
     if t == "bool":
         default_arg = (
             [f'default={"True" if field.default_value else "False"}']
