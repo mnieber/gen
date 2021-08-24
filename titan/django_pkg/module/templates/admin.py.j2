@@ -1,7 +1,7 @@
 {% magic_with item_type.name as yellowTulip %}
 from django.contrib import admin
 
-from {{ res.name }} import models
+from {{ res.name_snake }} import models
 
 {% for item_type in res.item_types %}
 admin.site.register(models.YellowTulip)
