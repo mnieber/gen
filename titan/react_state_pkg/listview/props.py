@@ -7,8 +7,12 @@ from titan.react_pkg.router_and_module.props import create_component_router_conf
 def create_router_configs(self):
     router_config = create_component_router_config(self)
     router_config.url = get_component_base_url(self, self.item_name)
-    result = prepend_router_configs(
-        self.load_items_effect.create_router_configs(), [router_config]
+    result = (
+        prepend_router_configs(
+            self.load_items_effect.create_router_configs(), [router_config]
+        )
+        if self.load_items_effect
+        else [router_config]
     )
 
     for state in self.module.states:
