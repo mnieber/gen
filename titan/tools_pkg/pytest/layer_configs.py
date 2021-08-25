@@ -13,7 +13,7 @@ def get_pytest_options(pytest):
 
 def get_pytest_html_options(pytest_html):
     def inner():
-        result = dict(html_report=r"${/SERVER/install_dir}/report.html")
+        result = dict(html_report=r"${/SERVER/install_dir}/pytest_report.html")
         return dict(PYTEST=result)
 
     return LayerConfig(lambda x: inner())
