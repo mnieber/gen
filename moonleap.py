@@ -12,7 +12,11 @@ from moonleap.session import Session, set_session
 
 def generate_code(spec_file, session):
     expanded_markdown = expand_markdown(spec_file)
-    expanded_markdown_fn = os.path.join(".moonleap", "spec.md")
+    expanded_markdown_fn = Path(".moonleap") / "spec.md"
+
+    if not expanded_markdown_fn.parent.exists():
+        expanded_markdown_fn.parent.mkdir()
+
     with open(expanded_markdown_fn, "w") as f:
         f.write(expanded_markdown)
 
