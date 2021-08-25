@@ -57,6 +57,10 @@ if __name__ == "__main__":
     set_session(session)
 
     spec_fn = Path(args.spec_dir) / "spec.md"
+    if not spec_fn.exists():
+        report(f"Spec file not found: {spec_fn}")
+        sys.exit(1)
+
     if args.action == "gen":
         generate_code(spec_fn, session)
         create_expected_dir(session.expected_dir, session.settings["references"])
