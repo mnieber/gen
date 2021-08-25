@@ -1,3 +1,4 @@
+import os
 import re
 
 import mistune
@@ -67,6 +68,8 @@ class BlockCollector(mistune.Renderer):
             self.parent_block,
             local_scope_names,
         )
+        self.block._dbg_text = text
+
         self.stack.append(self.block)
 
         self.line = self.create_line(buffer, it_term=None)
@@ -77,6 +80,8 @@ class BlockCollector(mistune.Renderer):
     def paragraph(self, text):
         if not self.block:
             raise FormatError("The spec file should start with a header")
+
+        self.block._dbg_text += os.linesep + os.linesep + text
 
         for sentence in nltk.sent_tokenize(clean_text(text)):
             self.line = self.create_line(

@@ -14,6 +14,7 @@ class Block:
         self._resource_by_term = []
         self._relations = []
         self.lines: T.List[Line] = []
+        self._dbg_text = ""
 
     def has_relation(self, relation):
         return relation in self._relations
