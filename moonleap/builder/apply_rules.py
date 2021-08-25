@@ -42,7 +42,11 @@ def _process_forwards(scope, forwards: T.List[Forward], block, scope_manager):
         )
         subj_term = _find_term_for_resource(forward.subj_res, block)
         if subj_term is None:
-            raise Exception(f"Resource {forward.subj_res} not found in block {block}")
+            raise Exception(
+                f"Resource {forward.subj_res} not found in block {block}"
+                + "This probably means that a rule made an assumption "
+                + "about your spec that doesn't hold true."
+            )
 
         new_rel = Rel(subj_term, forward.verb, forward.obj)
         if not forward.subj_res.has_relation(new_rel, new_obj_resource):
