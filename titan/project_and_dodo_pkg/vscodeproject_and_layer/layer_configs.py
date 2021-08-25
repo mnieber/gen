@@ -10,6 +10,6 @@ def get(project):
     code_workspace_fn = os.path.join(base_dir, f"{project.name_snake}.code-workspace")
 
     def inner():
-        return dict(ROOT=dict(aliases=dict(code=f'exec "code {code_workspace_fn}"')))
+        return dict(ROOT=dict(aliases=dict(code=f"exec 'code {code_workspace_fn}'")))
 
     return LayerConfig(lambda x: inner())
