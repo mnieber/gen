@@ -5,8 +5,10 @@ from pathlib import Path
 
 from moonleap import create_resources, get_blocks, render_resources, report_resources
 from moonleap.parser.expand_markdown import expand_markdown
+from moonleap.render.file_writer import FileWriter
+from moonleap.render.post_process_output_files import post_process_output_files
 from moonleap.report.create_expected_dir import create_expected_dir
-from moonleap.report.diff import create_snapshot, diff, smart_diff
+from moonleap.report.diff import create_symlinks, diff
 from moonleap.session import Session, set_session
 
 
@@ -20,10 +22,26 @@ def generate_code(spec_file, session):
     with open(expanded_markdown_fn, "w") as f:
         f.write(expanded_markdown)
 
+    session.report("Parsing...")
     blocks = get_blocks(expanded_markdown)
     create_resources(blocks)
-    render_resources(blocks)
+
+    session.report("Rendering...")
+    file_writer = FileWriter(session.snapshot_fn)
+    render_resources(blocks, file_writer.write_file)
+    for warning in file_writer.warnings:
+        session.report(warning)
+    file_writer.write_snapshot()
+
+    session.report("Creating report...")
     report_resources(blocks)
+
+    session.report("Post processing...")
+    post_process_output_files(
+        file_writer.output_filenames,
+        session.settings.get("post_process", {}),
+        session.settings.get("bin", {}),
+    )
 
 
 def report(x):
@@ -35,7 +53,7 @@ if __name__ == "__main__":
     parser.add_argument("--spec", required=True, dest="spec_dir")
     parser.add_argument("--smart", required=False, action="store_true")
     parser.add_argument("--sudo", required=False, action="store_true")
-    parser.add_argument("action", choices=["gen", "diff", "snap"])
+    parser.add_argument("action", choices=["gen", "diff"])
     args = parser.parse_args()
 
     if args.smart and args.action != "diff":
@@ -67,9 +85,5 @@ if __name__ == "__main__":
 
     if args.action == "diff":
         if args.smart:
-            smart_diff(session, args.sudo)
-        else:
-            diff(session, args.sudo)
-
-    if args.action == "snap":
-        create_snapshot()
+            create_symlinks(session)
+        diff(session, args.sudo)

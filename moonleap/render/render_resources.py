@@ -1,56 +1,56 @@
-from moonleap.render.add_output_filenames import add_output_filenames
-from moonleap.render.post_process_output_files import post_process_output_files
-from moonleap.render.template_renderer import TemplateRenderer
-from moonleap.session import get_session
+import os
+
+from moonleap.render.template_env import template_env
+from moonleap.render.transforms import post_transforms
 
 
-def render_resources(blocks):
-    session = get_session()
-    session.report("Rendering...")
-    all_output_filenames = _render_resources(blocks, session)
-    session.report("Post processing...")
-    post_process_output_files(
-        all_output_filenames,
-        session.settings.get("post_process", {}),
-        session.settings.get("bin", {}),
-    )
+def render_template(resource, template_fn, **kwargs):
+    if template_fn.suffix == ".j2":
+        template = template_env.get_template(str(template_fn))
+        content = template.render(res=resource, **kwargs)
+
+        lines = content.split(os.linesep)
+        for post_transform in post_transforms:
+            lines = post_transform(lines)
+        content = os.linesep.join(lines)
+    else:
+        with open(template_fn) as ifs:
+            content = ifs.read()
+
+    return content
 
 
-def _render_resources(blocks, session):
-    template_renderer = TemplateRenderer()
+def render_resources(blocks, write_file):
     rendered_resources = []
-    all_output_filenames = []
 
-    for block in blocks:
-        resources = [x[1] for x in block.get_resource_by_term() if x[2]]
-        for resource in resources:
-            if resource in rendered_resources:
-                raise Exception(f"Logical error. Resource in two blocks: {resource}")
+    try:
+        for block in blocks:
+            resources = [x[1] for x in block.get_resource_by_term() if x[2]]
+            for resource in resources:
+                if resource in rendered_resources:
+                    raise Exception(
+                        f"Logical error. Resource in two blocks: {resource}"
+                    )
 
-            rendered_resources.append(resource)
-            if hasattr(resource, "render"):
-                add_output_filenames(
-                    all_output_filenames,
+                rendered_resources.append(resource)
+                if hasattr(resource, "render"):
                     resource.render(
-                        output_root_dir=session.output_root_dir,
-                        template_renderer=template_renderer,
-                    ),
-                )
+                        write_file=write_file,
+                        render_template=render_template,
+                    )
 
-    for rendered_resource in list(rendered_resources):
-        resources = [x for _, x in rendered_resource.get_relations()]
-        for resource in resources:
-            if resource in rendered_resources:
-                continue
+        for rendered_resource in list(rendered_resources):
+            resources = [x for _, x in rendered_resource.get_relations()]
+            for resource in resources:
+                if resource in rendered_resources:
+                    continue
 
-            rendered_resources.append(resource)
-            if hasattr(resource, "render"):
-                add_output_filenames(
-                    all_output_filenames,
+                rendered_resources.append(resource)
+                if hasattr(resource, "render"):
                     resource.render(
-                        output_root_dir=session.output_root_dir,
-                        template_renderer=template_renderer,
-                    ),
-                )
+                        write_file=write_file,
+                        render_template=render_template,
+                    )
 
-    return all_output_filenames
+    except Exception:
+        raise

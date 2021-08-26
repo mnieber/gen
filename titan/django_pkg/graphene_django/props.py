@@ -1,4 +1,3 @@
-from moonleap.render.add_output_filenames import add_output_filenames
 from moonleap.render.template_renderer import render_templates
 from moonleap.resources.data_type_spec_store import FK, data_type_spec_store
 from moonleap.utils.case import upper0
@@ -6,18 +5,12 @@ from moonleap.utils.inflect import plural
 from moonleap.utils.magic_replace import magic_replace
 
 
-def render(self, output_root_dir, template_renderer):
-    all_output_filenames = []
-
+def render(self, write_file, render_template):
     for module in self.service.django_app.modules:
         if module.item_types or module.forms:
-            add_output_filenames(
-                all_output_filenames,
-                render_templates(__file__, "templates_module", graphene=self)(
-                    module, output_root_dir, template_renderer
-                ),
+            render_templates(__file__, "templates_module", graphene=self)(
+                module, write_file, render_template
             )
-    return all_output_filenames
 
 
 def has_graphql_mutations(module):

@@ -3,7 +3,7 @@ from pathlib import Path
 
 import markdown
 from moonleap.parser.term import term_to_word, verb_to_word
-from moonleap.render.template_renderer import _render
+from moonleap.render.render_resources import render_template
 from moonleap.session import get_session
 
 
@@ -20,9 +20,6 @@ def _get_relations(res, is_inv):
 
 
 def report_resources(blocks):
-    session = get_session()
-    session.report("Creating report...")
-
     report_dir = ".moonleap/report"
     index_fn = os.path.abspath(os.path.join(report_dir, "index.html"))
 
@@ -48,9 +45,9 @@ def create_report(resource, term, index_fn):
     parent_relations = [
         (rel, res) for (rel, res) in _get_relations(resource, is_inv=True) if rel.subj
     ]
-    body = _render(
-        default_template_fn,
+    body = render_template(
         resource,
+        default_template_fn,
         term=term,
         settings=get_session().settings,
         props={},
@@ -80,9 +77,9 @@ def create_index(blocks):
             if is_owner:
                 resource_by_term_str[term_to_word(term)] = resource
 
-    body = _render(
-        template_fn,
+    body = render_template(
         None,
+        template_fn,
         settings=get_session().settings,
         resource_by_term_str=sorted(
             list(resource_by_term_str.items()), key=lambda x: x[0]

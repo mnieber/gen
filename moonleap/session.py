@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from moonleap.scope_manager import ScopeManager
@@ -14,6 +15,7 @@ class Session:
         self.scope_manager = ScopeManager()
         self.output_root_dir = output_root_dir
         self.expected_dir = ".moonleap/expected"
+        self.snapshot_fn = ".moonleap/snapshot.json"
 
     def load_settings(self):
         settings_fn = Path(self.spec_dir) / self.settings_fn
@@ -23,8 +25,8 @@ class Session:
         self.settings["spec_dir"] = self.spec_dir
         self.scope_manager.import_packages(self.settings.get("packages_by_scope", {}))
 
-    def report(self, x):
-        print(x)
+    def report(self, x, end=os.linesep):
+        print(x, end=end)
 
     def get_tweaks(self):
         if not self.settings:
