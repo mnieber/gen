@@ -18,7 +18,7 @@ from .resources import View
 @tags(["view"])
 def create_view(term, block):
     name = upper0(kebab_to_camel(term.data))
-    view = View(name=f"{name}View")
+    view = View(name=f"{name}")
     return view
 
 
