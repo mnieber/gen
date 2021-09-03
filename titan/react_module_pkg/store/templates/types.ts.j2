@@ -4,7 +4,7 @@ export type YellowTulipT = {
 {{ res.sections.item_fields(item_type) }}
 }
 
-export type YellowTulipByIdT = {[id:string]: YellowTulipT};
+export type YellowTulipByIdT = { [id:string]: YellowTulipT };
 
 {% endfor %}
 {% end_magic_with %}
