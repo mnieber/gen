@@ -3,9 +3,9 @@ import React from 'react';
 import { States } from 'src/api/authApi/states';
 import { useStore } from 'src/app/components';
 import { routes } from 'src/app/routeTable';
-import { useAuthStateContext } from 'src/auth/components';
 import { ActivateAccountForm } from 'src/auth/components/ActivateAccountForm';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
+import { useAuthStateContext } from 'src/auth/components/useAuthStateContext';
 import { RouterLink } from 'src/utils/components';
 
 export const ActivateAccountPage: React.FC = observer(() => {

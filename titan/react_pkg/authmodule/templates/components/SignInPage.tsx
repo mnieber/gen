@@ -2,9 +2,9 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { States } from 'src/api/authApi/states';
 import { useStore } from 'src/app/components';
-import { useAuthStateContext } from 'src/auth/components';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { SignInForm } from 'src/auth/components/SignInForm';
+import { useAuthStateContext } from 'src/auth/components/useAuthStateContext';
 import { RouterLink } from 'src/utils/components';
 import { getNextUrl, useNextUrl } from 'src/utils/useNextUrl';
 

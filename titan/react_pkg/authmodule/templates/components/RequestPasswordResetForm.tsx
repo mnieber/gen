@@ -5,10 +5,10 @@ import {
   HandleValidateArgsT,
 } from 'react-form-state-context';
 import { States } from 'src/api/authApi/states';
-import { useAuthStateContext } from 'src/auth/components';
 import { EmailField } from 'src/auth/components/formFields/EmailField';
 import { GlobalError } from 'src/auth/components/formFields/GlobalError';
 import { SubmitButton } from 'src/auth/components/formFields/SubmitButton';
+import { useAuthStateContext } from 'src/auth/components/useAuthStateContext';
 import { Field } from 'src/forms/components/Field';
 
 const getExternalErrors = (errors: Array<string>) => {

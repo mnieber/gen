@@ -3,9 +3,9 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { States } from 'src/api/authApi/states';
 import { useStore } from 'src/app/components';
-import { useAuthStateContext } from 'src/auth/components';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { ResetPasswordForm } from 'src/auth/components/ResetPasswordForm';
+import { useAuthStateContext } from 'src/auth/components/useAuthStateContext';
 import { RouterLink } from 'src/utils/components';
 
 export const ResetPasswordPage: React.FC = observer(() => {
