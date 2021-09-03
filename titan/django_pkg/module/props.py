@@ -75,7 +75,9 @@ def _model(field):
 
 
 def _fields(spec):
-    return [x for x in spec.fields if x.name_snake != "id"]
+    return sorted(
+        [x for x in spec.fields if x.name_snake != "id"], key=lambda x: x.name_snake
+    )
 
 
 class Sections:
