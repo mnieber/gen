@@ -1,10 +1,9 @@
 import { FormState, FormStateProvider } from 'react-form-state-context';
 import { States } from 'src/api/authApi/states';
-import { ControlledCheckbox } from 'src/auth/components/formFields';
 import { EmailField } from 'src/auth/components/formFields/EmailField';
 import { GlobalError } from 'src/auth/components/formFields/GlobalError';
 import { SubmitButton } from 'src/auth/components/formFields/SubmitButton';
-import { Field } from 'src/forms/components/Field';
+import { ControlledCheckbox, Field } from 'src/forms/components';
 
 const getExternalErrors = (errors: Array<string>) => {
   const fieldErrors: { [name: string]: string } = {};

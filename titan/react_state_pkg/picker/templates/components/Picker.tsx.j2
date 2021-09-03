@@ -14,8 +14,8 @@ type PropsT = {
 
 type DefaultPropsT = {
   yellowTulips: YellowTulipT[]
-  yellowTulipsSelection: Selection
   yellowTulipsHighlight: Highlight
+  yellowTulipsSelection: Selection
 };
 
 export const YellowTulipPicker: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
@@ -32,7 +32,7 @@ export const YellowTulipPicker: FC<PropsT, DefaultPropsT> = observer((p: PropsT)
   };
 
   return (
-    <div className={classnames('YellowTulipPicker mt-2')}>
+    <div className={classnames('YellowTulipPicker', 'mt-2')}>
       <ValuePicker
         isMulti={false}
         isCreatable={true}

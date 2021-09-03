@@ -1,16 +1,15 @@
 {% magic_with item_name as redRose %}
-import { computed } from 'mobx';
 {% for item_name, bvrs in res.bvrs_by_item_name.items() %}
 import { RedRoseT, RedRoseByIdT } from '{{ res.type_import_path(item_name) }}';
 {% endfor %}
 import { listToItemById } from 'src/utils/ids';
-import { output } from 'skandha';
+import { data, output } from 'skandha';
 
 export class Outputs {
 {% for item_name, bvrs in res.bvrs_by_item_name.items() %}
   @output redRosesDisplay: Array<RedRoseT> = [];
 
-  @computed get redRoseById(): RedRoseByIdT {
+  @data get redRoseById(): RedRoseByIdT {
     return listToItemById(this.redRosesDisplay);
   }
 

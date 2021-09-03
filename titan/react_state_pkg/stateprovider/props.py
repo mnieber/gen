@@ -33,7 +33,7 @@ class Sections:
                 result += (
                     f"      {items_name}: () => state.outputs.{items_name}Display,\n"
                 )
-                result += f"      {items_name}ResUrl: () => {lower0(store.name)}ResUrls.{item_name}ById,\n"
+                result += f"      {items_name}ResUrl: () => {lower0(store.name)}.resUrls().{item_name}ById,\n"
 
                 for bvr in bvrs:
                     result += bvr.sections.default_props(store)

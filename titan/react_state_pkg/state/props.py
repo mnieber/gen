@@ -1,14 +1,17 @@
+import bisect
 import os
-from collections import defaultdict
 
+import ramda as R
 from moonleap import upper0
 from moonleap.utils.inflect import plural
 
 
 def bvrs_by_item_name(self):
-    result = defaultdict(lambda: [])
+    result = dict()
     for bvr in self.behaviors:
-        result[bvr.item_name].append(bvr)
+        bvrs = result.setdefault(bvr.item_name, [])
+        pos = bisect.bisect_left(R.map(R.prop("name"))(bvrs), bvr.name)
+        result[bvr.item_name].insert(pos, bvr)
     for item_list in self.item_lists:
         result.setdefault(item_list.item_name, [])
     return result
@@ -78,9 +81,10 @@ class Sections:
 
     def declare_policies(self, item_name):
         indent = "    "
+        items = plural(item_name)
         result = [
-            f"const Inputs_items = [Inputs, '{plural(item_name)}', this] as CMT;",
-            f"const Outputs_display = [Outputs, '{plural(item_name)}Display', this] as CMT;",  # noqa: E501
+            f"const Inputs_items = [Inputs, '{items}', this] as CMT;",
+            f"const Outputs_display = [Outputs, '{items}Display', this] as CMT;",  # noqa: E501
         ]
 
         return os.linesep.join([(indent + x) for x in result])

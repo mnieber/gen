@@ -12,7 +12,16 @@ from moonleap.report.diff import create_symlinks, diff
 from moonleap.session import Session, set_session
 
 
-def generate_code(spec_file, session):
+def _create_file_writer(args):
+    file_writer = FileWriter(
+        session.snapshot_fn,
+        check_crc_before_write=args.smart,
+        restore_missing_files=args.restore_missing_files,
+    )
+    return file_writer
+
+
+def generate_code(spec_file, session, file_writer):
     expanded_markdown = expand_markdown(spec_file)
     expanded_markdown_fn = Path(".moonleap") / "spec.md"
 
@@ -27,11 +36,10 @@ def generate_code(spec_file, session):
     create_resources(blocks)
 
     session.report("Rendering...")
-    file_writer = FileWriter(session.snapshot_fn)
     render_resources(blocks, file_writer.write_file)
+    file_writer.write_merged_files_and_snapshot()
     for warning in file_writer.warnings:
         session.report(warning)
-    file_writer.write_snapshot()
 
     session.report("Creating report...")
     report_resources(blocks)
@@ -51,13 +59,31 @@ def report(x):
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--spec", required=True, dest="spec_dir")
-    parser.add_argument("--smart", required=False, action="store_true")
+    parser.add_argument(
+        "--smart",
+        required=False,
+        action="store_true",
+        help="If true, CRCs of output files are recorded, "
+        + "and - on subsequent runs - output files are not written if "
+        + "they have the same CRC. Moreover, output files are replaced with "
+        + " a symlink if they have the same timestamp as the reference file.",
+    )
+    parser.add_argument(
+        "--restore-missing",
+        required=False,
+        action="store_true",
+        dest="restore_missing_files",
+        help="If true, missing output files are recreated when using --smart mode",
+    )
     parser.add_argument("--sudo", required=False, action="store_true")
     parser.add_argument("action", choices=["gen", "diff"])
     args = parser.parse_args()
 
-    if args.smart and args.action != "diff":
-        raise Exception("You can only use --smart with the 'diff' action")
+    if args.smart and args.action != "gen":
+        raise Exception("You can only use --smart with the 'gen' action")
+
+    if args.restore_missing_files and not args.smart:
+        raise Exception("You can only use --restore-missing together with --smart")
 
     if args.sudo and args.action != "diff":
         raise Exception("You can only use --sudo with the 'diff' action")
@@ -80,10 +106,10 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if args.action == "gen":
-        generate_code(spec_fn, session)
+        if args.smart:
+            create_symlinks(session)
+        generate_code(spec_fn, session, _create_file_writer(args))
         create_expected_dir(session.expected_dir, session.settings["references"])
 
     if args.action == "diff":
-        if args.smart:
-            create_symlinks(session)
         diff(session, args.sudo)

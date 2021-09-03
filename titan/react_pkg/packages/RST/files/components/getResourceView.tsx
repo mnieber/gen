@@ -1,5 +1,7 @@
 import React from 'react';
 import { rsMap } from 'src/api/ResourceStateMap';
+import { flags } from 'src/app/flags';
+import { log } from 'src/utils/logging';
 import { isErroredRS, isResetRS, isUpdatingRS, LoadingT } from 'src/utils/RST';
 
 type PropsT = {
@@ -24,7 +26,13 @@ export const getResourceView = (props: PropsT) => {
     return <React.Fragment />;
   };
 
-  const rs = rsMap.getRS(props.resUrl);
+  if (!rsMap.has(props.resUrl)) {
+    if (flags.logResourceView) {
+      log('getResourceView: unknown url', props.resUrl);
+    }
+  }
+
+  const rs = rsMap.get(props.resUrl);
   return isErroredRS(rs)
     ? renderErrored(rs.message)
     : isUpdatingRS(rs)

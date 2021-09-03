@@ -26,10 +26,10 @@ export class AppStore {
     this.redRose = new RedRose();
 {% endfor %}
 
-    this.applyPolicies();
+    this._installPolicies();
   }
 
-  applyPolicies() {
+  _installPolicies() {
 {% if res.module.react_app.api_module %}
 {% for substore in res.substores %}
   storeConnectsToApi(this.redRose, this.api);

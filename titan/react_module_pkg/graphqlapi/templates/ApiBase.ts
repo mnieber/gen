@@ -1,56 +1,94 @@
 import { Signal } from 'micro-signals';
+import { pathOr } from 'ramda';
 import { LoadDataEventT } from 'src/api/events';
+import { flags } from 'src/app/flags';
 import { doQuery } from 'src/utils/graphqlClient';
+import { log } from 'src/utils/logging';
 import { erroredRS, loadingRS, updatedRS } from 'src/utils/RST';
 import { ObjT } from 'src/utils/types';
+
+export const defaultGetErrorMsg = (error: any) => {
+  return pathOr(error, ['error', 'response', 'errors', 0, 'message'])(error);
+};
+
+export const defaultGetData = (response: any) => response;
 
 export class ApiBase {
   signal: Signal<any> = new Signal();
 
-  _dispatchUpdating(queryName: string) {
+  _dispatchUpdating(queryName: string, vars: ObjT) {
     this.signal.dispatch({
       topic: `Updating.${queryName}`,
       payload: {
-        state: loadingRS()
-      }
-    } as LoadDataEventT);
-    return Promise.resolve();
-  }
-
-  _dispatchUpdated(queryName: string, data: any) {
-    this.signal.dispatch({
-      topic: `Updated.${queryName}`,
-      payload: {
-        data,
-        state: updatedRS()
+        state: loadingRS(),
+        vars,
       },
     } as LoadDataEventT);
   }
 
-  _dispatchErrored(queryName: string, error: string) {
+  _dispatchUpdated(queryName: string, vars: ObjT, data: any) {
     this.signal.dispatch({
-      topic: `Errored.${queryName}`,
+      topic: `Updated.${queryName}`,
       payload: {
-        state: erroredRS(error)
-      }
+        vars,
+        data,
+        state: updatedRS(),
+      },
     } as LoadDataEventT);
   }
 
-  _doQuery(
+  _dispatchErrored(queryName: string, vars: ObjT, error: string) {
+    this.signal.dispatch({
+      topic: `Errored.${queryName}`,
+      payload: {
+        vars,
+        state: erroredRS(error),
+      },
+    } as LoadDataEventT);
+  }
+
+  doQuery(
     queryName: string,
     query: string,
     vars: ObjT,
-    getData: Function,
-    getErrorMsg: (error: ObjT) => string
+    getData: Function | undefined = undefined,
+    getErrorMsg: (error: ObjT) => string = defaultGetErrorMsg
   ) {
-    return this._dispatchUpdating(queryName).then(() =>
-      doQuery(query, vars)
-        .then((response) => {
-          this._dispatchUpdated(queryName, getData(response));
-        })
-        .catch((error) => {
-          this._dispatchErrored(queryName, getErrorMsg(error));
-        })
-    );
+    if (flags.logQueries) {
+      log('Query started: ', queryName, vars);
+    }
+
+    this._dispatchUpdating(queryName, vars);
+
+    const result = doQuery(query, vars).then((response) => {
+      return {
+        response,
+        data: (getData ?? defaultGetData)(response),
+      };
+    });
+
+    result
+      .then(({ response, data }) => {
+        if (flags.logQueries) {
+          log('Query finished: ', queryName, vars, response);
+        }
+
+        if (data instanceof Error) {
+          this._dispatchErrored(queryName, vars, data.message);
+        } else {
+          this._dispatchUpdated(queryName, vars, data);
+        }
+      })
+      .catch((error) => {
+        if (flags.logQueries) {
+          log('Query errored: ', queryName, vars, error);
+        }
+
+        this._dispatchErrored(queryName, vars, getErrorMsg(error));
+      });
+
+    return result;
   }
 }
+
+export const apiBase = new ApiBase();

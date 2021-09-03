@@ -10,14 +10,27 @@ export class ResourceStateMap {
   }
 
   @action registerRS(state: RST, resUrls: string[]) {
-    forEach(
-      (resUrl: string) => {this.resourceStateByResUrl[resUrl] = state}
-    )(resUrls);
+    forEach((resUrl: string) => {
+      this.resourceStateByResUrl[resUrl] = state;
+    })(resUrls);
   }
 
-  getRS(resUrl: string): RST {
+  has(resUrl: string): boolean {
+    return !!this.resourceStateByResUrl[resUrl];
+  }
+
+  get(resUrl: string): RST {
     return this.resourceStateByResUrl[resUrl] ?? resetRS();
   }
 }
 
 export const rsMap = new ResourceStateMap();
+
+export const maybeResUrl = (getter, ...args) => {
+  for (var i = 0; i < args.length; ++i) {
+    if (args[i] === undefined) {
+      return undefined;
+    }
+  }
+  return getter(...args);
+};

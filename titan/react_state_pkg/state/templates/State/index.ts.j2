@@ -26,8 +26,9 @@ import * as Handlers from './handlers';
 type PropsT = {};
 
 export class YellowTulipState {
-  @facet inputs = new Inputs();
-  @facet outputs = new Outputs();
+  @facet inputs: Inputs = new Inputs();
+  @facet outputs: Outputs = new Outputs();
+
 {{ res.sections.constructor() }}
 
 {{ res.sections.callbacks() }}
@@ -46,10 +47,14 @@ export class YellowTulipState {
 {% endfor %}
     ];
 
-    Skandha.installPolicies(policies, this.redRoses);
+    Skandha.installPolicies<any>(policies, this.redRoses);
   }
 
 {% endfor %}
+
+  getSummary() {
+    return Skandha.getCtrState(this);
+  }
 
   destroy() {
     cleanUpCtr(this);

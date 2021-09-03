@@ -4,22 +4,26 @@
 import { action, observable, makeObservable } from 'mobx';
 import { forEach, values } from 'ramda';
 import { rsMap } from 'src/api/ResourceStateMap';
+import { listToItemById } from 'src/utils/ids';
 import { isUpdatedRS, RST } from 'src/utils/RST';
+import { ObjT } from 'src/utils/types';
 {% if res.policies %}import * as Policies from '{{ res.module_path }}/policies';{% endif %}
 {% for item_list in res.item_lists %}
 import { YellowTulipT, YellowTulipByIdT } from 'src/gardenFlowers/types';
-import { ObjT } from 'src/utils/types';
 {% endfor %}
 {% end_clean_up_js_imports %}
 
 export const resUrls = {
 {% for item_list in res.item_lists %}
-  yellowTulipById: `{{ res.name }}/yellowTulipById`,
+  yellowTulipById: '{{ res.name }}/yellowTulipById',
 {% endfor %}
 };
 
 export class {{ res.name }} {
 {{ res.sections.item_list_fields() }}
+
+  resUrls = () => resUrls;
+
   constructor() {
     makeObservable(this);
 {% for policy in res.policies %}
@@ -27,15 +31,16 @@ export class {{ res.name }} {
 {% endfor %}
   }
 
-  @action onLoadData(event: any, rs: RST, queryName: string, data: ObjT) {
+  @action onLoadData(rs: RST, queryName: string, vars: ObjT, data: ObjT) {
 {{ res.sections.on_load_data() }}
   }
 
 {% for item_list in res.item_lists %}
   @action addYellowTulips = (yellowTulips: YellowTulipT[]) => {
-    forEach((yellowTulip: YellowTulipT) => {
-      this.yellowTulipById[yellowTulip.id] = yellowTulip;
-    }, yellowTulips);
+    this.yellowTulipById = {
+      ...this.yellowTulipById,
+      ...listToItemById(yellowTulips),
+    };
   };
 {% endfor %}
 }

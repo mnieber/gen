@@ -4,10 +4,9 @@
 import * as React from 'react';
 import { reaction } from 'mobx';
 import { values } from 'ramda';
+import { log } from 'src/utils/logging';
+import { flags } from 'src/app/flags';
 
-{% for item_name, store in res.state.store_by_item_name.items() %}
-import { resUrls as blueDaisyResUrls } from '{{ store.module_path }}/BlueDaisy';
-{% endfor %}
 import { YellowTulipState } from '{{ res.module_path }}/YellowTulipState';
 import { CtrProvider, FC, useDefaultProps } from 'react-default-props-context';
 import { useStore } from 'src/app/components';
@@ -39,6 +38,9 @@ export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = (p: PropsT) =
 {% for item_name, store in res.state.store_by_item_name.items() %}
         state.inputs.redRoses = inputs.redRoses;
 {% endfor %}
+        if (flags.logStateProviders) {
+          log('YellowTulipState updated', state.getSummary());
+        }
       },
       {
         fireImmediately: true,

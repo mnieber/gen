@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import json
 import zlib
 from pathlib import Path
@@ -7,66 +9,65 @@ from moonleap.session import get_session
 
 
 class FileWriter:
-    def __init__(self, snapshot_fn):
-        self._all_output_filenames = []
+    def __init__(self, snapshot_fn, check_crc_before_write, restore_missing_files):
         self.output_filenames = []
         self.warnings = []
         self.root_dir = Path(get_session().output_root_dir)
-        self.check_crc_before_write = True
+        self.check_crc_before_write = check_crc_before_write
+        self.restore_missing_files = restore_missing_files
+        self.fn_parts = {}
+
         self.snapshot_fn = Path(snapshot_fn)
         if self.snapshot_fn.exists():
             with open(snapshot_fn, "r") as f:
                 f_str = f.read()
                 self.crc_by_fn = json.loads(f_str)
-                self.crc_by_fn_memo = json.loads(f_str)
         else:
             self.crc_by_fn = {}
-            self.crc_by_fn_memo = {}
 
     def write_file(self, fn, content, is_dir=False):
-        fn = (self.root_dir / fn).resolve()
+        fn = (self.root_dir / fn).absolute()
+
         if is_dir:
             fn.mkdir(parents=True, exist_ok=True)
             return
-        fn.parent.mkdir(parents=True, exist_ok=True)
 
-        if fn in self._all_output_filenames:
-            file_merger = get_file_merger(fn)
-            if file_merger:
-                with open(fn) as ifs:
-                    lhs_content = ifs.read()
-                    content = file_merger.merge(lhs_content, content)
-            else:
-                self.warnings.append(f"Warning: writing twice to {fn}")
+        if get_file_merger(fn):
+            self.fn_parts.setdefault(str(fn), []).append(content)
         else:
-            self._all_output_filenames.append(fn)
+            self._write(fn, content)
+
+    def _write(self, fn, content):
+        fn_str = str(fn)
+
+        if fn_str in self.output_filenames:
+            self.warnings.append(f"Warning: writing twice to {fn_str}")
 
         crc = zlib.crc32(bytes(str.encode(content)))
         if (
-            str(fn) in self.crc_by_fn
-            and self.crc_by_fn[str(fn)] == crc
+            fn_str in self.crc_by_fn
+            and self.crc_by_fn[fn_str] == crc
             and self.check_crc_before_write
+            and (fn.exists() or not self.restore_missing_files)
         ):
             return
-        else:
-            self.crc_by_fn[str(fn)] = crc
 
-        self.output_filenames.append(fn)
-        if fn.islink():
+        self.output_filenames.append(fn_str)
+        self.crc_by_fn[fn_str] = crc
+        if fn.is_symlink():
             fn.unlink()
+        fn.parent.mkdir(parents=True, exist_ok=True)
         with open(fn, "w") as ofs:
             ofs.write(content)
 
-        # The same file may get written multiple times if there is a file_merger for it.
-        # Therefore, to find out of the file changed compared to its historical version, we need to
-        # compare its CRC again, using crc_by_fn_memo as the reference data.
-        if (
-            str(fn) in self.crc_by_fn_memo
-            and self.crc_by_fn_memo[str(fn)] == crc
-            and self.check_crc_before_write
-        ):
-            self.output_filenames.remove(fn)
+    def write_merged_files_and_snapshot(self):
+        for fn_str, parts in self.fn_parts.items():
+            file_merger = get_file_merger(fn_str)
+            assert file_merger
+            content = ""
+            for part in parts:
+                content = file_merger.merge(content, part)
+            self._write(Path(fn_str), content)
 
-    def write_snapshot(self):
         with open(self.snapshot_fn, "w") as f:
             json.dump(self.crc_by_fn, f)
