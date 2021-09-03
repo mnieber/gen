@@ -36,12 +36,7 @@ def create_symlinks(session):
 
     for fn in Path(".moonleap/output").rglob("*"):
         if not fn.is_dir() and not fn.is_symlink():
-            ref_fn = ref_dir / fn.relative_to(".moonleap/output")
+            ref_fn = (ref_dir / fn.relative_to(".moonleap/output")).absolute()
             if ref_fn.exists() and _same_file(fn.stat(), ref_fn.stat()):
                 fn.unlink()
                 fn.symlink_to(ref_fn)
-
-        if not fn.is_dir() and fn.is_symlink():
-            ref_fn = (ref_dir / fn.relative_to(".moonleap/output")).resolve()
-            fn.unlink()
-            fn.symlink_to(ref_fn)
