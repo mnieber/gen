@@ -32,7 +32,7 @@ GRAPHQL_JWT = {
         "django_rtk_green.mutations.RequestPasswordReset",
         "django_rtk_green.mutations.ResetPassword",
         "django_rtk_green.mutations.ObtainJSONWebToken",
-        "django_rtk_green.queries.MeQuery",
+        "django_rtk_green.queries.Me",
         "graphql_jwt.mutations.Verify",
         "graphql_jwt.mutations.Refresh",
         "graphql_jwt.mutations.Revoke",
