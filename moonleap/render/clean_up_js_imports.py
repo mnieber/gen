@@ -109,11 +109,13 @@ def has_symbol(x, text):
 
 
 def filter_packages(record, other_text):
-    record["packages"] = R.uniq(
-        [x for x in record["packages"] if has_symbol(x, other_text)]
+    record["packages"] = sorted(
+        R.uniq([x for x in record["packages"] if has_symbol(x, other_text)])
     )
-    record["star"] = [x for x in record["star"] if has_symbol(x, other_text)]
-    record["singleton"] = [x for x in record["singleton"] if has_symbol(x, other_text)]
+    record["star"] = sorted([x for x in record["star"] if has_symbol(x, other_text)])
+    record["singleton"] = sorted(
+        [x for x in record["singleton"] if has_symbol(x, other_text)]
+    )
 
 
 def post_process_clean_up_js_imports(lines):
@@ -132,7 +134,9 @@ def post_process_clean_up_js_imports(lines):
             count -= 1
             removing = False
             block_text = os.linesep.join(block)
-            for location, record in parse_imports(block_text).items():
+            for location, record in sorted(
+                parse_imports(block_text).items(), key=lambda x: x[0]
+            ):
                 filter_packages(record, other_text)
                 for star in record["star"]:
                     result.extend([f"import * as {star} from {location}"])
