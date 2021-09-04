@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import Prop, extend, kebab_to_camel, rule, tags
+from moonleap import Prop, extend, kebab_to_camel, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.utils.case import upper0
 from moonleap.verbs import contains, has

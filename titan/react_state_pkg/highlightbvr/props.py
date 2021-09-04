@@ -35,7 +35,7 @@ class Sections(BehaviourSections):
     def default_props(self, store):
         indent = "      "
         result = [
-            f"{self.res.items_name}Highlight: () => state.{self.res.items_name}.highlight,",
+            f"{self.res.items_name}Highlight: () => state.{self.res.items_name}.highlight,",  # noqa: E501
             f"{self.res.item_name}: () => state.{self.res.items_name}.highlight.item,",
         ]
         return os.linesep.join([(indent + x) for x in result]) + os.linesep

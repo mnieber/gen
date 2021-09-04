@@ -30,7 +30,7 @@ def create_panel(term, block):
 
 @rule("view", has, "panel")
 def view_has_panel(view, panel):
-    if panel.parent_view and not panel.parent_view is view:
+    if panel.parent_view and panel.parent_view is not view:
         raise Exception(f"{panel.name} already has a parent view")
 
     panel.name = view.name + panel.name

@@ -1,5 +1,5 @@
 from moonleap.resources.data_type_spec_store import FK, RelatedSet, data_type_spec_store
-from moonleap.utils.case import camel_to_snake, lower0
+from moonleap.utils.case import lower0
 
 
 def _on_delete(field):
@@ -13,7 +13,7 @@ def _on_delete(field):
 def _model(field):
     t = field.field_type
 
-    null_blank = [] if field.required else [f"null=True", f"blank=True"]
+    null_blank = [] if field.required else ["null=True", "blank=True"]
     unique = ["unique=True"] if field.unique else []
     help_text = [f"help_text='{field.description}'"] if field.description else []
 

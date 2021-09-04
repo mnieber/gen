@@ -18,9 +18,9 @@ def _type(field_spec):
     prefix = "/data_types/"
     if t is not None and t.startswith(prefix):
         return FK(
-            target=t[len(prefix) :],
+            target=t[len(prefix) :],  # noqa: E203
             has_related_set=field_spec.get("has_related_set", True),
-        )  # noqa: E203
+        )
 
     raise Exception(f"Unknown field type: {field_spec}")
 

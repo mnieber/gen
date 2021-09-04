@@ -3,7 +3,6 @@ from dataclasses import dataclass
 
 import moonleap.resource.props as P
 from moonleap import MemFun, Resource, extend, register_add
-from moonleap.verbs import has
 from titan.project_pkg.service import Service, Tool
 
 from . import props

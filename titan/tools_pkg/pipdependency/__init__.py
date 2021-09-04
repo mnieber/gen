@@ -1,6 +1,5 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, extend, register_add, tags
-from moonleap.verbs import has
 from titan.project_pkg.service import Service, Tool
 
 from . import props

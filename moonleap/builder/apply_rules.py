@@ -119,10 +119,12 @@ def apply_rules(root_block):
                     if not _apply_rules(
                         rel, resource, obj_resource, block, scope_manager
                     ):
-                        # We should check if the block declared this relation. This filters
-                        # out the cases where the relation was added programatically.
+                        # We should check if the block declared this relation. This
+                        # filters out the cases where the relation was added
+                        # programatically.
                         if block.has_relation(rel):
                             raise Exception(
-                                f"Unmatched relation ({term_to_word(rel.subj)} {rel.verb} {term_to_word(rel.obj)})"
+                                f"Unmatched relation ({term_to_word(rel.subj)} "
+                                + f"{rel.verb} {term_to_word(rel.obj)})"
                                 + f" in block: {block}"
                             )

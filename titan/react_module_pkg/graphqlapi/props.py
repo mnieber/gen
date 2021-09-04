@@ -200,17 +200,19 @@ def get_graphql_body(type_name, indent=0, skip=None):
 
     graphqlBody = []
     spec = data_type_spec_store.get_spec(type_name)
-    for field in [x for x in spec.fields if not x.private]:
-        if isinstance(field.field_type, RelatedSet) or isinstance(field.field_type, FK):
-            fk_type_name = field.field_type.target
+    for spec_field in [x for x in spec.fields if not x.private]:
+        if isinstance(spec_field.field_type, RelatedSet) or isinstance(
+            spec_field.field_type, FK
+        ):
+            fk_type_name = spec_field.field_type.target
             if fk_type_name not in skip:
-                graphqlBody.append(f"{field.name} {{")
+                graphqlBody.append(f"{spec_field.name} {{")
                 graphqlBody.extend(
                     get_graphql_body(fk_type_name, indent + 2, skip + [fk_type_name])
                 )
-                graphqlBody.append(f"}}")
+                graphqlBody.append(f"}}")  # noqa: F541
         else:
-            graphqlBody.append(f"{field.name}")
+            graphqlBody.append(f"{spec_field.name}")
 
     if indent == 0:
         return (os.linesep + (" " * 10)).join(graphqlBody)
@@ -241,14 +243,14 @@ class Sections:
 
         for item_name in sorted(item_names):
             spec = data_type_spec_store.get_spec(item_name)
-            for field in spec.fields:
-                if isinstance(field.field_type, FK):
+            for spec_field in spec.fields:
+                if isinstance(spec_field.field_type, FK):
                     result.append(
-                        f"{item_name}.define({{ {lower0(field.field_type.target)} }});"
+                        f"{item_name}.define({{ {lower0(spec_field.field_type.target)} }});"  # noqa: E501
                     )
-                if isinstance(field.field_type, RelatedSet):
+                if isinstance(spec_field.field_type, RelatedSet):
                     result.append(
-                        f"{item_name}.define({{ {lower0(plural(field.field_type.target))} }});"
+                        f"{item_name}.define({{ {lower0(plural(spec_field.field_type.target))} }});"  # noqa: E501
                     )
 
         return os.linesep.join(result)

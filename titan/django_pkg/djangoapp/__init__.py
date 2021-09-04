@@ -1,7 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, Prop, add, extend, register_add, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
-from moonleap.verbs import has
 from titan.tools_pkg.pipdependency import PipRequirement
 
 from . import (

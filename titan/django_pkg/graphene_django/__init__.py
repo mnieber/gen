@@ -1,4 +1,3 @@
-import moonleap.resource.props as P
 from moonleap import MemFun, Prop, add, create_forward, extend, rule, tags
 from moonleap.verbs import has, uses
 from titan.django_pkg.module import Module

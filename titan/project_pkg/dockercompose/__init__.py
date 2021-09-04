@@ -7,7 +7,6 @@ from moonleap import (
     register_add,
     tags,
 )
-from moonleap.verbs import has
 from titan.project_pkg.service import Tool
 
 from . import props
