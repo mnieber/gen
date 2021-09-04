@@ -1,5 +1,6 @@
 import os
 import sys
+import traceback
 from argparse import ArgumentParser
 from pathlib import Path
 
@@ -10,6 +11,32 @@ from moonleap.render.post_process_output_files import post_process_output_files
 from moonleap.report.create_expected_dir import create_expected_dir
 from moonleap.report.diff import create_symlinks, diff
 from moonleap.session import Session, set_session
+
+
+def create_parser():
+    parser = ArgumentParser()
+    parser.add_argument("--spec", required=True, dest="spec_dir")
+    parser.add_argument(
+        "--smart",
+        required=False,
+        action="store_true",
+        help="If true, CRCs of output files are recorded, "
+        + "and - on subsequent runs - output files are not written if "
+        + "they have the same CRC. Moreover, output files are replaced with "
+        + " a symlink if they have the same timestamp as the reference file.",
+    )
+    parser.add_argument(
+        "--restore-missing",
+        required=False,
+        action="store_true",
+        dest="restore_missing_files",
+        help="If true, missing output files are recreated when using --smart mode",
+    )
+    parser.add_argument("--sudo", required=False, action="store_true")
+    parser.add_argument("--stacktrace", required=False, action="store_true")
+    parser.add_argument("action", choices=["gen", "diff"])
+
+    return parser
 
 
 def _create_file_writer(args):
@@ -57,26 +84,7 @@ def report(x):
 
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_argument("--spec", required=True, dest="spec_dir")
-    parser.add_argument(
-        "--smart",
-        required=False,
-        action="store_true",
-        help="If true, CRCs of output files are recorded, "
-        + "and - on subsequent runs - output files are not written if "
-        + "they have the same CRC. Moreover, output files are replaced with "
-        + " a symlink if they have the same timestamp as the reference file.",
-    )
-    parser.add_argument(
-        "--restore-missing",
-        required=False,
-        action="store_true",
-        dest="restore_missing_files",
-        help="If true, missing output files are recreated when using --smart mode",
-    )
-    parser.add_argument("--sudo", required=False, action="store_true")
-    parser.add_argument("action", choices=["gen", "diff"])
+    parser = create_parser()
     args = parser.parse_args()
 
     if args.smart and args.action != "gen":
@@ -106,10 +114,15 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if args.action == "gen":
-        if args.smart:
-            create_symlinks(session)
-        generate_code(spec_fn, session, _create_file_writer(args))
-        create_expected_dir(session.expected_dir, session.settings["references"])
+        try:
+            if args.smart:
+                create_symlinks(session)
+            generate_code(spec_fn, session, _create_file_writer(args))
+            create_expected_dir(session.expected_dir, session.settings["references"])
+        except Exception as e:
+            report("Error: " + str(e))
+            if args.stacktrace:
+                traceback.print_exc()
 
     if args.action == "diff":
         diff(session, args.sudo)

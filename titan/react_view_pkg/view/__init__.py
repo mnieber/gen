@@ -30,9 +30,12 @@ def create_panel(term, block):
 
 @rule("view", has, "panel")
 def view_has_panel(view, panel):
+    if panel.parent_view and not panel.parent_view is view:
+        raise Exception(f"{panel.name} already has a parent view")
+
     panel.name = view.name + panel.name
     return [
-        create_forward(panel, "is-subpanel-of", ":parent-view", obj_res=view),
+        create_forward(panel, "p-is-subpanel-of", ":parent-view", obj_res=view),
         create_forward(view.module, has, ":component", panel),
     ]
 
@@ -47,7 +50,7 @@ class ExtendView:
     render = MemFun(props.render)
     create_router_configs = MemFun(router_configs.create_router_configs)
     wraps_children = P.child(shows, ":children")
-    parent_view = P.child("is-subpanel-of", ":parent-view")
+    parent_view = P.child("p-is-subpanel-of", ":parent-view")
     left_panel = P.child(has, "left:panel")
     right_panel = P.child(has, "right:panel")
     top_panel = P.child(has, "top:panel")
