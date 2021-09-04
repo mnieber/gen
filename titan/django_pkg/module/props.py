@@ -15,10 +15,11 @@ def _model(field):
 
     null_blank = [] if field.required else [f"null=True", f"blank=True"]
     unique = ["unique=True"] if field.unique else []
+    help_text = [f"help_text='{field.description}'"] if field.description else []
 
     if isinstance(t, FK):
         on_delete = _on_delete(field)
-        args = [t.target, f"on_delete={on_delete}", *null_blank, *unique]
+        args = [t.target, f"on_delete={on_delete}", *null_blank, *unique, *help_text]
         return f"models.ForeignKey({', '.join(args)})"
 
     if t == "string":
@@ -27,17 +28,23 @@ def _model(field):
             [f'default="{field.default_value}"'] if field.default_value else []
         )
         if max_length is not None:
-            args = [f"max_length={max_length}", *default_arg, *null_blank, *unique]
+            args = [
+                f"max_length={max_length}",
+                *default_arg,
+                *null_blank,
+                *unique,
+                *help_text,
+            ]
             return f"models.CharField({', '.join(args)})"
         else:
-            args = [*default_arg, *null_blank, *unique]
+            args = [*default_arg, *null_blank, *unique, *help_text]
             return f"models.TextField({', '.join(args)})"
 
     if t == "json":
         default_arg = (
             [f'default="{field.default_value}"'] if field.default_value else []
         )
-        args = [*default_arg, *null_blank, *unique]
+        args = [*default_arg, *null_blank, *unique, *help_text]
         return f"models.JSONField({', '.join(args)})"
 
     if t in ("slug", "url"):
@@ -47,7 +54,7 @@ def _model(field):
         max_length = field.spec.get("maxLength", None)
         max_length_arg = [f"max_length={max_length}"] if max_length else []
 
-        args = [*default_arg, *max_length_arg, *null_blank, *unique]
+        args = [*default_arg, *max_length_arg, *null_blank, *unique, *help_text]
         model = "SlugField" if t == "slug" else "URLField"
         return f"models.{model}({', '.join(args)})"
 
@@ -57,18 +64,18 @@ def _model(field):
             if field.default_value in (True, False)
             else []
         )
-        args = [*default_arg, *null_blank]
+        args = [*default_arg, *null_blank, *help_text]
         return f"models.BooleanField({', '.join(args)})"
 
     if t == "email":
         default_arg = (
             [f'default="{field.default_value}"'] if field.default_value else []
         )
-        args = [*default_arg, *null_blank, *unique]
+        args = [*default_arg, *null_blank, *unique, *help_text]
         return f"models.EmailField({', '.join(args)})"
 
     if t == "date":
-        args = [*unique]
+        args = [*unique, *help_text]
         return f"models.DateField({', '.join(args)})"
 
     raise Exception(f"Unknown model field type: {t}")

@@ -30,6 +30,10 @@ def _unique(field_spec):
     return field_spec.get("unique", False)
 
 
+def _description(field_spec):
+    return field_spec.get("description")
+
+
 def _load_data_type_dict(data_type_spec_dir, data_type_name):
     spec_fn = os.path.join(data_type_spec_dir, data_type_name + ".json")
     if not os.path.exists(spec_fn):
@@ -49,13 +53,14 @@ def _get_fields(data_type_dict):
     for field_name, field_spec in data_type_dict["properties"].items():
         result.append(
             DataTypeField(
+                default_value=_default_value(field_spec),
+                description=_description(field_spec),
+                field_type=_type(field_spec),
                 name_snake=field_name,
                 name=snake_to_camel(field_name),
-                spec=field_spec,
-                required=field_name in required,
                 private=field_name in private,
-                field_type=_type(field_spec),
-                default_value=_default_value(field_spec),
+                required=field_name in required,
+                spec=field_spec,
                 unique=_unique(field_spec),
             )
         )
@@ -74,13 +79,14 @@ class RelatedSet:
 
 @dataclass
 class DataTypeField:
+    field_type: T.Union[str, FK, RelatedSet]
     name_snake: str
     name: str
-    spec: T.Any
-    required: bool
     private: bool
-    field_type: T.Union[str, FK, RelatedSet]
+    required: bool
+    spec: T.Any
     default_value: T.Any = None
+    description: T.Optional[str] = None
     unique: bool = False
 
 
