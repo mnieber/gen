@@ -17,7 +17,10 @@ def _type(field_spec):
     t = field_spec.get("$ref")
     prefix = "/data_types/"
     if t is not None and t.startswith(prefix):
-        return FK(t[len(prefix) :])  # noqa: E203
+        return FK(
+            target=t[len(prefix) :],
+            has_related_set=field_spec.get("has_related_set", True),
+        )  # noqa: E203
 
     raise Exception(f"Unknown field type: {field_spec}")
 
@@ -70,6 +73,7 @@ def _get_fields(data_type_dict):
 @dataclass
 class FK:
     target: str
+    has_related_set: bool
 
 
 @dataclass
@@ -131,7 +135,10 @@ class DataTypeSpecStore:
 
         for data_type_name, spec in list(self.spec_by_name.items()):
             for field in spec.fields:
-                if isinstance(field.field_type, FK):
+                if (
+                    isinstance(field.field_type, FK)
+                    and field.field_type.has_related_set
+                ):
                     fk_spec = self.get_spec(field.field_type.target)
                     fk_spec.fields.append(
                         DataTypeField(

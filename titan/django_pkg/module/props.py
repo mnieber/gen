@@ -19,7 +19,15 @@ def _model(field):
 
     if isinstance(t, FK):
         on_delete = _on_delete(field)
-        args = [t.target, f"on_delete={on_delete}", *null_blank, *unique, *help_text]
+        related_name = ['related_name="+"'] if not t.has_related_set else []
+        args = [
+            t.target,
+            f"on_delete={on_delete}",
+            *null_blank,
+            *related_name,
+            *unique,
+            *help_text,
+        ]
         return f"models.ForeignKey({', '.join(args)})"
 
     if t == "string":
