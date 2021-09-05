@@ -29,7 +29,7 @@ class PurpleOrchidsQuery:
 
 {% for form in res.forms %}
 class RedRoseFormType(graphene.InputObjectType):
-{{ graphene.sections.graphene_fields(form.item_name + "Form") }}
+{{ graphene.sections.graphene_fields(form.data_type_name) }}
 
 class RedRose(graphene.Mutation):
     class Arguments:

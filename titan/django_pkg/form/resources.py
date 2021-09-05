@@ -7,3 +7,7 @@ from moonleap import Resource
 class Form(Resource):
     item_name: str
     item_name_snake: str
+
+    @property
+    def data_type_name(self):
+        return self.item_name + "Form"
