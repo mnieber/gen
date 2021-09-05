@@ -1,8 +1,10 @@
 import moonleap.resource.props as P
 from moonleap import extend, register_add
 from titan.project_pkg.service import Tool
+from titan.react_pkg.component import Component
+from titan.react_pkg.module import Module
 
-from .resources import Flags  # noqa
+from .resources import Flags
 
 
 class StoreFlags:
@@ -16,4 +18,14 @@ def add_flags(resource, flags):
 
 @extend(Tool)
 class ExtendTool(StoreFlags):
+    pass
+
+
+@extend(Component)
+class ExtendComponent(StoreFlags):
+    pass
+
+
+@extend(Module)
+class ExtendModule(StoreFlags):
     pass

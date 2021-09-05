@@ -8,6 +8,7 @@ from titan.react_pkg.module import Module
 @rule("module", has, "*", fltr_obj=P.fltr_instance(Component))
 def module_has_component(module, component):
     module.node_package_configs.add_source(component)
+    module.flags.add_source(component)
     component.output_paths.add_source(module)
 
 

@@ -3,7 +3,6 @@ from moonleap import MemFun, add, extend, kebab_to_camel, rule, tags
 from moonleap.verbs import has
 from titan.react_pkg.nodepackage import load_node_package_config
 from titan.react_pkg.reactapp import ReactApp
-from titan.react_module_pkg.flags import StoreFlags
 
 from . import props
 from .resources import AppModule  # noqa
@@ -29,5 +28,5 @@ class ExtendReactApp:
 
 
 @extend(AppModule)
-class ExtendAppModule(StoreFlags):
+class ExtendAppModule:
     get_flags = MemFun(props.get_flags)

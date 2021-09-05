@@ -1,6 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, Prop, RenderTemplates, add, extend, kebab_to_camel, tags
 from moonleap.verbs import has, provides
+from titan.react_module_pkg.flags import Flags
 from titan.react_pkg.module import Module
 from titan.react_pkg.nodepackage import load_node_package_config
 
@@ -14,6 +15,7 @@ def create_state(term, block):
     name = kebab_to_camel(kebab_name)
     state = State(name=name)
     add(state, load_node_package_config(__file__))
+    add(state, Flags({"logSkandha": False}))
     return state
 
 
