@@ -13,9 +13,9 @@ class Session:
         self.settings_fn = settings_fn
         self.settings = None
         self.scope_manager = ScopeManager()
-        self.output_root_dir = output_root_dir
-        self.expected_dir = ".moonleap/expected"
-        self.snapshot_fn = ".moonleap/snapshot.json"
+        self.output_dir = f"{output_root_dir}/output"
+        self.expected_dir = f"{output_root_dir}/expected"
+        self.snapshot_fn = f"{output_root_dir}/snapshot.json"
 
     def load_settings(self):
         settings_fn = Path(self.spec_dir) / self.settings_fn

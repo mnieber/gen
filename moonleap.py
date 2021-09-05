@@ -32,6 +32,7 @@ def create_parser():
         dest="restore_missing_files",
         help="If true, missing output files are recreated when using --smart mode",
     )
+    parser.add_argument("--output-dir", required=False, default=".moonleap")
     parser.add_argument("--sudo", required=False, action="store_true")
     parser.add_argument("--stacktrace", required=False, action="store_true")
     parser.add_argument("action", choices=["gen", "diff"])
@@ -103,7 +104,7 @@ if __name__ == "__main__":
     session = Session(
         args.spec_dir,
         "settings.yml",
-        output_root_dir=".moonleap/output",
+        output_root_dir=args.output_dir,
     )
     session.load_settings()
     set_session(session)

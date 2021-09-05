@@ -12,7 +12,7 @@ class FileWriter:
     def __init__(self, snapshot_fn, check_crc_before_write, restore_missing_files):
         self.output_filenames = []
         self.warnings = []
-        self.root_dir = Path(get_session().output_root_dir)
+        self.root_dir = Path(get_session().output_dir)
         self.check_crc_before_write = check_crc_before_write
         self.restore_missing_files = restore_missing_files
         self.fn_parts = {}
