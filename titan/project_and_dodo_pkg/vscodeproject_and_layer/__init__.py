@@ -8,7 +8,9 @@ from . import layer_configs
 
 @rule("project", has, "vscode-project")
 def project_has_vscode_project(project, vscode_project):
-    add(project, layer_configs.get(project))
+    layer_config = layer_configs.get(project)
+    if layer_config:
+        add(project, layer_config)
 
 
 @extend(VsCodeProject)
