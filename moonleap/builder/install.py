@@ -2,6 +2,7 @@ from moonleap.builder.rule import Rule
 from moonleap.parser.term import word_to_term
 from moonleap.render.merge import add_file_merger
 from moonleap.render.template_env import add_filter
+from moonleap.render.transforms import register_transforms
 from moonleap.resource.memfield import MemField
 from moonleap.resource.memfun import MemFun
 from moonleap.resource.prop import Prop
@@ -55,6 +56,11 @@ def install_module(module):
                 + f"or in the meta function, not both.\nIn module: {module}"
             )
         extensions = module.meta()
+
+    register_transforms(
+        getattr(module, "transforms", []),
+        getattr(module, "post_transforms", []),
+    )
 
     for extension in extensions:
         resource_type = extension.moonleap_extends_resource_type

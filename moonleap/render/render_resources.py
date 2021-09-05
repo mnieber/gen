@@ -1,7 +1,7 @@
 import os
 
 from moonleap.render.template_env import template_env
-from moonleap.render.transforms import post_transforms
+from moonleap.render.transforms import get_post_transforms
 
 
 def render_template(resource, template_fn, **kwargs):
@@ -10,7 +10,7 @@ def render_template(resource, template_fn, **kwargs):
         content = template.render(res=resource, **kwargs)
 
         lines = content.split(os.linesep)
-        for post_transform in post_transforms:
+        for post_transform in get_post_transforms():
             lines = post_transform(lines)
         content = os.linesep.join(lines)
     else:

@@ -3,7 +3,7 @@ import os
 
 import jinja2
 from jinja2_ansible_filters import AnsibleCoreFiltersExtension
-from moonleap.render.transforms import transforms
+from moonleap.render.transforms import get_transforms
 from moonleap.utils import chop
 
 
@@ -16,7 +16,7 @@ def load_template(template_fn):
         lines = [chop(x) for x in ifs.readlines()]
 
     transformed_lines = lines
-    for t in transforms:
+    for t in get_transforms():
         transformed_lines = t(transformed_lines)
 
     return os.linesep.join(transformed_lines)

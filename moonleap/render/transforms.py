@@ -1,25 +1,16 @@
-from moonleap.render.clean_up_js_imports import (
-    post_process_clean_up_js_imports,
-    process_clean_up_js_imports,
-)
-from moonleap.render.clean_up_py_imports import (
-    post_process_clean_up_py_imports,
-    process_clean_up_py_imports,
-)
-from moonleap.render.process_magic_with import process_magic_with
-from moonleap.render.process_trim_newlines import (
-    post_process_trim_newlines,
-    process_trim_newlines,
-)
+_transforms = []
+_post_transforms = []
 
-transforms = [
-    process_magic_with,
-    process_clean_up_js_imports,
-    process_clean_up_py_imports,
-    process_trim_newlines,
-]
-post_transforms = [
-    post_process_clean_up_js_imports,
-    post_process_clean_up_py_imports,
-    post_process_trim_newlines,
-]
+
+def register_transforms(arg_transforms, arg_post_transforms):
+    global _transforms, _post_transforms
+    _transforms.extend(arg_transforms)
+    _post_transforms.extend(arg_post_transforms)
+
+
+def get_transforms():
+    return _transforms
+
+
+def get_post_transforms():
+    return _post_transforms
