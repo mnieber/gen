@@ -2,7 +2,7 @@ import moonleap.resource.props as P
 from moonleap import Prop, RenderTemplates, add, extend, rule, tags
 from moonleap.verbs import contains, uses
 from titan.project_pkg.service import Service, Tool
-from titan.react_module_pkg.flags import Flags
+from titan.react_pkg.reactapp import ReactAppConfig
 
 from . import docker_compose_configs, layer_configs, props
 
@@ -22,7 +22,10 @@ def create_mock_server(term, block):
 
 @rule("service", uses, "mock-graphql-server")
 def add_flag(service, mock_server):
-    add(service.react_app.app_module, Flags({"useMockServer": True}))
+    add(
+        service.react_app.app_module,
+        ReactAppConfig(flags={"useMockServer": True}),
+    )
     add(service.project, layer_configs.get_for_project(service.name))
 
 

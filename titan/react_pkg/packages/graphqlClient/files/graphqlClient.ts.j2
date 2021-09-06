@@ -1,10 +1,10 @@
 import { GraphQLClient } from 'graphql-request';
-{% if 'useMockServer' in res.react_app.app_module.get_flags() %}
+{% if 'useMockServer' in res.react_app.get_flags() %}
 import { flags } from 'src/app/flags';
 {% endif %}
 
 function _createClient() {
-{% if 'useMockServer' in res.react_app.app_module.get_flags() %}
+{% if 'useMockServer' in res.react_app.get_flags() %}
   const authToken = flags.useMockServer
     ? undefined
     : localStorage.getItem('authToken');

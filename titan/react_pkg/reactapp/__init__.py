@@ -1,15 +1,20 @@
 import moonleap.resource.props as P
-from moonleap import add, create_forward, extend, rule, tags
+from moonleap import MemFun, Prop, add, create_forward, extend, register_add, rule, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
-from moonleap.verbs import has, runs
-from titan.project_pkg.service import Service, Tool
+from moonleap.verbs import has
 from titan.react_pkg.nodepackage import load_node_package_config
 
-from . import docker_compose_configs, layer_configs, makefile_rules
+from . import docker_compose_configs, makefile_rules, props, react_app_configs
+from .resources import ReactApp, ReactAppConfig
 
 
-class ReactApp(Tool):
-    pass
+@register_add(ReactAppConfig)
+def add_react_app_config(resource, app_module_config):
+    resource.react_app_configs.add(app_module_config)
+
+
+class StoreReactAppConfigs:
+    react_app_configs = P.tree("p-has", "react-app-config")
 
 
 @tags(["react-app"])
@@ -21,6 +26,13 @@ def create_react_app(term, block):
     add(react_app, docker_compose_configs.get(is_dev=False))
     add(react_app, makefile_rules.get_runserver())
     add(react_app, makefile_rules.get_install())
+    add(
+        react_app,
+        ReactAppConfig(
+            index_body=react_app_configs.body(),
+            index_imports=react_app_configs.imports(),
+        ),
+    )
     return react_app
 
 
@@ -32,21 +44,7 @@ def create_react_created(react_app):
     ]
 
 
-@rule("service", runs, "react-app")
-def service_uses_react_app(service, react_app):
-    service.port = service.port or "3000"
-    add(service.project, layer_configs.get_for_project(service.name))
-    return [
-        create_forward(service, has, ":makefile"),
-        create_forward(service, has, ":node-package"),
-    ]
-
-
 @extend(ReactApp)
-class ExtendReactApp(StoreTemplateDirs):
-    pass
-
-
-@extend(Service)
-class ExtendService:
-    react_app = P.child(runs, "react-app")
+class ExtendReactApp(StoreTemplateDirs, StoreReactAppConfigs):
+    get_flags = MemFun(props.get_flags)
+    sections = Prop(props.Sections)
