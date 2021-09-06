@@ -1,3 +1,6 @@
+import os
+
+import ramda as R
 from moonleap import chop0
 from moonleap.parser.term import word_to_term
 from moonleap.resources.data_type_spec_store import FK, RelatedSet, data_type_spec_store
