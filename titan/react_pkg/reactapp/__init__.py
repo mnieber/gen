@@ -1,15 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    Prop,
-    add,
-    create_forward,
-    extend,
-    get_session,
-    register_add,
-    rule,
-    tags,
-)
+from moonleap import MemFun, Prop, add, create_forward, extend, register_add, rule, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has
 from titan.react_pkg.nodepackage import load_node_package_config
@@ -43,13 +33,7 @@ def create_react_app(term, block):
 @rule("react-app")
 def create_react_created(react_app):
     if react_app.service.get_tweak_or(True, ["react_app", "reportWebVitals"]):
-        add(
-            react_app,
-            ReactAppConfig(
-                index_body=react_app_configs.body(),
-                index_imports=react_app_configs.imports(),
-            ),
-        )
+        add(react_app, react_app_configs.get())
         react_app.use_packages(["reportWebVitals"])
 
     return [

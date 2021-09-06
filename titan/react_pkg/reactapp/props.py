@@ -24,6 +24,8 @@ def get_config(react_app) -> ReactAppConfig:
             result = _merge(result, config)
 
     for tool in react_app.service.tools:
+        if tool is react_app:
+            continue
         for config in tool.react_app_configs.merged:
             result = _merge(result, config)
 

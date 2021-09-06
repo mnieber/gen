@@ -1,11 +1,19 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, RenderTemplates, add, extend, kebab_to_camel, tags
+from moonleap import (
+    MemFun,
+    Prop,
+    RenderTemplates,
+    add,
+    extend,
+    kebab_to_camel,
+    rule,
+    tags,
+)
 from moonleap.verbs import has, provides
 from titan.react_pkg.module import Module
 from titan.react_pkg.nodepackage import load_node_package_config
-from titan.react_pkg.reactapp import ReactAppConfig
 
-from . import props
+from . import props, react_app_configs
 from .resources import State
 
 
@@ -15,8 +23,13 @@ def create_state(term, block):
     name = kebab_to_camel(kebab_name)
     state = State(name=name)
     add(state, load_node_package_config(__file__))
-    add(state, ReactAppConfig(flags={"logSkandha": False}))
     return state
+
+
+@rule("module", has, "state")
+def module_has_state(module, state):
+    if react_app_configs.config not in module.react_app.react_app_configs.children:
+        add(module.react_app, react_app_configs.config)
 
 
 @extend(Module)
