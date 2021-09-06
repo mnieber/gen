@@ -1,5 +1,3 @@
-import ramda as R
-from moonleap import get_session
 from titan.react_pkg.component.resources import get_component_base_url
 from titan.react_pkg.router import RouterConfig
 from titan.react_pkg.router.resources import reduce_router_configs
@@ -10,17 +8,15 @@ def _wraps(panel):
 
 
 def _get_route_params(self):
-    return R.path_or(
+    return self.module.react_app.service.get_tweak_or(
         [],
         [
-            "services",
-            self.module.react_app.service.name,
             "react_app",
             "components",
             self.name,
             "route_params",
         ],
-    )(get_session().get_tweaks())
+    )
 
 
 def create_router_configs(self):

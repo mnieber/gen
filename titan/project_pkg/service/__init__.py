@@ -1,5 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import (
+    MemFun,
     Priorities,
     StoreOutputPaths,
     create_forward,
@@ -11,6 +12,7 @@ from moonleap import (
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has, runs, uses
 
+from . import props
 from .resources import Service, Tool
 from .tweaks import tweak
 
@@ -48,6 +50,7 @@ class ExtendService(
     StoreTemplateDirs,
 ):
     tools = P.children(has, "tool")
+    get_tweak_or = MemFun(props.get_tweak_or)
 
 
 @extend(Tool)

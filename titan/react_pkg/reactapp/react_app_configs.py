@@ -6,4 +6,4 @@ reportWebVitals();"""
 
 
 def imports():
-    return "import reportWebVitals from './reportWebVitals';"
+    return "import { reportWebVitals } from './reportWebVitals';"

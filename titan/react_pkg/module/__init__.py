@@ -3,9 +3,9 @@ from moonleap import MemFun, StoreOutputPaths, extend, kebab_to_camel, rule, tag
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has
 from titan.react_pkg.nodepackage import StoreNodePackageConfigs
+from titan.react_pkg.packages.use_packages import use_packages
 from titan.react_pkg.reactapp import ReactApp
 
-from . import props
 from .resources import Module  # noqa
 
 
@@ -24,7 +24,7 @@ def react_app_has_module(react_app, module):
 @extend(Module)
 class ExtendModule(StoreTemplateDirs, StoreNodePackageConfigs, StoreOutputPaths):
     react_app = P.parent(ReactApp, has)
-    use_packages = MemFun(props.use_packages)
+    use_packages = MemFun(use_packages)
 
 
 @extend(ReactApp)

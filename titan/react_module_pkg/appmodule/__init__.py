@@ -12,7 +12,6 @@ def create_app_module(term, block):
     module = AppModule(name=kebab_to_camel(term.data))
     module.add_template_dir(__file__, "templates")
     module.output_path = f"src/{module.name}"
-    module.use_packages(["reportWebVitals"])
     add(module, load_node_package_config(__file__))
     return module
 

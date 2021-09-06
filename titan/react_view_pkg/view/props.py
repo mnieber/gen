@@ -1,5 +1,4 @@
-import ramda as R
-from moonleap import get_session, render_templates, upper0
+from moonleap import render_templates, upper0
 
 
 def _panels(res):
@@ -14,17 +13,15 @@ def _panels(res):
 
 
 def _collapses(panel):
-    return R.path_or(
+    return panel.module.react_app.service.get_tweak_or(
         True,
         [
-            "services",
-            panel.module.react_app.service.name,
             "react_app",
             "components",
             panel.name,
             "collapses",
         ],
-    )(get_session().get_tweaks())
+    )
 
 
 def _components(panel):

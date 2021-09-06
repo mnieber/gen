@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 
+import ramda as R
+
 from moonleap.scope_manager import ScopeManager
 from moonleap.settings import load_settings
 
@@ -32,6 +34,9 @@ class Session:
         if not self.settings:
             raise Exception("No settings loaded")
         return self.settings.get("tweaks", {})
+
+    def get_tweak_or(self, default_value, path):
+        return R.path_or(default_value, path)(self.get_tweaks())
 
 
 def set_session(session):

@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
-import ramda as R
-from moonleap import Resource, get_session, upper0
+from moonleap import Resource, upper0
 
 
 @dataclass
@@ -14,15 +13,6 @@ class Component(Resource):
 
 
 def get_component_base_url(component, default_value):
-    component_settings = R.path_or(
-        {},
-        [
-            "services",
-            component.module.react_app.service.name,
-            "react_app",
-            "components",
-            component.name,
-        ],
-    )(get_session().get_tweaks())
-
-    return component_settings.get("base_url", default_value)
+    return component.module.react_app.service.get_tweak_or(
+        default_value, ["react_app", "components", component.name, "base_url"]
+    )
