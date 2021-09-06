@@ -124,6 +124,8 @@ if __name__ == "__main__":
             report("Error: " + str(e))
             if args.stacktrace:
                 traceback.print_exc()
+        finally:
+            pass
 
     if args.action == "diff":
         diff(session, args.sudo)
