@@ -1,26 +1,31 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
-    Prop,
-    RenderTemplates,
+    add,
+    create,
     create_forward,
     extend,
     kebab_to_camel,
     rule,
-    tags,
     upper0,
 )
 from moonleap.verbs import has
+from titan.react_pkg.reactapp import ReactAppConfig
 from titan.react_state_pkg.state.resources import State
 
 from . import props
+from .props import get_context
 from .resources import StateProvider
 
 
-@tags(["state-provider"])
+@create("state-provider", ["component"])
 def create_state_provider(term, block):
     base_name = kebab_to_camel(term.data)
     state_provider = StateProvider(name=f"{upper0(base_name)}StateProvider")
+    state_provider.add_template_dir(Path(__file__).parent / "templates", get_context)
+    add(state_provider, ReactAppConfig(flags=dict(logStateProviders=False)))
     return state_provider
 
 
@@ -38,7 +43,6 @@ class ExtendState:
 
 
 @extend(StateProvider)
-class ExtendStateProvider(RenderTemplates(__file__)):
+class ExtendStateProvider:
     create_router_configs = MemFun(props.create_router_configs)
-    sections = Prop(props.Sections)
     state = P.parent(State, has)

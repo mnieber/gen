@@ -2,7 +2,7 @@ import typing as T
 from dataclasses import dataclass
 from fnmatch import fnmatch
 
-from moonleap.parser.term import Term, word_to_term
+from moonleap.parser.term import Term
 from moonleap.utils import maybe_tuple_to_tuple
 
 
@@ -35,43 +35,27 @@ def _match_term_to_pattern(term, pattern_term):
     return datas_match and tags_match
 
 
-def fuzzy_match(input_rel, pattern_rel):
-    return (
-        input_rel.is_inv == pattern_rel.is_inv
-        and _is_intersecting(input_rel.verb, pattern_rel.verb)
-        and _match_term_to_pattern(input_rel.obj, pattern_rel.obj)
-        and (
-            pattern_rel.subj is None
-            or (
-                input_rel.subj
-                and _match_term_to_pattern(input_rel.subj, pattern_rel.subj)
+def _patch_tag(term, tag):
+    return term if tag is None else Term(data=None, tag=tag)
+
+
+def fuzzy_match(input_rel, pattern_rel, subj_base_tags, obj_base_tags):
+    for obj_base_tag in [None, *obj_base_tags]:
+        for subj_base_tag in [None, *subj_base_tags]:
+            rel = Rel(
+                subj=_patch_tag(input_rel.subj, subj_base_tag),
+                verb=input_rel.verb,
+                is_inv=input_rel.is_inv,
+                obj=_patch_tag(input_rel.obj, obj_base_tag),
             )
-        )
-    )
-
-
-@dataclass
-class Forward:
-    subj_res: T.Any
-    verb: T.Union[str, T.Tuple[str, ...]]
-    obj: Term
-    obj_res: T.Any
-
-
-def _to_term(x: T.Union[Term, str]) -> Term:
-    if isinstance(x, Term):
-        return x
-
-    term = word_to_term(x)
-    if term is None:
-        raise Exception("Cannot perform _to_term on {x}")
-    return term
-
-
-def create_forward(
-    subj_res: object,
-    verb: T.Union[str, T.Tuple[str, ...]],
-    obj: T.Union[Term, str],
-    obj_res: T.Any = None,
-):
-    return Forward(subj_res=subj_res, verb=verb, obj=_to_term(obj), obj_res=obj_res)
+            if (
+                rel.is_inv == pattern_rel.is_inv
+                and _is_intersecting(rel.verb, pattern_rel.verb)
+                and _match_term_to_pattern(rel.obj, pattern_rel.obj)
+                and (
+                    pattern_rel.subj is None
+                    or (rel.subj and _match_term_to_pattern(rel.subj, pattern_rel.subj))
+                )
+            ):
+                return True
+    return False

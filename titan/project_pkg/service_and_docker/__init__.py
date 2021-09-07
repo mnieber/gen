@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import add, create_forward, extend, rule
+from moonleap import add, create_forward, empty_rule, extend, rule
 from moonleap.verbs import has, uses
 from titan.project_pkg.dockercompose import StoreDockerComposeConfigs
 from titan.project_pkg.service import Service
@@ -16,9 +16,7 @@ def service_created(service):
 
 @rule("dockerfile", has, "docker-image")
 def dockerfile_use_docker_image(dockerfile, docker_image):
-    return create_forward(
-        dockerfile.service, has, ":docker-image", obj_res=docker_image
-    )
+    return create_forward(dockerfile.service, has, docker_image._meta.term)
 
 
 @rule("service", uses, "service")
@@ -28,6 +26,9 @@ def service_uses_service(client_service, server_service):
             client_service,
             docker_compose_configs.add_depends_on(server_service, is_dev=is_dev),
         )
+
+
+rules = [(("service", has, "docker-image"), empty_rule())]
 
 
 @extend(Service)

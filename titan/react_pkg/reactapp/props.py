@@ -46,3 +46,7 @@ class Sections:
 
     def app_config_body(self):
         return self.config.index_body
+
+
+def get_context(self):
+    return dict(sections=Sections(self))

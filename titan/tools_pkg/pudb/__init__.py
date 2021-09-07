@@ -1,11 +1,11 @@
-from moonleap import add, tags
+from moonleap import add, create
 from titan.tools_pkg.pipdependency import PipRequirement
 
 from . import opt_paths
 from .resources import Pudb
 
 
-@tags(["pudb"])
+@create("pudb", ["tool"])
 def create_pudb(term, block):
     pudb = Pudb(name="pudb")
 

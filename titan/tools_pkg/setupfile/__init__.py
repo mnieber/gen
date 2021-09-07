@@ -1,14 +1,18 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
-from moonleap import Prop, RenderTemplates, extend, register_add, tags
+from moonleap import create, extend, register_add
 from titan.project_pkg.service import Tool
 
-from . import props
+from .props import get_context
 from .resources import SetupFile, SetupFileConfig  # noqa
 
 
-@tags(["setup.cfg"])
+@create("setup.cfg", ["tool"])
 def create_setup_file(term, block):
-    return SetupFile(name="setup-file")
+    setupFile = SetupFile(name="setup-file")
+    setupFile.add_template_dir(Path(__file__).parent / "templates", get_context)
+    return setupFile
 
 
 @register_add(SetupFileConfig)
@@ -21,8 +25,8 @@ class StoreSetupFileConfigs:
 
 
 @extend(SetupFile)
-class ExtendSetupFile(StoreSetupFileConfigs, RenderTemplates(__file__)):
-    sections = Prop(props.Sections)
+class ExtendSetupFile(StoreSetupFileConfigs):
+    pass
 
 
 @extend(Tool)

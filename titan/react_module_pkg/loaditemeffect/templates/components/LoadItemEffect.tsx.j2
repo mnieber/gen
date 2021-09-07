@@ -1,26 +1,25 @@
 {% magic_with res.item_name as yellowTulip %}
 {% magic_with res.name as redRose %}
 import React from 'react';
-import { useStore } from 'src/app/components';
 import { Effect, EffectWithoutArgs } from 'src/utils/components';
+{{ sections.import_query() }}
 
 {% if res.route_params %}
-{{ res.sections.effect_args() }}
+{{ sections.effect_args() }}
 {% endif %}
 
 type PropsT = {};
 
 export const RedRose: React.FC<PropsT> = (p: PropsT) => {
-  const { api } = useStore();
   return (
 {% if res.route_params %}
     <Effect
-      {{ res.sections.effect() }}
+      {{ sections.effect() }}
     />
 {% else %}
     <EffectWithoutArgs
       f={() => {
-        api.getYellowTulip();
+        {{ sections.effect_without_args() }}
       }}
     />
 {% endif %}

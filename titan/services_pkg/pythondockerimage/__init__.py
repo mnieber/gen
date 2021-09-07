@@ -1,7 +1,7 @@
 from moonleap import add, rule
 from moonleap.verbs import has
 
-from . import docker_compose_configs, layer_configs
+from . import docker_compose_configs, dodo_layer_configs
 
 custom_steps_dev = """# create a python venv that we can easily store inside a docker volume
 RUN python3 -m venv /app/env
@@ -19,7 +19,7 @@ custom_steps_pre = """RUN pip install --upgrade pip
 def python_docker_image_created(docker_image):
     if docker_image.name.startswith("python:"):
         add(docker_image, docker_compose_configs.get(docker_image))
-        add(docker_image, layer_configs.get())
+        add(docker_image, dodo_layer_configs.get())
 
 
 @rule("dockerfile", has, "docker-image")

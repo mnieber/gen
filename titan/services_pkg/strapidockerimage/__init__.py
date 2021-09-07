@@ -1,4 +1,4 @@
-from moonleap import rule, tags
+from moonleap import create, rule
 from moonleap.verbs import uses
 from titan.project_pkg.dockerfile import create_docker_image
 
@@ -7,7 +7,7 @@ ENV LANG=C.UTF-8
 """
 
 
-@tags(["strapi:docker-image"])
+@create("strapi:docker-image", ["tool"])
 def strapi_docker_image_created(term, block):
     docker_image = create_docker_image(term, block)
     docker_image.name = "strapi/strapi"

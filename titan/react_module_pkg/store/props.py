@@ -1,6 +1,9 @@
+import os
+
 from moonleap import upper0
-from moonleap.resources.data_type_spec_store import FK, RelatedSet, data_type_spec_store
+from moonleap.resources.type_spec_store import type_spec_store
 from moonleap.utils.magic_replace import magic_replace
+from titan.react_module_pkg.apiquery.field_spec_to_ts_type import field_spec_to_ts_type
 
 load_data_template = """
     if (queryName === 'getYellowTulips') {
@@ -17,13 +20,13 @@ class Sections:
         self.res = res
 
     def item_list_fields(self):
-        result = ""
+        result = []
         for item_list in self.res.item_lists:
-            result += (
+            result.append(
                 f"  @observable {item_list.item_name}ById: "
                 + f"{upper0(item_list.item_name)}ByIdT = {{}};\n"
             )
-        return result
+        return os.linesep.join(result)
 
     def on_load_data(self):
         result = ""
@@ -34,15 +37,35 @@ class Sections:
             )
         return result
 
-    def item_fields(self, item_type):
+    def define_type(self, item_name):
         result = []
-        spec = data_type_spec_store.get_spec(item_type.name)
-        for field in spec.fields:
-            if field.private:
+        type_name = upper0(item_name)
+        result.append(f"export type {type_name}T = {{")
+        type_spec = type_spec_store().get(type_name)
+        for field_spec in type_spec.field_specs:
+            if field_spec.private:
                 continue
 
-            t = field.field_type
-            t = "string" if (isinstance(t, FK) or isinstance(t, RelatedSet)) else t
-            result.append(f"  {field.name}: {t};")
+            t = field_spec_to_ts_type(field_spec)
+            result.append(f"  {field_spec.name}: {t};")
+        result.append(f"}}")
 
         return "\n".join(result)
+
+    def define_form_type(self, item_type):
+        if not item_type.form_type:
+            return ""
+
+        result = []
+        type_spec = type_spec_store().get(f"{upper0(item_type.name)}Form")
+        for field_spec in type_spec.field_specs:
+            if field_spec.private:
+                continue
+
+            t = field_spec_to_ts_type(field_spec)
+            result.append(f"  {field_spec.name}: {t};")
+        return "\n".join(result)
+
+
+def get_context(self):
+    return dict(sections=Sections(self))

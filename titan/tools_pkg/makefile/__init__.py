@@ -1,9 +1,12 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
-from moonleap import Prop, RenderTemplates, add, extend, register_add, tags
+from moonleap import Prop, add, create, extend, register_add, rule
+from moonleap.verbs import has
 from titan.project_pkg.service import Service, Tool
 from titan.tools_pkg.pkgdependency import PkgDependency
 
-from . import layer_configs, props
+from . import dodo_layer_configs, props
 from .resources import Makefile, MakefileRule  # noqa
 
 
@@ -16,18 +19,24 @@ class StoreMakefileRules:
     makefile_rules = P.tree("p-has", "makefile-rules")
 
 
-@tags(["makefile"])
+@create("makefile", ["tool"])
 def create_makefile(term, block):
     makefile = Makefile(name="makefile")
+    makefile.add_template_dir(Path(__file__).parent / "templates")
 
     add(makefile, PkgDependency(["make"], is_dev=True))
-    add(makefile, layer_configs.get())
+    add(makefile, dodo_layer_configs.get())
 
     return makefile
 
 
+@rule("service", has, "makefile")
+def service_has_makefile(service, makefile):
+    service.project.add_template_dir(Path(__file__).parent / "templates_project")
+
+
 @extend(Makefile)
-class ExtendMakefile(StoreMakefileRules, RenderTemplates(__file__)):
+class ExtendMakefile(StoreMakefileRules):
     pass
 
 

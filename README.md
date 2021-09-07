@@ -69,7 +69,7 @@ A developer can add a rule for turning "backend:service" into a resource:
 class Service:
     name: str
 
-@tags(["service"])
+@create("service")
 def create_service(term, block):
     return Service(name=term.data)
 
@@ -85,7 +85,7 @@ The developer can then configure the set of (jinja2) templates that take this re
 ```
 @extend(Service)
 class ExtendService:
-    render = MemFun(render_templates(__file__), "templates")
+    render = MemFun(render_templates(Path(__file__).parent / "templates"))
 ```
 
 Moonleap turns the spec into a set of source files as follows:

@@ -58,13 +58,7 @@ def _get_relations(block):
 
 
 def find_relations(blocks):
+    lists_of_relations = []
     for block in blocks:
-        for rel in _get_relations(block):
-            parent_resource = block.get_resource(rel.subj)
-            child_resource = block.get_resource(rel.obj)
-            if parent_resource and child_resource:
-                block.register_relation(rel)
-                parent_resource.add_relation(
-                    rel,
-                    child_resource,
-                )
+        lists_of_relations.append((_get_relations(block), block))
+    return lists_of_relations

@@ -1,10 +1,10 @@
-from moonleap import Prop, extend, kebab_to_camel, tags
+from moonleap import Prop, create, extend, kebab_to_camel
 
 from . import props
 from .resources import HighlightBvr
 
 
-@tags(["highlight"])
+@create("highlight", ["behavior"])
 def create_behavior(term, block):
     item_name = kebab_to_camel(term.data)
     behavior = HighlightBvr(item_name=item_name, name=term.tag)

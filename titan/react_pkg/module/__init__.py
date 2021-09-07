@@ -1,30 +1,37 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, StoreOutputPaths, extend, kebab_to_camel, rule, tags
+from moonleap import (
+    MemFun,
+    Prop,
+    StoreOutputPaths,
+    add_src_inv,
+    create,
+    extend,
+    kebab_to_camel,
+)
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has
 from titan.react_pkg.nodepackage import StoreNodePackageConfigs
 from titan.react_pkg.packages.use_packages import use_packages
 from titan.react_pkg.reactapp import ReactApp
 
+from . import props
 from .resources import Module  # noqa
 
+rules = [(("react-app", has, "module"), add_src_inv("output_paths"))]
 
-@tags(["module"])
+
+@create("module", [])
 def create_module(term, block):
     module = Module(name=kebab_to_camel(term.data))
     module.output_path = f"src/{module.name}"
     return module
 
 
-@rule("react-app", has, "module")
-def react_app_has_module(react_app, module):
-    module.output_paths.add_source(react_app)
-
-
 @extend(Module)
 class ExtendModule(StoreTemplateDirs, StoreNodePackageConfigs, StoreOutputPaths):
     react_app = P.parent(ReactApp, has)
     use_packages = MemFun(use_packages)
+    module_path = Prop(props.module_path)
 
 
 @extend(ReactApp)

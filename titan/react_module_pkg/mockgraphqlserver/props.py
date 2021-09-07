@@ -1,4 +1,5 @@
-from moonleap.resources.data_type_spec_store import data_type_spec_store
+from moonleap import upper0
+from moonleap.resources.type_spec_store import type_spec_store
 
 
 class Sections:
@@ -6,7 +7,11 @@ class Sections:
         self.res = res
 
     def item_fields(self, item_name):
-        spec = data_type_spec_store.get_spec(item_name)
+        type_spec = type_spec_store().get(upper0(item_name))
         return "\n".join(
-            [f"  {x.name}: name: faker.name.findName()," for x in spec.fields]
+            [f"  {x.name}: name: faker.name.findName()," for x in type_spec.field_specs]
         )
+
+
+def get_context(self):
+    return dict(sections=Sections(self))

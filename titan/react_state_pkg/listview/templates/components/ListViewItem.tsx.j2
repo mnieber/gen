@@ -11,18 +11,22 @@ export type PropsT = {
   yellowTulip: YellowTulipT;
   className?: any;
   onClick?: any;
+  onMouseDown?: any;
+  onMouseUp?: any;
 };
 
 export const YellowTulipListViewItem: React.FC<PropsT> = observer((props: PropsT) => {
   return (
     <div
       className={classnames(
-        'YellowTulipListViewItem', 'flex flex-row flex-1 mb-2',
+        'YellowTulipListViewItem', 'flex flex-col flex-1 mb-2',
         props.className
       )}
       onClick={props.onClick}
+      onMouseDown={props.onMouseDown}
+      onMouseUp={props.onMouseUp}
     >
-        {props.yellowTulip.id}
+{{ sections.fields() }}
     </div>
   );
 });

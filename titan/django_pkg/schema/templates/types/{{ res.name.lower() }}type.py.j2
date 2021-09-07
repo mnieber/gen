@@ -1,0 +1,9 @@
+from graphene_django.types import DjangoObjectType
+{{ sections.imports() }}
+
+{% magic_with res.name as yellowTulip %}
+class YellowTulipType(DjangoObjectType):
+    class Meta:
+        model = YellowTulip
+        {{ sections.exclude() }}
+{% end_magic_with %}

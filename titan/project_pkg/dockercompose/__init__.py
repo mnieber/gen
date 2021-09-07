@@ -1,11 +1,13 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
-    RenderTemplates,
     StoreOutputPaths,
+    StoreTemplateDirs,
+    create,
     extend,
     register_add,
-    tags,
 )
 from titan.project_pkg.service import Tool
 
@@ -22,14 +24,15 @@ def add_docker_compose_config(resource, docker_compose_config):
     resource.docker_compose_configs.add(docker_compose_config)
 
 
-@tags(["docker-compose"])
+@create("docker-compose", [])
 def create_docker_compose(term, block):
     docker_compose = DockerCompose()
+    docker_compose.add_template_dir(Path(__file__).parent / "templates")
     return docker_compose
 
 
 @extend(DockerCompose)
-class ExtendDockerCompose(StoreOutputPaths, RenderTemplates(__file__)):
+class ExtendDockerCompose(StoreOutputPaths, StoreTemplateDirs):
     get_config = MemFun(props.get_docker_compose_config)
 
 

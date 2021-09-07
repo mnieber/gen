@@ -12,4 +12,4 @@ def _merge(lhs, rhs):
 
 
 def get_config(self):
-    return R.reduce(_merge, LayerConfig({}), self.layer_configs.merged)
+    return R.reduce(_merge, LayerConfig({}), self.dodo_layer_configs.merged)

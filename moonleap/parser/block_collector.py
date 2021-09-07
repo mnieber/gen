@@ -34,18 +34,33 @@ def clean_sentence(sentence):
 
 
 class BlockCollector(mistune.Renderer):
-    def __init__(self, create_block, create_line):
+    def __init__(self, create_block_policy, create_line_policy):
         super().__init__(escape=True, hard_wrap=True)
         self.stack = []
         self.block = None
         self.blocks = []
         self.line = None
-        self.create_block = create_block
-        self.create_line = create_line
+        self._create_block_policy = create_block_policy
+        self._create_line_policy = create_line_policy
 
     @property
     def parent_block(self):
         return self.stack[-1] if self.stack else None
+
+    def add_block_to_parent_block(self, text, level, scope_names):
+        self.block = self._create_block_policy(
+            text,
+            level,
+            self.parent_block,
+            scope_names,
+        )
+        self.block._dbg_text = text
+        self.stack.append(self.block)
+        self.blocks.append(self.block)
+
+    def add_line_to_current_block(self, text, it_term=None):
+        self.line = self._create_line_policy(clean_sentence(text), it_term)
+        self.block.lines.append(self.line)
 
     def header(self, text, level, raw=None):
         # Read scopes from the header text and pass them to the
@@ -62,32 +77,20 @@ class BlockCollector(mistune.Renderer):
         while self.parent_block and self.parent_block.level >= level:
             self.stack.pop()
 
-        self.block = self.create_block(
-            buffer,
-            level,
-            self.parent_block,
-            local_scope_names,
-        )
-        self.block._dbg_text = text
+        self.add_block_to_parent_block(buffer, level, local_scope_names)
+        self.add_line_to_current_block(buffer, it_term=None)
 
-        self.stack.append(self.block)
-
-        self.line = self.create_line(buffer, it_term=None)
-        self.block.lines.append(self.line)
-        self.blocks.append(self.block)
         return super().header(text, level, raw)
 
     def paragraph(self, text):
-        if not self.block:
+        if not self.block or not self.line:
             raise FormatError("The spec file should start with a header")
 
         self.block._dbg_text += os.linesep + os.linesep + text
 
         for sentence in nltk.sent_tokenize(clean_text(text)):
-            self.line = self.create_line(
-                clean_sentence(sentence), it_term=self.line.it_term
-            )
-            self.block.lines.append(self.line)
+            self.add_line_to_current_block(sentence, it_term=self.line.it_term)
+
         return super().paragraph(text)
 
 
@@ -104,8 +107,8 @@ def create_block(name, level, parent_block, scope_names):
 
 def get_blocks(markdown):
     blockCollector = BlockCollector(
-        create_block=create_block,
-        create_line=get_create_line(),
+        create_block_policy=create_block,
+        create_line_policy=get_create_line(),
     )
     mistune.Markdown(renderer=blockCollector)(markdown)
     return blockCollector.blocks

@@ -1,13 +1,10 @@
 import moonleap.resource.props as P
-from moonleap import extend, rule
+from moonleap import add_src_inv, extend
 from moonleap.verbs import has
 from titan.project_pkg.project import Project
 from titan.project_pkg.service import Service
 
-
-@rule("project", has, "service")
-def project_has_service(project, service):
-    service.output_paths.add_source(project)
+rules = [(("project", has, "service"), add_src_inv("output_paths"))]
 
 
 @extend(Project)

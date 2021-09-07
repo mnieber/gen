@@ -4,14 +4,14 @@ import ramda as R
 from moonleap.parser.term import maybe_term_to_term
 from moonleap.resource.prop import Prop
 from moonleap.resource.rel import Rel
-from moonleap.resource.slctrs import Selector
+from moonleap.resource.slctrs import RelSelector
 
 from .resources import OutputPath
 
 
 def output_path(verb, term):
     rel = Rel(verb=verb, obj=maybe_term_to_term(term))
-    slctr = Selector([rel])
+    slctr = RelSelector(rel)
 
     def get_child(self):
         children = slctr.select_from(self)

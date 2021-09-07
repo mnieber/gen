@@ -1,6 +1,7 @@
 import os
 import sys
-import traceback
+
+# import traceback
 from argparse import ArgumentParser
 from pathlib import Path
 
@@ -65,7 +66,7 @@ def generate_code(spec_file, session, file_writer):
 
     session.report("Rendering...")
     render_resources(blocks, file_writer.write_file)
-    file_writer.write_merged_files_and_snapshot()
+    file_writer.write_merged_files()
     for warning in file_writer.warnings:
         session.report(warning)
 
@@ -75,9 +76,11 @@ def generate_code(spec_file, session, file_writer):
     session.report("Post processing...")
     post_process_output_files(
         file_writer.output_filenames,
-        session.settings.get("post_process", {}),
-        session.settings.get("bin", {}),
+        session.get_post_process_settings(),
+        session.get_bin_settings(),
     )
+
+    file_writer.write_snapshot()
 
 
 def report(x):
@@ -118,12 +121,12 @@ if __name__ == "__main__":
         try:
             if args.smart:
                 create_symlinks(session)
-            generate_code(spec_fn, session, _create_file_writer(args))
             create_expected_dir(session.expected_dir, session.settings["references"])
-        except Exception as e:
-            report("Error: " + str(e))
-            if args.stacktrace:
-                traceback.print_exc()
+            generate_code(spec_fn, session, _create_file_writer(args))
+        # except Exception as e:
+        #     report("Error: " + str(e))
+        #     if args.stacktrace:
+        #         traceback.print_exc()
         finally:
             pass
 

@@ -1,11 +1,11 @@
-from moonleap import Prop, create_forward, extend, kebab_to_camel, rule, tags
+from moonleap import Prop, create, create_forward, extend, kebab_to_camel, rule
 from moonleap.verbs import provides
 
 from . import props
 from .resources import SelectionBvr
 
 
-@tags(["selection"])
+@create("selection", ["behavior"])
 def create_behavior(term, block):
     item_name = kebab_to_camel(term.data)
     behavior = SelectionBvr(item_name=item_name, name=term.tag)

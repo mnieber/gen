@@ -4,8 +4,10 @@ import uuid
 from dataclasses import dataclass, field
 from importlib import import_module
 
+from moonleap.parser.block import Block
+from moonleap.parser.term import Term
 from moonleap.resource.rel import Rel
-from moonleap.resource.slctrs import Selector
+from moonleap.resource.slctrs import RelSelector
 
 # Use a fixed seed for the id generator
 rd = random.Random()
@@ -17,10 +19,28 @@ def get_id():
 
 
 @dataclass
+class ResourceMetaData:
+    term: Term
+    block: Block
+    base_tags: T.List[str] = field(default_factory=list)
+
+
+@dataclass
 class Resource:
-    id: str = field(default_factory=get_id, init=False)
+    id: str = field(default_factory=get_id, init=False, repr=False)
     _relations: T.List[T.Tuple[Rel, "Resource"]] = field(
         default_factory=list, init=False, repr=False
+    )
+
+    _meta: ResourceMetaData = field(
+        # HACK: we need to initialize the meta-data because during object creation
+        # the P.tree properties may already be using it. This should be fixed by
+        # refactoring P.tree
+        default_factory=lambda: ResourceMetaData(
+            Term(None, "uninitialized"), Block("uninitialized", 0, []), []
+        ),
+        init=False,
+        repr=False,
     )
 
     def __repr__(self):
@@ -30,7 +50,7 @@ class Resource:
         return self._relations
 
     def has_relation(self, rel, resource):
-        return resource in Selector([rel]).select_from(self)
+        return resource in RelSelector(rel).select_from(self)
 
     def add_relation(self, relation, resource):
         if not self.has_relation(relation, resource):

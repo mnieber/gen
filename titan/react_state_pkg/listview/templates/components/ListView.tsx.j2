@@ -9,7 +9,7 @@ import { YellowTulipListViewItem } from 'src/gardenFlowers/components';
 import { YellowTulipT } from 'src/gardenFlowers/types';
 import { getResourceView } from 'src/utils/components';
 
-{{ res.sections.imports() }}
+{{ sections.imports() }}
 
 {% end_clean_up_js_imports %}
 
@@ -22,7 +22,7 @@ type PropsT = {
 type DefaultPropsT = {
   yellowTulips: YellowTulipT[],
   yellowTulipsResUrl: string,
-{{ res.sections.default_props() }}
+{{ sections.default_props() }}
 };
 
 export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
@@ -31,18 +31,19 @@ export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: Props
   const resourceView = getResourceView({ resUrl: props.yellowTulipsResUrl });
   if (resourceView) return resourceView;
 
+{{ sections.body() }}
+
   const yellowTulipDivs = pipe(
     always(props.yellowTulips),
     map((x: YellowTulipT) => (
       <YellowTulipListViewItem
         key={x.id}
         yellowTulip={x}
-{{ res.sections.classnames() }}
-{{ res.sections.on_click() }}
+{{ sections.classnames() }}
+{{ sections.on_click() }}
       />
     ))
   )();
-
 
   const noItems = <h2>There are no yellowTulips</h2>;
 
@@ -53,8 +54,8 @@ export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: Props
         props.className
       )}
     >
-      {yellowTulipDivs.length && yellowTulipDivs}
-      {!yellowTulipDivs.length && noItems}
+      {yellowTulipDivs.length > 0 && yellowTulipDivs}
+      {yellowTulipDivs.length === 0 && noItems}
     </div>
   );
 });

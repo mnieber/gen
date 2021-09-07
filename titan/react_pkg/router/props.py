@@ -157,3 +157,7 @@ def add_result(routes, url, level, indent, result):
     if needs_switch:
         indent -= 2
         _append("</Switch>", indent, result)
+
+
+def get_context(self):
+    return dict(sections=Sections(self))

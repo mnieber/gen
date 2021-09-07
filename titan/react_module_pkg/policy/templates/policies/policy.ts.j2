@@ -1,7 +1,7 @@
 {% magic_with res.name as yellowTulip %}
 {% magic_with res.store.name as RedRose %}
 import { reaction } from 'mobx';
-import { RedRose } from '{{ res.store.module_path }}/RedRose';
+import { RedRose } from '{{ res.store.module.module_path }}/RedRose';
 
 export const yellowTulip = () => (redRose: RedRose) => {
   reaction(

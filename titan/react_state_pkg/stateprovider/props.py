@@ -38,3 +38,7 @@ class Sections:
                 for bvr in bvrs:
                     result += bvr.sections.default_props(store)
         return result
+
+
+def get_context(self):
+    return dict(sections=Sections(self))

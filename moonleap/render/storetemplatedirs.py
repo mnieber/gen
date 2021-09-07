@@ -1,16 +1,20 @@
-from moonleap import MemField, MemFun
 from moonleap.render.template_renderer import render_templates
+from moonleap.resource.memfield import MemField
+from moonleap.resource.memfun import MemFun
 
 
-def render(self, write_file, render_template):
-    for root_filename, location in self.template_dirs:
-        render_templates(root_filename, location)(self, write_file, render_template)
+def render(self, write_file, render_template, output_path):
+    for template_dir, get_context, skip_render in self.template_dirs:
+        if skip_render and skip_render(self):
+            continue
+        render_templates(template_dir, get_context)(
+            self, write_file, render_template, output_path
+        )
 
 
-def add_template_dir(self, root_filename, location):
-    new_template_dir = (root_filename, location)
-    if new_template_dir not in self.template_dirs:
-        self.template_dirs.append(new_template_dir)
+def add_template_dir(self, template_dir, get_context=None, skip_render=None):
+    if not [x for x in self.template_dirs if x[0] == template_dir]:
+        self.template_dirs.append((template_dir, get_context, skip_render))
 
 
 class StoreTemplateDirs:

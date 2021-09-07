@@ -1,9 +1,11 @@
 {% magic_with rc.component_name as redRose %}
+{% clean_up_js_imports %}
 import React from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { createBrowserHistory } from 'history';
-{{ res.sections.route_imports() }}
+{{ sections.route_imports() }}
+{% end_clean_up_js_imports %}
 
 type PropsT = {};
 
@@ -12,7 +14,7 @@ export const history = createBrowserHistory();
 export const UrlRouter: React.FC<PropsT> = observer((props: PropsT) => {
   return (
     <Router history={history}>
-{{ res.sections.routes() }}
+{{ sections.routes() }}
     </Router>
   );
 });

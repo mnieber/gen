@@ -9,7 +9,7 @@ def get_runserver():
             """
 runserver:
 \tyarn start
-"""  # noqa: E501
+"""
         ),
     )
 
@@ -21,6 +21,6 @@ def get_install():
             """
 install:
 \tyarn install
-"""  # noqa: E501
+"""
         ),
     )

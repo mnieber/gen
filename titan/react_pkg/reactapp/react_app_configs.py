@@ -7,7 +7,7 @@ reportWebVitals();
 """
 
 
-imports = "import { reportWebVitals } from './reportWebVitals';"
+imports = "import reportWebVitals from './reportWebVitals';"
 
 
 def get():

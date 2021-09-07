@@ -33,9 +33,18 @@ class FileWriter:
             return
 
         if get_file_merger(fn):
+            if self._is_binary(content):
+                raise Exception(f"Cannot merge binary file: {fn}")
             self.fn_parts.setdefault(str(fn), []).append(content)
         else:
             self._write(fn, content)
+
+    def _is_binary(self, content):
+        return isinstance(content, bytes)
+
+    def _crc(self, content):
+        blob = content if self._is_binary(content) else bytes(str.encode(content))
+        return zlib.crc32(blob)
 
     def _write(self, fn, content):
         fn_str = str(fn)
@@ -43,7 +52,7 @@ class FileWriter:
         if fn_str in self.output_filenames:
             self.warnings.append(f"Warning: writing twice to {fn_str}")
 
-        crc = zlib.crc32(bytes(str.encode(content)))
+        crc = self._crc(content)
         if (
             fn_str in self.crc_by_fn
             and self.crc_by_fn[fn_str] == crc
@@ -57,10 +66,10 @@ class FileWriter:
         if fn.is_symlink():
             fn.unlink()
         fn.parent.mkdir(parents=True, exist_ok=True)
-        with open(fn, "w") as ofs:
+        with open(fn, "wb" if self._is_binary(content) else "w") as ofs:
             ofs.write(content)
 
-    def write_merged_files_and_snapshot(self):
+    def write_merged_files(self):
         for fn_str, parts in self.fn_parts.items():
             file_merger = get_file_merger(fn_str)
             assert file_merger
@@ -69,5 +78,6 @@ class FileWriter:
                 content = file_merger.merge(content, part)
             self._write(Path(fn_str), content)
 
+    def write_snapshot(self):
         with open(self.snapshot_fn, "w") as f:
             json.dump(self.crc_by_fn, f)

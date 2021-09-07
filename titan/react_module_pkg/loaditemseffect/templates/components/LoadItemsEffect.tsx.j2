@@ -1,16 +1,15 @@
 {% magic_with res.item_name as yellowTulip %}
 import React from 'react';
-import { useStore } from 'src/app/components';
 import { EffectWithoutArgs } from 'src/utils/components';
+{{ sections.import_query() }}
 
 type PropsT = {};
 
 export const LoadYellowTulipsEffect: React.FC<PropsT> = (p: PropsT) => {
-  const { api } = useStore();
   return (
     <EffectWithoutArgs
       f={() => {
-        api.getYellowTulips();
+{{ sections.run_query() }}
       }}
     />
   );

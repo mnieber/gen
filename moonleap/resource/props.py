@@ -3,18 +3,13 @@ from moonleap.parser.term import maybe_term_to_term
 from moonleap.resource import resolve
 from moonleap.resource.prop import Prop
 from moonleap.resource.rel import Rel, _is_intersecting
-from moonleap.resource.slctrs import Selector
+from moonleap.resource.slctrs import RelSelector
 from moonleap.utils.inflect import singular
 
 
-def fltr_instance(resource_type):
-    resource_type = resolve(resource_type)
-    return lambda x: isinstance(x, resource_type)
-
-
-def child(verb, term, readonly=False):
+def child(verb, term):
     rel = Rel(verb=verb, obj=maybe_term_to_term(term))
-    slctr = Selector([rel])
+    slctr = RelSelector(rel)
 
     def get_child(self):
         children = slctr.select_from(self)
@@ -23,18 +18,18 @@ def child(verb, term, readonly=False):
 
         return None if not children else children[0]
 
-    return Prop(get_value=get_child, rel=rel)
+    return Prop(get_value=get_child)
 
 
 def children(verb, term, rdcr=None):
     rel = Rel(verb=verb, obj=maybe_term_to_term(term))
-    slctr = Selector([rel])
+    slctr = RelSelector(rel)
 
     def get_children(self):
         children = slctr.select_from(self)
         return rdcr(children) if rdcr else children
 
-    return Prop(get_value=get_children, rel=rel)
+    return Prop(get_value=get_children)
 
 
 def _fltr(resource_type):
@@ -66,7 +61,7 @@ def parent(parent_resource_type, verb):
 def parents(parent_resource_type, verb, term, rdcr=None):
     parent_resource_type = resolve(parent_resource_type)
     rel = Rel(verb=verb, obj=maybe_term_to_term(term), is_inv=True)
-    slctr = Selector([rel])
+    slctr = RelSelector(rel)
 
     def get_parents(self):
         parents = _fltr(parent_resource_type)(slctr.select_from(self))
@@ -77,8 +72,10 @@ def parents(parent_resource_type, verb, term, rdcr=None):
 
 def tree(verb, term):
     children_prop = children(verb, term)
+    children_prop_rel = Rel(verb=verb, obj=maybe_term_to_term(term))
     sources_term = singular(term) + "-sources"
     sources_prop = children(verb, sources_term)
+    sources_prop_rel = Rel(verb=verb, obj=maybe_term_to_term(sources_term))
 
     def get_value(parent):
         class Inner:
@@ -107,10 +104,10 @@ def tree(verb, term):
                 return sources_prop.get_value(parent)
 
             def add(self, child):
-                parent.add_relation(children_prop.rel, child)
+                parent.add_relation(children_prop_rel, child)
 
             def add_source(self, source):
-                parent.add_relation(sources_prop.rel, source)
+                parent.add_relation(sources_prop_rel, source)
 
         return Inner()
 
@@ -120,3 +117,21 @@ def tree(verb, term):
 def add_source(target_and_prop_name, source, description):
     target, prop_name = target_and_prop_name
     getattr(target, prop_name).add_source(source)
+
+
+def add_src(prop_name):
+    def f(subj, obj):
+        getattr(subj, prop_name).add_source(obj)
+
+    return f
+
+
+def add_src_inv(prop_name):
+    def f(subj, obj):
+        getattr(obj, prop_name).add_source(subj)
+
+    return f
+
+
+def empty_rule():
+    return lambda *args, **kwargs: None

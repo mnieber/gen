@@ -68,7 +68,10 @@ class Block:
         return result
 
     def add_resource_for_term(self, resource, term, is_owner):
-        if self.get_resource(term):
+        existing_resource = self.get_resource(term)
+        if existing_resource is resource:
+            return
+        elif existing_resource:
             raise Exception(
                 f"Block {self.name} already has an resource for term {term}"
             )

@@ -1,12 +1,14 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
-    RenderTemplates,
     StoreOutputPaths,
+    StoreTemplateDirs,
+    create,
     extend,
     kebab_to_camel,
     register_add,
-    tags,
 )
 from titan.project_pkg.service import Tool
 
@@ -16,22 +18,23 @@ from .resources import Layer, LayerConfig
 
 @register_add(LayerConfig)
 def add_layerconfig(resource, layer_config):
-    resource.layer_configs.add(layer_config)
+    resource.dodo_layer_configs.add(layer_config)
 
 
 class StoreLayerConfigs:
-    layer_configs = P.tree("p-has", "layer-config")
+    dodo_layer_configs = P.tree("p-has", "layer-config")
 
 
-@tags(["layer"])
+@create("layer", [])
 def create_layer(term, block):
     layer = Layer(name=kebab_to_camel(term.data))
     layer.output_path = ".dodo_commands"
+    layer.add_template_dir(Path(__file__).parent / "templates")
     return layer
 
 
 @extend(Layer)
-class ExtendLayer(StoreLayerConfigs, StoreOutputPaths, RenderTemplates(__file__)):
+class ExtendLayer(StoreLayerConfigs, StoreOutputPaths, StoreTemplateDirs):
     get_config = MemFun(props.get_config)
 
 

@@ -1,44 +1,22 @@
-def _modules(self):
-    return [x for x in self.django_app.modules if x.item_types]
+from moonleap.render.template_renderer import render_templates
+from titan.django_pkg.apimutation.props import render_mutation_endpoint
+from titan.django_pkg.apiquery.props import render_query_endpoint
+from titan.django_pkg.schema.props import render_schema
 
 
-class Sections:
-    def __init__(self, res):
-        self.res = res
+def render(self, write_file, render_template, output_path):
+    # TODO: use query.add_template_dir
+    for query in self.graphql_api.queries:
+        render_query_endpoint(self, query, write_file, render_template)
 
-    def query_base_classes(self):
-        result = "".join(
-            [
-                f"{x.name_snake}.schema.Query, "
-                for x in _modules(self.res)
-                if x.has_graphql_queries
-            ]
-        )
-        return (result + "graphene.ObjectType") if result else ""
+    for mutation in self.graphql_api.mutations:
+        render_mutation_endpoint(self, mutation, write_file, render_template)
 
-    def mutation_base_classes(self):
-        result = "".join(
-            [
-                f"{x.name_snake}.schema.Mutation, "
-                for x in _modules(self.res)
-                if x.has_graphql_mutations
-            ]
-        )
-        return (result + "graphene.ObjectType") if result else ""
+    for item_type in self.graphql_api.item_types:
+        render_schema(self, item_type, write_file, render_template)
 
-    def schema_args(self):
-        args = []
-        if self.mutation_base_classes():
-            args.append("mutation=Mutation")
-        if self.query_base_classes():
-            args.append("query=Query")
-        return ", ".join(args)
-
-    def imports(self):
-        return "\n".join(
-            [
-                f"import {x.name_snake}.schema"
-                for x in _modules(self.res)
-                if x.has_graphql_mutations or x.has_graphql_queries
-            ]
-        )
+    for template_dir, get_context, skip_render in self.template_dirs:
+        if not skip_render or not skip_render(self):
+            render_templates(template_dir, get_context=get_context)(
+                self, write_file, render_template, output_path
+            )

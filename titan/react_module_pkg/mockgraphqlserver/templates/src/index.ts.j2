@@ -1,5 +1,5 @@
 {% magic_with substore.module.name as gardenFlowers %}
-{% magic_with item_type.name as yellowTulip %}
+{% magic_with item_list.item_name as yellowTulip %}
 import { gql, ApolloServer } from 'apollo-server';
 import faker from 'faker';
 
@@ -10,7 +10,7 @@ import { typeDefsStr as gardenFlowersTypeDefsStr } from '../../src/gardenFlowers
 const rootQueryStr = `
   type Query {
 {% for substore in res.service.react_app.app_module.app_store.substores %}
-{% for item_type in substore.item_types %}
+{% for item_list in substore.item_lists %}
     yellowTulips: [YellowTulip]
 {% endfor %}
 {% endfor %}
@@ -28,9 +28,9 @@ const typeDefsStr =
 
 const mocks = {
 {% for substore in res.service.react_app.app_module.app_store.substores %}
-{% for item_type in substore.item_types %}
+{% for item_list in substore.item_lists %}
   YellowTulip: () => ({
-{{ res.sections.item_fields(item_type.name) }}
+{{ sections.item_fields(item_type.name) }}
   }),
 {% endfor %}
 {% endfor %}

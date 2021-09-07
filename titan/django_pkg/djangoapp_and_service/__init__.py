@@ -1,26 +1,21 @@
 import moonleap.resource.props as P
-from moonleap import add, add_source, create_forward, extend, rule
+from moonleap import add, add_src, add_src_inv, create_forward, extend, rule
 from moonleap.verbs import has, runs
 from titan.django_pkg.djangoapp import StoreDjangoConfigs
 from titan.project_pkg.service import Service, Tool
 
-from . import layer_configs
+from . import dodo_layer_configs
 
-
-@rule("service", has, "tool")
-def service_has_tool(service, tool):
-    add_source(
-        [service, "django_configs"],
-        tool,
-        "The :service receives django configs from a :tool",
-    )
+rules = [
+    (("service", has + runs, "tool"), add_src("django_configs")),
+    (("service", runs, "django-app"), add_src_inv("django_configs")),
+]
 
 
 @rule("service", runs, "django-app")
 def service_runs_django_app(service, django_app):
     service.port = service.port or "8000"
-    add(service.project, layer_configs.get(service.name))
-    django_app.django_configs.add_source(service)
+    add(service.project, dodo_layer_configs.get(service.name))
     return [
         create_forward(service, has, ":makefile"),
         create_forward(django_app, has, "app:module"),

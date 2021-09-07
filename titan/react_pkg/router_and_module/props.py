@@ -24,3 +24,7 @@ class Sections:
                 + f" from '{route_table.import_path}';"
             )
         return os.linesep.join(result)
+
+
+def get_context(self):
+    return dict(sections=Sections(self))

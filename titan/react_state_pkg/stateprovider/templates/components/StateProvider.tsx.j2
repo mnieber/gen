@@ -7,7 +7,7 @@ import { values } from 'ramda';
 import { log } from 'src/utils/logging';
 import { flags } from 'src/app/flags';
 
-import { YellowTulipState } from '{{ res.module_path }}/YellowTulipState';
+import { YellowTulipState } from '{{ res.module.module_path }}/YellowTulipState';
 import { CtrProvider, FC, useDefaultProps } from 'react-default-props-context';
 import { useStore } from 'src/app/components';
 
@@ -50,7 +50,7 @@ export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = (p: PropsT) =
 
   const getDefaultProps = (state: YellowTulipState) => {
     return {
-{{ res.sections.default_props() }}
+{{ sections.default_props() }}
     };
   };
 

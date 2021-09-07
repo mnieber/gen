@@ -1,6 +1,6 @@
-{% magic_with item_type.name as yellowTulip %}
+{% magic_with item_list.item_name as yellowTulip %}
 export const typeDefsStr = `
-{% for item_type in res.item_types %}
+{% for item_list in res.item_lists %}
   type YellowTulip {
     id: ID!
     name: String

@@ -27,3 +27,7 @@ class Sections:
             for k, v in body.items():
                 result += f"{k}={v}\n"
         return result
+
+
+def get_context(self):
+    return dict(sections=Sections(self))

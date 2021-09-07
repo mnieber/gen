@@ -1,4 +1,4 @@
-from moonleap import render_templates, upper0
+from moonleap import upper0
 
 
 def _panels(res):
@@ -27,7 +27,7 @@ def _collapses(panel):
 def _components(panel):
     wraps = panel.wraps_children
     if len(panel.child_components) == 0 and not wraps:
-        return None
+        return []
 
     collapses = _collapses(panel)
     return panel.child_components if collapses else [panel]
@@ -128,15 +128,16 @@ class Sections:
         for panel in _panels(self.res):
             for component in _components(panel):
                 result.append(
-                    f"import {{ {upper0(component.name)} }} from '{component.module_path}/components';"  # noqa: E501
+                    f"import {{ {upper0(component.name)} }} from "
+                    + f"'{component.module.module_path}/components';"
                 )
         return "\n".join(result)
 
 
-def render(self, write_file, render_template):
+def skip_render(self):
     if self.parent_view and _collapses(self):
         return
 
-    return render_templates(self.root_filename, self.templates_dir)(
-        self, write_file, render_template
-    )
+
+def get_context(self):
+    return dict(sections=Sections(self))

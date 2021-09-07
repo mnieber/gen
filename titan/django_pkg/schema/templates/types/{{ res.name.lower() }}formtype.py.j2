@@ -1,0 +1,6 @@
+import graphene
+
+{% magic_with res.name as yellowTulip %}
+class YellowTulipFormType(graphene.InputObjectType):
+{{ sections.form_type_fields() }}
+{% end_magic_with %}

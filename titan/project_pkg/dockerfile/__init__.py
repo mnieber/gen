@@ -1,17 +1,22 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
-from moonleap import RenderTemplates, add_source, extend, rule, tags
+from moonleap import StoreTemplateDirs, add_src, create, extend, rule
 from moonleap.verbs import has
 
 from .resources import Dockerfile, DockerImage
 
+rules = [(("dockerfile", has, "docker-image"), add_src("docker_compose_configs"))]
 
-@tags(["dockerfile"])
+
+@create("dockerfile", ["tool"])
 def create_dockerfile(term, block):
     docker_file = Dockerfile(is_dev=term.data == "dev", name="dockerfile")
+    docker_file.add_template_dir(Path(__file__).parent / "templates")
     return docker_file
 
 
-@tags(["docker-image"])
+@create("docker-image", ["tool"])
 def create_docker_image(term, block):
     docker_image = DockerImage(term.data)
     return docker_image
@@ -20,13 +25,8 @@ def create_docker_image(term, block):
 @rule("dockerfile", has, "docker-image")
 def dockerfile_use_docker_image(dockerfile, docker_image):
     dockerfile.image_name = docker_image.name
-    add_source(
-        [dockerfile, "docker_compose_configs"],
-        docker_image,
-        "A :dockerfile receives docker compose configs from a :docker-image",
-    )
 
 
 @extend(Dockerfile)
-class ExtendDockerfile(RenderTemplates(__file__)):
+class ExtendDockerfile(StoreTemplateDirs):
     docker_image = P.child(has, "docker-image")

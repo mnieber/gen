@@ -17,8 +17,8 @@ import * as FacetPolicies from 'skandha-facets/policies';
 {{ bvr.sections.imports() }}
 {% endfor %}
 
-import { Inputs } from '{{ res.module_path }}/YellowTulipState/facets/Inputs';
-import { Outputs } from '{{ res.module_path }}/YellowTulipState/facets/Outputs';
+import { Inputs } from '{{ res.module.module_path }}/YellowTulipState/facets/Inputs';
+import { Outputs } from '{{ res.module.module_path }}/YellowTulipState/facets/Outputs';
 import * as Policies from './policies';
 import * as Handlers from './handlers';
 {% end_clean_up_js_imports %}
@@ -29,19 +29,19 @@ export class YellowTulipState {
   @facet inputs: Inputs = new Inputs();
   @facet outputs: Outputs = new Outputs();
 
-{{ res.sections.constructor() }}
+{{ sections.constructor() }}
 
-{{ res.sections.callbacks() }}
+{{ sections.callbacks() }}
 
 {% for item_name, bvrs in res.bvrs_by_item_name.items() %}
   _applyRedRosesPolicies(props: PropsT) {
-{{ res.sections.declare_policies(item_name) }}
+{{ sections.declare_policies(item_name) }}
 {% for bvr in bvrs %}
 {{ bvr.sections.declare_policies(bvrs) }}
 {% endfor %}
 
     const policies = [
-{{ res.sections.policies() }}
+{{ sections.policies() }}
 {% for bvr in bvrs %}
 {{ bvr.sections.policies(bvrs) }}
 {% endfor %}

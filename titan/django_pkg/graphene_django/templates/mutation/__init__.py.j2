@@ -1,0 +1,6 @@
+import graphene
+
+{{ sections.mutation_imports() }}
+
+class Mutation({{ sections.mutation_base_classes() }}graphene.ObjectType):
+{{ sections.mutation_fields() }}

@@ -9,8 +9,7 @@ GRAPHENE = {
         "graphql_jwt.middleware.JSONWebTokenMiddleware",
     ],
 }
-
-    """
+"""
 )
 
 

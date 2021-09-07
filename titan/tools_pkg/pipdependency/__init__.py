@@ -1,17 +1,17 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, extend, register_add, tags
+from moonleap import MemFun, create, extend, register_add
 from titan.project_pkg.service import Service, Tool
 
 from . import props
 from .resources import PipDependency, PipRequirement
 
 
-@tags(["pip-dependency"])
+@create("pip-dependency", [])
 def create_pip_dependency(term, block):
     return PipDependency([term.data])
 
 
-@tags(["dev:pip-dependency"])
+@create("dev:pip-dependency", [])
 def create_pip_dependency_dev(term, block):
     return PipDependency([term.data], is_dev=True)
 

@@ -1,12 +1,9 @@
-from moonleap.builder.rule import Rule
-from moonleap.parser.term import word_to_term
 from moonleap.render.merge import add_file_merger
 from moonleap.render.template_env import add_filter
 from moonleap.render.transforms import register_transforms
 from moonleap.resource.memfield import MemField
 from moonleap.resource.memfun import MemFun
 from moonleap.resource.prop import Prop
-from moonleap.resource.rel import Rel
 
 
 def get_symbols(module):
@@ -15,20 +12,6 @@ def get_symbols(module):
         for f in module.__dict__.values()
         if getattr(f, "__module__", "") == module.__name__
     ]
-
-
-# Empty rules are rules that are only there to silence warnings about unused
-# relations.
-def get_empty_rules(module):
-    rules = []
-    for subj_term, verb, obj_term in getattr(module, "empty_rules", []):
-        rel = Rel(
-            subj=word_to_term(subj_term, default_to_tag=True),
-            verb=verb,
-            obj=word_to_term(obj_term, default_to_tag=True),
-        )
-        rules.append(Rule(rel, lambda *arg, **kwargs: None))
-    return rules
 
 
 def install_package(package):
@@ -64,7 +47,7 @@ def install_module(module):
 
     for extension in extensions:
         resource_type = extension.moonleap_extends_resource_type
-        for base_type in extension.__mro__:
+        for base_type in reversed(extension.__mro__):
             for prop_name, p in base_type.__dict__.items():
                 if isinstance(p, Prop):
                     setattr(
