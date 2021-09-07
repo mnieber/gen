@@ -1,11 +1,11 @@
-from moonleap.resources.data_type_spec_store import FK, data_type_spec_store
+from moonleap.resources.data_type_spec_store import data_type_spec_store
 from moonleap.utils.magic_replace import magic_replace
 
 
 def _default_value(field, item_name):
     t = field.field_type
 
-    if isinstance(t, FK):
+    if t == "fk":
         return f"{field.name_snake}.id"
 
     if t == "bool":
@@ -65,7 +65,7 @@ class EndPointSectionsMixin:
     def form_mutation(self, form):
         result = []
         spec = data_type_spec_store.get_spec(form.data_type_name)
-        fields = [x for x in spec.fields if not x.private]
+        fields = [x for x in spec.field_by_name.values() if not x.private]
         args = (", " if fields else "") + ", ".join([x.name_snake for x in fields])
 
         if True:
@@ -93,7 +93,7 @@ class EndPointSectionsMixin:
     def post_item_mutation(self, item):
         result = []
         spec = data_type_spec_store.get_spec(item.item_name)
-        fields = [x for x in spec.fields if not x.private]
+        fields = [x for x in spec.field_by_name.values() if not x.private]
         args = (", " if fields else "") + ", ".join([x.name_snake for x in fields])
 
         if True:
@@ -125,7 +125,7 @@ class EndPointSectionsMixin:
         indent = " " * 16
         spec = data_type_spec_store.get_spec(item_name)
 
-        for field in spec.fields:
+        for field in spec.field_by_name.values():
             value = _default_value(field, item_name)
             result.append(f"{indent}{field.name}={value}, ")
 

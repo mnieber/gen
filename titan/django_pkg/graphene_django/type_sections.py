@@ -4,13 +4,13 @@ from moonleap.utils.inflect import plural
 
 
 def _fields(spec):
-    return [x for x in spec.fields if x.name_snake != "id"]
+    return [x for x in spec.field_by_name.values() if x.name_snake != "id"]
 
 
 def _graphene_field(field, item_name):
     t = field.field_type
 
-    if isinstance(t, FK):
+    if t == "fk":
         return r"graphene.ID()"
 
     if t == "string":

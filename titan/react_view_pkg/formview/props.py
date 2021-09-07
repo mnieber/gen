@@ -8,5 +8,9 @@ class Sections:
     def item_fields(self, item_name):
         spec = data_type_spec_store.get_spec(item_name)
         return "\n".join(
-            [f"    {x.name}: null," for x in spec.fields if x.name != "id"]
+            [
+                f"    {x.name}: null,"
+                for x in spec.field_by_name.values()
+                if x.name != "id"
+            ]
         )

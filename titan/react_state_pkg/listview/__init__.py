@@ -12,7 +12,6 @@ from moonleap import (
 from moonleap.utils.case import upper0
 from moonleap.utils.inflect import plural
 from moonleap.verbs import has, uses
-from titan.react_module_pkg.graphqlapi.resources import get_graphql_item_lists
 from titan.react_state_pkg.behavior.resources import Behavior
 
 from . import props
@@ -35,9 +34,10 @@ def list_view_has_a_behavior(list_view, behavior):
 
 @rule("list-view")
 def maybe_add_load_items_effect_to_list_view(list_view):
-    if get_graphql_item_lists(
-        list_view.module.react_app.api_module, list_view.item_name
-    ):
+    graphql_api = list_view.module.react_app.api_module.graphql_api
+    item_list_queries = graphql_api.queries_that_provide_item_list(list_view.item_name)
+
+    if item_list_queries:
         load_items_effect = create_load_items_effect(list_view)
         return [
             create_forward(

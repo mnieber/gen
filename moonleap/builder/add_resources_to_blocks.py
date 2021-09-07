@@ -1,5 +1,5 @@
 import ramda as R
-from moonleap.parser.term import is_generic_term
+from moonleap.parser.term import is_generic_term, term_to_word
 from moonleap.resource import Resource
 from moonleap.session import get_session
 

@@ -1,11 +1,11 @@
-from moonleap.resources.data_type_spec_store import FK, RelatedSet, data_type_spec_store
+from moonleap.resources.data_type_spec_store import data_type_spec_store
 from moonleap.utils.case import lower0
 
 
 def _on_delete(field):
     return (
         "models.CASCADE"
-        if field.spec.get("onDelete", "") == "cascade"
+        if field.field_type_attrs.get("on_delete", "") == "cascade"
         else "models.SET_NULL"
     )
 
@@ -17,7 +17,7 @@ def _model(field):
     unique = ["unique=True"] if field.unique else []
     help_text = [f"help_text='{field.description}'"] if field.description else []
 
-    if isinstance(t, FK):
+    if t == "fk":
         on_delete = _on_delete(field)
         related_name = ['related_name="+"'] if not t.has_related_set else []
         args = [
@@ -31,7 +31,7 @@ def _model(field):
         return f"models.ForeignKey({', '.join(args)})"
 
     if t == "string":
-        max_length = field.spec.get("maxLength", None)
+        max_length = field.field_type_attrs.get("max_length")
         default_arg = (
             [f'default="{field.default_value}"'] if field.default_value else []
         )
@@ -91,7 +91,8 @@ def _model(field):
 
 def _fields(spec):
     return sorted(
-        [x for x in spec.fields if x.name_snake != "id"], key=lambda x: x.name_snake
+        [x for x in spec.field_by_name.values() if x.name_snake != "id"],
+        key=lambda x: x.name_snake,
     )
 
 
@@ -103,8 +104,8 @@ class Sections:
         result = []
         spec = data_type_spec_store.get_spec(item_name)
         for field in _fields(spec):
-            if isinstance(field.field_type, FK):
-                fk_item_type = field.field_type.target
+            if field.field_type == "fk":
+                fk_item_type = field.field_type_attrs["target"]
                 fk_item_name = lower0(fk_item_type)
                 for module in self.res.django_app.modules:
                     if fk_item_name in [
@@ -121,7 +122,7 @@ class Sections:
         indent = "    "
         spec = data_type_spec_store.get_spec(item_name)
         for field in _fields(spec):
-            if isinstance(field.field_type, RelatedSet):
+            if field.field_type == "related_set":
                 continue
             model = _model(field)
             result.append(indent + f"{field.name_snake} = {model}")

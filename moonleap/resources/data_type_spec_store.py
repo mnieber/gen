@@ -1,28 +1,38 @@
 import os
 import typing as T
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
+import ramda as R
 import yaml
 from moonleap.session import get_session
 from moonleap.utils.case import camel_to_snake, lower0, snake_to_camel, upper0
 from moonleap.utils.inflect import plural
 
+fk_prefix = "/data_types/"
 
-def _type(field_spec):
+
+def _type_and_attrs(field_spec):
+    attrs = {}
     t = field_spec.get("type")
-    if t is not None:
-        return t
 
-    t = field_spec.get("$ref")
-    prefix = "/data_types/"
-    if t is not None and t.startswith(prefix):
-        return FK(
-            target=t[len(prefix) :],  # noqa: E203
-            has_related_set=field_spec.get("has_related_set", True),
-        )
+    if t is None:
+        ref = field_spec.get("$ref", "")
+        if ref.startswith(fk_prefix):
+            t = "fk"
+            attrs["target"] = ref[len(fk_prefix) :]  # noqa: E203
+            attrs["has_related_set"] = (field_spec.get("has_related_set", True),)
+    else:
+        if "onDelete" in field_spec:
+            attrs["on_delete"] = field_spec["onDelete"]
 
-    raise Exception(f"Unknown field type: {field_spec}")
+        if "maxLength" in field_spec:
+            attrs["max_length"] = field_spec["maxLength"]
+
+    if t is None:
+        raise Exception(f"Unknown field type: {field_spec}")
+
+    return t, attrs
 
 
 def _default_value(field_spec):
@@ -54,16 +64,18 @@ def _get_fields(data_type_dict):
     private = data_type_dict.get("private", [])
     result = []
     for field_name, field_spec in data_type_dict["properties"].items():
+        t, attrs = _type_and_attrs(field_spec)
+
         result.append(
             DataTypeField(
                 default_value=_default_value(field_spec),
                 description=_description(field_spec),
-                field_type=_type(field_spec),
+                field_type=t,
+                field_type_attrs=attrs,
                 name_snake=field_name,
                 name=snake_to_camel(field_name),
                 private=field_name in private,
                 required=field_name in required,
-                spec=field_spec,
                 unique=_unique(field_spec),
             )
         )
@@ -71,56 +83,48 @@ def _get_fields(data_type_dict):
 
 
 @dataclass
-class FK:
-    target: str
-    has_related_set: bool
-
-
-@dataclass
-class RelatedSet:
-    target: str
-
-
-@dataclass
 class DataTypeField:
-    field_type: T.Union[str, FK, RelatedSet]
+    field_type: str
     name_snake: str
     name: str
     private: bool
     required: bool
-    spec: T.Any
     default_value: T.Any = None
     description: T.Optional[str] = None
     unique: bool = False
+    field_type_attrs: dict = field(default_factory=dict)
 
 
 @dataclass
 class DataTypeSpec:
     type_name: str
-    fields: T.List[DataTypeField]
+    field_by_name: T.Dict[str, DataTypeField]
+    query_item_by: T.List[str] = field(default_factory=list)
+    query_item_list_by: T.List[str] = field(default_factory=list)
 
 
 class DataTypeSpecStore:
     def __init__(self):
         self.spec_by_name = {}
-        self.default_fields = [
-            DataTypeField(
-                name_snake="id",
-                name="id",
-                spec=dict(type="string"),
-                required=True,
-                private=False,
-                field_type="string",
-            ),
-            DataTypeField(
-                name_snake="name",
-                name="name",
-                spec=dict(type="string"),
-                required=True,
-                private=False,
-                field_type="string",
-            ),
-        ]
+        self.default_field_by_name = R.index_by(
+            R.prop("name"),
+            [
+                DataTypeField(
+                    name_snake="id",
+                    name="id",
+                    required=True,
+                    private=False,
+                    field_type="string",
+                ),
+                DataTypeField(
+                    name_snake="name",
+                    name="name",
+                    required=True,
+                    private=False,
+                    field_type="string",
+                ),
+            ],
+        )
 
     def _load_specs(self, data_types_dir):
         for spec_fn in Path(data_types_dir).glob("*.json"):
@@ -129,26 +133,26 @@ class DataTypeSpecStore:
 
             spec = DataTypeSpec(
                 type_name=data_type_name,
-                fields=_get_fields(data_type_dict),
+                field_by_name=R.index_by(R.prop("name"), _get_fields(data_type_dict)),
+                query_item_by=data_type_dict.get("query_item_by", ["id"]),
+                query_item_list_by=data_type_dict.get("query_item_list_by", []),
             )
             self.spec_by_name[data_type_name] = spec
 
         for data_type_name, spec in list(self.spec_by_name.items()):
-            for field in spec.fields:
-                if (
-                    isinstance(field.field_type, FK)
-                    and field.field_type.has_related_set
+            for _, field in spec.field_by_name.items():
+                if field.field_type == "fk" and field.field_type_attrs.get(
+                    "has_related_set"
                 ):
-                    fk_spec = self.get_spec(field.field_type.target)
-                    fk_spec.fields.append(
-                        DataTypeField(
-                            name=lower0(plural(spec.type_name)),
-                            name_snake=lower0(camel_to_snake(plural(spec.type_name))),
-                            spec=fk_spec,
-                            required=False,
-                            private=field.private,
-                            field_type=RelatedSet(target=spec.type_name),
-                        )
+                    fk_spec = self.get_spec(field.field_type_attrs["target"])
+                    name = lower0(plural(spec.type_name))
+                    fk_spec.field_by_name[name] = DataTypeField(
+                        name=name,
+                        name_snake=camel_to_snake(name),
+                        required=False,
+                        private=field.private,
+                        field_type="related_set",
+                        field_type_attrs=dict(target=spec.type_name),
                     )
 
     def get_spec(self, data_type_name):
@@ -160,7 +164,7 @@ class DataTypeSpecStore:
         data_type_name = upper0(data_type_name)
         if data_type_name not in self.spec_by_name:
             self.spec_by_name[data_type_name] = DataTypeSpec(
-                type_name=data_type_name, fields=self.default_fields
+                type_name=data_type_name, field_by_name=self.default_field_by_name
             )
 
         return self.spec_by_name[data_type_name]

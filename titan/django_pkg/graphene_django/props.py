@@ -1,5 +1,4 @@
 from moonleap.render.template_renderer import render_templates
-from moonleap.resources.data_type_spec_store import FK, data_type_spec_store
 
 from .endpoint_sections import EndPointSectionsMixin
 from .type_sections import TypeSectionsMixin

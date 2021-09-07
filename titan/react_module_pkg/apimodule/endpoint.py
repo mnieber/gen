@@ -3,7 +3,7 @@ import os
 import ramda as R
 from moonleap import chop0
 from moonleap.parser.term import word_to_term
-from moonleap.resources.data_type_spec_store import FK, RelatedSet, data_type_spec_store
+from moonleap.resources.data_type_spec_store import data_type_spec_store
 from moonleap.utils.case import kebab_to_camel, upper0
 from moonleap.utils.fp import ds
 from moonleap.utils.inflect import plural
@@ -34,6 +34,18 @@ endpoint_template = chop0(
 )
 
 
+def _fields(query):
+    fields = {}
+    for field_name in query.fields:
+        data_type_field = query.data_type_inputs.field_by_name[field_name]
+        fields[field_name] = data_type_field.type
+    return fields
+
+
+def _javascript_args(query):
+    return ", ".join(R.map(ds(input_arg_to_ts_arg), _fields(query).items()))
+
+
 def get_endpoint_query_text(query):
     return magic_replace(
         endpoint_template,
@@ -41,21 +53,19 @@ def get_endpoint_query_text(query):
             ("endpointName", query.name),
             (
                 "javaScriptArgs",
-                ", ".join(R.map(ds(input_arg_to_ts_arg), query.input_args.items())),
+                _javascript_args(query),
             ),
             (
                 "graphqlHeader",
-                get_graphql_header(query, "query"),
+                _graphql_header(query, "query"),
             ),
             (
                 "redRose",
-                (os.linesep + " " * 8).join(
-                    map(lambda x: f"{x}: ${x}", query.input_args.keys())
-                ),
+                (os.linesep + " " * 8).join(map(lambda x: f"{x}: ${x}", query.fields)),
             ),
             (
                 "graphqlBody",
-                get_graphql_body(upper0(query.item_name)),
+                _graphql_body(query.data_type_output.name),
             ),
             ("blueDaisy", (os.linesep + " " * 8).join(query.input_args.keys())),
             ("purpleOrchid", get_graphql_response(query)),
@@ -71,18 +81,18 @@ def get_endpoint_mutation_text(mutation):
             ("javaScriptArgs", ", ".join(mutation.input_args.keys())),
             (
                 "graphqlHeader",
-                get_graphql_header(mutation, "mutation"),
+                _graphql_header(mutation, "mutation"),
             ),
             (
                 "graphqlBody",
-                get_graphql_body(upper0(mutation.item_name)),
+                _graphql_body(mutation.data_type_output),
             ),
         ],
     )
 
 
-def get_graphql_header(query, query_type):
-    items = query.input_args.items()
+def _graphql_header(query, query_type):
+    items = _fields(query).items()
     return (os.linesep + " " * 6).join(
         [
             f"{query_type} " + query.name + ("(" if items else ""),
@@ -92,21 +102,22 @@ def get_graphql_header(query, query_type):
     )
 
 
-def get_graphql_body(type_name, indent=0, skip=None):
+def _graphql_body(spec, indent=0, skip=None):
     if skip is None:
-        skip = [type_name]
+        skip = [spec.type_name]
 
     graphqlBody = []
-    spec = data_type_spec_store.get_spec(type_name)
-    for spec_field in [x for x in spec.fields if not x.private]:
-        if isinstance(spec_field.field_type, RelatedSet) or isinstance(
-            spec_field.field_type, FK
-        ):
-            fk_type_name = spec_field.field_type.target
+    for spec_field in [x for x in spec.field_by_name.values() if not x.private]:
+        if spec_field.field_type in ("fk", "related_set"):
+            fk_type_name = spec_field.field_type_attrs["target"]
             if fk_type_name not in skip:
                 graphqlBody.append(f"{spec_field.name} {{")
                 graphqlBody.extend(
-                    get_graphql_body(fk_type_name, indent + 2, skip + [fk_type_name])
+                    _graphql_body(
+                        data_type_spec_store.get_spec(fk_type_name),
+                        indent + 2,
+                        skip + [fk_type_name],
+                    )
                 )
                 graphqlBody.append(f"}}")  # noqa: F541
         else:

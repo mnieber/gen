@@ -10,10 +10,6 @@ from moonleap import (
 )
 from moonleap.utils.case import upper0
 from moonleap.verbs import has, uses
-from titan.react_module_pkg.graphqlapi.resources import (
-    get_graphql_item_lists,
-    get_graphql_items,
-)
 
 from . import props
 from .resources import ItemView, create_load_item_effect, create_select_item_effect
@@ -28,8 +24,11 @@ def create_item_view(term, block):
 
 @rule("item-view")
 def maybe_add_load_item_effect_to_item_view(item_view):
-    # if the graphql api loads single instances of this item type
-    if get_graphql_items(item_view.module.react_app.api_module, item_view.item_name):
+    graphql_api = item_view.module.react_app.api_module.graphql_api
+    item_queries = graphql_api.queries_that_provide_item(item_view.item_name)
+    item_list_queries = graphql_api.queries_that_provide_item_list(item_view.item_name)
+
+    if item_queries:
         load_item_effect = create_load_item_effect(
             item_view, item_view._get_route_params()
         )
@@ -49,9 +48,7 @@ def maybe_add_load_item_effect_to_item_view(item_view):
         ]
 
     # else if it loads item lists of this item type
-    elif get_graphql_item_lists(
-        item_view.module.react_app.api_module, item_view.item_name
-    ):
+    elif item_list_queries:
         select_item_effect = create_select_item_effect(
             item_view, item_view._get_route_params()
         )
