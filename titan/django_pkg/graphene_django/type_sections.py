@@ -1,10 +1,10 @@
-from moonleap.resources.data_type_spec_store import data_type_spec_store
+from moonleap.resources.type_spec_store import type_spec_store
 from moonleap.utils.case import upper0
 from moonleap.utils.inflect import plural
 
 
-def _fields(spec):
-    return [x for x in spec.field_by_name.values() if x.name_snake != "id"]
+def _field_specs(type_spec):
+    return [x for x in type_spec.field_spec_by_name.values() if x.name_snake != "id"]
 
 
 def _graphene_field(field, item_name):
@@ -30,17 +30,19 @@ def _graphene_field(field, item_name):
 
 class TypeSectionsMixin:
     def exclude(self, item_name):
-        spec = data_type_spec_store.get_spec(item_name)
-        list_str = ", ".join([f'"{x.name_snake}"' for x in _fields(spec) if x.private])
+        type_spec = type_spec_store.get(item_name)
+        list_str = ", ".join(
+            [f'"{x.name_snake}"' for x in _field_specs(type_spec) if x.private]
+        )
         return f"exclude = [{list_str}]" if list_str else ""
 
     def graphene_fields(self, item_name):
         result = []
         indent = "    "
-        spec = data_type_spec_store.get_spec(item_name)
-        for field in _fields(spec):
-            graphene_field = _graphene_field(field, item_name)
-            result.append(indent + f"{field.name_snake} = {graphene_field}")
+        type_spec = type_spec_store.get(item_name)
+        for field_spec in _field_specs(type_spec):
+            graphene_field = _graphene_field(field_spec, item_name)
+            result.append(indent + f"{field_spec.name_snake} = {graphene_field}")
 
         return "\n".join(result or [indent + "pass"])
 

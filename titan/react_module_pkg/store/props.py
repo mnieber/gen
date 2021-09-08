@@ -1,5 +1,5 @@
 from moonleap import upper0
-from moonleap.resources.data_type_spec_store import data_type_spec_store
+from moonleap.resources.type_spec_store import type_spec_store
 from moonleap.utils.magic_replace import magic_replace
 
 load_data_template = """
@@ -36,13 +36,13 @@ class Sections:
 
     def item_fields(self, item_type):
         result = []
-        spec = data_type_spec_store.get_spec(item_type.name)
-        for field in spec.field_by_name.values():
-            if field.private:
+        type_spec = type_spec_store.get(item_type.name)
+        for field_spec in type_spec.field_spec_by_name.values():
+            if field_spec.private:
                 continue
 
-            t = field.field_type
+            t = field_spec.field_type
             t = "string" if t in ("fk", "related_set") else t
-            result.append(f"  {field.name}: {t};")
+            result.append(f"  {field_spec.name}: {t};")
 
         return "\n".join(result)

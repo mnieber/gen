@@ -1,6 +1,6 @@
 import os
 
-from moonleap.resources.data_type_spec_store import data_type_spec_store
+from moonleap.resources.type_spec_store import type_spec_store
 from moonleap.utils.case import lower0
 
 
@@ -104,9 +104,9 @@ def _model(field):
     raise Exception(f"Unknown model field type: {t}")
 
 
-def _fields(spec):
+def _field_specs(type_spec):
     return sorted(
-        [x for x in spec.field_by_name.values() if x.name_snake != "id"],
+        [x for x in type_spec.field_spec_by_name.values() if x.name_snake != "id"],
         key=lambda x: x.name_snake,
     )
 
@@ -117,10 +117,10 @@ class Sections:
 
     def model_imports(self, item_name):
         result = []
-        spec = data_type_spec_store.get_spec(item_name)
-        for field in _fields(spec):
-            if field.field_type == "fk":
-                fk_item_type = field.field_type_attrs["target"]
+        type_spec = type_spec_store.get(item_name)
+        for field_spec in _field_specs(type_spec):
+            if field_spec.field_type == "fk":
+                fk_item_type = field_spec.field_type_attrs["target"]
                 fk_item_name = lower0(fk_item_type)
                 for module in self.res.django_app.modules:
                     if fk_item_name in [
@@ -135,12 +135,12 @@ class Sections:
     def model_fields(self, item_name):
         result = []
         indent = "    "
-        spec = data_type_spec_store.get_spec(item_name)
-        for field in _fields(spec):
-            if field.field_type == "related_set":
+        type_spec = type_spec_store.get(item_name)
+        for field_spec in _field_specs(type_spec):
+            if field_spec.field_type == "related_set":
                 continue
-            model = _model(field)
-            result.append(indent + f"{field.name_snake} = {model}")
+            model = _model(field_spec)
+            result.append(indent + f"{field_spec.name_snake} = {model}")
 
         return "\n".join(result or [indent + "pass"])
 

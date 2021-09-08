@@ -1,7 +1,7 @@
 import os
 
 import ramda as R
-from moonleap.resources.data_type_spec_store import data_type_spec_store
+from moonleap.resources.type_spec_store import type_spec_store
 from moonleap.utils.case import lower0
 from moonleap.utils.inflect import plural
 
@@ -38,15 +38,15 @@ class Sections:
         result.append(os.linesep)
 
         for item_name in item_names:
-            spec = data_type_spec_store.get_spec(item_name)
-            for spec_field in spec.field_by_name.values():
-                if spec_field.field_type == "fk":
-                    target = spec_field.field_type_attrs["target"]
+            type_spec = type_spec_store.get(item_name)
+            for field_spec in type_spec.field_spec_by_name.values():
+                if field_spec.field_type == "fk":
+                    target = field_spec.field_type_attrs["target"]
                     result.append(
                         f"{item_name}.define({{ {lower0(target)} }});"  # noqa: E501
                     )
-                if spec_field.field_type == "related_set":
-                    target = spec_field.field_type_attrs["target"]
+                if field_spec.field_type == "related_set":
+                    target = field_spec.field_type_attrs["target"]
                     result.append(
                         f"{item_name}.define({{ {lower0(plural(target))} }});"  # noqa: E501
                     )

@@ -2,7 +2,7 @@ import moonleap.resource.props as P
 import ramda as R
 from moonleap import MemFun, Prop, extend, kebab_to_camel, rule, tags, upper0
 from moonleap.resource.rel import create_forward
-from moonleap.resources.data_type_spec_store import data_type_spec_store
+from moonleap.resources.type_spec_store import type_spec_store
 from moonleap.verbs import has, posts, provides
 from titan.api_pkg.graphqlapi import GraphqlApi
 
@@ -25,7 +25,6 @@ def graphql_api_posts_item(graphql_api, item):
 def mutation_posts_item(graphql_api, item):
     query_name = f"post{kebab_to_camel(upper0(item.item_name))}"
     mutation = R.find(lambda x: x.name == query_name)(graphql_api.mutations)
-    mutation.data_type_in = data_type_spec_store.get_spec(item.item_name)
     return [create_forward(mutation, posts, f"{item.item_name}:item", obj_res=item)]
 
 
@@ -44,4 +43,5 @@ class ExtendGraphqlApi:
 class ExtendMutation:
     items_posted = P.children(posts, "item")
     posts_item = MemFun(props.posts_item)
-    data_type_out = Prop(props.data_type_out)
+    inputs_type_spec = Prop(props.inputs_type_spec)
+    outputs_type_spec = Prop(props.outputs_type_spec)

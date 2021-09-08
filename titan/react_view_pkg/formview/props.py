@@ -1,4 +1,4 @@
-from moonleap.resources.data_type_spec_store import data_type_spec_store
+from moonleap.resources.type_spec_store import type_spec_store
 
 
 class Sections:
@@ -6,11 +6,11 @@ class Sections:
         self.res = res
 
     def item_fields(self, item_name):
-        spec = data_type_spec_store.get_spec(item_name)
+        type_spec = type_spec_store.get(item_name)
         return "\n".join(
             [
                 f"    {x.name}: null,"
-                for x in spec.field_by_name.values()
+                for x in type_spec.field_spec_by_name.values()
                 if x.name != "id"
             ]
         )
