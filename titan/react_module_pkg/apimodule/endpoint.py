@@ -8,6 +8,7 @@ from moonleap.utils.case import kebab_to_camel, upper0
 from moonleap.utils.fp import ds
 from moonleap.utils.inflect import plural
 from moonleap.utils.magic_replace import magic_replace
+from titan.api_pkg.mutation.data_types import default_mutation_output_data_type
 
 endpoint_template = chop0(
     """
@@ -36,8 +37,8 @@ endpoint_template = chop0(
 
 def _fields(query):
     fields = {}
-    for field_name in query.fields:
-        data_type_field = query.data_type_inputs.field_by_name[field_name]
+    for field_name in query.fields or query.data_type_in.field_by_name.keys():
+        data_type_field = query.data_type_in.field_by_name[field_name]
         fields[field_name] = data_type_field.type
     return fields
 
@@ -65,7 +66,7 @@ def get_endpoint_query_text(query):
             ),
             (
                 "graphqlBody",
-                _graphql_body(query.data_type_output.name),
+                _graphql_body(query.data_type_out),
             ),
             ("blueDaisy", (os.linesep + " " * 8).join(query.input_args.keys())),
             ("purpleOrchid", get_graphql_response(query)),
@@ -85,7 +86,7 @@ def get_endpoint_mutation_text(mutation):
             ),
             (
                 "graphqlBody",
-                _graphql_body(mutation.data_type_output),
+                _graphql_body(mutation.data_type_out),
             ),
         ],
     )

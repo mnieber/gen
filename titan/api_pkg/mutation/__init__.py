@@ -1,12 +1,12 @@
 import moonleap.resource.props as P
 import ramda as R
-from moonleap import extend, rule, tags
+from moonleap import MemFun, Prop, extend, rule, tags
 from moonleap.resource.rel import create_forward
 from moonleap.resources.data_type_spec_store import data_type_spec_store
 from moonleap.verbs import has, posts, provides
 from titan.api_pkg.graphqlapi import GraphqlApi
 
-from . import data_types
+from . import props
 from .resources import Mutation
 
 
@@ -26,9 +26,7 @@ def mutation_posts_item(graphql_api, item):
     mutation = R.find(lambda x: x.name == f"post-{item.item_name}")(
         graphql_api.mutations
     )
-    data_type = data_type_spec_store.get_spec(item.item_name)
-    mutation.data_type_inputs = data_type
-    mutation.data_type_output = data_types.mutation_output_data_type
+    mutation.data_type_in = data_type_spec_store.get_spec(item.item_name)
     return [create_forward(mutation, posts, f"{item.item_name}:item", obj_res=item)]
 
 
@@ -45,4 +43,6 @@ class ExtendGraphqlApi:
 
 @extend(Mutation)
 class ExtendMutation:
-    items_posted = P.children(provides, "item")
+    items_posted = P.children(posts, "item")
+    posts_item = MemFun(props.posts_item)
+    data_type_out = Prop(props.data_type_out)

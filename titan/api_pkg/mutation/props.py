@@ -1,7 +1,11 @@
 import ramda as R
-from moonleap.resources.data_type_spec_store import DataTypeField, DataTypeSpec
+from moonleap.resources.data_type_spec_store import (
+    DataTypeField,
+    DataTypeSpec,
+    data_type_spec_store,
+)
 
-mutation_output_data_type = DataTypeSpec(
+default_mutation_output_data_type = DataTypeSpec(
     type_name="MutationOutputType",
     field_by_name=R.index_by(
         R.prop("name"),
@@ -23,3 +27,14 @@ mutation_output_data_type = DataTypeSpec(
         ],
     ),
 )
+
+
+def posts_item(self, item_name):
+    return [x for x in self.items_posted if x.item_name == item_name]
+
+
+def data_type_out(self):
+    name = f"{self.name}OutputType"
+    return data_type_spec_store.spec_by_name.get(
+        name, default_mutation_output_data_type
+    )
