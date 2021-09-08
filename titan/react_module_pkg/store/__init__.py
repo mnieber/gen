@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import Prop, extend, kebab_to_camel, tags
+from moonleap import Prop, create_forward, extend, kebab_to_camel, rule, tags
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.utils.case import upper0
 from moonleap.verbs import contains, has
@@ -17,6 +17,16 @@ def create_store(term, block):
     store = Store(name=f"{upper0(kebab_to_camel(term.data))}Store")
     store.add_template_dir(__file__, "templates")
     return store
+
+
+@rule("store", contains, "item")
+def store_contains_item(store, item_list):
+    return create_forward(store, contains, f"{item_list.item_name}:item-type")
+
+
+@rule("store", contains, "item-list")
+def store_contains_item_list(store, item_list):
+    return create_forward(store, contains, f"{item_list.item_name}:item-type")
 
 
 @extend(Module)

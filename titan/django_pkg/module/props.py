@@ -1,5 +1,16 @@
+import os
+
 from moonleap.resources.data_type_spec_store import data_type_spec_store
 from moonleap.utils.case import lower0
+
+
+def _find_module_that_provides(module, item_type):
+    for module in module.django_app.modules:
+        for module_item_type in module.item_types:
+            if item_type.name == module_item_type.name:
+                return module
+
+    return None
 
 
 def _on_delete(field):
@@ -19,9 +30,13 @@ def _model(field):
 
     if t == "fk":
         on_delete = _on_delete(field)
-        related_name = ['related_name="+"'] if not t.has_related_set else []
+        related_name = (
+            ['related_name="+"']
+            if not field.field_type_attrs.get("has_related_set", True)
+            else []
+        )
         args = [
-            t.target,
+            field.field_type_attrs["target"],
             f"on_delete={on_delete}",
             *null_blank,
             *related_name,
@@ -128,3 +143,15 @@ class Sections:
             result.append(indent + f"{field.name_snake} = {model}")
 
         return "\n".join(result or [indent + "pass"])
+
+    def import_item_types(self):
+        result = []
+
+        for item_type in self.res.item_types:
+            module = _find_module_that_provides(self.res, item_type)
+            if module:
+                result.append(
+                    f"from {module.name_snake}.models import {item_type.name}"
+                )
+
+        return os.linesep.join(result)

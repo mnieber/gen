@@ -8,7 +8,6 @@ from moonleap.utils.case import kebab_to_camel, upper0
 from moonleap.utils.fp import ds
 from moonleap.utils.inflect import plural
 from moonleap.utils.magic_replace import magic_replace
-from titan.api_pkg.mutation.data_types import default_mutation_output_data_type
 
 endpoint_template = chop0(
     """
@@ -35,19 +34,23 @@ endpoint_template = chop0(
 )
 
 
-def _fields(query):
+def _input_fields(query):
     fields = {}
-    for field_name in query.fields or query.data_type_in.field_by_name.keys():
+    for field_name in getattr(query, "fields", []) or (
+        query.data_type_in.field_by_name.keys() if query.data_type_in else []
+    ):
         data_type_field = query.data_type_in.field_by_name[field_name]
-        fields[field_name] = data_type_field.type
+        fields[field_name] = data_type_field
     return fields
 
 
 def _javascript_args(query):
-    return ", ".join(R.map(ds(input_arg_to_ts_arg), _fields(query).items()))
+    return ", ".join(R.map(ds(_input_field_to_ts_arg), _input_fields(query).items()))
 
 
 def get_endpoint_query_text(query):
+    field_names = _input_fields(query).keys()
+
     return magic_replace(
         endpoint_template,
         [
@@ -62,14 +65,14 @@ def get_endpoint_query_text(query):
             ),
             (
                 "redRose",
-                (os.linesep + " " * 8).join(map(lambda x: f"{x}: ${x}", query.fields)),
+                (os.linesep + " " * 8).join(map(lambda x: f"{x}: ${x}", field_names)),
             ),
             (
                 "graphqlBody",
                 _graphql_body(query.data_type_out),
             ),
-            ("blueDaisy", (os.linesep + " " * 8).join(query.input_args.keys())),
-            ("purpleOrchid", get_graphql_response(query)),
+            ("blueDaisy", (os.linesep + " " * 8).join(field_names)),
+            ("purpleOrchid", get_graphql_response(query, is_list=True)),
         ],
     )
 
@@ -79,7 +82,10 @@ def get_endpoint_mutation_text(mutation):
         endpoint_template,
         [
             ("endpointName", mutation.name),
-            ("javaScriptArgs", ", ".join(mutation.input_args.keys())),
+            (
+                "javaScriptArgs",
+                _javascript_args(mutation),
+            ),
             (
                 "graphqlHeader",
                 _graphql_header(mutation, "mutation"),
@@ -93,12 +99,14 @@ def get_endpoint_mutation_text(mutation):
 
 
 def _graphql_header(query, query_type):
-    items = _fields(query).items()
+    input_fields = _input_fields(query).items()
     return (os.linesep + " " * 6).join(
         [
-            f"{query_type} " + query.name + ("(" if items else ""),
-            *map(ds(lambda n, t: "  " + input_arg_to_graphql_arg(n, t)), items),
-            ") " if items else "",
+            f"{query_type} " + query.name + ("(" if input_fields else ""),
+            *map(
+                ds(lambda n, t: "  " + _input_field_to_graphql_arg(n, t)), input_fields
+            ),
+            ") " if input_fields else "",
         ]
     )
 
@@ -130,43 +138,48 @@ def _graphql_body(spec, indent=0, skip=None):
         return [(" " * indent) + x for x in graphqlBody]
 
 
-def input_type_to_ts_type(arg_type):
-    if arg_type == "string":
+def _input_field_to_ts_type(input_field):
+    if input_field.field_type in ("string", "json", "url"):
         return "string"
 
-    term = word_to_term(arg_type)
+    if input_field.field_type in ("bool",):
+        return "bool"
 
-    if term and term.tag == "item":
-        return f"{upper0(kebab_to_camel(term.data))}T"
+    if input_field.field_type in ("fk",):
+        return f"{upper0(kebab_to_camel(input_field.field_type_attrs['target']))}T"
 
-    raise Exception(f"Cannot deduce typescript type for {arg_type}")
+    raise Exception(f"Cannot deduce typescript type for {input_field.field_type}")
 
 
-def input_arg_to_ts_arg(arg_name, arg_type):
-    ts_type = input_type_to_ts_type(arg_type)
+def _input_field_to_ts_arg(arg_name, input_field):
+    ts_type = _input_field_to_ts_type(input_field)
     return f"{arg_name}: {ts_type}"
 
 
-def input_arg_to_graphql_arg(arg_name, arg_type):
-    graphql_type = input_type_to_graphql_type(arg_type)
+def _input_field_to_graphql_arg(arg_name, input_field):
+    graphql_type = _input_field_to_graphql_type(input_field)
 
     return f"${arg_name}: {graphql_type}"
 
 
-def input_type_to_graphql_type(arg_type):
-    if arg_type == "string":
+def _input_field_to_graphql_type(input_field):
+    if input_field.field_type in ("string", "json", "url"):
         return "String"
 
-    term = word_to_term(arg_type)
+    if input_field.field_type in ("bool",):
+        return "Boolean"
 
-    if term and term.tag == "item":
-        return f"{upper0(kebab_to_camel(term.data))}Type"
+    if input_field.field_type in ("fk",):
+        return f"{upper0(kebab_to_camel(input_field.field_type_attrs['target']))}Type"
 
-    raise Exception(f"Cannot deduce graphql type for {arg_type}")
+    raise Exception(f"Cannot deduce graphql type for {input_field.field_type}")
 
 
-def get_graphql_response(query):
-    if query.is_list:
-        return f"normalize(response.{query.name}, {plural(query.item_name)}).entities"
+def get_graphql_response(query, is_list):
+    # TODO: return normalized data based on query.items_provided and query.item_lists_provided
+    if is_list:
+        return (
+            f"normalize(response.{plural(query.name)}, {plural(query.name)}).entities"
+        )
     else:
-        return f"normalize(response.{query.name}, {query.item_name}).entities"
+        return f"normalize(response.{query.name}, {query.name}).entities"

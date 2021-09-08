@@ -17,28 +17,24 @@ def provides_item_list(self, item_name):
 
 
 def _item_field(self, item):
-    return (
-        DataTypeField(
-            name_snake=item.name_snake,
-            name=item.name,
-            required=False,
-            private=False,
-            field_type="fk",
-            field_type_attrs=dict(target=upper0(item.item_name), has_related_set=False),
-        ),
+    return DataTypeField(
+        name_snake=item.item_name_snake,
+        name=item.item_name,
+        required=False,
+        private=False,
+        field_type="fk",
+        field_type_attrs=dict(target=upper0(item.item_name), has_related_set=False),
     )
 
 
 def _item_list_field(self, item):
-    return (
-        DataTypeField(
-            name_snake=plural(item.name_snake),
-            name=plural(item.name),
-            required=False,
-            private=False,
-            field_type="fk",
-            field_type_attrs=dict(target=upper0(item.item_name), has_related_set=False),
-        ),
+    return DataTypeField(
+        name_snake=plural(item.item_name_snake),
+        name=plural(item.item_name),
+        required=False,
+        private=False,
+        field_type="fk",
+        field_type_attrs=dict(target=upper0(item.item_name), has_related_set=False),
     )
 
 

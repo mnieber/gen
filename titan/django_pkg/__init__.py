@@ -8,9 +8,6 @@ from . import (
     form,
     graphene_django,
     graphql_auth,
-    item,
-    itemlist,
-    itemtype,
     module,
     usersmodule,
 )
@@ -25,9 +22,6 @@ modules = [
     djangoapp,
     graphene_django,
     graphql_auth,
-    item,
-    itemlist,
-    itemtype,
     module,
     usersmodule,
 ]

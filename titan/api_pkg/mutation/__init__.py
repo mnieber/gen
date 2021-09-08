@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
 import ramda as R
-from moonleap import MemFun, Prop, extend, rule, tags
+from moonleap import MemFun, Prop, extend, kebab_to_camel, rule, tags, upper0
 from moonleap.resource.rel import create_forward
 from moonleap.resources.data_type_spec_store import data_type_spec_store
 from moonleap.verbs import has, posts, provides
@@ -12,7 +12,7 @@ from .resources import Mutation
 
 @tags(["mutation"])
 def create_mutation(term, block):
-    mutation = Mutation(name=term.data)
+    mutation = Mutation(name=kebab_to_camel(term.data))
     return mutation
 
 
@@ -23,9 +23,8 @@ def graphql_api_posts_item(graphql_api, item):
 
 @rule("graphql:api", posts, "item")
 def mutation_posts_item(graphql_api, item):
-    mutation = R.find(lambda x: x.name == f"post-{item.item_name}")(
-        graphql_api.mutations
-    )
+    query_name = f"post{kebab_to_camel(upper0(item.item_name))}"
+    mutation = R.find(lambda x: x.name == query_name)(graphql_api.mutations)
     mutation.data_type_in = data_type_spec_store.get_spec(item.item_name)
     return [create_forward(mutation, posts, f"{item.item_name}:item", obj_res=item)]
 

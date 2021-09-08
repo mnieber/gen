@@ -1,7 +1,9 @@
+import moonleap.resource.props as P
 from moonleap import (
     Prop,
     StoreOutputPaths,
     add,
+    create_forward,
     extend,
     kebab_to_camel,
     kebab_to_snake,
@@ -9,6 +11,8 @@ from moonleap import (
     tags,
 )
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
+from moonleap.utils.case import snake_to_kebab
+from moonleap.verbs import contains, provides, receives
 from titan.django_pkg.djangoapp import StoreDjangoConfigs
 
 from . import django_configs, props
@@ -30,6 +34,24 @@ def module_created(module):
     add(module, django_configs.get(module))
 
 
+@rule("module", provides, "item-list")
+def module_contains_item_list(module, item_list):
+    kebab_name = snake_to_kebab(item_list.item_name_snake)
+    return create_forward(module, provides, f"{kebab_name}:item-type")
+
+
+@rule("module", receives, "item")
+def module_receives_item(module, item):
+    kebab_name = snake_to_kebab(item.item_name_snake)
+    return create_forward(module, provides, f"{kebab_name}:item-type")
+
+
+empty_rules = [("module", contains + provides, "item-type")]
+
+
 @extend(Module)
 class ExtendModule(StoreTemplateDirs, StoreOutputPaths, StoreDjangoConfigs):
+    item_lists_provided = P.children(provides, "item-list")
+    items_received = P.children(receives, "item")
+    item_types = P.children(contains + provides, "item-type")
     sections = Prop(props.Sections)

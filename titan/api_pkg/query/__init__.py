@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
 import ramda as R
-from moonleap import MemFun, Prop, extend, rule, tags
+from moonleap import MemFun, Prop, extend, kebab_to_camel, rule, tags, upper0
 from moonleap.resource.rel import create_forward
 from moonleap.resources.data_type_spec_store import data_type_spec_store
 from moonleap.verbs import has, loads, provides
@@ -12,7 +12,7 @@ from .resources import Query
 
 @tags(["query"])
 def create_query(term, block):
-    query = Query(name=term.data)
+    query = Query(name=kebab_to_camel(term.data))
     return query
 
 
@@ -23,7 +23,8 @@ def graphql_api_loads_item(graphql_api, item):
 
 @rule("graphql:api", loads, "item")
 def query_provides_item(graphql_api, item):
-    query = R.find(lambda x: x.name == f"get-{item.item_name}")(graphql_api.queries)
+    query_name = f"get{kebab_to_camel(upper0(item.item_name))}"
+    query = R.find(lambda x: x.name == query_name)(graphql_api.queries)
     query.data_type_in = data_type_spec_store.get_spec(item.item_name)
     query.fields = query.data_type_in.query_item_by
 
@@ -37,9 +38,8 @@ def graphql_api_loads_item_list(graphql_api, item_list):
 
 @rule("graphql:api", loads, "item-list")
 def query_provides_item_list(graphql_api, item_list):
-    query = R.find(lambda x: x.name == f"get-{item_list.item_name}-list")(
-        graphql_api.queries
-    )
+    query_name = f"get{kebab_to_camel(upper0(item_list.item_name))}List"
+    query = R.find(lambda x: x.name == query_name)(graphql_api.queries)
     query.data_type_in = data_type_spec_store.get_spec(item_list.item_name)
     query.fields = query.data_type_in.query_item_list_by
 

@@ -5,9 +5,7 @@
 {% magic_with item_list.item_name_snake as purple_orchid %}
 import graphene
 from graphene_django.types import DjangoObjectType
-{% for item_type in res.item_types %}
-from {{ item_type.module.name_snake }}.models import YellowTulip
-{% endfor %}
+{{ res.sections.import_item_types() }}
 
 {% for item_type in res.item_types %}
 class YellowTulipType(DjangoObjectType):
