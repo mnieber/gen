@@ -167,7 +167,8 @@ def get_endpoint_mutation_text(mutation):
 
 
 def get_graphql_response(query, is_list):
-    # TODO: return normalized data based on query.items_provided and query.item_lists_provided
+    # TODO: return normalized data based on query.items_provided
+    # and query.item_lists_provided
     if is_list:
         return (
             f"normalize(response.{plural(query.name)}, {plural(query.name)}).entities"

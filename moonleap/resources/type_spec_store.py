@@ -67,7 +67,8 @@ def _field_type_and_attrs(field_spec_dict):
             attrs["inline"] = field_spec_dict.get("inline", False)
             if attrs["inline"] and field_spec_dict.get("hasRelatedSet"):
                 raise Exception(
-                    f"Field cannot be inline and have a related set: {field_spec_dict.name}"
+                    "Field cannot be inline and have a "
+                    + f"related set: {field_spec_dict.name}"
                 )
             attrs["has_related_set"] = (
                 False if attrs["inline"] else field_spec_dict.get("hasRelatedSet", True)
@@ -149,17 +150,17 @@ class TypeSpecStore:
             self._type_spec_by_type_name[type_name] = type_spec
 
         for type_name, type_spec in list(self._type_spec_by_type_name.items()):
-            for _, field in type_spec.field_spec_by_name.items():
-                if field.field_type == "fk" and field.field_type_attrs.get(
+            for _, field_spec in type_spec.field_spec_by_name.items():
+                if field_spec.field_type == "fk" and field_spec.field_type_attrs.get(
                     "has_related_set"
                 ):
-                    fk_type_spec = self.get(field.field_type_attrs["target"])
+                    fk_type_spec = self.get(field_spec.field_type_attrs["target"])
                     name = lower0(plural(type_spec.type_name))
                     fk_type_spec.field_spec_by_name[name] = FieldSpec(
                         name=name,
                         name_snake=camel_to_snake(name),
                         required=False,
-                        private=field.private,
+                        private=field_spec.private,
                         field_type="related_set",
                         field_type_attrs=dict(target=type_spec.type_name),
                     )

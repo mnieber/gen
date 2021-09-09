@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import add, extend, kebab_to_camel, rule, tags
+from moonleap import add, extend, kebab_to_camel, tags
 from moonleap.verbs import has
 from titan.react_pkg.nodepackage import load_node_package_config
 from titan.react_pkg.reactapp import ReactApp

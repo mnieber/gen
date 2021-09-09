@@ -1,4 +1,3 @@
-import moonleap.resource.props as P
 from moonleap import kebab_to_camel, kebab_to_snake, tags
 
 from .resources import ItemList

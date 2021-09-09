@@ -1,4 +1,3 @@
-import ramda as R
 from moonleap.utils.inflect import plural
 from titan.react_pkg.component.resources import get_component_base_url
 from titan.react_pkg.router.resources import prepend_router_configs

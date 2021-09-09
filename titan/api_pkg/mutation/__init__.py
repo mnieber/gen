@@ -2,8 +2,7 @@ import moonleap.resource.props as P
 import ramda as R
 from moonleap import MemFun, Prop, extend, kebab_to_camel, rule, tags, upper0
 from moonleap.resource.rel import create_forward
-from moonleap.resources.type_spec_store import type_spec_store
-from moonleap.verbs import has, posts, provides
+from moonleap.verbs import has, posts
 from titan.api_pkg.graphqlapi import GraphqlApi
 
 from . import props
