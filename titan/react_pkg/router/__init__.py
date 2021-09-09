@@ -7,7 +7,7 @@ from moonleap import (
     extend,
     register_add,
     rule,
-    tags,
+    create,
 )
 from moonleap.verbs import has
 from titan.react_pkg.component import Component
@@ -26,7 +26,7 @@ def add_router_config(resource, router_configs):
     resource.router_configs.add(router_configs)
 
 
-@tags(["router"])
+@create(["router"])
 def create_router(term, block):
     router = Router(name="UrlRouter")
     add(router, load_node_package_config(__file__))

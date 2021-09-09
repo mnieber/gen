@@ -1,4 +1,4 @@
-from moonleap import RenderTemplates, add, extend, tags
+from moonleap import RenderTemplates, add, extend, create
 from titan.project_pkg.service import Tool
 from titan.react_pkg.nodepackage import load_node_package_config
 
@@ -7,7 +7,7 @@ class UIkit(Tool):
     pass
 
 
-@tags(["uikit"])
+@create(["uikit"])
 def create_uikit(term, block):
     uikit = UIkit(name="uikit")
     uikit.output_path = "src"

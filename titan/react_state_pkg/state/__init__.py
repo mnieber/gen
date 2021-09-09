@@ -7,7 +7,7 @@ from moonleap import (
     extend,
     kebab_to_camel,
     rule,
-    tags,
+    create,
 )
 from moonleap.verbs import has, provides
 from titan.react_pkg.module import Module
@@ -17,7 +17,7 @@ from . import props, react_app_configs
 from .resources import State
 
 
-@tags(["state"])
+@create(["state"])
 def create_state(term, block):
     kebab_name = term.data
     name = kebab_to_camel(kebab_name)

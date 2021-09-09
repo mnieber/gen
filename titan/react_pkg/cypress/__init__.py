@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import extend, rule, tags
+from moonleap import extend, rule, create
 from moonleap.verbs import has
 from titan.project_pkg.service import Tool
 from titan.react_pkg.reactapp import ReactApp
@@ -9,7 +9,7 @@ class Cypress(Tool):
     pass
 
 
-@tags(["cypress"])
+@create(["cypress"])
 def create_cypress(term, block):
     cypress = Cypress(name="cypress")
     return cypress

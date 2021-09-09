@@ -1,4 +1,4 @@
-from moonleap import MemFun, Prop, add, create_forward, extend, rule, tags
+from moonleap import MemFun, Prop, add, create_forward, extend, rule, create
 from moonleap.verbs import has, uses
 from titan.django_pkg.module import Module
 from titan.project_pkg.service import Tool
@@ -11,7 +11,7 @@ class GrapheneDjango(Tool):
     pass
 
 
-@tags(["graphene-django"])
+@create(["graphene-django"])
 def create_graphene_django(term, block):
     graphene_django = GrapheneDjango(name="graphene-django")
     add(graphene_django, django_configs.get())

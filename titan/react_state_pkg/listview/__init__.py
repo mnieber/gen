@@ -7,7 +7,7 @@ from moonleap import (
     extend,
     kebab_to_camel,
     rule,
-    tags,
+    create,
 )
 from moonleap.utils.case import upper0
 from moonleap.utils.inflect import plural
@@ -18,7 +18,7 @@ from . import props
 from .resources import ListView, create_load_items_effect
 
 
-@tags(["list-view"])
+@create(["list-view"])
 def create_list_view(term, block):
     name = kebab_to_camel(term.data)
     list_view = ListView(

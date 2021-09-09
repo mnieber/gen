@@ -1,28 +1,20 @@
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    Prop,
-    create_forward,
-    extend,
-    kebab_to_camel,
-    rule,
-    tags,
-    upper0,
-)
+from moonleap import (MemFun, Prop, create, create_forward, extend,
+                      kebab_to_camel, rule, upper0)
 from moonleap.verbs import has, shows
 
 from . import props, router_configs
 from .resources import View
 
 
-@tags(["view"])
+@create(["view"])
 def create_view(term, block):
     name = upper0(kebab_to_camel(term.data))
     view = View(name=f"{name}")
     return view
 
 
-@tags(["panel"])
+@create(["panel"])
 def create_panel(term, block):
     panel = View(name=f"{upper0(term.data)}Panel")
     return panel

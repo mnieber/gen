@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from moonleap import add, rule, tags
+from moonleap import add, rule, create
 from moonleap.verbs import uses
 from titan.tools_pkg.pkgdependency import PkgDependency
 from titan.project_pkg.service import Tool
@@ -18,7 +18,7 @@ def service_has_fish(service, fish):
     service.shell = "fish"
 
 
-@tags(["fish"])
+@create(["fish"])
 def create_fish(term, block):
     fish = Fish(name="fish")
 

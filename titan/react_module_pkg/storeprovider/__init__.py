@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 import moonleap.resource.props as P
-from moonleap import RenderTemplates, create_forward, extend, rule, tags
+from moonleap import RenderTemplates, create_forward, extend, rule, create
 from moonleap.verbs import has
 from titan.react_module_pkg.appmodule import AppModule
 from titan.react_pkg.component import Component
@@ -12,7 +12,7 @@ class StoreProvider(Component):
     pass
 
 
-@tags(["store-provider"])
+@create(["store-provider"])
 def create_store_provider(term, block):
     store_provider = StoreProvider(name="StoreProvider")
     return store_provider

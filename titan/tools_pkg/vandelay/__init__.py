@@ -1,9 +1,9 @@
-from moonleap import RenderTemplates, extend, tags
+from moonleap import RenderTemplates, extend, create
 
 from .resources import Vandelay
 
 
-@tags(["vandelay"])
+@create(["vandelay"])
 def create_vandelay(term, block):
     vandelay = Vandelay(type=term.data, name="vandelay")
     vandelay.output_path = "../.vandelay"

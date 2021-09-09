@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import Prop, create_forward, extend, kebab_to_camel, rule, tags
+from moonleap import Prop, create_forward, extend, kebab_to_camel, rule, create
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.utils.case import upper0
 from moonleap.verbs import contains, has
@@ -12,7 +12,7 @@ from .resources import Store
 JsFileMerger.add_pattern("types.ts")
 
 
-@tags(["store"])
+@create(["store"])
 def create_store(term, block):
     store = Store(name=f"{upper0(kebab_to_camel(term.data))}Store")
     store.add_template_dir(__file__, "templates")

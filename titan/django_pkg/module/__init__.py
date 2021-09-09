@@ -8,7 +8,7 @@ from moonleap import (
     kebab_to_camel,
     kebab_to_snake,
     rule,
-    tags,
+    create,
 )
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.utils.case import snake_to_kebab
@@ -19,7 +19,7 @@ from . import django_configs, props
 from .resources import Module  # noqa
 
 
-@tags(["module"])
+@create(["module"])
 def create_module(term, block):
     name = kebab_to_camel(term.data)
     name_snake = kebab_to_snake(term.data)

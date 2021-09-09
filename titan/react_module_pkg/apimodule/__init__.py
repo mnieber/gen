@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import Prop, add, extend, kebab_to_camel, rule, tags
+from moonleap import Prop, add, extend, kebab_to_camel, rule, create
 from moonleap.verbs import has
 from titan.react_pkg.nodepackage import load_node_package_config
 from titan.react_pkg.reactapp import ReactApp
@@ -8,7 +8,7 @@ from . import props
 from .resources import ApiModule  # noqa
 
 
-@tags(["api:module"])
+@create(["api:module"])
 def create_api_module(term, block):
     module = ApiModule(name=kebab_to_camel(term.data))
     module.output_path = f"src/{module.name}"

@@ -7,7 +7,7 @@ from moonleap import (
     extend,
     kebab_to_camel,
     rule,
-    tags,
+    create,
 )
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has, runs, uses
@@ -17,7 +17,7 @@ from .resources import Service, Tool
 from .tweaks import tweak
 
 
-@tags(["service"])
+@create(["service"])
 def create_service(term, block):
     service = Service(name=kebab_to_camel(term.data), use_default_config=True)
     service.output_path = service.name + "/"

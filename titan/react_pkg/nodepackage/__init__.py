@@ -7,7 +7,7 @@ from moonleap import (
     extend,
     register_add,
     rule,
-    tags,
+    create,
 )
 from moonleap.verbs import has
 from titan.project_pkg.service import Service, Tool
@@ -25,7 +25,7 @@ def add_node_package_config(resource, node_package_config):
     resource.node_package_configs.add(node_package_config)
 
 
-@tags(["node-package"])
+@create(["node-package"])
 def create_node_package(term, block):
     node_package = NodePackage(name="node-package")
     add(node_package, node_package_configs.get(node_package))

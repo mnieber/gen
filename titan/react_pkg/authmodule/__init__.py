@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import add, create_forward, extend, rule, tags
+from moonleap import add, create_forward, extend, rule, create
 from moonleap.verbs import has, shows
 from titan.react_module_pkg.store import Store
 from titan.react_pkg.reactapp import ReactApp
@@ -20,12 +20,12 @@ def react_app_has_auth_module(react_app, auth_module):
     ]
 
 
-@tags(["auth:store"])
+@create(["auth:store"])
 def create_auth_store(term, block):
     return Store(name="AuthStore")
 
 
-@tags(["auth-switch:view"])
+@create(["auth-switch:view"])
 def create_auth_switch(term, block):
     return View(
         name="AuthSwitch",

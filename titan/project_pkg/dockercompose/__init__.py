@@ -5,7 +5,7 @@ from moonleap import (
     StoreOutputPaths,
     extend,
     register_add,
-    tags,
+    create,
 )
 from titan.project_pkg.service import Tool
 
@@ -22,7 +22,7 @@ def add_docker_compose_config(resource, docker_compose_config):
     resource.docker_compose_configs.add(docker_compose_config)
 
 
-@tags(["docker-compose"])
+@create(["docker-compose"])
 def create_docker_compose(term, block):
     docker_compose = DockerCompose()
     return docker_compose

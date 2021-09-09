@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from moonleap import add, rule, tags
+from moonleap import add, rule, create
 from moonleap.verbs import connects, uses
 from titan.project_pkg.service import Tool
 from titan.tools_pkg.pipdependency import PipDependency, PipRequirement
@@ -16,7 +16,7 @@ class Strapi(Tool):
     pass
 
 
-@tags(["strapi"])
+@create(["strapi"])
 def create_strapi(term, block):
     strapi = Strapi(name="strapi")
     add(strapi, makefile_rules.get_runserver())

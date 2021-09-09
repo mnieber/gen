@@ -1,4 +1,4 @@
-from moonleap import add, rule, tags
+from moonleap import add, rule, create
 from titan.project_pkg.service import create_service
 
 from . import docker_compose_configs
@@ -6,7 +6,7 @@ from . import docker_compose_configs
 postgres_env_fn = "./env/postgres.env"
 
 
-@tags(["postgres:service"])
+@create(["postgres:service"])
 def create_postgres_service(term, block):
     postgres_service = create_service(term, block)
     postgres_service.env_files.append(postgres_env_fn)

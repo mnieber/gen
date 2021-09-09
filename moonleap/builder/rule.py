@@ -49,7 +49,7 @@ def rule(
     return wrapped
 
 
-def tags(tags):
+def create(tags):
     def wrapped(f):
         f.moonleap_create_rule_by_tag = {}
         for tag in tags:

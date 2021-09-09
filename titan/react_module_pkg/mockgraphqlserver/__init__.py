@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import Prop, RenderTemplates, add, extend, rule, tags
+from moonleap import Prop, RenderTemplates, add, extend, rule, create
 from moonleap.verbs import contains, uses
 from titan.project_pkg.service import Service, Tool
 from titan.react_pkg.reactapp import ReactAppConfig
@@ -11,7 +11,7 @@ class MockGraphqlServer(Tool):
     pass
 
 
-@tags(["mock-graphql-server"])
+@create(["mock-graphql-server"])
 def create_mock_server(term, block):
     mock_server = MockGraphqlServer(name="mock-graphql-server")
     mock_server.output_path = "mockServer"

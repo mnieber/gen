@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from moonleap import add, tags
+from moonleap import add, create
 from titan.tools_pkg.pipdependency import PipDependency
 from titan.project_pkg.service import Tool
 
@@ -10,7 +10,7 @@ class Black(Tool):
     pass
 
 
-@tags(["black"])
+@create(["black"])
 def create_black(term, block):
     black = Black(name="black")
 

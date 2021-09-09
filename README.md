@@ -69,7 +69,7 @@ A developer can add a rule for turning "backend:service" into a resource:
 class Service:
     name: str
 
-@tags(["service"])
+@create(["service"])
 def create_service(term, block):
     return Service(name=term.data)
 

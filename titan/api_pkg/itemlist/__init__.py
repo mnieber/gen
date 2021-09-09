@@ -1,9 +1,9 @@
-from moonleap import kebab_to_camel, kebab_to_snake, tags
+from moonleap import kebab_to_camel, kebab_to_snake, create
 
 from .resources import ItemList
 
 
-@tags(["item-list"])
+@create(["item-list"])
 def create_item_list(term, block):
     name = kebab_to_camel(term.data)
     name_snake = kebab_to_snake(term.data)

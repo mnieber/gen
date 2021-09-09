@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import add, create_forward, extend, rule, tags
+from moonleap import add, create_forward, extend, rule, create
 from moonleap.verbs import has, with_
 from titan.tools_pkg.pipdependency import PipRequirement
 
@@ -7,7 +7,7 @@ from . import layer_configs, opt_paths
 from .resources import Pytest, PytestHtml
 
 
-@tags(["pytest"])
+@create(["pytest"])
 def create_pytest(term, block):
     pytest = Pytest(name="pytest")
 
@@ -17,7 +17,7 @@ def create_pytest(term, block):
     return pytest
 
 
-@tags(["pytest-html"])
+@create(["pytest-html"])
 def create_pytest_html(term, block):
     pytest_html = PytestHtml(name="pytest-html")
 

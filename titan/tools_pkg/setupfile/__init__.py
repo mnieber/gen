@@ -1,12 +1,12 @@
 import moonleap.resource.props as P
-from moonleap import Prop, RenderTemplates, extend, register_add, tags
+from moonleap import Prop, RenderTemplates, extend, register_add, create
 from titan.project_pkg.service import Tool
 
 from . import props
 from .resources import SetupFile, SetupFileConfig  # noqa
 
 
-@tags(["setup.cfg"])
+@create(["setup.cfg"])
 def create_setup_file(term, block):
     return SetupFile(name="setup-file")
 

@@ -1,9 +1,9 @@
-from moonleap import add, tags
+from moonleap import add, create
 from titan.react_pkg.module import create_module
 from titan.react_pkg.nodepackage import load_node_package_config
 
 
-@tags(["forms:module"])
+@create(["forms:module"])
 def create_forms_module(term, block):
     module = create_module(term, block)
     module.add_template_dir(__file__, "templates")

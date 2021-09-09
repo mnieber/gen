@@ -6,7 +6,7 @@ from moonleap import (
     extend,
     kebab_to_camel,
     rule,
-    tags,
+    create,
 )
 from moonleap.utils.case import upper0
 from moonleap.verbs import has, uses
@@ -15,7 +15,7 @@ from . import props
 from .resources import ItemView, create_load_item_effect, create_select_item_effect
 
 
-@tags(["item-view"])
+@create(["item-view"])
 def create_item_view(term, block):
     name = kebab_to_camel(term.data)
     item_view = ItemView(item_name=name, name=f"{upper0(name)}View")

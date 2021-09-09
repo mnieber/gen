@@ -1,12 +1,12 @@
 import moonleap.resource.props as P
-from moonleap import extend, kebab_to_camel, kebab_to_snake, tags
+from moonleap import extend, kebab_to_camel, kebab_to_snake, create
 from moonleap.verbs import receives
 from titan.django_pkg.module import Module
 
 from .resources import Form
 
 
-@tags(["form"])
+@create(["form"])
 def create_form(term, block):
     item_name = kebab_to_camel(term.data)
     item_name_snake = kebab_to_snake(term.data)

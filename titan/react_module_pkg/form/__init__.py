@@ -1,9 +1,9 @@
-from moonleap import kebab_to_camel, tags
+from moonleap import kebab_to_camel, create
 
 from .resources import Form
 
 
-@tags(["form"])
+@create(["form"])
 def create_form(term, block):
     form = Form(name=kebab_to_camel(term.data) + "Form")
     return form

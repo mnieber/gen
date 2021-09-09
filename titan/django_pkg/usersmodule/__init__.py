@@ -1,9 +1,9 @@
-from moonleap import kebab_to_camel, kebab_to_snake, tags
+from moonleap import kebab_to_camel, kebab_to_snake, create
 
 from .resources import UsersModule  # noqa
 
 
-@tags(["users:module"])
+@create(["users:module"])
 def users_module_created(term, block):
     name = kebab_to_camel(term.data)
     name_snake = kebab_to_snake(term.data)

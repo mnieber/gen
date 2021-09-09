@@ -183,7 +183,7 @@ An example module
 
 .. code-block:: python
 
-    from moonleap import kebab_to_camel, kebab_to_snake, tags, Resource
+    from moonleap import kebab_to_camel, kebab_to_snake, create, Resource
     from .resources import Item
     from dataclasses import dataclass
 

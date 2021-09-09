@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from moonleap import add, extend, rule, tags
+from moonleap import add, extend, rule, create
 from moonleap.verbs import has
 from titan.project_pkg.service import Tool
 from titan.tools_pkg.pipdependency import PipDependency
@@ -18,7 +18,7 @@ def service_has_pip_compile(service, pip_compile):
     service.add_template_dir(__file__, "templates_service")
 
 
-@tags(["pip-compile"])
+@create(["pip-compile"])
 def create_pip_compile(term, block):
     pip_compile = PipCompile(name="pip-compile")
 

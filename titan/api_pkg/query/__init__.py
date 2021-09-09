@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
 import ramda as R
-from moonleap import MemFun, Prop, extend, kebab_to_camel, rule, tags, upper0
+from moonleap import MemFun, Prop, extend, kebab_to_camel, rule, create, upper0
 from moonleap.resource.rel import create_forward
 from moonleap.verbs import has, loads, provides
 from titan.api_pkg.graphqlapi import GraphqlApi
@@ -9,7 +9,7 @@ from . import props
 from .resources import Query
 
 
-@tags(["query"])
+@create(["query"])
 def create_query(term, block):
     name = kebab_to_camel(term.data)
     query = Query(name=name)

@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import Prop, RenderTemplates, add, extend, register_add, tags
+from moonleap import Prop, RenderTemplates, add, extend, register_add, create
 from titan.project_pkg.service import Service, Tool
 from titan.tools_pkg.pkgdependency import PkgDependency
 
@@ -16,7 +16,7 @@ class StoreMakefileRules:
     makefile_rules = P.tree("p-has", "makefile-rules")
 
 
-@tags(["makefile"])
+@create(["makefile"])
 def create_makefile(term, block):
     makefile = Makefile(name="makefile")
 

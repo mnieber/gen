@@ -1,10 +1,10 @@
-from moonleap import MemFun, extend, tags
+from moonleap import MemFun, extend, create
 
 from . import props
 from .resources import GraphqlApi
 
 
-@tags(["graphql:api"])
+@create(["graphql:api"])
 def create_graphql_api(term, block):
     graphql_api = GraphqlApi()
     return graphql_api

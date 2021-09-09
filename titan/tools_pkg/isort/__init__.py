@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from moonleap import add, tags
+from moonleap import add, create
 from titan.tools_pkg.pipdependency import PipDependency
 from titan.tools_pkg.setupfile import SetupFileConfig
 from titan.project_pkg.service import Tool
@@ -21,7 +21,7 @@ class ISort(Tool):
     pass
 
 
-@tags(["isort"])
+@create(["isort"])
 def create_isort(term, block):
     isort = ISort(name="isort")
 

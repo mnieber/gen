@@ -1,17 +1,17 @@
 import moonleap.resource.props as P
-from moonleap import RenderTemplates, add_source, extend, rule, tags
+from moonleap import RenderTemplates, add_source, extend, rule, create
 from moonleap.verbs import has
 
 from .resources import Dockerfile, DockerImage
 
 
-@tags(["dockerfile"])
+@create(["dockerfile"])
 def create_dockerfile(term, block):
     docker_file = Dockerfile(is_dev=term.data == "dev", name="dockerfile")
     return docker_file
 
 
-@tags(["docker-image"])
+@create(["docker-image"])
 def create_docker_image(term, block):
     docker_image = DockerImage(term.data)
     return docker_image

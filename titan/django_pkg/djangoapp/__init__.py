@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, add, extend, register_add, tags
+from moonleap import MemFun, Prop, add, extend, register_add, create
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from titan.tools_pkg.pipdependency import PipRequirement
 
@@ -23,7 +23,7 @@ def add_django_config(resource, django_config):
     resource.django_configs.add(django_config)
 
 
-@tags(["django-app"])
+@create(["django-app"])
 def create_django(term, block):
     django_app = DjangoApp(name="django-app")
     django_app.add_template_dir(__file__, "templates")

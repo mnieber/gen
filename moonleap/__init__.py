@@ -2,10 +2,10 @@ import moonleap.resource.props as props  # noqa
 from moonleap.builder.create_resources import create_resources  # noqa
 from moonleap.builder.rule import Priorities  # noqa
 from moonleap.builder.rule import add  # noqa
+from moonleap.builder.rule import create  # noqa
 from moonleap.builder.rule import extend  # noqa
 from moonleap.builder.rule import register_add  # noqa
 from moonleap.builder.rule import rule  # noqa
-from moonleap.builder.rule import tags  # noqa
 from moonleap.parser.block_collector import get_blocks  # noqa
 from moonleap.parser.term import Term, word_to_term  # noqa
 from moonleap.render import RenderTemplates  # noqa

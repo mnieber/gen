@@ -7,7 +7,7 @@ from moonleap import (
     extend,
     kebab_to_camel,
     rule,
-    tags,
+    create,
     upper0,
 )
 from moonleap.verbs import has
@@ -17,7 +17,7 @@ from . import props
 from .resources import StateProvider
 
 
-@tags(["state-provider"])
+@create(["state-provider"])
 def create_state_provider(term, block):
     base_name = kebab_to_camel(term.data)
     state_provider = StateProvider(name=f"{upper0(base_name)}StateProvider")

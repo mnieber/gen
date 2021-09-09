@@ -1,10 +1,10 @@
-from moonleap import rule, tags
+from moonleap import rule, create
 from titan.project_pkg.service import create_service
 
 keycloak_env_fn = "./env/keycloak.env"
 
 
-@tags(["keycloak:service"])
+@create(["keycloak:service"])
 def create_keycloak(term, block):
     keycloak_service = create_service(term, block)
     keycloak_service.env_files.append(keycloak_env_fn)
