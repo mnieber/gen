@@ -2,8 +2,10 @@ import os
 
 import ramda as R
 from moonleap import chop0
-from moonleap.parser.term import word_to_term
-from moonleap.resources.type_spec_store import type_spec_store
+from moonleap.resources.type_spec_store import (
+    flattened_spec_field_by_name,
+    type_spec_store,
+)
 from moonleap.utils.case import kebab_to_camel, upper0
 from moonleap.utils.fp import ds
 from moonleap.utils.inflect import plural
@@ -35,12 +37,12 @@ endpoint_template = chop0(
 
 
 def _javascript_args(type_spec):
-    field_specs = type_spec.field_spec_by_name.items()
+    field_specs = flattened_spec_field_by_name(type_spec).items()
     return ", ".join(R.map(ds(_field_spec_to_ts_arg), field_specs))
 
 
-def _graphql_header(name, type_spec, query_type):
-    field_specs = type_spec.field_spec_by_name.items()
+def _graphql_header(type_spec, name, query_type):
+    field_specs = flattened_spec_field_by_name(type_spec).items()
     return (os.linesep + " " * 6).join(
         [
             f"{query_type} {name}" + ("(" if field_specs else ""),
@@ -50,36 +52,25 @@ def _graphql_header(name, type_spec, query_type):
     )
 
 
-def _spec_fields(type_spec):
-    return [x for x in type_spec.field_spec_by_name.values() if not x.private]
-
-
 def _graphql_body(type_spec, indent=0, skip=None):
     if skip is None:
         skip = [type_spec.type_name]
 
     graphqlBody = []
-    spec_fields = _spec_fields(type_spec)
-    while spec_fields:
-        spec_field = spec_fields.pop(0)
+    for spec_field in flattened_spec_field_by_name(type_spec).values():
         if spec_field.field_type in ("fk", "related_set"):
             fk_type_name = spec_field.field_type_attrs["target"]
             if fk_type_name not in skip:
                 fk_type_spec = type_spec_store.get(fk_type_name)
-                is_inline = spec_field.field_type_attrs.get("inline", False)
-                if is_inline:
-                    skip.append(fk_type_name)
-                    spec_fields.extend(_spec_fields(fk_type_spec))
-                else:
-                    graphqlBody.append(f"{spec_field.name} {{")
-                    graphqlBody.extend(
-                        _graphql_body(
-                            fk_type_spec,
-                            indent + 2,
-                            skip + [fk_type_name],
-                        )
+                graphqlBody.append(f"{spec_field.name} {{")
+                graphqlBody.extend(
+                    _graphql_body(
+                        fk_type_spec,
+                        indent + 2,
+                        skip + [fk_type_name],
                     )
-                    graphqlBody.append(f"}}")  # noqa: F541
+                )
+                graphqlBody.append(f"}}")  # noqa: F541
         else:
             graphqlBody.append(f"{spec_field.name}")
 
@@ -126,7 +117,7 @@ def _input_field_to_graphql_type(field_spec):
 
 
 def get_endpoint_query_text(query):
-    field_names = query.inputs_type_spec.field_spec_by_name.keys()
+    field_names = flattened_spec_field_by_name(query.inputs_type_spec).keys()
 
     return magic_replace(
         endpoint_template,
@@ -148,7 +139,7 @@ def get_endpoint_query_text(query):
                 "graphqlBody",
                 _graphql_body(query.outputs_type_spec),
             ),
-            ("blueDaisy", (os.linesep + " " * 8).join(field_names)),
+            ("blueDaisy", ("," + os.linesep + " " * 8).join(field_names)),
             ("purpleOrchid", get_graphql_response(query, is_list=True)),
         ],
     )

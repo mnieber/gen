@@ -65,14 +65,12 @@ def _field_type_and_attrs(field_spec_dict):
             t = "fk"
             attrs["target"] = ref[len(fk_prefix) :]  # noqa: E203
             attrs["inline"] = field_spec_dict.get("inline", False)
-            if attrs["inline"] and field_spec_dict.get("has_related_set"):
+            if attrs["inline"] and field_spec_dict.get("hasRelatedSet"):
                 raise Exception(
                     f"Field cannot be inline and have a related set: {field_spec_dict.name}"
                 )
             attrs["has_related_set"] = (
-                False
-                if attrs["inline"]
-                else field_spec_dict.get("has_related_set", True)
+                False if attrs["inline"] else field_spec_dict.get("hasRelatedSet", True)
             )
     else:
         if "onDelete" in field_spec_dict:
@@ -142,28 +140,28 @@ class TypeSpecStore:
             type_name = spec_fn.stem
             type_spec_dict = _load_type_spec_dict(data_types_dir, type_name)
 
-            spec = TypeSpec(
+            type_spec = TypeSpec(
                 type_name=type_name,
                 field_spec_by_name=R.index_by(
                     R.prop("name"), _get_field_specs(type_spec_dict)
                 ),
             )
-            self._type_spec_by_type_name[type_name] = spec
+            self._type_spec_by_type_name[type_name] = type_spec
 
-        for type_name, spec in list(self._type_spec_by_type_name.items()):
-            for _, field in spec.field_spec_by_name.items():
+        for type_name, type_spec in list(self._type_spec_by_type_name.items()):
+            for _, field in type_spec.field_spec_by_name.items():
                 if field.field_type == "fk" and field.field_type_attrs.get(
                     "has_related_set"
                 ):
                     fk_type_spec = self.get(field.field_type_attrs["target"])
-                    name = lower0(plural(spec.type_name))
+                    name = lower0(plural(type_spec.type_name))
                     fk_type_spec.field_spec_by_name[name] = FieldSpec(
                         name=name,
                         name_snake=camel_to_snake(name),
                         required=False,
                         private=field.private,
                         field_type="related_set",
-                        field_type_attrs=dict(target=spec.type_name),
+                        field_type_attrs=dict(target=type_spec.type_name),
                     )
 
     def get(self, type_name, default=_default_type_spec_placeholder):
@@ -183,6 +181,35 @@ class TypeSpecStore:
             )
 
         return self._type_spec_by_type_name[type_name]
+
+
+def flattened_spec_field_by_name(type_spec, skip=None):
+    if skip is None:
+        skip = [type_spec.type_name]
+
+    result = {}
+    spec_fields = [x for x in type_spec.field_spec_by_name.values() if not x.private]
+    while spec_fields:
+        spec_field = spec_fields.pop(0)
+        if spec_field.field_type in ("fk", "related_set"):
+            fk_type_name = spec_field.field_type_attrs["target"]
+            if fk_type_name not in skip:
+                inline = spec_field.field_type_attrs.get("inline", [])
+                if inline:
+                    fk_type_spec = type_spec_store.get(fk_type_name)
+                    fk_field_spec_by_name = R.pick(
+                        inline,
+                        flattened_spec_field_by_name(
+                            fk_type_spec, skip + [fk_type_name]
+                        ),
+                    )
+                    spec_fields.extend(fk_field_spec_by_name.values())
+                else:
+                    result[spec_field.name] = spec_field
+        else:
+            result[spec_field.name] = spec_field
+
+    return result
 
 
 type_spec_store = TypeSpecStore()
