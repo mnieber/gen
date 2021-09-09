@@ -1,13 +1,14 @@
 The code generation steps
 =========================
 
-There are four steps to the code generation:
+There are five steps to the code generation:
 
 1. Parse the spec files to build a graph structure of resources (the nodes) and
    verbs (the edges)
 2. Create a resource object for every node in the graph (also using the edges)
-3. Render each resource into one or more source files.
-4. Run post-processing steps such as code formatters.
+3. Match every relation in the graph to a rule set, and run the matching rules.
+4. Render each resource into one or more source files.
+5. Run post-processing steps such as code formatters.
 
 The parsing step
 ----------------
@@ -15,11 +16,10 @@ The parsing step
 Blocks
 ~~~~~~
 
-The spec file is called `spec.md` and lives in its own directory,
+The spec file is called `spec.md` and lives in its own spec directory,
 together with a `settings.yml` file. The format of the spec file is Markdown.
 The parser treats the spec file as a collection of text blocks,
-where each block corresponds to a section in the file. Every block has a title that corresponds to the
-section title.
+where each block (title) corresponds to a Markdown section (title).
 
 Terms, verbs and relations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -31,9 +31,10 @@ Rel object (short for Relation) that is added as an edge. Terms have a tag part 
 and a data part (everything before). For example, the backend:service term has "service" as the tag part and
 "backend" as the data part.
 The parser understands constructions such as "the backend:service and frontend:service /have a welcome:endpoint,
-status:endpoint and about:endpoint". In this example, six relations would be created. You can use parentheses
-to limit the visibility of a term, e.g. "the (backend:service which /connects to :postgres) and frontend:service
-/have a welcome:endpoint". Note that verbs can be defined as tuples that contain different variants, such as
+status:endpoint and about:endpoint that can be /called from the frontent:service". In this example, the /have
+verb is involved in six relations, and /called in three relations. You can use parentheses
+to limit the visibility of a term, e.g. "the (backend:service which /connects to :postgres) /has a welcome:endpoint".
+Note that verbs can be defined as tuples that contain different variants, such as
 ("has", "have"), so that it makes no difference whether you write /has or /have.
 
 
@@ -47,39 +48,45 @@ below are meant to also include grand-children and grand-parents).
 
 The first rule applies when a term is mentioned in a block title:
 
-1.0 if a block mentions a term in its title, then we say that it _describes_ that term.
-1.1 if a parent or child block also mentions the term in its body, then then we say that it _references_ that term.
-1.2 if both the parent and the child block mentions the term in its title, it's considered an error
+1.0 if a block B mentions a term in its title, then we say that it _describes_ that term.
+1.1 if B's parent or child block also mentions the term in its body, then then we say that it _references_ that term.
+1.2 if a parent and child block describe the same term (they both mention it in their title) then
+it's considered an error
 
-The second rule applies when a child block repeats a term that appears in a parent block. It deals with cases that
-are not handled by the first rule.
+The second rule applies when a child block repeats a term that appears in the body of a parent block. It deals with cases
+that are not handled by the first rule (which focusses on the block title)
 
 2.0 if a block mentions a term in its body, and a child block also mentions it, then we say that the parent block
     _describes_ the term and the child block _references_ it.
 
-The third rule is about wild-cards. If a block title contains a term such as x:service or profile:x, then it
+The third rule is about wild-cards.
+
+3.0 If a block title contains a term such as x:service or profile:x, then it
 describes any terms that match this wildcard (e.g. account:service, or profile:screen).
+3.1 If a parent block mentions foo:x in their title, and a child block mentions x:bar, then the term foo:bar is
+considered to be described by the parent block (this case is not an error).
 
 
-An example
-~~~~~~~~~~
+An example spec
+~~~~~~~~~~~~~~~
 
 Consider the following spec:
 
 .. code-block:: bash
 
     # The foo:project
-    The foo:project uses the bar:service and the baz:service.
+    The foo:project uses the bar:service and the baz:service. It /shows the welcome:screen.
 
     ## The bar:service
-    The bar:service /has a welcome:endpoint.
+    The bar:service /has a welcome:endpoint that is /used in the welcome:screen.
 
-    ## The baz:service
+    ## The baz:x
     The baz:service /has a welcome:endpoint.
 
 In this example, there are three blocks. Let's call them Foo, Bar and Baz. The
-Foo block describes foo:project, but (based on rule 1) not bar:service or baz:service.
-The Bar block describes bar:service and welcome:endpoint.
+Foo block describes foo:project and welcome:screen, but (based on rule 1) not bar:service and not
+(based on rule 3) baz:service.
+The Bar block describes bar:service and welcome:endpoint. It references welcome:screen.
 The Baz block describes baz:service and welcome:endpoint. The welcome:endpoint terms
 in Bar and Baz are unrelated. The situation would change if Baz were a child of Bar,
 because in that case it would be referencing the welcome:endpoint of Bar.
@@ -154,3 +161,44 @@ with every block:
 
 Every package exports a variable called `modules`. Each module in this list can contain creation
 rules and relation rules.
+
+An example package
+~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    from . import graphqlapi, item, itemlist, itemtype, mutation, query
+
+    modules = [
+        graphqlapi,
+        item,
+        itemlist,
+        itemtype,
+        mutation,
+        query,
+    ]
+
+An example module
+~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    from moonleap import kebab_to_camel, kebab_to_snake, tags, Resource
+    from .resources import Item
+    from dataclasses import dataclass
+
+    @dataclass
+    class Item(Resource):
+        item_name: str
+        item_name_snake: str
+
+    @create(["item"])
+    def create_item(term, block):
+        name = kebab_to_camel(term.data)
+        name_snake = kebab_to_snake(term.data)
+        item = Item(
+            item_name=name,
+            item_name_snake=name_snake,
+        )
+        return item
+
