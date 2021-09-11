@@ -125,6 +125,6 @@ def apply_rules(root_block):
                         if block.has_relation(rel):
                             raise Exception(
                                 f"Unmatched relation ({term_to_word(rel.subj)} "
-                                + f"{rel.verb} {term_to_word(rel.obj)})"
+                                + f"/{rel.verb} {term_to_word(rel.obj)})"
                                 + f" in block: {block}"
                             )
