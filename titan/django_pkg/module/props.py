@@ -74,7 +74,7 @@ def _model(field):
         default_arg = (
             [f'default="{field.default_value}"'] if field.default_value else []
         )
-        max_length = field.spec.get("maxLength", None)
+        max_length = field.field_type_attrs.get("max_length")
         max_length_arg = [f"max_length={max_length}"] if max_length else []
 
         args = [*default_arg, *max_length_arg, *null_blank, *unique, *help_text]
