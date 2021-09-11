@@ -138,7 +138,7 @@ The resource creator converts every term into a resource, using the following st
 
 - it determines which block describes the resource, and the scopes associated with that block
 - it loads the rules for these scopes (all rules are plain functions)
-- it find the best matching (i.e. the most specific) "creation" rule and calls it to create the
+- it find the best matching (i.e. the most specific) "create" rule and calls it to create the
   resource
 - for every relation that the resource has to other resources (the edges in the graph), the resource
   creator executes the "relation" rules that match this relation. These "relation" rules allow you to
@@ -160,7 +160,30 @@ with every block:
         - titan.project_pkg
 
 Every package exports a variable called `modules`. Each module in this list can contain creation
-rules and relation rules.
+rules and relation rules. A create rule is decorated with `@create`. It receives a list of tags
+to match against, and returns a resource object:
+
+.. code-block:: python
+
+    from .resources import Item
+
+    @create(["item"])
+    def create_item(term, block):
+        assert term.tag == "item"
+        return Item(item_name=term.data)
+
+A relation rule is decorated with `@rule`. It receives a subject term, a verb and an object term.
+It optionally returns a Forward object (or list thereof) that contains additional relations.
+
+.. code-block:: python
+
+    @rule("graphql:api", posts, "item")
+    def graphql_api_posts_item(graphql_api, item):
+        # Take any action here to enrich graphql_api and item.
+        pass
+        # Return an additional relation that will be matched against the current set of rules
+        return [create_forward(graphql_api, has, f"post-{item.item_name}:mutation")]
+
 
 An example package
 ~~~~~~~~~~~~~~~~~~
@@ -194,11 +217,12 @@ An example module
 
     @create(["item"])
     def create_item(term, block):
-        name = kebab_to_camel(term.data)
-        name_snake = kebab_to_snake(term.data)
-        item = Item(
-            item_name=name,
-            item_name_snake=name_snake,
+        return Item(
+            item_name=kebab_to_camel(term.data),
+            item_name_snake=kebab_to_snake(term.data),
         )
-        return item
+
+    @rule("graphql:api", posts, "item")
+    def graphql_api_posts_item(graphql_api, item):
+        pass  # Take any action here to enrich graphql_api and item
 

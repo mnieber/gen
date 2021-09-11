@@ -85,7 +85,7 @@ The developer can then configure the set of (jinja2) templates that take this re
 ```
 @extend(Service)
 class ExtendService:
-    render = MemFun(render_templates(__file__), "templates")
+    render = MemFun(render_templates(__file__, "templates"))
 ```
 
 Moonleap turns the spec into a set of source files as follows:
