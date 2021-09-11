@@ -27,7 +27,7 @@ def _collapses(panel):
 def _components(panel):
     wraps = panel.wraps_children
     if len(panel.child_components) == 0 and not wraps:
-        return None
+        return []
 
     collapses = _collapses(panel)
     return panel.child_components if collapses else [panel]
