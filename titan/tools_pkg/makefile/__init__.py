@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import Prop, RenderTemplates, add, extend, register_add, create
+from moonleap import Prop, RenderTemplates, add, create, extend, register_add
 from titan.project_pkg.service import Service, Tool
 from titan.tools_pkg.pkgdependency import PkgDependency
 
