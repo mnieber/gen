@@ -16,11 +16,11 @@ from .resources import Layer, LayerConfig
 
 @register_add(LayerConfig)
 def add_layerconfig(resource, layer_config):
-    resource.layer_configs.add(layer_config)
+    resource.dodo_layer_configs.add(layer_config)
 
 
 class StoreLayerConfigs:
-    layer_configs = P.tree("p-has", "layer-config")
+    dodo_layer_configs = P.tree("p-has", "layer-config")
 
 
 @create(["layer"])

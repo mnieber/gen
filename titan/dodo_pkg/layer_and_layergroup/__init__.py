@@ -8,7 +8,7 @@ from titan.dodo_pkg.layergroup.resources import LayerGroup
 @rule("layer", has, "layer-group")
 def layer_has_layer_group(layer, layer_group):
     add_source(
-        [layer, "layer_configs"],
+        [layer, "dodo_layer_configs"],
         layer_group,
         "This layer receives layer configs from a layer-group",
     )

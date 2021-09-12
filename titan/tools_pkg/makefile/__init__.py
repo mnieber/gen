@@ -1,9 +1,10 @@
 import moonleap.resource.props as P
-from moonleap import Prop, RenderTemplates, add, create, extend, register_add
+from moonleap import Prop, RenderTemplates, add, create, extend, register_add, rule
+from moonleap.verbs import has
 from titan.project_pkg.service import Service, Tool
 from titan.tools_pkg.pkgdependency import PkgDependency
 
-from . import layer_configs, props
+from . import dodo_layer_configs, props
 from .resources import Makefile, MakefileRule  # noqa
 
 
@@ -21,9 +22,14 @@ def create_makefile(term, block):
     makefile = Makefile(name="makefile")
 
     add(makefile, PkgDependency(["make"], is_dev=True))
-    add(makefile, layer_configs.get())
+    add(makefile, dodo_layer_configs.get())
 
     return makefile
+
+
+@rule("service", has, "makefile")
+def service_has_makefile(service, makefile):
+    service.project.add_template_dir(__file__, "templates_project")
 
 
 @extend(Makefile)
