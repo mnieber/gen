@@ -293,7 +293,8 @@ The example
         )
 
     def render(self, write_file, render_template):
-        render_templates(__file__, "templates")(self, write_file, render_template)
+        template_path = Path(__file__).parent / "templates"
+        render_templates(template_path)(self, write_file, render_template)
 
     @extend(Item)
     class ExtendItem:
@@ -303,12 +304,12 @@ The example
     #
     # @extend(Item)
     # class ExtendItem:
-    #     render = MemFun(render_templates(__file__, "templates"))
+    #     render = MemFun(render_templates(Path(__file__).parent / "templates"))
     #
     # @extend(Item)
     # class ExtendItem(StoreTemplateDirs):
     #     # The render function is supplied by the StoreTemplateDirs base class
-    #     # Call item.add_template_dir(__file__, "templates") to add a directory
+    #     # Call item.add_template_dir(Path(__file__).parent / "templates") to add a directory
     #     # to the list of directories that are searched for templates.
     #     pass
     #

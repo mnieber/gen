@@ -3,14 +3,13 @@ from moonleap.render.template_renderer import render_templates
 
 
 def render(self, write_file, render_template):
-    for root_filename, location in self.template_dirs:
-        render_templates(root_filename, location)(self, write_file, render_template)
+    for template_dir in self.template_dirs:
+        render_templates(template_dir)(self, write_file, render_template)
 
 
-def add_template_dir(self, root_filename, location):
-    new_template_dir = (root_filename, location)
-    if new_template_dir not in self.template_dirs:
-        self.template_dirs.append(new_template_dir)
+def add_template_dir(self, template_dir):
+    if template_dir not in self.template_dirs:
+        self.template_dirs.append(template_dir)
 
 
 class StoreTemplateDirs:

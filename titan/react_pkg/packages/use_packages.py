@@ -15,6 +15,4 @@ def use_packages(self, package_names, packages_dir=None):
 
         files_dir = package_dir / "files"
         if files_dir.exists():
-            self.add_template_dir(
-                packages_dir / "__init__.py", files_dir.relative_to(packages_dir)
-            )
+            self.add_template_dir(packages_dir / files_dir.relative_to(packages_dir))

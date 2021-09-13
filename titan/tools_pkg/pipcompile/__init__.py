@@ -1,6 +1,7 @@
 from dataclasses import dataclass
+from pathlib import Path
 
-from moonleap import add, extend, rule, create
+from moonleap import add, create, extend, rule
 from moonleap.verbs import has
 from titan.project_pkg.service import Tool
 from titan.tools_pkg.pipdependency import PipDependency
@@ -15,7 +16,7 @@ class PipCompile(Tool):
 
 @rule("service", has, "pip-compile")
 def service_has_pip_compile(service, pip_compile):
-    service.add_template_dir(__file__, "templates_service")
+    service.add_template_dir(Path(__file__).parent / "templates_service")
 
 
 @create(["pip-compile"])

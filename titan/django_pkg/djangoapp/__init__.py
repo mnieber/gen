@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
 from moonleap import MemFun, Prop, add, create, extend, register_add
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
@@ -26,7 +28,7 @@ def add_django_config(resource, django_config):
 @create(["django-app"])
 def create_django(term, block):
     django_app = DjangoApp(name="django-app")
-    django_app.add_template_dir(__file__, "templates")
+    django_app.add_template_dir(Path(__file__).parent / "templates")
     add(django_app, django_configs.get())
     add(django_app, makefile_rules.get())
     add(django_app, dodo_layer_configs.get())

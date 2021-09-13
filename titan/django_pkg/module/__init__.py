@@ -1,14 +1,16 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
 from moonleap import (
     Prop,
     StoreOutputPaths,
     add,
+    create,
     create_forward,
     extend,
     kebab_to_camel,
     kebab_to_snake,
     rule,
-    create,
 )
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.utils.case import snake_to_kebab
@@ -25,7 +27,7 @@ def create_module(term, block):
     name_snake = kebab_to_snake(term.data)
     module = Module(name_snake=name_snake, name=name)
     module.output_path = module.name_snake
-    module.add_template_dir(__file__, "templates")
+    module.add_template_dir(Path(__file__).parent / "templates")
     return module
 
 

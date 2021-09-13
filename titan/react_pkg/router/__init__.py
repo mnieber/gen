@@ -1,13 +1,15 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
     Prop,
     RenderTemplates,
     add,
+    create,
     extend,
     register_add,
     rule,
-    create,
 )
 from moonleap.verbs import has
 from titan.react_pkg.component import Component
@@ -36,7 +38,9 @@ def create_router(term, block):
 @rule("app:module", has, "router")
 def app_module_has_router(app_module, router):
     app_module.react_app.utils_module.use_packages(["useNextUrl"])
-    app_module.react_app.utils_module.add_template_dir(__file__, "templates_utils")
+    app_module.react_app.utils_module.add_template_dir(
+        Path(__file__).parent / "templates_utils"
+    )
 
 
 @extend(Component)

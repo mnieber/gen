@@ -1,4 +1,6 @@
-from moonleap import rule, create
+from pathlib import Path
+
+from moonleap import create, rule
 from titan.project_pkg.service import create_service
 
 keycloak_env_fn = "./env/keycloak.env"
@@ -14,4 +16,4 @@ def create_keycloak(term, block):
 @rule("keycloak:service")
 def keycloak_service_created(keycloak_service):
     keycloak_service.port = keycloak_service.port or "8080"
-    keycloak_service.project.add_template_dir(__file__, "templates")
+    keycloak_service.project.add_template_dir(Path(__file__).parent / "templates")

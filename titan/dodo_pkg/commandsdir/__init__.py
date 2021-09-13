@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
 from moonleap import add, create, extend, rule
 from moonleap.verbs import has
@@ -15,7 +17,7 @@ def create_commands_dir(term, block):
 
 @rule("project", has, "commands-dir")
 def project_has_commands_dir(project, commands_dir):
-    project.add_template_dir(__file__, "templates_project")
+    project.add_template_dir(Path(__file__).parent / "templates_project")
     add(project, dodo_layer_configs.get(project))
 
 

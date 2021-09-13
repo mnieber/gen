@@ -1,5 +1,7 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
-from moonleap import Prop, RenderTemplates, add, extend, rule, create
+from moonleap import Prop, RenderTemplates, add, create, extend, rule
 from moonleap.verbs import contains, uses
 from titan.project_pkg.service import Service, Tool
 from titan.react_pkg.reactapp import ReactAppConfig
@@ -32,7 +34,7 @@ def add_flag(service, mock_server):
 @rule("store", contains, "item-type")
 def store_uses_item_type(store, item_type):
     if store.module.react_app.service.mock_graphql_server:
-        store.add_template_dir(__file__, "templates_store")
+        store.add_template_dir(Path(__file__).parent / "templates_store")
 
 
 @extend(MockGraphqlServer)

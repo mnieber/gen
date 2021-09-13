@@ -27,26 +27,27 @@ def _resolve_output_fn(templates_path, resource, template_fn):
     return _resolve_output_fn(templates_path, resource, template_fn.parent) / name
 
 
-def render_templates(root_filename, location="templates", **kwargs):
+def render_templates(template_path, **kwargs):
     def render(resource, write_file, render_template):
-        location_path = Path(root_filename).parent / (
-            location(resource) if callable(location) else location
+        expanded_template_path = Path(
+            template_path(resource) if callable(template_path) else template_path
         )
-        if location_path.is_dir():
-            templates_path = location_path
-            template_paths = templates_path.glob("**/*")
+
+        if expanded_template_path.is_dir():
+            templates_dir = expanded_template_path
+            template_paths = expanded_template_path.glob("**/*")
         else:
-            templates_path = location_path.parent
-            template_paths = [location_path]
+            templates_dir = expanded_template_path.parent
+            template_paths = [expanded_template_path]
 
         for template_fn in template_paths:
             if template_fn.suffix == ".fn":
                 continue
             if not template_fn.is_dir():
                 output_fn = Path(resource.merged_output_path) / _resolve_output_fn(
-                    templates_path,
+                    templates_dir,
                     resource,
-                    template_fn.relative_to(templates_path),
+                    template_fn.relative_to(templates_dir),
                 )
                 write_file(
                     output_fn,

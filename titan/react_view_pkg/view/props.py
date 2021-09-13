@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from moonleap import render_templates, upper0
 
 
@@ -137,6 +139,4 @@ def render(self, write_file, render_template):
     if self.parent_view and _collapses(self):
         return
 
-    return render_templates(self.root_filename, self.templates_dir)(
-        self, write_file, render_template
-    )
+    return render_templates(self.templates_dir)(self, write_file, render_template)

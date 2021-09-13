@@ -1,5 +1,7 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
-from moonleap import Prop, add, extend, kebab_to_camel, rule, create
+from moonleap import Prop, add, create, extend, kebab_to_camel, rule
 from moonleap.verbs import has
 from titan.react_pkg.nodepackage import load_node_package_config
 from titan.react_pkg.reactapp import ReactApp
@@ -12,7 +14,7 @@ from .resources import ApiModule  # noqa
 def create_api_module(term, block):
     module = ApiModule(name=kebab_to_camel(term.data))
     module.output_path = f"src/{module.name}"
-    module.add_template_dir(__file__, "templates")
+    module.add_template_dir(Path(__file__).parent / "templates")
     add(module, load_node_package_config(__file__))
     return module
 

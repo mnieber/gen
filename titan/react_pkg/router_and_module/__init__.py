@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
 from moonleap import Prop, extend, register_add, rule
 from moonleap.verbs import has
@@ -11,7 +13,7 @@ from .resources import RouteTable
 @rule("app:module", has, "router")
 def app_module_has_router(app_module, router):
     app_module.react_app.utils_module.use_packages(["RouteTable"])
-    app_module.add_template_dir(__file__, "templates_app")
+    app_module.add_template_dir(Path(__file__).parent / "templates_app")
 
 
 @register_add(RouteTable)

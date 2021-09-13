@@ -1,6 +1,7 @@
 from dataclasses import dataclass
+from pathlib import Path
 
-from moonleap import add, rule, create
+from moonleap import add, create, rule
 from moonleap.verbs import connects, uses
 from titan.project_pkg.service import Tool
 from titan.tools_pkg.pipdependency import PipDependency, PipRequirement
@@ -49,4 +50,6 @@ def strapi_uses_postgres_service(strapi, postgres_service):
         ),
     )
     add(strapi, makefile_rules.get_createdb())
-    postgres_service.project.add_template_dir(__file__, "templates_project")
+    postgres_service.project.add_template_dir(
+        Path(__file__).parent / "templates_project"
+    )

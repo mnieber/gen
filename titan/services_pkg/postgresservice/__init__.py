@@ -1,4 +1,6 @@
-from moonleap import add, rule, create
+from pathlib import Path
+
+from moonleap import add, create, rule
 from titan.project_pkg.service import create_service
 
 from . import docker_compose_configs
@@ -18,4 +20,4 @@ def create_postgres_service(term, block):
 @rule("postgres:service")
 def postgres_service_created(postgres_service):
     postgres_service.port = postgres_service.port or "5432"
-    postgres_service.project.add_template_dir(__file__, "templates")
+    postgres_service.project.add_template_dir(Path(__file__).parent / "templates")

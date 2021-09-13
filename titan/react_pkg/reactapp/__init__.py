@@ -1,13 +1,15 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
     Prop,
     add,
+    create,
     create_forward,
     extend,
     register_add,
     rule,
-    create,
 )
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has
@@ -30,7 +32,7 @@ class StoreReactAppConfigs:
 @create(["react-app"])
 def create_react_app(term, block):
     react_app = ReactApp(name="react-app")
-    react_app.add_template_dir(__file__, "templates")
+    react_app.add_template_dir(Path(__file__).parent / "templates")
     add(react_app, load_node_package_config(__file__))
     add(react_app, docker_compose_configs.get(is_dev=True))
     add(react_app, docker_compose_configs.get(is_dev=False))

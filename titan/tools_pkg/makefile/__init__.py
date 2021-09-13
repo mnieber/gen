@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
 from moonleap import Prop, RenderTemplates, add, create, extend, register_add, rule
 from moonleap.verbs import has
@@ -29,7 +31,7 @@ def create_makefile(term, block):
 
 @rule("service", has, "makefile")
 def service_has_makefile(service, makefile):
-    service.project.add_template_dir(__file__, "templates_project")
+    service.project.add_template_dir(Path(__file__).parent / "templates_project")
 
 
 @extend(Makefile)
