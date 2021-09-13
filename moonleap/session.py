@@ -15,6 +15,7 @@ class Session:
         self.settings_fn = settings_fn
         self.settings = None
         self.scope_manager = ScopeManager()
+        self.output_root_dir = output_root_dir
         self.output_dir = f"{output_root_dir}/output"
         self.expected_dir = f"{output_root_dir}/expected"
         self.snapshot_fn = f"{output_root_dir}/snapshot.json"
@@ -26,6 +27,12 @@ class Session:
         self.settings = load_settings(settings_fn)
         self.settings["spec_dir"] = self.spec_dir
         self.scope_manager.import_packages(self.settings.get("packages_by_scope", {}))
+
+    def get_post_process_settings(self):
+        return self.settings.get("post_process", {})
+
+    def get_bin_settings(self):
+        return self.settings.get("bin", {})
 
     def report(self, x, end=os.linesep):
         print(x, end=end)

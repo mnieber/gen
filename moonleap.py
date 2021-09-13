@@ -1,6 +1,7 @@
 import os
 import sys
-import traceback
+
+# import traceback
 from argparse import ArgumentParser
 from pathlib import Path
 
@@ -75,8 +76,8 @@ def generate_code(spec_file, session, file_writer):
     session.report("Post processing...")
     post_process_output_files(
         file_writer.output_filenames,
-        session.settings.get("post_process", {}),
-        session.settings.get("bin", {}),
+        session.get_post_process_settings(),
+        session.get_bin_settings(),
     )
 
 
