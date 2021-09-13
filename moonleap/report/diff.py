@@ -4,16 +4,19 @@ import ramda as R
 from plumbum import local
 
 
-def _diff_tool(settings):
-    return R.path_or("diff", ["bin", "diff_tool"])(settings)
+def _diff_tool_name_and_exe(settings):
+    diff_tool_name = settings.get("diff_tool", "diff")
+    return diff_tool_name, R.path_or(diff_tool_name, ["bin", diff_tool_name, "exe"])(
+        settings
+    )
 
 
 def _diff(session, from_dir, to_dir, sudo=False):
-    diff_tool = _diff_tool(session.settings)
-    if diff_tool == "meld":
-        args = ["meld", from_dir, to_dir]
+    diff_tool_name, diff_tool_exe = _diff_tool_name_and_exe(session.settings)
+    if diff_tool_name == "meld":
+        args = [diff_tool_exe, from_dir, to_dir]
     else:
-        session.report(f"Unknown diff tool: {diff_tool}")
+        session.report(f"Unknown diff tool: {diff_tool_name}")
         return
 
     if sudo:
