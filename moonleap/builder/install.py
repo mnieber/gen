@@ -64,7 +64,7 @@ def install_module(module):
 
     for extension in extensions:
         resource_type = extension.moonleap_extends_resource_type
-        for base_type in extension.__mro__:
+        for base_type in reversed(extension.__mro__):
             for prop_name, p in base_type.__dict__.items():
                 if isinstance(p, Prop):
                     setattr(
