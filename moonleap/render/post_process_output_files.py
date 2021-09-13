@@ -5,6 +5,12 @@ from pathlib import Path
 from plumbum import local
 
 
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i : i + n]
+
+
 def _get_post_process_tools(bin_config):
     result = {}
 
@@ -42,4 +48,5 @@ def post_process_output_files(output_filenames, post_process_configs, bin_config
     for tool_name, fns in fns_by_tool_name.items():
         tool = tool_by_name.get(tool_name)
         if tool:
-            tool(fns)
+            for chunk in chunks(fns, 20):
+                tool(chunk)
