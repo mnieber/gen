@@ -63,6 +63,3 @@ class TypeSectionsMixin:
             result.append(f"{upper0(plural(item_list.item_name))}Query, ")
 
         return "".join(result + (["graphene.ObjectType"] if result else []))
-
-    def mutation_base_types(self, module):
-        return "graphene.ObjectType" if module.has_graphql_mutations else ""

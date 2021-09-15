@@ -1,7 +1,5 @@
-import moonleap.resource.props as P
 from moonleap import MemFun, Prop, add, create, create_forward, extend, rule
 from moonleap.verbs import has, uses
-from titan.django_pkg.module import Module
 from titan.project_pkg.service import Tool
 from titan.tools_pkg.pipdependency import PipRequirement
 
@@ -32,9 +30,3 @@ def api_module_has_graphql_api(api_module, graphql_api):
 class ExtendGrapheneDjango:
     render = MemFun(props.render)
     sections = Prop(props.Sections)
-
-
-@extend(Module)
-class ExtendModule:
-    has_graphql_mutations = Prop(props.has_graphql_mutations)
-    has_graphql_queries = Prop(props.has_graphql_queries)

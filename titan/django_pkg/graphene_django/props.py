@@ -34,14 +34,6 @@ def render(self, write_file, render_template):
     render_templates(template_path)(self, write_file, render_template)
 
 
-def has_graphql_mutations(module):
-    return bool(module.forms or module.items_received)
-
-
-def has_graphql_queries(module):
-    return bool(module.item_lists_provided)
-
-
 def _query_py_classname(query):
     return upper0(query.name) + "Query"
 
