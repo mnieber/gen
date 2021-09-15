@@ -1,0 +1,8 @@
+{{ sections.imports(item_name) }}
+
+{% magic_with item_name as yellowTulip %}
+class YellowTulipType(DjangoObjectType):
+    class Meta:
+        model = YellowTulip
+        {{ sections.exclude(item_name) }}
+{% end_magic_with %}

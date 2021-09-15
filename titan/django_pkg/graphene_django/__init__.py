@@ -1,4 +1,5 @@
-from moonleap import MemFun, Prop, add, create_forward, extend, rule, create
+import moonleap.resource.props as P
+from moonleap import MemFun, Prop, add, create, create_forward, extend, rule
 from moonleap.verbs import has, uses
 from titan.django_pkg.module import Module
 from titan.project_pkg.service import Tool
@@ -14,14 +15,17 @@ class GrapheneDjango(Tool):
 @create(["graphene-django"])
 def create_graphene_django(term, block):
     graphene_django = GrapheneDjango(name="graphene-django")
+    graphene_django.output_path = "api"
     add(graphene_django, django_configs.get())
     add(graphene_django, PipRequirement(["graphene-django"]))
     return graphene_django
 
 
-@rule("service", uses, "graphene-django")
-def service_uses_graphene_django(service, graphene_django):
-    return create_forward(service.django_app, has, "api:module")
+@rule("api:module", has, "graphql:api")
+def api_module_has_graphql_api(api_module, graphql_api):
+    return [
+        create_forward(api_module.django_app.service, uses, ":graphene-django"),
+    ]
 
 
 @extend(GrapheneDjango)

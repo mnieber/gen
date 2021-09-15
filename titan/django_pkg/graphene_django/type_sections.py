@@ -29,13 +29,6 @@ def _graphene_field(field, item_name):
 
 
 class TypeSectionsMixin:
-    def exclude(self, item_name):
-        type_spec = type_spec_store.get(item_name)
-        list_str = ", ".join(
-            [f'"{x.name_snake}"' for x in _field_specs(type_spec) if x.private]
-        )
-        return f"exclude = [{list_str}]" if list_str else ""
-
     def graphene_fields(self, item_name):
         result = []
         indent = "    "

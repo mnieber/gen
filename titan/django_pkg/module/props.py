@@ -123,9 +123,7 @@ class Sections:
                 fk_item_type = field_spec.field_type_attrs["target"]
                 fk_item_name = lower0(fk_item_type)
                 for module in self.res.django_app.modules:
-                    if fk_item_name in [
-                        x.item_name for x in module.item_lists_provided
-                    ]:
+                    if fk_item_name in [x.name for x in module.item_types]:
                         result.append(
                             f"from {module.name_snake}.models import {fk_item_type}"
                         )

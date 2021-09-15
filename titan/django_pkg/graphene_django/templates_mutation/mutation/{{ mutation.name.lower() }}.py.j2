@@ -1,0 +1,10 @@
+class RedRose(graphene.Mutation):
+    class Arguments:
+        form = graphene.Argument(RedRoseFormType)
+
+    success = graphene.Boolean()
+
+    @staticmethod
+    def mutate(parent, info, form):
+        # TODO: post form
+        return RedRose(success=False)

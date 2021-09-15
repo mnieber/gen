@@ -6,7 +6,7 @@ from moonleap.render.template_env import template_env
 from moonleap.session import get_session
 
 
-def _resolve_output_fn(templates_path, resource, template_fn):
+def _resolve_output_fn(templates_path, resource, template_fn, **kwargs):
     if str(template_fn) == ".":
         return template_fn
 
@@ -18,7 +18,7 @@ def _resolve_output_fn(templates_path, resource, template_fn):
             .split(os.linesep)[0]
         )
         if Path(meta_filename).exists()
-        else Template(template_fn.name).render(res=resource)
+        else Template(template_fn.name).render(res=resource, **kwargs)
     )
 
     if name.endswith(".j2"):
@@ -48,6 +48,7 @@ def render_templates(template_path, **kwargs):
                     templates_dir,
                     resource,
                     template_fn.relative_to(templates_dir),
+                    **kwargs,
                 )
                 write_file(
                     output_fn,

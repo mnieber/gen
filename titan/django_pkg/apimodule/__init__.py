@@ -27,3 +27,4 @@ class ExtendDjangoApp:
 @extend(ApiModule)
 class ExtendApiModule:
     sections = Prop(props.Sections)
+    graphql_api = P.child(has, "graphql:api")

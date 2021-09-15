@@ -1,7 +1,8 @@
 import moonleap.resource.props as P
 import ramda as R
-from moonleap import MemFun, Prop, extend, kebab_to_camel, rule, create, upper0
+from moonleap import MemFun, Prop, create, extend, kebab_to_camel, rule, upper0
 from moonleap.resource.rel import create_forward
+from moonleap.utils.inflect import plural
 from moonleap.verbs import has, loads, provides
 from titan.api_pkg.graphqlapi import GraphqlApi
 
@@ -18,25 +19,27 @@ def create_query(term, block):
 
 @rule("graphql:api", loads, "item")
 def graphql_api_loads_item(graphql_api, item):
-    return [create_forward(graphql_api, has, f"get-{item.item_name}:query")]
+    return [create_forward(graphql_api, has, f"{item.item_name}:query")]
 
 
 @rule("graphql:api", loads, "item")
 def create_get_item_query(graphql_api, item):
-    query_name = f"get{kebab_to_camel(upper0(item.item_name))}"
+    query_name = f"{kebab_to_camel(item.item_name)}"
     query = R.find(lambda x: x.name == query_name)(graphql_api.queries)
+    assert query
     return [create_forward(query, provides, f"{item.item_name}:item", obj_res=item)]
 
 
 @rule("graphql:api", loads, "item-list")
 def graphql_api_loads_item_list(graphql_api, item_list):
-    return [create_forward(graphql_api, has, f"get-{item_list.item_name}-list:query")]
+    return [create_forward(graphql_api, has, f"{plural(item_list.item_name)}:query")]
 
 
 @rule("graphql:api", loads, "item-list")
 def create_get_items_query(graphql_api, item_list):
-    query_name = f"get{kebab_to_camel(upper0(item_list.item_name))}List"
+    query_name = f"{kebab_to_camel(plural(item_list.item_name))}"
     query = R.find(lambda x: x.name == query_name)(graphql_api.queries)
+    assert query
     return [
         create_forward(
             query, provides, f"{item_list.item_name}:item-list", obj_res=item_list

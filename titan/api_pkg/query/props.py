@@ -69,16 +69,16 @@ def _item_list_field(self, item):
         name=plural(item.item_name),
         required=False,
         private=False,
-        field_type="fk",
-        field_type_attrs=dict(target=upper0(item.item_name), has_related_set=False),
+        field_type="list",
+        field_type_attrs=dict(target=upper0(item.item_name)),
     )
 
 
 def inputs_type_spec(self):
     name = f"{self.name}InputType"
-    return type_spec_store.get(name) or _default_inputs_type_spec(name)
+    return type_spec_store.get(name, None) or _default_inputs_type_spec(self, name)
 
 
 def outputs_type_spec(self):
     name = f"{self.name}OutputType"
-    return type_spec_store.get(name) or _default_outputs_type_spec(self, name)
+    return type_spec_store.get(name, None) or _default_outputs_type_spec(self, name)

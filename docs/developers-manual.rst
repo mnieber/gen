@@ -184,8 +184,8 @@ Notes
    that block (rule 2).
 
 
-Case 4: blocks in a spec file have scopes and links
-===================================================
+Case 4: blocks (in a spec file) have scopes and links
+=====================================================
 
 Description
 -----------
@@ -252,8 +252,8 @@ Notes
    rules in the `default_pkg` and `titan.project_pkg`.
 
 
-Case 5: a module adds the resource.render function using an extension class
-===========================================================================
+Case 5: an extension class defines the resource.render function
+===============================================================
 
 Description
 -----------
