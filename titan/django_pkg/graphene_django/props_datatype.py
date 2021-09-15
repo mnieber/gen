@@ -1,7 +1,7 @@
 from moonleap.resources.type_spec_store import type_spec_store
 from moonleap.utils.case import lower0
 
-from .props_query import _find_module_that_provides_item_list
+from .props_endpoint import _find_module_that_provides_item_list
 
 
 class SectionsDataType:

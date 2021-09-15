@@ -1,0 +1,6 @@
+import graphene
+
+{{ res.sections.mutation_imports() }}
+
+class Mutation(graphene.ObjectType):
+{{ res.sections.mutation_fields() }}

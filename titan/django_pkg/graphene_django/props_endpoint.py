@@ -48,7 +48,7 @@ def _imports(django_app, datatypes, field_spec):
     return []
 
 
-class SectionsQuery:
+class SectionsEndpoint:
     def __init__(self, res):
         self.res = res
 
@@ -62,7 +62,7 @@ class SectionsQuery:
 
         return os.linesep.join(result)
 
-    def query_outputs(self, query):
+    def endpoint_outputs(self, query):
         indent = " " * 4
         result = []
 
@@ -74,7 +74,7 @@ class SectionsQuery:
 
         return os.linesep.join(result)
 
-    def query_arguments(self, query):
+    def endpoint_arguments(self, query):
         indent = " " * 8
         result = []
 
@@ -99,3 +99,6 @@ class SectionsQuery:
             )
 
         return os.linesep.join(result)
+
+    def mutate_function(self, mutation):
+        return ""

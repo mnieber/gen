@@ -1,12 +1,6 @@
 import graphene
 
-{{ res.sections.imports() }}
+from api.mutation import Mutation
+from api.query import Query
 
-class Query({{ res.sections.query_base_classes() }}):
-    pass
-
-class Mutation({{ res.sections.mutation_base_classes() }}):
-    pass
-
-
-schema = graphene.Schema({{ res.sections.schema_args() }})
+schema = graphene.Schema(query=Query, mutation=Mutation)

@@ -1,10 +1,11 @@
-class RedRose(graphene.Mutation):
+import graphene
+from graphene.types.generic import GenericScalar
+{{ sections.query_imports(mutation) }}
+
+class {{ mutation.name | upper0 }}(graphene.Mutation):
+{{ sections.endpoint_outputs(mutation) }}
+
     class Arguments:
-        form = graphene.Argument(RedRoseFormType)
+{{ sections.endpoint_arguments(mutation) }}
 
-    success = graphene.Boolean()
-
-    @staticmethod
-    def mutate(parent, info, form):
-        # TODO: post form
-        return RedRose(success=False)
+{{ sections.mutate_function(mutation) }}
