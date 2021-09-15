@@ -1,9 +1,6 @@
 {{ sections.query_imports(query) }}
 
 class {{ query.name | upper0 }}Query:
-{{ sections.endpoint_outputs(query) }}
-
-    class Arguments:
-{{ sections.endpoint_arguments(query) }}
+{{ sections.query_outputs(query) }}
 
 {{ sections.query_resolve_functions(query) }}

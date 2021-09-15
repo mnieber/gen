@@ -1,11 +1,11 @@
 import graphene
 from graphene.types.generic import GenericScalar
-{{ sections.query_imports(mutation) }}
+{{ sections.mutation_imports(mutation) }}
 
 class {{ mutation.name | upper0 }}(graphene.Mutation):
-{{ sections.endpoint_outputs(mutation) }}
+{{ sections.mutation_outputs(mutation) }}
 
     class Arguments:
-{{ sections.endpoint_arguments(mutation) }}
+{{ sections.mutation_arguments(mutation) }}
 
 {{ sections.mutate_function(mutation) }}

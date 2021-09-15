@@ -42,42 +42,45 @@ def has_graphql_queries(module):
     return bool(module.item_lists_provided)
 
 
+def _query_py_classname(query):
+    return upper0(query.name) + "Query"
+
+
+def _mutation_py_classname(mutation):
+    return upper0(mutation.name)
+
+
 class Sections:
     def __init__(self, res):
         self.res = res
+        self.graphql_api = res.service.django_app.api_module.graphql_api
 
     def query_imports(self):
         result = []
-        graphql_api = self.res.service.django_app.api_module.graphql_api
-        for query in graphql_api.queries:
-            result.append(
-                f"from .{query.name.lower()}query import {upper0(query.name)}Query"
-            )
+        for query in self.graphql_api.queries:
+            classname = _query_py_classname(query)
+            result.append(f"from .{classname.lower()} import {classname}")
 
         return os.linesep.join(result)
 
     def query_base_classes(self):
-        result = []
-        graphql_api = self.res.service.django_app.api_module.graphql_api
-        for query in graphql_api.queries:
-            result.append(f"{upper0(query.name)}Query")
-
-        return ", ".join(result)
+        return ", ".join(
+            [_query_py_classname(query) for query in self.graphql_api.queries]
+        )
 
     def mutation_imports(self):
         result = []
-        graphql_api = self.res.service.django_app.api_module.graphql_api
-        for mutation in graphql_api.mutations:
-            result.append(
-                f"from .{mutation.name.lower()} import {upper0(mutation.name)}"
-            )
+        for mutation in self.graphql_api.mutations:
+            classname = _mutation_py_classname(mutation)
+            result.append(f"from .{classname.lower()} import {classname}")
 
         return os.linesep.join(result)
 
     def mutation_fields(self):
         result = []
-        graphql_api = self.res.service.django_app.api_module.graphql_api
-        for mutation in graphql_api.mutations:
-            result.append(f"    {mutation.name} = {upper0(mutation.name)}.Field()")
+        for mutation in self.graphql_api.mutations:
+            result.append(
+                f"    {mutation.name} = {_mutation_py_classname(mutation)}.Field()"
+            )
 
         return os.linesep.join(result)

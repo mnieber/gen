@@ -34,10 +34,6 @@ def _default_outputs_type_spec(name):
     )
 
 
-def posts_item(self, item_name):
-    return [x for x in self.items_posted if x.item_name == item_name]
-
-
 def inputs_type_spec(self):
     name = f"{self.name}InputType"
     return type_spec_store.get(name) or _default_inputs_type_spec(name)
