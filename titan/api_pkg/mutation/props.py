@@ -45,4 +45,4 @@ def inputs_type_spec(self):
 
 def outputs_type_spec(self):
     name = f"{self.name}OutputType"
-    return type_spec_store.get(name) or _default_outputs_type_spec(name)
+    return type_spec_store.get(name, None) or _default_outputs_type_spec(name)
