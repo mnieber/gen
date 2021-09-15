@@ -66,7 +66,7 @@ def generate_code(spec_file, session, file_writer):
 
     session.report("Rendering...")
     render_resources(blocks, file_writer.write_file)
-    file_writer.write_merged_files_and_snapshot()
+    file_writer.write_merged_files()
     for warning in file_writer.warnings:
         session.report(warning)
 
@@ -79,6 +79,8 @@ def generate_code(spec_file, session, file_writer):
         session.get_post_process_settings(),
         session.get_bin_settings(),
     )
+
+    file_writer.write_snapshot()
 
 
 def report(x):

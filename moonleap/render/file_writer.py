@@ -60,7 +60,7 @@ class FileWriter:
         with open(fn, "w") as ofs:
             ofs.write(content)
 
-    def write_merged_files_and_snapshot(self):
+    def write_merged_files(self):
         for fn_str, parts in self.fn_parts.items():
             file_merger = get_file_merger(fn_str)
             assert file_merger
@@ -69,5 +69,6 @@ class FileWriter:
                 content = file_merger.merge(content, part)
             self._write(Path(fn_str), content)
 
+    def write_snapshot(self):
         with open(self.snapshot_fn, "w") as f:
             json.dump(self.crc_by_fn, f)
