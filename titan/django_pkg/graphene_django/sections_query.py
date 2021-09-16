@@ -64,7 +64,9 @@ class SectionsQuery:
             )
             if args:
                 args = ", " + args
-            result.append(f"{indent}{field_name} = {field_arg_type(field_spec, args)}")
+            result.append(
+                f"{indent}{field_spec.name_snake} = {field_arg_type(field_spec, args)}"
+            )
 
         return os.linesep.join(result)
 
@@ -78,7 +80,7 @@ class SectionsQuery:
             field_spec,
         ) in query.outputs_type_spec.field_spec_by_name.items():
             result.append(
-                f"{indent}def resolve_{field_name}(self, {', '.join(['info'] + field_names)}):"
+                f"{indent}def resolve_{field_spec.name_snake}(self, {', '.join(['info'] + field_names)}):"
             )
             result.append(
                 f"{indent}  return {_return_value_for_field_spec(query, field_spec)}"

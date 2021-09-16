@@ -1,8 +1,0 @@
-import { schema } from 'normalizr';
-{{ sections_datatype.schema_imports(outputs_item_name) }}
-
-export const {{ outputs_item_name }} = new schema.Entity('{{ outputs_item_name }}');
-{{ sections_datatype.define_fields(outputs_item_name) }}
-
-export const {{ query.name }}Query = () => {
-}

@@ -54,8 +54,8 @@ def provides_item_list(self, item_name):
 
 def _item_field(self, item):
     return FieldSpec(
-        name_snake=item.item_name_snake,
-        name=item.item_name,
+        name_snake=f"{item.item_name_snake}",
+        name=f"{item.item_name}",
         required=False,
         private=False,
         field_type="fk",
@@ -65,8 +65,8 @@ def _item_field(self, item):
 
 def _item_list_field(self, item):
     return FieldSpec(
-        name_snake=plural(item.item_name_snake),
-        name=plural(item.item_name),
+        name_snake=f"{plural(item.item_name_snake)}",
+        name=f"{plural(item.item_name)}",
         required=False,
         private=False,
         field_type="list",

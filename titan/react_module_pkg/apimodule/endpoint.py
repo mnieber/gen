@@ -80,42 +80,6 @@ def _graphql_body(type_spec, indent=0, skip=None):
         return [(" " * indent) + x for x in graphqlBody]
 
 
-def _field_spec_to_ts_type(field_spec):
-    if field_spec.field_type in ("string", "json", "url"):
-        return "string"
-
-    if field_spec.field_type in ("bool",):
-        return "bool"
-
-    if field_spec.field_type in ("fk",):
-        return f"{upper0(kebab_to_camel(field_spec.field_type_attrs['target']))}T"
-
-    raise Exception(f"Cannot deduce typescript type for {field_spec.field_type}")
-
-
-def _field_spec_to_ts_arg(field_name, field_spec):
-    ts_type = _field_spec_to_ts_type(field_spec)
-    return f"{field_name}: {ts_type}"
-
-
-def _field_spec_to_graphql_arg(field_name, field_spec):
-    graphql_type = _input_field_to_graphql_type(field_spec)
-    return f"${field_name}: {graphql_type}"
-
-
-def _input_field_to_graphql_type(field_spec):
-    if field_spec.field_type in ("string", "json", "url"):
-        return "String"
-
-    if field_spec.field_type in ("bool",):
-        return "Boolean"
-
-    if field_spec.field_type in ("fk",):
-        return f"{upper0(kebab_to_camel(field_spec.field_type_attrs['target']))}Type"
-
-    raise Exception(f"Cannot deduce graphql type for {field_spec.field_type}")
-
-
 def get_endpoint_query_text(query):
     field_names = flattened_spec_field_by_name(query.inputs_type_spec).keys()
 
