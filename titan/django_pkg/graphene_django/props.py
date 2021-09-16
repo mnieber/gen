@@ -5,8 +5,9 @@ from moonleap import upper0
 from moonleap.render.template_renderer import render_templates
 from moonleap.utils.case import lower0
 
-from .props_datatype import SectionsDataType
-from .props_endpoint import SectionsMutation, SectionsQuery
+from .sections_datatype import SectionsDataType
+from .sections_mutation import SectionsMutation
+from .sections_query import SectionsQuery
 
 
 def render(self, write_file, render_template):

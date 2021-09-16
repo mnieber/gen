@@ -1,13 +1,13 @@
 import os
 from pathlib import Path
 
-import ramda as R
 from moonleap.render.template_renderer import render_templates
-from moonleap.utils.case import lower0, upper0
+from moonleap.utils.case import lower0
 
 from .endpoint import get_endpoint_mutation_text, get_endpoint_query_text
-from .props_datatype import SectionsDataType
-from .props_endpoint import SectionsMutation, SectionsQuery
+from .sections_datatype import SectionsDataType
+from .sections_mutation import SectionsMutation
+from .sections_query import SectionsQuery
 
 
 def render(self, write_file, render_template):

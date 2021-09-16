@@ -1,7 +1,5 @@
 from moonleap.resources.type_spec_store import type_spec_store
-from moonleap.utils.case import lower0
-
-from .props_endpoint import _find_module_that_provides_item_list
+from titan.django_pkg.graphene_django.utils import find_module_that_provides_item_list
 
 
 class SectionsDataType:
@@ -9,7 +7,7 @@ class SectionsDataType:
         self.res = res
 
     def imports(self, item_name):
-        module = _find_module_that_provides_item_list(
+        module = find_module_that_provides_item_list(
             self.res.service.django_app, item_name
         )
         return f"from {module.name}.models import {item_name}" if module else ""
