@@ -4,30 +4,39 @@ from pathlib import Path
 from moonleap import upper0
 from moonleap.render.template_renderer import render_templates
 from moonleap.utils.case import lower0
-from titan.django_pkg.graphene_django.props_datatype import SectionsDataType
-from titan.django_pkg.graphene_django.props_endpoint import SectionsEndpoint
+
+from .props_datatype import SectionsDataType
+from .props_endpoint import SectionsMutation, SectionsQuery
 
 
 def render(self, write_file, render_template):
     api_module = self.service.django_app.api_module
-    sections = SectionsEndpoint(self)
 
+    sections_query = SectionsQuery(self)
     for query in api_module.graphql_api.queries:
         template_path = Path(__file__).parent / "templates_query"
-        render_templates(template_path, query=query, sections=sections)(
-            self, write_file, render_template
-        )
+        render_templates(
+            template_path,
+            query=query,
+            sections=sections_query,
+        )(self, write_file, render_template)
 
+    sections_mutation = SectionsMutation(self)
     for mutation in api_module.graphql_api.mutations:
         template_path = Path(__file__).parent / "templates_mutation"
-        render_templates(template_path, mutation=mutation, sections=sections)(
-            self, write_file, render_template
-        )
+        render_templates(
+            template_path,
+            mutation=mutation,
+            sections=sections_mutation,
+        )(self, write_file, render_template)
 
+    sections_datatype = SectionsDataType(self)
     for datatype in api_module.graphql_api.types:
         template_path = Path(__file__).parent / "templates_types"
         render_templates(
-            template_path, item_name=lower0(datatype), sections=SectionsDataType(self)
+            template_path,
+            item_name=lower0(datatype),
+            sections=sections_datatype,
         )(self, write_file, render_template)
 
     template_path = Path(__file__).parent / "templates"

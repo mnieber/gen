@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import Prop, add, create, extend, kebab_to_camel, rule
+from moonleap import MemFun, Prop, add, create, extend, kebab_to_camel, rule
 from moonleap.verbs import has
 from titan.react_pkg.nodepackage import load_node_package_config
 from titan.react_pkg.reactapp import ReactApp
@@ -29,6 +29,7 @@ empty_rules = [("api:module", has, "graphql:api")]
 
 @extend(ApiModule)
 class ExtendApiModule:
+    render = MemFun(props.render)
     load_item_effects = P.children(has, "load-item-effect")
     load_items_effects = P.children(has, "load-items-effect")
     graphql_api = P.child(has, "graphql:api")

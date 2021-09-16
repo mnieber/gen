@@ -5,10 +5,6 @@ from moonleap.resources.type_spec_store import type_spec_store
 from moonleap.utils.case import lower0
 
 
-def _target(field_spec):
-    return field_spec.field_type_attrs["target"]
-
-
 def _field_arg_type(field_spec, args):
     if field_spec.field_type == "list":
         return f"graphene.List({field_spec.fk_type_spec.tn_graphene}{args})"
@@ -75,19 +71,9 @@ def _args(field_spec_by_name):
     return result
 
 
-class SectionsEndpoint:
+class SectionsQuery:
     def __init__(self, res):
         self.res = res
-
-    def mutation_imports(self, mutation):
-        result = []
-        item_names = set()
-        for (field_name, field_spec) in list(
-            mutation.inputs_type_spec.field_spec_by_name.items()
-        ) + list(mutation.outputs_type_spec.field_spec_by_name.items()):
-            result.extend(_imports(self.res.service.django_app, item_names, field_spec))
-
-        return os.linesep.join(result)
 
     def query_imports(self, query):
         result = []
@@ -109,6 +95,36 @@ class SectionsEndpoint:
         ) in query.outputs_type_spec.field_spec_by_name.items():
             args = ""
             result.append(f"{indent}{field_name} = {_field_arg_type(field_spec, args)}")
+
+        return os.linesep.join(result)
+
+    def query_resolve_functions(self, query):
+        indent = " " * 4
+        result = []
+
+        for (
+            field_name,
+            field_spec,
+        ) in query.outputs_type_spec.field_spec_by_name.items():
+            result.append(f"{indent}def resolve_{field_name}():")
+            result.append(
+                f"{indent}  return {_return_value_for_field_spec(field_spec)}"
+            )
+
+        return os.linesep.join(result)
+
+
+class SectionsMutation:
+    def __init__(self, res):
+        self.res = res
+
+    def mutation_imports(self, mutation):
+        result = []
+        item_names = set()
+        for (field_name, field_spec) in list(
+            mutation.inputs_type_spec.field_spec_by_name.items()
+        ) + list(mutation.outputs_type_spec.field_spec_by_name.items()):
+            result.extend(_imports(self.res.service.django_app, item_names, field_spec))
 
         return os.linesep.join(result)
 
@@ -139,21 +155,6 @@ class SectionsEndpoint:
             result.append(f"{indent}{field_name} = {arg}")
         if not args:
             result.append(f"{indent}pass")
-
-        return os.linesep.join(result)
-
-    def query_resolve_functions(self, query):
-        indent = " " * 4
-        result = []
-
-        for (
-            field_name,
-            field_spec,
-        ) in query.outputs_type_spec.field_spec_by_name.items():
-            result.append(f"{indent}def resolve_{field_name}():")
-            result.append(
-                f"{indent}  return {_return_value_for_field_spec(field_spec)}"
-            )
 
         return os.linesep.join(result)
 

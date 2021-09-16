@@ -1,3 +1,6 @@
+import ramda as R
+
+
 def queries_that_provide_item(self, item_name):
     return [q for q in self.queries if q.provides_item(item_name)]
 
@@ -12,6 +15,6 @@ def types(self):
         for field_spec in list(
             endpoint.inputs_type_spec.field_spec_by_name.values()
         ) + list(endpoint.outputs_type_spec.field_spec_by_name.values()):
-            if field_spec.field_type in ("fk", "list"):
-                result.append(field_spec.field_type_attrs["target"])
-    return result
+            if field_spec.fk_type_spec:
+                result.append(field_spec.fk_type_spec.type_name)
+    return R.uniq(result)

@@ -165,23 +165,43 @@ class TypeSpecStore:
                         field_type_attrs=dict(target=type_spec.type_name),
                     )
 
-    def get(self, type_name, default=_default_type_spec_placeholder):
+    def _init(self):
         if not self._type_spec_by_type_name:
             self._load_specs(
                 os.path.join(get_session().settings["spec_dir"], "data_types")
             )
 
-        type_name = upper0(type_name)
-        if type_name not in self._type_spec_by_type_name:
-            self._type_spec_by_type_name[type_name] = (
+    def setdefault(self, type_name, default_value):
+        self._init()
+        assert type_name and type_name[0] == type_name[0].upper()
+
+        if not self.has(type_name):
+            self._type_spec_by_type_name[type_name] = default_value
+
+    def has(self, type_name):
+        self._init()
+        assert type_name and type_name[0] == type_name[0].upper()
+
+        return type_name in self._type_spec_by_type_name
+
+    def get(self, type_name, default=_default_type_spec_placeholder):
+        self._init()
+        type_name = upper0(type_name)  # HACK
+        assert type_name and type_name[0] == type_name[0].upper()
+
+        type_spec = self._type_spec_by_type_name.get(type_name, None)
+
+        return (
+            type_spec
+            if type_spec is not None
+            else (
                 TypeSpec(
                     type_name=type_name, field_spec_by_name=_default_field_spec_by_name
                 )
                 if default is _default_type_spec_placeholder
                 else default
             )
-
-        return self._type_spec_by_type_name[type_name]
+        )
 
 
 def flattened_spec_field_by_name(type_spec, skip=None):
