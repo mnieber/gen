@@ -3,14 +3,16 @@ from moonleap import (
     MemFun,
     Prop,
     RenderTemplates,
+    add,
+    create,
     create_forward,
     extend,
     kebab_to_camel,
     rule,
-    create,
     upper0,
 )
 from moonleap.verbs import has
+from titan.react_pkg.reactapp import ReactAppConfig
 from titan.react_state_pkg.state.resources import State
 
 from . import props
@@ -21,6 +23,7 @@ from .resources import StateProvider
 def create_state_provider(term, block):
     base_name = kebab_to_camel(term.data)
     state_provider = StateProvider(name=f"{upper0(base_name)}StateProvider")
+    add(state_provider, ReactAppConfig(flags=dict(logStateProviders=False)))
     return state_provider
 
 

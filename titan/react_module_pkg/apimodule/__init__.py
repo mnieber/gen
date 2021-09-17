@@ -3,8 +3,10 @@ from pathlib import Path
 import moonleap.resource.props as P
 from moonleap import MemFun, Prop, add, create, extend, kebab_to_camel, rule
 from moonleap.verbs import has
+from titan.react_module_pkg.loaditemseffect import LoadItemsEffect
+from titan.react_pkg.module import Module
 from titan.react_pkg.nodepackage import load_node_package_config
-from titan.react_pkg.reactapp import ReactApp
+from titan.react_pkg.reactapp import ReactApp, ReactAppConfig
 
 from . import props
 from .resources import ApiModule  # noqa
@@ -16,6 +18,10 @@ def create_api_module(term, block):
     module.output_path = f"src/{module.name}"
     module.add_template_dir(Path(__file__).parent / "templates")
     add(module, load_node_package_config(__file__))
+    add(
+        module,
+        ReactAppConfig(flags=dict(logQueries=False, logResourceView=False)),
+    )
     return module
 
 
@@ -39,3 +45,8 @@ class ExtendApiModule:
 @extend(ReactApp)
 class ExtendReactApp:
     api_module = P.child(has, "api:module")
+
+
+@extend(LoadItemsEffect)
+class ExtendLoadItemsEffect:
+    module = P.parent(Module, has)

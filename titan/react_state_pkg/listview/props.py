@@ -36,13 +36,13 @@ class Sections:
         result = []
         selection_bvr = self._find_behavior("selection")
         if selection_bvr:
-            result.append("import { Selection } from 'skandha-mobx/Selection';")
+            result.append("import { Selection } from 'skandha-facets/Selection';")
             result.append(
                 "import { ClickToSelectItems } from 'skandha-facets/handlers';"
             )
 
         if self._find_behavior("highlight"):
-            result.append("import { Highlight } from 'skandha-mobx/Highlight';")
+            result.append("import { Highlight } from 'skandha-facets/Highlight';")
 
         return "\n".join(result)
 

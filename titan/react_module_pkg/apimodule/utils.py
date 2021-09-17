@@ -11,21 +11,21 @@ def javascript_args(type_spec):
     return ", ".join(R.map(ds(_field_spec_to_ts_arg), field_specs))
 
 
-def _field_spec_to_ts_type(field_spec):
-    if field_spec.field_type in ("string", "json", "url"):
+def field_spec_to_ts_type(field_spec):
+    if field_spec.field_type in ("string", "json", "url", "slug"):
         return "string"
 
     if field_spec.field_type in ("bool",):
-        return "bool"
+        return "boolean"
 
-    if field_spec.field_type in ("fk",):
+    if field_spec.field_type in ("fk", "related_set"):
         return f"{upper0(kebab_to_camel(field_spec.field_type_attrs['target']))}T"
 
     raise Exception(f"Cannot deduce typescript type for {field_spec.field_type}")
 
 
 def _field_spec_to_ts_arg(field_name, field_spec):
-    ts_type = _field_spec_to_ts_type(field_spec)
+    ts_type = field_spec_to_ts_type(field_spec)
     return f"{field_name}: {ts_type}"
 
 

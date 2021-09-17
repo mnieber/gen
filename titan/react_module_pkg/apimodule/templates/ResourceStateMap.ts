@@ -26,7 +26,7 @@ export class ResourceStateMap {
 
 export const rsMap = new ResourceStateMap();
 
-export const maybeResUrl = (getter, ...args) => {
+export const maybeResUrl = (getter: Function, ...args: any) => {
   for (var i = 0; i < args.length; ++i) {
     if (args[i] === undefined) {
       return undefined;

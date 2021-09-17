@@ -13,7 +13,7 @@ from .resources import Query
 @create(["query"])
 def create_query(term, block):
     name = kebab_to_camel(term.data)
-    query = Query(name=name)
+    query = Query(name=name, fun_name=kebab_to_camel(term.data))
     return query
 
 
@@ -26,6 +26,7 @@ def graphql_api_loads_item(graphql_api, item):
 def create_get_item_query(graphql_api, item):
     query_name = f"{kebab_to_camel(item.item_name)}"
     query = R.find(lambda x: x.name == query_name)(graphql_api.queries)
+    query.fun_name = f"get{upper0(query_name)}"
     assert query
     return [create_forward(query, provides, f"{item.item_name}:item", obj_res=item)]
 
@@ -39,6 +40,7 @@ def graphql_api_loads_item_list(graphql_api, item_list):
 def create_get_items_query(graphql_api, item_list):
     query_name = f"{kebab_to_camel(plural(item_list.item_name))}"
     query = R.find(lambda x: x.name == query_name)(graphql_api.queries)
+    query.fun_name = f"get{upper0(query_name)}"
     assert query
     return [
         create_forward(

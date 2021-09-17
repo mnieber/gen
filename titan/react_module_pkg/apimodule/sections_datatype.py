@@ -25,7 +25,7 @@ class SectionsDataType:
             if field_spec.field_type in ("list", "related_set", "item", "fk"):
                 fk_item_name = lower0(field_spec.fk_type_spec.type_name)
                 result.append(
-                    f"import {{ {fk_item_name} }} from 'src/api/types/{fk_item_name}';"
+                    f"import {{ {fk_item_name} }} from 'src/api/schemas/{fk_item_name}Schema';"
                 )
 
         return os.linesep.join(result)

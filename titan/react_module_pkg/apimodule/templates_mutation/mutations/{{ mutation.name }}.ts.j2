@@ -1,0 +1,25 @@
+import { normalize, schema } from 'normalizr';
+import { apiBase } from 'src/api/ApiBase';
+import { ObjT } from 'src/utils/types';
+{{ sections_datatype.schema_imports(outputs_item_name) }}
+
+export const {{ outputs_item_name }} = new schema.Entity('{{ outputs_item_name }}');
+{{ sections_datatype.define_fields(outputs_item_name) }}
+
+export const {{ mutation.name }} = ({{ sections.javascript_args(mutation) }}) => {
+  return apiBase.doQuery(
+    '{{ mutation.name }}',
+    `mutation {{ mutation.name }}({{ sections.graphql_args(mutation, True) }}) {
+        {{ mutation.name }}({{ sections.graphql_args(mutation, False) }}) {
+{{ sections.graphql_body(mutation) }}
+        }
+    }`,
+    {
+{{ sections.graphql_variables(mutation) }}
+    },
+    (response: ObjT) => {
+{{ sections.graphql_response(mutation) }}
+    },
+    (error: ObjT) => error.response.errors[0].message
+  );
+}

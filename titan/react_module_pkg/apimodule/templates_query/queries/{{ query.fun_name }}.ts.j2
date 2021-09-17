@@ -1,12 +1,14 @@
-import { schema } from 'normalizr';
+import { normalize, schema } from 'normalizr';
+import { apiBase } from 'src/api/ApiBase';
+import { ObjT } from 'src/utils/types';
 {{ sections_datatype.schema_imports(outputs_item_name) }}
 
 export const {{ outputs_item_name }} = new schema.Entity('{{ outputs_item_name }}');
 {{ sections_datatype.define_fields(outputs_item_name) }}
 
-export const {{ query.name }} = ({{ sections.javascript_args(query) }}) => {
+export const {{ query.fun_name }} = ({{ sections.javascript_args(query) }}) => {
   return apiBase.doQuery(
-    '{{ query.name }}',
+    '{{ query.fun_name }}',
     `query {{ query.name }}({{ sections.graphql_args(query, True) }}) {
         {{ query.name }}({{ sections.graphql_args(query, False) }}) {
 {{ sections.graphql_body(query) }}

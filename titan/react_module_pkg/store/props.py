@@ -1,6 +1,7 @@
 from moonleap import upper0
 from moonleap.resources.type_spec_store import type_spec_store
 from moonleap.utils.magic_replace import magic_replace
+from titan.react_module_pkg.apimodule.utils import field_spec_to_ts_type
 
 load_data_template = """
     if (queryName === 'getYellowTulips') {
@@ -41,8 +42,7 @@ class Sections:
             if field_spec.private:
                 continue
 
-            t = field_spec.field_type
-            t = "string" if t in ("fk", "related_set") else t
+            t = field_spec_to_ts_type(field_spec)
             result.append(f"  {field_spec.name}: {t};")
 
         return "\n".join(result)
