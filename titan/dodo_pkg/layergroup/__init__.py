@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import add, create, extend, kebab_to_camel
+from moonleap import add, create, empty_rule, extend, kebab_to_camel
 from moonleap.verbs import contains
 from titan.dodo_pkg.layer import StoreLayerConfigs
 
@@ -14,7 +14,7 @@ def create_layer_group(term, block):
     return layer_group
 
 
-empty_rules = [("layer-group", contains, "layer")]
+rules = [(("layer-group", contains, "layer"), empty_rule)]
 
 
 @extend(LayerGroup)

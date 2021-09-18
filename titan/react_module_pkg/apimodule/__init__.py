@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, add, create, extend, kebab_to_camel, rule
+from moonleap import MemFun, Prop, add, create, empty_rule, extend, kebab_to_camel, rule
 from moonleap.verbs import has
 from titan.react_module_pkg.loaditemseffect import LoadItemsEffect
 from titan.react_pkg.module import Module
@@ -30,7 +30,7 @@ def react_app_has_api_module(react_app, api_module):
     react_app.utils_module.use_packages(["graphqlClient", "RST"])
 
 
-empty_rules = [("api:module", has, "graphql:api")]
+rules = [(("api:module", has, "graphql:api"), empty_rule)]
 
 
 @extend(ApiModule)

@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
 import ramda as R
-from moonleap import MemFun, Prop, create, extend, kebab_to_camel, rule, upper0
+from moonleap import Prop, create, empty_rule, extend, kebab_to_camel, rule, upper0
 from moonleap.resource.rel import create_forward
 from moonleap.verbs import deletes, has, posts
 from titan.api_pkg.graphqlapi import GraphqlApi
@@ -39,9 +39,9 @@ def mutation_deletes_item(graphql_api, item):
     return [create_forward(mutation, deletes, f"{item.item_name}:item", obj_res=item)]
 
 
-empty_rules = [
-    ("graphql:api", has, "mutation"),
-    ("mutation", posts, "item"),
+rules = [
+    (("graphql:api", has, "mutation"), empty_rule),
+    (("mutation", posts, "item"), empty_rule),
 ]
 
 

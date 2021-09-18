@@ -4,10 +4,11 @@ from moonleap import (
     Prop,
     RenderTemplates,
     add,
+    create,
+    empty_rule,
     extend,
     kebab_to_camel,
     rule,
-    create,
 )
 from moonleap.verbs import has, provides
 from titan.react_pkg.module import Module
@@ -37,10 +38,10 @@ class ExtendModule:
     states = P.children(has, "state")
 
 
-empty_rules = [
-    ("state", provides, "item-list"),
-    ("state", provides, "item"),
-    ("state", provides, "behavior"),
+rules = [
+    (("state", provides, "item-list"), empty_rule),
+    (("state", provides, "item"), empty_rule),
+    (("state", provides, "behavior"), empty_rule),
 ]
 
 

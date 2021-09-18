@@ -1,5 +1,12 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, StoreOutputPaths, extend, kebab_to_camel, rule, create
+from moonleap import (
+    MemFun,
+    StoreOutputPaths,
+    add_src_inv,
+    create,
+    extend,
+    kebab_to_camel,
+)
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has
 from titan.react_pkg.nodepackage import StoreNodePackageConfigs
@@ -8,17 +15,14 @@ from titan.react_pkg.reactapp import ReactApp
 
 from .resources import Module  # noqa
 
+rules = [(("react-app", has, "module"), add_src_inv("output_paths"))]
+
 
 @create(["module"])
 def create_module(term, block):
     module = Module(name=kebab_to_camel(term.data))
     module.output_path = f"src/{module.name}"
     return module
-
-
-@rule("react-app", has, "module")
-def react_app_has_module(react_app, module):
-    module.output_paths.add_source(react_app)
 
 
 @extend(Module)

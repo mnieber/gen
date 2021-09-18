@@ -1,13 +1,10 @@
 import moonleap.resource.props as P
-from moonleap import extend, rule
+from moonleap import add_src_inv, extend
 from moonleap.verbs import has
 from titan.project_pkg.dockercompose.resources import DockerCompose
 from titan.project_pkg.project import Project
 
-
-@rule("project", has, "docker-compose")
-def project_has_docker_compose(project, docker_compose):
-    docker_compose.output_paths.add_source(project)
+rules = [(("project", has, "docker-compose"), add_src_inv("output_paths"))]
 
 
 @extend(DockerCompose)

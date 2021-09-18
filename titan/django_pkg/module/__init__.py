@@ -7,6 +7,7 @@ from moonleap import (
     add,
     create,
     create_forward,
+    empty_rule,
     extend,
     kebab_to_camel,
     kebab_to_snake,
@@ -48,7 +49,7 @@ def module_receives_item(module, item):
     return create_forward(module, provides, f"{kebab_name}:item-type")
 
 
-empty_rules = [("module", contains + provides, "item-type")]
+rules = [(("module", contains + provides, "item-type"), empty_rule)]
 
 
 @extend(Module)

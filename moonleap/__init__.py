@@ -16,7 +16,7 @@ from moonleap.resource import Resource, resolve  # noqa
 from moonleap.resource.memfield import MemField  # noqa
 from moonleap.resource.memfun import MemFun  # noqa
 from moonleap.resource.prop import Prop  # noqa
-from moonleap.resource.props import add_source  # noqa
+from moonleap.resource.props import add_source, add_src, add_src_inv, empty_rule  # noqa
 from moonleap.resource.rel import Forward, Rel, create_forward  # noqa
 from moonleap.resources.outputpath import StoreOutputPaths  # noqa
 from moonleap.session import get_session  # noqa

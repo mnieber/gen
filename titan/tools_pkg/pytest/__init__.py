@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import add, create_forward, extend, rule, create
+from moonleap import add, create, create_forward, empty_rule, extend, rule
 from moonleap.verbs import has, with_
 from titan.tools_pkg.pipdependency import PipRequirement
 
@@ -35,7 +35,7 @@ def service_has_pytest_html(service, pytest):
         return create_forward(service, has, ":tool", pytest.pytest_html)
 
 
-empty_rules = [("pytest", with_, "pytest-html")]
+rules = [(("pytest", with_, "pytest-html"), empty_rule)]
 
 
 @extend(Pytest)

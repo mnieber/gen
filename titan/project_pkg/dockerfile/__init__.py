@@ -1,8 +1,10 @@
 import moonleap.resource.props as P
-from moonleap import RenderTemplates, add_source, extend, rule, create
+from moonleap import RenderTemplates, add_src, create, extend, rule
 from moonleap.verbs import has
 
 from .resources import Dockerfile, DockerImage
+
+rules = [(("dockerfile", has, "docker-image"), add_src("docker_compose_configs"))]
 
 
 @create(["dockerfile"])
@@ -20,11 +22,6 @@ def create_docker_image(term, block):
 @rule("dockerfile", has, "docker-image")
 def dockerfile_use_docker_image(dockerfile, docker_image):
     dockerfile.image_name = docker_image.name
-    add_source(
-        [dockerfile, "docker_compose_configs"],
-        docker_image,
-        "A :dockerfile receives docker compose configs from a :docker-image",
-    )
 
 
 @extend(Dockerfile)

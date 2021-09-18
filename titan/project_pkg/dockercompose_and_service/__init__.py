@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import add_source, extend, rule
+from moonleap import add_source, empty_rule, extend, rule
 from moonleap.verbs import has, runs
 from titan.project_pkg.dockercompose.resources import DockerCompose
 
@@ -13,7 +13,7 @@ def service_has_tool(service, tool):
     )
 
 
-empty_rules = [("docker-compose", runs, "service")]
+rules = [(("docker-compose", runs, "service"), empty_rule)]
 
 
 @extend(DockerCompose)

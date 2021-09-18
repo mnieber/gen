@@ -17,20 +17,6 @@ def get_symbols(module):
     ]
 
 
-# Empty rules are rules that are only there to silence warnings about unused
-# relations.
-def get_empty_rules(module):
-    rules = []
-    for subj_term, verb, obj_term in getattr(module, "empty_rules", []):
-        rel = Rel(
-            subj=word_to_term(subj_term, default_to_tag=True),
-            verb=verb,
-            obj=word_to_term(obj_term, default_to_tag=True),
-        )
-        rules.append(Rule(rel, lambda *arg, **kwargs: None))
-    return rules
-
-
 def install_package(package):
     for module in getattr(package, "modules", []):
         install_module(module)

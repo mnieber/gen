@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import extend, kebab_to_camel, kebab_to_snake, create
+from moonleap import create, empty_rule, extend, kebab_to_camel, kebab_to_snake
 from moonleap.verbs import receives
 from titan.django_pkg.module import Module
 
@@ -14,7 +14,7 @@ def create_form(term, block):
     return form
 
 
-empty_rules = [("module", receives, "form")]
+rules = [(("module", receives, "form"), empty_rule)]
 
 
 @extend(Module)

@@ -1,14 +1,13 @@
 import moonleap.resource.props as P
-from moonleap import extend, rule
+from moonleap import add_src, add_src_inv, extend
 from moonleap.verbs import has
 from titan.django_pkg.djangoapp import DjangoApp
 from titan.django_pkg.module import Module
 
-
-@rule("django-app", has, "module")
-def django_app_has_module(django_app, module):
-    module.output_paths.add_source(django_app)
-    django_app.django_configs.add_source(module)
+rules = [
+    (("django-app", has, "module"), add_src_inv("output_paths")),
+    (("django-app", has, "module"), add_src("django_configs")),
+]
 
 
 @extend(DjangoApp)

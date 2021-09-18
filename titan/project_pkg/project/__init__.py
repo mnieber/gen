@@ -1,5 +1,12 @@
 import moonleap.resource.props as P
-from moonleap import StoreOutputPaths, extend, kebab_to_camel, kebab_to_snake, create
+from moonleap import (
+    StoreOutputPaths,
+    create,
+    empty_rule,
+    extend,
+    kebab_to_camel,
+    kebab_to_snake,
+)
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has
 
@@ -15,7 +22,7 @@ def create_project(term, block):
     return project
 
 
-empty_rules = [("project", has, "src-dir")]
+rules = [(("project", has, "src-dir"), empty_rule)]
 
 
 @extend(Project)

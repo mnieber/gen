@@ -120,3 +120,21 @@ def tree(verb, term):
 def add_source(target_and_prop_name, source, description):
     target, prop_name = target_and_prop_name
     getattr(target, prop_name).add_source(source)
+
+
+def add_src(prop_name):
+    def f(subj, obj):
+        getattr(subj, prop_name).add_source(obj)
+
+    return f
+
+
+def add_src_inv(prop_name):
+    def f(subj, obj):
+        getattr(obj, prop_name).add_source(subj)
+
+    return f
+
+
+def empty_rule(*args, **kwargs):
+    pass

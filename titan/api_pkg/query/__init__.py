@@ -1,6 +1,15 @@
 import moonleap.resource.props as P
 import ramda as R
-from moonleap import MemFun, Prop, create, extend, kebab_to_camel, rule, upper0
+from moonleap import (
+    MemFun,
+    Prop,
+    create,
+    empty_rule,
+    extend,
+    kebab_to_camel,
+    rule,
+    upper0,
+)
 from moonleap.resource.rel import create_forward
 from moonleap.utils.inflect import plural
 from moonleap.verbs import has, loads, provides
@@ -49,10 +58,10 @@ def create_get_items_query(graphql_api, item_list):
     ]
 
 
-empty_rules = [
-    ("graphql:api", has, "query"),
-    ("query", provides, "item"),
-    ("query", provides, "item-list"),
+rules = [
+    (("graphql:api", has, "query"), empty_rule),
+    (("query", provides, "item"), empty_rule),
+    (("query", provides, "item-list"), empty_rule),
 ]
 
 

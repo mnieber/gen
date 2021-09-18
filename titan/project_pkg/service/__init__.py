@@ -3,11 +3,12 @@ from moonleap import (
     MemFun,
     Priorities,
     StoreOutputPaths,
+    add_src_inv,
+    create,
     create_forward,
     extend,
     kebab_to_camel,
     rule,
-    create,
 )
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has, runs, uses
@@ -15,6 +16,8 @@ from moonleap.verbs import has, runs, uses
 from . import props
 from .resources import Service, Tool
 from .tweaks import tweak
+
+rules = [(("service", has, "tool"), add_src_inv("output_paths"))]
 
 
 @create(["service"])
@@ -27,11 +30,6 @@ def create_service(term, block):
 @rule("service", priority=Priorities.TWEAK.value)
 def service_uses_tweaks(service):
     tweak(service)
-
-
-@rule("service", has, "tool")
-def service_has_tool(service, tool):
-    tool.output_paths.add_source(service)
 
 
 @rule("service", uses + runs + has, "*", fltr_obj=P.fltr_instance(Tool))

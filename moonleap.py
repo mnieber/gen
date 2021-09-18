@@ -123,10 +123,10 @@ if __name__ == "__main__":
                 create_symlinks(session)
             create_expected_dir(session.expected_dir, session.settings["references"])
             generate_code(spec_fn, session, _create_file_writer(args))
-        except Exception as e:
-            report("Error: " + str(e))
-            if args.stacktrace:
-                traceback.print_exc()
+        # except Exception as e:
+        #     report("Error: " + str(e))
+        #     if args.stacktrace:
+        #         traceback.print_exc()
         finally:
             pass
 
