@@ -14,8 +14,12 @@ def render_template(resource, template_fn, **kwargs):
             lines = post_transform(lines)
         content = os.linesep.join(lines)
     else:
-        with open(template_fn) as ifs:
-            content = ifs.read()
+        try:
+            with open(template_fn) as ifs:
+                content = ifs.read()
+        except UnicodeDecodeError:
+            with open(template_fn, "rb") as ifs:
+                content = ifs.read()
 
     return content
 
