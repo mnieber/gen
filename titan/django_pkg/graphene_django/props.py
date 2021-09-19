@@ -68,6 +68,7 @@ class Sections:
     def query_base_classes(self):
         return ", ".join(
             [_query_py_classname(query) for query in self.graphql_api.queries]
+            + ["graphene.ObjectType"]
         )
 
     def mutation_imports(self):

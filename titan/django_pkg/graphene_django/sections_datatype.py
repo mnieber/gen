@@ -1,3 +1,4 @@
+from moonleap import upper0
 from moonleap.resources.type_spec_store import type_spec_store
 from titan.django_pkg.graphene_django.utils import find_module_that_provides_item_list
 
@@ -10,7 +11,7 @@ class SectionsDataType:
         module = find_module_that_provides_item_list(
             self.res.service.django_app, item_name
         )
-        return f"from {module.name}.models import {item_name}" if module else ""
+        return f"from {module.name}.models import {upper0(item_name)}" if module else ""
 
     def exclude(self, item_name):
         type_spec = type_spec_store.get(item_name)
