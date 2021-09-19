@@ -12,4 +12,5 @@ def users_module_created(term, block):
     module = UsersModule(name_snake=name_snake, name=name)
     module.add_template_dir(Path(__file__).parent / "templates")
     module.output_path = module.name_snake
+    module.has_graphql_schema = True
     return module
