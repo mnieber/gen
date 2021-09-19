@@ -155,7 +155,7 @@ class TypeSpecStore:
                     "has_related_set"
                 ):
                     fk_type_spec = self.get(field_spec.field_type_attrs["target"])
-                    name = lower0(plural(type_spec.type_name))
+                    name = lower0(type_spec.type_name + "Set")
                     fk_type_spec.field_spec_by_name[name] = FieldSpec(
                         name=name,
                         name_snake=camel_to_snake(name),
