@@ -50,28 +50,33 @@ def field_spec_to_graphql_arg(field_name, field_spec, before):
 
 
 def graphql_body(type_spec, indent=0, skip=None):
+    is_top_level = not skip
     if skip is None:
         skip = [type_spec.type_name]
 
     graphqlBody = []
     for spec_field in type_spec.field_spec_by_name.values():
-        if spec_field.field_type in ("fk", "related_set"):
+        if spec_field.field_type in ("fk", "related_set", "list", "item"):
             fk_type_name = spec_field.field_type_attrs["target"]
             if fk_type_name not in skip:
                 fk_type_spec = type_spec_store.get(fk_type_name)
-                graphqlBody.append(f"{spec_field.name} {{")
+                if spec_field.field_type in ("fk", "related_set"):
+                    graphqlBody.append(f"{spec_field.name} {{")
+                    indent += 2
                 graphqlBody.extend(
                     graphql_body(
                         fk_type_spec,
-                        indent + 2,
+                        indent,
                         skip + [fk_type_name],
                     )
                 )
-                graphqlBody.append(f"}}")  # noqa: F541
+                if spec_field.field_type in ("fk", "related_set"):
+                    indent -= 2
+                    graphqlBody.append(f"}}")
         else:
             graphqlBody.append(f"{spec_field.name}")
 
-    if indent == 0:
+    if is_top_level:
         return " " * 10 + (os.linesep + (" " * 10)).join(graphqlBody)
     else:
         return [(" " * indent) + x for x in graphqlBody]

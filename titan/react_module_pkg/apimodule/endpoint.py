@@ -6,7 +6,6 @@ from moonleap.resources.type_spec_store import (
     flattened_spec_field_by_name,
     type_spec_store,
 )
-from moonleap.utils.case import kebab_to_camel, upper0
 from moonleap.utils.fp import ds
 from moonleap.utils.inflect import plural
 from moonleap.utils.magic_replace import magic_replace
@@ -131,8 +130,6 @@ def get_endpoint_mutation_text(mutation):
 
 
 def get_graphql_response(query, is_list):
-    # TODO: return normalized data based on query.items_provided
-    # and query.item_lists_provided
     if is_list:
         return (
             f"normalize(response.{plural(query.name)}, {plural(query.name)}).entities"

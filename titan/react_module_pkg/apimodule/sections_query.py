@@ -23,7 +23,8 @@ class SectionsQuery:
             return ""
 
         return (
-            os.linesep
+            "("
+            + os.linesep
             + os.linesep.join(
                 map(
                     ds(
@@ -36,6 +37,7 @@ class SectionsQuery:
             )
             + os.linesep
             + tab
+            + ")"
         )
 
     def graphql_body(self, query):

@@ -1,6 +1,14 @@
 import moonleap.resource.props as P
-from moonleap import (MemFun, Prop, create, create_forward, extend,
-                      kebab_to_camel, rule, upper0)
+from moonleap import (
+    MemFun,
+    Prop,
+    create,
+    create_forward,
+    extend,
+    kebab_to_camel,
+    rule,
+    upper0,
+)
 from moonleap.verbs import has, shows
 
 from . import props, router_configs
@@ -34,6 +42,11 @@ def view_has_panel(view, panel):
 
 @rule("view", shows, "children")
 def view_wraps_children(term, block):
+    pass
+
+
+@rule("panel", shows, "children")
+def panel_wraps_children(term, block):
     pass
 
 

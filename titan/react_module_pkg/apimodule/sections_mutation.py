@@ -23,7 +23,8 @@ class SectionsMutation:
             return ""
 
         return (
-            os.linesep
+            "("
+            + os.linesep
             + os.linesep.join(
                 map(
                     ds(
@@ -36,6 +37,7 @@ class SectionsMutation:
             )
             + os.linesep
             + tab
+            + ")"
         )
 
     def graphql_body(self, mutation):

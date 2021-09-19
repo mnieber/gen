@@ -9,8 +9,8 @@ export const {{ outputs_item_name }} = new schema.Entity('{{ outputs_item_name }
 export const {{ query.fun_name }} = ({{ sections.javascript_args(query) }}) => {
   return apiBase.doQuery(
     '{{ query.fun_name }}',
-    `query {{ query.name }}({{ sections.graphql_args(query, True) }}) {
-        {{ query.name }}({{ sections.graphql_args(query, False) }}) {
+    `query {{ query.name }}{{ sections.graphql_args(query, True) }} {
+        {{ query.name }}{{ sections.graphql_args(query, False) }} {
 {{ sections.graphql_body(query) }}
         }
     }`,
