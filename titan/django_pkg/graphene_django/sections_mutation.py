@@ -2,11 +2,38 @@ import os
 
 from moonleap import upper0
 from moonleap.resources.type_spec_store import type_spec_store
-from titan.django_pkg.graphene_django.utils import (
-    endpoint_args,
-    endpoint_imports,
-    field_arg_type,
-)
+from titan.django_pkg.extendspectypes.props import fk_type_spec
+from titan.django_pkg.graphene_django.utils import endpoint_imports
+
+
+def mutation_argument_type(field_spec, args):
+    if field_spec.field_type == "related_set":
+        return f"graphene.List({field_spec.fk_type_spec.tn_graphene}{args})"
+
+    if field_spec.field_type == "fk":
+        return f"{field_spec.fk_type_spec.tn_graphene}({args})"
+
+    if field_spec.field_type == "boolean":
+        return f"graphene.Boolean()"
+
+    if field_spec.field_type in ("string", "slug"):
+        return f"graphene.String()"
+
+    if field_spec.field_type == "uuid":
+        return f"graphene.ID()"
+
+    if field_spec.field_type == "any":
+        return f"GenericScalar"
+
+    raise Exception(f"Cannot deduce arg type for {field_spec.field_type}")
+
+
+def _mutation_arguments(field_specs):
+    result = {}
+    for field_spec in field_specs:
+        if field_spec.field_type in ("fk",):
+            result[field_spec.name_snake] = mutation_argument_type(field_spec, "")
+    return result
 
 
 class SectionsMutation:
@@ -16,9 +43,9 @@ class SectionsMutation:
     def mutation_imports(self, mutation):
         result = []
         item_names = set()
-        for (field_name, field_spec) in list(
-            mutation.inputs_type_spec.field_spec_by_name.items()
-        ) + list(mutation.outputs_type_spec.field_spec_by_name.items()):
+        for field_spec in list(mutation.inputs_type_spec.field_specs) + list(
+            mutation.outputs_type_spec.field_specs
+        ):
             result.extend(
                 endpoint_imports(self.res.service.django_app, item_names, field_spec)
             )
@@ -29,12 +56,11 @@ class SectionsMutation:
         indent = " " * 4
         result = []
 
-        for (
-            field_name,
-            field_spec,
-        ) in mutation.outputs_type_spec.field_spec_by_name.items():
+        for field_spec in mutation.outputs_type_spec.field_specs:
             args = ""
-            result.append(f"{indent}{field_name} = {field_arg_type(field_spec, args)}")
+            result.append(
+                f"{indent}{field_spec.name} = {mutation_argument_type(field_spec, args)}"
+            )
 
         return os.linesep.join(result)
 
@@ -42,7 +68,7 @@ class SectionsMutation:
         indent = " " * 8
         result = []
 
-        args = endpoint_args(mutation.inputs_type_spec.field_spec_by_name)
+        args = _mutation_arguments(mutation.inputs_type_spec.field_specs)
         for field_name, arg in args.items():
             result.append(f"{indent}{field_name} = {arg}")
         if not args:
@@ -52,12 +78,12 @@ class SectionsMutation:
 
     def mutate_function(self, mutation):
         tab = " " * 4
-        field_names = list(mutation.inputs_type_spec.field_spec_by_name.keys())
+        field_names = list([x.name for x in mutation.inputs_type_spec.field_specs])
 
         result = [f"{tab}def mutate(self, {', '.join(['info'] + field_names)}):"]
         for item_posted in mutation.items_posted:
             item_name = item_posted.item_name
-            type_spec = type_spec_store.get(item_name)
+            type_spec = type_spec_store().get(item_name)
             result += [f"{tab}{tab}{item_name} = {type_spec.tn_django_model}("]
             for field_name in field_names:
                 result += [f"{tab}{tab}{tab}{field_name}={field_name},"]
@@ -66,7 +92,7 @@ class SectionsMutation:
 
         for item_posted in mutation.items_deleted:
             item_name = item_posted.item_name
-            type_spec = type_spec_store.get(item_name)
+            type_spec = type_spec_store().get(item_name)
             result += [
                 f"{tab}{tab}{item_name} = {type_spec.tn_django_model}.objects.get("
             ]

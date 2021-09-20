@@ -4,19 +4,19 @@ from moonleap.utils.inflect import plural
 
 
 def _field_specs(type_spec):
-    return [x for x in type_spec.field_spec_by_name.values() if x.name_snake != "id"]
+    return [x for x in type_spec.field_specs if x.name_snake != "id"]
 
 
 def _graphene_field(field, item_name):
     t = field.field_type
 
-    if t == "fk":
+    if t in ("fk", "uuid"):
         return r"graphene.ID()"
 
     if t == "string":
         return r"graphene.String()"
 
-    if t == "bool":
+    if t == "boolean":
         return r"graphene.Boolean()"
 
     if t in ("email", "slug", "url"):
@@ -32,7 +32,7 @@ class TypeSectionsMixin:
     def graphene_fields(self, item_name):
         result = []
         indent = "    "
-        type_spec = type_spec_store.get(item_name)
+        type_spec = type_spec_store().get(item_name)
         for field_spec in _field_specs(type_spec):
             graphene_field = _graphene_field(field_spec, item_name)
             result.append(indent + f"{field_spec.name_snake} = {graphene_field}")

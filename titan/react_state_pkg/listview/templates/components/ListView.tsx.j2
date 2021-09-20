@@ -31,6 +31,8 @@ export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: Props
   const resourceView = getResourceView({ resUrl: props.yellowTulipsResUrl });
   if (resourceView) return resourceView;
 
+{{ res.sections.body() }}
+
   const yellowTulipDivs = pipe(
     always(props.yellowTulips),
     map((x: YellowTulipT) => (
@@ -43,7 +45,6 @@ export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: Props
     ))
   )();
 
-
   const noItems = <h2>There are no yellowTulips</h2>;
 
   return (
@@ -53,8 +54,8 @@ export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: Props
         props.className
       )}
     >
-      {yellowTulipDivs.length && yellowTulipDivs}
-      {!yellowTulipDivs.length && noItems}
+      {yellowTulipDivs.length > 0 && yellowTulipDivs}
+      {yellowTulipDivs.length === 0 && noItems}
     </div>
   );
 });

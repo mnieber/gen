@@ -60,7 +60,7 @@ def _graphql_body(type_spec, indent=0, skip=None):
         if spec_field.field_type in ("fk", "related_set"):
             fk_type_name = spec_field.field_type_attrs["target"]
             if fk_type_name not in skip:
-                fk_type_spec = type_spec_store.get(fk_type_name)
+                fk_type_spec = type_spec_store().get(fk_type_name)
                 graphqlBody.append(f"{spec_field.name} {{")
                 graphqlBody.extend(
                     _graphql_body(

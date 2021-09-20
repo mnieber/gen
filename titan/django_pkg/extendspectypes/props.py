@@ -7,7 +7,7 @@ def fk_type_spec(self: FieldSpec):
     if not target:
         return None
 
-    return type_spec_store.get(target)
+    return type_spec_store().get(target)
 
 
 def tn_graphene(self: TypeSpec):

@@ -8,39 +8,30 @@ def _default_inputs_type_spec(self, name):
     if self.items_provided and not self.item_lists_provided:
         return TypeSpec(
             type_name=name,
-            field_spec_by_name=R.index_by(
-                R.prop("name"),
-                [
-                    FieldSpec(
-                        name_snake="id",
-                        name="id",
-                        required=False,
-                        private=False,
-                        field_type="string",
-                    )
-                ],
-            ),
+            field_specs=[
+                FieldSpec(
+                    name_snake="id",
+                    name="id",
+                    required=False,
+                    private=False,
+                    field_type="uuid",
+                )
+            ],
         )
     else:
-        return TypeSpec(
-            type_name=name,
-            field_spec_by_name={},
-        )
+        return TypeSpec(type_name=name, field_specs=[])
 
 
 def _default_outputs_type_spec(self, name):
     return TypeSpec(
         type_name=name,
-        field_spec_by_name=R.index_by(
-            R.prop("name"),
-            [
-                *[_item_field(self, item) for item in self.items_provided],
-                *[
-                    _item_list_field(self, item_list)
-                    for item_list in self.item_lists_provided
-                ],
+        field_specs=[
+            *[_item_field(self, item) for item in self.items_provided],
+            *[
+                _item_list_field(self, item_list)
+                for item_list in self.item_lists_provided
             ],
-        ),
+        ],
     )
 
 
@@ -69,20 +60,20 @@ def _item_list_field(self, item):
         name=f"{plural(item.item_name)}",
         required=False,
         private=False,
-        field_type="list",
+        field_type="related_set",
         field_type_attrs=dict(target=upper0(item.item_name)),
     )
 
 
 def inputs_type_spec(self):
     name = f"{upper0(self.name)}Input"
-    if not type_spec_store.has(name):
-        type_spec_store.setdefault(name, _default_inputs_type_spec(self, name))
-    return type_spec_store.get(name)
+    if not type_spec_store().has(name):
+        type_spec_store().setdefault(name, _default_inputs_type_spec(self, name))
+    return type_spec_store().get(name)
 
 
 def outputs_type_spec(self):
     name = f"{upper0(self.name)}Output"
-    if not type_spec_store.has(name):
-        type_spec_store.setdefault(name, _default_outputs_type_spec(self, name))
-    return type_spec_store.get(name)
+    if not type_spec_store().has(name):
+        type_spec_store().setdefault(name, _default_outputs_type_spec(self, name))
+    return type_spec_store().get(name)

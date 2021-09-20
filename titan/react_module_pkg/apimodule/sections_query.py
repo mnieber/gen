@@ -18,7 +18,7 @@ class SectionsQuery:
 
     def graphql_args(self, query, before):
         tab = " " * (4 if before else 8)
-        field_specs = query.inputs_type_spec.field_spec_by_name.items()
+        field_specs = query.inputs_type_spec.field_specs
         if not field_specs:
             return ""
 
@@ -27,11 +27,7 @@ class SectionsQuery:
             + os.linesep
             + os.linesep.join(
                 map(
-                    ds(
-                        lambda n, t: tab
-                        + "  "
-                        + field_spec_to_graphql_arg(n, t, before)
-                    ),
+                    lambda t: tab + "  " + field_spec_to_graphql_arg(t.name, t, before),
                     field_specs,
                 )
             )
@@ -45,7 +41,7 @@ class SectionsQuery:
 
     def graphql_variables(self, query):
         tab = " " * 6
-        field_specs = query.inputs_type_spec.field_spec_by_name.values()
+        field_specs = query.inputs_type_spec.field_specs
         return tab + ("," + os.linesep + tab).join(
             [field_spec.name_snake for field_spec in field_specs]
         )

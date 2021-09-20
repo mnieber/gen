@@ -1,5 +1,6 @@
 import os
 
+from moonleap import upper0
 from moonleap.resources.type_spec_store import type_spec_store
 from moonleap.utils.case import lower0
 
@@ -81,7 +82,7 @@ def _model(field):
         model = "SlugField" if t == "slug" else "URLField"
         return f"models.{model}({', '.join(args)})"
 
-    if t == "bool":
+    if t == "boolean":
         default_arg = (
             [f'default={"True" if field.default_value else "False"}']
             if field.default_value in (True, False)
@@ -89,6 +90,10 @@ def _model(field):
         )
         args = [*default_arg, *null_blank, *help_text]
         return f"models.BooleanField({', '.join(args)})"
+
+    if t == "uuid":
+        args = [*null_blank, *help_text]
+        return f"models.UUIDField({', '.join(args)})"
 
     if t == "email":
         default_arg = (
@@ -106,7 +111,7 @@ def _model(field):
 
 def _field_specs(type_spec):
     return sorted(
-        [x for x in type_spec.field_spec_by_name.values() if x.name_snake != "id"],
+        [x for x in type_spec.field_specs if x.name_snake != "id"],
         key=lambda x: x.name_snake,
     )
 
@@ -117,7 +122,7 @@ class Sections:
 
     def model_imports(self, item_name):
         result = []
-        type_spec = type_spec_store.get(item_name)
+        type_spec = type_spec_store().get(item_name)
         for field_spec in _field_specs(type_spec):
             if field_spec.field_type == "fk":
                 fk_item_type = field_spec.field_type_attrs["target"]
@@ -133,7 +138,7 @@ class Sections:
     def model_fields(self, item_name):
         result = []
         indent = "    "
-        type_spec = type_spec_store.get(item_name)
+        type_spec = type_spec_store().get(item_name)
         for field_spec in _field_specs(type_spec):
             if field_spec.field_type == "related_set":
                 continue
@@ -141,6 +146,15 @@ class Sections:
             result.append(indent + f"{field_spec.name_snake} = {model}")
 
         return "\n".join(result or [indent + "pass"])
+
+    def str_repr(self, item_name):
+        indent = " " * 6
+        type_spec = type_spec_store().get(item_name)
+        for field_spec in _field_specs(type_spec):
+            if field_spec.field_type == "string":
+                return f"{indent}return '{upper0(item_name)}: ' + self.{field_spec.name_snake}"
+
+        return ""
 
     def import_item_types(self):
         result = []

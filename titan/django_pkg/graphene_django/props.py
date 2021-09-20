@@ -33,10 +33,16 @@ def render(self, write_file, render_template):
 
     sections_datatype = SectionsDataType(self)
     for datatype in api_module.graphql_api.types:
-        template_path = Path(__file__).parent / "templates_types"
+        if datatype.endswith("Form"):
+            template_dir = "templates_form_types"
+            item_name = lower0(datatype[:-4])
+        else:
+            template_dir = "templates_types"
+            item_name = lower0(datatype)
+        template_path = Path(__file__).parent / template_dir
         render_templates(
             template_path,
-            item_name=lower0(datatype),
+            item_name=item_name,
             sections=sections_datatype,
         )(self, write_file, render_template)
 

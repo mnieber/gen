@@ -10,5 +10,9 @@ from app.models import Entity
 class YellowTulip(Entity):
 {{ res.sections.model_fields(item_type.name)}}
 
+    def __str__(self):
+{{ res.sections.str_repr(item_type.name)}}
+
+
 {% endfor %}
 {% end_magic_with %}

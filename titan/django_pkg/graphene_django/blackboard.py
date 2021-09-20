@@ -8,7 +8,7 @@ def _default_value(field, item_name):
     if t == "fk":
         return f"{field.name_snake}.id"
 
-    if t == "bool":
+    if t == "boolean":
         return r"True"
 
     if t == "date":
@@ -19,6 +19,9 @@ def _default_value(field, item_name):
 
     if t == "slug":
         return r"foo-bar"
+
+    if t == "uuid":
+        return r'"41f55a14-a1b7-5697-84ef-c00e3f51c7e2"'
 
     if t == "string":
         return r'"foo"'
@@ -31,7 +34,7 @@ def _default_value(field, item_name):
 
 def _add_mutation_fields(fields, result):
     for field in fields:
-        if field.field_type == "bool":
+        if field.field_type == "boolean":
             result.append(
                 f'          {field.name}: {{"true" if {field.name_snake} else "false"}},'
             )
@@ -64,8 +67,8 @@ class EndPointSectionsMixin:
 
     def form_mutation(self, form):
         result = []
-        type_spec = type_spec_store.get(form.data_type_name)
-        fields = [x for x in type_spec.field_spec_by_name.values() if not x.private]
+        type_spec = type_spec_store().get(form.data_type_name)
+        fields = [x for x in type_spec.field_specs if not x.private]
         args = (", " if fields else "") + ", ".join([x.name_snake for x in fields])
 
         if True:
@@ -92,8 +95,8 @@ class EndPointSectionsMixin:
 
     def post_item_mutation(self, item):
         result = []
-        type_spec = type_spec_store.get(item.item_name)
-        fields = [x for x in type_spec.field_spec_by_name.values() if not x.private]
+        type_spec = type_spec_store().get(item.item_name)
+        fields = [x for x in type_spec.field_specs if not x.private]
         args = (", " if fields else "") + ", ".join([x.name_snake for x in fields])
 
         if True:
@@ -123,9 +126,9 @@ class EndPointSectionsMixin:
     def form_values(self, item_name):
         result = []
         indent = " " * 16
-        type_spec = type_spec_store.get(item_name)
+        type_spec = type_spec_store().get(item_name)
 
-        for field in type_spec.field_spec_by_name.values():
+        for field in type_spec.field_specs:
             value = _default_value(field, item_name)
             result.append(f"{indent}{field.name}={value}, ")
 

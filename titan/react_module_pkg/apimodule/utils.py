@@ -7,15 +7,15 @@ from moonleap.utils.fp import ds
 
 
 def javascript_args(type_spec):
-    field_specs = type_spec.field_spec_by_name.items()
-    return ", ".join(R.map(ds(_field_spec_to_ts_arg), field_specs))
+    field_specs = type_spec.field_specs
+    return ", ".join(R.map(lambda t: _field_spec_to_ts_arg(t.name, t), field_specs))
 
 
 def field_spec_to_ts_type(field_spec):
-    if field_spec.field_type in ("string", "json", "url", "slug"):
+    if field_spec.field_type in ("string", "json", "url", "slug", "uuid"):
         return "string"
 
-    if field_spec.field_type in ("bool",):
+    if field_spec.field_type in ("boolean",):
         return "boolean"
 
     if field_spec.field_type in ("fk", "related_set"):
@@ -33,8 +33,11 @@ def _input_field_to_graphql_type(field_spec):
     if field_spec.field_type in ("string", "json", "url"):
         return "String"
 
-    if field_spec.field_type in ("bool",):
+    if field_spec.field_type in ("boolean",):
         return "Boolean"
+
+    if field_spec.field_type in ("uuid",):
+        return "ID"
 
     if field_spec.field_type in ("fk",):
         return f"{upper0(kebab_to_camel(field_spec.field_type_attrs['target']))}Type"
@@ -55,11 +58,11 @@ def graphql_body(type_spec, indent=0, skip=None):
         skip = [type_spec.type_name]
 
     graphqlBody = []
-    for spec_field in type_spec.field_spec_by_name.values():
-        if spec_field.field_type in ("fk", "related_set", "list", "item"):
+    for spec_field in type_spec.field_specs:
+        if spec_field.field_type in ("fk", "related_set"):
             fk_type_name = spec_field.field_type_attrs["target"]
             if fk_type_name not in skip:
-                fk_type_spec = type_spec_store.get(fk_type_name)
+                fk_type_spec = type_spec_store().get(fk_type_name)
                 if spec_field.field_type in ("fk", "related_set"):
                     graphqlBody.append(f"{spec_field.name} {{")
                     indent += 2

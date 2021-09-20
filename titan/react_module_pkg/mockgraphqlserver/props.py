@@ -6,10 +6,7 @@ class Sections:
         self.res = res
 
     def item_fields(self, item_name):
-        type_spec = type_spec_store.get(item_name)
+        type_spec = type_spec_store().get(item_name)
         return "\n".join(
-            [
-                f"  {x.name}: name: faker.name.findName(),"
-                for x in type_spec.field_spec_by_name.values()
-            ]
+            [f"  {x.name}: name: faker.name.findName()," for x in type_spec.field_specs]
         )

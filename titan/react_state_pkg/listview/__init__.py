@@ -3,18 +3,18 @@ from moonleap import (
     MemFun,
     Prop,
     RenderTemplates,
+    create,
     create_forward,
     extend,
     kebab_to_camel,
     rule,
-    create,
 )
 from moonleap.utils.case import upper0
 from moonleap.utils.inflect import plural
 from moonleap.verbs import has, uses
 from titan.react_state_pkg.behavior.resources import Behavior
 
-from . import props
+from . import props, sections, sections_item_view
 from .resources import ListView, create_load_items_effect
 
 
@@ -60,4 +60,5 @@ class ExtendListView(RenderTemplates(__file__)):
     create_router_configs = MemFun(props.create_router_configs)
     load_items_effect = P.child(uses, "load-items-effect")
     behaviors = P.children(has, "behavior")
-    sections = Prop(props.Sections)
+    sections = Prop(sections.Sections)
+    sections_item_view = Prop(sections_item_view.Sections)
