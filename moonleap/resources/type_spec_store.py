@@ -1,91 +1,14 @@
 import os
-import typing as T
-from dataclasses import dataclass, field
 from pathlib import Path
 
 import yaml
+from moonleap.resources.default_field_specs import default_field_specs
+from moonleap.resources.field_spec import field_specs_from_type_spec_dict
+from moonleap.resources.type_spec import TypeSpec, add_related_set_field_to_type_spec
 from moonleap.session import get_session
-from moonleap.utils.case import camel_to_snake, lower0, snake_to_camel, upper0
-
-fk_prefix = "/data_types/"
-
-
-@dataclass
-class FieldSpec:
-    field_type: str
-    name_snake: str
-    name: str
-    private: bool
-    required: bool
-    default_value: T.Any = None
-    description: T.Optional[str] = None
-    unique: bool = False
-    field_type_attrs: dict = field(default_factory=dict)
-
-
-@dataclass
-class TypeSpec:
-    type_name: str
-    field_specs: T.List[FieldSpec]
-
+from moonleap.utils.case import upper0
 
 _default_type_spec_placeholder = TypeSpec(type_name="placeholder", field_specs=[])
-_default_field_specs = [
-    FieldSpec(
-        name_snake="id",
-        name="id",
-        required=True,
-        private=False,
-        field_type="uuid",
-    ),
-    FieldSpec(
-        name_snake="name",
-        name="name",
-        required=True,
-        private=False,
-        field_type="string",
-    ),
-]
-
-
-def _field_type_and_attrs(field_spec_dict):
-    attrs = {}
-    t = field_spec_dict.get("type")
-
-    if t is None:
-        ref = field_spec_dict.get("$ref", "")
-        if ref.startswith(fk_prefix):
-            t = "fk"
-            attrs["target"] = ref[len(fk_prefix) :]  # noqa: E203
-            attrs["inline"] = field_spec_dict.get("inline", False)
-            if attrs["inline"] and field_spec_dict.get("hasRelatedSet"):
-                raise Exception(
-                    "Field cannot be inline and have a "
-                    + f"related set: {field_spec_dict.name}"
-                )
-            attrs["has_related_set"] = (
-                False if attrs["inline"] else field_spec_dict.get("hasRelatedSet", True)
-            )
-    else:
-        if "onDelete" in field_spec_dict:
-            attrs["on_delete"] = field_spec_dict["onDelete"]
-
-        if "maxLength" in field_spec_dict:
-            attrs["max_length"] = field_spec_dict["maxLength"]
-
-    return t, attrs
-
-
-def _default_value(field_spec):
-    return field_spec.get("default", None)
-
-
-def _unique(field_spec):
-    return field_spec.get("unique", False)
-
-
-def _description(field_spec):
-    return field_spec.get("description")
 
 
 def _load_type_spec_dict(type_specs_dir, type_name):
@@ -100,31 +23,6 @@ def _load_type_spec_dict(type_specs_dir, type_name):
         return type_spec_dict
 
 
-def _field_specs_from_type_spec_dict(type_spec_dict):
-    required = type_spec_dict.get("required", [])
-    private = type_spec_dict.get("private", [])
-    result = []
-    for field_name, field_spec_dict in type_spec_dict["properties"].items():
-        t, attrs = _field_type_and_attrs(field_spec_dict)
-        if t is None:
-            raise Exception(f"Unknown field type for field: {field_name}")
-
-        result.append(
-            FieldSpec(
-                default_value=_default_value(field_spec_dict),
-                description=_description(field_spec_dict),
-                field_type=t,
-                field_type_attrs=attrs,
-                name_snake=field_name,
-                name=snake_to_camel(field_name),
-                private=field_name in private,
-                required=field_name in required,
-                unique=_unique(field_spec_dict),
-            )
-        )
-    return result
-
-
 class TypeSpecStore:
     def __init__(self):
         self._type_spec_by_type_name = {}
@@ -136,7 +34,7 @@ class TypeSpecStore:
 
             type_spec = TypeSpec(
                 type_name=type_name,
-                field_specs=_field_specs_from_type_spec_dict(type_spec_dict),
+                field_specs=field_specs_from_type_spec_dict(type_spec_dict),
             )
             self.setdefault(type_name, type_spec)
 
@@ -145,20 +43,10 @@ class TypeSpecStore:
             if field_spec.field_type == "fk" and field_spec.field_type_attrs.get(
                 "has_related_set"
             ):
-                fk_type_spec = self.get(field_spec.field_type_attrs["target"])
-                name = lower0(type_spec.type_name + "Set")
-                if [x for x in fk_type_spec.field_specs if x.name == name]:
-                    raise Exception("Field spec with name {name} already exists")
-
-                fk_type_spec.field_specs.append(
-                    FieldSpec(
-                        name=name,
-                        name_snake=camel_to_snake(name),
-                        required=False,
-                        private=field_spec.private,
-                        field_type="related_set",
-                        field_type_attrs=dict(target=type_spec.type_name),
-                    )
+                add_related_set_field_to_type_spec(
+                    type_spec,
+                    field_spec,
+                    self.get(field_spec.field_type_attrs["target"]),
                 )
 
     def setdefault(self, type_name, default_value):
@@ -178,15 +66,13 @@ class TypeSpecStore:
         assert type_name and type_name[0] == type_name[0].upper()
 
         type_spec = self._type_spec_by_type_name.get(type_name, None)
+        if type_spec is not None:
+            return type_spec
 
         return (
-            type_spec
-            if type_spec is not None
-            else (
-                TypeSpec(type_name=type_name, field_specs=_default_field_specs)
-                if default is _default_type_spec_placeholder
-                else default
-            )
+            TypeSpec(type_name=type_name, field_specs=default_field_specs)
+            if default is _default_type_spec_placeholder
+            else default
         )
 
 
