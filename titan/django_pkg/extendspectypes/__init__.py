@@ -1,12 +1,7 @@
 from moonleap import Prop, extend
-from moonleap.resources.type_spec_store import FieldSpec, TypeSpec
+from moonleap.resources.type_spec_store import TypeSpec
 
 from . import props
-
-
-@extend(FieldSpec)
-class ExtendFieldSpec:
-    fk_type_spec = Prop(props.fk_type_spec)
 
 
 @extend(TypeSpec)

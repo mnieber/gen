@@ -35,11 +35,11 @@ def render(self, write_file, render_template):
             sections_datatype=sections_datatype,
         )(self, write_file, render_template)
 
-    for datatype in self.graphql_api.types:
+    for type_spec in self.graphql_api.data_type_specs:
         template_path = Path(__file__).parent / "templates_schemas"
         render_templates(
             template_path,
-            item_name=lower0(datatype),
+            item_name=lower0(type_spec.type_name),  # HACK
             sections=sections_datatype,
         )(self, write_file, render_template)
 

@@ -24,7 +24,7 @@ class SectionsDataType:
         return f"exclude = [{list_str}]" if list_str else ""
 
     def form_type_fields(self, item_name):
-        type_spec = type_spec_store().get_form(item_name)
+        type_spec = type_spec_store().get(item_name + "Form")  # HACK
         return os.linesep.join(
             [
                 f'    {x.name_snake} = {mutation_argument_type(x, "")}'

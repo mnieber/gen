@@ -12,6 +12,7 @@ def create_graphql_api(term, block):
 
 @extend(GraphqlApi)
 class ExtendGraphqlApi:
-    types = Prop(props.types)
+    data_type_specs = Prop(props.data_type_specs)
+    form_type_specs = Prop(props.form_type_specs)
     queries_that_provide_item = MemFun(props.queries_that_provide_item)
     queries_that_provide_item_list = MemFun(props.queries_that_provide_item_list)

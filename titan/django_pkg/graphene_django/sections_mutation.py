@@ -2,7 +2,6 @@ import os
 
 from moonleap import upper0
 from moonleap.resources.type_spec_store import type_spec_store
-from titan.django_pkg.extendspectypes.props import fk_type_spec
 from titan.django_pkg.graphene_django.utils import endpoint_imports
 
 

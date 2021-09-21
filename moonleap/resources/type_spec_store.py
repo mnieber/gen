@@ -1,13 +1,11 @@
 import os
 import typing as T
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, field
 from pathlib import Path
 
-import ramda as R
 import yaml
 from moonleap.session import get_session
 from moonleap.utils.case import camel_to_snake, lower0, snake_to_camel, upper0
-from moonleap.utils.inflect import plural
 
 fk_prefix = "/data_types/"
 
@@ -102,7 +100,7 @@ def _load_type_spec_dict(type_specs_dir, type_name):
         return type_spec_dict
 
 
-def _get_field_specs(type_spec_dict):
+def _field_specs_from_type_spec_dict(type_spec_dict):
     required = type_spec_dict.get("required", [])
     private = type_spec_dict.get("private", [])
     result = []
@@ -127,56 +125,6 @@ def _get_field_specs(type_spec_dict):
     return result
 
 
-def _form_type_spec_from_data_type_spec(data_type_spec):
-    def _convert(field_spec):
-        changes = {}
-        if field_spec.field_type in ("fk",):
-            changes = dict(
-                field_type="uuid",
-                field_type_attrs={},
-            )
-
-        return replace(field_spec, **changes)
-
-    return TypeSpec(
-        type_name=data_type_spec.type_name + "Form",
-        field_specs=R.pipe(
-            R.always(data_type_spec.field_specs),
-            R.filter(lambda x: x.field_type != "related_set"),
-            R.map(_convert),
-        )(None),
-    )
-
-
-def flattened_spec_field_by_name(type_spec, skip=None):
-    if skip is None:
-        skip = [type_spec.type_name]
-
-    result = {}
-    spec_fields = [x for x in type_spec.field_specs if not x.private]
-    while spec_fields:
-        spec_field = spec_fields.pop(0)
-        if spec_field.field_type in ("fk", "related_set"):
-            fk_type_name = spec_field.field_type_attrs["target"]
-            if fk_type_name not in skip:
-                inline = spec_field.field_type_attrs.get("inline", [])
-                if inline:
-                    fk_type_spec = type_spec_store().get(fk_type_name)
-                    fk_field_specs = R.pick(
-                        inline,
-                        flattened_spec_field_by_name(
-                            fk_type_spec, skip + [fk_type_name]
-                        ),
-                    )
-                    spec_fields.extend(fk_field_specs)
-                else:
-                    result[spec_field.name] = spec_field
-        else:
-            result[spec_field.name] = spec_field
-
-    return result
-
-
 class TypeSpecStore:
     def __init__(self):
         self._type_spec_by_type_name = {}
@@ -188,7 +136,7 @@ class TypeSpecStore:
 
             type_spec = TypeSpec(
                 type_name=type_name,
-                field_specs=_get_field_specs(type_spec_dict),
+                field_specs=_field_specs_from_type_spec_dict(type_spec_dict),
             )
             self.setdefault(type_name, type_spec)
 
@@ -239,21 +187,6 @@ class TypeSpecStore:
                 if default is _default_type_spec_placeholder
                 else default
             )
-        )
-
-    def get_form(self, type_name, default=_default_type_spec_placeholder):
-        data_type_name = upper0(type_name)  # HACK
-        data_type_spec = self.get(data_type_name)
-
-        form_type_name = upper0(type_name + "Form")  # HACK
-        form_type_spec = self._type_spec_by_type_name.get(form_type_name, None)
-
-        return (
-            form_type_spec
-            if form_type_spec is not None
-            else _form_type_spec_from_data_type_spec(data_type_spec)
-            if default is _default_type_spec_placeholder
-            else default
         )
 
 

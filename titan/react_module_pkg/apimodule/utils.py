@@ -8,7 +8,7 @@ from moonleap.utils.fp import ds
 
 def javascript_args(type_spec):
     field_specs = type_spec.field_specs
-    return ", ".join(R.map(lambda t: _field_spec_to_ts_arg(t.name, t), field_specs))
+    return ", ".join(R.map(lambda t: field_spec_to_ts_arg(t.name, t), field_specs))
 
 
 def field_spec_to_ts_type(field_spec):
@@ -24,7 +24,7 @@ def field_spec_to_ts_type(field_spec):
     raise Exception(f"Cannot deduce typescript type for {field_spec.field_type}")
 
 
-def _field_spec_to_ts_arg(field_name, field_spec):
+def field_spec_to_ts_arg(field_name, field_spec):
     ts_type = field_spec_to_ts_type(field_spec)
     return f"{field_name}: {ts_type}"
 

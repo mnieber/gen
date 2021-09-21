@@ -2,13 +2,14 @@ import os
 
 import ramda as R
 from moonleap import chop0
-from moonleap.resources.type_spec_store import (
-    flattened_spec_field_by_name,
-    type_spec_store,
-)
+from moonleap.resources.type_spec_store import type_spec_store
 from moonleap.utils.fp import ds
 from moonleap.utils.inflect import plural
 from moonleap.utils.magic_replace import magic_replace
+from titan.react_module_pkg.apimodule.utils import (
+    field_spec_to_graphql_arg,
+    field_spec_to_ts_arg,
+)
 
 endpoint_template = chop0(
     """
@@ -36,16 +37,19 @@ endpoint_template = chop0(
 
 
 def _javascript_args(type_spec):
-    field_specs = flattened_spec_field_by_name(type_spec).items()
-    return ", ".join(R.map(ds(_field_spec_to_ts_arg), field_specs))
+    field_specs = [(x.name, x) for x in type_spec.field_specs]
+    return ", ".join(R.map(ds(field_spec_to_ts_arg), field_specs))
 
 
 def _graphql_header(type_spec, name, query_type):
-    field_specs = flattened_spec_field_by_name(type_spec).items()
+    field_specs = [(x.name, x) for x in type_spec.field_specs]
     return (os.linesep + " " * 6).join(
         [
             f"{query_type} {name}" + ("(" if field_specs else ""),
-            *map(ds(lambda n, t: "  " + _field_spec_to_graphql_arg(n, t)), field_specs),
+            *map(
+                ds(lambda n, t: "  " + field_spec_to_graphql_arg(n, t, True)),
+                field_specs,
+            ),
             ") " if field_specs else "",
         ]
     )
@@ -56,7 +60,7 @@ def _graphql_body(type_spec, indent=0, skip=None):
         skip = [type_spec.type_name]
 
     graphqlBody = []
-    for spec_field in flattened_spec_field_by_name(type_spec).values():
+    for spec_field in type_spec.field_specs:
         if spec_field.field_type in ("fk", "related_set"):
             fk_type_name = spec_field.field_type_attrs["target"]
             if fk_type_name not in skip:
@@ -80,7 +84,7 @@ def _graphql_body(type_spec, indent=0, skip=None):
 
 
 def get_endpoint_query_text(query):
-    field_names = flattened_spec_field_by_name(query.inputs_type_spec).keys()
+    field_names = [x.name for x in query.inputs_type_spec.field_specs]
 
     return magic_replace(
         endpoint_template,
