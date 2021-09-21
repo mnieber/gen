@@ -7,31 +7,31 @@ import {
   HandleValidateArgsT,
   HandleSubmitArgsT,
 } from 'react-form-state-context';
-import { useStore } from 'src/app/components';
+import { {{ _.postmethod }} } from 'src/api/mutations/{{ _.postmethod }}';
 import { Field } from 'src/forms/components/Field';
 import { GlobalError } from 'src/forms/components/GlobalError';
 import { TextField } from 'src/forms/components/TextField';
 import { SaveButton } from 'src/forms/components/SaveButton';
 
-import './YellowTulipView.scss';
+import './YellowTulipFormView.scss';
 
 type PropsT = {
 };
 
-export const YellowTulipView: React.FC<PropsT> = observer(() => {
-  const { gardenFlowersStore } = useStore();
-
+export const YellowTulipFormView: React.FC<PropsT> = observer(() => {
   const initialValues = {
-{{ res.sections.item_fields(res.item_name) }}
+{% for field_spec in _.form_field_specs %}
+    {{ field_spec.name }}: null,
+{% endfor %}
   };
   const initialErrors = {};
   const handleValidate = ({values, setError} : HandleValidateArgsT) => {};
   const handleSubmit = ({values}: HandleSubmitArgsT) => {
-    gardenFlowersStore.saveYellowTulip(values);
+    {{ _.postmethod }}(values);
   };
 
   const formDiv = (
-    <div className="YellowTulipView flex flex-col w-full">
+    <div className="YellowTulipFormView flex flex-col w-full">
       <FormStateProvider
         initialValues={initialValues}
         initialErrors={initialErrors}

@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-def RenderTemplates(root_filename, location="templates"):  # noqa
+def RenderTemplates(root_filename, location="templates", get_context=None):  # noqa
     from moonleap.render.template_renderer import render_templates
     from moonleap.resource.memfun import MemFun
 
@@ -10,6 +10,6 @@ def RenderTemplates(root_filename, location="templates"):  # noqa
             templates_path = lambda res: Path(root_filename).parent / location(res)
         else:
             templates_path = Path(root_filename).parent / location
-        render = MemFun(render_templates(templates_path))
+        render = MemFun(render_templates(templates_path, get_context=get_context))
 
     return Base

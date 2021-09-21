@@ -10,6 +10,10 @@ def queries_that_provide_item_list(self, item_name):
     return [q for q in self.queries if q.provides_item_list(item_name)]
 
 
+def mutations_that_post_item(self, item_name):
+    return [m for m in self.mutations if m.posts_item(item_name)]
+
+
 def form_type_specs(self):
     result = []
     for endpoint in list(self.queries) + list(self.mutations):

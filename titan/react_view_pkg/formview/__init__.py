@@ -1,22 +1,21 @@
 from moonleap import (
-    Prop,
     RenderTemplates,
+    create,
     create_forward,
     extend,
     kebab_to_camel,
     rule,
-    create,
 )
 from moonleap.verbs import has
 
-from . import props
+from .context import get_context
 from .resources import FormView
 
 
 @create(["form-view"])
 def create_form_view(term, block):
     name = kebab_to_camel(term.data)
-    form_view = FormView(item_name=name + "Form", name=f"{name}FormView")
+    form_view = FormView(item_name=name, name=f"{name}FormView")
     return form_view
 
 
@@ -26,5 +25,5 @@ def service_has_forms_module(module, form_view):
 
 
 @extend(FormView)
-class ExtendFormView(RenderTemplates(__file__)):
-    sections = Prop(props.Sections)
+class ExtendFormView(RenderTemplates(__file__, get_context=get_context)):
+    pass

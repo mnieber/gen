@@ -62,3 +62,7 @@ def outputs_type_spec(self):
     if not type_spec_store().has(name):
         type_spec_store().setdefault(name, default_outputs_type_spec(self, name))
     return type_spec_store().get(name)
+
+
+def posts_item(self, item_name):
+    return [x for x in self.items_posted if x.item_name == item_name]

@@ -1,6 +1,15 @@
 import moonleap.resource.props as P
 import ramda as R
-from moonleap import Prop, create, empty_rule, extend, kebab_to_camel, rule, upper0
+from moonleap import (
+    MemFun,
+    Prop,
+    create,
+    empty_rule,
+    extend,
+    kebab_to_camel,
+    rule,
+    upper0,
+)
 from moonleap.resource.rel import create_forward
 from moonleap.verbs import deletes, has, posts
 from titan.api_pkg.graphqlapi import GraphqlApi
@@ -54,5 +63,6 @@ class ExtendGraphqlApi:
 class ExtendMutation:
     items_deleted = P.children(deletes, "item")
     items_posted = P.children(posts, "item")
+    posts_item = MemFun(props.posts_item)
     inputs_type_spec = Prop(props.inputs_type_spec)
     outputs_type_spec = Prop(props.outputs_type_spec)

@@ -46,7 +46,6 @@ def create_report(resource, term, index_fn):
         (rel, res) for (rel, res) in _get_relations(resource, is_inv=True) if rel.subj
     ]
     body = render_template(
-        resource,
         default_template_fn,
         term=term,
         settings=get_session().settings,
@@ -54,6 +53,7 @@ def create_report(resource, term, index_fn):
         child_relations=child_relations,
         parent_relations=parent_relations,
         index_fn=index_fn,
+        res=resource,
     )
     return (
         "<html><body>"
@@ -78,7 +78,6 @@ def create_index(blocks):
                 resource_by_term_str[term_to_word(term)] = resource
 
     body = render_template(
-        None,
         template_fn,
         settings=get_session().settings,
         resource_by_term_str=sorted(

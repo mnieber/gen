@@ -14,5 +14,6 @@ def create_graphql_api(term, block):
 class ExtendGraphqlApi:
     data_type_specs = Prop(props.data_type_specs)
     form_type_specs = Prop(props.form_type_specs)
+    mutations_that_post_item = MemFun(props.mutations_that_post_item)
     queries_that_provide_item = MemFun(props.queries_that_provide_item)
     queries_that_provide_item_list = MemFun(props.queries_that_provide_item_list)
