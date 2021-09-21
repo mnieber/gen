@@ -1,3 +1,4 @@
+from moonleap import upper0
 from moonleap.resources.type_spec_store import type_spec_store
 from moonleap.utils.magic_replace import magic_replace
 
@@ -95,7 +96,7 @@ class EndPointSectionsMixin:
 
     def post_item_mutation(self, item):
         result = []
-        type_spec = type_spec_store().get(item.item_name)
+        type_spec = type_spec_store().get(upper0(item.item_name))
         fields = [x for x in type_spec.field_specs if not x.private]
         args = (", " if fields else "") + ", ".join([x.name_snake for x in fields])
 
@@ -126,7 +127,7 @@ class EndPointSectionsMixin:
     def form_values(self, item_name):
         result = []
         indent = " " * 16
-        type_spec = type_spec_store().get(item_name)
+        type_spec = type_spec_store().get(upper0(item_name))
 
         for field in type_spec.field_specs:
             value = _default_value(field, item_name)

@@ -37,7 +37,7 @@ class Sections:
 
     def item_fields(self, item_type):
         result = []
-        type_spec = type_spec_store().get(item_type.name)
+        type_spec = type_spec_store().get(upper0(item_type.name))
         for field_spec in type_spec.field_specs:
             if field_spec.private:
                 continue

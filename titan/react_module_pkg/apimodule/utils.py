@@ -1,9 +1,8 @@
 import os
 
 import ramda as R
-from moonleap import kebab_to_camel, upper0
+from moonleap import upper0
 from moonleap.resources.type_spec_store import type_spec_store
-from moonleap.utils.fp import ds
 
 
 def javascript_args(type_spec):
@@ -18,8 +17,8 @@ def field_spec_to_ts_type(field_spec):
     if field_spec.field_type in ("boolean",):
         return "boolean"
 
-    if field_spec.field_type in ("fk", "related_set"):
-        return f"{upper0(kebab_to_camel(field_spec.field_type_attrs['target']))}T"
+    if field_spec.field_type in ("fk", "related_set", "form"):
+        return f"{upper0(field_spec.field_type_attrs['item_name'])}T"
 
     raise Exception(f"Cannot deduce typescript type for {field_spec.field_type}")
 
@@ -39,8 +38,8 @@ def _input_field_to_graphql_type(field_spec):
     if field_spec.field_type in ("uuid",):
         return "ID"
 
-    if field_spec.field_type in ("fk",):
-        return f"{upper0(kebab_to_camel(field_spec.field_type_attrs['target']))}Type"
+    if field_spec.field_type in ("form",):
+        return f"{upper0(field_spec.field_type_attrs['item_name'])}Type"
 
     raise Exception(f"Cannot deduce graphql type for {field_spec.field_type}")
 

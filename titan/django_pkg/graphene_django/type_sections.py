@@ -32,7 +32,7 @@ class TypeSectionsMixin:
     def graphene_fields(self, item_name):
         result = []
         indent = "    "
-        type_spec = type_spec_store().get(item_name)
+        type_spec = type_spec_store().get(upper0(item_name))
         for field_spec in _field_specs(type_spec):
             graphene_field = _graphene_field(field_spec, item_name)
             result.append(indent + f"{field_spec.name_snake} = {graphene_field}")

@@ -1,5 +1,6 @@
 import os
 
+from moonleap import upper0
 from titan.django_pkg.graphene_django.utils import endpoint_imports
 
 
@@ -42,13 +43,13 @@ def _filter_args(query):
 def _return_value_for_field_spec(query, field_spec):
     if field_spec.field_type == "related_set":
         return (
-            f"{field_spec.fk_type_spec.tn_django_model}.objects.filter"
+            f"{upper0(field_spec.field_type_attrs['item_name'])}.objects.filter"
             + f"({_filter_args(query)})"
         )
 
     if field_spec.field_type == "fk":
         return (
-            f"{field_spec.fk_type_spec.tn_django_model}.objects.filter"
+            f"{upper0(field_spec.field_type_attrs['item_name'])}.objects.filter"
             + f"({_filter_args(query)}).first()"
         )
 

@@ -1,7 +1,8 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap.utils.case import snake_to_camel
+from moonleap.utils.case import lower0, snake_to_camel
+from moonleap.utils.chop import chop_postfix
 
 
 @dataclass
@@ -60,6 +61,12 @@ def field_specs_from_type_spec_dict(type_spec_dict):
         t, attrs = _field_type_and_attrs(field_spec_dict)
         if t is None:
             raise Exception(f"Unknown field type for field: {field_name}")
+
+        if t == "form":
+            attrs.setdefault("item_name", lower0(chop_postfix(field_name, "Form")))
+
+        if t == "fk":
+            attrs.setdefault("item_name", lower0(field_name))
 
         result.append(
             FieldSpec(

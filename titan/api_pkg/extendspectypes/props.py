@@ -1,4 +1,5 @@
-from moonleap.resources.type_spec_store import FieldSpec, type_spec_store
+from moonleap.resources.field_spec import FieldSpec
+from moonleap.resources.type_spec_store import type_spec_store
 
 
 def fk_type_spec(self: FieldSpec):

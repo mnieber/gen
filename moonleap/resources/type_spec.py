@@ -1,6 +1,7 @@
 import typing as T
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
+import ramda as R
 from moonleap.resources.field_spec import FieldSpec
 from moonleap.utils.case import camel_to_snake, lower0
 
@@ -23,6 +24,30 @@ def add_related_set_field_to_type_spec(type_spec, field_spec, fk_type_spec):
             required=False,
             private=field_spec.private,
             field_type="related_set",
-            field_type_attrs=dict(target=type_spec.type_name),
+            field_type_attrs=dict(
+                target=type_spec.type_name,
+                item_name=field_spec.field_type_attrs["item_name"],
+            ),
         )
+    )
+
+
+def form_type_spec_from_data_type_spec(data_type_spec):
+    def _convert(field_spec):
+        changes = {}
+        if field_spec.field_type in ("fk",):
+            changes = dict(
+                field_type="uuid",
+                field_type_attrs={},
+            )
+
+        return replace(field_spec, **changes)
+
+    return TypeSpec(
+        type_name=data_type_spec.type_name + "Form",
+        field_specs=R.pipe(
+            R.always(data_type_spec.field_specs),
+            R.filter(lambda x: x.field_type != "related_set"),
+            R.map(_convert),
+        )(None),
     )

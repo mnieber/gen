@@ -1,5 +1,5 @@
 from moonleap import Prop, extend
-from moonleap.resources.type_spec_store import FieldSpec
+from moonleap.resources.field_spec import FieldSpec
 
 from . import props
 

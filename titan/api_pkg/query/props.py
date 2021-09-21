@@ -1,6 +1,7 @@
 import ramda as R
 from moonleap import upper0
-from moonleap.resources.type_spec_store import FieldSpec, TypeSpec, type_spec_store
+from moonleap.resources.field_spec import FieldSpec
+from moonleap.resources.type_spec_store import TypeSpec, type_spec_store
 from moonleap.utils.inflect import plural
 
 
@@ -50,7 +51,11 @@ def _item_field(self, item):
         required=False,
         private=False,
         field_type="fk",
-        field_type_attrs=dict(target=upper0(item.item_name), has_related_set=False),
+        field_type_attrs=dict(
+            target=upper0(item.item_name),
+            item_name=item.item_name,
+            has_related_set=False,
+        ),
     )
 
 
@@ -61,7 +66,7 @@ def _item_list_field(self, item):
         required=False,
         private=False,
         field_type="related_set",
-        field_type_attrs=dict(target=upper0(item.item_name)),
+        field_type_attrs=dict(target=upper0(item.item_name), item_name=item.item_name),
     )
 
 

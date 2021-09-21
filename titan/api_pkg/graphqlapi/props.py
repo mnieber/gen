@@ -14,7 +14,7 @@ def form_type_specs(self):
     result = []
     for endpoint in list(self.queries) + list(self.mutations):
         for field_spec in endpoint.inputs_type_spec.field_specs:
-            if field_spec.field_type in ("fk",):
+            if field_spec.field_type in ("form",):
                 fk_type_name = field_spec.fk_type_spec.type_name
                 form_type_spec = type_spec_store().get(fk_type_name)
                 result.append(form_type_spec)

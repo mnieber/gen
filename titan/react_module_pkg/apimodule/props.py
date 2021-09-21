@@ -30,7 +30,7 @@ def render(self, write_file, render_template):
         render_templates(
             template_path,
             mutation=mutation,
-            outputs_item_name=lower0(mutation.outputs_type_spec.type_name),
+            outputs_item_name=lower0(mutation.outputs_type_spec.type_name),  # HACK
             sections=sections_mutation,
             sections_datatype=sections_datatype,
         )(self, write_file, render_template)

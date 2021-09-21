@@ -62,7 +62,6 @@ class TypeSpecStore:
         return type_name in self._type_spec_by_type_name
 
     def get(self, type_name, default=_default_type_spec_placeholder):
-        type_name = upper0(type_name)  # HACK
         assert type_name and type_name[0] == type_name[0].upper()
 
         type_spec = self._type_spec_by_type_name.get(type_name, None)

@@ -17,14 +17,14 @@ class SectionsDataType:
         return f"from {module.name}.models import {upper0(item_name)}" if module else ""
 
     def exclude(self, item_name):
-        type_spec = type_spec_store().get(item_name)
+        type_spec = type_spec_store().get(upper0(item_name))
         list_str = ", ".join(
             [f'"{x.name_snake}"' for x in type_spec.field_specs if x.private]
         )
         return f"exclude = [{list_str}]" if list_str else ""
 
     def form_type_fields(self, item_name):
-        type_spec = type_spec_store().get(item_name + "Form")  # HACK
+        type_spec = type_spec_store().get(upper0(item_name + "Form"))  # HACK
         return os.linesep.join(
             [
                 f'    {x.name_snake} = {mutation_argument_type(x, "")}'

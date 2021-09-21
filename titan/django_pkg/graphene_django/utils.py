@@ -1,3 +1,4 @@
+from moonleap import upper0
 from moonleap.resources.type_spec_store import type_spec_store
 from moonleap.utils.case import lower0
 
@@ -11,8 +12,8 @@ def find_module_that_provides_item_list(django_app, item_name):
 
 
 def endpoint_imports(django_app, item_names, field_spec):
-    if field_spec.field_type in ("fk", "related_set"):
-        item_name = lower0(field_spec.fk_type_spec.type_name)
+    if field_spec.field_type in ("fk", "related_set", "form"):
+        item_name = field_spec.field_type_attrs["item_name"]
         if item_name not in item_names:
             item_names.add(item_name)
 
@@ -25,7 +26,7 @@ def endpoint_imports(django_app, item_names, field_spec):
                 + f"import {fk_type_spec.tn_graphene}"
             ] + (
                 [
-                    f"from {module.name}.models import {fk_type_spec.tn_django_model}",
+                    f"from {module.name}.models import {upper0(field_spec.field_type_attrs['item_name'])}",
                 ]
                 if module
                 else []

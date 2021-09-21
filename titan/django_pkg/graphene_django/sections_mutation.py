@@ -9,7 +9,7 @@ def mutation_argument_type(field_spec, args):
     if field_spec.field_type == "related_set":
         return f"graphene.List({field_spec.fk_type_spec.tn_graphene}{args})"
 
-    if field_spec.field_type == "fk":
+    if field_spec.field_type in ("form"):
         return f"{field_spec.fk_type_spec.tn_graphene}({args})"
 
     if field_spec.field_type == "boolean":
@@ -30,8 +30,9 @@ def mutation_argument_type(field_spec, args):
 def _mutation_arguments(field_specs):
     result = {}
     for field_spec in field_specs:
-        if field_spec.field_type in ("fk",):
-            result[field_spec.name_snake] = mutation_argument_type(field_spec, "")
+        result[field_spec.name_snake] = mutation_argument_type(
+            field_spec, f"required={field_spec.required}"
+        )
     return result
 
 
@@ -77,13 +78,14 @@ class SectionsMutation:
 
     def mutate_function(self, mutation):
         tab = " " * 4
-        field_names = list([x.name for x in mutation.inputs_type_spec.field_specs])
+        field_names = list(
+            [x.name_snake for x in mutation.inputs_type_spec.field_specs]
+        )
 
         result = [f"{tab}def mutate(self, {', '.join(['info'] + field_names)}):"]
         for item_posted in mutation.items_posted:
             item_name = item_posted.item_name
-            type_spec = type_spec_store().get(item_name)
-            result += [f"{tab}{tab}{item_name} = {type_spec.tn_django_model}("]
+            result += [f"{tab}{tab}{item_name} = {upper0(item_name)}("]
             for field_name in field_names:
                 result += [f"{tab}{tab}{tab}{field_name}={field_name},"]
             result += [f"{tab}{tab})"]
@@ -91,10 +93,7 @@ class SectionsMutation:
 
         for item_posted in mutation.items_deleted:
             item_name = item_posted.item_name
-            type_spec = type_spec_store().get(item_name)
-            result += [
-                f"{tab}{tab}{item_name} = {type_spec.tn_django_model}.objects.get("
-            ]
+            result += [f"{tab}{tab}{item_name} = {upper0(item_name)}.objects.get("]
             for field_name in field_names:
                 result += [f"{tab}{tab}{tab}{field_name}={field_name},"]
             result += [f"{tab}{tab})"]

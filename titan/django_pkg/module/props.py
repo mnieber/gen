@@ -122,11 +122,11 @@ class Sections:
 
     def model_imports(self, item_name):
         result = []
-        type_spec = type_spec_store().get(item_name)
+        type_spec = type_spec_store().get(upper0(item_name))
         for field_spec in _field_specs(type_spec):
             if field_spec.field_type == "fk":
                 fk_item_type = field_spec.field_type_attrs["target"]
-                fk_item_name = lower0(fk_item_type)
+                fk_item_name = field_spec.field_type_attrs["item_name"]
                 for module in self.res.django_app.modules:
                     if fk_item_name in [x.name for x in module.item_types]:
                         result.append(
@@ -138,7 +138,7 @@ class Sections:
     def model_fields(self, item_name):
         result = []
         indent = "    "
-        type_spec = type_spec_store().get(item_name)
+        type_spec = type_spec_store().get(upper0(item_name))
         for field_spec in _field_specs(type_spec):
             if field_spec.field_type == "related_set":
                 continue
@@ -149,7 +149,7 @@ class Sections:
 
     def str_repr(self, item_name):
         indent = " " * 6
-        type_spec = type_spec_store().get(item_name)
+        type_spec = type_spec_store().get(upper0(item_name))
         for field_spec in _field_specs(type_spec):
             if field_spec.field_type == "string":
                 return f"{indent}return '{upper0(item_name)}: ' + self.{field_spec.name_snake}"
