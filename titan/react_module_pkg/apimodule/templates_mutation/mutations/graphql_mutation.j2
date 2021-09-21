@@ -2,6 +2,7 @@ import { normalize, schema } from 'normalizr';
 import { apiBase } from 'src/api/ApiBase';
 import { ObjT } from 'src/utils/types';
 {{ sections_datatype.schema_imports(outputs_item_name) }}
+{{ sections.mutation_imports(mutation) }}
 
 export const {{ outputs_item_name }} = new schema.Entity('{{ outputs_item_name }}');
 {{ sections_datatype.define_fields(outputs_item_name) }}

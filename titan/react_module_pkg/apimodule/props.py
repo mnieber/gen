@@ -19,7 +19,7 @@ def render(self, write_file, render_template):
         render_templates(
             template_path,
             query=query,
-            outputs_item_name=lower0(query.outputs_type_spec.type_name),
+            outputs_item_name=lower0(query.outputs_type_spec.type_name),  # HACK
             sections=sections_query,
             sections_datatype=sections_datatype,
         )(self, write_file, render_template)

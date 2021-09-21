@@ -39,7 +39,7 @@ def _input_field_to_graphql_type(field_spec):
         return "ID"
 
     if field_spec.field_type in ("form",):
-        return f"{upper0(field_spec.field_type_attrs['item_name'])}Type"
+        return f"{field_spec.fk_type_spec.type_name}Type"
 
     raise Exception(f"Cannot deduce graphql type for {field_spec.field_type}")
 
@@ -62,7 +62,10 @@ def graphql_body(type_spec, indent=0, skip=None):
             fk_type_name = spec_field.field_type_attrs["target"]
             if fk_type_name not in skip:
                 fk_type_spec = type_spec_store().get(fk_type_name)
-                if spec_field.field_type in ("fk", "related_set"):
+                include_field_name = (
+                    spec_field.field_type in ("fk", "related_set") and not is_top_level
+                )
+                if include_field_name:
                     graphqlBody.append(f"{spec_field.name} {{")
                     indent += 2
                 graphqlBody.extend(
@@ -72,7 +75,7 @@ def graphql_body(type_spec, indent=0, skip=None):
                         skip + [fk_type_name],
                     )
                 )
-                if spec_field.field_type in ("fk", "related_set"):
+                if include_field_name:
                     indent -= 2
                     graphqlBody.append(f"}}")
         else:

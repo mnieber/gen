@@ -43,7 +43,7 @@ class SectionsQuery:
         tab = " " * 6
         field_specs = query.inputs_type_spec.field_specs
         return tab + ("," + os.linesep + tab).join(
-            [field_spec.name_snake for field_spec in field_specs]
+            [field_spec.name for field_spec in field_specs]
         )
 
     def graphql_response(self, query):
