@@ -12,24 +12,21 @@ def find_module_that_provides_item_list(django_app, item_name):
 
 
 def endpoint_imports(django_app, item_names, field_spec):
+    result = []
+
     if field_spec.field_type in ("fk", "related_set", "form"):
         item_name = field_spec.field_type_attrs["item_name"]
-        if item_name not in item_names:
-            item_names.add(item_name)
+        if item_name in item_names:
+            return result
+        item_names.add(item_name)
 
-            fk_type_spec = field_spec.fk_type_spec
-            py_module_name = fk_type_spec.tn_graphene.lower()
+        tn_graphene = field_spec.fk_type_spec.tn_graphene
+        result.append(
+            f"from api.types.{tn_graphene.lower()} " + f"import {tn_graphene}"
+        )
 
-            module = find_module_that_provides_item_list(django_app, item_name)
-            return [
-                f"from api.types.{py_module_name} "
-                + f"import {fk_type_spec.tn_graphene}"
-            ] + (
-                [
-                    f"from {module.name}.models import {upper0(field_spec.field_type_attrs['item_name'])}",
-                ]
-                if module
-                else []
-            )
+        module = find_module_that_provides_item_list(django_app, item_name)
+        if module:
+            result.append(f"from {module.name}.models import {upper0(item_name)}")
 
-    return []
+    return result

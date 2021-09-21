@@ -14,7 +14,7 @@ def _resolve_output_fn(templates_path, resource, template_fn, **kwargs):
     name = (
         (
             template_env.get_template(meta_filename)
-            .render(res=resource)
+            .render(res=resource, **kwargs)
             .split(os.linesep)[0]
         )
         if Path(meta_filename).exists()

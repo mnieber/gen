@@ -2,7 +2,9 @@ import os
 
 from moonleap import upper0
 from moonleap.resources.type_spec_store import type_spec_store
-from titan.django_pkg.graphene_django.sections_mutation import mutation_argument_type
+from titan.django_pkg.graphene_django.sections_mutation import (
+    graphene_type_from_field_spec,
+)
 from titan.django_pkg.graphene_django.utils import find_module_that_provides_item_list
 
 
@@ -27,7 +29,7 @@ class SectionsDataType:
         type_spec = type_spec_store().get(upper0(item_name + "Form"))  # HACK
         return os.linesep.join(
             [
-                f'    {x.name_snake} = {mutation_argument_type(x, "")}'
+                f'    {x.name_snake} = {graphene_type_from_field_spec(x, "")}'
                 for x in type_spec.field_specs
                 if not x.private
             ]

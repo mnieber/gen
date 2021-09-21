@@ -1,11 +1,10 @@
 import os
 
 from moonleap import upper0
-from moonleap.resources.type_spec_store import type_spec_store
 from titan.django_pkg.graphene_django.utils import endpoint_imports
 
 
-def mutation_argument_type(field_spec, args):
+def graphene_type_from_field_spec(field_spec, args):
     if field_spec.field_type == "related_set":
         return f"graphene.List({field_spec.fk_type_spec.tn_graphene}{args})"
 
@@ -30,7 +29,7 @@ def mutation_argument_type(field_spec, args):
 def _mutation_arguments(field_specs):
     result = {}
     for field_spec in field_specs:
-        result[field_spec.name_snake] = mutation_argument_type(
+        result[field_spec.name_snake] = graphene_type_from_field_spec(
             field_spec, f"required={field_spec.required}"
         )
     return result
@@ -59,7 +58,7 @@ class SectionsMutation:
         for field_spec in mutation.outputs_type_spec.field_specs:
             args = ""
             result.append(
-                f"{indent}{field_spec.name} = {mutation_argument_type(field_spec, args)}"
+                f"{indent}{field_spec.name} = {graphene_type_from_field_spec(field_spec, args)}"
             )
 
         return os.linesep.join(result)
@@ -85,11 +84,11 @@ class SectionsMutation:
         result = [f"{tab}def mutate(self, {', '.join(['info'] + field_names)}):"]
         for item_posted in mutation.items_posted:
             item_name = item_posted.item_name
-            result += [f"{tab}{tab}{item_name} = {upper0(item_name)}("]
-            for field_name in field_names:
-                result += [f"{tab}{tab}{tab}{field_name}={field_name},"]
+            result += [f"{tab}{tab}{item_name}_id = {item_name}_form.pop('id')"]
+            result += [f"{tab}{tab}{upper0(item_name)}.objects.update_or_create("]
+            result += [f"{tab}{tab}{tab}id={item_name}_id,"]
+            result += [f"{tab}{tab}{tab}defaults={item_name}_form"]
             result += [f"{tab}{tab})"]
-            result += [f"{tab}{tab}{item_name}.save()", ""]
 
         for item_posted in mutation.items_deleted:
             item_name = item_posted.item_name
