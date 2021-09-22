@@ -47,7 +47,7 @@ The example
 
     # This is an example JSON schema for the Todo type.
 
-    # specs/todoapp/data_types/Todo.json
+    # specs/todoapp/type_specs/Todo.json
 
     {
         "required": ["id", "name"],
@@ -58,7 +58,7 @@ The example
             "name": {"type": "string", "maxLength": 255, "unique": true},
             "todolist": {
                 "type": "fk",
-                "$ref": "/data_types/Todolist",
+                "$ref": "/type_specs/Todolist",
                 "onDelete": "cascade",
                 "hasRelatedSet": true
             }

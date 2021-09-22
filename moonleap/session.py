@@ -19,7 +19,7 @@ class Session:
         self.output_dir = f"{output_root_dir}/output"
         self.expected_dir = f"{output_root_dir}/expected"
         self.snapshot_fn = f"{output_root_dir}/snapshot.json"
-        self.type_specs_dir = os.path.join(self.spec_dir, "data_types")
+        self.type_specs_dir = os.path.join(self.spec_dir, "type_specs")
 
     def load_settings(self):
         settings_fn = Path(self.spec_dir) / self.settings_fn

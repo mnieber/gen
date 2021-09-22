@@ -18,7 +18,7 @@ class FieldSpec:
     field_type_attrs: dict = field(default_factory=dict)
 
 
-fk_prefix = "/data_types/"
+fk_prefix = "/type_specs/"
 
 
 def _default_value(field_spec):
