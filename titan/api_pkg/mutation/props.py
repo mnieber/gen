@@ -43,18 +43,18 @@ def _get_or_create_form_type_spec(field_spec):
 
 
 def inputs_type_spec(self):
-    name = f"{upper0(self.name)}Input"
-    inputs_type_spec = type_spec_store().get(name, None)
-    if not inputs_type_spec:
-        inputs_type_spec = _default_inputs_type_spec(self, name)
-        type_spec_store().setdefault(name, inputs_type_spec)
+    type_spec_name = f"{upper0(self.name)}Input"
+    type_spec = type_spec_store().get(type_spec_name, None)
+    if not type_spec:
+        type_spec = _default_inputs_type_spec(self, type_spec_name)
+        type_spec_store().setdefault(type_spec_name, type_spec)
 
     # Automatically create missing form type specs
-    for field_spec in inputs_type_spec.field_specs:
+    for field_spec in type_spec.field_specs:
         if field_spec.field_type in ("form",):
             _get_or_create_form_type_spec(field_spec)
 
-    return type_spec_store().get(name)
+    return type_spec_store().get(type_spec_name)
 
 
 def outputs_type_spec(self):

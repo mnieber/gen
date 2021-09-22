@@ -4,7 +4,7 @@ from pathlib import Path
 from moonleap import render_templates, upper0
 from moonleap.resources.type_spec_store import type_spec_store
 from titan.django_pkg.apimutation.props import graphene_type_from_field_spec
-from titan.django_pkg.graphene_django.utils import find_module_that_provides_item_list
+from titan.django_pkg.graphene_django.utils import find_module_that_provides_item_type
 
 
 def get_context(item_type, api_module):
@@ -20,7 +20,7 @@ def get_context(item_type, api_module):
 
     class Sections:
         def imports(self):
-            module = find_module_that_provides_item_list(_.django_app, _.item_name)
+            module = find_module_that_provides_item_type(_.django_app, _.item_name)
             return (
                 f"from {module.name}.models import {upper0(_.item_name)}"
                 if module

@@ -1,7 +1,7 @@
 from moonleap import upper0
 
 
-def find_module_that_provides_item_list(django_app, item_name):
+def find_module_that_provides_item_type(django_app, item_name):
     for module in django_app.modules:
         for item_list in module.item_lists_provided:
             if item_list.item_name == item_name:
@@ -23,7 +23,7 @@ def endpoint_imports(django_app, item_names, field_spec):
             f"from api.types.{tn_graphene.lower()} " + f"import {tn_graphene}"
         )
 
-        module = find_module_that_provides_item_list(django_app, item_name)
+        module = find_module_that_provides_item_type(django_app, item_name)
         if module:
             result.append(f"from {module.name}.models import {upper0(item_name)}")
 

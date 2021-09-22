@@ -16,7 +16,7 @@ class ReactAppConfig(Resource):
     index_body: str = ""
 
 
-def find_module_that_provides_item_list(react_app, item_name):
+def find_module_that_provides_item_type(react_app, item_name):
     for module in react_app.modules:
         for store in module.stores:
             for item_type in store.item_types:
