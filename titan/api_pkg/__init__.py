@@ -1,6 +1,6 @@
 from . import (
     extendspectypes,
-    formitemtype,
+    formtype,
     graphqlapi,
     item,
     itemlist,
@@ -11,7 +11,7 @@ from . import (
 
 modules = [
     extendspectypes,
-    formitemtype,
+    formtype,
     graphqlapi,
     item,
     itemlist,

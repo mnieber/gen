@@ -1,19 +1,18 @@
 from moonleap import create, kebab_to_camel, kebab_to_snake, rule
-from moonleap.resources.type_spec import form_type_spec_from_data_type_spec
 
 from . import props
-from .resources import FormItemType
+from .resources import FormType
 
 
-@create(["form-item-type"])
-def create_form_item_type(term, block):
+@create(["form-type"])
+def create_form_type(term, block):
     name = kebab_to_camel(term.data)
     name_snake = kebab_to_snake(term.data)
-    form_item_type = FormItemType(
+    form_type = FormType(
         name=name,
         name_snake=name_snake,
     )
-    return form_item_type
+    return form_type
 
 
 @rule("item-type")
