@@ -4,7 +4,8 @@ from pathlib import Path
 import yaml
 from moonleap.resources.default_field_specs import default_field_specs
 from moonleap.resources.field_spec import field_specs_from_type_spec_dict
-from moonleap.resources.type_spec import TypeSpec, add_related_set_field_to_type_spec
+from moonleap.resources.type_spec import (TypeSpec,
+                                          add_related_set_field_to_type_spec)
 from moonleap.session import get_session
 from moonleap.utils.case import upper0
 

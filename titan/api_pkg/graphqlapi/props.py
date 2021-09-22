@@ -46,7 +46,7 @@ def item_types(self):
             if item_list.item_type not in result:
                 result.append(item_list.item_type)
 
-    for mutation in self.mutation:
+    for mutation in self.mutations:
         for item in mutation.items_posted:
             if item.item_type not in result:
                 result.append(item.item_type)

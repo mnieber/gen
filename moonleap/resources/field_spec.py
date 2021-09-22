@@ -53,6 +53,10 @@ def _field_type_and_attrs(field_spec_dict):
     return t, attrs
 
 
+def type_name_to_item_name(type_name):
+    return lower0(chop_postfix(type_name, "Form"))
+
+
 def field_specs_from_type_spec_dict(type_spec_dict):
     required = type_spec_dict.get("required", [])
     private = type_spec_dict.get("private", [])
@@ -63,10 +67,12 @@ def field_specs_from_type_spec_dict(type_spec_dict):
             raise Exception(f"Unknown field type for field: {field_name}")
 
         if t == "form":
-            attrs.setdefault("item_name", lower0(chop_postfix(field_name, "Form")))
+            fk_item_name = type_name_to_item_name(attrs["target"])
+            attrs.setdefault("item_name", fk_item_name)
 
         if t == "fk":
-            attrs.setdefault("item_name", lower0(field_name))
+            fk_item_name = lower0(attrs["target"])
+            attrs.setdefault("item_name", fk_item_name)
 
         result.append(
             FieldSpec(

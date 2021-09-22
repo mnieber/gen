@@ -14,7 +14,7 @@ def render(self, write_file, render_template):
     for mutation in self.graphql_api.mutations:
         render_mutation_endpoint(self, mutation, write_file, render_template)
 
-    for item_type in self.graphql_api.data_type_specs:
+    for item_type in self.graphql_api.item_types:
         render_schema(self, item_type, write_file, render_template)
 
     template_path = Path(__file__).parent / "templates"

@@ -2,7 +2,7 @@ import typing as T
 from dataclasses import dataclass, replace
 
 import ramda as R
-from moonleap.resources.field_spec import FieldSpec
+from moonleap.resources.field_spec import FieldSpec, type_name_to_item_name
 from moonleap.utils.case import camel_to_snake, lower0
 
 
@@ -26,7 +26,7 @@ def add_related_set_field_to_type_spec(type_spec, field_spec, fk_type_spec):
             field_type="related_set",
             field_type_attrs=dict(
                 target=type_spec.type_name,
-                item_name=field_spec.field_type_attrs["item_name"],
+                item_name=type_name_to_item_name(type_spec.type_name),
             ),
         )
     )

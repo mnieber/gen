@@ -1,1 +1,1 @@
-{{ res.item_name }}Schema.ts
+{{ res.name }}Schema.ts
