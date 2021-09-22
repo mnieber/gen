@@ -32,5 +32,5 @@ def graphql_args(field_specs, before):
     result = ["("]
     for field_spec in field_specs:
         result.append(f"{tab}  {_field_spec_to_graphql_arg(field_spec, before)}")
-    result += [f"{tab}("]
+    result += [f"{tab})"]
     return os.linesep.join(result)

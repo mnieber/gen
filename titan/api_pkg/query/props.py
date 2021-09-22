@@ -71,14 +71,18 @@ def _item_list_field(self, item):
 
 
 def inputs_type_spec(self):
-    name = f"{upper0(self.name)}Input"
-    if not type_spec_store().has(name):
-        type_spec_store().setdefault(name, _default_inputs_type_spec(self, name))
-    return type_spec_store().get(name)
+    spec_name = f"{upper0(self.name)}Input"
+    if not type_spec_store().has(spec_name):
+        type_spec_store().setdefault(
+            spec_name, _default_inputs_type_spec(self, spec_name)
+        )
+    return type_spec_store().get(spec_name)
 
 
 def outputs_type_spec(self):
-    name = f"{upper0(self.name)}Output"
-    if not type_spec_store().has(name):
-        type_spec_store().setdefault(name, _default_outputs_type_spec(self, name))
-    return type_spec_store().get(name)
+    spec_name = f"{upper0(self.name)}Output"
+    if not type_spec_store().has(spec_name):
+        type_spec_store().setdefault(
+            spec_name, _default_outputs_type_spec(self, spec_name)
+        )
+    return type_spec_store().get(spec_name)

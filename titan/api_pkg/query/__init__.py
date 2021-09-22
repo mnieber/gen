@@ -35,8 +35,8 @@ def graphql_api_loads_item(graphql_api, item):
 def create_get_item_query(graphql_api, item):
     query_name = f"{kebab_to_camel(item.item_name)}"
     query = R.find(lambda x: x.name == query_name)(graphql_api.queries)
-    query.fun_name = f"get{upper0(query_name)}"
     assert query
+    query.fun_name = f"get{upper0(query_name)}"
     return [create_forward(query, provides, f"{item.item_name}:item", obj_res=item)]
 
 
