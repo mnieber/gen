@@ -1,7 +1,7 @@
 from moonleap import upper0
 from moonleap.resources.type_spec_store import type_spec_store
 from moonleap.utils.magic_replace import magic_replace
-from titan.react_module_pkg.apimodule.utils import field_spec_to_ts_type
+from titan.react_module_pkg.apiquery.field_spec_to_ts_type import field_spec_to_ts_type
 
 load_data_template = """
     if (queryName === 'getYellowTulips') {

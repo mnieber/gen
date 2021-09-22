@@ -1,5 +1,7 @@
 from . import (
     apimodule,
+    apimutation,
+    apiquery,
     appmodule,
     appstore,
     extendspectypes,
@@ -8,12 +10,15 @@ from . import (
     loaditemseffect,
     mockgraphqlserver,
     policy,
+    schema,
     store,
     storeprovider,
 )
 
 modules = [
     apimodule,
+    apimutation,
+    apiquery,
     appmodule,
     appstore,
     extendspectypes,
@@ -22,6 +27,7 @@ modules = [
     loaditemseffect,
     mockgraphqlserver,
     policy,
+    schema,
     store,
     storeprovider,
 ]

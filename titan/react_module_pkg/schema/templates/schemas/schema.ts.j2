@@ -1,0 +1,5 @@
+import { schema } from 'normalizr';
+{{ sections.schema_imports(res.item_name) }}
+
+export const {{ res.item_name }} = new schema.Entity('{{ res.item_name | plural }}');
+{{ sections.define_fields() }}

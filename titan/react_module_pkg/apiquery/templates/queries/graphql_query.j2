@@ -1,0 +1,25 @@
+import { normalize, schema } from 'normalizr';
+import { apiBase } from 'src/api/ApiBase';
+import { ObjT } from 'src/utils/types';
+{{ sections.schema_imports() }}
+
+export const {{ _.output_schema_name }} = new schema.Entity('{{ _.output_schema_name }}');
+{{ sections.output_schema_fields() }}
+
+export const {{ res.fun_name }} = ({{ sections.javascript_args() }}) => {
+  return apiBase.doQuery(
+    '{{ res.fun_name }}',
+    `query {{ res.name }}{{ sections.graphql_args(True) }} {
+        {{ res.name }}{{ sections.graphql_args(False) }} {
+{{ sections.graphql_body() }}
+        }
+    }`,
+    {
+{{ sections.graphql_variables() }}
+    },
+    (response: ObjT) => {
+      return normalize(response, {{ _.output_schema_name }}).entities;
+    },
+    (error: ObjT) => error.response.errors[0].message
+  );
+}

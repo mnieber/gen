@@ -1,4 +1,13 @@
-from moonleap import kebab_to_camel, kebab_to_snake, create
+import moonleap.resource.props as P
+from moonleap import (
+    create,
+    create_forward,
+    extend,
+    kebab_to_camel,
+    kebab_to_snake,
+    rule,
+)
+from moonleap.verbs import uses
 
 from .resources import ItemList
 
@@ -12,3 +21,13 @@ def create_item_list(term, block):
         item_name_snake=name_snake,
     )
     return item_list
+
+
+@rule("item-list")
+def item_list_created(item_list):
+    return create_forward(item_list, uses, f"{item_list.item_name}:item-type")
+
+
+@extend(ItemList)
+class ExtendItemList:
+    item_type = P.child(uses, "item-type")

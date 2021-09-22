@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, add, create, empty_rule, extend, kebab_to_camel, rule
+from moonleap import MemFun, add, create, empty_rule, extend, kebab_to_camel, rule
 from moonleap.verbs import has
 from titan.react_module_pkg.loaditemseffect import LoadItemsEffect
 from titan.react_pkg.module import Module
@@ -39,7 +39,6 @@ class ExtendApiModule:
     load_item_effects = P.children(has, "load-item-effect")
     load_items_effects = P.children(has, "load-items-effect")
     graphql_api = P.child(has, "graphql:api")
-    sections = Prop(props.Sections)
 
 
 @extend(ReactApp)
