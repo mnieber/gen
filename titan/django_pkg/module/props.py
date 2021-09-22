@@ -2,7 +2,6 @@ import os
 
 from moonleap import upper0
 from moonleap.resources.type_spec_store import type_spec_store
-from moonleap.utils.case import lower0
 
 
 def _find_module_that_provides(module, item_type):
