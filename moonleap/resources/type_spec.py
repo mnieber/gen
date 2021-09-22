@@ -12,10 +12,8 @@ class TypeSpec:
     field_specs: T.List[FieldSpec]
 
 
-def add_related_set_field_to_type_spec(
-    type_spec, is_private, related_type_name, related_item_name
-):
-    field_name = lower0(related_type_name + "Set")
+def add_related_set_field_to_type_spec(type_spec, is_private, related_item_name):
+    field_name = related_item_name + "Set"
     if [x for x in type_spec.field_specs if x.name == field_name]:
         raise Exception("Field spec with name {name} already exists")
 
@@ -27,8 +25,7 @@ def add_related_set_field_to_type_spec(
             private=is_private,
             field_type="related_set",
             field_type_attrs=dict(
-                target=related_type_name,
-                item_name=related_item_name,
+                target=related_item_name,
             ),
         )
     )

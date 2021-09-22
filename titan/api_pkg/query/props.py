@@ -52,8 +52,7 @@ def _item_field(self, item):
         private=False,
         field_type="fk",
         field_type_attrs=dict(
-            target=upper0(item.item_name),
-            item_name=item.item_name,
+            target=item.item_name,
             has_related_set=False,
         ),
     )
@@ -66,7 +65,7 @@ def _item_list_field(self, item):
         required=False,
         private=False,
         field_type="related_set",
-        field_type_attrs=dict(target=upper0(item.item_name), item_name=item.item_name),
+        field_type_attrs=dict(target=item.item_name),
     )
 
 

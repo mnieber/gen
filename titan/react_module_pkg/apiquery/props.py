@@ -10,7 +10,7 @@ from titan.react_module_pkg.apiquery.graphql_body import graphql_body
 
 def define_schema_field(field_spec, output_schema_name):
     output_many = field_spec.field_type in ("related_set",)
-    fk_item_name = field_spec.field_type_attrs["item_name"]
+    fk_item_name = field_spec.field_type_attrs["target"]
     value = f"[{fk_item_name}]" if output_many else fk_item_name
     line = f"{output_schema_name}.define({{ {field_spec.name}: {value} }});"
     return line
@@ -31,7 +31,7 @@ def get_context(query, api_module):
         def schema_imports(self):
             result = []
             for field_spec in _.fk_output_field_specs:
-                fk_item_name = field_spec.field_type_attrs["item_name"]
+                fk_item_name = field_spec.field_type_attrs["target"]
                 result.append(
                     f"import {{ {fk_item_name} }} from 'src/api/schemas/{fk_item_name}Schema';"
                 )

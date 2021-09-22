@@ -21,7 +21,7 @@ def get_context(item_type, api_module):
         def schema_imports(self):
             result = []
             for field_spec in _.fk_field_specs:
-                fk_item_name = field_spec.field_type_attrs["item_name"]
+                fk_item_name = field_spec.field_type_attrs["target"]
                 result.append(
                     f"import {{ {fk_item_name} }} from 'src/api/schemas/{fk_item_name}Schema';"
                 )

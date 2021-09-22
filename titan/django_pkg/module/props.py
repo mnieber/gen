@@ -36,7 +36,7 @@ def _model(field):
             else []
         )
         args = [
-            field.field_type_attrs["target"],
+            upper0(field.field_type_attrs["target"]),
             f"on_delete={on_delete}",
             *null_blank,
             *related_name,
@@ -124,8 +124,8 @@ class Sections:
         type_spec = type_spec_store().get(upper0(item_name))
         for field_spec in _field_specs(type_spec):
             if field_spec.field_type == "fk":
-                fk_item_type = field_spec.field_type_attrs["target"]
-                fk_item_name = field_spec.field_type_attrs["item_name"]
+                fk_item_name = field_spec.field_type_attrs["target"]
+                fk_item_type = upper0(fk_item_name)
                 for module in self.res.django_app.modules:
                     if fk_item_name in [x.name for x in module.item_types]:
                         result.append(

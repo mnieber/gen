@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 import yaml
+from moonleap import upper0
 from moonleap.resources.default_field_specs import default_field_specs
 from moonleap.resources.field_spec import (
     field_specs_from_type_spec_dict,
@@ -46,9 +47,8 @@ class TypeSpecStore:
                 "has_related_set"
             ):
                 add_related_set_field_to_type_spec(
-                    self.get(field_spec.field_type_attrs["target"]),
+                    self.get(upper0(field_spec.field_type_attrs["target"])),
                     is_private=field_spec.private,
-                    related_type_name=type_spec.type_name,
                     related_item_name=type_name_to_item_name(type_spec.type_name),
                 )
 

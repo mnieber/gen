@@ -28,7 +28,7 @@ def get_context(mutation, api_module):
         def schema_imports(self):
             result = []
             for field_spec in _.fk_output_field_specs:
-                fk_item_name = field_spec.field_type_attrs["item_name"]
+                fk_item_name = field_spec.field_type_attrs["target"]
                 result.append(
                     f"import {{ {fk_item_name} }} from 'src/api/schemas/{fk_item_name}Schema';"
                 )
@@ -38,7 +38,7 @@ def get_context(mutation, api_module):
         def ts_type_imports(self):
             result = []
             for field_spec in _.form_input_field_specs:
-                item_name = field_spec.field_type_attrs["item_name"]
+                item_name = field_spec.field_type_attrs["target"]
                 ts_module = find_module_that_provides_item_type(
                     api_module.react_app, item_name
                 )

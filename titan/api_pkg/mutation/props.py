@@ -11,11 +11,7 @@ def _field_spec_from_item(self, item):
         required=False,
         private=False,
         field_type="form",
-        field_type_attrs=dict(
-            target=upper0(item.item_name + "Form"),
-            has_related_set=False,
-            item_name=item.item_name,
-        ),
+        field_type_attrs=dict(target=item.item_name),
     )
 
 

@@ -18,9 +18,6 @@ class FieldSpec:
     field_type_attrs: dict = field(default_factory=dict)
 
 
-fk_prefix = "/type_specs/"
-
-
 def _default_value(field_spec):
     return field_spec.get("default", None)
 
@@ -37,16 +34,16 @@ def _field_type_and_attrs(field_spec_dict):
     attrs = {}
     t = field_spec_dict.get("type")
 
-    if t is None:
-        ref = field_spec_dict.get("$ref", "")
-        if ref.startswith(fk_prefix):
-            t = "fk"
-            attrs["target"] = ref[len(fk_prefix) :]  # noqa: E203
-            attrs["has_related_set"] = field_spec_dict.get("hasRelatedSet", True)
-    else:
+    if t == "fk":
+        attrs["target"] = field_spec_dict["target"]
+        attrs["has_related_set"] = field_spec_dict.get("hasRelatedSet", True)
         if "onDelete" in field_spec_dict:
             attrs["on_delete"] = field_spec_dict["onDelete"]
-
+    elif t == "related_set":
+        attrs["target"] = field_spec_dict["target"]
+    elif t == "form":
+        attrs["target"] = field_spec_dict["target"]
+    else:
         if "maxLength" in field_spec_dict:
             attrs["max_length"] = field_spec_dict["maxLength"]
 
@@ -65,14 +62,6 @@ def field_specs_from_type_spec_dict(type_spec_dict):
         t, attrs = _field_type_and_attrs(field_spec_dict)
         if t is None:
             raise Exception(f"Unknown field type for field: {field_name}")
-
-        if t == "form":
-            fk_item_name = type_name_to_item_name(attrs["target"])
-            attrs.setdefault("item_name", fk_item_name)
-
-        if t == "fk":
-            fk_item_name = lower0(attrs["target"])
-            attrs.setdefault("item_name", fk_item_name)
 
         result.append(
             FieldSpec(

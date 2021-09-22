@@ -58,7 +58,7 @@ The example
             "name": {"type": "string", "maxLength": 255, "unique": true},
             "todolist": {
                 "type": "fk",
-                "$ref": "/type_specs/Todolist",
+                "target": "todolist",
                 "onDelete": "cascade",
                 "hasRelatedSet": true
             }
