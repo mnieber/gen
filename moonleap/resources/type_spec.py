@@ -2,7 +2,7 @@ import typing as T
 from dataclasses import dataclass, replace
 
 import ramda as R
-from moonleap.resources.field_spec import FieldSpec, type_name_to_item_name
+from moonleap.resources.field_spec import FieldSpec
 from moonleap.utils.case import camel_to_snake, lower0
 
 
@@ -12,21 +12,23 @@ class TypeSpec:
     field_specs: T.List[FieldSpec]
 
 
-def add_related_set_field_to_type_spec(type_spec, field_spec, fk_type_spec):
-    field_name = lower0(type_spec.type_name + "Set")
-    if [x for x in fk_type_spec.field_specs if x.name == field_name]:
+def add_related_set_field_to_type_spec(
+    type_spec, is_private, related_type_name, related_item_name
+):
+    field_name = lower0(related_type_name + "Set")
+    if [x for x in type_spec.field_specs if x.name == field_name]:
         raise Exception("Field spec with name {name} already exists")
 
-    fk_type_spec.field_specs.append(
+    type_spec.field_specs.append(
         FieldSpec(
             name=field_name,
             name_snake=camel_to_snake(field_name),
             required=False,
-            private=field_spec.private,
+            private=is_private,
             field_type="related_set",
             field_type_attrs=dict(
-                target=type_spec.type_name,
-                item_name=type_name_to_item_name(type_spec.type_name),
+                target=related_type_name,
+                item_name=related_item_name,
             ),
         )
     )

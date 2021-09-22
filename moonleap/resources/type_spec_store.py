@@ -3,11 +3,12 @@ from pathlib import Path
 
 import yaml
 from moonleap.resources.default_field_specs import default_field_specs
-from moonleap.resources.field_spec import field_specs_from_type_spec_dict
-from moonleap.resources.type_spec import (TypeSpec,
-                                          add_related_set_field_to_type_spec)
+from moonleap.resources.field_spec import (
+    field_specs_from_type_spec_dict,
+    type_name_to_item_name,
+)
+from moonleap.resources.type_spec import TypeSpec, add_related_set_field_to_type_spec
 from moonleap.session import get_session
-from moonleap.utils.case import upper0
 
 _default_type_spec_placeholder = TypeSpec(type_name="placeholder", field_specs=[])
 
@@ -45,9 +46,10 @@ class TypeSpecStore:
                 "has_related_set"
             ):
                 add_related_set_field_to_type_spec(
-                    type_spec,
-                    field_spec,
                     self.get(field_spec.field_type_attrs["target"]),
+                    is_private=field_spec.private,
+                    related_type_name=type_spec.type_name,
+                    related_item_name=type_name_to_item_name(type_spec.type_name),
                 )
 
     def setdefault(self, type_name, default_value):
