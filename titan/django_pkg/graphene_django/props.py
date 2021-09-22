@@ -1,57 +1,6 @@
 import os
-from pathlib import Path
 
 from moonleap import upper0
-from moonleap.render.template_renderer import render_templates
-from moonleap.utils.case import lower0
-
-from .sections_datatype import SectionsDataType
-from .sections_mutation import SectionsMutation
-from .sections_query import SectionsQuery
-
-
-def render(self, write_file, render_template):
-    api_module = self.service.django_app.api_module
-
-    sections_query = SectionsQuery(self)
-    for query in api_module.graphql_api.queries:
-        template_path = Path(__file__).parent / "templates_query"
-        render_templates(
-            template_path,
-            query=query,
-            sections=sections_query,
-        )(self, write_file, render_template)
-
-    sections_mutation = SectionsMutation(self)
-    for mutation in api_module.graphql_api.mutations:
-        template_path = Path(__file__).parent / "templates_mutation"
-        render_templates(
-            template_path,
-            mutation=mutation,
-            sections=sections_mutation,
-        )(self, write_file, render_template)
-
-    sections_datatype = SectionsDataType(self)
-    for form_type_spec in api_module.graphql_api.form_type_specs:
-        item_name = lower0(form_type_spec.type_name[:-4])  # HACK
-        template_path = Path(__file__).parent / "templates_form_types"
-        render_templates(
-            template_path,
-            item_name=item_name,
-            sections=sections_datatype,
-        )(self, write_file, render_template)
-
-    for data_type_spec in api_module.graphql_api.data_type_specs:
-        item_name = lower0(data_type_spec.type_name)  # HACK
-        template_path = Path(__file__).parent / "templates_types"
-        render_templates(
-            template_path,
-            item_name=item_name,
-            sections=sections_datatype,
-        )(self, write_file, render_template)
-
-    template_path = Path(__file__).parent / "templates"
-    render_templates(template_path)(self, write_file, render_template)
 
 
 def _query_py_classname(query):

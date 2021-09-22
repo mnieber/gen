@@ -1,4 +1,13 @@
-from moonleap import MemField, MemFun, Prop, add, create, create_forward, extend, rule
+from moonleap import (
+    MemField,
+    Prop,
+    RenderTemplates,
+    add,
+    create,
+    create_forward,
+    extend,
+    rule,
+)
 from moonleap.verbs import has, uses
 from titan.django_pkg.module import Module
 from titan.project_pkg.service import Tool
@@ -28,8 +37,7 @@ def api_module_has_graphql_api(api_module, graphql_api):
 
 
 @extend(GrapheneDjango)
-class ExtendGrapheneDjango:
-    render = MemFun(props.render)
+class ExtendGrapheneDjango(RenderTemplates(__file__)):
     sections = Prop(props.Sections)
 
 

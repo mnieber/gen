@@ -1,0 +1,8 @@
+import graphene
+
+{{ sections.query_imports() }}
+
+class {{ res.name | upper0 }}Query:
+{{ sections.query_outputs() }}
+
+{{ sections.query_resolve_functions() }}

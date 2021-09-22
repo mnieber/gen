@@ -1,6 +1,4 @@
 from moonleap import upper0
-from moonleap.resources.type_spec_store import type_spec_store
-from moonleap.utils.case import lower0
 
 
 def find_module_that_provides_item_list(django_app, item_name):

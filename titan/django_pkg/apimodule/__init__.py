@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import Prop, create, extend, kebab_to_snake
+from moonleap import MemFun, Prop, create, extend, kebab_to_snake
 from moonleap.utils.case import snake_to_camel
 from moonleap.verbs import has
 from titan.django_pkg.djangoapp import DjangoApp
@@ -15,7 +15,6 @@ def create_api_module(term, block):
     name_snake = kebab_to_snake(term.data)
     module = ApiModule(name_snake=name_snake, name=snake_to_camel(name_snake))
     module.output_path = module.name_snake
-    module.add_template_dir(Path(__file__).parent / "templates")
     return module
 
 
@@ -26,5 +25,5 @@ class ExtendDjangoApp:
 
 @extend(ApiModule)
 class ExtendApiModule:
-    sections = Prop(props.Sections)
+    render = MemFun(props.render)
     graphql_api = P.child(has, "graphql:api")
