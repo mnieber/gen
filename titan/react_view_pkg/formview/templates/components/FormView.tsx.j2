@@ -7,7 +7,7 @@ import {
   HandleValidateArgsT,
   HandleSubmitArgsT,
 } from 'react-form-state-context';
-import { {{ _.postmethod }} } from 'src/api/mutations/{{ _.postmethod }}';
+import { {{ res.sections.postmethod }} } from 'src/api/mutations/{{ res.sections.postmethod }}';
 import { Field } from 'src/forms/components/Field';
 import { GlobalError } from 'src/forms/components/GlobalError';
 import { TextField } from 'src/forms/components/TextField';
@@ -20,14 +20,14 @@ type PropsT = {
 
 export const YellowTulipFormView: React.FC<PropsT> = observer(() => {
   const initialValues = {
-{% for field_spec in _.form_field_specs %}
+{% for field_spec in res.sections.form_field_specs %}
     {{ field_spec.name }}: null,
 {% endfor %}
   };
   const initialErrors = {};
   const handleValidate = ({values, setError} : HandleValidateArgsT) => {};
   const handleSubmit = ({values}: HandleSubmitArgsT) => {
-    {{ _.postmethod }}(values);
+    {{ res.sections.postmethod }}(values);
   };
 
   const formDiv = (

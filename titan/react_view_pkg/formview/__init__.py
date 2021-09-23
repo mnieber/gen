@@ -1,4 +1,5 @@
 from moonleap import (
+    Prop,
     RenderTemplates,
     create,
     create_forward,
@@ -8,7 +9,7 @@ from moonleap import (
 )
 from moonleap.verbs import has
 
-from .context import get_context
+from . import props
 from .resources import FormView
 
 
@@ -25,5 +26,5 @@ def service_has_forms_module(module, form_view):
 
 
 @extend(FormView)
-class ExtendFormView(RenderTemplates(__file__, get_context=get_context)):
-    pass
+class ExtendFormView(RenderTemplates(__file__)):
+    sections = Prop(props.Sections)
