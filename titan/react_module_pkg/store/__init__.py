@@ -1,7 +1,15 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import Prop, create, create_forward, extend, kebab_to_camel, rule
+from moonleap import (
+    Prop,
+    create,
+    create_forward,
+    empty_rule,
+    extend,
+    kebab_to_camel,
+    rule,
+)
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.utils.case import upper0
 from moonleap.verbs import contains, has
@@ -26,9 +34,7 @@ def store_contains_item(store, item_list):
     return create_forward(store, contains, f"{item_list.item_name}:item-type")
 
 
-@rule("store", contains, "item-list")
-def store_contains_item_list(store, item_list):
-    return create_forward(store, contains, f"{item_list.item_name}:item-type")
+rules = [(("store", contains, "item-list"), empty_rule)]
 
 
 @extend(Module)
@@ -39,5 +45,4 @@ class ExtendModule:
 @extend(Store)
 class ExtendStore(StoreTemplateDirs):
     item_lists = P.children(contains, "item-list")
-    item_types = P.children(contains, "item-type")
     sections = Prop(props.Sections)

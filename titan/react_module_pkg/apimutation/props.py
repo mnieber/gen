@@ -7,7 +7,7 @@ from titan.react_module_pkg.apiquery.field_spec_to_ts_type import field_spec_to_
 from titan.react_module_pkg.apiquery.graphql_args import graphql_args
 from titan.react_module_pkg.apiquery.graphql_body import graphql_body
 from titan.react_module_pkg.apiquery.props import define_schema_field
-from titan.react_pkg.reactapp.resources import find_module_that_provides_item_type
+from titan.react_pkg.reactapp.resources import find_module_that_provides_item_list
 
 
 def get_context(mutation, api_module):
@@ -39,7 +39,7 @@ def get_context(mutation, api_module):
             result = []
             for field_spec in _.form_input_field_specs:
                 item_name = field_spec.field_type_attrs["target"]
-                ts_module = find_module_that_provides_item_type(
+                ts_module = find_module_that_provides_item_list(
                     api_module.react_app, item_name
                 )
                 if ts_module:
