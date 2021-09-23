@@ -44,8 +44,9 @@ def get_context(item_type, api_module):
 
 def render_schema(api_module, item_type, write_file, render_template):
     template_path = Path(__file__).parent / "templates"
-    render_templates(
-        template_path,
-        get_context=get_context,
-        api_module=api_module,
-    )(item_type, write_file, render_template, output_path=api_module.merged_output_path)
+    render_templates(template_path, get_context=lambda x: get_context(x, api_module))(
+        item_type,
+        write_file,
+        render_template,
+        output_path=api_module.merged_output_path,
+    )
