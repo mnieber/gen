@@ -24,7 +24,7 @@ def _resolve_output_fn(templates_path, template_fn, **kwargs):
     return _resolve_output_fn(templates_path, template_fn.parent, **kwargs) / name
 
 
-def render_templates(template_path, get_context=None, **kwargs):
+def render_templates(template_path, get_context=None):
     def render(resource, write_file, render_template, output_path=None):
         expanded_template_path = Path(
             template_path(resource) if callable(template_path) else template_path
@@ -39,7 +39,7 @@ def render_templates(template_path, get_context=None, **kwargs):
 
         context_kwargs = dict(res=resource)
         if get_context:
-            context_kwargs = R.merge(context_kwargs, get_context(resource, **kwargs))
+            context_kwargs = R.merge(context_kwargs, get_context(resource))
 
         for template_fn in template_paths:
             if template_fn.suffix == ".fn":
@@ -49,16 +49,12 @@ def render_templates(template_path, get_context=None, **kwargs):
                 output_fn = Path(output_path) / _resolve_output_fn(
                     templates_dir,
                     template_fn.relative_to(templates_dir),
-                    **context_kwargs,
-                    **kwargs,
+                    **context_kwargs
                 )
                 write_file(
                     output_fn,
                     render_template(
-                        template_fn,
-                        settings=get_session().settings,
-                        **context_kwargs,
-                        **kwargs,
+                        template_fn, settings=get_session().settings, **context_kwargs
                     ),
                 )
 
