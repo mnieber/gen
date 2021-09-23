@@ -1,4 +1,7 @@
-from moonleap import create, kebab_to_camel, kebab_to_snake, rule
+import moonleap.resource.props as P
+from moonleap import create, extend, kebab_to_camel, kebab_to_snake, rule
+from moonleap.verbs import has
+from titan.api_pkg.item.resources import Item
 
 from . import props
 from .resources import FormType
@@ -15,6 +18,11 @@ def create_form_type(term, block):
     return form_type
 
 
-@rule("item-type")
-def item_type_created(item_type):
-    props.get_or_create_form_type_spec(item_type.name)
+@rule("form-type")
+def form_type_created(form_type):
+    props.get_or_create_form_type_spec(form_type.name)
+
+
+@extend(Item)
+class ExtendItem:
+    form_type = P.child(has, "form-type")
