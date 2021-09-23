@@ -15,7 +15,7 @@ from moonleap import (
 )
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.utils.case import snake_to_kebab
-from moonleap.verbs import contains, provides, receives
+from moonleap.verbs import contains, provides
 from titan.django_pkg.djangoapp import StoreDjangoConfigs
 
 from . import django_configs, props
@@ -43,18 +43,11 @@ def module_contains_item_list(module, item_list):
     return create_forward(module, provides, f"{kebab_name}:item-type")
 
 
-@rule("module", receives, "item")
-def module_receives_item(module, item):
-    kebab_name = snake_to_kebab(item.item_name_snake)
-    return create_forward(module, provides, f"{kebab_name}:item-type")
-
-
 rules = [(("module", contains + provides, "item-type"), empty_rule)]
 
 
 @extend(Module)
 class ExtendModule(StoreTemplateDirs, StoreOutputPaths, StoreDjangoConfigs):
     item_lists_provided = P.children(provides, "item-list")
-    items_received = P.children(receives, "item")
     item_types = P.children(contains + provides, "item-type")
     sections = Prop(props.Sections)
