@@ -17,8 +17,8 @@ import * as FacetPolicies from 'skandha-facets/policies';
 {{ bvr.sections.imports() }}
 {% endfor %}
 
-import { Inputs } from '{{ res.module_path }}/YellowTulipState/facets/Inputs';
-import { Outputs } from '{{ res.module_path }}/YellowTulipState/facets/Outputs';
+import { Inputs } from '{{ res.module.module_path }}/YellowTulipState/facets/Inputs';
+import { Outputs } from '{{ res.module.module_path }}/YellowTulipState/facets/Outputs';
 import * as Policies from './policies';
 import * as Handlers from './handlers';
 {% end_clean_up_js_imports %}

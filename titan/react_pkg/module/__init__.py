@@ -1,6 +1,7 @@
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
+    Prop,
     StoreOutputPaths,
     add_src_inv,
     create,
@@ -13,6 +14,7 @@ from titan.react_pkg.nodepackage import StoreNodePackageConfigs
 from titan.react_pkg.packages.use_packages import use_packages
 from titan.react_pkg.reactapp import ReactApp
 
+from . import props
 from .resources import Module  # noqa
 
 rules = [(("react-app", has, "module"), add_src_inv("output_paths"))]
@@ -29,6 +31,7 @@ def create_module(term, block):
 class ExtendModule(StoreTemplateDirs, StoreNodePackageConfigs, StoreOutputPaths):
     react_app = P.parent(ReactApp, has)
     use_packages = MemFun(use_packages)
+    module_path = Prop(props.module_path)
 
 
 @extend(ReactApp)

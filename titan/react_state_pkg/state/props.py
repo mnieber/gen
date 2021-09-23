@@ -35,7 +35,7 @@ def type_import_path(self, type_name):
     for module in self.module.react_app.modules:
         for store in module.stores:
             if [x for x in store.item_lists if x.item_name == type_name]:
-                return f"{store.module_path}/types"
+                return f"{store.module.module_path}/types"
     return None
 
 

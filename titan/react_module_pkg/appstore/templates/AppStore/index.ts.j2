@@ -5,10 +5,10 @@ import { Api } from 'src/api/Api';
 import { storeConnectsToApi } from 'src/app/AppStore/policies';
 {% endif %}
 {% for substore in res.substores %}
-import { RedRose } from '{{ substore.module_path }}/RedRose';
+import { RedRose } from '{{ substore.module.module_path }}/RedRose';
 {% endfor %}
 {% if res.policies %}
-import * as Policies from '{{ res.module_path }}/policies';
+import * as Policies from '{{ res.module.module_path }}/policies';
 {% endif %}
 
 export class AppStore {

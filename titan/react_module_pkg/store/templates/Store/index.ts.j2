@@ -7,7 +7,7 @@ import { rsMap } from 'src/api/ResourceStateMap';
 import { listToItemById } from 'src/utils/ids';
 import { isUpdatedRS, RST } from 'src/utils/RST';
 import { ObjT } from 'src/utils/types';
-{% if res.policies %}import * as Policies from '{{ res.module_path }}/policies';{% endif %}
+{% if res.policies %}import * as Policies from '{{ res.module.module_path }}/policies';{% endif %}
 {% for item_list in res.item_lists %}
 import { YellowTulipT, YellowTulipByIdT } from 'src/gardenFlowers/types';
 {% endfor %}

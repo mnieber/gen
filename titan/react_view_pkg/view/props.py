@@ -128,7 +128,8 @@ class Sections:
         for panel in _panels(self.res):
             for component in _components(panel):
                 result.append(
-                    f"import {{ {upper0(component.name)} }} from '{component.module_path}/components';"  # noqa: E501
+                    f"import {{ {upper0(component.name)} }} from "
+                    + f"'{component.module.module_path}/components';"
                 )
         return "\n".join(result)
 
