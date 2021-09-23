@@ -41,6 +41,7 @@ def render_resources(blocks, write_file):
                     resource.render(
                         write_file=write_file,
                         render_template=render_template,
+                        output_path=resource.merged_output_path,
                     )
 
         for rendered_resource in list(rendered_resources):
@@ -54,6 +55,7 @@ def render_resources(blocks, write_file):
                     resource.render(
                         write_file=write_file,
                         render_template=render_template,
+                        output_path=resource.merged_output_path,
                     )
 
     except Exception:

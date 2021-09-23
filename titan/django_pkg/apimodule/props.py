@@ -4,7 +4,7 @@ from titan.django_pkg.apiquery.props import render_query_endpoint
 from titan.django_pkg.schema.props import render_schema
 
 
-def render(self, write_file, render_template):
+def render(self, write_file, render_template, output_path):
     for query in self.graphql_api.queries:
         render_query_endpoint(self, query, write_file, render_template)
 
@@ -15,4 +15,4 @@ def render(self, write_file, render_template):
         render_schema(self, item_type, write_file, render_template)
 
     for template_dir in self.template_dirs:
-        render_templates(template_dir)(self, write_file, render_template)
+        render_templates(template_dir)(self, write_file, render_template, output_path)

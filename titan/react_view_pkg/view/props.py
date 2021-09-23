@@ -134,8 +134,10 @@ class Sections:
         return "\n".join(result)
 
 
-def render(self, write_file, render_template):
+def render(self, write_file, render_template, output_path):
     if self.parent_view and _collapses(self):
         return
 
-    return render_templates(self.templates_dir)(self, write_file, render_template)
+    return render_templates(self.templates_dir)(
+        self, write_file, render_template, output_path
+    )

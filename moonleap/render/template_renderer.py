@@ -25,7 +25,7 @@ def _resolve_output_fn(templates_path, template_fn, **kwargs):
 
 
 def render_templates(template_path, get_context=None):
-    def render(resource, write_file, render_template, output_path=None):
+    def render(resource, write_file, render_template, output_path):
         expanded_template_path = Path(
             template_path(resource) if callable(template_path) else template_path
         )
@@ -45,7 +45,6 @@ def render_templates(template_path, get_context=None):
             if template_fn.suffix == ".fn":
                 continue
             if not template_fn.is_dir():
-                output_path = output_path or resource.merged_output_path
                 output_fn = Path(output_path) / _resolve_output_fn(
                     templates_dir,
                     template_fn.relative_to(templates_dir),

@@ -2,9 +2,9 @@ from moonleap import MemField, MemFun
 from moonleap.render.template_renderer import render_templates
 
 
-def render(self, write_file, render_template):
+def render(self, write_file, render_template, output_path):
     for template_dir in self.template_dirs:
-        render_templates(template_dir)(self, write_file, render_template)
+        render_templates(template_dir)(self, write_file, render_template, output_path)
 
 
 def add_template_dir(self, template_dir):

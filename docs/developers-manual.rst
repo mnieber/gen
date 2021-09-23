@@ -292,9 +292,9 @@ The example
             item_name=kebab_to_camel(term.data)
         )
 
-    def render(self, write_file, render_template):
+    def render(self, write_file, render_template, output_path):
         template_path = Path(__file__).parent / "templates"
-        render_templates(template_path)(self, write_file, render_template)
+        render_templates(template_path)(self, write_file, render_template, output_path)
 
     @extend(Item)
     class ExtendItem:
