@@ -4,6 +4,8 @@ import os
 import ramda as R
 from moonleap import upper0
 from moonleap.utils.inflect import plural
+from titan.django_pkg.graphene_django.utils import find_module_that_provides_item_list
+from titan.react_pkg.reactapp.resources import find_module_that_provides_item_list
 
 
 def bvrs_by_item_name(self):
@@ -32,10 +34,9 @@ def store_by_item_name(self):
 
 
 def type_import_path(self, type_name):
-    for module in self.module.react_app.modules:
-        for store in module.stores:
-            if [x for x in store.item_lists if x.item_name == type_name]:
-                return f"{store.module.module_path}/types"
+    module = find_module_that_provides_item_list(self.module.react_app, type_name)
+    if module:
+        return f"{module.module_path}/types"
     return None
 
 
