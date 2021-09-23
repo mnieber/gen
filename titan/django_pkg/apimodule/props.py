@@ -1,6 +1,3 @@
-import os
-from pathlib import Path
-
 from moonleap.render.template_renderer import render_templates
 from titan.django_pkg.apimutation.props import render_mutation_endpoint
 from titan.django_pkg.apiquery.props import render_query_endpoint
@@ -17,5 +14,5 @@ def render(self, write_file, render_template):
     for item_type in self.graphql_api.item_types:
         render_schema(self, item_type, write_file, render_template)
 
-    template_path = Path(__file__).parent / "templates"
-    render_templates(template_path)(self, write_file, render_template)
+    for template_dir in self.template_dirs:
+        render_templates(template_dir)(self, write_file, render_template)
