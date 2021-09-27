@@ -8,12 +8,12 @@ from titan.react_pkg.component import Component
 
 @dataclass
 class LoadItemEffect(Component):
-    item_name: str
-    route_params: T.List[str]
+    route_params: T.Optional[T.List[str]] = None
+    item_name: T.Optional[str] = None
 
     @property
     def name_postfix(self):
-        return create_name_postfix(self.item_name, self.route_params)
+        return create_name_postfix(self.name, self.route_params)
 
 
 def shorten_route_params(route_params, item_name):
@@ -27,6 +27,4 @@ def shorten_route_params(route_params, item_name):
 
 
 def create_name_postfix(item_name, route_params):
-    return "By" + "And".join(
-        [upper0(x) for x in shorten_route_params(route_params, item_name)]
-    )
+    return "and-".join(shorten_route_params(route_params, item_name))

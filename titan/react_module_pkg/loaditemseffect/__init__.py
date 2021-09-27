@@ -1,24 +1,23 @@
 from pathlib import Path
 
-from moonleap import MemFun, extend, upper0
-from moonleap.parser.term import Term
-from moonleap.resource import ResourceMetaData
+from moonleap import MemFun, create, extend, kebab_to_camel, rule
+from moonleap.verbs import uses
 
 from . import props
 from .props import get_context
 from .resources import LoadItemsEffect
 
 
-def create_load_items_effect(list_view):
-    # TODO can we use _create_resource for this?
-    name = f"Load{upper0(list_view.items_name)}Effect"
-    term = Term(list_view.item_name, "load-items-effect")
-    load_items_effect = LoadItemsEffect(item_name=list_view.item_name, name=name)
-    load_items_effect._meta = ResourceMetaData(
-        term, list_view._meta.block, ["component"]
-    )
+@create("load-items-effect", ["component"])
+def create_load_items_effect(term, block):
+    load_items_effect = LoadItemsEffect(name=kebab_to_camel(term.data))
     load_items_effect.add_template_dir(Path(__file__).parent / "templates", get_context)
     return load_items_effect
+
+
+@rule("list-view", uses, "load-items-effect")
+def item_view_uses_load_items_effect(list_view, load_items_effect):
+    load_items_effect.item_name = list_view.item_name
 
 
 @extend(LoadItemsEffect)

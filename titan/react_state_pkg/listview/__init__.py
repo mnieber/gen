@@ -30,6 +30,21 @@ def create_list_view(term, block):
     return list_view
 
 
+@rule("list-view", priority=5)
+def maybe_add_load_items_effect_to_list_view(list_view):
+    api_module = list_view.module.react_app.api_module
+    graphql_api = api_module.graphql_api
+    item_name_kebab = plural(list_view._meta.term.data)
+
+    # if the graphql_api loads items of this item type
+    if graphql_api.queries_that_provide_item_list(list_view.item_name):
+        load_items_effect_term_str = f"load-{item_name_kebab}:load-items-effect"
+        return [
+            create_forward(api_module, has, load_items_effect_term_str),
+            create_forward(list_view, uses, load_items_effect_term_str),
+        ]
+
+
 rules = [(("list-view", has, "behavior"), empty_rule())]
 
 
