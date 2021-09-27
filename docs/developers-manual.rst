@@ -36,7 +36,7 @@ to markdown sections) that contain terms (words that have a colon in them) and v
 These terms and verbs will later be translated into resources and relations (according to block specific rules),
 which are then rendered using jinja2 templates.
 
-The example (file: specs/foo/spec.md)
+The example (e.g.: specs/foo/spec.md)
 -------------------------------------
 
 .. code-block:: markdown
@@ -56,32 +56,32 @@ Notes
 1. Every section of the spec file defines a block. The section title defines the block title.
 2. A word with a colon in it is called a term. It identifies a resource. The part of the term before the colon
    is called 'data' and the part after the colon is called 'tag'. The tag and data parts are used as inputs
-   for the (resource) create rules.
+   for the (resource) creation rules.
 3. A word that starts with a slash is called a verb. It establishes a relationship between resources.
    Moonleap has so-called relation rules and a rule-matching engine that are used to enrich resources based on
    their relations to other resources.
 4. Since one resource is mentioned before the verb (/uses) and two after, there will be two relations created here.
 5. The :it term refers to the first term in the previous sentence.
-6. Parentheses are used to limit the scope of the /has verb. Without these parentheses, it would state
-   that the cookie-notice uses the welcome endpoint (that would be wrong).
+6. Parentheses are used to limit the scope of the /has verb. Without these parentheses, it would (wrongly) state
+   that the cookie-notice uses the welcome endpoint.
 7. If a term appears in a block title, then we say that the block _describes_ that term. For every term, there is
    exactly one block that describes that term. It's important to know which blocks describe which terms, because -
-   as will be explained later - every block has an associated set of create and relation rules.
+   as will be explained later - every block has specific rules that are used to process these terms.
 8. To use a colon in the spec file without identifying a resource, it needs to be doubled. This is why the word
    goal is proceeded by a double colon (::).
 
 
-Case 2: a module contains create rules and relation rules
-=========================================================
+Case 2: a module contains creation rules and relation rules
+===========================================================
 
 Description
 -----------
 
-A Moonleap (Python) module contains create rules that convert terms into Python resource objects.
-The most specific create rule that matches a term is called to create the resource for that term.
-The module also contains relation rules. For every relation, all matching relation rules are called
-to enrich the resources in that relation. A relation rule may return a list of additional relations,
-which are processed in the same way.
+A Moonleap (Python) module contains creation rules that convert terms into Python resource objects.
+The most specific creation rule that matches a term is called to create the resource for that term.
+The module also contains relation rules. For every relation, all matching relation rules are executed
+in order to enrich the resources in that relation. A relation rule may return a list of additional
+relations, which are processed in the same way.
 
 The example
 -----------
@@ -115,28 +115,29 @@ The example
         item.used_by_api = True
         # Return an additional relation that will be matched against the current set of rules
         return [
-            create_forward(graphql_api, has, f"post-{item.item_name}:mutation"),   # [7]
-            create_forward(graphql_api, uses, f":item", obj_res=item),   # [8-9]
+            create_forward(graphql_api, has, f"post-{item.item_name}:mutation"),   # [7,8]
+            create_forward(graphql_api, documents, item),   # [9]
         ]
 
 Notes
 -----
 
-1. As will be explained later, Moonleap uses a settings file to configure which Python packages and modules
-   are used for processing the spec file.
+1. In this example, we are showing a Python module that declares rules. This Python module is part of
+   a so-called "Moonleap Python package". As will be explained later, you can indicate in the settings file
+   which moonleap packages must be used to process the spec file.
 2. A new resource class is declared here.
-3. The create decorator indicates a create rule. The create rule receives the term and the block
+3. The create decorator indicates a creation rule. The creation rule receives the term and the block
    that describes the term, and returns the resource object.
 4. By convention, terms use kebab case, which is converted here into camel case.
-5. This create rule is a more specific match for the `project:item` term. It will be called instead of the more
-   general create rule right above it.
+5. This creation rule is a more specific match for the `project:item` term. It will be called instead of the more
+   general creation rule right above it.
 6. A relation rule will be called by Moonleap for any relation in the spec file that matches the rule.
-7. A relation rule may return a Forward object (or list thereof) that contains additional relations.
-   If needed, new resources will be created for this new relation.
-8. When returning a new relation, you may use the `obj_res` field to specify the object in that
-   relation (without this argument, Moonleap will find or create the object based on the ":item" term)
-9. Note that the graphql_api resource is twice related to the item resource, using the "posts" and the
-   "has" verbs.
+7. A relation rule may return a new list of relations that are processed in the same way as the relations
+   from the spec file. If needed, new resources (mentioned in these relations) will be created.
+8. The create_forward helper function will accept arguments that are either a term or a resource. In the
+   latter case, it converts the resource into a term (Moonleap knows which term was used to create the resource).
+9. Note that a resource may be twice related to another resource (using different verbs, in this case
+   "posts" and "documents"). The _term helper function returns the term associated with the resource.
 
 
 Case 3: terms in a spec file are described by blocks
@@ -145,20 +146,40 @@ Case 3: terms in a spec file are described by blocks
 Description
 -----------
 
-The following rules are used to determine which blocks describe which terms
+There are special rules that determine which blocks describe which terms. In general, the question we must
+answer is: if a blocks mentions a term, then which block is describing that term?
 
-1.0 if a block B mentions a term in its title, then we say that it _describes_ that term.
-1.1 if B's parent or child block also mentions the term in its body, then then we say that it _references_ that term.
-1.2 if a parent and child block describe the same term (they both mention it in their title) then
-it's considered an error
-2.0 if a block mentions a term in its body, and a child block also mentions it, then we say that the parent block
-    _describes_ the term and the child block _references_ it.
-3.0 If a block title contains a term such as x:service or profile:x, then it describes any terms - appearing in the
-    block body - that match this wildcard (e.g. account:service, or profile:screen).
-3.1 If a parent block mentions foo:x in their title, and a child block mentions x:bar, then the term foo:bar is
-considered to be described by the parent block (this case is not an error).
+To answer this question we use the notion of "competing blocks". For any block, it's competing blocks are:
+- the block itself
+- all its (grand)child blocks
+- all its (grand)parent blocks
+- all direct children of its (grand)parent blocks
 
-The example (file: specs/foo/spec.md)
+The answer to our question is:
+1. if a competing block mentions the term it its title, then this block describes the term. If more than 1 such
+   block can be found then it's considered an error. If no such block is found, then rule 2 (below) is used
+2. the competing (grand)parent block that mentions the term and is highest in the tree describes the term
+
+The sloppy (but convenient) way to use these rules is to say that:
+- the block that mentions the term in its title describes it
+- otherwise, the parent block is the one describing the term (the child block references it)
+- the concept of parent/child is bent a little so that also "the direct child of my (grand)parent can be
+  considered my (grand)parent" but we only use this bent concept if that "grand-parent" mentions the term in
+  its title. The mental picture here is that a child block's title explains some detail about its parent block.
+
+We can now ask in which cases a term that appears in two blocks (B1 and B2) refers to the same resource in
+both blocks. One required condition is that B1 and B2 are competing (B1 is a competing block for B2,
+or vice versa). But this is not a sufficient condition. Consider the case where B1 is a competing block for B2,
+but B1 and B2 are not related by parent/child relations. In this case (without loss of generality) assume that
+the parent of B1 is a (grand)parent of B2. In this case, if B1 mentions the term in its title, then the term refers
+to the same resource in both blocks, but otherwise, it doesn't.
+
+There is one additional rule to explain, which has to do with wildcards: if a block title contains a term such as
+x:service or profile:x, then it describes any terms - appearing in the block body - that match this wildcard
+(e.g. account:service, or profile:screen). If a parent block mentions foo:x in their title, and a child block
+mentions x:bar, then the term foo:bar is considered to be described by the parent block (this case is not an error).
+
+The example (e.g.: specs/foo/spec.md)
 -------------------------------------
 
 .. code-block:: markdown
@@ -169,19 +190,23 @@ The example (file: specs/foo/spec.md)
     ## The bar:service [2]
     The bar:service /has a welcome:endpoint that is /used in the welcome:screen.
 
-    ## The baz:x [3]
-    The baz:service /has a welcome:endpoint.
+    ### Details
+    The welcome:screen also /shows a baz:banner. [3]
+
+    ## The baz:x [4]
+    The baz:service /has a welcome:endpoint. :It /shows the baz:banner.
 
 Notes
 -----
 
-1. In this example, there are three blocks. The first block describes foo:project and welcome:screen, but
+1. In this example, there are four blocks. The first block describes foo:project and welcome:screen, but
    (based on rule 1) not bar:service and not (based on rule 3) baz:service.
 2. This block describes bar:service and welcome:endpoint. It references welcome:screen.
-3. This block describes (based on rule 3) baz:service and welcome:endpoint. The welcome:endpoint terms in the
-   "bar:service" block and "baz:x" block are unrelated. The situation would change if the "baz:x" block were a child
-   of the "bar:service" block, because in that case it would be referencing the welcome:endpoint of
-   that block (rule 2).
+3. This block references baz:banner (because the last block is a competing block that mentions baz:banner in
+   its title via the baz:x wildcard)
+4. This block describes (via the rule about wildcards) baz:service and welcome:endpoint. The welcome:endpoint terms
+   in the "bar:service" block and "baz:x" block are unrelated. That would change if the  were
+   a child of the "bar:service" block, or if the "baz:x" block would mention "welcome:screen" in its title.
 
 
 Case 4: blocks (in a spec file) have scopes and links
@@ -190,11 +215,12 @@ Case 4: blocks (in a spec file) have scopes and links
 Description
 -----------
 
-Every block in a spec file can specify one or more scopes. Scopes are string values that identify the create
-and relation rules that should be used to process the resources that are described in that block (and the relations
-that this resource has to other relations). The Moonleap settings file contains a mapping from scopes to Python
-packages. If a block title contains a link then the body of that block is replaced with the contents of that link.
-In addition, the name of the linked file is added as a scope to the block.
+Every block in a spec file can specify one or more scopes. Scopes are string values that identify the creation
+and relation rules that should be used to: a) create the resources that are described in that block and b)
+process the relations (between resources) that are declared in the block. The Moonleap settings file contains a mapping
+from scopes to Python packages.
+If a block title contains a link then the body of that block is replaced with the
+contents of that link. In addition, the name of the linked file is added as a scope to the block.
 
 
 The example (file: specs/foo/spec.md)
@@ -216,7 +242,7 @@ The example (file: specs/foo/spec.md)
 
     # specs/foo/settings.yml
 
-    packages_by_scope:
+    packages_by_scope:  # [5]
         default:
             - default_pkg
             - titan.project_pkg
@@ -232,7 +258,7 @@ The example (file: specs/foo/spec.md)
 
     from . import graphqlapi, mutation, query
 
-    modules = [
+    modules = [  # [6]
         graphqlapi,
         item,
         itemlist,
@@ -250,7 +276,8 @@ Notes
 3. For debugging purposes, the fully expanded spec file is written to the moonleap directory.
 4. This block has the `default` and `baz-service` scope. It will be processed using the
    rules in the `default_pkg` and `titan.project_pkg`.
-
+5. This key in the settings file describes which Moonleap packages are used per scope.
+6. Every moonleap package has an init file that lists the module that should be loaded for that package.
 
 Case 5: an extension class defines the resource.render function
 ===============================================================
@@ -263,12 +290,12 @@ that resource.  Moonleap gives a lot of options to users to influence how code i
 resource objects typically do not have a hard coded render function. Instead, the render function
 (of your choice) is added dynamically to the resource class using the `@extend` decorator.
 The default implementation of `render` will iterate over all jinja2 templates in the resource's
-template directory, and render each template using `res` as the variable that contains
+template directories, and render each template using `res` as the variable that contains
 the resource. The jinja2 templates are found by looking for the "j2" extension. If the template
 is called `foo.bar.j2` then its content will be written to `foo.bar`. To choose a different
 output name, add a `foo.bar.fn` template: Moonleap will render this "fn" template and use the
-output instead of `foo.bar` (the default output filename). It's also possible to put a jinja2
-tag directly in the template name, e.g. `{{ res.name }}.txt.j2`.
+output as the filename that should be used instead of `foo.bar` (the default output filename). It's also possible
+to put a jinja2 tag directly in the template name, e.g. `{{ res.name }}.txt.j2`.
 Note that directories that appear in the template directory are also created in the output directory.
 They too can have names with jinja2 tags, and associated ".fn" files.
 
@@ -286,42 +313,34 @@ The example
     class Item(Resource):
         item_name: str
 
+    def get_context(item_resource):
+        return dict(res=item_resource)
+
     @create("item")
     def create_item(term, block):
-        return Item(
+        item = Item(
             item_name=kebab_to_camel(term.data)
         )
-
-    def render(self, write_file, render_template, output_path):
-        template_path = Path(__file__).parent / "templates"
-        render_templates(template_path)(self, write_file, render_template, output_path)
+        item.add_template_dir(Path(__file__).parent / "templates", get_context)  # [1]
 
     @extend(Item)
-    class ExtendItem:
-        render = MemFun(render)  # [1]
+    class ExtendItem(StoreTemplateDirs):  # [2]
+        # The render function is supplied by the StoreTemplateDirs base class
+        pass
 
-    # Below, we show some alternatives for adding the render function
-    #
-    # @extend(Item)
-    # class ExtendItem:
-    #     render = MemFun(render_templates(Path(__file__).parent / "templates"))
-    #
-    # @extend(Item)
-    # class ExtendItem(StoreTemplateDirs):
-    #     # The render function is supplied by the StoreTemplateDirs base class
-    #     # Call item.add_template_dir(Path(__file__).parent / "templates") to add a directory
-    #     # to the list of directories that are searched for templates.
-    #     pass
-    #
     # Alternatively, you can use the special meta() function, which allows you
     # to do additional imports which would otherwise create a circular import dependency.
+    #
+    # def custom_render(self, write_file, render_template, output_path):  # [3]
+    #     template_path = Path(__file__).parent / "templates"
+    #     render_templates(template_path)(self, write_file, render_template, output_path)
     #
     # def meta():
     #     from foo_pkg.bar import Bar
     #
     #     @extend(Item)
     #     class ExtendItem:
-    #         render = MemFun(props.render)
+    #         render = MemFun(custom_render)  # [4]
     #         create_bar = MemFun(lambda self: Bar())
     #
     #     return [ExtendItem]
@@ -329,7 +348,14 @@ The example
 Notes
 -----
 
-1. `MemFun` is a helper function adds a special tag to a stand-alone function. This tag lets Moonleap
+1. This is the typical way to render a directory with jinja2 templates with a jinja2 context that
+   contains the resource. Note that the `res` key is added automatically to the context, so
+   you could leave out `res=item_resource` in `get_context` (or you could leave out the `get_context`
+   argument entirely).
+2. The `StoreTemplateDirs` class is a mixin that adds the `add_template_dir` method to the resource class.
+   It also adds a `render` function that renders all templates added with `add_template_dir`.
+3. This is an example of a custom render function (in this case, `StoreTemplateDirs]` is not used).
+4. `MemFun` is a helper function adds a special tag to a stand-alone function. This tag lets Moonleap
    know that this stand-alone function must be added as a member function to the extended class.
 
 
