@@ -33,13 +33,3 @@ def create_forward(
         subj = subj._meta.term
 
     return Rel(subj=subj, verb=verb, obj=_to_term(obj))
-
-
-def to_list_of_relations(x, rule):
-    result = list(x) if (isinstance(x, list) or isinstance(x, tuple)) else [x]
-    for rel in result:
-        if not isinstance(rel, Rel):
-            raise Exception(
-                f"A rule ({rule}) should either return a Rel or a list of Rel"
-            )
-    return result

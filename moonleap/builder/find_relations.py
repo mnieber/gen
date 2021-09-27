@@ -49,16 +49,9 @@ def _process_words(words, it_term, result, word_idx=0):
     return first_term, word_idx
 
 
-def _get_relations(block):
+def get_relations(block):
     result = []
     for line in block.lines:
         _process_words(line.words, line.it_term, result)
 
     return result
-
-
-def find_relations(blocks):
-    lists_of_relations = []
-    for block in blocks:
-        lists_of_relations.append((_get_relations(block), block))
-    return lists_of_relations
