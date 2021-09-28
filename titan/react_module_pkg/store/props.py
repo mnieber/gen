@@ -37,16 +37,16 @@ class Sections:
             )
         return result
 
-    def define_type(self, item_name):
+    def define_type(self, item_type):
         result = []
-        type_name = upper0(item_name)
+        type_name = upper0(item_type.name)
         result.append(f"export type {type_name}T = {{")
         type_spec = type_spec_store().get(type_name)
         for field_spec in type_spec.field_specs:
             if field_spec.private:
                 continue
 
-            t = field_spec_to_ts_type(field_spec)
+            t = field_spec_to_ts_type(field_spec, fk_as_str=True)
             result.append(f"  {field_spec.name}: {t};")
         result.append(f"}}")
 
@@ -56,14 +56,20 @@ class Sections:
         if not item_type.form_type:
             return ""
 
+        type_name = upper0(item_type.name)
         result = []
+        result.append(f"export type {type_name}FormT = {{")
+
         type_spec = type_spec_store().get(f"{upper0(item_type.name)}Form")
         for field_spec in type_spec.field_specs:
             if field_spec.private:
                 continue
 
-            t = field_spec_to_ts_type(field_spec)
+            t = field_spec_to_ts_type(field_spec, fk_as_str=True)
             result.append(f"  {field_spec.name}: {t};")
+
+        result.append(r"}")
+
         return "\n".join(result)
 
 

@@ -57,7 +57,8 @@ def get_context(mutation, api_module):
         def javascript_args(self):
             return ", ".join(
                 R.map(
-                    lambda field_spec: f"{field_spec.name}: {field_spec_to_ts_type(field_spec)}",
+                    lambda field_spec: f"{field_spec.name}: "
+                    + f"{field_spec_to_ts_type(field_spec, fk_as_str=False)}",
                     _.input_field_specs,
                 )
             )
