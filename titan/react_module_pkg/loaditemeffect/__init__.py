@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from moonleap import MemFun, create, extend, rule
+from moonleap import MemFun, create, extend, rule, u0
 from moonleap.utils.case import kebab_to_camel
 from moonleap.verbs import uses
 
@@ -11,7 +11,7 @@ from .resources import LoadItemEffect
 
 @create("load-item-effect", ["component"])
 def create_load_item_effect(term, block):
-    load_item_effect = LoadItemEffect(name=kebab_to_camel(term.data))
+    load_item_effect = LoadItemEffect(name=kebab_to_camel(u0(term.data)) + "Effect")
     load_item_effect.add_template_dir(Path(__file__).parent / "templates", get_context)
     return load_item_effect
 

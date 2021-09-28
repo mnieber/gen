@@ -1,15 +1,8 @@
 import os
-import typing as T
-from dataclasses import dataclass
 
 import ramda as R
 from moonleap.utils.case import u0
-from titan.react_pkg.router.resources import RouterConfig, prepend_router_configs
-
-
-@dataclass
-class Route:
-    configs: T.List[RouterConfig]
+from titan.react_pkg.router.resources import prepend_router_configs
 
 
 def _group_by(get_key, xs):
@@ -35,82 +28,26 @@ def _append(x, indent, result):
     result.append(" " * (indent) + x)
 
 
-class Sections:
-    def __init__(self, res):
-        self.res = res
-
-    def route_imports(self):
-        components = []
-
-        def add(component):
-            queue = [component]
-            while queue:
-                component = queue.pop()
-                if component not in components:
-                    components.append(component)
-                queue.extend(component.wrapped_child_components)
-
-        for module in self.res.module.react_app.modules:
-            for component in module.routed_components:
-                for router_config in component.create_router_configs():
-                    add(router_config.component)
-
-        result = []
-        imports_by_module_name = R.group_by(lambda x: x.module.name, components)
-        for module_name, components in imports_by_module_name.items():
-            component_names = ", ".join(R.map(lambda x: x.name)(components))
-            result.append(
-                f"import {{ {component_names} }} from 'src/{module_name}/components';"
-            )
-
-        return os.linesep.join(result)
-
-    def routes(self):
-        routes = []
-
-        for module in self.res.module.react_app.modules:
-            for component in module.routed_components:
-                router_configs = component.create_router_configs()
-                if router_configs:
-                    add_route(router_configs, routes)
-
-        result = []
-        add_result(routes, "", 0, 6, result)
-
-        result_str = os.linesep.join(result)
-        return result_str
-
-
-def add_route(router_configs, routes):
-    wrapped_child_components = router_configs[-1].component.wrapped_child_components
-    if not wrapped_child_components:
-        routes.append(Route(configs=_move_url_values_up(router_configs)))
-        return
-
-    for wrapped_child in wrapped_child_components:
-        more_router_configs = wrapped_child.create_router_configs()
-        if more_router_configs:
-            add_route(
-                prepend_router_configs(router_configs, more_router_configs), routes
-            )
-
-
 def _needs_switch(routes_by_first_component_and_url, level):
     count_routes = 0
     for _, group in routes_by_first_component_and_url:
-        router_config = group[0].configs[level]
+        router_config = group[0][level]
         count_routes += 1 if router_config.url else 0
     return count_routes > 1
 
 
-def add_result(routes, url, level, indent, result):
+def _group_routes(level, routes):
     # all the routes that share their first component should be grouped inside a
     # route for that first component
     def get_component_and_url(route):
-        router_config = route.configs[level]
+        router_config = route[level]
         return (router_config.component, router_config.url)
 
-    routes_by_first_component_and_url = _group_by(get_component_and_url, routes)
+    return _group_by(get_component_and_url, routes)
+
+
+def add_result(routes, url, level, indent, result):
+    routes_by_first_component_and_url = _group_routes(level, routes)
     needs_switch = _needs_switch(routes_by_first_component_and_url, level)
 
     if needs_switch:
@@ -118,15 +55,13 @@ def add_result(routes, url, level, indent, result):
         indent += 2
 
     for _, group in routes_by_first_component_and_url:
-        router_config = group[0].configs[level]
-        next_routes = [x for x in group if len(x.configs) > level + 1]
+        router_config = group[0][level]
+        next_routes = [x for x in group if len(x) > level + 1]
         url_memo = url
         if router_config.url:
             url += "/" + router_config.url
             postfix = (
-                "/"
-                if [route for route in next_routes if route.configs[level + 1].url]
-                else ""
+                "/" if [route for route in next_routes if route[level + 1].url] else ""
             )
             _append(f'<Route path="{url}{postfix}">', indent, result)
             indent += 2
@@ -159,5 +94,82 @@ def add_result(routes, url, level, indent, result):
         _append("</Switch>", indent, result)
 
 
-def get_context(self):
-    return dict(sections=Sections(self))
+def _routed_components(modules):
+    result = []
+    for module in modules:
+        for component in module.routed_components:
+            if component not in result:
+                result.append(component)
+
+    return result
+
+
+def _routes(routed_components):
+    routes = []
+
+    def add(route):
+        tail_component = route[-1].component
+
+        wrapped_components = tail_component.wrapped_components
+        if not wrapped_components:
+            routes.append(_move_url_values_up(route))
+            return
+
+        for wrapped_child in wrapped_components:
+            more_router_configs = wrapped_child.create_router_configs()
+            if more_router_configs:
+                add(prepend_router_configs(route, more_router_configs))
+
+    for routed_component in routed_components:
+        route = routed_component.create_router_configs()
+        if route:
+            add(route)
+
+    return routes
+
+
+def _components_used_in_router(routes):
+    result = []
+
+    def add(component):
+        queue = [component]
+        while queue:
+            component = queue.pop()
+            if component not in result:
+                result.append(component)
+            queue.extend(component.wrapped_components)
+
+    for route in routes:
+        for router_config in route:
+            add(router_config.component)
+
+    return result
+
+
+def get_context(router):
+    _ = lambda: None
+    _.react_app = router.module.react_app
+    _.routed_components = _routed_components(_.react_app.modules)
+    _.routes = _routes(_.routed_components)
+
+    class Sections:
+        def route_imports(self):
+            used_components = _components_used_in_router(_.routes)
+
+            result = []
+            imports_by_module_name = R.group_by(
+                lambda x: x.module.name, used_components
+            )
+            for module_name, components in imports_by_module_name.items():
+                component_names = ", ".join(R.map(lambda x: x.name)(components))
+                result.append(
+                    f"import {{ {component_names} }} from 'src/{module_name}/components';"
+                )
+            return os.linesep.join(result)
+
+        def routes(self):
+            result = []
+            add_result(_.routes, "", 0, 6, result)
+            return os.linesep.join(result)
+
+    return dict(sections=Sections())

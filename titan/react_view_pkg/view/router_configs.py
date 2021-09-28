@@ -4,7 +4,7 @@ from titan.react_pkg.router.resources import reduce_router_configs
 
 
 def _wraps(panel):
-    return panel and panel.wraps_children
+    return panel and bool(panel.wrapped_components)
 
 
 def _get_route_params(self):

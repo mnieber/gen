@@ -50,7 +50,6 @@ def panel_has_component(panel, component):
 
 @extend(View)
 class ExtendView:
-    wraps_children = Prop(props.wraps_children)
     create_router_configs = MemFun(router_configs.create_router_configs)
     parent_view = P.parent(View, has)
     left_panel = P.child(has, "left:panel")

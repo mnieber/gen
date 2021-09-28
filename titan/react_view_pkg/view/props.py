@@ -39,7 +39,7 @@ def _panel(divClassName, panel):
         return []
 
     components = _components(panel)
-    panel_wraps_children = panel.wraps_children
+    panel_wraps_children = bool(panel.wrapped_components)
     if not components and not panel_wraps_children:
         return []
 
@@ -63,26 +63,9 @@ def _panel(divClassName, panel):
     return result
 
 
-def wraps_children(self):
-    if self.wrapped_child_components:
-        return True
-
-    has_child_that_wraps_children = False
-    for child_component in self.child_components:
-        if wraps_children(child_component):
-            if has_child_that_wraps_children:
-                raise Exception(
-                    f"The {self.name} component has more than one child component "
-                    + r"that wraps its children. This is invalid. Please check the spec file"
-                )
-            has_child_that_wraps_children = True
-
-    return has_child_that_wraps_children
-
-
 def get_context(view):
     _ = lambda: None
-    _.wraps_children = wraps_children(view)
+    _.wraps_children = bool(view.wrapped_components)
     _.panels = _panels(view)
     _.has_col = (
         view.top_panel or view.bottom_panel or not (view.left_panel or view.right_panel)
