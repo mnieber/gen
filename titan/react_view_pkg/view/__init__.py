@@ -1,7 +1,16 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import MemFun, create, create_forward, extend, kebab_to_camel, rule, u0
+from moonleap import (
+    MemFun,
+    Prop,
+    create,
+    create_forward,
+    extend,
+    kebab_to_camel,
+    rule,
+    u0,
+)
 from moonleap.verbs import has
 
 from . import props, router_configs
@@ -22,6 +31,9 @@ def create_view(term, block):
 @create("panel", ["component"])
 def create_panel(term, block):
     panel = View(name=f"{u0(term.data)}Panel")
+    panel.add_template_dir(
+        Path(__file__).parent / "templates", get_context, skip_render=props.skip_render
+    )
     return panel
 
 
@@ -38,6 +50,7 @@ def panel_has_component(panel, component):
 
 @extend(View)
 class ExtendView:
+    wraps_children = Prop(props.wraps_children)
     create_router_configs = MemFun(router_configs.create_router_configs)
     parent_view = P.parent(View, has)
     left_panel = P.child(has, "left:panel")

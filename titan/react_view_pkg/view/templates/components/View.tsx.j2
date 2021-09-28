@@ -2,6 +2,7 @@
 {% clean_up_js_imports %}
 import { useDefaultProps, FC } from 'react-default-props-context';
 import classnames from 'classnames';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
 
 {{ sections.imports() }}
@@ -9,9 +10,7 @@ import { observer } from 'mobx-react-lite';
 
 import './YellowTulip.scss';
 
-type PropsT = {
-  className?: any;
-};
+{{ sections.props_type() }}
 
 type DefaultPropsT = {
 };
