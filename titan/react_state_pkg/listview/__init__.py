@@ -10,7 +10,7 @@ from moonleap import (
     kebab_to_camel,
     rule,
 )
-from moonleap.utils.case import upper0
+from moonleap.utils.case import u0
 from moonleap.utils.inflect import plural
 from moonleap.verbs import has, uses
 from titan.react_module_pkg.loaditemseffect import create_load_items_effect
@@ -24,7 +24,7 @@ from .resources import ListView
 def create_list_view(term, block):
     name = kebab_to_camel(term.data)
     list_view = ListView(
-        item_name=name, items_name=plural(name), name=f"{upper0(name)}ListView"
+        item_name=name, items_name=plural(name), name=f"{u0(name)}ListView"
     )
     list_view.add_template_dir(Path(__file__).parent / "templates", get_context)
     return list_view

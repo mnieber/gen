@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from moonleap import upper0
+from moonleap import u0
 from titan.react_pkg.component import Component
 from titan.react_state_pkg.selectitemeffect.resources import SelectItemEffect
 
@@ -11,6 +11,6 @@ class ItemView(Component):
 
 
 def create_select_item_effect(item_view, route_params):
-    name = f"Select{upper0(item_view.item_name)}Effect"
+    name = f"Select{u0(item_view.item_name)}Effect"
     select_item_effect = SelectItemEffect(item_name=item_view.item_name, name=name)
     return select_item_effect

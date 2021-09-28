@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from moonleap import render_templates, upper0
+from moonleap import render_templates, u0
 from moonleap.resources.type_spec_store import type_spec_store
 from titan.react_module_pkg.apiquery.props import define_schema_field
 
@@ -12,7 +12,7 @@ def get_context(item_type, api_module):
     _.item_type = item_type
     _.item_name = _.item_type.name
     _.schema_name = _.item_name
-    _.type_spec = type_spec_store().get(upper0(_.item_name))
+    _.type_spec = type_spec_store().get(u0(_.item_name))
     _.fk_field_specs = [
         x for x in _.type_spec.field_specs if x.field_type in ("fk", "related_set")
     ]

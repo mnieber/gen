@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from moonleap import render_templates, upper0
+from moonleap import render_templates, u0
 from titan.django_pkg.graphene_django.utils import endpoint_imports
 
 
@@ -44,13 +44,13 @@ def _filter_args(query):
 def _return_value_for_field_spec(query, field_spec):
     if field_spec.field_type == "related_set":
         return (
-            f"{upper0(field_spec.field_type_attrs['target'])}.objects.filter"
+            f"{u0(field_spec.field_type_attrs['target'])}.objects.filter"
             + f"({_filter_args(query)})"
         )
 
     if field_spec.field_type == "fk":
         return (
-            f"{upper0(field_spec.field_type_attrs['target'])}.objects.filter"
+            f"{u0(field_spec.field_type_attrs['target'])}.objects.filter"
             + f"({_filter_args(query)}).first()"
         )
 

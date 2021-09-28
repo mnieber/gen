@@ -1,11 +1,11 @@
 import re
 
 
-def lower0(x):
+def l0(x):
     return x[0].lower() + x[1:] if x else x
 
 
-def upper0(x):
+def u0(x):
     return x[0].upper() + x[1:] if x else x
 
 

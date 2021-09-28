@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from moonleap import Resource, upper0
+from moonleap import Resource, u0
 
 
 @dataclass
@@ -9,7 +9,7 @@ class Component(Resource):
 
     @property
     def react_tag(self):
-        return f"<{upper0(self.name)}/>"
+        return f"<{u0(self.name)}/>"
 
 
 def get_component_base_url(component, default_value):

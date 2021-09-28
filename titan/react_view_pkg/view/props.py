@@ -1,4 +1,4 @@
-from moonleap import upper0
+from moonleap import u0
 
 
 def _panels(res):
@@ -128,7 +128,7 @@ class Sections:
         for panel in _panels(self.res):
             for component in _components(panel):
                 result.append(
-                    f"import {{ {upper0(component.name)} }} from "
+                    f"import {{ {u0(component.name)} }} from "
                     + f"'{component.module.module_path}/components';"
                 )
         return "\n".join(result)

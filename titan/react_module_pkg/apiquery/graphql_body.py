@@ -1,6 +1,6 @@
 import os
 
-from moonleap import upper0
+from moonleap import u0
 from moonleap.resources.type_spec_store import type_spec_store
 
 
@@ -16,7 +16,7 @@ def graphql_body(type_spec=None, indent=0, skip=None):
     result = []
     for spec_field in type_spec.field_specs:
         if spec_field.field_type in ("fk", "related_set"):
-            fk_type_name = upper0(spec_field.field_type_attrs["target"])
+            fk_type_name = u0(spec_field.field_type_attrs["target"])
             if fk_type_name not in skip:
                 fk_type_spec = type_spec_store().get(fk_type_name)
                 include_field_name = (

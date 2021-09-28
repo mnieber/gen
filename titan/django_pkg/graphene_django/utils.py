@@ -1,4 +1,4 @@
-from moonleap import upper0
+from moonleap import u0
 
 
 def find_module_that_provides_item_list(django_app, item_name):
@@ -25,6 +25,6 @@ def endpoint_imports(django_app, item_names, field_spec):
 
         module = find_module_that_provides_item_list(django_app, item_name)
         if module:
-            result.append(f"from {module.name}.models import {upper0(item_name)}")
+            result.append(f"from {module.name}.models import {u0(item_name)}")
 
     return result

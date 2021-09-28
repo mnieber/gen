@@ -2,7 +2,7 @@ import graphene
 from graphene.types.generic import GenericScalar
 {{ sections.mutation_imports() }}
 
-class {{ res.name | upper0 }}(graphene.Mutation):
+class {{ res.name | u0 }}(graphene.Mutation):
 {{ sections.mutation_outputs() }}
 
     class Arguments:

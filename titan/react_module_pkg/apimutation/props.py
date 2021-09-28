@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 import ramda as R
-from moonleap import render_templates, upper0
+from moonleap import render_templates, u0
 from titan.react_module_pkg.apiquery.field_spec_to_ts_type import field_spec_to_ts_type
 from titan.react_module_pkg.apiquery.graphql_args import graphql_args
 from titan.react_module_pkg.apiquery.graphql_body import graphql_body
@@ -44,7 +44,7 @@ def get_context(mutation, api_module):
                 )
                 if ts_module:
                     result.append(
-                        f"import {{ {upper0(item_name)}FormT }} from 'src/{ts_module.name}/types';"
+                        f"import {{ {u0(item_name)}FormT }} from 'src/{ts_module.name}/types';"
                     )
             return os.linesep.join(result)
 

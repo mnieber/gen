@@ -2,7 +2,7 @@ import bisect
 import os
 
 import ramda as R
-from moonleap import upper0
+from moonleap import u0
 from moonleap.utils.inflect import plural
 from titan.react_pkg.reactapp.resources import find_module_that_provides_item_list
 
@@ -66,7 +66,7 @@ class Sections:
             for bvr in bvrs:
                 body += [bvr.sections.callbacks(self.res.behaviors)]
 
-            result += [f"_set{upper0(redRoses)}Callbacks(props: PropsT) {{"]
+            result += [f"_set{u0(redRoses)}Callbacks(props: PropsT) {{"]
 
             if body:
                 result += [

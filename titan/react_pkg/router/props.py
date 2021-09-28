@@ -3,7 +3,7 @@ import typing as T
 from dataclasses import dataclass
 
 import ramda as R
-from moonleap.utils.case import upper0
+from moonleap.utils.case import u0
 from titan.react_pkg.router.resources import RouterConfig, prepend_router_configs
 
 
@@ -132,10 +132,10 @@ def add_result(routes, url, level, indent, result):
             indent += 2
 
         if router_config.wraps:
-            _append(f"<{upper0(router_config.component.name)}>", indent, result)
+            _append(f"<{u0(router_config.component.name)}>", indent, result)
             indent += 2
         else:
-            _append(f"<{upper0(router_config.component.name)}/>", indent, result)
+            _append(f"<{u0(router_config.component.name)}/>", indent, result)
 
         add_result(
             next_routes,
@@ -147,7 +147,7 @@ def add_result(routes, url, level, indent, result):
 
         if router_config.wraps:
             indent -= 2
-            _append(f"</{upper0(router_config.component.name)}>", indent, result)
+            _append(f"</{u0(router_config.component.name)}>", indent, result)
 
         if router_config.url:
             url = url_memo

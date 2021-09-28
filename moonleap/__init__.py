@@ -21,7 +21,7 @@ from moonleap.resource.rel import Rel  # noqa
 from moonleap.resources.outputpath import StoreOutputPaths  # noqa
 from moonleap.session import get_session  # noqa
 from moonleap.utils import chop0, yaml2dict  # noqa
-from moonleap.utils.case import kebab_to_camel, kebab_to_snake, upper0  # noqa
+from moonleap.utils.case import kebab_to_camel, kebab_to_snake, u0  # noqa
 
 
 def describe(*args, **kwargs):

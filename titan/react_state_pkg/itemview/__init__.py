@@ -2,7 +2,7 @@ from pathlib import Path
 
 import moonleap.resource.props as P
 from moonleap import MemFun, create, create_forward, extend, kebab_to_camel, rule
-from moonleap.utils.case import upper0
+from moonleap.utils.case import u0
 from moonleap.verbs import has, uses
 from titan.react_module_pkg.loaditemeffect.resources import create_name_postfix
 
@@ -13,7 +13,7 @@ from .resources import ItemView
 @create("item-view", ["component"])
 def create_item_view(term, block):
     name = kebab_to_camel(term.data)
-    item_view = ItemView(item_name=name, name=f"{upper0(name)}View")
+    item_view = ItemView(item_name=name, name=f"{u0(name)}View")
     item_view.add_template_dir(Path(__file__).parent / "templates")
     return item_view
 

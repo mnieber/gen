@@ -9,7 +9,7 @@ from moonleap import (
     extend,
     kebab_to_camel,
     rule,
-    upper0,
+    u0,
 )
 from moonleap.verbs import has
 from titan.react_pkg.reactapp import ReactAppConfig
@@ -23,7 +23,7 @@ from .resources import StateProvider
 @create("state-provider", ["component"])
 def create_state_provider(term, block):
     base_name = kebab_to_camel(term.data)
-    state_provider = StateProvider(name=f"{upper0(base_name)}StateProvider")
+    state_provider = StateProvider(name=f"{u0(base_name)}StateProvider")
     state_provider.add_template_dir(Path(__file__).parent / "templates", get_context)
     add(state_provider, ReactAppConfig(flags=dict(logStateProviders=False)))
     return state_provider

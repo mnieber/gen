@@ -1,6 +1,6 @@
 import os
 
-from moonleap import upper0
+from moonleap import u0
 from moonleap.resources.type_spec_store import type_spec_store
 
 
@@ -36,7 +36,7 @@ def _model(field):
             else []
         )
         args = [
-            upper0(field.field_type_attrs["target"]),
+            u0(field.field_type_attrs["target"]),
             f"on_delete={on_delete}",
             *null_blank,
             *related_name,
@@ -121,11 +121,11 @@ class Sections:
 
     def model_imports(self, item_name):
         result = []
-        type_spec = type_spec_store().get(upper0(item_name))
+        type_spec = type_spec_store().get(u0(item_name))
         for field_spec in _field_specs(type_spec):
             if field_spec.field_type == "fk":
                 fk_item_name = field_spec.field_type_attrs["target"]
-                fk_item_type = upper0(fk_item_name)
+                fk_item_type = u0(fk_item_name)
                 for module in self.res.django_app.modules:
                     if fk_item_name in [x.name for x in module.item_types]:
                         result.append(
@@ -137,7 +137,7 @@ class Sections:
     def model_fields(self, item_name):
         result = []
         indent = "    "
-        type_spec = type_spec_store().get(upper0(item_name))
+        type_spec = type_spec_store().get(u0(item_name))
         for field_spec in _field_specs(type_spec):
             if field_spec.field_type == "related_set":
                 continue
@@ -148,10 +148,12 @@ class Sections:
 
     def str_repr(self, item_name):
         indent = " " * 6
-        type_spec = type_spec_store().get(upper0(item_name))
+        type_spec = type_spec_store().get(u0(item_name))
         for field_spec in _field_specs(type_spec):
             if field_spec.field_type == "string":
-                return f"{indent}return '{upper0(item_name)}: ' + self.{field_spec.name_snake}"
+                return (
+                    f"{indent}return '{u0(item_name)}: ' + self.{field_spec.name_snake}"
+                )
 
         return ""
 

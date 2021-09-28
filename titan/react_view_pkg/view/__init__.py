@@ -1,16 +1,8 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    create,
-    create_forward,
-    extend,
-    kebab_to_camel,
-    rule,
-    upper0,
-)
-from moonleap.verbs import has, shows
+from moonleap import MemFun, create, create_forward, extend, kebab_to_camel, rule, u0
+from moonleap.verbs import has
 
 from . import props, router_configs
 from .props import get_context
@@ -19,7 +11,7 @@ from .resources import View
 
 @create("view", ["component"])
 def create_view(term, block):
-    name = upper0(kebab_to_camel(term.data))
+    name = u0(kebab_to_camel(term.data))
     view = View(name=f"{name}")
     view.add_template_dir(
         Path(__file__).parent / "templates", get_context, skip_render=props.skip_render
@@ -29,23 +21,13 @@ def create_view(term, block):
 
 @create("panel", ["component"])
 def create_panel(term, block):
-    panel = View(name=f"{upper0(term.data)}Panel")
+    panel = View(name=f"{u0(term.data)}Panel")
     return panel
 
 
 @rule("view", has, "panel")
 def view_has_panel(view, panel):
     panel.name = view.name + panel.name
-
-
-@rule("view", shows, "children")
-def view_wraps_children(term, block):
-    pass
-
-
-@rule("panel", shows, "children")
-def panel_wraps_children(term, block):
-    pass
 
 
 @rule("panel", has, "component")
@@ -58,7 +40,6 @@ def panel_has_component(panel, component):
 class ExtendView:
     create_router_configs = MemFun(router_configs.create_router_configs)
     parent_view = P.parent(View, has)
-    wraps_children = P.child(shows, ":children")
     left_panel = P.child(has, "left:panel")
     right_panel = P.child(has, "right:panel")
     top_panel = P.child(has, "top:panel")

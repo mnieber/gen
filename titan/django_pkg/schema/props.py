@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from moonleap import render_templates, upper0
+from moonleap import render_templates, u0
 from moonleap.resources.type_spec_store import type_spec_store
 from titan.django_pkg.apimutation.props import graphene_type_from_field_spec
 from titan.django_pkg.graphene_django.utils import find_module_that_provides_item_list
@@ -11,10 +11,10 @@ def get_context(item_type, api_module):
     _ = lambda: None
     _.django_app = api_module.django_app
     _.item_name = item_type.name
-    _.type_name = upper0(_.item_name)
+    _.type_name = u0(_.item_name)
     _.type_spec = type_spec_store().get(_.type_name)
     _.field_specs = [x for x in _.type_spec.field_specs if x.private]
-    _.form_type_name = upper0(_.item_name) + "Form"
+    _.form_type_name = u0(_.item_name) + "Form"
     _.form_type_spec = type_spec_store().get(_.form_type_name)
     _.form_field_specs = [x for x in _.form_type_spec.field_specs if not x.private]
 
@@ -22,9 +22,7 @@ def get_context(item_type, api_module):
         def imports(self):
             module = find_module_that_provides_item_list(_.django_app, _.item_name)
             return (
-                f"from {module.name}.models import {upper0(_.item_name)}"
-                if module
-                else ""
+                f"from {module.name}.models import {u0(_.item_name)}" if module else ""
             )
 
         def exclude(self):

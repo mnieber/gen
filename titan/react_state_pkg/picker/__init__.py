@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from moonleap import create, kebab_to_camel, rule, upper0
+from moonleap import create, kebab_to_camel, rule, u0
 from moonleap.verbs import has
 
 from .resources import Picker
@@ -9,7 +9,7 @@ from .resources import Picker
 @create("picker", ["component"])
 def create_picker(term, block):
     item_name = kebab_to_camel(term.data)
-    name = f"{upper0(item_name)}Picker"
+    name = f"{u0(item_name)}Picker"
     picker = Picker(item_name=item_name, name=name)
     picker.add_template_dir(Path(__file__).parent / "templates")
     return picker

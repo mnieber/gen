@@ -1,8 +1,8 @@
 import typing as T
 from dataclasses import dataclass
 
-from moonleap import upper0
-from moonleap.utils.case import lower0
+from moonleap import u0
+from moonleap.utils.case import l0
 from titan.react_pkg.component import Component
 
 
@@ -20,7 +20,7 @@ def shorten_route_params(route_params, item_name):
     def _param_to_word(route_param):
         if route_param.startswith(item_name):
             cutoff_index = len(item_name)
-            route_param = lower0(route_param[cutoff_index:])
+            route_param = l0(route_param[cutoff_index:])
         return route_param
 
     return [_param_to_word(x) for x in route_params]

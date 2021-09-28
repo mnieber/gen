@@ -1,4 +1,4 @@
-from moonleap import upper0
+from moonleap import u0
 from moonleap.resources.field_spec import FieldSpec
 from moonleap.resources.type_spec_store import TypeSpec, type_spec_store
 from titan.api_pkg.mutation.default_outputs_type_spec import default_outputs_type_spec
@@ -25,7 +25,7 @@ def _default_inputs_type_spec(self, name):
 
 
 def inputs_type_spec(self):
-    type_spec_name = f"{upper0(self.name)}Inputs"
+    type_spec_name = f"{u0(self.name)}Inputs"
     type_spec = type_spec_store().get(type_spec_name, None)
     if not type_spec:
         type_spec = _default_inputs_type_spec(self, type_spec_name)
@@ -35,7 +35,7 @@ def inputs_type_spec(self):
 
 
 def outputs_type_spec(self):
-    name = f"{upper0(self.name)}Outputs"
+    name = f"{u0(self.name)}Outputs"
     if not type_spec_store().has(name):
         type_spec_store().setdefault(name, default_outputs_type_spec(self, name))
     return type_spec_store().get(name)

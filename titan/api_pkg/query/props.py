@@ -1,4 +1,4 @@
-from moonleap import upper0
+from moonleap import u0
 from moonleap.resources.field_spec import FieldSpec
 from moonleap.resources.type_spec_store import TypeSpec, type_spec_store
 from moonleap.utils.inflect import plural
@@ -69,7 +69,7 @@ def _item_list_field(self, item):
 
 
 def inputs_type_spec(self):
-    spec_name = f"{upper0(self.name)}Input"
+    spec_name = f"{u0(self.name)}Input"
     if not type_spec_store().has(spec_name):
         type_spec_store().setdefault(
             spec_name, _default_inputs_type_spec(self, spec_name)
@@ -78,7 +78,7 @@ def inputs_type_spec(self):
 
 
 def outputs_type_spec(self):
-    spec_name = f"{upper0(self.name)}Output"
+    spec_name = f"{u0(self.name)}Output"
     if not type_spec_store().has(spec_name):
         type_spec_store().setdefault(
             spec_name, _default_outputs_type_spec(self, spec_name)

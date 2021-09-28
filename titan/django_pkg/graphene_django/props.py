@@ -1,14 +1,14 @@
 import os
 
-from moonleap import upper0
+from moonleap import u0
 
 
 def _query_py_classname(query):
-    return upper0(query.name) + "Query"
+    return u0(query.name) + "Query"
 
 
 def _mutation_py_classname(mutation):
-    return upper0(mutation.name)
+    return u0(mutation.name)
 
 
 class Sections:

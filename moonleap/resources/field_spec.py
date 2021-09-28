@@ -1,7 +1,7 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap.utils.case import lower0, snake_to_camel
+from moonleap.utils.case import l0, snake_to_camel
 from moonleap.utils.chop import chop_postfix
 
 
@@ -51,7 +51,7 @@ def _field_type_and_attrs(field_spec_dict):
 
 
 def type_name_to_item_name(type_name):
-    return lower0(chop_postfix(type_name, "Form"))
+    return l0(chop_postfix(type_name, "Form"))
 
 
 def field_specs_from_type_spec_dict(type_spec_dict):

@@ -1,4 +1,4 @@
-from moonleap import upper0
+from moonleap import u0
 
 
 class Sections:
@@ -6,14 +6,14 @@ class Sections:
         self.res = res
 
     def imports(self):
-        facet_name = upper0(self.res.name)
+        facet_name = u0(self.res.name)
         return (
             f"import {{ {facet_name}, {facet_name}Cbs }} "
             + f"from 'skandha-facets/{facet_name}';"
         )
 
     def constructor(self):
-        facet_name = upper0(self.res.name)
+        facet_name = u0(self.res.name)
         return f"  {self.res.name}: new {facet_name}(),"
 
     def callbacks(self, bvrs):

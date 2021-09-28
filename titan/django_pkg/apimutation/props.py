@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from moonleap import render_templates, upper0
+from moonleap import render_templates, u0
 from titan.django_pkg.graphene_django.utils import endpoint_imports
 
 
@@ -85,21 +85,21 @@ def get_context(mutation, api_module):
             for item_posted in mutation.items_posted:
                 item_name = item_posted.item_name
                 result += [f"{tab}{tab}{item_name}_id = {item_name}_form.pop('id')"]
-                result += [f"{tab}{tab}{upper0(item_name)}.objects.update_or_create("]
+                result += [f"{tab}{tab}{u0(item_name)}.objects.update_or_create("]
                 result += [f"{tab}{tab}{tab}id={item_name}_id,"]
                 result += [f"{tab}{tab}{tab}defaults={item_name}_form"]
                 result += [f"{tab}{tab})"]
 
             for item_posted in mutation.items_deleted:
                 item_name = item_posted.item_name
-                result += [f"{tab}{tab}{item_name} = {upper0(item_name)}.objects.get("]
+                result += [f"{tab}{tab}{item_name} = {u0(item_name)}.objects.get("]
                 for field_name in field_names:
                     result += [f"{tab}{tab}{tab}{field_name}={field_name},"]
                 result += [f"{tab}{tab})"]
                 result += [f"{tab}{tab}{item_name}.delete()", ""]
 
             result += [
-                f"{tab}{tab}return {upper0(mutation.name)}(success=True, errors={{}})"
+                f"{tab}{tab}return {u0(mutation.name)}(success=True, errors={{}})"
             ]
             return os.linesep.join(result)
 
