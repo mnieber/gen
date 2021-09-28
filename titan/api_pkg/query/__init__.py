@@ -25,19 +25,19 @@ def graphql_api_loads_item(graphql_api, item):
     ]
 
 
-@rule("graphql:api", loads, "item-list")
+@rule("graphql:api", loads, "item~list")
 def graphql_api_loads_item_list(graphql_api, item_list):
     query_term_str = f"get-{plural(item_list.item_name)}:query"
     return [
         create_forward(graphql_api, has, query_term_str),
-        create_forward(query_term_str, provides, f"{item_list.item_name}:item-list"),
+        create_forward(query_term_str, provides, f"{item_list.item_name}:item~list"),
     ]
 
 
 rules = [
     (("graphql:api", has, "query"), empty_rule()),
     (("query", provides, "item"), empty_rule()),
-    (("query", provides, "item-list"), empty_rule()),
+    (("query", provides, "item~list"), empty_rule()),
 ]
 
 
@@ -49,7 +49,7 @@ class ExtendGraphqlApi:
 @extend(Query)
 class ExtendQuery:
     items_provided = P.children(provides, "item")
-    item_lists_provided = P.children(provides, "item-list")
+    item_lists_provided = P.children(provides, "item~list")
     provides_item = MemFun(props.provides_item)
     provides_item_list = MemFun(props.provides_item_list)
     inputs_type_spec = Prop(props.inputs_type_spec)

@@ -33,7 +33,7 @@ class ExtendModule:
 
 
 rules = [
-    (("state", provides, "item-list"), empty_rule()),
+    (("state", provides, "item~list"), empty_rule()),
     (("state", provides, "item"), empty_rule()),
     (("state", provides, "behavior"), empty_rule()),
 ]
@@ -42,7 +42,7 @@ rules = [
 @extend(State)
 class ExtendState:
     behaviors = P.children(provides, "behavior")
-    item_lists = P.children(provides, "item-list")
+    item_lists = P.children(provides, "item~list")
     items = P.children(provides, "item")
     bvrs_by_item_name = Prop(props.bvrs_by_item_name)
     store_by_item_name = Prop(props.store_by_item_name)

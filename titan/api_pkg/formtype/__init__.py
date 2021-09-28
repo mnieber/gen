@@ -7,7 +7,7 @@ from . import props
 from .resources import FormType
 
 
-@create("form-type", [])
+@create("item~form-type", [])
 def create_form_type(term, block):
     name = kebab_to_camel(term.data)
     name_snake = kebab_to_snake(term.data)
@@ -18,14 +18,14 @@ def create_form_type(term, block):
     return form_type
 
 
-@rule("form-type")
+@rule("item~form-type")
 def form_type_created(form_type):
     props.get_or_create_form_type_spec(form_type.name)
 
 
-rules = [(("item-type", has, "form-type"), empty_rule())]
+rules = [(("item~type", has, "item~form-type"), empty_rule())]
 
 
 @extend(ItemType)
 class ExtendItemType:
-    form_type = P.child(has, "form-type")
+    form_type = P.child(has, "item~form-type")

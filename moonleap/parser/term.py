@@ -53,3 +53,8 @@ def is_generic_term(term):
 
 def create_generic_terms(term):
     return [Term(term.data, "x"), Term("x", term.tag)]
+
+
+def stem_term(term):
+    pos = term.tag.find("~")
+    return Term(term.data, term.tag[:pos]) if pos != -1 else None

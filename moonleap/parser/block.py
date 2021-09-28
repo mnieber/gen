@@ -1,7 +1,7 @@
 import typing as T
 
 from moonleap.parser.line import Line
-from moonleap.parser.term import create_generic_terms
+from moonleap.parser.term import create_generic_terms, stem_term
 
 
 class Block:
@@ -16,6 +16,10 @@ class Block:
         self.lines: T.List[Line] = []
         self._dbg_text = ""
 
+    @property
+    def title_line(self):
+        return self.lines[0] if self.lines else None
+
     def has_relation(self, relation):
         return relation in self._relations
 
@@ -24,11 +28,15 @@ class Block:
             self._relations.append(relation)
 
     def describes(self, term):
-        generic_terms = create_generic_terms(term)
-        return term in self.lines[0].terms or (
-            [x for x in generic_terms if x in self.lines[0].terms]
-            and [line for line in self.lines if term in line.terms]
-        )
+        title_terms = self.title_line.terms if self.title_line else []
+        for t in [term, stem_term(term)]:
+            if t:
+                if t in title_terms or (
+                    [x for x in create_generic_terms(t) if x in title_terms]
+                    and [line for line in self.lines if t in line.terms]
+                ):
+                    return True
+        return False
 
     def get_resource(self, term):
         resources = [x[1] for x in self._resource_by_term if x[0] == term]

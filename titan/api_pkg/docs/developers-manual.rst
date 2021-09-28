@@ -13,7 +13,7 @@ Description
 
 The spec file can declare resources that represent item-types, items, and item lists. For example,
 when you declare a `todo:item` resource then this resource represents a single instance of the
-`todo:item-type`. Similarly, a `todo:item-list` resource represents a list of `todo:item-type`.
+`todo:item~type`. Similarly, a `todo:item~list` resource represents a list of `todo:item~type`.
 
 Every item-type has two associated type specs called 'data-type spec' and 'form-type spec'.
 The data-type spec is used to describe a type that is returned from a query, whereas the the form-type spec
@@ -40,7 +40,7 @@ The example
 
     ## The todos:module (todo:x)
 
-    The todos:module /provides the todo:item-list.
+    The todos:module /provides the todo:item~list.
 
 
 .. code-block:: JSON
@@ -69,10 +69,10 @@ The example
 Case 2: modules can store item-lists
 ====================================
 
-The `item` and `item-list` resources can be used is various (frontend and backend) services.
+The `item` and `item~list` resources can be used is various (frontend and backend) services.
 Typically, these services are divided modules, where different modules work with different
 data types. Therefore, a common pattern is to declare in the spec file that the `todos:module`
-stores the `todo:item-list`. In case that the spec describes a django module
+stores the `todo:item~list`. In case that the spec describes a django module
 (e.g. `titan/django_pkg/module`) this would have the effect that the `todos` Django module
 would contain a `Todo` django model.
 
@@ -96,7 +96,7 @@ Description
 -----------
 
 The spec file can declare a `foo:query` resource that `/provides` a `todo:item` and/or
-`todo:item-list`. Moonleap uses this information to generate graphql queries based on the
+`todo:item~list`. Moonleap uses this information to generate graphql queries based on the
 type specs for these items. To every query corresponds a so-called 'inputs type spec' and
 'outputs type spec' that that describe the inputs and outputs for that query.
 If the query is named `foo` then these type specs are named `FooInputsType` and
@@ -107,11 +107,11 @@ To provide a `todo:item` it must be specified how these items are queried. By de
 a single item you need to provide its "id". However, you can override this default using the
 `queryItemBy` type spec value. For example, setting `queryItemBy` to `['name']` indicates that
 the todo name is used to find the todo.
-Similarly, you can use the `queryItemsBy` type spec value to specify how an `item-list` is queried.
+Similarly, you can use the `queryItemsBy` type spec value to specify how an `item~list` is queried.
 For example, to query todos by the todolist name you can set `queryItemsBy` to `[('todolist', 'name')]`.
 
 The default outputs type spec will contain a "fk" field for every item that the query
-provides, and a "related_set" field for every item-list that it provides. The final graphql
+provides, and a "related_set" field for every item~list that it provides. The final graphql
 code that is generated for the `query` resource depends on:
 - the in/outputs type spec and the foreign key fields therein.
 - the type specs that are associated with these foreign keys.
@@ -123,12 +123,12 @@ The example
 .. code-block:: markdown
 
     (this is an example spec file)
-    The graphql:api /has a todos:query that /provides the todo:item-list.
+    The graphql:api /has a todos:query that /provides the todo:item~list.
 
 .. code-block:: markdown
 
     (the same example, using a shorthand notation)
-    The graphql:api /loads the todo:item-list.
+    The graphql:api /loads the todo:item~list.
 
 .. code-block:: python
 

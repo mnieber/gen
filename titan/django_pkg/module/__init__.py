@@ -37,16 +37,16 @@ def module_created(module):
     add(module, django_configs.get(module))
 
 
-@rule("module", provides, "item-list")
+@rule("module", provides, "item~list")
 def module_contains_item_list(module, item_list):
     kebab_name = snake_to_kebab(item_list.item_name_snake)
-    return create_forward(module, provides, f"{kebab_name}:item-type")
+    return create_forward(module, provides, f"{kebab_name}:item~type")
 
 
-rules = [(("module", contains + provides, "item-type"), empty_rule())]
+rules = [(("module", contains + provides, "item~type"), empty_rule())]
 
 
 @extend(Module)
 class ExtendModule(StoreTemplateDirs, StoreOutputPaths, StoreDjangoConfigs):
-    item_lists_provided = P.children(provides, "item-list")
-    item_types = P.children(contains + provides, "item-type")
+    item_lists_provided = P.children(provides, "item~list")
+    item_types = P.children(contains + provides, "item~type")

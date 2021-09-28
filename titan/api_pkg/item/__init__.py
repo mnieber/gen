@@ -26,12 +26,12 @@ def create_item(term, block):
 
 @rule("item")
 def item_created(item):
-    return create_forward(item, uses, f"{item.item_name}:item-type")
+    return create_forward(item, uses, f"{item.item_name}:item~type")
 
 
-rules = [(("item", uses, "item-type"), empty_rule())]
+rules = [(("item", uses, "item~type"), empty_rule())]
 
 
 @extend(Item)
 class ExtendItem:
-    item_type = P.child(uses, "item-type")
+    item_type = P.child(uses, "item~type")

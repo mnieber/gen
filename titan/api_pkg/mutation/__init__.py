@@ -18,9 +18,9 @@ def create_mutation(term, block):
 @rule("graphql:api", posts, "item")
 def graphql_api_posts_item(graphql_api, item):
     mutation_term_str = f"post-{item.item_name}:mutation"
-    item_type_term_str = f"{item._meta.term.data}:item-type"
+    item_type_term_str = f"{item._meta.term.data}:item~type"
     return [
-        create_forward(item_type_term_str, has, f"{item.item_name}:form-type"),
+        create_forward(item_type_term_str, has, f"{item.item_name}:item~form-type"),
         create_forward(graphql_api, has, mutation_term_str),
         create_forward(mutation_term_str, posts, f"{item.item_name}:item"),
     ]

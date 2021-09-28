@@ -23,10 +23,10 @@ def create_store(term, block):
 
 @rule("store", contains, "item")
 def store_contains_item(store, item_list):
-    return create_forward(store, contains, f"{item_list.item_name}:item-type")
+    return create_forward(store, contains, f"{item_list.item_name}:item~type")
 
 
-rules = [(("store", contains, "item-list"), empty_rule())]
+rules = [(("store", contains, "item~list"), empty_rule())]
 
 
 @extend(Module)
@@ -36,4 +36,4 @@ class ExtendModule:
 
 @extend(Store)
 class ExtendStore(StoreTemplateDirs):
-    item_lists = P.children(contains, "item-list")
+    item_lists = P.children(contains, "item~list")
