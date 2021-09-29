@@ -46,7 +46,7 @@ def _group_routes(level, routes):
     return _group_by(get_component_and_url, routes)
 
 
-def add_result(routes, url, level, indent, result):
+def render_routes(routes, url, level, indent, result):
     routes_by_first_component_and_url = _group_routes(level, routes)
     needs_switch = _needs_switch(routes_by_first_component_and_url, level)
 
@@ -72,7 +72,7 @@ def add_result(routes, url, level, indent, result):
         else:
             _append(f"<{u0(router_config.component.name)}/>", indent, result)
 
-        add_result(
+        render_routes(
             next_routes,
             url,
             level + 1,
@@ -169,7 +169,7 @@ def get_context(router):
 
         def routes(self):
             result = []
-            add_result(_.routes, "", 0, 6, result)
+            render_routes(_.routes, "", 0, 6, result)
             return os.linesep.join(result)
 
     return dict(sections=Sections())
