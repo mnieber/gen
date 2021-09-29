@@ -5,8 +5,8 @@ from moonleap import create, create_forward, empty_rule, extend, kebab_to_camel,
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.utils.case import u0
 from moonleap.verbs import contains, has
-from titan.react_pkg.jsfilemerger import JsFileMerger
 from titan.react_pkg.module import Module
+from titan.react_pkg.pkg.jsfilemerger import JsFileMerger
 
 from .props import get_context
 from .resources import Store

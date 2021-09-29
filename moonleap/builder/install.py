@@ -18,12 +18,6 @@ def install_package(package):
     for module in getattr(package, "modules", []):
         install_module(module)
 
-    for file_merger in getattr(package, "file_mergers", []):
-        add_file_merger(file_merger)
-
-    for name, f in getattr(package, "filters", {}).items():
-        add_filter(name, f)
-
 
 def install_module(module):
     extensions = []
@@ -44,6 +38,12 @@ def install_module(module):
         getattr(module, "transforms", []),
         getattr(module, "post_transforms", []),
     )
+
+    for file_merger in getattr(module, "file_mergers", []):
+        add_file_merger(file_merger)
+
+    for name, f in getattr(module, "filters", {}).items():
+        add_filter(name, f)
 
     for extension in extensions:
         resource_type = extension.moonleap_extends_resource_type

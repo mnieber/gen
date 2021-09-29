@@ -2,10 +2,10 @@ from . import (
     authmodule,
     component,
     cypress,
-    jsfilemerger,
     module,
     module_and_component,
     nodepackage,
+    pkg,
     prettier,
     reactapp,
     reactapp_and_module,
@@ -21,6 +21,7 @@ modules = [
     authmodule,
     component,
     cypress,
+    pkg,
     module_and_component,
     module,
     nodepackage,
@@ -34,5 +35,3 @@ modules = [
     uikit,
     utilsmodule,
 ]
-
-file_mergers = [jsfilemerger.JsFileMerger()]
