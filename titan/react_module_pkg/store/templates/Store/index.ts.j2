@@ -1,5 +1,5 @@
 {% magic_with item_list.item_name as yellowTulip %}
-{% magic_with res.module.name as gardenFlowers %}
+{% magic_with item.item_name as blueDaisy %}
 {% clean_up_js_imports %}
 import { action, observable, makeObservable } from 'mobx';
 import { forEach, values } from 'ramda';
@@ -7,20 +7,23 @@ import { rsMap } from 'src/api/ResourceStateMap';
 import { listToItemById } from 'src/utils/ids';
 import { isUpdatedRS, RST } from 'src/utils/RST';
 import { ObjT } from 'src/utils/types';
-{% if res.policies %}import * as Policies from '{{ res.module.module_path }}/policies';{% endif %}
-{% for item_list in res.item_lists %}
-import { YellowTulipT, YellowTulipByIdT } from 'src/gardenFlowers/types';
-{% endfor %}
+
+{{ sections.import_policies() }}
+{{ sections.import_item_types() }}
 {% end_clean_up_js_imports %}
 
 export const resUrls = {
-{% for item_list in res.item_lists %}
+{% for item_list in res.item_lists_stored %}
   yellowTulipById: '{{ res.name }}/yellowTulipById',
+{% endfor %}
+{% for item in res.items_stored %}
+  blueDaisy: '{{ res.name }}/blueDaisy',
 {% endfor %}
 };
 
 export class {{ res.name }} {
 {{ sections.item_list_fields() }}
+{{ sections.item_fields() }}
 
   resUrls = () => resUrls;
 
@@ -35,7 +38,7 @@ export class {{ res.name }} {
 {{ sections.on_load_data() }}
   }
 
-{% for item_list in res.item_lists %}
+{% for item_list in res.item_lists_stored %}
   @action addYellowTulips = (yellowTulips: YellowTulipT[]) => {
     this.yellowTulipById = {
       ...this.yellowTulipById,

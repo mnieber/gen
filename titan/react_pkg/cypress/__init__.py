@@ -11,7 +11,10 @@ class Cypress(Tool):
     pass
 
 
-@create("cypress", ["tool"])
+base_tags = [("cypress", ["tool"])]
+
+
+@create("cypress")
 def create_cypress(term, block):
     cypress = Cypress(name="cypress")
     return cypress

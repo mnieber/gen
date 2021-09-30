@@ -20,17 +20,20 @@ def reduce_router_configs(router_configs):
 
     for router_config in router_configs:
         for child_component in router_config.component.child_components:
-            child_router_configs = child_component.create_router_configs()
-            if not child_router_configs or len(child_router_configs) < 2:
+            # The last router config always corresponds to the child component itself.
+            # Any preceeding router configs supply dependencies
+            # (e.g. state providers, load effects, etc)
+            supporting_router_configs = child_component.create_router_configs()[:-1]
+            if not supporting_router_configs:
                 continue
 
-            wrapper_router_configs = reduce_router_configs(child_router_configs[:-1])
-            result = prepend_router_configs(wrapper_router_configs, result)
+            preceeding_router_configs = reduce_router_configs(supporting_router_configs)
+            result = concat_router_configs(preceeding_router_configs, result)
 
     return result
 
 
-def prepend_router_configs(first, second):
+def concat_router_configs(first, second):
     first_components = [x.component for x in first]
     second_filtered = [x for x in second if x.component not in first_components]
     return first + second_filtered

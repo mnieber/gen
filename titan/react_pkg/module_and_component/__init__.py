@@ -1,19 +1,19 @@
 import moonleap.resource.props as P
-from moonleap import create_forward, extend, rule
+from moonleap import create_forward, extend, feeds, receives, rule
 from moonleap.verbs import has, shows
 from titan.react_pkg.module import Module
 
-
-@rule("module", has, "component")
-def module_has_component(module, component):
-    module.node_package_configs.add_source(component)
-    module.react_app_configs.add_source(component)
-    component.output_paths.add_source(module)
+rules = [
+    (("module", has, "component"), receives("node_package_configs")),
+    (("module", has, "component"), receives("react_app_configs")),
+    (("module", has, "component"), feeds("output_paths")),
+]
 
 
 @rule("module", shows, "component")
 def module_shows_component(module, component):
-    return create_forward(module, has, component._meta.term)
+    if not component.module:
+        return create_forward(module, has, component.meta.term)
 
 
 @extend(Module)

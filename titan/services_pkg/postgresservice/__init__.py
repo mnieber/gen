@@ -8,7 +8,7 @@ from . import docker_compose_configs
 postgres_env_fn = "./env/postgres.env"
 
 
-@create("postgres:service", [])
+@create("postgres:service")
 def create_postgres_service(term, block):
     postgres_service = create_service(term, block)
     postgres_service.env_files.append(postgres_env_fn)

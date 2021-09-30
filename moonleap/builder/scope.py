@@ -8,16 +8,17 @@ class Scope:
         self.name = name
         self.create_rule_by_term = {}
         self.rules = []
+        self.base_tags_by_tag = {}
 
     def add_rules(self, module):
         for f in get_symbols(module):
             if hasattr(f, "moonleap_create_rule_term"):
-                term, base_tags = f.moonleap_create_rule_term
+                term = f.moonleap_create_rule_term
                 if term in self.create_rule_by_term:
                     raise Exception(
                         f"There can be only one creation rule for term: {term}"
                     )
-                self.create_rule_by_term[term] = f, base_tags
+                self.create_rule_by_term[term] = f
 
             if hasattr(f, "moonleap_rule"):
                 self.rules.append(f.moonleap_rule)
@@ -25,6 +26,9 @@ class Scope:
         for rel_tuple, f in getattr(module, "rules", []):
             rule = rule_decorator(*rel_tuple)(f).moonleap_rule
             self.rules.append(rule)
+
+        for tag, base_tags in getattr(module, "base_tags", []):
+            self.register_base_tags(tag, base_tags)
 
     def find_create_rule(self, subj_term):
         result = None
@@ -37,7 +41,7 @@ class Scope:
                 elif not result:
                     result = rule
 
-        return result or (None, None)
+        return result
 
     def find_rules(self, input_rel, subj_base_tags=None, obj_base_tags=None):
         return [
@@ -50,3 +54,13 @@ class Scope:
 
     def drop_rule(self, rule):
         self.rules = [x for x in self.rules if x is not rule]
+
+    def register_base_tags(self, tag, base_tags):
+        self.base_tags_by_tag.setdefault(tag, []).extend(base_tags)
+
+    def get_base_tags(self, term):
+        return self.base_tags_by_tag.get(term.tag, [])
+
+
+def get_base_tags(resource):
+    return resource.meta.base_tags if resource.meta else []

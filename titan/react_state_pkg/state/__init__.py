@@ -3,15 +3,20 @@ from pathlib import Path
 import moonleap.resource.props as P
 from moonleap import MemFun, Prop, add, create, empty_rule, extend, kebab_to_camel, rule
 from moonleap.verbs import has, provides
+from titan.api_pkg.item.resources import Item
+from titan.api_pkg.itemlist.resources import ItemList
 from titan.react_pkg.module import Module
 from titan.react_pkg.nodepackage import load_node_package_config
+from titan.react_pkg.pkg.ml_get import ml_react_app
 
 from . import props, react_app_configs
 from .props import get_context
 from .resources import State
 
+base_tags = [("state", ["component", "react-state"])]
 
-@create("state", ["component"])
+
+@create("state")
 def create_state(term, block):
     kebab_name = term.data
     name = kebab_to_camel(kebab_name)
@@ -23,8 +28,9 @@ def create_state(term, block):
 
 @rule("module", has, "state")
 def module_has_state(module, state):
-    if react_app_configs.config not in module.react_app.react_app_configs.children:
-        add(module.react_app, react_app_configs.config)
+    react_app = ml_react_app(module)
+    if react_app_configs.config not in react_app.react_app_configs.children:
+        add(react_app, react_app_configs.config)
 
 
 @extend(Module)
@@ -42,8 +48,18 @@ rules = [
 @extend(State)
 class ExtendState:
     behaviors = P.children(provides, "behavior")
-    item_lists = P.children(provides, "item~list")
-    items = P.children(provides, "item")
+    item_lists_provided = P.children(provides, "item~list")
+    items_provided = P.children(provides, "item")
     bvrs_by_item_name = Prop(props.bvrs_by_item_name)
     store_by_item_name = Prop(props.store_by_item_name)
     type_import_path = MemFun(props.type_import_path)
+
+
+@extend(Item)
+class ExtendItem:
+    provider_react_states = P.parents("react-state", "provides")
+
+
+@extend(ItemList)
+class ExtendItemList:
+    provider_react_states = P.parents("react-state", "provides")

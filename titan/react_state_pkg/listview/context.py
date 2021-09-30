@@ -1,8 +1,7 @@
 import os
 
 import ramda as R
-from moonleap import u0
-from moonleap.resources.type_spec_store import type_spec_store
+from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
 
 
 class Sections:
@@ -95,7 +94,7 @@ class Sections:
     def fields(self):
         result = []
 
-        type_spec = type_spec_store().get(u0(self.res.item_name))
+        type_spec = ml_type_spec_from_item_name(self.res.item_name)
         for field_spec in type_spec.field_specs:
             if (
                 field_spec.private

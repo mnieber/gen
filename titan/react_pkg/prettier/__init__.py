@@ -9,7 +9,10 @@ class Prettier(Tool):
     pass
 
 
-@create("prettier", ["tool"])
+base_tags = [("prettier", ["tool"])]
+
+
+@create("prettier")
 def create_prettier(term, block):
     prettier = Prettier(name="prettier")
     prettier.add_template_dir(Path(__file__).parent / "templates")

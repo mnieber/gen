@@ -13,7 +13,10 @@ class Policy(Component):
     pass
 
 
-@create("policy", ["component"])
+base_tags = [("policy", ["component"])]
+
+
+@create("policy")
 def create_policy(term, block):
     name = kebab_to_camel(term.data)
     policy = Policy(name=name)
@@ -28,4 +31,4 @@ class ExtendStore:
 
 @extend(Policy)
 class ExtendPolicy:
-    store = P.parent(Store, has)
+    store = P.parent("react-store", has, required=True)

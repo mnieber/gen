@@ -2,13 +2,13 @@ from moonleap.parser.term import is_it_term, word_to_term
 from moonleap.resource.rel import Rel
 
 
-def _add_relations(lhs_terms, verb, terms, result):
+def _add_relations(block, lhs_terms, verb, terms, result):
     for lhs_term in lhs_terms:
         for term in terms:
-            result.append(Rel(subj=lhs_term, verb=verb, obj=term))
+            result.append(Rel(subj=lhs_term, verb=verb, obj=term, block=block))
 
 
-def _process_words(words, it_term, result, word_idx=0):
+def _process_words(block, words, it_term, result, word_idx=0):
     first_term = None
     lhs_terms = []
     verb = None
@@ -19,7 +19,7 @@ def _process_words(words, it_term, result, word_idx=0):
         term = None
 
         if word == "(":
-            term, word_idx = _process_words(words, it_term, result, word_idx + 1)
+            term, word_idx = _process_words(block, words, it_term, result, word_idx + 1)
 
         if word == ")":
             break
@@ -38,20 +38,20 @@ def _process_words(words, it_term, result, word_idx=0):
 
         if word.startswith("/"):
             if verb:
-                _add_relations(lhs_terms, verb, terms, result)
+                _add_relations(block, lhs_terms, verb, terms, result)
             verb = word[1:]
             lhs_terms = terms
             terms = []
 
         word_idx += 1
 
-    _add_relations(lhs_terms, verb, terms, result)
+    _add_relations(block, lhs_terms, verb, terms, result)
     return first_term, word_idx
 
 
 def get_relations(block):
     result = []
     for line in block.lines:
-        _process_words(line.words, line.it_term, result)
+        _process_words(block, line.words, line.it_term, result)
 
     return result

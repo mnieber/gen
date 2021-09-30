@@ -35,14 +35,6 @@ def _default_outputs_type_spec(self, name):
     )
 
 
-def provides_item(self, item_name):
-    return [x for x in self.items_provided if x.item_name == item_name]
-
-
-def provides_item_list(self, item_name):
-    return [x for x in self.item_lists_provided if x.item_name == item_name]
-
-
 def _item_field(self, item):
     return FieldSpec(
         name_snake=f"{item.item_name_snake}",

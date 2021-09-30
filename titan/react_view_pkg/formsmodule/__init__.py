@@ -5,7 +5,7 @@ from titan.react_pkg.module import create_module
 from titan.react_pkg.nodepackage import load_node_package_config
 
 
-@create("forms:module", [])
+@create("forms:module")
 def create_forms_module(term, block):
     module = create_module(term, block)
     module.add_template_dir(Path(__file__).parent / "templates")

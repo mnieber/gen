@@ -6,8 +6,10 @@ from titan.tools_pkg.pipdependency import PipRequirement
 from . import dodo_layer_configs, opt_paths
 from .resources import Pytest, PytestHtml
 
+base_tags = [("pytest", ["tool"]), ("pytest-html", ["tool"])]
 
-@create("pytest", ["tool"])
+
+@create("pytest")
 def create_pytest(term, block):
     pytest = Pytest(name="pytest")
 
@@ -17,7 +19,7 @@ def create_pytest(term, block):
     return pytest
 
 
-@create("pytest-html", ["tool"])
+@create("pytest-html")
 def create_pytest_html(term, block):
     pytest_html = PytestHtml(name="pytest-html")
 
@@ -32,7 +34,7 @@ def create_pytest_html(term, block):
 @rule("service", has, "pytest")
 def service_has_pytest_html(service, pytest):
     if pytest.pytest_html:
-        return create_forward(service, has, pytest.pytest_html._meta.term)
+        return create_forward(service, has, pytest.pytest_html.meta.term)
 
 
 rules = [(("pytest", with_, "pytest-html"), empty_rule())]

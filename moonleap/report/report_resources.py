@@ -13,12 +13,6 @@ def _fn(resource, report_dir):
     return os.path.join(report_dir, report_basename)
 
 
-def _get_relations(res, is_inv):
-    return [
-        (rel, other_res) for rel, other_res in res._relations if rel.is_inv == is_inv
-    ]
-
-
 def report_resources(blocks):
     report_dir = ".moonleap/report"
     index_fn = os.path.abspath(os.path.join(report_dir, "index.html"))
@@ -39,19 +33,13 @@ def report_resources(blocks):
 
 def create_report(resource, term, index_fn):
     default_template_fn = Path(__file__).parent / "templates" / "resource.md.j2"
-    child_relations = [
-        (rel, res) for (rel, res) in _get_relations(resource, is_inv=False) if rel.subj
-    ]
-    parent_relations = [
-        (rel, res) for (rel, res) in _get_relations(resource, is_inv=True) if rel.subj
-    ]
     body = render_template(
         default_template_fn,
         term=term,
         settings=get_session().settings,
         props={},
-        child_relations=child_relations,
-        parent_relations=parent_relations,
+        child_relations=resource.get_relations(),
+        parent_relations=resource.get_inv_relations(),
         index_fn=index_fn,
         res=resource,
     )

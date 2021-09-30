@@ -1,12 +1,14 @@
-from moonleap.parser.block import get_extended_scope_names
+import ramda as R
 from moonleap.resource import Resource, ResourceMetaData
-from moonleap.resource.forward import create_forward
-from moonleap.session import get_session
-from moonleap.verbs import is_created_as
 
 
-def _create_generic_resource(term, block):
-    return Resource()
+def _get_base_tags(term, block):
+    result = []
+
+    for scope in block.get_scopes():
+        result.extend(scope.get_base_tags(term))
+
+    return R.uniq(result)
 
 
 def create_resource_and_add_to_block(term, block):
@@ -17,25 +19,25 @@ def create_resource_and_add_to_block(term, block):
                 creator_block = competing_block
                 break
 
-    resource, forward = None, None
+    resource = None
 
-    for scope in block.scopes:
-        create_rule, base_tags = scope.find_create_rule(term)
+    for scope in block.get_scopes():
+        create_rule = scope.find_create_rule(term)
         if create_rule:
             if resource:
                 raise Exception(f"More than 1 create rule for {term}")
+
             resource = create_rule(term, block)
             if resource is None:
                 raise Exception(
                     "Resource creation rule returned None: " + str(create_rule)
                 )
 
-            resource._meta = ResourceMetaData(term, creator_block, base_tags)
-            forward = create_forward(term, is_created_as, term)
+            resource.meta = ResourceMetaData(
+                term, creator_block, _get_base_tags(term, creator_block)
+            )
 
-    if resource is None:
-        resource = _create_generic_resource(term, block)
-
+    resource = resource or Resource()
     creator_block.add_resource_for_term(resource, term, True)
     if block is not creator_block:
         block.add_resource_for_term(resource, term, False)
@@ -51,21 +53,4 @@ def create_resource_and_add_to_block(term, block):
     if creator_block.describes(term) and creator_block.parent_block:
         creator_block.parent_block.add_resource_for_term(resource, term, False)
 
-    return resource, forward
-
-
-def add_meta_data_to_blocks(blocks):
-    scope_manager = get_session().scope_manager
-    for block in blocks:
-        block.scopes = [
-            scope_manager.get_scope(scope_name)
-            for scope_name in get_extended_scope_names(block)
-        ]
-
-    for block in blocks:
-        child_blocks = block.get_blocks(include_children=True, include_self=False)
-        parent_blocks = block.get_blocks(include_parents=True, include_self=False)
-        block.competing_blocks = list(child_blocks)
-        for parent_block in parent_blocks:
-            sibling_blocks = [x for x in parent_block.child_blocks if x is not block]
-            block.competing_blocks += list(sibling_blocks)
+    return resource, creator_block

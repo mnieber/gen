@@ -10,7 +10,10 @@ class Black(Tool):
     pass
 
 
-@create("black", ["tool"])
+base_tags = [("black", ["tool"])]
+
+
+@create("black")
 def create_black(term, block):
     black = Black(name="black")
 

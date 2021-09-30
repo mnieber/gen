@@ -6,7 +6,7 @@ from titan.project_pkg.service import create_service
 keycloak_env_fn = "./env/keycloak.env"
 
 
-@create("keycloak:service", [])
+@create("keycloak:service")
 def create_keycloak(term, block):
     keycloak_service = create_service(term, block)
     keycloak_service.env_files.append(keycloak_env_fn)

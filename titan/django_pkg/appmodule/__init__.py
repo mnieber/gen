@@ -7,7 +7,7 @@ from titan.django_pkg.djangoapp import DjangoApp
 from .resources import AppModule  # noqa
 
 
-@create("app:module", [])
+@create("app:module")
 def create_app_module(term, block):
     name_snake = kebab_to_snake(term.data)
     module = AppModule(name_snake=name_snake, name=snake_to_camel(name_snake))
@@ -17,4 +17,4 @@ def create_app_module(term, block):
 
 @extend(DjangoApp)
 class ExtendDjangoApp:
-    app_module = P.child(has, "app:module")
+    app_module = P.child(has, "app:module", required=True)

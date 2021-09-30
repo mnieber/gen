@@ -9,7 +9,7 @@ from . import props
 from .resources import AppStore
 
 
-@create("app:store", ["component"])
+@create("app:store")
 def create_appstore(term, block):
     store = AppStore(name="AppStore")
     store.add_template_dir(Path(__file__).parent / "templates")
@@ -23,4 +23,4 @@ class ExtendAppStore:
 
 @extend(AppModule)
 class ExtendModule:
-    app_store = P.child(has, "app:store")
+    app_store = P.child(has, "app:store", required=True)

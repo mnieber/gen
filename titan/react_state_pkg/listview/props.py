@@ -1,24 +1,22 @@
+from moonleap.utils.inflect import plural
+from titan.api_pkg.typeregistry import TypeRegistry
+from titan.react_pkg.component.props import create_router_configs_from_chain
 from titan.react_pkg.component.resources import get_component_base_url
-from titan.react_pkg.router.resources import prepend_router_configs
+from titan.react_pkg.pkg.get_chain import get_chain_to
+from titan.react_pkg.pkg.ml_get import ml_graphql_api, ml_react_app
 from titan.react_pkg.router_and_module.props import create_component_router_config
 
 
 def create_router_configs(self):
-    router_config = create_component_router_config(self)
-    router_config.url = get_component_base_url(self, self.item_name)
-    result = (
-        prepend_router_configs(
-            self.load_items_effect.create_router_configs(), [router_config]
-        )
-        if self.load_items_effect
-        else [router_config]
-    )
-
-    for state in self.module.states:
-        item_names = [x.item_name for x in state.item_lists]
-        if state.state_provider and self.item_name in item_names:
-            result = prepend_router_configs(
-                state.state_provider.create_router_configs(), result
-            )
+    result = create_router_configs_from_chain(self.get_chain() or [])
+    url = get_component_base_url(self, plural(self.item_name))
+    router_config = create_component_router_config(self, url=url)
+    result.append(router_config)
 
     return result
+
+
+def get_chain(self):
+    graphql_api = ml_graphql_api(ml_react_app(self))
+    type_reg = TypeRegistry(graphql_api)
+    return get_chain_to(type_reg.get_item_list_by_name(self.item_name))

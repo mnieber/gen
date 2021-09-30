@@ -1,7 +1,8 @@
 import typing as T
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from fnmatch import fnmatch
 
+from moonleap.parser.block import Block
 from moonleap.parser.term import Term
 from moonleap.utils import maybe_tuple_to_tuple
 
@@ -11,10 +12,22 @@ class Rel:
     subj: T.Optional[Term] = None
     verb: T.Optional[T.Union[str, T.Tuple[str, ...]]] = None
     obj: T.Optional[Term] = None
-    is_inv: bool = False
+    block: T.Optional[Block] = None
 
-    def inv(self):
-        return Rel(verb=self.verb, obj=self.obj, subj=self.subj, is_inv=not self.is_inv)
+    # This field is used for debugging purposes. It allows us to trace the chain of
+    # action --(src_rel)--> relation --(origin)--> action etc, so we can figure out
+    # why a certain rule was triggered.
+    origin: T.Optional[T.Any] = field(default_factory=lambda: None, repr=False)
+
+    def __repr__(self):
+        verb = f"{self.verb[0]}*" if isinstance(self.verb, tuple) else self.verb
+        return f"Rel({self.subj} /{verb} {self.obj})"
+
+    def trace(self):
+        if self.origin and hasattr(self.origin, "trace"):
+            self.origin.trace()
+        else:
+            print(f"{self} in {self.block}")
 
 
 def _is_intersecting(lhs, rhs):
@@ -45,12 +58,10 @@ def fuzzy_match(input_rel, pattern_rel, subj_base_tags, obj_base_tags):
             rel = Rel(
                 subj=_patch_tag(input_rel.subj, subj_base_tag),
                 verb=input_rel.verb,
-                is_inv=input_rel.is_inv,
                 obj=_patch_tag(input_rel.obj, obj_base_tag),
             )
             if (
-                rel.is_inv == pattern_rel.is_inv
-                and _is_intersecting(rel.verb, pattern_rel.verb)
+                _is_intersecting(rel.verb, pattern_rel.verb)
                 and _match_term_to_pattern(rel.obj, pattern_rel.obj)
                 and (
                     pattern_rel.subj is None

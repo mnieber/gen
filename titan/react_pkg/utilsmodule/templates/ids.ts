@@ -15,3 +15,7 @@ export function getIds(x: Array<any>): Array<string> {
 export function createUUID() {
   return uuidv4();
 }
+
+export const lookUp = (keys: Array<any>, obj: any): Array<any> => {
+  return keys.map((x) => obj[x]);
+};

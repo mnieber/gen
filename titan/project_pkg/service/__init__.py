@@ -2,9 +2,9 @@ import moonleap.resource.props as P
 from moonleap import (
     MemFun,
     StoreOutputPaths,
-    add_src_inv,
     create,
     extend,
+    feeds,
     kebab_to_camel,
     rule,
 )
@@ -15,10 +15,10 @@ from . import props
 from .resources import Service, Tool
 from .tweaks import tweak
 
-rules = [(("service", has + runs, "tool"), add_src_inv("output_paths"))]
+rules = [(("service", has + runs, "tool"), feeds("output_paths"))]
 
 
-@create("service", [])
+@create("service")
 def create_service(term, block):
     service = Service(name=kebab_to_camel(term.data), use_default_config=True)
     service.output_path = service.name + "/"
@@ -41,4 +41,4 @@ class ExtendService(
 
 @extend(Tool)
 class ExtendTool(StoreOutputPaths, StoreTemplateDirs):
-    service = P.parent(Service, has + runs)
+    service = P.parent("service", has + runs, required=True)

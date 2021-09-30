@@ -1,12 +1,24 @@
 import os
 
-from moonleap import u0
-from moonleap.resources.type_spec_store import type_spec_store
+import ramda as R
 from moonleap.utils.magic_replace import magic_replace
-from titan.react_module_pkg.apiquery.field_spec_to_ts_type import field_spec_to_ts_type
+from titan.api_pkg.pkg.ml_name import (
+    ml_form_type_spec_from_item_name,
+    ml_type_spec_from_item_name,
+)
+from titan.react_pkg.pkg.field_spec_to_ts_type import field_spec_to_ts_type
+from titan.react_pkg.pkg.get_chain import get_chain_to
+from titan.react_pkg.pkg.ts_var import (
+    ts_form_type,
+    ts_type,
+    ts_type_import_path,
+    ts_var,
+    ts_var_by_id,
+    ts_var_by_id_type,
+)
 
-load_data_template = """
-    if (queryName === 'getYellowTulips') {
+items_loaded_template = """
+    if (queryName === 'theQueryName') {
       if (isUpdatedRS(rs)) {
         this.addYellowTulips(values(data.yellowTulips));
       }
@@ -14,64 +26,121 @@ load_data_template = """
     }
 """
 
+item_loaded_template = """
+    if (queryName === 'theQueryName') {
+      if (isUpdatedRS(rs)) {
+        this.yellowTulip = data.yellowTulip;
+      }
+      rsMap.registerRS(rs, [resUrls.yellowTulip]);
+    }
+"""
 
-class Sections:
-    def __init__(self, res):
-        self.res = res
 
-    def item_list_fields(self):
-        result = []
-        for item_list in self.res.item_lists:
-            result.append(
-                f"  @observable {item_list.item_name}ById: "
-                + f"{u0(item_list.item_name)}ByIdT = {{}};\n"
-            )
-        return os.linesep.join(result)
-
-    def on_load_data(self):
-        result = ""
-        for item_list in self.res.item_lists:
-            result += magic_replace(
-                load_data_template,
-                [("yellowTulip", item_list.item_name)],
-            )
-        return result
-
-    def define_type(self, item_type):
-        result = []
-        type_name = u0(item_type.name)
-        result.append(f"export type {type_name}T = {{")
-        type_spec = type_spec_store().get(type_name)
-        for field_spec in type_spec.field_specs:
-            if field_spec.private:
-                continue
-
-            t = field_spec_to_ts_type(field_spec, fk_as_str=True)
-            result.append(f"  {field_spec.name}: {t};")
-        result.append(f"}}")
-
-        return "\n".join(result)
-
-    def define_form_type(self, item_type):
-        if not item_type.form_type:
+def get_context(store):
+    class Sections:
+        def import_policies(self):
+            if store.policies:
+                return (
+                    f"import * as Policies from '{store.module.module_path}/policies';"
+                )
             return ""
 
-        type_name = u0(item_type.name)
-        result = []
-        result.append(f"export type {type_name}FormT = {{")
+        def import_item_types(self):
+            result = []
 
-        type_spec = type_spec_store().get(f"{u0(item_type.name)}Form")
-        for field_spec in type_spec.field_specs:
-            if field_spec.private:
-                continue
+            for item_list in store.item_lists_stored:
+                item = item_list.item
+                result.append(
+                    f"import {{ {ts_type(item)}, {ts_var_by_id_type(item)} }} "
+                    + f"from '{ts_type_import_path(item)}';"
+                )
 
-            t = field_spec_to_ts_type(field_spec, fk_as_str=True)
-            result.append(f"  {field_spec.name}: {t};")
+            for item in store.items_stored:
+                result.append(
+                    f"import {{ {ts_type(item)} }} "
+                    + f"from '{ts_type_import_path(item)}';"
+                )
 
-        result.append(r"}")
+            return os.linesep.join(result)
 
-        return "\n".join(result)
+        def item_list_fields(self):
+            result = []
+            for item_list in store.item_lists_stored:
+                result.append(
+                    f"  @observable {ts_var_by_id(item_list.item)}: "
+                    + f"{ts_var_by_id_type(item_list.item)} = {{}};\n"
+                )
+            return os.linesep.join(result)
 
+        def item_fields(self):
+            result = []
+            for item in store.items_stored:
+                result.append(
+                    f"  @observable {ts_var(item)}: "
+                    + f"{ts_type(item)} | undefined;\n"
+                )
+            return os.linesep.join(result)
 
-def get_context(self):
-    return dict(sections=Sections(self))
+        def on_load_data(self):
+            result = ""
+
+            for item_list in store.item_lists_stored:
+                chain = get_chain_to(item_list, store)
+                query = chain[0].subj if chain else None
+                if query:
+                    result += magic_replace(
+                        items_loaded_template,
+                        [
+                            ("yellowTulip", item_list.item_name),
+                            ("theQueryName", query.name),
+                        ],
+                    )
+
+            for item in store.items_stored:
+                chain = get_chain_to(item, store)
+                query = chain[0].subj if chain else None
+                result += magic_replace(
+                    item_loaded_template,
+                    [
+                        ("yellowTulip", item.item_name),
+                        ("theQueryName", query.name),
+                    ],
+                )
+            return result
+
+        def define_type(self, item):
+            result = []
+            type_spec = ml_type_spec_from_item_name(item.item_name)
+
+            result.append(f"export type {ts_type(item)} = {{")
+            for field_spec in type_spec.field_specs:
+                if field_spec.private:
+                    continue
+
+                t = field_spec_to_ts_type(field_spec, fk_as_str=True)
+                result.append(f"  {field_spec.name}: {t};")
+            result.append(f"}}")
+
+            return "\n".join(result)
+
+        def define_form_type(self, item):
+            if not item.item_type.form_type:
+                return ""
+
+            type_spec = ml_form_type_spec_from_item_name(item.item_name)
+
+            result = []
+            result.append(f"export type {ts_form_type(item)} = {{")
+
+            for field_spec in type_spec.field_specs:
+                if field_spec.private:
+                    continue
+
+                t = field_spec_to_ts_type(field_spec, fk_as_str=True)
+                result.append(f"  {field_spec.name}: {t};")
+
+            result.append(r"}")
+
+            return "\n".join(result)
+
+    return dict(sections=Sections())

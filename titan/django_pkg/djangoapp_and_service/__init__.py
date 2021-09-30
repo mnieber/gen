@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import add, add_src, add_src_inv, create_forward, extend, rule
+from moonleap import add, receives, feeds, create_forward, extend, rule
 from moonleap.verbs import has, runs
 from titan.django_pkg.djangoapp import StoreDjangoConfigs
 from titan.project_pkg.service import Service, Tool
@@ -7,8 +7,8 @@ from titan.project_pkg.service import Service, Tool
 from . import dodo_layer_configs
 
 rules = [
-    (("service", has + runs, "tool"), add_src("django_configs")),
-    (("service", runs, "django-app"), add_src_inv("django_configs")),
+    (("service", has + runs, "tool"), receives("django_configs")),
+    (("service", runs, "django-app"), feeds("django_configs")),
 ]
 
 

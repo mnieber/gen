@@ -1,26 +1,19 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    create,
-    create_forward,
-    empty_rule,
-    extend,
-    kebab_to_camel,
-    rule,
-)
+from moonleap import MemFun, create, empty_rule, extend, kebab_to_camel
 from moonleap.utils.case import u0
 from moonleap.utils.inflect import plural
-from moonleap.verbs import has, uses
-from titan.react_module_pkg.loaditemseffect import create_load_items_effect
+from moonleap.verbs import has
 
 from . import props
 from .context import get_context
 from .resources import ListView
 
+base_tags = [("list-view", ["component"])]
 
-@create("list-view", ["component"])
+
+@create("list-view")
 def create_list_view(term, block):
     name = kebab_to_camel(term.data)
     list_view = ListView(
@@ -30,26 +23,11 @@ def create_list_view(term, block):
     return list_view
 
 
-@rule("list-view", priority=5)
-def maybe_add_load_items_effect_to_list_view(list_view):
-    api_module = list_view.module.react_app.api_module
-    graphql_api = api_module.graphql_api
-    item_name_kebab = plural(list_view._meta.term.data)
-
-    # if the graphql_api loads items of this item type
-    if graphql_api.queries_that_provide_item_list(list_view.item_name):
-        load_items_effect_term_str = f"load-{item_name_kebab}:load-items-effect"
-        return [
-            create_forward(api_module, has, load_items_effect_term_str),
-            create_forward(list_view, uses, load_items_effect_term_str),
-        ]
-
-
 rules = [(("list-view", has, "behavior"), empty_rule())]
 
 
 @extend(ListView)
 class ExtendListView:
     create_router_configs = MemFun(props.create_router_configs)
-    load_items_effect = P.child(uses, "load-items-effect")
+    get_chain = MemFun(props.get_chain)
     behaviors = P.children(has, "behavior")

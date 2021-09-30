@@ -24,11 +24,11 @@ def _field_spec_to_graphql_arg(field_spec, before):
     return f"{field_spec.name}: ${field_spec.name}"
 
 
-def graphql_args(field_specs, before):
+def graphql_args(field_specs, before, base_indent=4):
     if not field_specs:
         return ""
 
-    tab = " " * (4 if before else 8)
+    tab = " " * (base_indent if before else base_indent + 4)
     result = ["("]
     for field_spec in field_specs:
         result.append(f"{tab}  {_field_spec_to_graphql_arg(field_spec, before)}")

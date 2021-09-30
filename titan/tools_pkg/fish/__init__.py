@@ -13,12 +13,15 @@ class Fish(Tool):
     pass
 
 
+base_tags = [("fish", ["tool"])]
+
+
 @rule("service", uses, "fish")
 def service_has_fish(service, fish):
     service.shell = "fish"
 
 
-@create("fish", ["tool"])
+@create("fish")
 def create_fish(term, block):
     fish = Fish(name="fish")
 

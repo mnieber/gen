@@ -13,7 +13,7 @@ from moonleap.verbs import has
 from .resources import Project
 
 
-@create("project", [])
+@create("project")
 def create_project(term, block):
     project = Project(
         name=kebab_to_camel(term.data), name_snake=kebab_to_snake(term.data)

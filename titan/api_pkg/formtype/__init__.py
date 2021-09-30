@@ -7,7 +7,7 @@ from . import props
 from .resources import FormType
 
 
-@create("item~form-type", [])
+@create("item~form-type")
 def create_form_type(term, block):
     name = kebab_to_camel(term.data)
     name_snake = kebab_to_snake(term.data)

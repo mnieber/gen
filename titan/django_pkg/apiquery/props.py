@@ -2,7 +2,11 @@ import os
 from pathlib import Path
 
 from moonleap import render_templates, u0
-from titan.django_pkg.graphene_django.utils import endpoint_imports
+from titan.django_pkg.graphene_django.utils import (
+    endpoint_imports_api,
+    endpoint_imports_models,
+)
+from titan.react_module_pkg.apiquery.graphql_args import graphql_args
 
 
 def _field_arg_type(field_spec, args):
@@ -68,9 +72,9 @@ def get_context(query, api_module):
     class Sections:
         def query_imports(self):
             result = []
-            item_names = set()
-            for field_spec in _.input_field_specs + _.output_field_specs:
-                result.extend(endpoint_imports(_.django_app, item_names, field_spec))
+            type_specs = [_.inputs_type_spec, _.outputs_type_spec]
+            result.extend(endpoint_imports_api(type_specs))
+            result.extend(endpoint_imports_models(_.django_app, type_specs))
 
             return os.linesep.join(result)
 
@@ -105,6 +109,14 @@ def get_context(query, api_module):
                 )
 
             return os.linesep.join(result)
+
+        def create_query_args(self):
+            inputs = list(f"{x.name_snake}" for x in _.input_field_specs)
+            outputs = list(f"{x.name_snake}_outputs=None" for x in _.output_field_specs)
+            return ", ".join(inputs + outputs)
+
+        def graphql_args(self, before):
+            return graphql_args(_.input_field_specs, before, base_indent=6)
 
     return dict(sections=Sections(), _=_)
 

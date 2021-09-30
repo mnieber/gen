@@ -3,9 +3,9 @@ from pathlib import Path
 
 import ramda as R
 from moonleap import render_templates
-from titan.react_module_pkg.apiquery.field_spec_to_ts_type import field_spec_to_ts_type
 from titan.react_module_pkg.apiquery.graphql_args import graphql_args
 from titan.react_module_pkg.apiquery.graphql_body import graphql_body
+from titan.react_pkg.pkg.field_spec_to_ts_type import field_spec_to_ts_type
 
 
 def define_schema_field(field_spec, output_schema_name):
@@ -42,7 +42,7 @@ def get_context(query, api_module):
             result = []
             for field_spec in _.fk_output_field_specs:
                 result.append(define_schema_field(field_spec, _.output_schema_name))
-            return ("," + os.linesep).join(result)
+            return os.linesep.join(result)
 
         def javascript_args(self):
             return ", ".join(
@@ -56,8 +56,14 @@ def get_context(query, api_module):
         def graphql_args(self, before):
             return graphql_args(_.input_field_specs, before)
 
-        def graphql_body(self):
-            return graphql_body(_.query.outputs_type_spec)
+        def graphql_body(self, output_field_spec):
+            fk_type_spec = output_field_spec.fk_type_spec
+            if fk_type_spec:
+                return graphql_body(fk_type_spec)
+            else:
+                raise Exception(
+                    f"Not implemented: graphql_body for field {output_field_spec.name}"
+                )
 
         def graphql_variables(self):
             tab = " " * 6

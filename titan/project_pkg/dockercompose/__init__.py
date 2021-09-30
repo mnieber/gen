@@ -24,7 +24,7 @@ def add_docker_compose_config(resource, docker_compose_config):
     resource.docker_compose_configs.add(docker_compose_config)
 
 
-@create("docker-compose", [])
+@create("docker-compose")
 def create_docker_compose(term, block):
     docker_compose = DockerCompose()
     docker_compose.add_template_dir(Path(__file__).parent / "templates")

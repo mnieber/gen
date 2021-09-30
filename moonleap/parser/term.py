@@ -7,6 +7,9 @@ class Term:
     data: T.Optional[str]
     tag: str
 
+    def __repr__(self):
+        return f"{self.data}:{self.tag}"
+
 
 def maybe_term_to_term(maybe_term):
     if isinstance(maybe_term, Term):

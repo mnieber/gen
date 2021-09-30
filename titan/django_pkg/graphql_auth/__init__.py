@@ -9,7 +9,12 @@ class GraphqlAuth(Tool):
     pass
 
 
-@create("graphql-auth", ["tool"])
+base_tags = [
+    ("graphql-auth", ["tool"]),
+]
+
+
+@create("graphql-auth")
 def create_graphql_auth(term, block):
     graphql_auth = GraphqlAuth(name="graphql-auth")
     add(graphql_auth, django_configs.get())

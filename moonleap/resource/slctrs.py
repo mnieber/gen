@@ -8,15 +8,17 @@ class RelSelector:
         self.fltr = fltr or R.identity
 
     def select_from(self, resource):
+        from moonleap.builder.scope import get_base_tags
+
         result = []
 
-        for relation, obj_resource in resource.get_relations():
+        for relation, obj_res in resource.get_relations():
             if fuzzy_match(
                 relation,
                 self.pattern_rel,
-                resource._meta.base_tags,
-                obj_resource._meta.base_tags,
+                get_base_tags(resource),
+                get_base_tags(obj_res),
             ):
-                result.append(obj_resource)
+                result.append(obj_res)
 
         return self.fltr(result)

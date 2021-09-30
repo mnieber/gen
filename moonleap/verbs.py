@@ -1,6 +1,7 @@
 configured_by = ("configured",)
 uses = ("use", "uses")
-contains = ("has", "have", "contain", "contains", "stores")
+contains = ("has", "have", "contain", "contains")
+stores = ("stores",)
 has = contains + uses
 is_created_as = "is-created-as"
 runs = ("run", "runs", "running")

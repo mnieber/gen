@@ -10,7 +10,7 @@ from . import props
 from .resources import ApiModule  # noqa
 
 
-@create("api:module", [])
+@create("api:module")
 def create_api_module(term, block):
     name_snake = kebab_to_snake(term.data)
     module = ApiModule(name_snake=name_snake, name=snake_to_camel(name_snake))

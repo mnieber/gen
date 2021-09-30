@@ -1,0 +1,23 @@
+{% magic_with res.name_snake as red_rose %}
+{% magic_with field_spec.name_snake as yellow_tulip %}
+def create_red_rose_query(self, {{ sections.create_query_args() }}):
+    sep = ",\n          "
+{% for field_spec in res.outputs_type_spec.field_specs %}
+    if yellow_tulip_outputs:
+        yellow_tulip_body = """yellow_tulip{{ sections.graphql_args(False) }} {\n"""
+        yellow_tulip_body += sep.join(yellow_tulip_output_values)
+        yellow_tulip_body += "}\n"
+    else:
+        yellow_tulip_body = ""
+{% endfor %}
+
+    query = f"""
+      query red_rose{{ sections.graphql_args(True) }} {{ "{{" }}
+{% for field_spec in res.outputs_type_spec.field_specs %}
+        {yellow_tulip_body}
+{% endfor %}
+    {{ "}}" }}
+    """
+    return query
+{% end_magic_with %}
+{% end_magic_with %}

@@ -2,17 +2,19 @@ import os
 from pathlib import Path
 
 import ramda as R
-from moonleap import render_templates, u0
-from titan.react_module_pkg.apiquery.field_spec_to_ts_type import field_spec_to_ts_type
+from moonleap import render_templates
+from titan.api_pkg.typeregistry import TypeRegistry
 from titan.react_module_pkg.apiquery.graphql_args import graphql_args
 from titan.react_module_pkg.apiquery.graphql_body import graphql_body
 from titan.react_module_pkg.apiquery.props import define_schema_field
-from titan.react_pkg.reactapp.resources import find_module_that_provides_item_list
+from titan.react_pkg.pkg.field_spec_to_ts_type import field_spec_to_ts_type
+from titan.react_pkg.pkg.ts_var import ts_form_type, ts_type_import_path
 
 
 def get_context(mutation, api_module):
     _ = lambda: None
     _.api_module = api_module
+    _.type_reg = TypeRegistry(api_module.graphql_api)
     _.mutation = mutation
     _.input_field_specs = mutation.inputs_type_spec.field_specs
     _.form_input_field_specs = [
@@ -39,13 +41,10 @@ def get_context(mutation, api_module):
             result = []
             for field_spec in _.form_input_field_specs:
                 item_name = field_spec.field_type_attrs["target"]
-                ts_module = find_module_that_provides_item_list(
-                    api_module.react_app, item_name
+                item = _.type_reg.get_item_by_name(item_name)
+                result.append(
+                    f"import {{ {ts_form_type(item)} }} from '{ts_type_import_path(item)}';"
                 )
-                if ts_module:
-                    result.append(
-                        f"import {{ {u0(item_name)}FormT }} from 'src/{ts_module.name}/types';"
-                    )
             return os.linesep.join(result)
 
         def output_schema_fields(self):

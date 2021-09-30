@@ -9,7 +9,7 @@ from titan.react_pkg.reactapp import ReactApp
 from .resources import AppModule  # noqa
 
 
-@create("app:module", [])
+@create("app:module")
 def create_app_module(term, block):
     module = AppModule(name=kebab_to_camel(term.data))
     module.add_template_dir(Path(__file__).parent / "templates")

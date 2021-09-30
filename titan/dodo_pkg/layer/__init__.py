@@ -25,7 +25,7 @@ class StoreLayerConfigs:
     dodo_layer_configs = P.tree("p-has", "layer-config")
 
 
-@create("layer", [])
+@create("layer")
 def create_layer(term, block):
     layer = Layer(name=kebab_to_camel(term.data))
     layer.output_path = ".dodo_commands"

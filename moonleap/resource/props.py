@@ -1,20 +1,44 @@
-import ramda as R
-from moonleap.parser.term import maybe_term_to_term
-from moonleap.resource import resolve
+import typing as T
+from dataclasses import dataclass
+
+from moonleap.builder.scope import get_base_tags
+from moonleap.parser.term import maybe_term_to_term, word_to_term
 from moonleap.resource.prop import Prop
-from moonleap.resource.rel import Rel, _is_intersecting
+from moonleap.resource.rel import Rel, fuzzy_match
 from moonleap.resource.slctrs import RelSelector
 from moonleap.utils.inflect import singular
 
 
-def child(verb, term):
+@dataclass
+class RelationNotFound(Exception):
+    subj: T.Any
+    verb: str
+    obj: T.Any
+
+    def __str__(self):
+        return f"Not found: {self.subj} /{self.verb} {self.obj}"
+
+
+class ChildNotFound(RelationNotFound):
+    pass
+
+
+class ParentNotFound(RelationNotFound):
+    pass
+
+
+def child(verb, term, required=False):
     rel = Rel(verb=verb, obj=maybe_term_to_term(term))
     slctr = RelSelector(rel)
 
     def get_child(self):
         children = slctr.select_from(self)
+
         if len(children) > 1:
             raise Exception(f"More than 1 child, verb={verb}, term={term}")
+
+        if required and not children:
+            raise ChildNotFound(subj=self, verb=verb, obj=rel.obj)
 
         return None if not children else children[0]
 
@@ -32,42 +56,39 @@ def children(verb, term, rdcr=None):
     return Prop(get_value=get_children)
 
 
-def _fltr(resource_type):
-    return R.filter(lambda x: isinstance(x, resource_type))
+def _get_parents(parent_term_str, verb, child_term, inv_relations):
+    parents = []
+    pattern_rel = Rel(word_to_term(parent_term_str, True), verb, child_term)
+    for rel, subj_res in inv_relations:
+        if fuzzy_match(rel, pattern_rel, get_base_tags(subj_res), []):
+            if subj_res not in parents:
+                parents.append(subj_res)
+    return parents
 
 
-def parent(parent_resource_type, verb):
-    parent_resource_type = resolve(parent_resource_type)
-
+def parent(parent_term_str, verb, required=False):
     def get_parent(self):
-        parents = []
-        for relation, object_resource in self.get_relations():
-            if (
-                relation.is_inv
-                and isinstance(object_resource, parent_resource_type)
-                and _is_intersecting(relation.verb, verb)
-            ):
-                if object_resource not in parents:
-                    parents.append(object_resource)
+        parents = _get_parents(
+            parent_term_str, verb, self.meta.term, self.get_inv_relations()
+        )
 
         if len(parents) > 1:
             raise Exception("More than 1 parent")
+        elif required and not parents:
+            raise ParentNotFound(subj=parent_term_str, verb=verb, obj=self)
 
         return None if not parents else parents[0]
 
     return Prop(get_value=get_parent)
 
 
-def parents(parent_resource_type, verb, term, rdcr=None):
-    parent_resource_type = resolve(parent_resource_type)
-    rel = Rel(verb=verb, obj=maybe_term_to_term(term), is_inv=True)
-    slctr = RelSelector(rel)
+def parents(parent_term_str, verb):
+    def get_parent(self):
+        return _get_parents(
+            parent_term_str, verb, self.meta.term, self.get_inv_relations()
+        )
 
-    def get_parents(self):
-        parents = _fltr(parent_resource_type)(slctr.select_from(self))
-        return rdcr(parents) if rdcr else parents
-
-    return Prop(get_value=get_parents)
+    return Prop(get_value=get_parent)
 
 
 def tree(verb, term):
@@ -114,19 +135,14 @@ def tree(verb, term):
     return Prop(get_value)
 
 
-def add_source(target_and_prop_name, source, description):
-    target, prop_name = target_and_prop_name
-    getattr(target, prop_name).add_source(source)
-
-
-def add_src(prop_name):
+def receives(prop_name):
     def f(subj, obj):
         getattr(subj, prop_name).add_source(obj)
 
     return f
 
 
-def add_src_inv(prop_name):
+def feeds(prop_name):
     def f(subj, obj):
         getattr(obj, prop_name).add_source(subj)
 

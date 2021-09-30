@@ -6,6 +6,8 @@ from titan.project_pkg.vscodeproject.resources import VsCodeProjectConfig
 
 from .resources import Vandelay
 
+base_tags = [("vandelay", ["tool"])]
+
 
 def _vandelay_path():
     settings = get_session().settings
@@ -13,7 +15,7 @@ def _vandelay_path():
     return str(Path(default_base_dir) / ".vandelay")
 
 
-@create("vandelay", ["tool"])
+@create("vandelay")
 def create_vandelay(term, block):
     vandelay = Vandelay(type=term.data, name="vandelay")
     vandelay.output_path = "../.vandelay"

@@ -9,11 +9,12 @@ from moonleap import (
     rule,
 )
 from moonleap.verbs import uses
+from titan.api_pkg.item.resources import Item
 
 from .resources import ItemList
 
 
-@create("item~list", [])
+@create("item~list")
 def create_item_list(term, block):
     name = kebab_to_camel(term.data)
     name_snake = kebab_to_snake(term.data)
@@ -26,12 +27,17 @@ def create_item_list(term, block):
 
 @rule("item~list")
 def item_list_created(item_list):
-    return create_forward(item_list, uses, f"{item_list.item_name}:item~type")
+    return create_forward(item_list, uses, f"{item_list.item_name}:item")
 
 
-rules = [(("item~list", uses, "item~type"), empty_rule())]
+rules = [(("item~list", uses, "item"), empty_rule())]
 
 
 @extend(ItemList)
 class ExtendItemList:
-    item_type = P.child(uses, "item~type")
+    item = P.child(uses, "item", required=True)
+
+
+@extend(Item)
+class ExtendItem:
+    item_list = P.parent("item~list", uses, required=True)

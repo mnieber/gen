@@ -11,64 +11,59 @@ def _mutation_py_classname(mutation):
     return u0(mutation.name)
 
 
-class Sections:
-    def __init__(self, res):
-        self.res = res
-        self.graphql_api = res.service.django_app.api_module.graphql_api
-        self.modules = [
-            module
-            for module in res.service.django_app.modules
-            if module.has_graphql_schema
-        ]
+def get_context(graphene_django):
+    _ = lambda: None
+    _.django_app = graphene_django.service.django_app
+    _.graphql_api = _.django_app.api_module.graphql_api
+    _.modules = [module for module in _.django_app.modules if module.has_graphql_schema]
 
-    def query_imports(self):
-        result = []
-        for query in self.graphql_api.queries:
-            classname = _query_py_classname(query)
-            result.append(f"from .{classname.lower()} import {classname}")
+    class Sections:
+        def query_imports(self):
+            result = []
+            for query in _.graphql_api.queries:
+                classname = _query_py_classname(query)
+                result.append(f"from .{classname.lower()} import {classname}")
 
-        for module in self.modules:
-            if module.has_graphql_schema:
-                result.append(f"import {module.name}.schema")
+            for module in _.modules:
+                if module.has_graphql_schema:
+                    result.append(f"import {module.name}.schema")
 
-        return os.linesep.join(result)
+            return os.linesep.join(result)
 
-    def query_base_classes(self):
-        return ", ".join(
-            [f"{module.name}.schema.Query" for module in self.modules]
-            + [_query_py_classname(query) for query in self.graphql_api.queries]
-            + ["graphene.ObjectType"]
-        )
-
-    def mutation_base_classes(self):
-        if not self.modules:
-            return ""
-        return (
-            ", ".join([f"{module.name}.schema.Mutation" for module in self.modules])
-            + ", "
-        )
-
-    def mutation_imports(self):
-        result = []
-        for mutation in self.graphql_api.mutations:
-            classname = _mutation_py_classname(mutation)
-            result.append(f"from .{classname.lower()} import {classname}")
-
-        for module in self.modules:
-            if module.has_graphql_schema:
-                result.append(f"import {module.name}.schema")
-
-        return os.linesep.join(result)
-
-    def mutation_fields(self):
-        result = []
-        for mutation in self.graphql_api.mutations:
-            result.append(
-                f"    {mutation.name} = {_mutation_py_classname(mutation)}.Field()"
+        def query_base_classes(self):
+            return ", ".join(
+                [f"{module.name}.schema.Query" for module in _.modules]
+                + [_query_py_classname(query) for query in _.graphql_api.queries]
+                + ["graphene.ObjectType"]
             )
 
-        return os.linesep.join(result)
+        def mutation_base_classes(self):
+            if not _.modules:
+                return ""
+            return (
+                ", ".join([f"{module.name}.schema.Mutation" for module in _.modules])
+                + ", "
+            )
 
+        def mutation_imports(self):
+            result = []
+            for mutation in _.graphql_api.mutations:
+                classname = _mutation_py_classname(mutation)
+                result.append(f"from .{classname.lower()} import {classname}")
 
-def get_context(self):
-    return dict(sections=Sections(self))
+            for module in _.modules:
+                if module.has_graphql_schema:
+                    result.append(f"import {module.name}.schema")
+
+            return os.linesep.join(result)
+
+        def mutation_fields(self):
+            result = []
+            for mutation in _.graphql_api.mutations:
+                result.append(
+                    f"    {mutation.name} = {_mutation_py_classname(mutation)}.Field()"
+                )
+
+            return os.linesep.join(result)
+
+    return dict(sections=Sections())

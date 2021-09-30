@@ -2,7 +2,8 @@ import os
 
 import ramda as R
 from moonleap.utils.case import u0
-from titan.react_pkg.router.resources import prepend_router_configs
+from titan.react_pkg.pkg.ml_get import ml_react_app
+from titan.react_pkg.router.resources import concat_router_configs
 
 
 def _group_by(get_key, xs):
@@ -112,13 +113,13 @@ def _routes(routed_components):
 
         wrapped_components = tail_component.wrapped_components
         if not wrapped_components:
-            routes.append(_move_url_values_up(route))
+            routes.append(route)  # _move_url_values_up(route)
             return
 
         for wrapped_child in wrapped_components:
             more_router_configs = wrapped_child.create_router_configs()
             if more_router_configs:
-                add(prepend_router_configs(route, more_router_configs))
+                add(concat_router_configs(route, more_router_configs))
 
     for routed_component in routed_components:
         route = routed_component.create_router_configs()
@@ -148,7 +149,7 @@ def _components_used_in_router(routes):
 
 def get_context(router):
     _ = lambda: None
-    _.react_app = router.module.react_app
+    _.react_app = ml_react_app(router)
     _.routed_components = _routed_components(_.react_app.modules)
     _.routes = _routes(_.routed_components)
 

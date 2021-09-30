@@ -1,0 +1,23 @@
+{% magic_with res.name as yellowTulip %}
+{% magic_with res.name_snake as yellow_tulip %}
+import pytest
+from django.test import Client
+from .create_{{ res.name_snake }}_query import create_{{ res.name_snake }}_query
+
+class TestYellowTulipQuery:
+    @pytest.fixture()
+    def client(self):
+        return Client()
+
+    @pytest.mark.django_db()
+    def test_yellow_tulip(self, client: Client):
+        query = create_yellow_tulip_query()
+        response = client.get("/graphql/", dict(query=query))
+
+        # check that the response is as expected
+        assert response.json() == {
+            "data": {"yellowTulips": []}
+        }
+
+{% end_magic_with %}
+{% end_magic_with %}

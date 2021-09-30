@@ -1,7 +1,7 @@
 import os
 
 from moonleap import u0
-from moonleap.verbs import wraps
+from titan.react_pkg.pkg.ml_get import ml_react_app
 
 
 def _panels(view):
@@ -16,7 +16,7 @@ def _panels(view):
 
 
 def _collapses(panel):
-    return panel.module.react_app.service.get_tweak_or(
+    return ml_react_app(panel).service.get_tweak_or(
         True,
         [
             "react_app",

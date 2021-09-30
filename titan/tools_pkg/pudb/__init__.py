@@ -4,8 +4,10 @@ from titan.tools_pkg.pipdependency import PipRequirement
 from . import opt_paths
 from .resources import Pudb
 
+base_tags = [("pudb", ["tool"])]
 
-@create("pudb", ["tool"])
+
+@create("pudb")
 def create_pudb(term, block):
     pudb = Pudb(name="pudb")
 

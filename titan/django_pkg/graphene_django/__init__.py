@@ -14,7 +14,12 @@ class GrapheneDjango(Tool):
     pass
 
 
-@create("graphene-django", ["tool"])
+base_tags = [
+    ("graphene-django", ["tool"]),
+]
+
+
+@create("graphene-django")
 def create_graphene_django(term, block):
     graphene_django = GrapheneDjango(name="graphene-django")
     graphene_django.output_path = "api"

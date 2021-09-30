@@ -1,16 +1,42 @@
-{% magic_with res.item_name as yellowTulip %}
+{% magic_with res.name as redRose %}
+{% magic_with res.item_list.item_name as yellowTulip %}
+{% clean_up_js_imports %}
 import React from 'react';
+import { observer } from 'mobx-react-lite';
+import { FC, useDefaultProps } from 'react-default-props-context';
+import { Selection } from 'skandha-facets/Selection';
+import { Effect } from 'src/utils/components';
+import * as R from 'ramda';
+import { {{ _.item_ts_type }} } from '{{ _.item_ts_type_import_path }}';
+{% end_clean_up_js_imports %}
 
-import { EffectWithoutArgs } from 'src/utils/components';
+{{ sections.effect_args() }}
 
 type PropsT = {};
 
-export const SelectYellowTulipEffect: React.FC<PropsT> = (p: PropsT) => {
+type DefaultPropsT = {
+  yellowTulipsSelection: Selection;
+{% if sections.get_item_id() %}
+  yellowTulips: [{{ _.item_ts_type }}];
+{% endif %}
+};
+
+export const RedRose: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
+  const props = useDefaultProps<PropsT, DefaultPropsT>(p);
+
   return (
-    <EffectWithoutArgs
-      f={() => {
+    <Effect
+      f={({{ sections.declare_params() }}: ArgsT) => {
+          {{ sections.get_item_id() }};
+          props.yellowTulipsSelection.selectItem({ itemId: yellowTulipId});
+      }}
+      getArgs={(params) => {
+        return {
+          {{ sections.extract_params() }}
+        }
       }}
     />
   );
-};
+});
+{% end_magic_with %}
 {% end_magic_with %}

@@ -15,14 +15,19 @@ from moonleap import (
 )
 from moonleap.utils.case import snake_to_kebab
 from moonleap.verbs import contains, provides
+from titan.api_pkg.itemtype.resources import ItemType
 from titan.django_pkg.djangoapp import StoreDjangoConfigs
 
 from . import django_configs
 from .props import get_context
 from .resources import Module  # noqa
 
+rules = [(("module", contains + provides, "item~type"), empty_rule())]
 
-@create("module", [])
+base_tags = [("module", ["django-module"])]
+
+
+@create("module")
 def create_module(term, block):
     name = kebab_to_camel(term.data)
     name_snake = kebab_to_snake(term.data)
@@ -43,10 +48,12 @@ def module_contains_item_list(module, item_list):
     return create_forward(module, provides, f"{kebab_name}:item~type")
 
 
-rules = [(("module", contains + provides, "item~type"), empty_rule())]
-
-
 @extend(Module)
 class ExtendModule(StoreTemplateDirs, StoreOutputPaths, StoreDjangoConfigs):
     item_lists_provided = P.children(provides, "item~list")
     item_types = P.children(contains + provides, "item~type")
+
+
+@extend(ItemType)
+class ExtendItemType:
+    django_modules = P.parent("django-module", contains + provides)

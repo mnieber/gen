@@ -10,9 +10,11 @@ export const {{ res.fun_name }} = ({{ sections.javascript_args() }}) => {
   return apiBase.doQuery(
     '{{ res.fun_name }}',
     `query {{ res.name }}{{ sections.graphql_args(True) }} {
-        {{ res.name }}{{ sections.graphql_args(False) }} {
-{{ sections.graphql_body() }}
+{% for output_field_spec in res.outputs_type_spec.field_specs %}
+        {{ output_field_spec.name }}{{ sections.graphql_args(False) }} {
+{{ sections.graphql_body(output_field_spec) }}
         }
+{% endfor %}
     }`,
     {
 {{ sections.graphql_variables() }}
@@ -20,6 +22,8 @@ export const {{ res.fun_name }} = ({{ sections.javascript_args() }}) => {
     (response: ObjT) => {
       return normalize(response, {{ _.output_schema_name }}).entities;
     },
-    (error: ObjT) => error.response.errors[0].message
+    (error: ObjT) => {
+      return error.response.errors[0].message;
+    }
   );
 }

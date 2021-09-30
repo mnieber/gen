@@ -17,7 +17,10 @@ class Strapi(Tool):
     pass
 
 
-@create("strapi", ["tool"])
+base_tags = [("strapi", ["tool"])]
+
+
+@create("strapi")
 def create_strapi(term, block):
     strapi = Strapi(name="strapi")
     add(strapi, makefile_rules.get_runserver())

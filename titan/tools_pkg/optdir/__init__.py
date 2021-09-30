@@ -1,13 +1,15 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, add, create, extend, register_add
+from moonleap import MemFun, add, create, empty_rule, extend, register_add
 from moonleap.verbs import has
 from titan.project_pkg.service import Service, Tool
 
 from . import docker_compose_configs, props
 from .resources import OptDir, OptPath  # noqa
 
+base_tags = [("opt-dir", ["tool"])]
 
-@create("opt-dir", ["tool"])
+
+@create("opt-dir")
 def create_opt_dir(term, block):
     opt_dir = OptDir(name="opt-dir")
     add(opt_dir, docker_compose_configs.get(opt_dir))

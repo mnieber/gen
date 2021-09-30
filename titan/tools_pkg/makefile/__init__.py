@@ -19,7 +19,10 @@ class StoreMakefileRules:
     makefile_rules = P.tree("p-has", "makefile-rules")
 
 
-@create("makefile", ["tool"])
+base_tags = [("makefile", ["tool"])]
+
+
+@create("makefile")
 def create_makefile(term, block):
     makefile = Makefile(name="makefile")
     makefile.add_template_dir(Path(__file__).parent / "templates")

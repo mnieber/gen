@@ -1,12 +1,12 @@
 import moonleap.resource.props as P
-from moonleap import add_src, add_src_inv, extend
+from moonleap import extend, feeds, receives
 from moonleap.verbs import has
 from titan.django_pkg.djangoapp import DjangoApp
 from titan.django_pkg.module import Module
 
 rules = [
-    (("django-app", has, "module"), add_src_inv("output_paths")),
-    (("django-app", has, "module"), add_src("django_configs")),
+    (("django-app", has, "module"), feeds("output_paths")),
+    (("django-app", has, "module"), receives("django_configs")),
 ]
 
 
@@ -17,4 +17,4 @@ class ExtendDjangoApp:
 
 @extend(Module)
 class ExtendModule:
-    django_app = P.parent(DjangoApp, has)
+    django_app = P.parent("django-app", has, required=True)

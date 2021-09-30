@@ -5,23 +5,25 @@ from moonleap import (
     MemFun,
     StoreOutputPaths,
     add,
-    add_src,
-    add_src_inv,
     create,
     extend,
+    feeds,
+    receives,
     register_add,
 )
-from moonleap.verbs import has
+from moonleap.verbs import has, runs
 from titan.project_pkg.service import Service, Tool
 
 from . import node_package_configs, props
 from .resources import NodePackage, NodePackageConfig, load_node_package_config  # noqa
 
 rules = [
-    (("service", has, "node-package"), add_src_inv("node_package_configs")),
-    (("service", has, "tool"), add_src("node_package_configs")),
-    (("react-app", has, "module"), add_src("node_package_configs")),
+    (("service", has, "node-package"), feeds("node_package_configs")),
+    (("service", has + runs, "tool"), receives("node_package_configs")),
+    (("react-app", has, "module"), receives("node_package_configs")),
 ]
+
+base_tags = [("node-package", ["tool"])]
 
 
 class StoreNodePackageConfigs:
@@ -33,7 +35,7 @@ def add_node_package_config(resource, node_package_config):
     resource.node_package_configs.add(node_package_config)
 
 
-@create("node-package", ["tool"])
+@create("node-package")
 def create_node_package(term, block):
     node_package = NodePackage(name="node-package")
     node_package.add_template_dir(Path(__file__).parent / "templates")

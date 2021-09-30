@@ -1,21 +1,8 @@
 import { GraphQLClient } from 'graphql-request';
-{% if 'useMockServer' in res.react_app.get_flags() %}
-import { flags } from 'src/app/flags';
-{% endif %}
 
 function _createClient() {
-{% if 'useMockServer' in res.react_app.get_flags() %}
-  const authToken = flags.useMockServer
-    ? undefined
-    : localStorage.getItem('authToken');
-
-  const url = flags.useMockServer
-    ? `http://localhost:4000`
-    : `http://${window.location.hostname}:8000/graphql/`;
-{% else %}
   const authToken = localStorage.getItem('authToken');
   const url = `http://${window.location.hostname}:8000/graphql/`;
-{% endif %}
 
   return new GraphQLClient(url, {
     headers: authToken

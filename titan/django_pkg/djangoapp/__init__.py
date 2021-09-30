@@ -25,7 +25,12 @@ def add_django_config(resource, django_config):
     resource.django_configs.add(django_config)
 
 
-@create("django-app", ["tool"])
+base_tags = [
+    ("django-app", ["tool"]),
+]
+
+
+@create("django-app")
 def create_django(term, block):
     django_app = DjangoApp(name="django-app")
     django_app.add_template_dir(Path(__file__).parent / "templates")

@@ -7,7 +7,7 @@ ENV LANG=C.UTF-8
 """
 
 
-@create("strapi:docker-image", ["tool"])
+@create("strapi:docker-image")
 def strapi_docker_image_created(term, block):
     docker_image = create_docker_image(term, block)
     docker_image.name = "strapi/strapi"

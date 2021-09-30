@@ -19,8 +19,10 @@ from . import props
 from .props import get_context
 from .resources import StateProvider
 
+base_tags = [("state-provider", ["component"])]
 
-@create("state-provider", ["component"])
+
+@create("state-provider")
 def create_state_provider(term, block):
     base_name = kebab_to_camel(term.data)
     state_provider = StateProvider(name=f"{u0(base_name)}StateProvider")
@@ -39,10 +41,10 @@ def state_created(state):
 
 @extend(State)
 class ExtendState:
-    state_provider = P.child(has, "state-provider")
+    state_provider = P.child(has, "state-provider", required=True)
 
 
 @extend(StateProvider)
 class ExtendStateProvider:
     create_router_configs = MemFun(props.create_router_configs)
-    state = P.parent(State, has)
+    state = P.parent("react-state", has, required=True)

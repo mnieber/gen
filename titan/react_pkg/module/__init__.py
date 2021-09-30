@@ -3,9 +3,9 @@ from moonleap import (
     MemFun,
     Prop,
     StoreOutputPaths,
-    add_src_inv,
     create,
     extend,
+    feeds,
     kebab_to_camel,
 )
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
@@ -17,10 +17,12 @@ from titan.react_pkg.reactapp import ReactApp
 from . import props
 from .resources import Module  # noqa
 
-rules = [(("react-app", has, "module"), add_src_inv("output_paths"))]
+rules = [(("react-app", has, "module"), feeds("output_paths"))]
+
+base_tags = [("module", ["react-module"])]
 
 
-@create("module", [])
+@create("module")
 def create_module(term, block):
     module = Module(name=kebab_to_camel(term.data))
     module.output_path = f"src/{module.name}"
@@ -29,7 +31,7 @@ def create_module(term, block):
 
 @extend(Module)
 class ExtendModule(StoreTemplateDirs, StoreNodePackageConfigs, StoreOutputPaths):
-    react_app = P.parent(ReactApp, has)
+    react_app = P.parent("react-app", has, required=True)
     use_packages = MemFun(use_packages)
     module_path = Prop(props.module_path)
 

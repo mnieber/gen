@@ -1,16 +1,8 @@
 import os
 
+import ramda as R
 from moonleap import u0
-from moonleap.resources.type_spec_store import type_spec_store
-
-
-def _find_module_that_provides(module, item_type):
-    for module in module.django_app.modules:
-        for module_item_type in module.item_types:
-            if item_type.name == module_item_type.name:
-                return module
-
-    return None
+from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
 
 
 def _on_delete(field):
@@ -121,7 +113,7 @@ class Sections:
 
     def model_imports(self, item_name):
         result = []
-        type_spec = type_spec_store().get(u0(item_name))
+        type_spec = ml_type_spec_from_item_name(item_name)
         for field_spec in _field_specs(type_spec):
             if field_spec.field_type == "fk":
                 fk_item_name = field_spec.field_type_attrs["target"]
@@ -137,7 +129,7 @@ class Sections:
     def model_fields(self, item_name):
         result = []
         indent = "    "
-        type_spec = type_spec_store().get(u0(item_name))
+        type_spec = ml_type_spec_from_item_name(item_name)
         for field_spec in _field_specs(type_spec):
             if field_spec.field_type == "related_set":
                 continue
@@ -148,7 +140,7 @@ class Sections:
 
     def str_repr(self, item_name):
         indent = " " * 6
-        type_spec = type_spec_store().get(u0(item_name))
+        type_spec = ml_type_spec_from_item_name(item_name)
         for field_spec in _field_specs(type_spec):
             if field_spec.field_type == "string":
                 return (
@@ -161,7 +153,7 @@ class Sections:
         result = []
 
         for item_type in self.res.item_types:
-            module = _find_module_that_provides(self.res, item_type)
+            module = R.head(item_type.django_modules)
             if module:
                 result.append(
                     f"from {module.name_snake}.models import {item_type.name}"

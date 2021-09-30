@@ -2,11 +2,14 @@ from pathlib import Path
 
 from moonleap import create, kebab_to_camel, rule, u0
 from moonleap.verbs import has
+from titan.react_pkg.pkg.ml_get import ml_react_app
 
 from .resources import Picker
 
+base_tags = [("picker", ["component"])]
 
-@create("picker", ["component"])
+
+@create("picker")
 def create_picker(term, block):
     item_name = kebab_to_camel(term.data)
     name = f"{u0(item_name)}Picker"
@@ -17,4 +20,4 @@ def create_picker(term, block):
 
 @rule("module", has, "picker")
 def create_utils_module(module, picker):
-    module.react_app.utils_module.use_packages(["ValuePicker"])
+    ml_react_app(module).utils_module.use_packages(["ValuePicker"])

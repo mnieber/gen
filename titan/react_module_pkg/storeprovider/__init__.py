@@ -13,7 +13,10 @@ class StoreProvider(Component):
     pass
 
 
-@create("store-provider", ["component"])
+base_tags = [("store-provider", ["component"])]
+
+
+@create("store-provider")
 def create_store_provider(term, block):
     store_provider = StoreProvider(name="StoreProvider")
     store_provider.add_template_dir(Path(__file__).parent / "templates")
@@ -27,4 +30,4 @@ def app_module_created(app_module):
 
 @extend(AppModule)
 class ExtendAppModule:
-    store_provider = P.child(has, "store-provider")
+    store_provider = P.child(has, "store-provider", required=True)

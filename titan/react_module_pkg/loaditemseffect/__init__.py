@@ -1,25 +1,32 @@
 from pathlib import Path
 
-from moonleap import MemFun, create, extend, kebab_to_camel, rule, u0
+import moonleap.resource.props as P
+from moonleap import MemFun, create, empty_rule, extend, kebab_to_camel, rule, u0
 from moonleap.verbs import uses
+from titan.api_pkg.itemlist.resources import ItemList
 
 from . import props
 from .props import get_context
 from .resources import LoadItemsEffect
 
+base_tags = [("load-items-effect", ["component", "api-effect"])]
 
-@create("load-items-effect", ["component"])
+rules = [(("item~list", uses, "load-items-effect"), empty_rule())]
+
+
+@create("load-items-effect")
 def create_load_items_effect(term, block):
     load_items_effect = LoadItemsEffect(name=kebab_to_camel(u0(term.data)) + "Effect")
     load_items_effect.add_template_dir(Path(__file__).parent / "templates", get_context)
     return load_items_effect
 
 
-@rule("list-view", uses, "load-items-effect")
-def item_view_uses_load_items_effect(list_view, load_items_effect):
-    load_items_effect.item_name = list_view.item_name
-
-
 @extend(LoadItemsEffect)
 class ExtendLoadItemsEffect:
     create_router_configs = MemFun(props.create_router_configs)
+    item_list = P.parent("item~list", uses, required=True)
+
+
+@extend(ItemList)
+class ExtendItemList:
+    react_load_effect = P.child(uses, "load-items-effect")

@@ -8,6 +8,7 @@ class Block:
     def __init__(self, name, level, scope_names):
         self.name = name
         self.scope_names = scope_names
+        self._scopes = []
         self.level = level
         self.parent_block = None
         self.child_blocks = []
@@ -19,6 +20,12 @@ class Block:
     @property
     def title_line(self):
         return self.lines[0] if self.lines else None
+
+    def get_scopes(self):
+        return self._scopes
+
+    def set_scopes(self, scopes):
+        self._scopes = scopes
 
     def has_relation(self, relation):
         return relation in self._relations
@@ -93,12 +100,3 @@ class Block:
 
     def __repr__(self):
         return f"Block ({self.name})"
-
-
-def get_extended_scope_names(root_block):
-    scope_names = []
-    for block in root_block.get_blocks(include_children=True):
-        for scope_name in block.scope_names:
-            if scope_name not in scope_names:
-                scope_names.append(scope_name)
-    return scope_names

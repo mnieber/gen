@@ -1,24 +1,35 @@
 import moonleap.resource.props as P
-import ramda as R
-from moonleap import MemFun, Prop, create, empty_rule, extend, kebab_to_camel, rule
+from moonleap import (
+    MemFun,
+    Prop,
+    create,
+    empty_rule,
+    extend,
+    kebab_to_camel,
+    kebab_to_snake,
+    rule,
+)
 from moonleap.resource.forward import create_forward
 from moonleap.verbs import deletes, has, posts
 from titan.api_pkg.graphqlapi import GraphqlApi
+from titan.api_pkg.item.resources import Item
 
 from . import props
 from .resources import Mutation
 
 
-@create("mutation", [])
+@create("mutation")
 def create_mutation(term, block):
-    mutation = Mutation(name=kebab_to_camel(term.data))
+    mutation = Mutation(
+        name=kebab_to_camel(term.data), name_snake=kebab_to_snake(term.data)
+    )
     return mutation
 
 
 @rule("graphql:api", posts, "item")
 def graphql_api_posts_item(graphql_api, item):
     mutation_term_str = f"post-{item.item_name}:mutation"
-    item_type_term_str = f"{item._meta.term.data}:item~type"
+    item_type_term_str = f"{item.meta.term.data}:item~type"
     return [
         create_forward(item_type_term_str, has, f"{item.item_name}:item~form-type"),
         create_forward(graphql_api, has, mutation_term_str),
@@ -53,3 +64,8 @@ class ExtendMutation:
     posts_item = MemFun(props.posts_item)
     inputs_type_spec = Prop(props.inputs_type_spec)
     outputs_type_spec = Prop(props.outputs_type_spec)
+
+
+@extend(Item)
+class ExtendItem:
+    poster_mutations = P.parents("mutation", posts)

@@ -16,12 +16,15 @@ setup_file_config = dict(
 )
 
 
+base_tags = [("isort", ["tool"])]
+
+
 @dataclass
 class ISort(Tool):
     pass
 
 
-@create("isort", ["tool"])
+@create("isort")
 def create_isort(term, block):
     isort = ISort(name="isort")
 

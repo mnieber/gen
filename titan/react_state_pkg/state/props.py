@@ -4,7 +4,16 @@ import os
 import ramda as R
 from moonleap import u0
 from moonleap.utils.inflect import plural
-from titan.react_pkg.reactapp.resources import find_module_that_provides_item_list
+from titan.react_pkg.pkg.ml_get import ml_react_app
+
+
+def _find_module_that_provides_item_list(react_app, item_name):
+    for module in react_app.modules:
+        for store in module.stores:
+            for item_list in store.item_lists_stored:
+                if item_list.item_name == item_name:
+                    return module
+    return None
 
 
 def bvrs_by_item_name(self):
@@ -13,7 +22,7 @@ def bvrs_by_item_name(self):
         bvrs = result.setdefault(bvr.item_name, [])
         pos = bisect.bisect_left(R.map(R.prop("name"))(bvrs), bvr.name)
         result[bvr.item_name].insert(pos, bvr)
-    for item_list in self.item_lists:
+    for item_list in self.item_lists_provided:
         result.setdefault(item_list.item_name, [])
     return result
 
@@ -21,19 +30,19 @@ def bvrs_by_item_name(self):
 def store_by_item_name(self):
     result = {}
     stores = []
-    for x in self.module.react_app.modules:
+    for x in ml_react_app(self).modules:
         stores.extend(x.stores)
 
     for item_name in bvrs_by_item_name(self).keys():
         for store in stores:
-            if [x for x in store.item_lists if x.item_name == item_name]:
+            if [x for x in store.item_lists_stored if x.item_name == item_name]:
                 result[item_name] = store
                 break
     return result
 
 
-def type_import_path(self, type_name):
-    module = find_module_that_provides_item_list(self.module.react_app, type_name)
+def type_import_path(self, item_name):
+    module = _find_module_that_provides_item_list(ml_react_app(self), item_name)
     if module:
         return f"{module.module_path}/types"
     return None

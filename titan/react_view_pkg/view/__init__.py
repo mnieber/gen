@@ -17,8 +17,13 @@ from . import props, router_configs
 from .props import get_context
 from .resources import View
 
+base_tags = [
+    ("view", ["component", "react-view"]),
+    ("panel", ["component", "react-panel"]),
+]
 
-@create("view", ["component"])
+
+@create("view")
 def create_view(term, block):
     name = u0(kebab_to_camel(term.data))
     view = View(name=f"{name}")
@@ -28,7 +33,7 @@ def create_view(term, block):
     return view
 
 
-@create("panel", ["component"])
+@create("panel")
 def create_panel(term, block):
     panel = View(name=f"{u0(term.data)}Panel")
     panel.add_template_dir(
@@ -45,13 +50,13 @@ def view_has_panel(view, panel):
 @rule("panel", has, "component")
 def panel_has_component(panel, component):
     if not component.module:
-        return create_forward(panel.parent_view.module, has, component._meta.term)
+        return create_forward(panel.parent_view.module, has, component.meta.term)
 
 
 @extend(View)
 class ExtendView:
     create_router_configs = MemFun(router_configs.create_router_configs)
-    parent_view = P.parent(View, has)
+    parent_view = P.parent("view", has)
     left_panel = P.child(has, "left:panel")
     right_panel = P.child(has, "right:panel")
     top_panel = P.child(has, "top:panel")

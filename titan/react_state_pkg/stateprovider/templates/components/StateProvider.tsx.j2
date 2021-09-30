@@ -1,27 +1,26 @@
 {% magic_with res.state.name as yellowTulip %}
-{% magic_with item_name as redRose %}
-{% magic_with store.name as BlueDaisy %}
+{% clean_up_js_imports %}
 import * as React from 'react';
+import * as R from 'ramda';
 import { reaction } from 'mobx';
-import { values } from 'ramda';
 import { log } from 'src/utils/logging';
 import { flags } from 'src/app/flags';
+import { lookUp } from 'src/utils/ids';
+
+{{ sections.default_prop_type_imports() }}
 
 import { YellowTulipState } from '{{ res.module.module_path }}/YellowTulipState';
 import { CtrProvider, FC, useDefaultProps } from 'react-default-props-context';
 import { useStore } from 'src/app/components';
+{% end_clean_up_js_imports %}
 
 type PropsT = React.PropsWithChildren<{}>;
 
-type DefaultPropsT = {};
+type DefaultPropsT = { {{ sections.declare_default_input_props() }} };
 
 export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = (p: PropsT) => {
   const props = useDefaultProps<PropsT, DefaultPropsT>(p);
-  const {
-{% for item_name, store in res.state.store_by_item_name.items() %}
-    blueDaisy,
-{% endfor %}
-  } = useStore();
+  const { {{ sections.input_stores() }} } = useStore();
 
   const createState = () => {
     return new YellowTulipState({});
@@ -29,15 +28,13 @@ export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = (p: PropsT) =
 
   const updateState = (state: YellowTulipState) => {
     return reaction(
-      () => ({
-{% for item_name, store in res.state.store_by_item_name.items() %}
-        redRoses: values(blueDaisy.redRoseById),
-{% endfor %}
-      }),
+      () => {
+        return {
+{{ sections.get_state_input_values() }}
+        }
+      },
       (inputs) => {
-{% for item_name, store in res.state.store_by_item_name.items() %}
-        state.inputs.redRoses = inputs.redRoses;
-{% endfor %}
+{{ sections.set_state_input_values() }}
         if (flags.logStateProviders) {
           log('YellowTulipState updated', state.getSummary());
         }
@@ -65,7 +62,4 @@ export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = (p: PropsT) =
     </CtrProvider>
   );
 };
-
-{% end_magic_with %}
-{% end_magic_with %}
 {% end_magic_with %}

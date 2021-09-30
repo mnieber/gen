@@ -1,18 +1,33 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, create, empty_rule, extend, kebab_to_camel, rule
+from moonleap import (
+    MemFun,
+    Prop,
+    create,
+    empty_rule,
+    extend,
+    kebab_to_camel,
+    kebab_to_snake,
+    rule,
+)
 from moonleap.resource.forward import create_forward
 from moonleap.utils.inflect import plural
 from moonleap.verbs import has, loads, provides
 from titan.api_pkg.graphqlapi import GraphqlApi
+from titan.api_pkg.item.resources import Item
+from titan.api_pkg.itemlist.resources import ItemList
 
 from . import props
 from .resources import Query
 
 
-@create("query", [])
+@create("query")
 def create_query(term, block):
     name = kebab_to_camel(term.data)
-    query = Query(name=name, fun_name=kebab_to_camel(term.data))
+    query = Query(
+        name=name,
+        name_snake=kebab_to_snake(term.data),
+        fun_name=kebab_to_camel(term.data),
+    )
     return query
 
 
@@ -50,7 +65,15 @@ class ExtendGraphqlApi:
 class ExtendQuery:
     items_provided = P.children(provides, "item")
     item_lists_provided = P.children(provides, "item~list")
-    provides_item = MemFun(props.provides_item)
-    provides_item_list = MemFun(props.provides_item_list)
     inputs_type_spec = Prop(props.inputs_type_spec)
     outputs_type_spec = Prop(props.outputs_type_spec)
+
+
+@extend(Item)
+class ExtendItem:
+    provider_queries = P.parents("query", provides)
+
+
+@extend(ItemList)
+class ExtendItemList:
+    provider_queries = P.parents("query", provides)

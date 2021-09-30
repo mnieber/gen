@@ -7,8 +7,10 @@ from titan.project_pkg.service import Tool
 from .props import get_context
 from .resources import SetupFile, SetupFileConfig  # noqa
 
+base_tags = [("setup.cfg", ["tool"])]
 
-@create("setup.cfg", ["tool"])
+
+@create("setup.cfg")
 def create_setup_file(term, block):
     setupFile = SetupFile(name="setup-file")
     setupFile.add_template_dir(Path(__file__).parent / "templates", get_context)

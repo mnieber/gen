@@ -6,13 +6,13 @@ from moonleap import (
     Prop,
     StoreOutputPaths,
     StoreTemplateDirs,
-    add_src,
-    add_src_inv,
     create,
     extend,
+    feeds,
+    receives,
     register_add,
 )
-from moonleap.verbs import has
+from moonleap.verbs import has, runs
 from titan.project_pkg.project import Project
 from titan.project_pkg.service import Service, Tool
 
@@ -29,7 +29,7 @@ class StoreVsCodeProjectConfigs:
     vs_code_project_configs = P.tree("p-has", "vs-code-project-config")
 
 
-@create("vscode-project", [])
+@create("vscode-project")
 def create_vscode_project(term, block):
     vscode_project = VsCodeProject()
     vscode_project.add_template_dir(Path(__file__).parent / "templates")
@@ -37,9 +37,9 @@ def create_vscode_project(term, block):
 
 
 rules = [
-    (("service", has, "tool"), add_src("vs_code_project_configs")),
-    (("project", has, "service"), add_src("vs_code_project_configs")),
-    (("project", has, "vscode-project"), add_src_inv("vs_code_project_configs")),
+    (("service", has + runs, "tool"), receives("vs_code_project_configs")),
+    (("project", has, "service"), receives("vs_code_project_configs")),
+    (("project", has, "vscode-project"), feeds("vs_code_project_configs")),
 ]
 
 
@@ -47,7 +47,7 @@ rules = [
 class ExtendVsCodeProject(
     StoreOutputPaths, StoreVsCodeProjectConfigs, StoreTemplateDirs
 ):
-    project = P.parent(Project, has)
+    project = P.parent("project", has, required=True)
     paths = Prop(props.paths)
     get_config = MemFun(props.get_config)
 

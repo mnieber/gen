@@ -19,7 +19,10 @@ def service_has_pip_compile(service, pip_compile):
     service.add_template_dir(Path(__file__).parent / "templates_service")
 
 
-@create("pip-compile", ["tool"])
+base_tags = [("pip-compile", ["tool"])]
+
+
+@create("pip-compile")
 def create_pip_compile(term, block):
     pip_compile = PipCompile(name="pip-compile")
 

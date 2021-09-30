@@ -9,7 +9,10 @@ class TailwindCss(Tool):
     pass
 
 
-@create("tailwind-css", ["tool"])
+base_tags = [("tailwind-css", ["tool"])]
+
+
+@create("tailwind-css")
 def create_tailwind_css(term, block):
     tailwind_css = TailwindCss(name="tailwind")
     tailwind_css.add_template_dir(Path(__file__).parent / "templates")

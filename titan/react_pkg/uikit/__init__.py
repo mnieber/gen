@@ -9,7 +9,10 @@ class UIkit(Tool):
     pass
 
 
-@create("uikit", ["tool"])
+base_tags = [("uikit", ["tool"])]
+
+
+@create("uikit")
 def create_uikit(term, block):
     uikit = UIkit(name="uikit")
     uikit.add_template_dir(Path(__file__).parent / "templates")

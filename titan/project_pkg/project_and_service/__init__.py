@@ -1,10 +1,10 @@
 import moonleap.resource.props as P
-from moonleap import add_src_inv, extend
+from moonleap import extend, feeds
 from moonleap.verbs import has
 from titan.project_pkg.project import Project
 from titan.project_pkg.service import Service
 
-rules = [(("project", has, "service"), add_src_inv("output_paths"))]
+rules = [(("project", has, "service"), feeds("output_paths"))]
 
 
 @extend(Project)
@@ -14,4 +14,4 @@ class ExtendProject:
 
 @extend(Service)
 class ExtendService:
-    project = P.parent(Project, has)
+    project = P.parent("project", has, required=True)

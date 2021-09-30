@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
 
-from moonleap import render_templates, u0
-from moonleap.resources.type_spec_store import type_spec_store
+from moonleap import render_templates
+from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
 from titan.react_module_pkg.apiquery.props import define_schema_field
 
 
@@ -12,7 +12,7 @@ def get_context(item_type, api_module):
     _.item_type = item_type
     _.item_name = _.item_type.name
     _.schema_name = _.item_name
-    _.type_spec = type_spec_store().get(u0(_.item_name))
+    _.type_spec = ml_type_spec_from_item_name(_.item_name)
     _.fk_field_specs = [
         x for x in _.type_spec.field_specs if x.field_type in ("fk", "related_set")
     ]
@@ -32,7 +32,7 @@ def get_context(item_type, api_module):
             result = []
             for field_spec in _.fk_field_specs:
                 result.append(define_schema_field(field_spec, _.schema_name))
-            return ("," + os.linesep).join(result)
+            return os.linesep.join(result)
 
     return dict(sections=Sections(), _=_)
 

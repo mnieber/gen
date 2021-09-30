@@ -13,4 +13,4 @@ def react_app_has_utils_module(react_app, utils_module):
 
 @extend(ReactApp)
 class ExtendReactApp:
-    utils_module = P.child(has, "utils:module")
+    utils_module = P.child(has, "utils:module", required=True)

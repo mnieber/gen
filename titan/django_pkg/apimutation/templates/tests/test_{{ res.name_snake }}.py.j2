@@ -1,0 +1,25 @@
+{% magic_with res.name as blueDaisy %}
+{% magic_with res.name_snake as blue_daisy %}
+import pytest
+from django.test import Client
+from .create_{{ res.name_snake }}_mutation import create_{{ res.name_snake }}_mutation
+
+class TestBlueDaisyMutation:
+    @pytest.fixture()
+    def client(self):
+        return Client()
+
+    @pytest.mark.django_db()
+    def test_blue_daisy(self, client: Client):
+        query = create_blue_daisy_mutation(
+            {{ sections.form_values() }}
+        );
+        response = client.post("/graphql/", dict(query=query))
+
+        # check that the response is as expected
+        assert response.json() == {
+            "data": {"blueDaisy": {"success": True} }
+        }
+
+{% end_magic_with %}
+{% end_magic_with %}

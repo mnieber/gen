@@ -19,7 +19,10 @@ def add_router_config(resource, router_configs):
     resource.router_configs.add(router_configs)
 
 
-@create("router", ["component"])
+base_tags = [("router", ["component"])]
+
+
+@create("router")
 def create_router(term, block):
     router = Router(name="UrlRouter")
     router.add_template_dir(Path(__file__).parent / "templates", get_context)

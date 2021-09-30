@@ -9,7 +9,7 @@ from . import dodo_layer_configs
 from .resources import CommandsDir
 
 
-@create("commands-dir", [])
+@create("commands-dir")
 def create_commands_dir(term, block):
     commands_dir = CommandsDir(name=term.data)
     return commands_dir

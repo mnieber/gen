@@ -1,7 +1,16 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import MemFun, add, create, create_forward, extend, register_add, rule
+from moonleap import (
+    MemFun,
+    Priorities,
+    add,
+    create,
+    create_forward,
+    extend,
+    register_add,
+    rule,
+)
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has
 from titan.react_pkg.nodepackage import load_node_package_config
@@ -21,7 +30,10 @@ class StoreReactAppConfigs:
     react_app_configs = P.tree("p-has", "react-app-config")
 
 
-@create("react-app", ["tool"])
+base_tags = [("react-app", ["tool"])]
+
+
+@create("react-app")
 def create_react_app(term, block):
     react_app = ReactApp(name="react-app")
     react_app.add_template_dir(Path(__file__).parent / "templates", get_context)
@@ -33,7 +45,7 @@ def create_react_app(term, block):
     return react_app
 
 
-@rule("react-app", priority=100)
+@rule("react-app", priority=Priorities.HIGH.value)
 def create_react_created(react_app):
     return [
         create_forward(react_app, has, "app:module"),
