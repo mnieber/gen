@@ -15,8 +15,8 @@ the spec file
 **spec dir**: the directory that contains the spec file
 **spec file**: the root markdown file that contains the project specification
 **term**: a word in the spec that contains - or is prefixed by - a colon.
-**term data**: The part of the term before the colon.
-**term tag**: The part of the term after then colon.
+**term data (part)**: The part of the term before the colon.
+**term tag (part)**: The part of the term after then colon.
 **verb**: a word in the spec that is prefixed with a forward slash
 
 Purpose
@@ -44,11 +44,11 @@ The example (e.g.: specs/foo/spec.md)
     # The foo:project [1-2]
 
     The foo:project /uses the bar:service and the baz:service [3-4].
-    :It [4] /shows a (welcome:screen that /has a :cookie-notice) that /uses the welcome:endpoint [5].
+    :It [4] /shows a (welcome:screen that /has a :cookie-notice) that /uses the welcome:endpoint [5,6].
 
-    ## The bar:service [6-7]
+    ## The bar:service [7-8]
 
-    The bar:service has a simple goal:: it /provides the bar:endpoint. [8]
+    The bar:service has a simple goal:: it /provides the bar:endpoint. [9]
 
 Notes
 -----
@@ -62,12 +62,13 @@ Notes
    their relations to other resources.
 4. Since one resource is mentioned before the verb (/uses) and two after, there will be two relations created here.
 5. The :it term refers to the first term in the previous sentence.
-6. Parentheses are used to limit the scope of the /has verb. Without these parentheses, it would (wrongly) state
+6. The :cookie-notice term has an data part that is the empty string ("").
+7. Parentheses are used to limit the scope of the /has verb. Without these parentheses, it would (wrongly) state
    that the cookie-notice uses the welcome endpoint.
-7. If a term appears in a block title, then we say that the block _describes_ that term. For every term, there is
+8. If a term appears in a block title, then we say that the block _describes_ that term. For every term, there is
    exactly one block that describes that term. It's important to know which blocks describe which terms, because -
    as will be explained later - every block has specific rules that are used to process these terms.
-8. To use a colon in the spec file without identifying a resource, it needs to be doubled. This is why the word
+9. To use a colon in the spec file without identifying a resource, it needs to be doubled. This is why the word
    goal is proceeded by a double colon (::).
 
 
