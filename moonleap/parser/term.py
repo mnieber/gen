@@ -67,16 +67,20 @@ def stem_term(term):
     return Term(term.data, term.tag[:pos]) if pos != -1 else None
 
 
+def _match(lhs, rhs):
+    if lhs is None or rhs is None:
+        return lhs == rhs
+
+    return (
+        (lhs == "x" and rhs is not None)
+        or (rhs == "x" and lhs is not None)
+        or fnmatch(lhs, rhs)
+    )
+
+
 def match_term_to_pattern(term, pattern_term):
-    datas_match = (
-        pattern_term.data is None
-        or pattern_term.data == "x"
-        or term.data == "x"
-        or fnmatch(term.data or "", pattern_term.data)
+    return (
+        (pattern_term.data is None or _match(term.data, pattern_term.data))
+        and _match(term.tag, pattern_term.tag)
+        and _match(term.name, pattern_term.name)
     )
-    tags_match = (
-        pattern_term.tag == "x"
-        or term.tag == "x"
-        or fnmatch(term.tag, pattern_term.tag)
-    )
-    return datas_match and tags_match
