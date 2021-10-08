@@ -5,16 +5,12 @@ from fnmatch import fnmatch
 
 @dataclass(frozen=True)
 class Term:
-    data: T.Optional[str]
+    data: str
     tag: str
     name: T.Optional[str] = None
 
     def __repr__(self):
-        return (
-            (self.name + "+" if self.name else "")
-            + (self.data + ":" if self.data else "")
-            + self.tag
-        )
+        return (self.name + "+" if self.name else "") + self.data + ":" + self.tag
 
 
 def maybe_term_to_term(maybe_term):
@@ -37,9 +33,9 @@ def word_to_term(word, default_to_tag=False) -> T.Optional[Term]:
         data = word[:sep_tag]
     else:
         tag = word
-        data = None
+        data = "x"
 
-    if sep_name == -1 and sep_tag == -1 and not default_to_tag:
+    if sep_tag == -1 and not default_to_tag:
         return None
 
     return Term(data, tag, name)
@@ -80,7 +76,7 @@ def _match(lhs, rhs):
 
 def match_term_to_pattern(term, pattern_term):
     return (
-        (pattern_term.data is None or _match(term.data, pattern_term.data))
+        _match(term.data, pattern_term.data)
         and _match(term.tag, pattern_term.tag)
         and _match(term.name, pattern_term.name)
     )

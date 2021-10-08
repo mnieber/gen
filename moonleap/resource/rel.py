@@ -40,7 +40,7 @@ def _is_intersecting(lhs, rhs):
 
 
 def _patch_tag(term, tag):
-    return term if tag is None else Term(data=None, tag=tag)
+    return term if tag is None else Term(data="x", tag=tag)
 
 
 def fuzzy_match(input_rel, pattern_rel, subj_base_tags, obj_base_tags):

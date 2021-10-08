@@ -34,7 +34,7 @@ class Scope:
         result = None
         for term, rule in self.create_rule_by_term.items():
             if subj_term.tag == term.tag:
-                if term.data:
+                if term.data != "x":
                     if subj_term.data == term.data:
                         result = rule
                         break
