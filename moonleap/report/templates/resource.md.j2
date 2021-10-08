@@ -1,6 +1,6 @@
 <a href="{{ index_fn }}">Index</a>
 
-# {{ res.__class__.__name__ }}({{ term | term_to_word }})
+# {{ res.__class__.__name__ }}({{ term | to_str }})
 
 ---
 ## Properties
@@ -16,7 +16,7 @@
 |                               |                              |
 | ----------------------------- | ----------------------------:|
 {% for rel, rhs in child_relations %}
-| {{ rel.verb | verb_to_word }} | <a href="{{ rhs.id }}.html">{{ rel.obj | term_to_word }}</a> |
+| {{ rel.verb | verb_to_word }} | <a href="{{ rhs.id }}.html">{{ rel.obj | to_str }}</a> |
 {% endfor %}
 
 ## Relations (parent)
@@ -24,5 +24,5 @@
 |                               |                              |
 | ----------------------------- | ----------------------------:|
 {% for rel, rhs in parent_relations %}
-| <a href="{{ rhs.id }}.html">{{ rel.subj | term_to_word }}</a> | {{ rel.verb | verb_to_word }} |
+| <a href="{{ rhs.id }}.html">{{ rel.subj | to_str }}</a> | {{ rel.verb | verb_to_word }} |
 {% endfor %}

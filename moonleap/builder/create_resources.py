@@ -5,7 +5,6 @@ from moonleap.builder.create_resource import create_resource_and_add_to_block
 from moonleap.builder.find_relations import get_relations
 from moonleap.builder.rule import Action
 from moonleap.builder.scope import get_base_tags
-from moonleap.parser.term import term_to_word
 from moonleap.resource.rel import Rel
 from moonleap.verbs import is_created_as
 
@@ -76,10 +75,7 @@ def _process_relations(relations: T.List[Rel], actions):
 
             rules = _find_rules(rel, subj_res, obj_res)
             if not rules and rel.verb != is_created_as:
-                raise Exception(
-                    f"Unmatched relation ({term_to_word(rel.subj)} "
-                    + f"/{rel.verb} {term_to_word(rel.obj)}) in block: {rel.block}"
-                )
+                raise Exception(f"Unmatched relation ({rel}) in block: {rel.block}")
 
             for rule in rules:
                 _add_action(actions, Action(rule, rel, subj_res, obj_res))

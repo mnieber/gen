@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 
 import markdown
-from moonleap.parser.term import term_to_word, verb_to_word
 from moonleap.render.render_resources import render_template
 from moonleap.session import get_session
 
@@ -51,11 +50,6 @@ def create_report(resource, term, index_fn):
 
 
 def create_index(blocks):
-    def to_rel_str(rel):
-        subj = term_to_word(rel.subj)
-        obj = term_to_word(rel.obj)
-        return f"{subj} /{verb_to_word(rel.verb)} {obj}"
-
     template_fn = Path(__file__).parent / "templates" / "index.md.j2"
 
     resource_by_term_str = {}
@@ -63,7 +57,7 @@ def create_index(blocks):
     for block in root_block.get_blocks(include_children=True):
         for term, resource, is_owner in block.get_resource_by_term():
             if is_owner:
-                resource_by_term_str[term_to_word(term)] = resource
+                resource_by_term_str[str(term)] = resource
 
     body = render_template(
         template_fn,

@@ -6,9 +6,14 @@ from dataclasses import dataclass
 class Term:
     data: T.Optional[str]
     tag: str
+    name: T.Optional[str] = None
 
     def __repr__(self):
-        return f"{self.data}:{self.tag}"
+        return (
+            (self.name + "+" if self.name else "")
+            + (self.data + ":" if self.data else "")
+            + self.tag
+        )
 
 
 def maybe_term_to_term(maybe_term):
@@ -18,13 +23,25 @@ def maybe_term_to_term(maybe_term):
 
 
 def word_to_term(word, default_to_tag=False) -> T.Optional[Term]:
-    parts = word.split(":")
-    if len(parts) >= 2:
-        data, tag = ":".join(parts[:-1]), parts[-1]
-        return Term(data or "", tag or "")
-    elif default_to_tag:
-        return Term(None, word)
-    return None
+    sep_name = word.find("+")
+    if sep_name != -1:
+        name = word[:sep_name]
+        word = word[sep_name + 1 :]
+    else:
+        name = None
+
+    sep_tag = word.rfind(":")
+    if sep_tag != -1:
+        tag = word[sep_tag + 1 :]
+        data = word[:sep_tag]
+    else:
+        tag = word
+        data = None
+
+    if sep_name == -1 and sep_tag == -1 and not default_to_tag:
+        return None
+
+    return Term(data, tag, name)
 
 
 def words_to_terms(words):
@@ -34,12 +51,6 @@ def words_to_terms(words):
         if term:
             terms.append(term)
     return terms
-
-
-def term_to_word(term):
-    if term.data is None:
-        return term.tag
-    return f"{term.data}:{term.tag}"
 
 
 def is_it_term(term):
