@@ -1,5 +1,6 @@
 import typing as T
 from dataclasses import dataclass
+from fnmatch import fnmatch
 
 
 @dataclass(frozen=True)
@@ -61,14 +62,21 @@ def verb_to_word(verb):
     return verb[0] if isinstance(verb, tuple) else verb
 
 
-def is_generic_term(term):
-    return term.data == "x" or term.tag == "x"
-
-
-def create_generic_terms(term):
-    return [Term(term.data, "x"), Term("x", term.tag)]
-
-
 def stem_term(term):
     pos = term.tag.find("~")
     return Term(term.data, term.tag[:pos]) if pos != -1 else None
+
+
+def match_term_to_pattern(term, pattern_term):
+    datas_match = (
+        pattern_term.data is None
+        or pattern_term.data == "x"
+        or term.data == "x"
+        or fnmatch(term.data or "", pattern_term.data)
+    )
+    tags_match = (
+        pattern_term.tag == "x"
+        or term.tag == "x"
+        or fnmatch(term.tag, pattern_term.tag)
+    )
+    return datas_match and tags_match

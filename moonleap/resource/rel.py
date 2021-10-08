@@ -1,9 +1,8 @@
 import typing as T
 from dataclasses import dataclass, field
-from fnmatch import fnmatch
 
 from moonleap.parser.block import Block
-from moonleap.parser.term import Term
+from moonleap.parser.term import Term, match_term_to_pattern
 from moonleap.utils import maybe_tuple_to_tuple
 
 
@@ -40,14 +39,6 @@ def _is_intersecting(lhs, rhs):
     return False
 
 
-def _match_term_to_pattern(term, pattern_term):
-    datas_match = pattern_term.data is None or fnmatch(
-        term.data or "", pattern_term.data
-    )
-    tags_match = fnmatch(term.tag, pattern_term.tag)
-    return datas_match and tags_match
-
-
 def _patch_tag(term, tag):
     return term if tag is None else Term(data=None, tag=tag)
 
@@ -62,10 +53,10 @@ def fuzzy_match(input_rel, pattern_rel, subj_base_tags, obj_base_tags):
             )
             if (
                 _is_intersecting(rel.verb, pattern_rel.verb)
-                and _match_term_to_pattern(rel.obj, pattern_rel.obj)
+                and match_term_to_pattern(rel.obj, pattern_rel.obj)
                 and (
                     pattern_rel.subj is None
-                    or (rel.subj and _match_term_to_pattern(rel.subj, pattern_rel.subj))
+                    or (rel.subj and match_term_to_pattern(rel.subj, pattern_rel.subj))
                 )
             ):
                 return True

@@ -1,7 +1,7 @@
 import typing as T
 
 from moonleap.parser.line import Line
-from moonleap.parser.term import create_generic_terms, stem_term
+from moonleap.parser.term import match_term_to_pattern, stem_term
 
 
 class Block:
@@ -39,8 +39,8 @@ class Block:
         for t in [term, stem_term(term)]:
             if t:
                 if t in title_terms or (
-                    [x for x in create_generic_terms(t) if x in title_terms]
-                    and [line for line in self.lines if t in line.terms]
+                    any(match_term_to_pattern(t, x) for x in title_terms)
+                    and any(line for line in self.lines if t in line.terms)
                 ):
                     return True
         return False
