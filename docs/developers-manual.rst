@@ -23,7 +23,61 @@ Purpose
 =======
 
 Moonleap turns a markdown-based spec file into a set of source files.
-Below, the process will be explained using annotated use-cases.
+Below, we will explain the process by introducing some concepts showing annotated use-cases.
+
+The spec dir
+============
+
+The spec file is called `spec.md` and it is located in the so-called spec dir. The purpose of the
+spec file is to describe your project in a way that allows Moonleap
+to generate source code for it. The spec file is written in markdown. It uses (annotated) natural
+language, which also means that at times it will be ambiguous, and in those cases Moonleap will try to
+make a reasonable choice. As we will see later, the generated code is treated as a shadow project,
+from which useful parts are copied to your real project. This means that the shadow project
+does not have to be perfect, as long as it is useful.
+The spec dir may include additional spec files that are included in `spec.md`. It also contains a
+`settings.yml` file, which will be explained later.
+
+The code generation steps
+=========================
+
+There are four code generation steps:
+
+1. Parse the spec file(s) to build a graph structure of resources (the nodes) and
+   relations (the edges).
+2. Match every relation in the graph to a rule set, and run the matching rules. This step
+   allows you to enrich the resources with additional information.
+3. Render each resource into one or more source files.
+4. Run post-processing steps such as code formatters.
+
+Spec files, terms and relations
+===============================
+
+The most important ingredients of the spec file are so-called terms and verbs. Terms are words
+in the spec that follow a pattern of name+data:tag, e.g. `main+todo:list-view`. Moonleap will turn
+every term into a (Python) `resource` object, that can be rendered into a set of source files.
+Verbs are words that are prefixed with a slash, e.g. `/shows`. By connecting two terms with a verb,
+you indicate a relation between two resources, e.g. `the welcome:screen /shows the main+todo:list-view`.
+The parser understands constructions such as "the backend:service and frontend:service /have a welcome:endpoint,
+status:endpoint and about:endpoint that can be /called from the frontent:service". In this example, the /have
+verb is involved in six relations, and /called in three relations. You can use parentheses
+to limit the visibility of a term, e.g. "the (backend:service which /connects to :postgres) /has a welcome:endpoint".
+
+The `name`, `data` and `tag` part
+---------------------------------
+
+Generally speaking, the `tag` part of a term indicates a resource type (`list-view`),
+the data part indicates a flavour of that type (it's a `list-view` of `todo` elements) and the
+`name` part indicates a named instance of this resource type (it's an instance of a `todo:list-view`
+that is named `main`). The `name` part is optional, so you could specify that a
+`todo:module /defines a todo:list-view` using only references to types (`todo:module` and
+`todo:list-view`).
+
+Blocks
+======
+
+The parser treats the spec file as a collection of text blocks,
+where each block (title) corresponds to a Markdown section (title).
 
 Case 1: a spec file describes resources and their relations
 ===========================================================
@@ -31,58 +85,49 @@ Case 1: a spec file describes resources and their relations
 Description
 -----------
 
-Moonleap processes a spec file written in markdown. This spec file contains blocks (which correspond
-to markdown sections) that contain terms (words that have a colon in them) and verbs (words that start with a slash).
-These terms and verbs will later be translated into resources and relations (according to block specific rules),
-which are then rendered using jinja2 templates.
+Below we show a small spec file written in markdown.
 
 The example (e.g.: specs/foo/spec.md)
 -------------------------------------
 
 .. code-block:: markdown
 
-    # The foo:project [1-2]
+    # The foo:project [1]
 
-    The foo:project /uses the bar:service and the baz:service [3-4].
-    :It [4] /shows a (welcome:screen that /has a :cookie-notice) that /uses the welcome:endpoint [5,6].
+    The foo:project /uses the bar:service and the baz:service [2].
+    :It /shows a (welcome:screen that /has a :cookie-notice) that /uses the welcome:endpoint [3,4].
 
-    ## The bar:service [7-8]
+    ## The bar:service [5,6]
 
-    The bar:service has a simple goal:: it /provides the bar:endpoint. [9]
+    The bar:service has a simple goal:: it /provides the bar:endpoint. [7]
 
 Notes
 -----
 
 1. Every section of the spec file defines a block. The section title defines the block title.
-2. A word with a colon in it is called a term. It identifies a resource. The part of the term before the colon
-   is called 'data' and the part after the colon is called 'tag'. The tag and data parts are used as inputs
-   for the (resource) creation rules.
-3. A word that starts with a slash is called a verb. It establishes a relationship between resources.
-   Moonleap has so-called relation rules and a rule-matching engine that are used to enrich resources based on
-   their relations to other resources.
-4. Since one resource is mentioned before the verb (/uses) and two after, there will be two relations created here.
-5. The :it term refers to the first term in the previous sentence.
-6. The :cookie-notice term has an data part that is the empty string ("").
-7. Parentheses are used to limit the scope of the /has verb. Without these parentheses, it would (wrongly) state
+2. Since one resource is mentioned before the verb (/uses) and two after, there will be two relations created here.
+3. The :it term refers to the first term in the previous sentence.
+4. The :cookie-notice term has an data part that is the empty string ("").
+5. Parentheses are used to limit the scope of the /has verb. Without these parentheses, it would (wrongly) state
    that the cookie-notice uses the welcome endpoint.
-8. If a term appears in a block title, then we say that the block _describes_ that term. For every term, there is
+6. If a term appears in a block title, then we say that the block _describes_ that term. For every term, there is
    exactly one block that describes that term. It's important to know which blocks describe which terms, because -
    as will be explained later - every block has specific rules that are used to process these terms.
-9. To use a colon in the spec file without identifying a resource, it needs to be doubled. This is why the word
+7. To use a colon in the spec file without identifying a resource, it needs to be doubled. This is why the word
    goal is proceeded by a double colon (::).
 
 
-Case 2: a module contains creation rules and relation rules
-===========================================================
-
-Description
------------
+Creation and relation rules
+===========================
 
 A Moonleap (Python) module contains creation rules that convert terms into Python resource objects.
 The most specific creation rule that matches a term is called to create the resource for that term.
 The module also contains relation rules. For every relation, all matching relation rules are executed
 in order to enrich the resources in that relation. A relation rule may return a list of additional
-relations, which are processed in the same way.
+relations, which are processed in the same way as the relations in the spec file.
+
+Case 2: a module contains creation rules and relation rules
+===========================================================
 
 The example
 -----------
@@ -110,14 +155,14 @@ The example
             item_name="project",
         )
 
-    @rule("graphql:api", posts, "item")  # [6]
+    @rule("graphql:api", ("posts", "saves"), "item")  # [6,7]
     def graphql_api_posts_item(graphql_api, item):
         # Take any action here to enrich graphql_api and item.
         item.used_by_api = True
         # Return an additional relation that will be matched against the current set of rules
         return [
-            create_forward(graphql_api, has, f"post-{item.item_name}:mutation"),   # [7,8]
-            create_forward(graphql_api, documents, item),   # [9]
+            create_forward(graphql_api, has, f"post-{item.item_name}:mutation"),   # [8,9]
+            create_forward(graphql_api, documents, item),   # [10]
         ]
 
 Notes
@@ -133,11 +178,13 @@ Notes
 5. This creation rule is a more specific match for the `project:item` term. It will be called instead of the more
    general creation rule right above it.
 6. A relation rule will be called by Moonleap for any relation in the spec file that matches the rule.
-7. A relation rule may return a new list of relations that are processed in the same way as the relations
+7. Verbs in relation rules can be defined as tuples that contain different variants, so that it makes no difference
+   whether you write /posts or /saves.
+8. A relation rule may return a new list of relations that are processed in the same way as the relations
    from the spec file. If needed, new resources (mentioned in these relations) will be created.
-8. The create_forward helper function will accept arguments that are either a term or a resource. In the
+9. The create_forward helper function will accept arguments that are either a term or a resource. In the
    latter case, it converts the resource into a term (Moonleap knows which term was used to create the resource).
-9. Note that a resource may be twice related to another resource (using different verbs, in this case
+10. Note that a resource may be twice related to another resource (using different verbs, in this case
    "posts" and "documents"). The _term helper function returns the term associated with the resource.
 
 
