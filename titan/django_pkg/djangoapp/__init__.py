@@ -39,7 +39,7 @@ def create_django(term, block):
     add(django_app, dodo_layer_configs.get())
     add(django_app, opt_paths.static_opt_path)
     add(django_app, PipRequirement(["Django", "django-environ", "django-cors-headers"]))
-    add(django_app, PipRequirement(["pytest-django"], is_dev=True))
+    add(django_app, PipRequirement(["faker", "pytest-django"], is_dev=True))
     add(django_app, docker_compose_configs.get(is_dev=True))
     add(django_app, docker_compose_configs.get(is_dev=False))
     return django_app

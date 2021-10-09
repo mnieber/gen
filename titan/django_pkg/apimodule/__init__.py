@@ -1,8 +1,8 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import MemFun, create, extend, kebab_to_snake
-from moonleap.utils.case import snake_to_camel
+from moonleap import MemFun, create, extend
+from moonleap.utils.case import kebab_to_camel, sn
 from moonleap.verbs import has
 from titan.django_pkg.djangoapp import DjangoApp
 
@@ -12,9 +12,8 @@ from .resources import ApiModule  # noqa
 
 @create("api:module")
 def create_api_module(term, block):
-    name_snake = kebab_to_snake(term.data)
-    module = ApiModule(name_snake=name_snake, name=snake_to_camel(name_snake))
-    module.output_path = module.name_snake
+    module = ApiModule(name=kebab_to_camel(term.data))
+    module.output_path = sn(module.name)
     module.add_template_dir(Path(__file__).parent / "templates")
     return module
 

@@ -1,5 +1,5 @@
-from moonleap.resources.type_spec import form_type_spec_from_data_type_spec
-from moonleap.resources.type_spec_store import type_spec_store
+from moonleap.typespec.type_spec import form_type_spec_from_data_type_spec
+from moonleap.typespec.type_spec_store import type_spec_store
 from titan.api_pkg.pkg.ml_name import (
     ml_form_type_name_from_type_name,
     ml_type_name_from_item_name,

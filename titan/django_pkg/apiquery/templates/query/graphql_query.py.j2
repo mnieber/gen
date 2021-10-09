@@ -3,6 +3,6 @@ import graphene
 {{ sections.query_imports() }}
 
 class {{ res.name | u0 }}Query:
-{{ sections.query_outputs() }}
+{{ sections.declare_query_endpoints() }}
 
 {{ sections.query_resolve_functions() }}

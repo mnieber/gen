@@ -1,13 +1,14 @@
 import os
 
-import ramda as R
-from moonleap.utils.magic_replace import magic_replace
+from moonleap import u0
+from moonleap.utils.codeblock import CodeBlock
+from moonleap.utils.inflect import plural
 from titan.api_pkg.pkg.ml_name import (
     ml_form_type_spec_from_item_name,
     ml_type_spec_from_item_name,
 )
 from titan.react_pkg.pkg.field_spec_to_ts_type import field_spec_to_ts_type
-from titan.react_pkg.pkg.get_chain import get_chain_to
+from titan.react_pkg.pkg.ml_get import ml_graphql_api, ml_react_app
 from titan.react_pkg.pkg.ts_var import (
     ts_form_type,
     ts_type,
@@ -17,26 +18,15 @@ from titan.react_pkg.pkg.ts_var import (
     ts_var_by_id_type,
 )
 
-items_loaded_template = """
-    if (queryName === 'theQueryName') {
-      if (isUpdatedRS(rs)) {
-        this.addYellowTulips(values(data.yellowTulips));
-      }
-      rsMap.registerRS(rs, [resUrls.yellowTulipById]);
-    }
-"""
-
-item_loaded_template = """
-    if (queryName === 'theQueryName') {
-      if (isUpdatedRS(rs)) {
-        this.yellowTulip = data.yellowTulip;
-      }
-      rsMap.registerRS(rs, [resUrls.yellowTulip]);
-    }
-"""
-
 
 def get_context(store):
+    _ = lambda: None
+    _.graphql_api = ml_graphql_api(ml_react_app(store))
+    _.service = ml_react_app(store).service
+    _.handled_queries = _.service.get_tweak_or(
+        [], ["react_app", "stores", store.name, "handled_queries"]
+    )
+
     class Sections:
         def import_policies(self):
             if store.policies:
@@ -82,31 +72,47 @@ def get_context(store):
             return os.linesep.join(result)
 
         def on_load_data(self):
-            result = ""
+            root = CodeBlock(style="typescript", level=2)
 
             for item_list in store.item_lists_stored:
-                chain = get_chain_to(item_list, store)
-                query = chain[0].subj if chain else None
-                if query:
-                    result += magic_replace(
-                        items_loaded_template,
-                        [
-                            ("yellowTulip", item_list.item_name),
-                            ("theQueryName", query.name),
-                        ],
-                    )
+                queries = list(_.graphql_api.queries)
+                mutations = list(_.graphql_api.mutations)
+                if_ = "if"
+                item_name = item_list.item_name
+                items = plural(item_name)
 
-            for item in store.items_stored:
-                chain = get_chain_to(item, store)
-                query = chain[0].subj if chain else None
-                result += magic_replace(
-                    item_loaded_template,
+                for query in queries + mutations:
+                    output_field_specs = [
+                        x
+                        for x in query.outputs_type_spec.get_field_specs(
+                            ["fk", "relatedSet"]
+                        )
+                        if x.target == item_list.item_name
+                    ]
+
+                    if not output_field_specs and not query.name in _.handled_queries:
+                        continue
+
+                    root.abc(f"{if_} (queryName === '{query.name}') {{")
+                    root.abc(f"  if (isUpdatedRS(rs)) {{")
+                    root.IxI(f"    this.add{u0(items)}", [f"values(data.{items})"], ";")
+                    root.abc(f"  }}")
+                    root.abc(f"}}")
+                    if_ = "else if"
+
+                root.abc(f"{if_} (data?.{items}) {{")
+                root.IxI(f"  this.add{u0(items)}", [f"values(data.{items})"], ";")
+                root.IxI(
+                    f"  console.warn",
                     [
-                        ("yellowTulip", item.item_name),
-                        ("theQueryName", query.name),
+                        f"`The query ${{queryName}} returned {items} but was not ` +"
+                        + f"'explicitly handled in {store.name}. Please add a handler.'",
                     ],
+                    "",
                 )
-            return result
+                root.abc(f"}}")
+                root.abc(f"rsMap.registerRS(rs, [resUrls.{item_name}ById]);")
+            return root.result
 
         def define_type(self, item):
             result = []
@@ -118,7 +124,8 @@ def get_context(store):
                     continue
 
                 t = field_spec_to_ts_type(field_spec, fk_as_str=True)
-                result.append(f"  {field_spec.name}: {t};")
+                postfix = "Id" if field_spec.field_type == "fk" else ""
+                result.append(f"  {field_spec.name}{postfix}: {t};")
             result.append(f"}}")
 
             return "\n".join(result)

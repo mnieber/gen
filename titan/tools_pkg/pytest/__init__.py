@@ -34,7 +34,7 @@ def create_pytest_html(term, block):
 @rule("service", has, "pytest")
 def service_has_pytest_html(service, pytest):
     if pytest.pytest_html:
-        return create_forward(service, has, pytest.pytest_html.meta.term)
+        return create_forward(service, has, pytest.pytest_html)
 
 
 rules = [(("pytest", with_, "pytest-html"), empty_rule())]

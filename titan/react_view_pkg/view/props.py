@@ -54,7 +54,14 @@ def _panel(divClassName, panel):
             result.extend([" " * indent + r"{props.children}"])
 
     for component in components:
-        result.extend([" " * indent + component.react_tag])
+        result.extend(
+            [
+                " " * indent + '<div className="Card">',
+                " " * (indent + 2) + f"<h2>{component.get_title()}</h2>",
+                " " * (indent + 2) + component.react_tag,
+                " " * indent + "</div>",
+            ]
+        )
 
     if collapses:
         indent -= 2
@@ -140,7 +147,7 @@ def get_context(view):
 
             return "\n".join(result)
 
-        def imports(self):
+        def view_imports(self):
             result = []
             for panel in _.panels:
                 for component in _components(panel):

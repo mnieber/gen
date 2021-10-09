@@ -5,18 +5,18 @@ import { ObjT } from 'src/utils/types';
 {{ sections.ts_type_imports() }}
 
 export const {{ _.output_schema_name }} = new schema.Entity('{{ _.output_schema_name }}');
-{{ sections.output_schema_fields() }}
+{{ sections.mutation_output_schema_fields() }}
 
-export const {{ res.name }} = ({{ sections.javascript_args() }}) => {
+export const {{ res.name }} = ({{ sections.ts_mutation_args() }}) => {
   return apiBase.doQuery(
     '{{ res.name }}',
-    `mutation {{ res.name }}{{ sections.graphql_args(True) }} {
-        {{ res.name }}{{ sections.graphql_args(False) }} {
-{{ sections.graphql_body() }}
+    `mutation {{ res.name }}{{ sections.ts_mutation_graphql_args(True) }} {
+        {{ res.name }}{{ sections.ts_mutation_graphql_args(False) }} {
+{{ sections.ts_mutation_graphql_body() }}
         }
     }`,
     {
-{{ sections.graphql_variables() }}
+{{ sections.ts_mutation_graphql_variables() }}
     },
     (response: ObjT) => {
       return normalize(response, {{ _.output_schema_name }}).entities;

@@ -3,35 +3,106 @@ Purpose
 
 The api_pkg allows you to specify the data-model that is used by the various services
 in your project, as well as the queries and mutations that work against this data-model.
-Below, the process will be explained using annotated use-cases.
+
+
+Items, lists, queries and mutations
+===================================
+
+To tell Titan about the data model, you need to declare items, item~lists, queries and mutations:
+
+- the `item` resource represents a single item of some type, e.g. `person:item`.
+- the `item~list` resource represents a list of items, e.g. `person:item~list`.
+- the `query` resource represents a graphql query, e.g. `the get-person:query /provides a person:item~list`.
+- the `mutation` resource represents a graphql mutation, e.g. `the save-person:mutation /posts a person:item`.
+
+The data part of a term that declares an item (e.g. `person:item`) is called the `item-name`.
+Titan uses the item-name to (automatically) create an associated `item~type` resource (`person:item~type`)
+and `item~form-type` (`person:item~form-type`).
+
+Type specs
+==========
+
+Type specs are JSON-schema data-structures that contain type information.
+
+- a `data-type spec` describes the fields of an item~type
+- a `form-type spec` describes the fields of an item~form-type
+- an `inputs-type spec` describes the input fields of a `query` or `mutation`
+- an `outputs-type spec` describes the output fields of a `query` or `mutation`
+
+These type specs have different names depending on how they are used, but they share the same
+JSON schema. These JSON schemas are stored in the type specs directory (a subdirectory of the
+spec dir) using a filename that is based on the item-name (e.g. `Person.json` for a data-type spec
+and `PersonForm.json` for a form-type spec) or query/mutation name (e.g. `GetPersonInputs.json`).
+
+
+
+Field specs
+===========
+
+Every type spec contains so-called field specs. A field spec is a dictionary
+(contained in a type-spec) that describes a field. It has:
+
+- a name
+- a field type
+- field attributes (e.g. "required", "unique")
+
+Field types
+-----------
+
+Possible field types that can be used in a field spec are:
+
+- a scalar value, e.g. `string`, `boolean`, `slug`
+- `foreignKey`: this field represents an external instance of some item~type.
+- `related set`: this field represents a list of external instances.
+- `form`: this field is used in the inputs-type spec of a mutation.
+
+If the field spec does not have a scalar type then it has an associated `target` attribute that
+indicates the item-name that is associated with the field. For example, a `foreignKey` with `target`
+equal to `person` returns a `person:item`, a `relatedSet` with this target returns a `person:item~list`
+and a `form` with this target is used to create a `person:item`.
+
+Note that a "foreignKey" field spec in a data-type spec implies a "relatedSet" field on the type spec that it
+targets. For example, if `Person.json` has a `foreignKey` field that targets `personlist`, then `PersonList.json`
+will have a `relatedSet` field that targets `person`. If you want to prevent the creation of a relatedSet
+field for a given foreignKey field, then set `hasRelatedSet` to false in the foreignKey field attributes.
+
+
+Queries
+=======
+
+The information about queries comes from the spec file, e.g. `the get-person:query /provides a person:item`.
+The default outputs-type spec for a query (which is used if you don't provide one) has a "foreignKey" field for
+any item that the query provides, and a "relatedSet" for any item~list that it provides. For each of these
+output fields, an endpoint will created in the query's API (though this is not the responsibility of the api
+pkg, but rather of a package that creates the backend, such as the django pkg).
+Queries also need inputs, and these are described in the inputs-type spec. The default inputs-type spec has fields
+that are based on the `queryItemBy` and `queryItemsBy` values of the provided items and item~lists.
+The `queryItemBy` for a provided item is stored in the data-type spec of that item. By default, `queryItemBy`
+equals ["id"] and `queryItemsBy` equals [] (the empty list).
+Since Titan needs to know which inputs are associated with which outputs, every field in the inputs-type spec has
+a `relatedOutput` attribute. If `relatedOutput` is omitted then the input field is used for all endpoints.
+
+
+Mutations
+=========
+
+The information about mutations also comes from the spec file, e.g. `the save-person:mutation /receives a person:item`).
+Mutations can also return items and item~lists, e.g. `the save-person:mutation /returns a person:item`. To declare a
+mutation that receives and returns the same item~type, then you can use the verb `posts`, e.g. `the save-person:mutation
+/posts a person:item`.
+
+Every mutation has a single endpoint that takes a form~type argument for every item that the mutation receives.
+These form~type arguments are described as "form" fields in the inputs-type spec for the mutation. Every
+form field has a `target` attribute that identifies the form-type. For example, if `target` is `person` then
+the field refers to an instance of the `PersonForm.json` type spec. If you don't supply the `PersonForm.json`
+type spec, then a default one is created that is based on the fields of the associated `Person.json` type spec.
+
+A mutation has an outputs-type spec that has a "success" flag and an "errors" dictionary. It also has a
+foreignKey field for any item that the mutation returns, and a relatedSet for any item~list that it returns.
+
 
 Case 1: a spec file declares item-types, items and item-lists
 =============================================================
-
-Description
------------
-
-The spec file can declare resources that represent item-types, items, and item lists. For example,
-when you declare a `todo:item` resource then this resource represents a single instance of the
-`todo:item~type`. Similarly, a `todo:item~list` resource represents a list of `todo:item~type`.
-
-Every item-type has two associated type specs called 'data-type spec' and 'form-type spec'.
-The data-type spec is used to describe a type that is returned from a query, whereas the the form-type spec
-describes a type that posted in a mutation.
-Both type specs are formatted as JSON schemas and stored in the type specs directory.
-
-A type spec contains type information including so-called field specs that describe the fields of
-the type. The field specs in the JSON schema are dictionaries that have a name and a field type, which can be a
-scalar or a foreign key (that points to some type spec). There are two different types of foreign keys:
-- fk: this is used when a type references an instance of another type by its id.
-- relatedSet: this is used when a type references several instances of another type by their ids. By
-  default, when `foo` has a "fk" field that points to `bar`, then a `relatedSet` field (pointing to `foo`)
-  is automatically added to `bar`. The exception is when `hasRelatedSet` is set to false in the fk"
-  field spec.
-
-If a data-type spec for an item-type does not exist in the type specs directory then a default
-one is used that has "name" and "id" field specs. If a form-type spec does not exist in this directory,
-then an automatically created type spec based on the associated data-type spec is used.
 
 The example
 -----------
@@ -57,7 +128,7 @@ The example
             "id": {"type": "uuid"},
             "name": {"type": "string", "maxLength": 255, "unique": true},
             "todolist": {
-                "type": "fk",
+                "type": "foreignKey",
                 "target": "todolist",
                 "onDelete": "cascade",
                 "hasRelatedSet": true
@@ -92,31 +163,6 @@ The example
 Case 3: a spec file declares queries
 ====================================
 
-Description
------------
-
-The spec file can declare a `foo:query` resource that `/provides` a `todo:item` and/or
-`todo:item~list`. Moonleap uses this information to generate graphql queries based on the
-type specs for these items. To every query corresponds a so-called 'inputs type spec' and
-'outputs type spec' that that describe the inputs and outputs for that query.
-If the query is named `foo` then these type specs are named `FooInputsType` and
-`FooOutputsType`. You can define these type specs in the type-specs directory, and if you
-don't then Moonleap creates default ones.
-
-To provide a `todo:item` it must be specified how these items are queried. By default, to query
-a single item you need to provide its "id". However, you can override this default using the
-`queryItemBy` type spec value. For example, setting `queryItemBy` to `['name']` indicates that
-the todo name is used to find the todo.
-Similarly, you can use the `queryItemsBy` type spec value to specify how an `item~list` is queried.
-For example, to query todos by the todolist name you can set `queryItemsBy` to `[('todolist', 'name')]`.
-
-The default outputs type spec will contain a "fk" field for every item that the query
-provides, and a "related_set" field for every item~list that it provides. The final graphql
-code that is generated for the `query` resource depends on:
-- the in/outputs type spec and the foreign key fields therein.
-- the type specs that are associated with these foreign keys.
-- the "queryItemBy" and "queryItemsBy" of these assiociated type specs.
-
 The example
 -----------
 
@@ -148,17 +194,6 @@ The example
 
 Case 4: a spec file declares mutations
 ======================================
-
-Description
------------
-
-The spec file can declare a `bar:mutation` resource that `/posts` (or `/deletes`) a `todo:item`.
-Just like queries, mutations have an inputs-type-spec and outputs-type-spec. The inputs-type spec
-has a foreign key field for every item-type that is posted (or deleted). This foreign key points
-to an external type spec (e.g. `Todo`) whose fields (e.g. `id`, `name`, etc) are used as arguments
-in the mutation. In case the mutation deletes an item, then only the item's id is used as an argument.
-If the mutation posts or deletes multiple item types, then the mutation arguments are prefixed with the
-type name, e.g. `todo_id` and `todolist_id`.
 
 The example
 -----------

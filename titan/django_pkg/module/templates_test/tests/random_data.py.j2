@@ -1,0 +1,24 @@
+{% magic_with item_list.item_name as redRose %}
+{% magic_with item_list.item_name|sn as red_rose %}
+import faker
+{% for item_list in res.item_lists_provided %}
+from {{ res.name }}.models import RedRose
+{% endfor %}
+f = faker.Faker()
+
+{% for item_list in res.item_lists_provided %}
+def create_random_red_rose({{ sections.create_random_args(item_list.item_name) }}):
+    obj, created = RedRose.objects.get_or_create(
+        {{ sections.create_random_body(item_list.item_name, snake_args=True) }}
+    )
+    return obj
+
+{% if item_list.item.poster_mutations %}
+def create_random_red_rose_form({{ sections.create_random_args(item_list.item_name) }}):
+    return dict(
+        {{ sections.create_random_body(item_list.item_name, snake_args=False) }}
+    )
+{% endif %}
+{% endfor %}
+{% end_magic_with %}
+{% end_magic_with %}

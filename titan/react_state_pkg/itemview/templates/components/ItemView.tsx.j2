@@ -20,12 +20,15 @@ type DefaultPropsT = {
 export const YellowTulipView: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
   const props = useDefaultProps<PropsT, DefaultPropsT>(p);
 
-  const resourceView = getResourceView({ resUrl: props.yellowTulipResUrl });
+  const resourceView = getResourceView({
+    resUrl: props.yellowTulipResUrl,
+    res: props.yellowTulip
+  });
   if (resourceView) return resourceView;
 
   return (
     <div className="YellowTulipView flex flex-col w-full">
-      To do: show yellowTulip with id {props.yellowTulip.id}
+{{ sections.fields() }}
     </div>
   );
 });

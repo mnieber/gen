@@ -3,7 +3,7 @@ import json
 import os
 
 from moonleap.parser.term import verb_to_word
-from moonleap.utils.case import l0, u0
+from moonleap.utils.case import l0, sn, u0
 from moonleap.utils.inflect import plural
 from ruamel.yaml import YAML
 
@@ -31,6 +31,7 @@ filters = {
     "plural": lambda x: plural(x),
     "u0": u0,
     "to_str": lambda x: x if x is None else str(x),
+    "sn": sn,
     "to_nice_json": to_nice_json,
     "to_nice_yaml": to_nice_yaml,
     "verb_to_word": verb_to_word,

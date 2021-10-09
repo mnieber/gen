@@ -50,6 +50,7 @@ def create_react_created(react_app):
     return [
         create_forward(react_app, has, "app:module"),
         create_forward(react_app, has, "utils:module"),
+        create_forward(react_app, has, "frames:module"),
     ]
 
 

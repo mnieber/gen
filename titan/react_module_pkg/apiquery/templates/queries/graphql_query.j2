@@ -4,15 +4,15 @@ import { ObjT } from 'src/utils/types';
 {{ sections.schema_imports() }}
 
 export const {{ _.output_schema_name }} = new schema.Entity('{{ _.output_schema_name }}');
-{{ sections.output_schema_fields() }}
+{{ sections.query_output_schema_fields() }}
 
 export const {{ res.fun_name }} = ({{ sections.javascript_args() }}) => {
   return apiBase.doQuery(
     '{{ res.fun_name }}',
-    `query {{ res.name }}{{ sections.graphql_args(True) }} {
+    `query {{ res.name }}{{ sections.ts_graphql_query_args(True) }} {
 {% for output_field_spec in res.outputs_type_spec.field_specs %}
-        {{ output_field_spec.name }}{{ sections.graphql_args(False) }} {
-{{ sections.graphql_body(output_field_spec) }}
+        {{ output_field_spec.name }}{{ sections.ts_graphql_query_args(False) }} {
+{{ sections.ts_graphql_query_body(output_field_spec) }}
         }
 {% endfor %}
     }`,

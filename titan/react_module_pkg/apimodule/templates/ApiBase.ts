@@ -60,12 +60,18 @@ export class ApiBase {
 
     this._dispatchUpdating(queryName, vars);
 
-    const result = doQuery(query, vars).then((response) => {
-      return {
-        response,
-        data: (getData ?? defaultGetData)(response),
-      };
-    });
+    const result =
+      query !== ''
+        ? doQuery(query, vars).then((response) => {
+            return {
+              response,
+              data: (getData ?? defaultGetData)(response),
+            };
+          })
+        : Promise.resolve({
+            response: undefined,
+            data: {},
+          });
 
     result
       .then(({ response, data }) => {

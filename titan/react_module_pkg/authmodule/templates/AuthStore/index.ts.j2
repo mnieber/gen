@@ -1,0 +1,79 @@
+import { action, makeObservable, observable } from 'mobx';
+import { maybeSetCypressCookie } from 'src/utils/cookies';
+import { isUpdatedRS, RST } from 'src/utils/RST';
+import { ObjT } from 'src/utils/types';
+{% if res.react_app.cypress %}
+import { maybeSetCypressCookie } from 'src/utils/cookies';
+{% endif %}
+
+export const termsVersion: string =
+  process.env.REACT_APP_TERMS_VERSION ?? '1.0.0';
+
+export class Anonymous {}
+export const anonymous = new Anonymous();
+
+export class AuthStore {
+  @observable signedInUserId: string | Anonymous = anonymous;
+
+  constructor() {
+    makeObservable(this);
+  }
+
+  @action onLoadData(rs: RST, queryName: string, vars: ObjT, data: ObjT) {
+    if (queryName === 'signIn') {
+      if (isUpdatedRS(rs)) {
+        if (!data.errors) {
+          this.signedInUserId = data.userId;
+        }
+      }
+    }
+
+{% if res.react_app.cypress %}
+    if (queryName === 'signUp') {
+      if (isUpdatedRS(rs)) {
+        if (data.errors) {
+          maybeSetCypressCookie('cypressAccountActivationToken', '');
+        }
+        else {
+          maybeSetCypressCookie(
+            'cypressAccountActivationToken',
+            data.activationToken
+          );
+        }
+      }
+    }
+{% endif %}
+
+{% if res.react_app.cypress %}
+    if (queryName === 'requestPasswordReset') {
+      if (isUpdatedRS(rs)) {
+        if (data.errors) {
+          maybeSetCypressCookie('cypressPasswordResetToken', '');
+        }
+        else {
+          maybeSetCypressCookie(
+            'cypressPasswordResetToken',
+            data.passwordResetToken
+          );
+        }
+      }
+    }
+{% endif %}
+
+    if (queryName === 'loadUserId') {
+      if (isUpdatedRS(rs)) {
+        if (!data.errors) {
+          this.signedInUserId = data.userId ?? anonymous;
+        }
+      }
+    }
+
+    if (queryName === 'signOut') {
+      if (isUpdatedRS(rs)) {
+        if (!data.errors) {
+          this.signedInUserId = anonymous;
+        }
+      }
+    }
+  }
+}

@@ -1,3 +1,4 @@
+import typing as T
 from dataclasses import dataclass
 
 from moonleap import Resource, u0
@@ -11,6 +12,9 @@ class Component(Resource):
     @property
     def react_tag(self):
         return f"<{u0(self.name)}/>"
+
+    def get_title(self):
+        return self.name
 
 
 def get_component_base_url(component, default_value):

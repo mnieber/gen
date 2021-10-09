@@ -10,7 +10,12 @@ class Term:
     name: T.Optional[str] = None
 
     def __repr__(self):
-        return (self.name + "+" if self.name else "") + self.data + ":" + self.tag
+        return (
+            (self.name + "+" if self.name is not None else "")
+            + self.data
+            + ":"
+            + self.tag
+        )
 
 
 def maybe_term_to_term(maybe_term):
@@ -67,11 +72,7 @@ def _match(lhs, rhs):
     if lhs is None or rhs is None:
         return lhs == rhs
 
-    return (
-        (lhs == "x" and rhs is not None)
-        or (rhs == "x" and lhs is not None)
-        or fnmatch(lhs, rhs)
-    )
+    return lhs == "x" or rhs == "x" or fnmatch(lhs, rhs)
 
 
 def match_term_to_pattern(term, pattern_term):

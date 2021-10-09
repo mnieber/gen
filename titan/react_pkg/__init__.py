@@ -1,5 +1,4 @@
 from . import (
-    authmodule,
     component,
     cypress,
     module,
@@ -10,15 +9,11 @@ from . import (
     reactapp,
     reactapp_and_module,
     reactapp_and_service,
-    router,
-    router_and_module,
     tailwindcss,
     uikit,
-    utilsmodule,
 )
 
 modules = [
-    authmodule,
     component,
     cypress,
     pkg,
@@ -29,9 +24,6 @@ modules = [
     reactapp,
     reactapp_and_module,
     reactapp_and_service,
-    router_and_module,
-    router,
     tailwindcss,
     uikit,
-    utilsmodule,
 ]

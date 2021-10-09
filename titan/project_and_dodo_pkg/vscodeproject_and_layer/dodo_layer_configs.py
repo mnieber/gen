@@ -2,6 +2,7 @@ import os
 
 import ramda as R
 from moonleap.session import get_session
+from moonleap.utils.case import sn
 from titan.dodo_pkg.layer import LayerConfig
 
 
@@ -13,7 +14,7 @@ def get(project):
     if not base_dir:
         return None
 
-    code_workspace_fn = os.path.join(base_dir, f"{project.name_snake}.code-workspace")
+    code_workspace_fn = os.path.join(base_dir, f"{sn(project.name)}.code-workspace")
 
     def inner():
         return dict(ROOT=dict(aliases=dict(code=f"exec 'code {code_workspace_fn}'")))

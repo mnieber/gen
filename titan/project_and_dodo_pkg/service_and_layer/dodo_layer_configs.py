@@ -1,3 +1,4 @@
+from moonleap.utils.case import sn
 from titan.dodo_pkg.layer import LayerConfig
 
 
@@ -26,7 +27,7 @@ def get_docker_options(service):
             #
             DOCKER_OPTIONS={
                 #
-                "*": {"container": f"{project.name_snake}_dev_{service.name}_1"}
+                "*": {"container": f"{sn(project.name)}_dev_{service.name}_1"}
             }
         )
 

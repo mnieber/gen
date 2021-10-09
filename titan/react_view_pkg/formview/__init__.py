@@ -1,7 +1,15 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import create, create_forward, extend, kebab_to_camel, rule
+from moonleap import (
+    MemFun,
+    create,
+    create_forward,
+    empty_rule,
+    extend,
+    kebab_to_camel,
+    rule,
+)
 from moonleap.verbs import has, posts
 from titan.react_pkg.pkg.ml_get import ml_react_app
 
@@ -9,6 +17,7 @@ from .props import get_context
 from .resources import FormView
 
 base_tags = [("form-view", ["component"])]
+rules = [(("form-view", posts, "item"), empty_rule())]
 
 
 @create("form-view")
@@ -32,3 +41,4 @@ def service_has_forms_module(module, form_view):
 @extend(FormView)
 class ExtendFormView:
     item_posted = P.child(posts, "item")
+    create_router_configs = MemFun(props.create_router_configs)

@@ -7,6 +7,7 @@ from moonleap.resource.prop import Prop
 from moonleap.resource.rel import Rel, fuzzy_match
 from moonleap.resource.slctrs import RelSelector
 from moonleap.utils.inflect import singular
+from moonleap.utils.queue import Queue
 
 
 @dataclass
@@ -102,18 +103,11 @@ def tree(verb, term):
         class Inner:
             @property
             def merged(self):
-                result = list(self.children)
-                queue = list(self.sources)
-                # never use the same source twice
-                known_sources = [self]
-
-                while queue:
-                    source = queue.pop(0)
-                    if source not in known_sources:
-                        known_sources.append(source)
-                        queue.extend(sources_prop.get_value(source))
-                        result.extend(children_prop.get_value(source))
-
+                result = []
+                queue = Queue(lambda x: x, [parent])
+                for source in queue:
+                    result.extend(children_prop.get_value(source))
+                    queue.extend(sources_prop.get_value(source))
                 return result
 
             @property

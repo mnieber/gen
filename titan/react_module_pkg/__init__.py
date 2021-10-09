@@ -4,13 +4,16 @@ from . import (
     apiquery,
     appmodule,
     appstore,
+    authmodule,
     extendspectypes,
+    framesmodule,
     loaditemeffect,
     loaditemseffect,
     policy,
     schema,
     store,
     storeprovider,
+    utilsmodule,
 )
 
 modules = [
@@ -19,11 +22,14 @@ modules = [
     apiquery,
     appmodule,
     appstore,
+    authmodule,
     extendspectypes,
+    framesmodule,
     loaditemeffect,
     loaditemseffect,
     policy,
     schema,
     store,
     storeprovider,
+    utilsmodule,
 ]

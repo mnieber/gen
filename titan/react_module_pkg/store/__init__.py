@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import create, create_forward, empty_rule, extend, kebab_to_camel, rule
+from moonleap import create, empty_rule, extend, kebab_to_camel
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.utils.case import u0
 from moonleap.verbs import has, stores

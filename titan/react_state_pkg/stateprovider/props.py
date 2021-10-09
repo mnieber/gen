@@ -1,6 +1,6 @@
 import os
 
-from moonleap.resources.type_spec_store import get_member_field_spec
+from moonleap.typespec.get_member_field_spec import get_member_field_spec
 from moonleap.utils.case import l0
 from moonleap.utils.inflect import plural
 from titan.react_pkg.component.resources import get_component_base_url
@@ -20,7 +20,9 @@ from titan.react_pkg.pkg.ts_var import (
     ts_var,
     ts_var_by_id,
 )
-from titan.react_pkg.router_and_module.props import create_component_router_config
+from titan.react_view_pkg.pkg.create_component_router_config import (
+    create_component_router_config,
+)
 
 
 def create_router_configs(self):

@@ -1,14 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    Prop,
-    create,
-    empty_rule,
-    extend,
-    kebab_to_camel,
-    kebab_to_snake,
-    rule,
-)
+from moonleap import Prop, Term, create, empty_rule, extend, kebab_to_camel, named, rule
 from moonleap.resource.forward import create_forward
 from moonleap.utils.inflect import plural
 from moonleap.verbs import has, loads, provides
@@ -23,34 +14,49 @@ from .resources import Query
 @create("query")
 def create_query(term, block):
     name = kebab_to_camel(term.data)
-    query = Query(
-        name=name,
-        name_snake=kebab_to_snake(term.data),
-        fun_name=kebab_to_camel(term.data),
-    )
+    query = Query(name=name, fun_name=kebab_to_camel(term.data))
     return query
 
 
-@rule("graphql:api", loads, "item")
-def graphql_api_loads_item(graphql_api, item):
-    query_term_str = f"get-{item.item_name}:query"
+@rule("graphql:api", loads, "x+item")
+def graphql_api_loads_item(graphql_api, named_item):
+    query_term_str = f"get-{named_item.typ.item_name}:query"
     return [
         create_forward(graphql_api, has, query_term_str),
-        create_forward(query_term_str, provides, f"{item.item_name}:item"),
+        create_forward(query_term_str, provides, named_item),
     ]
 
 
-@rule("graphql:api", loads, "item~list")
-def graphql_api_loads_item_list(graphql_api, item_list):
-    query_term_str = f"get-{plural(item_list.item_name)}:query"
+@rule("graphql:api", loads, "x+item~list")
+def graphql_api_loads_item_list(graphql_api, named_item_list):
+    query_term_str = f"get-{plural(named_item_list.typ.item_name)}:query"
+    named_item_list_term = named_item_list.meta.term
     return [
         create_forward(graphql_api, has, query_term_str),
-        create_forward(query_term_str, provides, f"{item_list.item_name}:item~list"),
+        create_forward(query_term_str, provides, named_item_list),
+    ]
+
+
+@rule("query", provides, "x+item~list")
+def query_provides_named_item_list(query, named_item_list):
+    item_list_term = Term(named_item_list.meta.term.data, named_item_list.meta.term.tag)
+    return [
+        create_forward(query, provides, item_list_term),
+    ]
+
+
+@rule("query", provides, "x+item")
+def query_provides_named_item(query, named_item):
+    item_term = Term(named_item.meta.term.data, named_item.meta.term.tag)
+    return [
+        create_forward(query, provides, item_term),
     ]
 
 
 rules = [
     (("graphql:api", has, "query"), empty_rule()),
+    (("query", provides, "x+item"), empty_rule()),
+    (("query", provides, "x+item~list"), empty_rule()),
     (("query", provides, "item"), empty_rule()),
     (("query", provides, "item~list"), empty_rule()),
 ]
@@ -63,17 +69,17 @@ class ExtendGraphqlApi:
 
 @extend(Query)
 class ExtendQuery:
-    items_provided = P.children(provides, "item")
-    item_lists_provided = P.children(provides, "item~list")
+    named_items_provided = P.children(provides, "x+item")
+    named_item_lists_provided = P.children(provides, "x+item~list")
     inputs_type_spec = Prop(props.inputs_type_spec)
     outputs_type_spec = Prop(props.outputs_type_spec)
 
 
 @extend(Item)
-class ExtendItem:
+class ExtendNamedItem:
     provider_queries = P.parents("query", provides)
 
 
 @extend(ItemList)
-class ExtendItemList:
+class ExtendNamedItemList:
     provider_queries = P.parents("query", provides)

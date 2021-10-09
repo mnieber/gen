@@ -1,0 +1,25 @@
+from api.tests.codeblock import CodeBlock
+
+{% magic_with res.name as getRedRose %}
+{% magic_with res.name|sn as get_red_rose %}
+{% magic_with output_field_spec.name as yellowTulip %}
+{% magic_with output_field_spec.name|sn as yellow_tulip %}
+def create_get_red_rose_query({{ sections.declare_create_query_args() }}):
+    root = CodeBlock(style="graphql")
+    root.IxI("query getRedRose", [{{ sections.declare_graphql_query_args() }}], " {")
+{% for output_field_spec in res.outputs_type_spec.field_specs %}
+    if yellow_tulip_outputs:
+        root.IxI("  yellowTulip", [{{ sections.invoke_query_endpoint(output_field_spec) }}], " {")
+        root._x_("    ", yellow_tulip_outputs, "")
+        root.abc("  }")
+{% endfor %}
+    root.abc("}")
+
+
+    op_name = "getRedRose"
+    variables = {{ sections.query_variables() }}
+    return root.result, op_name, variables
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}

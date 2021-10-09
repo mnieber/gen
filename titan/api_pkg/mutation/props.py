@@ -1,12 +1,11 @@
 from moonleap import u0
-from moonleap.resources.field_spec import FieldSpec
-from moonleap.resources.type_spec_store import TypeSpec, type_spec_store
+from moonleap.typespec.field_spec import FieldSpec
+from moonleap.typespec.type_spec_store import TypeSpec, type_spec_store
 from titan.api_pkg.mutation.default_outputs_type_spec import default_outputs_type_spec
 
 
 def _field_spec_from_item(self, item):
     return FieldSpec(
-        name_snake=item.item_name_snake + "_form",
         name=item.item_name + "Form",
         required=False,
         private=False,

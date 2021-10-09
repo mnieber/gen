@@ -13,8 +13,8 @@ def item_types(self):
                 add_items([x.item for x in item.item_lists_provided])
 
     for query in self.queries:
-        add_items([x for x in query.items_provided])
-        add_items([x.item for x in query.item_lists_provided])
+        add_items([x.typ for x in query.named_items_provided])
+        add_items([x.typ.item for x in query.named_item_lists_provided])
 
     for mutation in self.mutations:
         add_items([x for x in mutation.items_posted])

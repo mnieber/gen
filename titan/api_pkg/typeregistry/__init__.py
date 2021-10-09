@@ -4,10 +4,10 @@ class TypeRegistry:
         self.item_list_by_name = {}
 
         for query in graphql_api.queries:
-            for item in query.items_provided:
-                self.register_item(item)
-            for item_list in query.item_lists_provided:
-                self.register_item_list(item_list)
+            for named_item in query.named_items_provided:
+                self.register_item(named_item.typ)
+            for named_item_list in query.named_item_lists_provided:
+                self.register_item_list(named_item_list.typ)
 
     def get_item_by_name(self, item_name):
         return self.item_by_name.get(item_name)

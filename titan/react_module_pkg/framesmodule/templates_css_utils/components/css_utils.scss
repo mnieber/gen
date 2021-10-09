@@ -1,0 +1,59 @@
+.w-screen {
+  width: 100vw;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+}
+
+.text-primary {
+  color: #0070f3;
+}
+
+.text-red-400 {
+  color: #ff6b6b;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.w-full {
+  width: 100%;
+}

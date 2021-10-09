@@ -1,13 +1,6 @@
 import moonleap.resource.props as P
-from moonleap import (
-    create,
-    create_forward,
-    empty_rule,
-    extend,
-    kebab_to_camel,
-    kebab_to_snake,
-    rule,
-)
+from moonleap import create, create_forward, empty_rule, extend, kebab_to_camel, rule
+from moonleap.resource.named_class import named
 from moonleap.verbs import uses
 from titan.api_pkg.item.resources import Item
 
@@ -17,12 +10,14 @@ from .resources import ItemList
 @create("item~list")
 def create_item_list(term, block):
     name = kebab_to_camel(term.data)
-    name_snake = kebab_to_snake(term.data)
-    item_list = ItemList(
-        item_name=name,
-        item_name_snake=name_snake,
-    )
+    item_list = ItemList(item_name=name)
     return item_list
+
+
+@create("x+item~list")
+def create_named_item(term, block):
+    named_class = named(ItemList)
+    return named_class(term, block)
 
 
 @rule("item~list")

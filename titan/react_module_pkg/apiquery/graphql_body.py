@@ -1,24 +1,27 @@
 import os
 
 
-def graphql_body(type_spec, indent=0, skip=None):
+def graphql_body(type_spec, indent=0, skip=None, recurse=True):
     is_top_level = not skip
     skip = skip or [type_spec.type_name]
 
     result = []
     for field_spec in type_spec.field_specs:
-        if field_spec.field_type in ("fk", "related_set"):
-            fk_type_spec = field_spec.fk_type_spec
-            if fk_type_spec.type_name not in skip:
-                include_field_name = field_spec.field_type in ("fk", "related_set")
+        if field_spec.field_type in ("fk", "relatedSet"):
+            if field_spec.field_type == "fk" and not is_top_level:
+                result.append(f"{field_spec.name}Id")
+            target_type_spec = field_spec.target_type_spec
+            if (is_top_level or recurse) and target_type_spec.type_name not in skip:
+                include_field_name = field_spec.field_type in ("fk", "relatedSet")
                 if include_field_name:
                     result.append(f"{field_spec.name} {{")
                     indent += 2
                 result.extend(
                     graphql_body(
-                        fk_type_spec,
+                        target_type_spec,
                         indent,
-                        skip + [fk_type_spec.type_name],
+                        skip + [target_type_spec.type_name],
+                        recurse=recurse,
                     )
                 )
                 if include_field_name:

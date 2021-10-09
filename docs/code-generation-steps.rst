@@ -137,21 +137,17 @@ An example module
 
 .. code-block:: python
 
-    from moonleap import kebab_to_camel, kebab_to_snake, create, Resource
+    from moonleap import kebab_to_camel, create, Resource
     from .resources import Item
     from dataclasses import dataclass
 
     @dataclass
     class Item(Resource):
         item_name: str
-        item_name_snake: str
 
     @create("item")
     def create_item(term, block):
-        return Item(
-            item_name=kebab_to_camel(term.data),
-            item_name_snake=kebab_to_snake(term.data),
-        )
+        return Item(item_name=kebab_to_camel(term.data))
 
     @rule("graphql:api", posts, "item")
     def graphql_api_posts_item(graphql_api, item):

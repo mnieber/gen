@@ -6,4 +6,3 @@ from moonleap import Resource
 @dataclass
 class FormType(Resource):
     name: str
-    name_snake: str

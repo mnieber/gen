@@ -18,7 +18,7 @@ def get_context(graphene_django):
     _.modules = [module for module in _.django_app.modules if module.has_graphql_schema]
 
     class Sections:
-        def query_imports(self):
+        def graphene_query_imports(self):
             result = []
             for query in _.graphql_api.queries:
                 classname = _query_py_classname(query)

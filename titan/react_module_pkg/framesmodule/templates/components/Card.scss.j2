@@ -1,0 +1,10 @@
+.Card {
+{% if res.react_app.has_tailwind_css %}
+  @apply m-2 p-4;
+  @apply bg-gray-200;
+{% else %}
+  padding: 8px;
+  margin: 16px;
+  background-color: #cccccc;
+{% endif %}
+}

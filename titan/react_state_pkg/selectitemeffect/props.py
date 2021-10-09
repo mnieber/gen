@@ -3,8 +3,8 @@ from moonleap.utils.inflect import plural
 from moonleap.utils.magic_replace import magic_replace
 from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
 from titan.react_pkg.pkg.ts_var import ts_type, ts_type_import_path
-from titan.react_pkg.router import RouterConfig
 from titan.react_state_pkg.itemview.props import get_item_view_route_params
+from titan.react_view_pkg.router import RouterConfig
 
 
 def create_router_configs(self):
@@ -55,7 +55,7 @@ def get_context(select_item_effect):
             search_function = "(x) => " + " && ".join(
                 [
                     f"x.{param} === {_.item_name + u0(param)}"
-                    for param in _.type_spec.query_item_by
+                    for param in _.type_spec.query_item_by or []
                 ]
             )
             return (

@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 import mistune
@@ -17,6 +18,7 @@ def expand_markdown(spec_file, base_level=0, scope_names=None):
 
     with open(spec_file) as ifs:
         raw_markdown = ifs.read()
+        raw_markdown = re.sub(r"\s\- ", " ", raw_markdown)
 
     expander = BlockExpander(Path(spec_file).parent, base_level, scope_names)
     Markdown(renderer=expander)(raw_markdown)

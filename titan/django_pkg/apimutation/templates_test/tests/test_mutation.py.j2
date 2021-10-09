@@ -1,0 +1,23 @@
+{% magic_with res.name as postBlueDaisy %}
+{% magic_with res.name|sn as post_blue_daisy %}
+import pytest
+from api.tests.graphqltestcase import GraphqlTestCase
+from .create_post_blue_daisy_mutation import create_post_blue_daisy_mutation
+{{ sections.mutation_fixture_imports() }}
+
+class TestPostBlueDaisyMutation(GraphqlTestCase):
+{{ sections.define_fixtures() }}
+
+    @pytest.mark.django_db()
+    def test_post_blue_daisy(self, client_query{{ sections.invoke_mutation_fixtures() }}):
+        query, op_name, variables = create_post_blue_daisy_mutation(
+            {{ sections.create_mutation_args() }}
+        );
+        response = client_query(query, op_name=op_name, variables=variables)
+        data = response.json()["data"]
+
+        # check that the response is as expected
+        assert data["postBlueDaisy"] == {"errors": {}, "success": True}
+
+{% end_magic_with %}
+{% end_magic_with %}

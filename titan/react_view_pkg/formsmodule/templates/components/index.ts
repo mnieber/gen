@@ -7,4 +7,6 @@ export { FormFieldLabel } from './FormFieldLabel';
 export { GlobalError } from './GlobalError';
 export { MobXFormState } from './MobXFormState';
 export { SaveButton } from './SaveButton';
+export { SlugField, UpdateSlugButton } from './SlugField';
 export { TextField } from './TextField';
+export { ValuePickerField } from './ValuePickerField';

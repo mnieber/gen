@@ -1,17 +1,16 @@
-{% magic_with item_type.name as yellowTulip %}
+{% magic_with item_list.item_name as yellowTulip %}
 from django.db import models
-{% for item_type in res.item_types %}
-{{ sections.model_imports(item_type.name)}}
+{% for item_list in res.item_lists_provided %}
+{{ sections.model_imports(item_list.item_name)}}
 {% endfor %}
 
 from app.models import Entity
 
-{% for item_type in res.item_types %}
+{% for item_list in res.item_lists_provided %}
 class YellowTulip(Entity):
-{{ sections.model_fields(item_type.name)}}
+{{ sections.model_fields(item_list.item_name)}}
 
-    def __str__(self):
-{{ sections.str_repr(item_type.name)}}
+{{ sections.repr_function(item_list.item_name)}}
 
 
 {% endfor %}

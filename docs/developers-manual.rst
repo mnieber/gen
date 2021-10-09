@@ -6,8 +6,7 @@ Glossary
 **block scope**: a label that is added to a block to indicate which scope it belongs to (e.g. backend, frontend, database, etc). Every scope has associated creation rules and relation rules
 **block title**: the heading of the block in the spec file
 **creation rule**: a rule that turns a term into a resource
-**external link**: a link to an external spec file that is included into
-the spec file
+**external link**: a link to an external spec file that is included into the spec file
 **moonleap dir**: an output directory where all results are written
 **package**: a python package containing Moonleap rules and resources
 **relation rule**: a rule that updates existing resources that are in a certain relationship
@@ -16,14 +15,27 @@ the spec file
 **spec file**: the root markdown file that contains the project specification
 **term**: a word in the spec that contains - or is prefixed by - a colon.
 **term data (part)**: The part of the term before the colon.
-**term tag (part)**: The part of the term after then colon.
+**term name (part)**: The part of the term before the plus sign.
+**term tag (part)**: The part of the term after the colon.
 **verb**: a word in the spec that is prefixed with a forward slash
 
 Purpose
 =======
 
-Moonleap turns a markdown-based spec file into a set of source files.
-Below, we will explain the process by introducing some concepts showing annotated use-cases.
+Moonleap turns a markdown-based spec file into a set of source files. There are four code generation steps:
+
+1. Parse the spec file(s) to build a graph structure of (Python) resource objects that have
+   relations to other resources.
+2. Match every relation in the graph to a rule set, and run the matching rules. This step
+   allows you to enrich the resources with additional information.
+3. Render each resource into one or more source files.
+4. Run post-processing steps such as code formatters.
+
+Below, we will explain the process by introducing concepts and use-cases. Note that since Moonleap is a general
+purpose rule-based code generator, it doesn't provide any specific rules that you could use to generate source code.
+However, there is a companion package called Titan (one of the moons around Saturn) that is based on Moonleap,
+which allows you to create a stack based on Docker, Django and React.
+
 
 The spec dir
 ============
@@ -35,20 +47,7 @@ language, which also means that at times it will be ambiguous, and in those case
 make a reasonable choice. As we will see later, the generated code is treated as a shadow project,
 from which useful parts are copied to your real project. This means that the shadow project
 does not have to be perfect, as long as it is useful.
-The spec dir may include additional spec files that are included in `spec.md`. It also contains a
-`settings.yml` file, which will be explained later.
 
-The code generation steps
-=========================
-
-There are four code generation steps:
-
-1. Parse the spec file(s) to build a graph structure of resources (the nodes) and
-   relations (the edges).
-2. Match every relation in the graph to a rule set, and run the matching rules. This step
-   allows you to enrich the resources with additional information.
-3. Render each resource into one or more source files.
-4. Run post-processing steps such as code formatters.
 
 Spec files, terms and relations
 ===============================
@@ -57,7 +56,7 @@ The most important ingredients of the spec file are so-called terms and verbs. T
 in the spec that follow a pattern of name+data:tag, e.g. `main+todo:list-view`. Moonleap will turn
 every term into a (Python) `resource` object, that can be rendered into a set of source files.
 Verbs are words that are prefixed with a slash, e.g. `/shows`. By connecting two terms with a verb,
-you indicate a relation between two resources, e.g. `the welcome:screen /shows the main+todo:list-view`.
+you indicate a relation between resources, e.g. `the welcome:screen /shows the main+todo:list-view`.
 The parser understands constructions such as "the backend:service and frontend:service /have a welcome:endpoint,
 status:endpoint and about:endpoint that can be /called from the frontent:service". In this example, the /have
 verb is involved in six relations, and /called in three relations. You can use parentheses
@@ -76,8 +75,13 @@ that is named `main`). The `name` part is optional, so you could specify that a
 Blocks
 ======
 
-The parser treats the spec file as a collection of text blocks,
-where each block (title) corresponds to a Markdown section (title).
+To create resources for terms, Moonleap needs to know which terms in the spec file introduce a new
+resource, and which terms are merely repeated. To solve this problem, the parser treats the spec file as a
+collection of text blocks, where each block (title) corresponds to a Markdown section (title).
+If a term appears in a block title, then we say that the block _describes_ that term. This means
+that Moonleap will create a resource for that term using the specific resource creation rules
+that are associated with the block. If the term is repeated in the block body (or in a child block) then
+no new resource is created. We will later explain the exact rules that govern the resource creation process.
 
 Case 1: a spec file describes resources and their relations
 ===========================================================
@@ -85,7 +89,7 @@ Case 1: a spec file describes resources and their relations
 Description
 -----------
 
-Below we show a small spec file written in markdown.
+Below we show a small (markdown) spec file.
 
 The example (e.g.: specs/foo/spec.md)
 -------------------------------------
@@ -95,11 +99,11 @@ The example (e.g.: specs/foo/spec.md)
     # The foo:project [1]
 
     The foo:project /uses the bar:service and the baz:service [2].
-    :It /shows a (welcome:screen that /has a :cookie-notice) that /uses the welcome:endpoint [3,4].
+    :It /shows a (welcome:screen that /has a :cookie-notice) that /uses the welcome:endpoint [3-5].
 
-    ## The bar:service [5,6]
+    ## The bar:service
 
-    The bar:service has a simple goal:: it /provides the bar:endpoint. [7]
+    The bar:service has a simple goal:: it /provides the bar:endpoint. [6]
 
 Notes
 -----
@@ -110,10 +114,7 @@ Notes
 4. The :cookie-notice term has an data part that is the empty string ("").
 5. Parentheses are used to limit the scope of the /has verb. Without these parentheses, it would (wrongly) state
    that the cookie-notice uses the welcome endpoint.
-6. If a term appears in a block title, then we say that the block _describes_ that term. For every term, there is
-   exactly one block that describes that term. It's important to know which blocks describe which terms, because -
-   as will be explained later - every block has specific rules that are used to process these terms.
-7. To use a colon in the spec file without identifying a resource, it needs to be doubled. This is why the word
+6. To use a colon in the spec file without identifying a resource, it needs to be doubled. This is why the word
    goal is proceeded by a double colon (::).
 
 
@@ -121,10 +122,17 @@ Creation and relation rules
 ===========================
 
 A Moonleap (Python) module contains creation rules that convert terms into Python resource objects.
-The most specific creation rule that matches a term is called to create the resource for that term.
-The module also contains relation rules. For every relation, all matching relation rules are executed
+Every creation rule has an associated term-pattern that can be matched against a term. This pattern can include a name,
+data and tag pert. The most specific creation rule that matches the term is used to create the resource for that term.
+A module can also contains relation rules. A relation rule has an subject term-pattern, a verb and an object term-pattern.
+For every relation between resources that the spec file describes, all matching relation rules are executed
 in order to enrich the resources in that relation. A relation rule may return a list of additional
 relations, which are processed in the same way as the relations in the spec file.
+
+
+Term matching rules
+===================
+
 
 Case 2: a module contains creation rules and relation rules
 ===========================================================
@@ -168,35 +176,34 @@ The example
 Notes
 -----
 
-1. In this example, we are showing a Python module that declares rules. This Python module is part of
-   a so-called "Moonleap Python package". As will be explained later, you can indicate in the settings file
-   which moonleap packages must be used to process the spec file.
+1. The the filename, we can see that this Python module is part of the `bar_pkg` Moonleap (Python) package. As will be explained
+   later, you can indicate in the settings file which moonleap packages must be used to process the spec file.
 2. A new resource class is declared here.
-3. The create decorator indicates a creation rule. The creation rule receives the term and the block
-   that describes the term, and returns the resource object.
-4. By convention, terms use kebab case, which is converted here into camel case.
+3. The create decorator indicates a creation rule. The term-pattern for this creation rule only contains a tag part.
+   The creation rule receives the term and the block that describes the term, and returns the resource object.
+4. By convention, terms (in the spec file) use kebab case, which is converted here into camel case.
 5. This creation rule is a more specific match for the `project:item` term. It will be called instead of the more
    general creation rule right above it.
-6. A relation rule will be called by Moonleap for any relation in the spec file that matches the rule.
+6. A relation rule will be called by Moonleap for any relation in the spec file that matches the rule. A matching relation rule
+   receives the matching resources as arguments.
 7. Verbs in relation rules can be defined as tuples that contain different variants, so that it makes no difference
    whether you write /posts or /saves.
 8. A relation rule may return a new list of relations that are processed in the same way as the relations
    from the spec file. If needed, new resources (mentioned in these relations) will be created.
 9. The create_forward helper function will accept arguments that are either a term or a resource. In the
-   latter case, it converts the resource into a term (Moonleap knows which term was used to create the resource).
+   latter case, it converts the resource into a term (Moonleap remembers which term was used to create the resource).
 10. Note that a resource may be twice related to another resource (using different verbs, in this case
-   "posts" and "documents"). The _term helper function returns the term associated with the resource.
+   "posts" and "documents").
 
 
-Case 3: terms in a spec file are described by blocks
-====================================================
+The rules that govern resource creation
+=======================================
 
-Description
------------
+There are special rules that determine which blocks describe which terms. Moonleap uses this information to
+determine if a term introduces a new resource, and to determine which creation rules must be used to
+create it.
 
-There are special rules that determine which blocks describe which terms. In general, the question we must
-answer is: if a blocks mentions a term, then which block is describing that term?
-
+In general, the question we must answer is: if a blocks mentions a term, then which block is describing that term?
 To answer this question we use the notion of "competing blocks". For any block, it's competing blocks are:
 - the block itself
 - all its (grand)child blocks
@@ -226,6 +233,10 @@ There is one additional rule to explain, which has to do with wildcards: if a bl
 x:service or profile:x, then it describes any terms - appearing in the block body - that match this wildcard
 (e.g. account:service, or profile:screen). If a parent block mentions foo:x in their title, and a child block
 mentions x:bar, then the term foo:bar is considered to be described by the parent block (this case is not an error).
+
+
+Case 3: a spec file that illustrates resource creation
+======================================================
 
 The example (e.g.: specs/foo/spec.md)
 -------------------------------------
@@ -257,11 +268,8 @@ Notes
    a child of the "bar:service" block, or if the "baz:x" block would mention "welcome:screen" in its title.
 
 
-Case 4: blocks (in a spec file) have scopes and links
-=====================================================
-
-Description
------------
+How scopes are used to create resources
+=======================================
 
 Every block in a spec file can specify one or more scopes. Scopes are string values that identify the creation
 and relation rules that should be used to: a) create the resources that are described in that block and b)
@@ -270,6 +278,9 @@ from scopes to Python packages.
 If a block title contains a link then the body of that block is replaced with the
 contents of that link. In addition, the name of the linked file is added as a scope to the block.
 
+
+Case 4: a spec file that illustrates scopes and links
+=====================================================
 
 The example (file: specs/foo/spec.md)
 -------------------------------------
@@ -327,11 +338,9 @@ Notes
 5. This key in the settings file describes which Moonleap packages are used per scope.
 6. Every moonleap package has an init file that lists the module that should be loaded for that package.
 
-Case 5: an extension class defines the resource.render function
-===============================================================
 
-Description
------------
+Extension classes
+=================
 
 If a resource object has a render function, then Moonleap will call it so that code is generated for
 that resource.  Moonleap gives a lot of options to users to influence how code is generated. Therefore,
@@ -346,6 +355,18 @@ output as the filename that should be used instead of `foo.bar` (the default out
 to put a jinja2 tag directly in the template name, e.g. `{{ res.name }}.txt.j2`.
 Note that directories that appear in the template directory are also created in the output directory.
 They too can have names with jinja2 tags, and associated ".fn" files.
+
+Accessing relations
+-------------------
+
+To render a resource, it's usually important to know its relations to other resources.
+Moonleap offers four standard properties - that you can use in class extensions - to give
+access to relations: `child`, `children`, `parent` and `tree`. The `tree` property allows
+you to recursively collect resources that are "relatives of relatives".
+
+
+Case 5: a Moonleap module that uses an extension class
+======================================================
 
 The example
 -----------
@@ -378,20 +399,21 @@ The example
 
     # Alternatively, you can use the special meta() function, which allows you
     # to do additional imports which would otherwise create a circular import dependency.
-    #
-    # def custom_render(self, write_file, render_template, output_path):  # [3]
-    #     template_path = Path(__file__).parent / "templates"
-    #     render_templates(template_path)(self, write_file, render_template, output_path)
-    #
-    # def meta():
-    #     from foo_pkg.bar import Bar
-    #
-    #     @extend(Item)
-    #     class ExtendItem:
-    #         render = MemFun(custom_render)  # [4]
-    #         create_bar = MemFun(lambda self: Bar())
-    #
-    #     return [ExtendItem]
+
+    if False:  # we are not actually using the meta function here
+        def custom_render(self, write_file, render_template, output_path):  # [3]
+            template_path = Path(__file__).parent / "templates"
+            render_templates(template_path)(self, write_file, render_template, output_path)
+
+        def meta():
+            from foo_pkg.bar import Bar
+
+            @extend(Item)
+            class ExtendItem:
+                render = MemFun(custom_render)  # [4]
+                create_bar = MemFun(lambda self: Bar())
+
+            return [ExtendItem]
 
 Notes
 -----
@@ -407,16 +429,8 @@ Notes
    know that this stand-alone function must be added as a member function to the extended class.
 
 
-Case 6: an extension class offers access to the relations of a resource
-=======================================================================
-
-Description
------------
-
-To render a resource, it's usually important to know its relations to other resources.
-Moonleap offers four standard properties (that you can use in class extensions) to give
-access to relations: `child`, `children`, `parent` and `tree`. The `tree` property allows
-you to recursively collect resources that are "relatives of relatives".
+Case 6: an extension class that offers access to relations
+==========================================================
 
 The example
 -----------

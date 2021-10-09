@@ -35,4 +35,7 @@ def create_forward(
     if isinstance(subj, Resource):
         subj = subj.meta.term
 
+    if isinstance(obj, Resource):
+        obj = obj.meta.term
+
     return Rel(subj=subj, verb=verb, obj=_to_term(obj), block=block, origin=origin)

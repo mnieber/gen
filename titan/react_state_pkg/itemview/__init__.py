@@ -13,7 +13,7 @@ base_tags = [("item-view", ["component"])]
 def create_item_view(term, block):
     name = kebab_to_camel(term.data)
     item_view = ItemView(item_name=name, name=f"{u0(name)}View")
-    item_view.add_template_dir(Path(__file__).parent / "templates")
+    item_view.add_template_dir(Path(__file__).parent / "templates", props.get_context)
     return item_view
 
 

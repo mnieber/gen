@@ -27,7 +27,7 @@ def clean_text(text):
 def clean_sentence(sentence):
     result = sentence
     for char in (",", ";", "\n"):
-        result = result.replace(char, "")
+        result = result.replace(char, " ")
     while result.endswith("."):
         result = result[:-1]
     return result

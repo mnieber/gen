@@ -1,4 +1,4 @@
-from moonleap.utils.case import u0
+from moonleap.utils.case import sn, u0
 from titan.django_pkg.djangoapp.resources import DjangoConfig
 
 
@@ -7,7 +7,7 @@ def get(module):
         {
             "installed_apps": {
                 "LOCAL_APPS": [
-                    f"{module.name_snake}.apps.{u0(module.name)}Config",
+                    f"{sn(module.name)}.apps.{u0(module.name)}Config",
                 ],
             },
         }

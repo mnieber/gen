@@ -13,7 +13,7 @@ rules = [
 @rule("module", shows, "component")
 def module_shows_component(module, component):
     if not component.module:
-        return create_forward(module, has, component.meta.term)
+        return create_forward(module, has, component)
 
 
 @extend(Module)

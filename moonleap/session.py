@@ -5,6 +5,7 @@ import ramda as R
 
 from moonleap.scope_manager import ScopeManager
 from moonleap.settings import load_settings
+from moonleap.utils.inflect import install_plural
 
 _session = None
 
@@ -28,6 +29,9 @@ class Session:
         self.settings = load_settings(settings_fn)
         self.settings["spec_dir"] = self.spec_dir
         self.scope_manager.import_packages(self.settings.get("packages_by_scope", {}))
+
+        for one, many in self.settings["plurals"].items():
+            install_plural(one, many)
 
     def get_post_process_settings(self):
         return self.settings.get("post_process", {})

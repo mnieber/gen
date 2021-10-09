@@ -1,0 +1,13 @@
+import { schema } from 'normalizr';
+
+{% for item_type in _.item_types %}
+export const {{ item_type.name }} = new schema.Entity(
+    '{{ item_type.name | plural }}',
+{{ sections.process_entity(item_type) }}
+);
+
+{% endfor %}
+{% for item_type in _.item_types %}
+{{ sections.schema_fields(item_type) }}
+
+{% endfor %}

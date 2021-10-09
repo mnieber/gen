@@ -1,13 +1,12 @@
-import React from 'react';
-
 import './App.scss';
+import 'src/frames/components/index.scss';
 {% if res.router %}
 import { UrlRouter } from 'src/app/components/UrlRouter';
 {% endif %}
 
 export function App() {
   return (
-    <div className="App w-screen">
+    <div className="App w-screen {% if res.react_app.has_tailwind_css %}lg:w-2/3{% endif %}">
       <header className="App__Header">
 {% if res.router %}
         <UrlRouter />

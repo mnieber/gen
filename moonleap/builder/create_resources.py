@@ -5,8 +5,10 @@ from moonleap.builder.create_resource import create_resource_and_add_to_block
 from moonleap.builder.find_relations import get_relations
 from moonleap.builder.rule import Action
 from moonleap.builder.scope import get_base_tags
+from moonleap.parser.term import Term
+from moonleap.resource.named_class import NamedResource
 from moonleap.resource.rel import Rel
-from moonleap.verbs import is_created_as
+from moonleap.verbs import is_created_as, uses
 
 
 def _find_resource(term, block):
@@ -62,6 +64,10 @@ def _process_relations(relations: T.List[Rel], actions):
             _process_relations(
                 [Rel(term, is_created_as, term, creator_block, rel.origin)], actions
             )
+            if isinstance(res, NamedResource):
+                res.name = term.name
+                res.typ = _find_or_create(rel, Term(data=term.data, tag=term.tag))
+
         return res
 
     for rel in relations:

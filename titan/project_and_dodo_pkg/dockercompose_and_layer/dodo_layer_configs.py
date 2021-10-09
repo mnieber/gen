@@ -1,10 +1,11 @@
+from moonleap.utils.case import sn
 from titan.dodo_pkg.layer import LayerConfig
 
 
 def get(docker_compose):
     def inner():
         project = docker_compose.project
-        name = project.name_snake + "_dev"
+        name = sn(project.name) + "_dev"
         return {
             "DOCKER_COMPOSE": {
                 "compose_project_name": name,

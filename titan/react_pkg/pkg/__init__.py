@@ -1,3 +1,3 @@
-from . import jsfilemerger
+from . import jsfilemerger, scssfilemerger
 
-file_mergers = [jsfilemerger.JsFileMerger()]
+file_mergers = [jsfilemerger.JsFileMerger(), scssfilemerger.ScssFileMerger()]

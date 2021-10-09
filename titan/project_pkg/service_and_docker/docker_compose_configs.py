@@ -1,3 +1,4 @@
+from moonleap.utils.case import sn
 from titan.project_pkg.dockercompose import DockerComposeConfig
 
 
@@ -13,7 +14,7 @@ def get(service, is_dev):
             depends_on=[],
             ports=[f"{port}:{port}"],
             image=(
-                f"{service.project.name_snake}_{service.name}{image_postfix}"
+                f"{sn(service.project.name)}_{service.name}{image_postfix}"
                 if service.dockerfile
                 else service.docker_image.name
             ),

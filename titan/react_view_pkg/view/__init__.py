@@ -1,16 +1,7 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    Prop,
-    create,
-    create_forward,
-    extend,
-    kebab_to_camel,
-    rule,
-    u0,
-)
+from moonleap import MemFun, create, create_forward, extend, kebab_to_camel, rule, u0
 from moonleap.verbs import has
 
 from . import props, router_configs
@@ -50,7 +41,7 @@ def view_has_panel(view, panel):
 @rule("panel", has, "component")
 def panel_has_component(panel, component):
     if not component.module:
-        return create_forward(panel.parent_view.module, has, component.meta.term)
+        return create_forward(panel.parent_view.module, has, component)
 
 
 @extend(View)

@@ -3,14 +3,14 @@ from pathlib import Path
 
 import ramda as R
 from moonleap import render_templates
-from titan.react_module_pkg.apiquery.graphql_args import graphql_args
+from titan.api_pkg.pkg.graphql_args import graphql_args
 from titan.react_module_pkg.apiquery.graphql_body import graphql_body
 from titan.react_pkg.pkg.field_spec_to_ts_type import field_spec_to_ts_type
 
 
 def define_schema_field(field_spec, output_schema_name):
-    output_many = field_spec.field_type in ("related_set",)
-    fk_item_name = field_spec.field_type_attrs["target"]
+    output_many = field_spec.field_type in ("relatedSet",)
+    fk_item_name = field_spec.target
     value = f"[{fk_item_name}]" if output_many else fk_item_name
     line = f"{output_schema_name}.define({{ {field_spec.name}: {value} }});"
     return line
@@ -22,23 +22,20 @@ def get_context(query, api_module):
     _.query = query
     _.input_field_specs = query.inputs_type_spec.field_specs
     _.output_schema_name = query.name + "Outputs"
-    _.output_field_specs = query.outputs_type_spec.field_specs
-    _.fk_output_field_specs = [
-        x for x in _.output_field_specs if x.field_type in ("related_set", "fk")
-    ]
+    _.fk_output_field_specs = query.outputs_type_spec.get_field_specs(
+        ["relatedSet", "fk"]
+    )
 
     class Sections:
         def schema_imports(self):
             result = []
             for field_spec in _.fk_output_field_specs:
-                fk_item_name = field_spec.field_type_attrs["target"]
-                result.append(
-                    f"import {{ {fk_item_name} }} from 'src/api/schemas/{fk_item_name}Schema';"
-                )
+                fk_item_name = field_spec.target
+                result.append(f"import {{ {fk_item_name} }} from 'src/api/schema';")
 
             return os.linesep.join(result)
 
-        def output_schema_fields(self):
+        def query_output_schema_fields(self):
             result = []
             for field_spec in _.fk_output_field_specs:
                 result.append(define_schema_field(field_spec, _.output_schema_name))
@@ -53,13 +50,12 @@ def get_context(query, api_module):
                 )
             )
 
-        def graphql_args(self, before):
+        def ts_graphql_query_args(self, before):
             return graphql_args(_.input_field_specs, before)
 
-        def graphql_body(self, output_field_spec):
-            fk_type_spec = output_field_spec.fk_type_spec
-            if fk_type_spec:
-                return graphql_body(fk_type_spec)
+        def ts_graphql_query_body(self, output_field_spec):
+            if output_field_spec.field_type in ("fk", "relatedSet"):
+                return graphql_body(output_field_spec.target_type_spec)
             else:
                 raise Exception(
                     f"Not implemented: graphql_body for field {output_field_spec.name}"

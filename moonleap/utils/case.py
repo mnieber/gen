@@ -44,3 +44,12 @@ _underscorer2 = re.compile("([a-z0-9])([A-Z])")
 def camel_to_snake(s):
     subbed = _underscorer1.sub(r"\1_\2", s)
     return _underscorer2.sub(r"\1_\2", subbed).lower()
+
+
+def camel_join(lhs, rhs):
+    if not lhs:
+        return rhs
+    return f"{lhs}{u0(rhs)}"
+
+
+sn = camel_to_snake

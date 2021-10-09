@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormFieldContext } from 'src/forms/components/FormFieldContext';
-import { FormFieldLabel } from 'src/forms/components/FormFieldLabel';
 import { FormFieldError } from 'src/forms/components/FormFieldError';
+import { FormFieldLabel } from 'src/forms/components/FormFieldLabel';
 
 interface FieldT {
   fieldName: string;
@@ -17,7 +17,7 @@ export const Field: React.FC<FieldT> = ({
 }) => {
   return (
     <FormFieldContext fieldName={fieldName} label={label}>
-      <div className="Field flexcol">
+      <div className="Field flex flex-col">
         <FormFieldLabel buttons={buttons} />
         {children}
         <FormFieldError />

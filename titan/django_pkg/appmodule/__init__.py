@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
-from moonleap import create, extend, kebab_to_snake
-from moonleap.utils.case import snake_to_camel
+from moonleap import create, extend
+from moonleap.utils.case import kebab_to_camel, sn
 from moonleap.verbs import has
 from titan.django_pkg.djangoapp import DjangoApp
 
@@ -9,9 +9,8 @@ from .resources import AppModule  # noqa
 
 @create("app:module")
 def create_app_module(term, block):
-    name_snake = kebab_to_snake(term.data)
-    module = AppModule(name_snake=name_snake, name=snake_to_camel(name_snake))
-    module.output_path = module.name_snake
+    module = AppModule(name=kebab_to_camel(term.data))
+    module.output_path = sn(module.name)
     return module
 
 
