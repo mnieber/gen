@@ -9,13 +9,13 @@ def merge(lhs, rhs):
     return new_body
 
 
-def get_docker_compose_config(self, is_dev):
+def get_docker_compose_config(self, is_dev, is_override):
     config = {}
     services = config.setdefault("services", {})
     for service in self.services:
         docker_compose_configs = R.pipe(
             R.always(service.docker_compose_configs.merged),
-            R.filter(lambda x: x.is_dev == is_dev),
+            R.filter(lambda x: x.is_dev == is_dev and x.is_override == is_override),
         )(None)
 
         service_body = R.pipe(

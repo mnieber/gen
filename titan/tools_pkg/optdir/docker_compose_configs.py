@@ -28,4 +28,5 @@ def get(opt_dir):
         get_service_body=lambda x, service_name: inner(),
         get_global_body=lambda x, service_name: {},
         is_dev=True,
+        is_override=True,
     )

@@ -14,3 +14,4 @@ class DockerComposeConfig(Resource):
     get_service_body: T.Callable
     get_global_body: T.Callable
     is_dev: bool = False
+    is_override: bool = False

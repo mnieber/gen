@@ -38,3 +38,7 @@ def cors_urls_regex(self):
 
 def secret_key(self):
     return get_or_create_secret_key(get_session(), "django_dev")
+
+
+def use_django_extensions(self):
+    return self.service.get_tweak_or(True, ["django_app", "use_django_extensions"])

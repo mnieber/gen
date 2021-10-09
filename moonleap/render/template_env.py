@@ -1,14 +1,8 @@
-import json
 import os
 
 import jinja2
-from jinja2_ansible_filters import AnsibleCoreFiltersExtension
 from moonleap.render.transforms import get_transforms
 from moonleap.utils import chop
-
-
-def to_nice_json(value):
-    return json.dumps(value, sort_keys=False, indent=2, separators=(",", ": "))
 
 
 def load_template(template_fn):
@@ -25,7 +19,6 @@ def load_template(template_fn):
 template_loader = jinja2.FunctionLoader(load_template)
 template_env = jinja2.Environment(
     loader=template_loader,
-    extensions=[AnsibleCoreFiltersExtension],
     trim_blocks=True,
     lstrip_blocks=True,
 )
@@ -41,6 +34,3 @@ def drop_filter(name):
 
 def get_filter(name):
     return template_env.filters.get(name)
-
-
-add_filter("to_nice_json", to_nice_json)

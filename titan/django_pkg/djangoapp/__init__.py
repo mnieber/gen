@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, add, create, extend, register_add
+from moonleap import MemFun, Prop, add, create, extend, register_add, rule
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from titan.tools_pkg.pipdependency import PipRequirement
 
@@ -39,10 +39,16 @@ def create_django(term, block):
     add(django_app, dodo_layer_configs.get())
     add(django_app, opt_paths.static_opt_path)
     add(django_app, PipRequirement(["Django", "django-environ", "django-cors-headers"]))
-    add(django_app, PipRequirement(["pytest-django", "django-extensions"], is_dev=True))
+    add(django_app, PipRequirement(["pytest-django"], is_dev=True))
     add(django_app, docker_compose_configs.get(is_dev=True))
     add(django_app, docker_compose_configs.get(is_dev=False))
     return django_app
+
+
+@rule("django-app")
+def rule_django_app(django_app):
+    if django_app.use_django_extensions:
+        add(django_app, PipRequirement(["django-extensions"], is_dev=True))
 
 
 @extend(DjangoApp)
@@ -53,3 +59,4 @@ class ExtendDjangoApp(StoreTemplateDirs):
     local_apps = Prop(props.local_apps)
     cors_urls_regex = Prop(props.cors_urls_regex)
     secret_key = Prop(props.secret_key)
+    use_django_extensions = Prop(props.use_django_extensions)

@@ -9,7 +9,7 @@ def get(docker_compose):
             "DOCKER_COMPOSE": {
                 "compose_project_name": name,
                 "cwd": r"${/ROOT/src_dir}",
-                "files": ["docker-compose.dev.yml"],
+                "files": ["docker-compose.dev.yml", "docker-compose.dev.override.yml"],
             },
             "ROOT": {
                 "aliases": {

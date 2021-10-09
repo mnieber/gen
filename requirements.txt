@@ -1,11 +1,11 @@
 inflect
 jinja2
-jinja2-ansible-filters
+markdown
 mistune
 nltk
-PyYAML
-ramda
-python-slugify
-markdown
 parsimonious
 plumbum
+ruamel.yaml
+python-slugify
+PyYAML
+ramda
