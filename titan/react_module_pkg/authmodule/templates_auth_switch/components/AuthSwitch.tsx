@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import { routes } from 'src/app/routeTable';
 import { ActivateAccountPage } from 'src/auth/components/ActivateAccountPage';
 import { AuthStateProvider } from 'src/auth/components/AuthStateProvider';
+import { LoadUserIdEffect } from 'src/auth/components/LoadUserIdEffect';
 import { RequestPasswordResetPage } from 'src/auth/components/RequestPasswordResetPage';
 import { ResetPasswordPage } from 'src/auth/components/ResetPasswordPage';
 import { SignInPage } from 'src/auth/components/SignInPage';
@@ -11,6 +12,7 @@ import { SignUpPage } from 'src/auth/components/SignUpPage';
 export const AuthSwitch: React.FC = () => {
   return (
     <AuthStateProvider>
+      <LoadUserIdEffect />
       <Switch>
         <Route exact path={routes.signIn()}>
           <SignInPage />

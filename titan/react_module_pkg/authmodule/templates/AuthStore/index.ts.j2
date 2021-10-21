@@ -1,3 +1,4 @@
+import * as R from 'ramda';
 import { action, makeObservable, observable } from 'mobx';
 import { maybeSetCypressCookie } from 'src/utils/cookies';
 import { isUpdatedRS, RST } from 'src/utils/RST';
@@ -20,9 +21,11 @@ export class AuthStore {
   }
 
   @action onLoadData(rs: RST, queryName: string, vars: ObjT, data: ObjT) {
+    const errors = data?.errors ?? [];
+
     if (queryName === 'signIn') {
       if (isUpdatedRS(rs)) {
-        if (!data.errors) {
+        if (R.isEmpty(errors)) {
           this.signedInUserId = data.userId;
         }
       }
@@ -62,7 +65,7 @@ export class AuthStore {
 
     if (queryName === 'loadUserId') {
       if (isUpdatedRS(rs)) {
-        if (!data.errors) {
+        if (R.isEmpty(errors)) {
           this.signedInUserId = data.userId ?? anonymous;
         }
       }
@@ -70,7 +73,7 @@ export class AuthStore {
 
     if (queryName === 'signOut') {
       if (isUpdatedRS(rs)) {
-        if (!data.errors) {
+        if (R.isEmpty(errors)) {
           this.signedInUserId = anonymous;
         }
       }
