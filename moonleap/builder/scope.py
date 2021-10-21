@@ -2,6 +2,7 @@ from moonleap.builder.install import get_symbols
 from moonleap.builder.rule import rule as rule_decorator
 from moonleap.parser.term import match_term_to_pattern, patch_tag
 from moonleap.resource.rel import fuzzy_match
+from moonleap.utils.queue import Queue
 
 
 class Scope:
@@ -63,7 +64,14 @@ class Scope:
         self.base_tags_by_tag.setdefault(tag, []).extend(base_tags)
 
     def get_base_tags(self, term):
-        return self.base_tags_by_tag.get(term.tag, [])
+        result = []
+        q = Queue(lambda x: x, [term.tag])
+        for tag in q:
+            result.append(tag)
+            tags = self.base_tags_by_tag.get(tag, [])
+            q.extend(tags)
+
+        return result
 
 
 def get_base_tags(resource):
