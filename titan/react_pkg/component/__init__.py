@@ -49,7 +49,7 @@ def create_load_and_select_effects(component):
     ]
 
 
-@create("x+component")
+@create("x+generic:component")
 def create_named_component(term, block):
     return named(Component)(term, block)
 
