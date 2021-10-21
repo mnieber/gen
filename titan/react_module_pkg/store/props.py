@@ -3,6 +3,7 @@ import os
 from moonleap import u0
 from moonleap.utils.codeblock import CodeBlock
 from moonleap.utils.inflect import plural
+from moonleap.utils.quote import quote
 from titan.api_pkg.pkg.ml_name import (
     ml_form_type_spec_from_item_name,
     ml_type_spec_from_item_name,
@@ -25,6 +26,9 @@ def get_context(store):
     _.service = ml_react_app(store).service
     _.handled_queries = _.service.get_tweak_or(
         [], ["react_app", "stores", store.name, "handled_queries"]
+    )
+    _.ignored_queries = _.service.get_tweak_or(
+        [], ["react_app", "stores", store.name, "ignored_queries"]
     )
 
     class Sections:
@@ -77,9 +81,9 @@ def get_context(store):
             for item_list in store.item_lists_stored:
                 queries = list(_.graphql_api.queries)
                 mutations = list(_.graphql_api.mutations)
-                if_ = "if"
                 item_name = item_list.item_name
                 items = plural(item_name)
+                query_names = []
 
                 for query in queries + mutations:
                     output_field_specs = [
@@ -90,17 +94,33 @@ def get_context(store):
                         if x.target == item_list.item_name
                     ]
 
-                    if not output_field_specs and not query.name in _.handled_queries:
-                        continue
+                    if output_field_specs or query.name in _.handled_queries:
+                        query_names.append(quote(query.name))
 
-                    root.abc(f"{if_} (queryName === '{query.name}') {{")
-                    root.abc(f"  if (isUpdatedRS(rs)) {{")
-                    root.IxI(f"    this.add{u0(items)}", [f"values(data.{items})"], ";")
-                    root.abc(f"  }}")
-                    root.abc(f"}}")
-                    if_ = "else if"
+                root.abc(
+                    r"const ignoredQueries = "
+                    + f"[{', '.join([quote(x) for x in _.ignored_queries])}];"
+                )
+                root.abc(r"if (ignoredQueries.includes(queryName)) return;")
+                root.abc("")
 
-                root.abc(f"{if_} (data?.{items}) {{")
+                root.abc(f"const handledQueries = [{', '.join(query_names)}];")
+                root.abc(f"if (handledQueries.includes(queryName)) {{")
+                root.abc(f"  if (isUpdatedRS(rs)) {{")
+                root.abc(f"    if (!data.{items}) {{")
+                root.IxI(
+                    f"      console.warn",
+                    [
+                        f"`The query ${{queryName}} was handled in {store.name} ` +"
+                        + f"'but does not return any {items}.'"
+                    ],
+                    "",
+                )
+                root.abc(r"    }")
+                root.IxI(f"    this.add{u0(items)}", [f"values(data.{items})"], ";")
+                root.abc(r"  }")
+                root.abc(r"}")
+                root.abc(f"else if (data?.{items}) {{")
                 root.IxI(f"  this.add{u0(items)}", [f"values(data.{items})"], ";")
                 root.IxI(
                     f"  console.warn",
