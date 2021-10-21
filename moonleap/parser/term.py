@@ -81,3 +81,18 @@ def match_term_to_pattern(term, pattern_term):
         and _match(term.tag, pattern_term.tag)
         and _match(term.name, pattern_term.name)
     )
+
+
+def named_term(term, name=""):
+    if term.name:
+        raise Exception("Term already has a name")
+
+    return Term(term.data, term.tag, name=name)
+
+
+def patch_tag(term, tag):
+    return (
+        term
+        if tag is None
+        else Term(data="x", tag=tag, name=term.name if term else None)
+    )

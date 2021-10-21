@@ -29,7 +29,9 @@ def _collapses(panel):
 
 def _components(panel):
     if _collapses(panel):
-        return panel.child_components
+        return [
+            x.typ for x in panel.child_components
+        ]  # HACK: turn named components into types
     else:
         return [panel]
 
@@ -39,8 +41,7 @@ def _panel(divClassName, panel):
         return []
 
     components = _components(panel)
-    panel_wraps_children = bool(panel.wrapped_components)
-    if not components and not panel_wraps_children:
+    if not components and not panel.wraps_children:
         return []
 
     collapses = _collapses(panel)
@@ -50,7 +51,7 @@ def _panel(divClassName, panel):
     if collapses:
         result.extend([f'{" " * indent}<div className="{divClassName}">'])
         indent += 2
-        if panel_wraps_children:
+        if panel.wraps_children:
             result.extend([" " * indent + r"{props.children}"])
 
     for component in components:
@@ -72,7 +73,7 @@ def _panel(divClassName, panel):
 
 def get_context(view):
     _ = lambda: None
-    _.wraps_children = bool(view.wrapped_components)
+    _.wraps_children = view.wraps_children
     _.panels = _panels(view)
     _.has_col = (
         view.top_panel or view.bottom_panel or not (view.left_panel or view.right_panel)
@@ -132,9 +133,9 @@ def get_context(view):
 
             for x in view.child_components:
                 if x not in _.panels:
-                    result.append(f"  {x.react_tag}")
+                    result.append(f"  {x.typ.react_tag}")
 
-            if view.wrapped_child_components:
+            if view.wraps_children:
                 result.append(r"  {props.children}")
 
             if view.left_panel or view.right_panel:

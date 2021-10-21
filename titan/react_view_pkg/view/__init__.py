@@ -1,8 +1,17 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import MemFun, create, create_forward, extend, kebab_to_camel, rule, u0
-from moonleap.verbs import has
+from moonleap import (
+    MemFun,
+    create,
+    create_forward,
+    extend,
+    kebab_to_camel,
+    named,
+    rule,
+    u0,
+)
+from moonleap.verbs import has, wraps
 
 from . import props, router_configs
 from .props import get_context
@@ -10,7 +19,7 @@ from .resources import View
 
 base_tags = [
     ("view", ["component", "react-view"]),
-    ("panel", ["component", "react-panel"]),
+    ("panel", ["component", "view", "react-panel"]),
 ]
 
 
@@ -22,6 +31,11 @@ def create_view(term, block):
         Path(__file__).parent / "templates", get_context, skip_render=props.skip_render
     )
     return view
+
+
+@rule("view", wraps, "children")
+def view_wraps_children(view, children):
+    view.wraps_children = True
 
 
 @create("panel")
@@ -38,10 +52,17 @@ def view_has_panel(view, panel):
     panel.name = view.name + panel.name
 
 
-@rule("panel", has, "component")
-def panel_has_component(panel, component):
-    if not component.module:
-        return create_forward(panel.parent_view.module, has, component)
+@rule("+view", wraps, "+component")
+def named_view_wraps_named_component(named_view, named_component):
+    named_view.typ.wraps_children = True
+
+
+@rule("panel", has, "+component")
+def panel_has_named_component(panel, named_component):
+    if not named_component.typ.module:
+        __import__("pudb").set_trace()
+        # can we remove parent_view altogether?
+        return create_forward(panel.parent_view.module, has, named_component.typ)
 
 
 @extend(View)

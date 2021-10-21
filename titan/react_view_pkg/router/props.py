@@ -2,6 +2,7 @@ import os
 
 import ramda as R
 from moonleap.utils.case import u0
+from titan.react_pkg.component.props import wrapped_components
 from titan.react_pkg.pkg.ml_get import ml_react_app
 from titan.react_view_pkg.router.resources import concat_router_configs
 
@@ -108,23 +109,23 @@ def _routed_components(modules):
 def _routes(routed_components):
     routes = []
 
-    def add(route):
-        tail_component = route[-1].component
-
-        wrapped_components = tail_component.wrapped_components
+    def add(route, wrapped_components):
         if not wrapped_components:
             routes.append(route)  # _move_url_values_up(route)
             return
 
         for wrapped_child in wrapped_components:
-            more_router_configs = wrapped_child.create_router_configs()
+            more_router_configs = wrapped_child.typ.create_router_configs()
             if more_router_configs:
-                add(concat_router_configs(route, more_router_configs))
+                add(
+                    concat_router_configs(route, more_router_configs),
+                    wrapped_child.wrapped_components,
+                )
 
     for routed_component in routed_components:
-        route = routed_component.create_router_configs()
+        route = routed_component.typ.create_router_configs()
         if route:
-            add(route)
+            add(route, routed_component.wrapped_components)
 
     return routes
 
@@ -138,7 +139,7 @@ def _components_used_in_router(routes):
             component = queue.pop()
             if component not in result:
                 result.append(component)
-            queue.extend(component.wrapped_components)
+            # queue.extend(component.wrapped_components)
 
     for route in routes:
         for router_config in route:

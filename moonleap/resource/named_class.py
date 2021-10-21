@@ -15,12 +15,12 @@ def constructor(self, term: Term, block: Block):
     self.typ = None
 
 
-def named(klass):
+def named(klass, base_klass=NamedResource):
     named_klass_name = f"Named{klass.__name__}"
     result = _lut.get(named_klass_name)
 
     if not result:
-        result = type(named_klass_name, (NamedResource,), {"__init__": constructor})
+        result = type(named_klass_name, (base_klass,), {"__init__": constructor})
         _lut[named_klass_name] = result
 
     return result

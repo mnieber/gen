@@ -1,6 +1,6 @@
 from moonleap.builder.install import get_symbols
 from moonleap.builder.rule import rule as rule_decorator
-from moonleap.parser.term import match_term_to_pattern
+from moonleap.parser.term import match_term_to_pattern, patch_tag
 from moonleap.resource.rel import fuzzy_match
 
 
@@ -10,6 +10,9 @@ class Scope:
         self.create_rule_by_term = {}
         self.rules = []
         self.base_tags_by_tag = {}
+
+    def __str__(self):
+        return f"Scope: {self.name}"
 
     def add_rules(self, module):
         for f in get_symbols(module):
@@ -32,13 +35,15 @@ class Scope:
             self.register_base_tags(tag, base_tags)
 
     def find_create_rule(self, subj_term):
+        subj_base_tags = self.get_base_tags(subj_term)
         result = None
-        for term, rule in self.create_rule_by_term.items():
-            if not match_term_to_pattern(subj_term, term):
-                continue
 
-            if not result or term.data != "x":
-                result = rule
+        for subj_base_tag in [None, *(subj_base_tags or [])]:
+            patched_subj_term = patch_tag(subj_term, subj_base_tag)
+            for term, rule in self.create_rule_by_term.items():
+                if match_term_to_pattern(patched_subj_term, term):
+                    if not result or term.data != "x":
+                        result = rule
 
         return result
 

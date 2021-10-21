@@ -23,7 +23,7 @@ def reduce_router_configs(router_configs):
             # The last router config always corresponds to the child component itself.
             # Any preceeding router configs supply dependencies
             # (e.g. state providers, load effects, etc)
-            supporting_router_configs = child_component.create_router_configs()[:-1]
+            supporting_router_configs = child_component.typ.create_router_configs()[:-1]
             if not supporting_router_configs:
                 continue
 

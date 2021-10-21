@@ -20,8 +20,7 @@ def create_item(term, block):
 
 @create("x+item")
 def create_named_item(term, block):
-    named_class = named(Item)
-    return named_class(term, block)
+    return named(Item)(term, block)
 
 
 @rule("item")

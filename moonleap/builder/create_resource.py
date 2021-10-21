@@ -2,6 +2,10 @@ import ramda as R
 from moonleap.resource import Resource, ResourceMetaData
 
 
+def _create_generic_resource():
+    return Resource()
+
+
 def _get_base_tags(term, block):
     result = []
 
@@ -37,7 +41,7 @@ def create_resource_and_add_to_block(term, block):
                 term, creator_block, _get_base_tags(term, creator_block)
             )
 
-    resource = resource or Resource()
+    resource = resource or _create_generic_resource()
     creator_block.add_resource_for_term(resource, term, True)
     if block is not creator_block:
         block.add_resource_for_term(resource, term, False)
