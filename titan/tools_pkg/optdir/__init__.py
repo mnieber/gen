@@ -22,7 +22,7 @@ def add_optpath(resource, opt_path):
 
 
 class StoreOptPaths:
-    opt_paths = P.tree("p-has", "opt-path")
+    opt_paths = P.tree("opt_paths")
 
 
 @extend(OptDir)

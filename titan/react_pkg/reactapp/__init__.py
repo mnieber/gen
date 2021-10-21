@@ -27,7 +27,7 @@ def add_react_app_config(resource, app_module_config):
 
 
 class StoreReactAppConfigs:
-    react_app_configs = P.tree("p-has", "react-app-config")
+    react_app_configs = P.tree("react_app_configs")
 
 
 base_tags = [("react-app", ["tool"])]

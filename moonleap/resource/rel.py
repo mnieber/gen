@@ -52,7 +52,7 @@ def fuzzy_match(input_rel, pattern_rel, subj_base_tags, obj_base_tags):
                 and match_term_to_pattern(rel.obj, pattern_rel.obj)
                 and (
                     pattern_rel.subj is None
-                    or (rel.subj and match_term_to_pattern(rel.subj, pattern_rel.subj))
+                    or match_term_to_pattern(rel.subj, pattern_rel.subj)
                 )
             ):
                 return True

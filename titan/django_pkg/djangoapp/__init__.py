@@ -17,7 +17,7 @@ from .resources import DjangoApp, DjangoConfig
 
 
 class StoreDjangoConfigs:
-    django_configs = P.tree("p-has", "django_app-config")
+    django_configs = P.tree("django_configs")
 
 
 @register_add(DjangoConfig)

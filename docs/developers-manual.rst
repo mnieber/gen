@@ -464,12 +464,12 @@ The example
         service = P.parent(Service, has)  # [2]
         store = P.child(has, "store")  # [3]
         components = P.children(has, "component")  # [4]
-        configs = P.tree(has, "module-config")  # [5]
+        module_configs = P.tree("module_configs")  # [5]
         merged_config = Prop(lambda self: self.configs.merged)  # [6]
 
     @extend(Component)
     class ExtendComponent:
-        configs = P.tree(has, "module-config")
+        module_configs = P.tree("module_configs")
 
 Notes
 -----

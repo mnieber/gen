@@ -22,7 +22,7 @@ def add_layerconfig(resource, layer_config):
 
 
 class StoreLayerConfigs:
-    dodo_layer_configs = P.tree("p-has", "layer-config")
+    dodo_layer_configs = P.tree("dodo_layer_configs")
 
 
 @create("layer")

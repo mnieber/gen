@@ -29,8 +29,7 @@ def create_state(term, block):
 @rule("module", has, "state")
 def module_has_state(module, state):
     react_app = ml_react_app(module)
-    if react_app_configs.config not in react_app.react_app_configs.children:
-        add(react_app, react_app_configs.config)
+    add(react_app, react_app_configs.config)
 
 
 @extend(Module)

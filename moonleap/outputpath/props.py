@@ -1,34 +1,25 @@
 from pathlib import Path
 
 import ramda as R
-from moonleap.parser.term import maybe_term_to_term
 from moonleap.resource.prop import Prop
-from moonleap.resource.rel import Rel
-from moonleap.resource.slctrs import RelSelector
 
 from .resources import OutputPath
 
 
-def output_path(verb, term):
-    rel = Rel(verb=verb, obj=maybe_term_to_term(term))
-    slctr = RelSelector(rel)
+def output_path():
+    def get(self):
+        elements = self.output_paths.elements
+        return None if not elements else elements[0].location
 
-    def get_child(self):
-        children = slctr.select_from(self)
-        if len(children) > 1:
-            raise Exception(f"More than 1 child, verb={verb}, term={term}")
-
-        return None if not children else children[0].location
-
-    def set_child(self, output_path):
-        children = slctr.select_from(self)
-        if len(children) > 0:
-            raise Exception("Already has a child")
+    def set(self, output_path):
+        elements = self.output_paths.elements
+        if len(elements) > 0:
+            raise Exception(f"Output path was already set")
 
         child = OutputPath(output_path)
-        self.add_relation(rel, child)
+        elements.append(child)
 
-    return Prop(get_value=get_child, set_value=set_child)
+    return Prop(get_value=get, set_value=set)
 
 
 def merged_output_path():

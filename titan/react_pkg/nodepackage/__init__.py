@@ -27,7 +27,7 @@ base_tags = [("node-package", ["tool"])]
 
 
 class StoreNodePackageConfigs:
-    node_package_configs = P.tree("p-has", "node-package-config")
+    node_package_configs = P.tree("node_package_configs")
 
 
 @register_add(NodePackageConfig)

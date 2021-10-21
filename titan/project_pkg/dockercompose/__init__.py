@@ -16,7 +16,7 @@ from .resources import DockerCompose, DockerComposeConfig  # noqa
 
 
 class StoreDockerComposeConfigs:
-    docker_compose_configs = P.tree("p-has", "docker-compose-config")
+    docker_compose_configs = P.tree("docker_compose_configs")
 
 
 @register_add(DockerComposeConfig)

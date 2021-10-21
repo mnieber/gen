@@ -3,11 +3,11 @@ from dataclasses import dataclass
 
 from moonleap.builder.scope import get_base_tags
 from moonleap.parser.term import maybe_term_to_term, word_to_term
+from moonleap.resource.memfield import MemField
 from moonleap.resource.prop import Prop
 from moonleap.resource.rel import Rel, fuzzy_match
 from moonleap.resource.slctrs import RelSelector
-from moonleap.utils.inflect import singular
-from moonleap.utils.queue import Queue
+from moonleap.resource.tree import Tree
 
 
 @dataclass
@@ -92,41 +92,8 @@ def parents(parent_term_str, verb):
     return Prop(get_value=get_parent)
 
 
-def tree(verb, term):
-    children_prop = children(verb, term)
-    children_prop_rel = Rel(verb=verb, obj=maybe_term_to_term(term))
-    sources_term = singular(term) + "-sources"
-    sources_prop = children(verb, sources_term)
-    sources_prop_rel = Rel(verb=verb, obj=maybe_term_to_term(sources_term))
-
-    def get_value(parent):
-        class Inner:
-            @property
-            def merged(self):
-                result = []
-                queue = Queue(lambda x: x, [parent])
-                for source in queue:
-                    result.extend(children_prop.get_value(source))
-                    queue.extend(sources_prop.get_value(source))
-                return result
-
-            @property
-            def children(self):
-                return children_prop.get_value(parent)
-
-            @property
-            def sources(self):
-                return sources_prop.get_value(parent)
-
-            def add(self, child):
-                parent.add_relation(children_prop_rel, child)
-
-            def add_source(self, source):
-                parent.add_relation(sources_prop_rel, source)
-
-        return Inner()
-
-    return Prop(get_value)
+def tree(name):
+    return MemField(lambda: Tree(name))
 
 
 def receives(prop_name):

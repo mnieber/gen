@@ -11,7 +11,7 @@ from .resources import Router, RouterConfig
 
 
 class StoreRouterConfigs:
-    router_configs = P.tree("p-has", "router-config")
+    router_configs = P.tree("router_configs")
 
 
 @register_add(RouterConfig)

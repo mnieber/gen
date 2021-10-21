@@ -26,7 +26,7 @@ def add_vs_code_project_config(resource, app_module_config):
 
 
 class StoreVsCodeProjectConfigs:
-    vs_code_project_configs = P.tree("p-has", "vs-code-project-config")
+    vs_code_project_configs = P.tree("vs_code_project_configs")
 
 
 @create("vscode-project")
