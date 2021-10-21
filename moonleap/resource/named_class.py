@@ -6,7 +6,11 @@ _lut = dict()
 
 
 class NamedResource(Resource):
-    pass
+    def __str__(self):
+        return f"Named {self.typ}"
+
+    def __repr__(self):
+        return f"Named {self.typ}"
 
 
 def constructor(self, term: Term, block: Block):

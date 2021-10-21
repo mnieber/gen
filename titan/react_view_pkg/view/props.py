@@ -27,9 +27,9 @@ def _collapses(panel):
     )
 
 
-def _components(panel):
-    if _collapses(panel):
-        return [x.typ for x in panel.child_components]
+def _named_components(panel):
+    if _collapses(panel.typ):
+        return [x for x in panel.typ.child_components]
     else:
         return [panel]
 
@@ -38,26 +38,26 @@ def _panel(divClassName, panel):
     if not panel:
         return []
 
-    components = _components(panel)
-    if not components and not panel.wraps_children:
+    named_components = _named_components(panel)
+    if not named_components and not panel.typ.wraps_children:
         return []
 
-    collapses = _collapses(panel)
+    collapses = _collapses(panel.typ)
     indent = 2
     result = []
 
     if collapses:
         result.extend([f'{" " * indent}<div className="{divClassName}">'])
         indent += 2
-        if panel.wraps_children:
+        if panel.typ.wraps_children:
             result.extend([" " * indent + r"{props.children}"])
 
-    for component in components:
+    for named_component in named_components:
         result.extend(
             [
                 " " * indent + '<div className="Card">',
-                " " * (indent + 2) + f"<h2>{component.get_title()}</h2>",
-                " " * (indent + 2) + component.react_tag,
+                " " * (indent + 2) + f"<h2>{named_component.typ.get_title()}</h2>",
+                " " * (indent + 2) + named_component.typ.react_tag,
                 " " * indent + "</div>",
             ]
         )
@@ -71,6 +71,7 @@ def _panel(divClassName, panel):
 
 def get_context(view):
     _ = lambda: None
+    _.view = view
     _.wraps_children = view.wraps_children
     _.panels = _panels(view)
     _.has_col = (
@@ -129,9 +130,9 @@ def get_context(view):
             result.extend(_panel(view.name + "__middlePanel", view.middle_panel))
             result.extend(_panel(view.name + "__rightPanel", view.right_panel))
 
-            for x in [x.typ for x in view.child_components]:
-                if x not in _.panels:
-                    result.append(f"  {x.react_tag}")
+            for named_component in view.child_components:
+                if named_component not in _.panels:
+                    result.append(f"  {named_component.typ.react_tag}")
 
             if view.wraps_children and not [
                 x for x in view.child_components if x.typ.wraps_children
@@ -151,10 +152,10 @@ def get_context(view):
         def view_imports(self):
             result = []
             for panel in _.panels:
-                for component in _components(panel):
+                for named_component in _named_components(panel):
                     result.append(
-                        f"import {{ {u0(component.name)} }} from "
-                        + f"'{component.module.module_path}/components';"
+                        f"import {{ {u0(named_component.typ.name)} }} from "
+                        + f"'{named_component.typ.module.module_path}/components';"
                     )
             return "\n".join(result)
 

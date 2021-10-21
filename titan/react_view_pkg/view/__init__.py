@@ -53,8 +53,8 @@ class ExtendView:
     create_router_configs = MemFun(router_configs.create_router_configs)
     # can we remove parent_view altogether?
     parent_view = P.parent("view", has)
-    left_panel = P.child(has, "left:panel")
-    right_panel = P.child(has, "right:panel")
-    top_panel = P.child(has, "top:panel")
-    bottom_panel = P.child(has, "bottom:panel")
-    middle_panel = P.child(has, "middle:panel")
+    left_panel = P.child(has, "+left:panel")
+    right_panel = P.child(has, "+right:panel")
+    top_panel = P.child(has, "+top:panel")
+    bottom_panel = P.child(has, "+bottom:panel")
+    middle_panel = P.child(has, "+middle:panel")
