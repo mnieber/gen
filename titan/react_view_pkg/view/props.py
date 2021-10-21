@@ -29,9 +29,7 @@ def _collapses(panel):
 
 def _components(panel):
     if _collapses(panel):
-        return [
-            x.typ for x in panel.child_components
-        ]  # HACK: turn named components into types
+        return [x.typ for x in panel.child_components]
     else:
         return [panel]
 
@@ -80,7 +78,7 @@ def get_context(view):
     )
 
     class Sections:
-        def props_type(self):
+        def view_props_type(self):
             result = []
             if _.wraps_children:
                 result.append(f"type PropsT = React.PropsWithChildren<{{")
@@ -96,7 +94,7 @@ def get_context(view):
 
             return os.linesep.join(result)
 
-        def div(self):
+        def view_div(self):
             result = []
 
             # top section
@@ -131,11 +129,13 @@ def get_context(view):
             result.extend(_panel(view.name + "__middlePanel", view.middle_panel))
             result.extend(_panel(view.name + "__rightPanel", view.right_panel))
 
-            for x in view.child_components:
+            for x in [x.typ for x in view.child_components]:
                 if x not in _.panels:
-                    result.append(f"  {x.typ.react_tag}")
+                    result.append(f"  {x.react_tag}")
 
-            if view.wraps_children:
+            if view.wraps_children and not [
+                x for x in view.child_components if x.typ.wraps_children
+            ]:
                 result.append(r"  {props.children}")
 
             if view.left_panel or view.right_panel:

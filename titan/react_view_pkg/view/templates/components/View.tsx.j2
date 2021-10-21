@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite';
 
 import './YellowTulip.scss';
 
-{{ sections.props_type() }}
+{{ sections.view_props_type() }}
 
 type DefaultPropsT = {
 };
@@ -18,7 +18,7 @@ type DefaultPropsT = {
 export const YellowTulip: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
   const props = useDefaultProps<PropsT, DefaultPropsT>(p);
   return (
-{{ sections.div() }}
+{{ sections.view_div() }}
   );
 });
 {% end_magic_with %}
