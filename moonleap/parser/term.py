@@ -94,5 +94,5 @@ def patch_tag(term, tag):
     return (
         term
         if tag is None
-        else Term(data="x", tag=tag, name=term.name if term else None)
+        else Term(data="generic", tag=tag, name=term.name if term else None)
     )
