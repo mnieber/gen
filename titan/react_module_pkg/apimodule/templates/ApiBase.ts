@@ -5,7 +5,7 @@ import { flags } from 'src/app/flags';
 import { doQuery } from 'src/utils/graphqlClient';
 import { log } from 'src/utils/logging';
 import { erroredRS, loadingRS, updatedRS } from 'src/utils/RST';
-import { ObjT } from 'src/utils/types';
+import { isString, ObjT } from 'src/utils/types';
 
 export const defaultGetErrorMsg = (error: any) => {
   return pathOr(error, ['error', 'response', 'errors', 0, 'message'])(error);
@@ -49,7 +49,7 @@ export class ApiBase {
 
   doQuery(
     queryName: string,
-    query: string,
+    query: string | (() => any),
     vars: ObjT,
     getData: Function | undefined = undefined,
     getErrorMsg: (error: ObjT) => string = defaultGetErrorMsg
@@ -60,18 +60,16 @@ export class ApiBase {
 
     this._dispatchUpdating(queryName, vars);
 
-    const result =
-      query !== ''
-        ? doQuery(query, vars).then((response) => {
-            return {
-              response,
-              data: (getData ?? defaultGetData)(response),
-            };
-          })
-        : Promise.resolve({
-            response: undefined,
-            data: {},
-          });
+    const result = (
+      isString(query)
+        ? doQuery(query as string, vars)
+        : Promise.resolve((query as any)() ?? {})
+    ).then((response) => {
+      return {
+        response,
+        data: (getData ?? defaultGetData)(response),
+      };
+    });
 
     result
       .then(({ response, data }) => {
