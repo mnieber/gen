@@ -29,7 +29,7 @@ def _collapses(panel):
 
 def _named_components(panel):
     if _collapses(panel.typ):
-        return [x for x in panel.typ.child_components]
+        return list(panel.typ.child_components)
     else:
         return [panel]
 
@@ -151,8 +151,13 @@ def get_context(view):
 
         def view_imports(self):
             result = []
-            for panel in _.panels:
-                for named_component in _named_components(panel):
+            for panel in [view, *_.panels]:
+                named_components = (
+                    list(panel.child_components)
+                    if panel is view
+                    else _named_components(panel)
+                )
+                for named_component in named_components:
                     result.append(
                         f"import {{ {u0(named_component.typ.name)} }} from "
                         + f"'{named_component.typ.module.module_path}/components';"
