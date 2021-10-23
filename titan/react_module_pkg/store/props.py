@@ -1,7 +1,5 @@
 import os
 
-from moonleap import u0
-from moonleap.utils.codeblock import CodeBlock
 from moonleap.utils.inflect import plural
 from moonleap.utils.quote import quote
 from titan.api_pkg.pkg.ml_name import (
@@ -75,15 +73,19 @@ def get_context(store):
                 )
             return os.linesep.join(result)
 
-        def on_load_data(self):
-            root = CodeBlock(style="typescript", level=2)
+        def prop_names(self):
+            result = []
+            for item_list in store.item_lists_stored:
+                item_name = item_list.item_name
+                result.append(quote(plural(item_name)))
+            return ", ".join(result)
+
+        def queries_handled(self):
+            query_names = []
 
             for item_list in store.item_lists_stored:
                 queries = list(_.graphql_api.queries)
                 mutations = list(_.graphql_api.mutations)
-                item_name = item_list.item_name
-                items = plural(item_name)
-                query_names = []
 
                 for query in queries + mutations:
                     output_field_specs = [
@@ -97,42 +99,7 @@ def get_context(store):
                     if output_field_specs or query.name in _.handled_queries:
                         query_names.append(quote(query.name))
 
-                root.abc(
-                    r"const ignoredQueries = "
-                    + f"[{', '.join([quote(x) for x in _.ignored_queries])}];"
-                )
-                root.abc(r"if (ignoredQueries.includes(queryName)) return;")
-                root.abc("")
-
-                root.abc(f"const handledQueries = [{', '.join(query_names)}];")
-                root.abc(f"if (handledQueries.includes(queryName)) {{")
-                root.abc(f"  if (isUpdatedRS(rs)) {{")
-                root.abc(f"    if (!data.{items}) {{")
-                root.IxI(
-                    f"      console.warn",
-                    [
-                        f"`The query ${{queryName}} was handled in {store.name} ` +"
-                        + f"'but does not return any {items}.'"
-                    ],
-                    "",
-                )
-                root.abc(r"    }")
-                root.IxI(f"    this.add{u0(items)}", [f"values(data.{items})"], ";")
-                root.abc(r"  }")
-                root.abc(r"}")
-                root.abc(f"else if (data?.{items}) {{")
-                root.IxI(f"  this.add{u0(items)}", [f"values(data.{items})"], ";")
-                root.IxI(
-                    f"  console.warn",
-                    [
-                        f"`The query ${{queryName}} returned {items} but was not ` +"
-                        + f"'explicitly handled in {store.name}. Please add a handler.'",
-                    ],
-                    "",
-                )
-                root.abc(f"}}")
-                root.abc(f"rsMap.registerRS(rs, [resUrls.{item_name}ById]);")
-            return root.result
+            return ", ".join(query_names)
 
         def define_type(self, item):
             result = []

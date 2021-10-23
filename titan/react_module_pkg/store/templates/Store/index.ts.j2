@@ -2,7 +2,8 @@
 {% magic_with item.item_name as blueDaisy %}
 {% clean_up_js_imports %}
 import { action, observable, makeObservable } from 'mobx';
-import { forEach, values } from 'ramda';
+import { mustHandleQuery } from 'src/api/mustHandleQuery';
+import { values } from 'ramda';
 import { rsMap } from 'src/api/ResourceStateMap';
 import { listToItemById } from 'src/utils/ids';
 import { isUpdatedRS, RST } from 'src/utils/RST';
@@ -35,7 +36,23 @@ export class {{ res.name }} {
   }
 
   @action onLoadData(rs: RST, queryName: string, vars: ObjT, data: ObjT) {
-{{ sections.on_load_data() }}
+    if (
+      mustHandleQuery({
+        storeName: '{{ res.name }}',
+        queryName: queryName,
+        data,
+        propNames: [{{ sections.prop_names() }}],
+        handled: [{{ sections.queries_handled() }}],
+        ignored: [],
+      })
+    ) {
+{% for item_list in res.item_lists_stored %}
+      if (isUpdatedRS(rs)) {
+        this.addYellowTulips(values(data?.yellowTulips ?? []));
+      }
+      rsMap.registerRS(rs, [resUrls.yellowTulipById]);
+{% endfor %}
+    }
   }
 
 {% for item_list in res.item_lists_stored %}
