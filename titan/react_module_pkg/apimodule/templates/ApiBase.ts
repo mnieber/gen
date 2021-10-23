@@ -55,7 +55,7 @@ export class ApiBase {
     getErrorMsg: (error: ObjT) => string = defaultGetErrorMsg
   ) {
     if (flags.logQueries) {
-      log('Query started: ', queryName, vars);
+      log(`Query started: ${queryName}`, vars);
     }
 
     this._dispatchUpdating(queryName, vars);
@@ -74,7 +74,7 @@ export class ApiBase {
     result
       .then(({ response, data }) => {
         if (flags.logQueries) {
-          log('Query finished: ', queryName, vars, response);
+          log(`Query finished: ${queryName}`, vars, response);
         }
 
         if (data instanceof Error) {
@@ -85,7 +85,7 @@ export class ApiBase {
       })
       .catch((error) => {
         if (flags.logQueries) {
-          log('Query errored: ', queryName, vars, error);
+          log(`Query errored: {queryName}`, vars, error);
         }
 
         this._dispatchErrored(queryName, vars, getErrorMsg(error));
