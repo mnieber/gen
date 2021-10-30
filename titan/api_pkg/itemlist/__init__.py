@@ -16,7 +16,7 @@ def create_item_list(term, block):
 
 @create("x+item~list")
 def create_named_item(term, block):
-    return named(ItemList)(term, block)
+    return named(ItemList)()
 
 
 @rule("item~list")

@@ -13,7 +13,7 @@ class NamedResource(Resource):
         return f"Named {self.typ}"
 
 
-def constructor(self, term: Term, block: Block):
+def constructor(self):
     super(NamedResource, self).__init__()
     self.name = None
     self.typ = None
