@@ -13,9 +13,11 @@ from titan.react_view_pkg.pkg.create_component_router_config import (
 )
 
 
-def create_router_configs(self):
+def create_router_configs(self, named_component):
     url = get_component_base_url(self, self.name)
-    return [create_component_router_config(self, url=url)]
+    return [
+        create_component_router_config(self, named_component=named_component, url=url)
+    ]
 
 
 def get_related_field_name(field_spec, string_field_specs):

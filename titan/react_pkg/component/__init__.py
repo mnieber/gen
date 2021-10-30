@@ -1,12 +1,12 @@
 import moonleap.resource.props as P
 from moonleap import (
+    MemFun,
     Priorities,
     Prop,
     StoreOutputPaths,
     StoreTemplateDirs,
     create,
     create_forward,
-    empty_rule,
     extend,
     named,
     rule,
@@ -16,7 +16,7 @@ from moonleap.verbs import has, wraps
 from titan.react_pkg.nodepackage import StoreNodePackageConfigs
 from titan.react_pkg.pkg.ml_get import ml_react_app
 
-from . import props
+from . import props, router_configs
 from .resources import Component  # noqa
 
 rules = []
@@ -58,6 +58,7 @@ def create_named_component(term, block):
 class ExtendComponent(StoreNodePackageConfigs, StoreOutputPaths, StoreTemplateDirs):
     module = P.parent("react-module", has)
     child_components = P.children(has, "+component")
+    create_router_configs = MemFun(router_configs.create_router_configs)
 
 
 @extend(named(Component))

@@ -6,8 +6,8 @@ from titan.react_pkg.pkg.ts_var import ts_type, ts_type_import_path
 from titan.react_view_pkg.router import RouterConfig
 
 
-def create_router_configs(self):
-    return [RouterConfig(component=self, url="")]
+def create_router_configs(self, named_component):
+    return [RouterConfig(component=named_component, url="")]
 
 
 effect_args_template = """

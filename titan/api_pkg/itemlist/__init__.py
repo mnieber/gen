@@ -1,6 +1,13 @@
 import moonleap.resource.props as P
-from moonleap import create, create_forward, empty_rule, extend, kebab_to_camel, rule
-from moonleap.resource.named_class import named
+from moonleap import (
+    create,
+    create_forward,
+    empty_rule,
+    extend,
+    kebab_to_camel,
+    named,
+    rule,
+)
 from moonleap.verbs import uses
 from titan.api_pkg.item.resources import Item
 

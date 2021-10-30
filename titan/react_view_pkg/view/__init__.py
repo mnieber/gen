@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import MemFun, create, extend, kebab_to_camel, rule, u0
+from moonleap import MemFun, create, extend, kebab_to_camel, named, rule, u0
 from moonleap.verbs import has, wraps
 
 from . import props, router_configs
@@ -51,7 +51,6 @@ def named_view_wraps_named_component(named_view, named_component):
 @extend(View)
 class ExtendView:
     create_router_configs = MemFun(router_configs.create_router_configs)
-    # can we remove parent_view altogether?
     parent_view = P.parent("view", has)
     left_panel = P.child(has, "+left:panel")
     right_panel = P.child(has, "+right:panel")

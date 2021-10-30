@@ -40,4 +40,4 @@ def app_module_has_router(app_module, router):
 
 @extend(Component)
 class ExtendComponent(StoreRouterConfigs):
-    create_router_configs = MemFun(lambda x: [])
+    create_router_configs = MemFun(lambda *args, **kwargs: [])

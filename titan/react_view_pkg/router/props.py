@@ -1,162 +1,171 @@
 import os
+import typing as T
+from dataclasses import dataclass, field
 
 import ramda as R
-from moonleap.utils.case import u0
-from titan.react_pkg.component.props import wrapped_components
+from moonleap.utils.queue import Queue
 from titan.react_pkg.pkg.ml_get import ml_react_app
-from titan.react_view_pkg.router.resources import concat_router_configs
 
 
-def _group_by(get_key, xs):
-    acc = []
-    for x in xs:
-        key = get_key(x)
-        group = R.find(lambda x: x[0] == key, acc)
-        if not group:
-            group = [key, []]
-            acc.append(group)
-        group[1].append(x)
-    return acc
+@dataclass
+class Elm:
+    parent: T.Optional["Elm"] = None
+    children: T.List["Elm"] = field(default_factory=list)
+    dep_chains: T.List[T.Any] = field(default_factory=list, repr=False)
+    component: T.Any = None
+    config: T.Any = None
 
-
-def _move_url_values_up(route_configs):
-    urls = [x.url for x in route_configs if x.url]
-    for x in route_configs:
-        x.url = urls.pop(0) if urls else None
-    return route_configs
+    def add_child(self, child):
+        child.parent = self
+        self.children.append(child)
 
 
 def _append(x, indent, result):
     result.append(" " * (indent) + x)
 
 
-def _needs_switch(routes_by_first_component_and_url, level):
-    count_routes = 0
-    for _, group in routes_by_first_component_and_url:
-        router_config = group[0][level]
-        count_routes += 1 if router_config.url else 0
-    return count_routes > 1
+def render_elm(elm, result, level=0):
+    wraps = elm.config and elm.config.wraps
 
+    if elm.config and elm.config.url:
+        _append(f'<Route path="{elm.config.url}">', level * 2, result)
+        level += 1
 
-def _group_routes(level, routes):
-    # all the routes that share their first component should be grouped inside a
-    # route for that first component
-    def get_component_and_url(route):
-        router_config = route[level]
-        return (router_config.component, router_config.url)
+    for dep_chain in elm.dep_chains:
+        for dep in dep_chain:
+            _append(f"<{dep.component.typ.name} />", level * 2, result)
 
-    return _group_by(get_component_and_url, routes)
+    if elm.component:
+        postfix = "" if wraps else " /"
+        _append(f"<{elm.component.typ.name}{postfix}>", level * 2, result)
+        if wraps:
+            level += 1
 
+    for child_elm in elm.children:
+        render_elm(child_elm, result)
 
-def render_routes(routes, url, level, indent, result):
-    routes_by_first_component_and_url = _group_routes(level, routes)
-    needs_switch = _needs_switch(routes_by_first_component_and_url, level)
+    if elm.component:
+        if wraps:
+            level -= 1
+            _append(f"</{elm.component.typ.name}>", (level + 1) * 2, result)
 
-    if needs_switch:
-        _append("<Switch>", indent, result)
-        indent += 2
-
-    for _, group in routes_by_first_component_and_url:
-        router_config = group[0][level]
-        next_routes = [x for x in group if len(x) > level + 1]
-        url_memo = url
-        if router_config.url:
-            url += "/" + router_config.url
-            postfix = (
-                "/" if [route for route in next_routes if route[level + 1].url] else ""
-            )
-            _append(f'<Route path="{url}{postfix}">', indent, result)
-            indent += 2
-
-        if router_config.wraps:
-            _append(f"<{u0(router_config.component.name)}>", indent, result)
-            indent += 2
-        else:
-            _append(f"<{u0(router_config.component.name)}/>", indent, result)
-
-        render_routes(
-            next_routes,
-            url,
-            level + 1,
-            indent,
-            result,
-        )
-
-        if router_config.wraps:
-            indent -= 2
-            _append(f"</{u0(router_config.component.name)}>", indent, result)
-
-        if router_config.url:
-            url = url_memo
-            indent -= 2
-            _append("</Route>", indent, result)
-
-    if needs_switch:
-        indent -= 2
-        _append("</Switch>", indent, result)
-
-
-def _routed_components(modules):
-    result = []
-    for module in modules:
-        for component in module.routed_components:
-            if component not in result:
-                result.append(component)
+    if elm.config and elm.config.url:
+        _append("</Route>", level * 2, result)
+        level -= 1
 
     return result
 
 
-def _routes(routed_components):
-    routes = []
-
-    def add(route, wrapped_components):
-        if not wrapped_components:
-            routes.append(route)  # _move_url_values_up(route)
-            return
-
-        for wrapped_child in wrapped_components:
-            more_router_configs = wrapped_child.typ.create_router_configs()
-            if more_router_configs:
-                add(
-                    concat_router_configs(route, more_router_configs),
-                    wrapped_child.wrapped_components,
-                )
-
-    for routed_component in routed_components:
-        route = routed_component.typ.create_router_configs()
-        if route:
-            add(route, routed_component.wrapped_components)
-
-    return routes
+def _create_dep_chain(dep_router_configs):
+    result = []
+    for router_config in dep_router_configs:
+        result.append(router_config)
+        for side_effect in router_config.side_effects:
+            result.append(side_effect)
+    return result
 
 
-def _components_used_in_router(routes):
+def add_child_elm(elm, elm_component):
+    child_elm = Elm(component=elm_component)
+    elm.add_child(child_elm)
+
+    q = Queue(lambda x: x, [elm_component])
+    for embedded_component in q:
+        router_configs = embedded_component.typ.create_router_configs(
+            embedded_component
+        )
+        if embedded_component is elm_component:
+            child_elm.config = router_configs[-1] if router_configs else None
+        dep_route_configs = router_configs[:-1]
+        if dep_route_configs:
+            child_elm.dep_chains.append(_create_dep_chain(dep_route_configs))
+        q.extend(embedded_component.typ.child_components)
+
+    return child_elm
+
+
+def _get_root_elm(modules):
+    root_components = []
+    for module in modules:
+        root_components.extend(module.routed_components)
+
+    root = Elm(config=None)
+    q = Queue(lambda x: x, [root])
+    for elm in q:
+        components = (
+            root_components if elm is root else elm.component.wrapped_components
+        )
+        for wrapped_component in components:
+            child_elm = add_child_elm(elm, wrapped_component)
+            q.append(child_elm)
+
+    return root
+
+
+def _components_used_in_router(root):
     result = []
 
     def add(component):
-        queue = [component]
-        while queue:
-            component = queue.pop()
-            if component not in result:
-                result.append(component)
-            # queue.extend(component.wrapped_components)
+        if component not in result:
+            result.append(component.typ)
 
-    for route in routes:
-        for router_config in route:
-            add(router_config.component)
+    q = Queue(lambda x: x, [root])
+    for elm in q:
+        if elm is not root:
+            add(elm.component)
+            for dep_chain in elm.dep_chains:
+                for dep in dep_chain:
+                    add(dep.component)
+        q.extend(elm.children)
 
     return result
+
+
+def _equal_dep(lhs, rhs):
+    return lhs.component.typ is rhs.component.typ
+
+
+def _prune_dep_chains(root):
+    q = Queue(lambda x: x, [root])
+    for elm in q:
+        dep_chains = list(sorted(elm.dep_chains, key=lambda x: len(x)))
+        elm.dep_chains.clear()
+        for dep_chain in dep_chains:
+            pruned_chain = []
+            for dep in dep_chain:
+                skip = False
+                other_elm = elm
+                while other_elm:
+                    for other_dep_chain in other_elm.dep_chains:
+                        if other_dep_chain == dep_chain:
+                            continue
+                        if [x for x in other_dep_chain if _equal_dep(x, dep)]:
+                            skip = True
+                            break
+                    if skip:
+                        break
+                    else:
+                        # TODO if other_elm disallows finding dep in a parent
+                        # elm, then stop processing all further deps in this
+                        # dep chain.
+                        other_elm = other_elm.parent
+                if not skip:
+                    pruned_chain.append(dep)
+
+            if pruned_chain:
+                elm.dep_chains.append(pruned_chain)
+        q.extend(elm.children)
 
 
 def get_context(router):
     _ = lambda: None
     _.react_app = ml_react_app(router)
-    _.routed_components = _routed_components(_.react_app.modules)
-    _.routes = _routes(_.routed_components)
+    _.root = _get_root_elm(_.react_app.modules)
+    _prune_dep_chains(_.root)
 
     class Sections:
         def route_imports(self):
-            used_components = _components_used_in_router(_.routes)
+            used_components = _components_used_in_router(_.root)
 
             result = []
             imports_by_module_name = R.group_by(
@@ -171,7 +180,7 @@ def get_context(router):
 
         def routes(self):
             result = []
-            render_routes(_.routes, "", 0, 6, result)
+            render_elm(_.root, result)
             return os.linesep.join(result)
 
     return dict(sections=Sections())

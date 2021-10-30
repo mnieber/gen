@@ -1,10 +1,10 @@
 from pathlib import Path
 
-from moonleap import MemFun, create, extend, kebab_to_camel
+from moonleap import MemFun, create, extend, kebab_to_camel, named
 from moonleap.utils.case import u0
 
 from . import props
-from .resources import ItemView
+from .resources import ItemView, NamedItemView
 
 base_tags = [("item-view", ["component"])]
 
@@ -17,7 +17,12 @@ def create_item_view(term, block):
     return item_view
 
 
+@create("x+item-view")
+def create_named_item_view(term, block):
+    return NamedItemView()
+
+
 @extend(ItemView)
 class ExtendItemView:
-    create_router_configs = MemFun(props.create_router_configs)
     get_chain = MemFun(props.get_chain)
+    create_router_configs = MemFun(props.create_router_configs)

@@ -19,10 +19,12 @@ def get_item_view_route_params(item_name):
     return [item_name + u0(param) for param in type_spec.query_item_by or []]
 
 
-def create_router_configs(self):
+def create_router_configs(self, named_component):
     result = create_router_configs_from_chain(self.get_chain() or [])
     url = get_component_base_url(self, self.item_name)
-    router_config = create_component_router_config(self, url=url)
+    router_config = create_component_router_config(
+        self, named_component=named_component, url=url
+    )
     result.append(router_config)
 
     return result

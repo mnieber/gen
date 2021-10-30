@@ -7,12 +7,14 @@ from titan.react_view_pkg.pkg.create_component_router_config import (
 )
 
 
-def create_router_configs(self):
+def create_router_configs(self, named_component):
     route_params = get_item_view_route_params(self.item.item_name)
     postfix = join(prefix="/:", infix="/:".join(route_params))
     url = f"{plural(self.item.item_name)}{postfix}"
 
-    return [create_component_router_config(self, url="")]
+    return [
+        create_component_router_config(self, named_component=named_component, url="")
+    ]
 
 
 def _query(item):

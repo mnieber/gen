@@ -11,10 +11,12 @@ from titan.react_view_pkg.pkg.create_router_configs_from_chain import (
 )
 
 
-def create_router_configs(self):
+def create_router_configs(self, named_component):
     result = create_router_configs_from_chain(self.get_chain() or [])
     url = get_component_base_url(self, plural(self.item_name))
-    router_config = create_component_router_config(self, url=url)
+    router_config = create_component_router_config(
+        self, named_component=named_component, url=url
+    )
     result.append(router_config)
 
     return result

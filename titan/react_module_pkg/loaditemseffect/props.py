@@ -3,8 +3,10 @@ from titan.react_view_pkg.pkg.create_component_router_config import (
 )
 
 
-def create_router_configs(self):
-    return [create_component_router_config(self, url="")]
+def create_router_configs(self, named_component):
+    return [
+        create_component_router_config(self, named_component=named_component, url="")
+    ]
 
 
 def _query(item_list):

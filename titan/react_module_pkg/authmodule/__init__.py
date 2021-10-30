@@ -6,7 +6,8 @@ from moonleap.verbs import has, shows
 from titan.react_module_pkg.store import Store
 from titan.react_pkg.reactapp import ReactApp
 from titan.react_view_pkg.router_and_module import RouteTable
-from titan.react_view_pkg.view import View
+
+from .resources import AuthSwitchView
 
 
 @rule("react-app", has, "auth:module")
@@ -30,7 +31,7 @@ def create_auth_store(term, block):
 
 @create("auth-switch:view")
 def create_auth_switch(term, block):
-    view = View(name="AuthSwitch")
+    view = AuthSwitchView(name="AuthSwitch")
     view.add_template_dir(Path(__file__).parent / "templates_auth_switch")
     return view
 

@@ -25,12 +25,15 @@ from titan.react_view_pkg.pkg.create_component_router_config import (
 )
 
 
-def create_router_configs(self):
+def create_router_configs(self, named_component):
     result = []
 
     if self.state:
         router_config = create_component_router_config(
-            self, wraps=True, url=get_component_base_url(self, "")
+            self,
+            named_component=named_component,
+            wraps=True,
+            url=get_component_base_url(self, ""),
         )
         result.append(router_config)
 
