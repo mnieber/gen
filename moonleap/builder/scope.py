@@ -38,13 +38,26 @@ class Scope:
     def find_create_rule(self, subj_term):
         subj_base_tags = self.get_base_tags(subj_term)
         result = None
+        result_term = None
+        result_term_base_tags = []
 
         for subj_base_tag in [None, *(subj_base_tags or [])]:
             patched_subj_term = patch_tag(subj_term, subj_base_tag)
             for term, rule in self.create_rule_by_term.items():
                 if match_term_to_pattern(patched_subj_term, term):
-                    if not result or term.data != "x":
+                    if result_term and term.tag in result_term_base_tags:
+                        continue
+
+                    term_base_tags = self.get_base_tags(term, include_self=False)
+
+                    if (
+                        not result_term
+                        or (result_term.data == "x" and term.data != "x")
+                        or (result_term.tag in term_base_tags)
+                    ):
                         result = rule
+                        result_term = term
+                        result_term_base_tags = term_base_tags
 
         return result
 
@@ -63,7 +76,7 @@ class Scope:
     def register_base_tags(self, tag, base_tags):
         self.base_tags_by_tag.setdefault(tag, []).extend(base_tags)
 
-    def get_base_tags(self, term):
+    def get_base_tags(self, term, include_self=True):
         result = []
         q = Queue(lambda x: x, [term.tag])
         for tag in q:
@@ -71,6 +84,8 @@ class Scope:
             tags = self.base_tags_by_tag.get(tag, [])
             q.extend(tags)
 
+        if not include_self:
+            result.remove(term.tag)
         return result
 
 
