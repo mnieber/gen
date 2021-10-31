@@ -1,4 +1,6 @@
+from moonleap import u0
 from moonleap.utils.inflect import plural
+from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
 from titan.api_pkg.typeregistry import TypeRegistry
 from titan.react_pkg.component.resources import get_component_base_url
 from titan.react_pkg.pkg.get_chain import get_chain_to
@@ -9,6 +11,11 @@ from titan.react_view_pkg.pkg.create_component_router_config import (
 from titan.react_view_pkg.pkg.create_router_configs_from_chain import (
     create_router_configs_from_chain,
 )
+
+
+def get_list_view_route_params(item_name):
+    type_spec = ml_type_spec_from_item_name(item_name)
+    return [item_name + u0(param) for param in type_spec.query_items_by or []]
 
 
 def create_router_configs(self, named_component):

@@ -1,17 +1,27 @@
-{% magic_with res.item_list.item_name as yellowTulip %}
+{% clean_up_js_imports %}
 import React from 'react';
-import { EffectWithoutArgs } from 'src/utils/components';
+import { Effect, EffectWithoutArgs } from 'src/utils/components';
 {{ sections.import_query() }}
+{% end_clean_up_js_imports %}
+
+{% if _.route_params %}
+{{ sections.effect_args() }}
+{% endif %}
 
 type PropsT = {};
 
-export const LoadYellowTulipsEffect: React.FC<PropsT> = (p: PropsT) => {
+export const {{ res.name }}: React.FC<PropsT> = (p: PropsT) => {
   return (
+{% if _.route_params %}
+    <Effect
+      {{ sections.effect() }}
+    />
+{% else %}
     <EffectWithoutArgs
       f={() => {
-{{ sections.run_query() }}
+        {{ sections.effect_without_args() }}
       }}
     />
+{% endif %}
   );
 };
-{% end_magic_with %}

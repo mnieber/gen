@@ -1,4 +1,3 @@
-{% magic_with res.name as redRose %}
 {% clean_up_js_imports %}
 import React from 'react';
 import { Effect, EffectWithoutArgs } from 'src/utils/components';
@@ -11,7 +10,7 @@ import { Effect, EffectWithoutArgs } from 'src/utils/components';
 
 type PropsT = {};
 
-export const RedRose: React.FC<PropsT> = (p: PropsT) => {
+export const {{ res.name }}: React.FC<PropsT> = (p: PropsT) => {
   return (
 {% if _.route_params %}
     <Effect
@@ -26,4 +25,3 @@ export const RedRose: React.FC<PropsT> = (p: PropsT) => {
 {% endif %}
   );
 };
-{% end_magic_with %}
