@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from moonleap import Resource, Term
 from moonleap.resource.rel import Rel
 from moonleap.utils.inflect import plural
+from moonleap.utils.join import join
 from moonleap.verbs import uses
 from titan.api_pkg.item.resources import Item
 from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
@@ -11,21 +12,19 @@ from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
 
 def get_select_item_effect_term(item):
     type_spec = ml_type_spec_from_item_name(item.item_name)
-    name_postfix = "and-".join(type_spec.select_item_by)
-    return Term(f"select-{item.meta.term.data}-by-{name_postfix}", "select-item-effect")
+    name_postfix = join("-by-", "-and-".join(type_spec.select_item_by))
+    return Term(f"select-{item.meta.term.data}{name_postfix}", "select-item-effect")
 
 
 def get_load_item_effect_term(item):
     type_spec = ml_type_spec_from_item_name(item.item_name)
-    name_postfix = "-by-" + "and-".join(type_spec.query_item_by)
+    name_postfix = join("-by-", "-and-".join(type_spec.query_item_by))
     return Term(f"load-{item.meta.term.data}{name_postfix}", "load-item-effect")
 
 
 def get_load_items_effect_term(item):
     type_spec = ml_type_spec_from_item_name(item.item_name)
-    name_postfix = "and-".join(type_spec.query_items_by)
-    if name_postfix:
-        name_postfix = "-by-" + name_postfix
+    name_postfix = join("-by-", "-and-".join(type_spec.query_items_by))
     return Term(
         f"load-{plural(item.meta.term.data)}{name_postfix}", "load-items-effect"
     )

@@ -1,6 +1,7 @@
 import os
 
 from moonleap import u0
+from moonleap.utils.join import join
 
 
 def _query_py_classname(query):
@@ -38,11 +39,10 @@ def get_context(graphene_django):
             )
 
         def mutation_base_classes(self):
-            if not _.modules:
-                return ""
-            return (
-                ", ".join([f"{module.name}.schema.Mutation" for module in _.modules])
-                + ", "
+            return join(
+                "",
+                ", ".join([f"{module.name}.schema.Mutation" for module in _.modules]),
+                ", ",
             )
 
         def mutation_imports(self):

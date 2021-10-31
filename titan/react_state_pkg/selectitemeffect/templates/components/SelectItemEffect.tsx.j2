@@ -16,7 +16,7 @@ type PropsT = {};
 
 type DefaultPropsT = {
   yellowTulipsSelection: Selection;
-{% if sections.get_item_id() %}
+{% if _.route_params and sections.get_item_id() %}
   yellowTulips: [{{ _.item_ts_type }}];
 {% endif %}
 };
@@ -28,7 +28,9 @@ export const RedRose: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
     <Effect
       f={({{ sections.declare_params() }}: ArgsT) => {
           {{ sections.get_item_id() }};
-          props.yellowTulipsSelection.selectItem({ itemId: yellowTulipId});
+          if (yellowTulipId) {
+            props.yellowTulipsSelection.selectItem({ itemId: yellowTulipId});
+          }
       }}
       getArgs={(params) => {
         return {

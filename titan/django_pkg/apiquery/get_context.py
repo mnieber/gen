@@ -4,6 +4,7 @@ from moonleap import u0
 from moonleap.typespec.field_spec import input_is_used_for_output
 from moonleap.utils.case import sn
 from moonleap.utils.codeblock import CodeBlock
+from moonleap.utils.join import join
 from titan.django_pkg.graphene_django.utils import (
     get_django_model_imports,
     get_graphene_type_imports,
@@ -54,13 +55,14 @@ def get_context(query, api_module):
 
             for output_field_spec in _.output_field_specs:
                 endpoint_name = sn(output_field_spec.name)
-                endpoint_args = ", ".join(
-                    f"{sn(input_field_spec.short_name)}={input_field_spec.graphene_input_type}"
-                    for input_field_spec in _.input_field_specs
-                    if input_is_used_for_output(input_field_spec, output_field_spec)
+                endpoint_args = join(
+                    prefix=", ",
+                    infix=", ".join(
+                        f"{sn(input_field_spec.short_name)}={input_field_spec.graphene_input_type}"
+                        for input_field_spec in _.input_field_specs
+                        if input_is_used_for_output(input_field_spec, output_field_spec)
+                    ),
                 )
-                if endpoint_args:
-                    endpoint_args = ", " + endpoint_args
 
                 root.abc(
                     f"{endpoint_name} = "

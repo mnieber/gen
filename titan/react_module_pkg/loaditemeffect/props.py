@@ -1,4 +1,5 @@
 from moonleap.utils.inflect import plural
+from moonleap.utils.join import join
 from moonleap.utils.magic_replace import magic_replace
 from titan.react_state_pkg.itemview.props import get_item_view_route_params
 from titan.react_view_pkg.pkg.create_component_router_config import (
@@ -8,7 +9,7 @@ from titan.react_view_pkg.pkg.create_component_router_config import (
 
 def create_router_configs(self):
     route_params = get_item_view_route_params(self.item.item_name)
-    postfix = ("/:" + "/:".join(route_params)) if route_params else ""
+    postfix = join(prefix="/:", infix="/:".join(route_params))
     url = f"{plural(self.item.item_name)}{postfix}"
 
     return [create_component_router_config(self, url="")]

@@ -3,7 +3,6 @@ from moonleap.utils.inflect import plural
 from moonleap.utils.magic_replace import magic_replace
 from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
 from titan.react_pkg.pkg.ts_var import ts_type, ts_type_import_path
-from titan.react_state_pkg.itemview.props import get_item_view_route_params
 from titan.react_view_pkg.router import RouterConfig
 
 
@@ -20,12 +19,14 @@ type ArgsT = {
 
 def get_context(select_item_effect):
     _ = lambda: None
-    _.route_params = get_item_view_route_params(select_item_effect.item_list.item_name)
     _.item_name = select_item_effect.item_list.item_name
+    _.type_spec = ml_type_spec_from_item_name(_.item_name)
     _.items_name = plural(_.item_name)
     _.item_ts_type = ts_type(select_item_effect.item_list.item)
     _.item_ts_type_import_path = ts_type_import_path(select_item_effect.item_list.item)
-    _.type_spec = ml_type_spec_from_item_name(_.item_name)
+    _.route_params = [
+        _.item_name + u0(param) for param in _.type_spec.select_item_by or []
+    ]
 
     class Sections:
         def effect_args(self):
@@ -52,12 +53,17 @@ def get_context(select_item_effect):
             )
 
         def get_item_id(self):
-            search_function = "(x) => " + " && ".join(
-                [
-                    f"x.{param} === {_.item_name + u0(param)}"
-                    for param in _.type_spec.query_item_by or []
-                ]
+            search_function = "(x) => " + (
+                " && ".join(
+                    [
+                        f"x.{param} === {_.item_name + u0(param)}"
+                        for param in _.type_spec.select_item_by or []
+                    ]
+                )
+                if _.route_params
+                else "true"
             )
+
             return (
                 ""
                 if _.route_params == [f"{_.item_name}Id"]

@@ -4,6 +4,7 @@ import ramda as R
 from moonleap.typespec.field_spec import input_is_used_for_output
 from moonleap.utils.case import sn
 from moonleap.utils.codeblock import CodeBlock
+from moonleap.utils.join import join
 from titan.api_pkg.pkg.graphql_args import (
     declare_graphql_variable,
     invoke_graphql_variable,
@@ -46,7 +47,8 @@ def get_context_test(query, api_module):
             for output_field_spec in _.fk_output_field_specs:
                 fixture = sn(output_field_spec.name)
                 result.append(fixture)
-            return (", " if result else "") + ", ".join(R.uniq(result))
+
+            return join(prefix=", ", infix=", ".join(R.uniq(result)))
 
         def invoke_create_query_args(self):
             args = []
