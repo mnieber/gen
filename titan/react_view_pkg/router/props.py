@@ -3,6 +3,7 @@ import typing as T
 from dataclasses import dataclass, field
 
 import ramda as R
+from moonleap.utils.join import join
 from moonleap.utils.queue import Queue
 from titan.react_pkg.pkg.ml_get import ml_react_app
 
@@ -24,11 +25,14 @@ def _append(x, indent, result):
     result.append(" " * (indent) + x)
 
 
-def render_elm(elm, result, level=0):
+def render_elm(elm, result, level=0, url=""):
     wraps = elm.config and elm.config.wraps
+    url_postfix = get_elm_url_postfix(elm)
 
-    if elm.config and elm.config.url:
-        _append(f'<Route path="{elm.config.url}">', level * 2, result)
+    if url_postfix:
+        url += f"/{url_postfix}"
+        exact = "exact={true} " if not elm.children else ""
+        _append(f'<Route {exact}path="{url}">', level * 2, result)
         level += 1
 
     for dep_chain in elm.dep_chains:
@@ -36,13 +40,13 @@ def render_elm(elm, result, level=0):
             _append(f"<{dep.component.typ.name} />", level * 2, result)
 
     if elm.component:
-        postfix = "" if wraps else " /"
-        _append(f"<{elm.component.typ.name}{postfix}>", level * 2, result)
+        component_postfix = "" if wraps else " /"
+        _append(f"<{elm.component.typ.name}{component_postfix}>", level * 2, result)
         if wraps:
             level += 1
 
     for child_elm in elm.children:
-        render_elm(child_elm, result)
+        render_elm(child_elm, result, level + 1, url)
 
     if elm.component:
         if wraps:
@@ -54,6 +58,19 @@ def render_elm(elm, result, level=0):
         level -= 1
 
     return result
+
+
+def get_elm_url_postfix(elm):
+    if not elm.config:
+        return ""
+
+    params = elm.config.params
+    for dep_chain in elm.dep_chains:
+        for dep in dep_chain:
+            for param in [f":{x}" for x in dep.params]:
+                if param not in params:
+                    params.append(param)
+    return elm.config.url + join("/", "/".join(params))
 
 
 def _create_dep_chain(dep_router_configs):

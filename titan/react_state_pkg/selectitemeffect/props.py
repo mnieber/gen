@@ -6,8 +6,21 @@ from titan.react_pkg.pkg.ts_var import ts_type, ts_type_import_path
 from titan.react_view_pkg.router import RouterConfig
 
 
+def get_select_item_effect_route_params(select_item_effect):
+    item_name = select_item_effect.item_list.item_name
+    type_spec = ml_type_spec_from_item_name(item_name)
+    params = [item_name + u0(param) for param in type_spec.select_item_by or []]
+    return params
+
+
 def create_router_configs(self, named_component):
-    return [RouterConfig(component=named_component, url="")]
+    return [
+        RouterConfig(
+            component=named_component,
+            url="",
+            params=get_select_item_effect_route_params(named_component.typ),
+        )
+    ]
 
 
 effect_args_template = """
