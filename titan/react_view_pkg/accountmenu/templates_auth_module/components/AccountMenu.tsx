@@ -4,7 +4,7 @@ import React from 'react';
 import { signOut } from 'src/api/authApi';
 import { useStore } from 'src/app/components';
 import { anonymous } from 'src/auth/AuthStore';
-import { RouterLink } from 'src/utils/components';
+import { RouterLink } from 'src/routes/components';
 import UIkit from 'uikit';
 import './AccountMenu.scss';
 

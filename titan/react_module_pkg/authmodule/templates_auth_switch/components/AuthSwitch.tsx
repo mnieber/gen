@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { routes } from 'src/app/routeTable';
 import { ActivateAccountPage } from 'src/auth/components/ActivateAccountPage';
 import { AuthStateProvider } from 'src/auth/components/AuthStateProvider';
 import { LoadUserIdEffect } from 'src/auth/components/LoadUserIdEffect';
@@ -8,6 +7,7 @@ import { RequestPasswordResetPage } from 'src/auth/components/RequestPasswordRes
 import { ResetPasswordPage } from 'src/auth/components/ResetPasswordPage';
 import { SignInPage } from 'src/auth/components/SignInPage';
 import { SignUpPage } from 'src/auth/components/SignUpPage';
+import { routes } from 'src/routes/routes';
 
 export const AuthSwitch: React.FC = () => {
   return (
@@ -20,13 +20,13 @@ export const AuthSwitch: React.FC = () => {
         <Route exact path={routes.signUp()}>
           <SignUpPage />
         </Route>
-        <Route exact path={routes.activateAccount(':activationToken')}>
+        <Route exact path={routes.activateAccount()}>
           <ActivateAccountPage />
         </Route>
         <Route exact path={routes.requestPasswordReset()}>
           <RequestPasswordResetPage />
         </Route>
-        <Route exact path={routes.resetPassword(':passwordResetToken')}>
+        <Route exact path={routes.resetPassword()}>
           <ResetPasswordPage />
         </Route>
       </Switch>

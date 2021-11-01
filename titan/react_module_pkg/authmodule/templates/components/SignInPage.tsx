@@ -5,7 +5,7 @@ import { States } from 'src/api/authApi/states';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { SignInForm } from 'src/auth/components/SignInForm';
 import { useAuthStateContext } from 'src/auth/components/useAuthStateContext';
-import { RouterLink } from 'src/utils/components';
+import { RouterLink } from 'src/routes/components';
 import { getNextUrl, useNextUrl } from 'src/utils/useNextUrl';
 
 export const SignInPage: React.FC = observer(() => {

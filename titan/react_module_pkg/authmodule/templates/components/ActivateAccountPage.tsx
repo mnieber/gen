@@ -2,11 +2,11 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { activateAccount } from 'src/api/authApi';
 import { States } from 'src/api/authApi/states';
-import { routes } from 'src/app/routeTable';
 import { ActivateAccountForm } from 'src/auth/components/ActivateAccountForm';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { useAuthStateContext } from 'src/auth/components/useAuthStateContext';
-import { RouterLink } from 'src/utils/components';
+import { RouterLink } from 'src/routes/components';
+import { routes } from 'src/routes/routes';
 
 export const ActivateAccountPage: React.FC = observer(() => {
   const { errors, state } = useAuthStateContext(true);

@@ -6,7 +6,7 @@ import { States } from 'src/api/authApi/states';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { ResetPasswordForm } from 'src/auth/components/ResetPasswordForm';
 import { useAuthStateContext } from 'src/auth/components/useAuthStateContext';
-import { RouterLink } from 'src/utils/components';
+import { RouterLink } from 'src/routes/components';
 
 export const ResetPasswordPage: React.FC = observer(() => {
   const params = useParams();

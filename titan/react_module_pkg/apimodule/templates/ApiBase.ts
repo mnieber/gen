@@ -85,7 +85,7 @@ export class ApiBase {
       })
       .catch((error) => {
         if (flags.logQueries) {
-          log(`Query errored: {queryName}`, vars, error);
+          log(`Query errored: ${queryName}`, vars, error);
         }
 
         this._dispatchErrored(queryName, vars, getErrorMsg(error));

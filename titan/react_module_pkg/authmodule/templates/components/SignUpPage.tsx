@@ -6,7 +6,7 @@ import { termsVersion } from 'src/auth/AuthStore';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { SignUpForm } from 'src/auth/components/SignUpForm';
 import { useAuthStateContext } from 'src/auth/components/useAuthStateContext';
-import { RouterLink } from 'src/utils/components';
+import { RouterLink } from 'src/routes/components';
 
 export const SignUpPage: React.FC = observer(() => {
   const { errors, state } = useAuthStateContext(true);

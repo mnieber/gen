@@ -5,7 +5,7 @@ import { States } from 'src/api/authApi/states';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { RequestPasswordResetForm } from 'src/auth/components/RequestPasswordResetForm';
 import { useAuthStateContext } from 'src/auth/components/useAuthStateContext';
-import { RouterLink } from 'src/utils/components';
+import { RouterLink } from 'src/routes/components';
 
 export const RequestPasswordResetPage: React.FC = observer(() => {
   const { errors, state } = useAuthStateContext(true);
