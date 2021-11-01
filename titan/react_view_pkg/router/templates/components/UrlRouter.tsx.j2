@@ -1,9 +1,10 @@
 {% magic_with rc.component_name as redRose %}
 {% clean_up_js_imports %}
 import React from 'react';
-import { Router, Switch, Route } from 'react-router-dom';
+import { Router, Switch } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { createBrowserHistory } from 'history';
+import { Route } from 'src/routes/components';
 {{ sections.route_imports() }}
 {% end_clean_up_js_imports %}
 

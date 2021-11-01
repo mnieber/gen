@@ -1,6 +1,14 @@
 from titan.react_view_pkg import accountmenu
 
-from . import accountmenu, formsmodule, formview, router, router_and_module, view
+from . import (
+    accountmenu,
+    formsmodule,
+    formview,
+    router,
+    router_and_module,
+    routesmodule,
+    view,
+)
 
 modules = [
     accountmenu,
@@ -8,5 +16,6 @@ modules = [
     formview,
     router,
     router_and_module,
+    routesmodule,
     view,
 ]

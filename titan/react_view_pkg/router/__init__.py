@@ -1,23 +1,13 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import MemFun, add, create, extend, register_add, rule
+from moonleap import MemFun, add, create, create_forward, extend, rule
 from moonleap.verbs import has
 from titan.react_pkg.component import Component
 from titan.react_pkg.nodepackage import load_node_package_config
 
 from .props import get_context
-from .resources import Router, RouterConfig
-
-
-class StoreRouterConfigs:
-    router_configs = P.tree("router_configs")
-
-
-@register_add(RouterConfig)
-def add_router_config(resource, router_configs):
-    resource.router_configs.add(router_configs)
-
+from .resources import Router, RouterConfig  # noqa
 
 base_tags = [("router", ["component"])]
 
@@ -30,14 +20,15 @@ def create_router(term, block):
     return router
 
 
-@rule("app:module", has, "router")
-def app_module_has_router(app_module, router):
-    app_module.react_app.utils_module.use_packages(["useNextUrl", "useSearchParams"])
-    app_module.react_app.utils_module.add_template_dir(
-        Path(__file__).parent / "templates_utils"
-    )
+@rule("react-app", has, "router")
+def react_app_has_router(react_app, router):
+    react_app.utils_module.use_packages(["useNextUrl", "useSearchParams"])
+    return [
+        create_forward(react_app, has, "routes:module"),
+        create_forward("routes:module", has, router),
+    ]
 
 
 @extend(Component)
-class ExtendComponent(StoreRouterConfigs):
+class ExtendComponent:
     create_router_configs = MemFun(lambda *args, **kwargs: [])
