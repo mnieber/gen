@@ -21,7 +21,7 @@ export function createNavigateTo(
           ...getParamsFromItem(item),
         });
         if (newUrl !== loc) {
-          window.history.replaceState(null, '', newUrl);
+          window.history.pushState(null, '', newUrl);
         }
       }
     }
