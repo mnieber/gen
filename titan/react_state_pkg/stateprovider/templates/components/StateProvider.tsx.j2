@@ -1,4 +1,6 @@
 {% magic_with res.state.name as yellowTulip %}
+{% magic_with item.item_name as redRose %}
+{% magic_with field_name as blueDaisy %}
 {% clean_up_js_imports %}
 import * as React from 'react';
 import * as R from 'ramda';
@@ -6,7 +8,11 @@ import { reaction } from 'mobx';
 import { log } from 'src/utils/logging';
 import { flags } from 'src/app/flags';
 import { lookUp } from 'src/utils/ids';
-
+{% if _.selected_items %}
+import { useRouteMatch } from 'react-router-dom';
+import { createNavigateTo } from 'src/routes/createNavigateTo';
+{% endif %}
+{{ sections.import_item_types() }}
 {{ sections.default_prop_type_imports() }}
 
 import { YellowTulipState } from '{{ res.module.module_path }}/YellowTulipState';
@@ -21,9 +27,20 @@ type DefaultPropsT = { {{ sections.declare_default_input_props() }} };
 export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = (p: PropsT) => {
   const props = useDefaultProps<PropsT, DefaultPropsT>(p);
   const { {{ sections.input_stores() }} } = useStore();
+{% if _.selected_items %}
+  const renderedRoute = useRouteMatch();
+{% endif %}
 
   const createState = () => {
-    return new YellowTulipState({});
+    return new YellowTulipState({
+{% for item in _.selected_items %}
+      navigateToRedRose: createNavigateTo(renderedRoute, (redRose: RedRoseT) => ({
+{% for field_name in sections.field_names(item) %}
+        redRoseBlueDaisy: redRose.blueDaisy,
+{% endfor %}
+      })),
+{% endfor %}
+    });
   };
 
   const updateState = (state: YellowTulipState) => {
@@ -62,4 +79,6 @@ export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = (p: PropsT) =
     </CtrProvider>
   );
 };
+{% end_magic_with %}
+{% end_magic_with %}
 {% end_magic_with %}

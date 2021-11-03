@@ -1,5 +1,6 @@
 import os
 
+from moonleap import u0
 from moonleap.render.process_lines import process_lines
 from titan.react_state_pkg.behavior.props import Sections as BehaviourSections
 
@@ -26,11 +27,12 @@ class Sections(BehaviourSections):
                 106: r"        ctr.selection,",
                 107: r"        this.selectionParams",
                 108: r"      );",
-                109: r"    }",
-                110: r"  },",
-                111: r"} as SelectionCbs);",
+                109: f"      props.navigateTo{u0(self.res.item_name)}(ctr.highlight.item);",
+                110: r"    }",
+                111: r"  },",
+                112: r"} as SelectionCbs);",
             },
-            remove={(105, 108): "highlight" not in facet_names},
+            remove={(105, 109): "highlight" not in facet_names},
             indent=4,
         )
 

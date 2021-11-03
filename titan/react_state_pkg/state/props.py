@@ -5,6 +5,8 @@ import ramda as R
 from moonleap import u0
 from moonleap.utils.inflect import plural
 from titan.react_pkg.pkg.ml_get import ml_react_app
+from titan.react_pkg.pkg.ts_var import ts_type, ts_type_import_path
+from titan.react_state_pkg.stateprovider.props import get_items_selected_from_url
 
 
 def _find_module_that_provides_item_list(react_app, item_name):
@@ -48,68 +50,75 @@ def type_import_path(self, item_name):
     return None
 
 
-class Sections:
-    def __init__(self, res):
-        self.res = res
+def get_context(state):
+    _ = lambda: None
+    _.selected_items = get_items_selected_from_url(state.state_provider)
 
-    def constructor(self):
-        indent = "  "
-        result = []
+    class Sections:
+        def constructor(self):
+            indent = "  "
+            result = []
 
-        for item_name, bvrs in self.res.bvrs_by_item_name.items():
-            result += [f"{plural(item_name)} = {{"]
-            for bvr in bvrs:
-                result += [bvr.sections.constructor()]
-            result += [r"};"]
+            for item_name, bvrs in state.bvrs_by_item_name.items():
+                result += [f"{plural(item_name)} = {{"]
+                for bvr in bvrs:
+                    result += [bvr.sections.constructor()]
+                result += [r"};"]
 
-        return os.linesep.join([(indent + x) for x in result])
+            return os.linesep.join([(indent + x) for x in result])
 
-    def callbacks(self):
-        indent = "  "
-        result = []
+        def import_item_types(self):
+            result = []
+            for item in _.selected_items:
+                result.append(
+                    f"import {{ {ts_type(item)} }} from '{ts_type_import_path(item)}';"
+                )
+            return os.linesep.join(result)
 
-        for item_name, bvrs in self.res.bvrs_by_item_name.items():
-            redRoses = plural(item_name)
+        def callbacks(self):
+            indent = "  "
+            result = []
 
-            body = []
-            for bvr in bvrs:
-                body += [bvr.sections.callbacks(self.res.behaviors)]
+            for item_name, bvrs in state.bvrs_by_item_name.items():
+                redRoses = plural(item_name)
 
-            result += [f"_set{u0(redRoses)}Callbacks(props: PropsT) {{"]
+                body = []
+                for bvr in bvrs:
+                    body += [bvr.sections.callbacks(state.behaviors)]
 
-            if body:
-                result += [
-                    f"  const ctr = this.{redRoses};",
-                    #
-                    *body,
-                ]
+                result += [f"_set{u0(redRoses)}Callbacks(props: PropsT) {{"]
 
-            result += [r"}", ""]
+                if body:
+                    result += [
+                        f"  const ctr = this.{redRoses};",
+                        #
+                        *body,
+                    ]
 
-        return os.linesep.join([(indent + x) for x in result])
+                result += [r"}", ""]
 
-    def declare_policies(self, item_name):
-        indent = "    "
-        items = plural(item_name)
-        result = [
-            f"const Inputs_items = [Inputs, '{items}', this] as CMT;",
-            f"const Outputs_display = [Outputs, '{items}Display', this] as CMT;",  # noqa: E501
-        ]
+            return os.linesep.join([(indent + x) for x in result])
 
-        return os.linesep.join([(indent + x) for x in result])
-
-    def policies(self):
-        facet_names = [x.name for x in self.res.behaviors]
-        indent = "      "
-        result = []
-
-        if "filtering" not in facet_names:
-            result += [
-                r"Skandha.mapDataToFacet(Outputs_display, getm(Inputs_items)),",
+        def declare_policies(self, item_name):
+            indent = "    "
+            items = plural(item_name)
+            result = [
+                f"const Inputs_items = [Inputs, '{items}', this] as CMT;",
+                f"const Outputs_display = [Outputs, '{items}Display', this] as CMT;",  # noqa: E501
             ]
 
-        return os.linesep.join([(indent + x) for x in result])
+            return os.linesep.join([(indent + x) for x in result])
 
+        def policies(self):
+            facet_names = [x.name for x in state.behaviors]
+            indent = "      "
+            result = []
 
-def get_context(self):
-    return dict(sections=Sections(self))
+            if "filtering" not in facet_names:
+                result += [
+                    r"Skandha.mapDataToFacet(Outputs_display, getm(Inputs_items)),",
+                ]
+
+            return os.linesep.join([(indent + x) for x in result])
+
+    return dict(sections=Sections(), _=_)

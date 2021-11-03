@@ -1,8 +1,11 @@
 import os
 
+from moonleap import u0
 from moonleap.typespec.get_member_field_spec import get_member_field_spec
 from moonleap.utils.case import l0
 from moonleap.utils.inflect import plural
+from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
+from titan.api_pkg.typeregistry import TypeRegistry
 from titan.react_pkg.component.resources import get_component_base_url
 from titan.react_pkg.pkg.get_chain import (
     ExtractItemFromItem,
@@ -14,6 +17,7 @@ from titan.react_pkg.pkg.get_chain import (
     TakeItemListFromStore,
     get_chain_to,
 )
+from titan.react_pkg.pkg.ml_get import ml_graphql_api, ml_react_app
 from titan.react_pkg.pkg.ts_var import (
     ts_type,
     ts_type_import_path,
@@ -110,9 +114,24 @@ def _expression(chain):
     return result
 
 
+def get_items_selected_from_url(state_provider):
+    graphql_api = ml_graphql_api(ml_react_app(state_provider))
+    type_reg = TypeRegistry(graphql_api)
+    result = []
+    if state_provider.state:
+        for item_name, bvrs in state_provider.state.bvrs_by_item_name.items():
+            if [x for x in bvrs if x.name == "selection"]:
+                item = type_reg.get_item_by_name(item_name)
+                type_spec = ml_type_spec_from_item_name(item_name)
+                if type_spec.select_item_by:
+                    result.append(item)
+    return result
+
+
 def get_context(state_provider):
     _ = lambda: None
     _.state = state_provider.state
+    _.selected_items = get_items_selected_from_url(state_provider)
 
     _.chains = []
     for target in list(_.state.items_provided) + list(_.state.item_lists_provided):
@@ -145,6 +164,14 @@ def get_context(state_provider):
                 f"import {{ {ts_type(x)} }} from '{ts_type_import_path(x)}';"
                 for x in _.default_input_props
             ]
+            return os.linesep.join(result)
+
+        def import_item_types(self):
+            result = []
+            for item in _.selected_items:
+                result.append(
+                    f"import {{ {ts_type(item)} }} from '{ts_type_import_path(item)}';"
+                )
             return os.linesep.join(result)
 
         def get_state_input_values(self):
@@ -182,4 +209,7 @@ def get_context(state_provider):
                         result += bvr.sections.default_props(store)
             return result
 
-    return dict(sections=Sections())
+        def field_names(self, item):
+            return ml_type_spec_from_item_name(item.item_name).select_item_by
+
+    return dict(sections=Sections(), _=_)
