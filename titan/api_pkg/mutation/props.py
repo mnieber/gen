@@ -14,11 +14,25 @@ def _field_spec_from_item(self, item):
     )
 
 
+def _field_spec_from_deleted_item_list(self, item_list):
+    return FieldSpec(
+        name=item_list.item_name + "Ids",
+        required=True,
+        private=False,
+        field_type="idList",
+        field_type_attrs=dict(target=item_list.item_name),
+    )
+
+
 def _default_inputs_type_spec(self, name):
     return TypeSpec(
         type_name=name,
         field_specs=[
             *[_field_spec_from_item(self, item) for item in self.items_posted],
+            *[
+                _field_spec_from_deleted_item_list(self, item_list)
+                for item_list in self.item_lists_deleted
+            ],
         ],
     )
 

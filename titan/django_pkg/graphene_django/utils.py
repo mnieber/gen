@@ -14,7 +14,9 @@ def find_module_that_provides_item_list(django_app, item_name):
 def get_django_model_imports(django_app, type_specs):
     result = []
     for type_spec in type_specs:
-        for field_spec in type_spec.get_field_specs(["fk", "relatedSet", "form"]):
+        for field_spec in type_spec.get_field_specs(
+            ["fk", "relatedSet", "form", "idList"]
+        ):
             item_name = field_spec.target
             module = find_module_that_provides_item_list(django_app, item_name)
             result.append(f"from {module.name}.models import {u0(item_name)}")

@@ -15,6 +15,16 @@ def default_outputs_type_spec(self, name):
         )
         for named_item in self.named_items_returned
     ]
+    delete_items_field_specs = [
+        FieldSpec(
+            name=camel_join("deleted", deleted_item_list.item_name + "Ids"),
+            required=True,
+            private=False,
+            field_type="idList",
+            field_type_attrs=dict(target=deleted_item_list.item_name),
+        )
+        for deleted_item_list in self.item_lists_deleted
+    ]
     related_set_field_specs = [
         FieldSpec(
             name=camel_join(
@@ -31,6 +41,7 @@ def default_outputs_type_spec(self, name):
         type_name=name,
         field_specs=[
             *fk_field_specs,
+            *delete_items_field_specs,
             *related_set_field_specs,
             FieldSpec(
                 name="success",

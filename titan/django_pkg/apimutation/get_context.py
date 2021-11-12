@@ -43,7 +43,7 @@ def get_context(mutation, api_module):
             for field_spec in _.output_field_specs:
                 args = ""
                 result.append(
-                    f"{indent}{field_spec.name} = {field_spec.graphene_output_type(args)}"
+                    f"{indent}{sn(field_spec.name)} = {field_spec.graphene_output_type(args)}"
                 )
 
             return os.linesep.join(result)
@@ -69,7 +69,11 @@ def get_context(mutation, api_module):
 
             for item_posted in mutation.items_posted:
                 item_name = item_posted.item_name
-                prefix = f"{item_name}, created = " if _.fk_output_field_specs else ""
+                prefix = (
+                    f"{item_name}, created = "
+                    if [x for x in _.fk_output_field_specs if x.target == item_name]
+                    else ""
+                )
                 body.abc(f"{item_name}_id = {item_name}_form.pop('id')")
                 body.IxI(
                     f"{prefix}{u0(item_name)}.objects.update_or_create",
@@ -77,20 +81,21 @@ def get_context(mutation, api_module):
                     "",
                 )
 
-            for item_posted in mutation.items_deleted:
-                item_name = item_posted.item_name
+            deleted_ids_args = []
+            for item_list_deleted in mutation.item_lists_deleted:
+                item_name = item_list_deleted.item_name
                 body.IxI(
-                    f"{item_name} = {u0(item_name)}.objects.get",
-                    [f"{field_name}={field_name}" for field_name in field_names],
-                    "",
+                    f"{u0(item_name)}.objects.filter",
+                    [f"id__in={item_name}_ids"],
+                    ".delete()",
                 )
-                body.abc(f"{item_name}.delete()")
                 body.abc("")
+                deleted_ids_args += [f"deleted_{item_name}_ids={item_name}_ids"]
 
             fk_args = [f"{sn(x.name)}={sn(x.name)}" for x in _.fk_output_field_specs]
             body.IxI(
                 f"return {u0(mutation.name)}",
-                ["success=True", "errors={}"] + fk_args,
+                ["success=True", "errors={}"] + fk_args + deleted_ids_args,
                 "",
             )
             return root.result

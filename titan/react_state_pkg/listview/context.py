@@ -5,45 +5,48 @@ from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
 
 
 def get_context(list_view):
+    def _find_behavior(name):
+        return R.find(lambda x: x.name == name)(list_view.behaviors)
+
     _ = lambda: None
     _.type_spec = ml_type_spec_from_item_name(list_view.item_name)
+    _.selection_bvr = _find_behavior("selection")
+    _.deletion_bvr = _find_behavior("deletion")
+    _.highlight_bvr = _find_behavior("highlight")
 
     class Sections:
-        def _find_behavior(self, name):
-            return R.find(lambda x: x.name == name)(list_view.behaviors)
-
         def imports(self):
             result = []
-            selection_bvr = self._find_behavior("selection")
-            if selection_bvr:
+            if _.deletion_bvr:
+                result.append("import { Deletion } from 'skandha-facets/Deletion';")
+            if _.highlight_bvr:
+                result.append("import { Highlight } from 'skandha-facets/Highlight';")
+            if _.selection_bvr:
                 result.append("import { Selection } from 'skandha-facets/Selection';")
                 result.append(
                     "import { ClickToSelectItems } from 'skandha-facets/handlers';"
                 )
 
-            if self._find_behavior("highlight"):
-                result.append("import { Highlight } from 'skandha-facets/Highlight';")
-
             return os.linesep.join(result)
 
         def default_props(self):
             result = []
-            selection_bvr = self._find_behavior("selection")
-            if selection_bvr:
-                result.extend(
-                    [f"          {list_view.items_name}Selection: Selection,"]
-                )
-
-            if self._find_behavior("highlight"):
+            if _.deletion_bvr:
+                result.extend([f"          {list_view.items_name}Deletion: Deletion,"])
+            if _.highlight_bvr:
                 result.extend(
                     [f"          {list_view.items_name}Highlight: Highlight,"]
+                )
+            if _.selection_bvr:
+                result.extend(
+                    [f"          {list_view.items_name}Selection: Selection,"]
                 )
 
             return os.linesep.join(result)
 
         def classnames(self):
             result = []
-            if self._find_behavior("selection"):
+            if _.selection_bvr:
                 result.extend(
                     [
                         f"          '{list_view.name}Item--selected':",
@@ -51,7 +54,7 @@ def get_context(list_view):
                     ]
                 )
 
-            if self._find_behavior("highlight"):
+            if _.highlight_bvr:
                 result.extend(
                     [
                         f"          '{list_view.name}Item--highlighted':",
@@ -74,7 +77,7 @@ def get_context(list_view):
         def on_click(self):
             result = []
             indent = " " * 10
-            if self._find_behavior("selection"):
+            if _.selection_bvr:
                 result.extend([f"{indent}{{...handlerClick.handle(x.id)}}"])
             else:
                 result.extend(
@@ -88,8 +91,7 @@ def get_context(list_view):
 
         def body(self):
             result = []
-            selection_bvr = self._find_behavior("selection")
-            if selection_bvr:
+            if _.selection_bvr:
                 result.append(r"const handlerClick = new ClickToSelectItems({")
                 result.append(f"  selection: props.{list_view.items_name}Selection")
                 result.append(r"});")

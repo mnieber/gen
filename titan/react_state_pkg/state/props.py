@@ -89,11 +89,10 @@ def get_context(state):
                 result += [f"_set{u0(redRoses)}Callbacks(props: PropsT) {{"]
 
                 if body:
-                    result += [
-                        f"  const ctr = this.{redRoses};",
-                        #
-                        *body,
-                    ]
+                    if [bvr for bvr in state.behaviors if bvr.name == "selection"]:
+                        result += [f"  const inputs = this.inputs;"]
+                    result += [f"  const ctr = this.{redRoses};"]
+                    result += body
 
                 result += [r"}", ""]
 

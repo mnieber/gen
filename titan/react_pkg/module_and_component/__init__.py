@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import create_forward, empty_rule, extend, feeds, receives, rule
+from moonleap import empty_rule, extend, feeds, receives
 from moonleap.verbs import has, shows
 from titan.react_pkg.module import Module
 

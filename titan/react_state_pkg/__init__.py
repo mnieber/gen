@@ -1,5 +1,6 @@
 from . import (
     behavior,
+    deletionbvr,
     highlightbvr,
     itemview,
     listview,
@@ -11,13 +12,14 @@ from . import (
 )
 
 modules = [
-    (behavior),
-    (state),
-    (stateprovider),
-    (highlightbvr),
-    (itemview),
-    (listview),
-    (picker),
-    (selectionbvr),
-    (selectitemeffect),
+    behavior,
+    deletionbvr,
+    highlightbvr,
+    itemview,
+    listview,
+    picker,
+    selectionbvr,
+    selectitemeffect,
+    state,
+    stateprovider,
 ]

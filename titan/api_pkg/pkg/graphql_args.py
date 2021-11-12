@@ -2,17 +2,22 @@ import os
 
 
 def _field_spec_to_graphql_type(field_spec):
+    postfix = "!" if field_spec.required else ""
+
     if field_spec.field_type in ("string", "json", "url", "slug"):
-        return "String"
+        return "String" + postfix
 
     if field_spec.field_type in ("boolean",):
-        return "Boolean"
+        return "Boolean" + postfix
 
     if field_spec.field_type in ("uuid",):
-        return "ID"
+        return "ID" + postfix
 
     if field_spec.field_type in ("form",):
-        return f"{field_spec.target_type_spec.type_name}Type"
+        return f"{field_spec.target_type_spec.type_name}Type" + postfix
+
+    if field_spec.field_type in ("idList",):
+        return r"[String]" + postfix
 
     raise Exception(f"Cannot deduce graphql type for {field_spec.field_type}")
 

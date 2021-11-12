@@ -1,4 +1,5 @@
 {% magic_with item_name as redRose %}
+import * as R from 'ramda';
 {% for item_name, bvrs in res.bvrs_by_item_name.items() %}
 import { RedRoseT } from "{{ res.type_import_path(item_name) }}";
 {% endfor %}
@@ -7,6 +8,10 @@ import { input } from "skandha";
 export class Inputs {
 {% for item_name, bvrs in res.bvrs_by_item_name.items() %}
   @input redRoses: Array<RedRoseT> = [];
+
+  findRedRoseById(id: string): RedRoseT | undefined {
+    return R.find(R.propEq('id', id), this.redRoses) as RedRoseT;
+  }
 {% endfor %}
 }
 {% end_magic_with %}

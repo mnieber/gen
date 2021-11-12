@@ -36,13 +36,13 @@ export const mustHandleQuery = (props: PropsT) => {
   if (props.data && !hasRelevantData && (isHandled || isIgnored)) {
     console.warn(
       `The query ${props.queryName} was ${isIgnored ? 'ignored' : 'handled'} ` +
-        `in ${props.storeName} but does not return any ${propNames()}}.`
+        `in ${props.storeName} but does not return any ${propNames()}.`
     );
   }
 
   if (hasRelevantData && !isHandled && !isIgnored) {
     console.warn(
-      `The query ${props.queryName} returned ${propNames()}} but was not ` +
+      `The query ${props.queryName} returned ${propNames()} but was not ` +
         `handled or ignored in ${props.storeName}.`
     );
   }

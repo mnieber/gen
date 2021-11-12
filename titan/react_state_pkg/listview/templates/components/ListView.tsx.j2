@@ -43,6 +43,9 @@ export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: Props
         key={x.id}
         yellowTulip={x}
 {{ sections.classnames() }}
+{% if _.deletion_bvr %}
+        onDelete={() => props.yellowTulipsDeletion.delete([x.id])}
+{% endif %}
 {{ sections.on_click() }}
       />
     ))

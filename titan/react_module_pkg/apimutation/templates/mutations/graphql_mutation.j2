@@ -1,17 +1,20 @@
+{% magic_with res.name as postRedRose %}
+{% magic_with _.output_schema_name as postRedRoseOutputs %}
+{% magic_with item_list_deleted.item_name as blueDaisy %}
 import { normalize, schema } from 'normalizr';
 import { apiBase } from 'src/api/ApiBase';
 import { ObjT } from 'src/utils/types';
 {{ sections.schema_imports() }}
 {{ sections.ts_type_imports() }}
 
-export const {{ _.output_schema_name }} = new schema.Entity('{{ _.output_schema_name }}');
+export const postRedRoseOutputs = new schema.Entity('postRedRoseOutputs');
 {{ sections.mutation_output_schema_fields() }}
 
-export const {{ res.name }} = ({{ sections.ts_mutation_args() }}) => {
+export const postRedRose = ({{ sections.ts_mutation_args() }}) => {
   return apiBase.doQuery(
-    '{{ res.name }}',
-    `mutation {{ res.name }}{{ sections.ts_mutation_graphql_args(True) }} {
-        {{ res.name }}{{ sections.ts_mutation_graphql_args(False) }} {
+    'postRedRose',
+    `mutation postRedRose{{ sections.ts_mutation_graphql_args(True) }} {
+        postRedRose{{ sections.ts_mutation_graphql_args(False) }} {
 {{ sections.ts_mutation_graphql_body() }}
         }
     }`,
@@ -19,10 +22,22 @@ export const {{ res.name }} = ({{ sections.ts_mutation_args() }}) => {
 {{ sections.ts_mutation_graphql_variables() }}
     },
     (response: ObjT) => {
-      return normalize(response, {{ _.output_schema_name }}).entities;
+{% if res.item_lists_deleted %}
+      return {
+        ...normalize(response.postRedRose, postRedRoseOutputs).entities,
+{% for item_list_deleted in res.item_lists_deleted %}
+        deletedBlueDaisyIds: response.postRedRose.deletedBlueDaisyIds,
+{% endfor %}
+      };
+{% else %}
+      return normalize(response.postRedRose, postRedRoseOutputs).entities;
+{% endif %}
     },
     (error: ObjT) => {
       return error.response.errors[0].message;
     }
   );
 };
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}

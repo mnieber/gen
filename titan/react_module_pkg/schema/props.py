@@ -25,7 +25,6 @@ def get_context(item_types, api_module):
                 "...entity,",
             ]
             for field_spec in fk_field_specs:
-                result.append(f"{field_spec.name}Id: entity['{field_spec.name}'],")
                 result.append(f"{field_spec.name}: undefined,")
             result.append("})")
             result.append("}")

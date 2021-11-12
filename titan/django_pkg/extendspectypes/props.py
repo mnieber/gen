@@ -18,6 +18,9 @@ def graphene_input_type(self: FieldSpec):
     if self.field_type == "uuid":
         return f"graphene.ID()"
 
+    if self.field_type == "idList":
+        return f"graphene.List(graphene.String)"
+
     if self.field_type == "any":
         return f"GenericScalar()"
 

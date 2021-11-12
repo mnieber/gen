@@ -1,9 +1,11 @@
 {% magic_with item_list.item_name as yellowTulip %}
 {% magic_with item.item_name as blueDaisy %}
+{% magic_with field_spec.target as redRose %}
 {% clean_up_js_imports %}
 import { action, observable, makeObservable } from 'mobx';
-import { mustHandleQuery } from 'src/api/mustHandleQuery';
-import { values } from 'ramda';
+import * as R from 'ramda';
+import { mustHandleQuery, updateForeignKey } from 'src/api/utils';
+import { removeItemsFromArray } from 'src/utils/array';
 import { rsMap } from 'src/api/ResourceStateMap';
 import { listToItemById } from 'src/utils/ids';
 import { isUpdatedRS, RST } from 'src/utils/RST';
@@ -48,7 +50,11 @@ export class {{ res.name }} {
     ) {
 {% for item_list in res.item_lists_stored %}
       if (isUpdatedRS(rs)) {
-        this.addYellowTulips(values(data?.yellowTulips ?? []));
+        this.addYellowTulips(R.values(data?.yellowTulips ?? []));
+{% for field_spec in _.related_set_field_specs_by_list_item_name.get(item_list.item_name, []) %}
+        this.addRedRosesToYellowTulips(R.values(data?.redRoses ?? []));
+        this.removeRedRosesFromYellowTulips(data?.deletedRedRoseIds ?? []);
+{% endfor %}
       }
       rsMap.registerRS(rs, [resUrls.yellowTulipById]);
 {% endfor %}
@@ -63,6 +69,23 @@ export class {{ res.name }} {
     };
   };
 {% endfor %}
+
+{% for item_list in res.item_lists_stored %}
+{% for field_spec in _.related_set_field_specs_by_list_item_name.get(item_list.item_name, []) %}
+  @action addRedRosesToYellowTulips = (redRoses: RedRoseT[]) => {
+    R.forEach((redRose: RedRoseT) => {
+      updateForeignKey(this.yellowTulipById, '{{ field_spec.name }}', redRose.yellowTulipId, redRose.id);
+    }, redRoses);
+  };
+
+  @action removeRedRosesFromYellowTulips = (ids: string[]) => {
+    R.forEach((yellowTulip: YellowTulipT) => {
+      removeItemsFromArray(yellowTulip.{{ field_spec.name }}, ids);
+    }, R.values(this.yellowTulipById));
+  };
+{% endfor %}
+{% endfor %}
 }
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

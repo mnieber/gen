@@ -28,4 +28,7 @@ def field_spec_default_value(field_spec):
     if t == "url":
         return r'"https://foo.bar.com"'
 
+    if t == "idList":
+        return r"[]"
+
     raise Exception(f"Unknown graphene field type: {t} in spec for {field_spec.name}")

@@ -13,3 +13,11 @@ def prop_or(default_value, prop_name):
 
 def ds(f):
     return lambda x: f(*x)
+
+
+def uniq(items):
+    result = []
+    for x in items:
+        if x not in result:
+            result.append(x)
+    return result

@@ -9,6 +9,9 @@ import './YellowTulipListViewItem.scss';
 
 export type PropsT = {
   yellowTulip: YellowTulipT;
+{% if _.deletion_bvr %}
+  onDelete: Function;
+{% endif %}
   className?: any;
   onClick?: any;
   onMouseDown?: any;
@@ -27,6 +30,15 @@ export const YellowTulipListViewItem: React.FC<PropsT> = observer((props: PropsT
       onMouseUp={props.onMouseUp}
     >
 {{ sections.fields() }}
+{% if _.deletion_bvr %}
+      <button
+        onClick={() => {
+          props.onDelete().then(() => {});
+        }}
+      >
+        Delete
+      </button>
+{% endif %}
     </div>
   );
 });
