@@ -1,7 +1,7 @@
-import { observer } from "mobx-react-lite";
-import { isNil } from "ramda";
-import Select from "react-select";
-import CreatableSelect from "react-select/creatable";
+import { observer } from 'mobx-react-lite';
+import { isNil } from 'ramda';
+import Select from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 
 export interface PickerValueT {
   value: any;
@@ -46,7 +46,7 @@ export const ValuePicker = observer(
       isMulti: isMulti,
       options,
       value: isNil(pickableValue)
-        ? undefined
+        ? null
         : isMulti
         ? (pickableValue as any).map(toPickerValue)
         : toPickerValue(pickableValue),

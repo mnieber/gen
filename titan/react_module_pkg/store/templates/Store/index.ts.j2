@@ -51,6 +51,7 @@ export class {{ res.name }} {
 {% for item_list in res.item_lists_stored %}
       if (isUpdatedRS(rs)) {
         this.addYellowTulips(R.values(data?.yellowTulips ?? []));
+        this.deleteYellowTulips(R.values(data?.deletedYellowTulipIds ?? []));
 {% for field_spec in _.related_set_field_specs_by_list_item_name.get(item_list.item_name, []) %}
         this.addRedRosesToYellowTulips(R.values(data?.redRoses ?? []));
         this.removeRedRosesFromYellowTulips(data?.deletedRedRoseIds ?? []);
@@ -67,6 +68,12 @@ export class {{ res.name }} {
       ...this.yellowTulipById,
       ...listToItemById(yellowTulips),
     };
+  };
+
+  @action deleteYellowTulips = (deletedYellowTulipIds: string[]) => {
+    for (const id of deletedYellowTulipIds) {
+      delete this.yellowTulipById[id];
+    }
   };
 {% endfor %}
 

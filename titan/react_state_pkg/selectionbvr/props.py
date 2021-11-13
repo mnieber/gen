@@ -30,7 +30,7 @@ class Sections(BehaviourSections):
                 109: f"      props.navigateTo{u0(self.res.item_name)}(",
                 110: f"        inputs.find{u0(self.res.item_name)}ById(",
                 111: r"          this.selectionParams.itemId as string",
-                112: r"        ) as TodoT",
+                112: f"        ) as {u0(self.res.item_name)}T",
                 113: r"      );",
                 114: r"    }",
                 115: r"  },",

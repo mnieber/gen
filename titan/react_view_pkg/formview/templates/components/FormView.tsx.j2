@@ -1,6 +1,7 @@
 {% magic_with res.item_name as yellowTulip %}
 {% clean_up_js_imports %}
 import React from 'react';
+import * as R from 'ramda';
 import { observer } from 'mobx-react-lite';
 import { FC, useDefaultProps } from 'react-default-props-context';
 import { FormStateProvider, HandleValidateArgsT, HandleSubmitArgsT } from 'react-form-state-context';
@@ -30,8 +31,9 @@ export const YellowTulipFormView: FC<PropsT, DefaultPropsT> = observer((p: Props
   const handleValidate = ({values, setError} : HandleValidateArgsT) => {
 {{ sections.validate_form() }}
   };
-  const handleSubmit = ({values}: HandleSubmitArgsT) => {
+  const handleSubmit = ({ formState, values }: HandleSubmitArgsT) => {
 {{ sections.post_form() }}
+    formState.reset(initialValues, initialErrors);
   };
 
   return (

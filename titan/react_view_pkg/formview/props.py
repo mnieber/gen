@@ -75,12 +75,22 @@ def get_context(form_view):
 
             for field_spec in _.field_specs:
                 name = _get_field_name(field_spec, _.fk_field_specs)
-                value = "''" if field_spec.field_type in ("slug",) else "null"
+                value = (
+                    "''"
+                    if field_spec.field_type
+                    in (
+                        "slug",
+                        "string",
+                    )
+                    else "false"
+                    if field_spec.field_type in ("boolean",)
+                    else "null"
+                )
                 root.abc(f"{name}: {value},")
             return root.result
 
         def form_field(self, field_spec):
-            name = field_spec.name
+            name = _get_field_name(field_spec, _.fk_field_specs)
             item_name = field_spec.target
             root = CodeBlock(style="typescript", level=2)
 
@@ -100,7 +110,7 @@ def get_context(form_view):
 
             root.abc(f'<Field fieldName="{name}" label="{u0(label)}"{buttons}>')
             if field_spec.field_type in ("string", "url"):
-                root.abc(r"  <TextField />")
+                root.abc(r"  <TextField controlled={true} />")
             elif field_spec.field_type in ("slug",):
                 root.abc(r"  <SlugField />")
             elif field_spec.field_type in ("uuid",) and item_name:
@@ -124,7 +134,7 @@ def get_context(form_view):
             for field_spec in _.field_specs:
                 name = _get_field_name(field_spec, _.fk_field_specs)
                 if field_spec.required:
-                    root.abc(f"if (values.{name} === null) {{")
+                    root.abc(f"if (R.isNil(values.{name})) {{")
                     root.abc(f"  setError('{name}', 'This field is required')")
                     root.abc(r"}")
             return root.result
@@ -134,6 +144,7 @@ def get_context(form_view):
             for field_spec in _.fk_field_specs:
                 chopped_name = chop_postfix(field_spec.name, "Id")
                 args.append(f"{field_spec.name}: values.{chopped_name}.id")
+                args.append(f"{chopped_name}: undefined")
             args.append(r"} as any")
             root = CodeBlock(style="typescript", level=2)
             root.IxI(_.postmethod, args, "")
