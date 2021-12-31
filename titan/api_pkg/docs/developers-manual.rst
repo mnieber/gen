@@ -15,32 +15,35 @@ To tell Titan about the data model, you need to declare items, item~lists, queri
 - the `query` resource represents a graphql query, e.g. `the get-person:query /provides a person:item~list`.
 - the `mutation` resource represents a graphql mutation, e.g. `the save-person:mutation /posts a person:item`.
 
-The data part of a term that declares an item (e.g. `person:item`) is called the `item-name`.
-Titan uses the item-name to (automatically) create an associated `item~type` resource (`person:item~type`)
-and `item~form-type` (`person:item~form-type`).
+For every term that represents an item (e.g. `person:item`) Titan automatically introduces two related terms,
+which are `person:item~type` and `person:item~form-type`. These terms have the same data part (`person`) which
+we shall call the `item-name`. The `person:item~type` represents the data type that stores a person, and
+the `person:item~type` term represents the form type that can be used to create a new person.
 
 Type specs
 ==========
 
-Type specs are JSON-schema data-structures that contain type information.
+We can use the above terms to tell Titan which items, queries and mutations exist, but to generally
+useful code, we also need to specify which fields exist on these items. This is done by declaring
+type specs. These are JSON-schema data-structures that contain type information.
 
 - a `data-type spec` describes the fields of an item~type
 - a `form-type spec` describes the fields of an item~form-type
 - an `inputs-type spec` describes the input fields of a `query` or `mutation`
 - an `outputs-type spec` describes the output fields of a `query` or `mutation`
 
-These type specs have different names depending on how they are used, but they share the same
-JSON schema. These JSON schemas are stored in the type specs directory (a subdirectory of the
-spec dir) using a filename that is based on the item-name (e.g. `Person.json` for a data-type spec
-and `PersonForm.json` for a form-type spec) or query/mutation name (e.g. `GetPersonInputs.json`).
+All JSON schemas for your project are stored in the type specs directory, which is a subdirectory of
+the spec dir. Every schema uses a filename that is based on either an item-name (e.g. `Person.json` for a
+data-type spec and `PersonForm.json` for a form-type spec) or a query/mutation name
+(e.g. `GetPersonInputs.json`).
 
 
 
 Field specs
 ===========
 
-Every type spec contains so-called field specs. A field spec is a dictionary
-(contained in a type-spec) that describes a field. It has:
+Every type spec contains so-called field specs. A field spec is a dictionary that describes a field.
+It has:
 
 - a name
 - a field type
@@ -51,9 +54,9 @@ Field types
 
 Possible field types that can be used in a field spec are:
 
-- a scalar value, e.g. `string`, `boolean`, `slug`
+- `string`, `date`, `boolean`, `slug`, `url` and other scalar types
 - `foreignKey`: this field represents an external instance of some item~type.
-- `related set`: this field represents a list of external instances.
+- `related set`: this field represents a list of external instances of some item~type.
 - `form`: this field is used in the inputs-type spec of a mutation.
 
 If the field spec does not have a scalar type then it has an associated `target` attribute that
@@ -70,15 +73,18 @@ field for a given foreignKey field, then set `hasRelatedSet` to false in the for
 Queries
 =======
 
-The information about queries comes from the spec file, e.g. `the get-person:query /provides a person:item`.
+You can tell Titan which queries exist by mentioning them in the spec file, e.g.
+`the get-person:query /provides a person:item`.
 The default outputs-type spec for a query (which is used if you don't provide one) has a "foreignKey" field for
 any item that the query provides, and a "relatedSet" for any item~list that it provides. For each of these
-output fields, an endpoint will created in the query's API (though this is not the responsibility of the api
-pkg, but rather of a package that creates the backend, such as the django pkg).
-Queries also need inputs, and these are described in the inputs-type spec. The default inputs-type spec has fields
-that are based on the `queryItemBy` and `queryItemsBy` values of the provided items and item~lists.
-The `queryItemBy` for a provided item is stored in the data-type spec of that item. By default, `queryItemBy`
-equals ["id"] and `queryItemsBy` equals [] (the empty list).
+output fields, an endpoint will created in the query's API. Note though that the api pkg is only used to specify which
+endpoints exist, which means that some other Moonleap package - such as the django packge - must take care of actually
+creating the endpoint.
+Queries also need inputs, and these are described in the inputs-type spec. Titan can create a default
+inputs-type spec by - again - looking at the items and item~lists that are provided by the query.
+It looks up the `queryItemBy` and `queryItemsBy` values for these items and item~lists to determine the fields of the
+default inputs-type spec. The `queryItemBy` for a provided item is stored in the data-type spec of that item.
+By default, `queryItemBy` equals ["id"] and `queryItemsBy` equals [] (the empty list).
 Since Titan needs to know which inputs are associated with which outputs, every field in the inputs-type spec has
 a `relatedOutput` attribute. If `relatedOutput` is omitted then the input field is used for all endpoints.
 
@@ -87,7 +93,7 @@ Mutations
 =========
 
 The information about mutations also comes from the spec file, e.g. `the save-person:mutation /receives a person:item`).
-Mutations can also return items and item~lists, e.g. `the save-person:mutation /returns a person:item`. To declare a
+Mutations can return items and item~lists, e.g. `the save-person:mutation /returns a person:item`. To declare a
 mutation that receives and returns the same item~type, then you can use the verb `posts`, e.g. `the save-person:mutation
 /posts a person:item`.
 
@@ -140,8 +146,8 @@ The example
 Case 2: modules can store item-lists
 ====================================
 
-The `item` and `item~list` resources can be used is various (frontend and backend) services.
-Typically, these services are divided modules, where different modules work with different
+The `item` and `item~list` resources can be used in various (frontend and backend) services.
+Typically, these services are divided in modules, where different modules work with different
 data types. Therefore, a common pattern is to declare in the spec file that the `todos:module`
 stores the `todo:item~list`. In case that the spec describes a django module
 (e.g. `titan/django_pkg/module`) this would have the effect that the `todos` Django module
