@@ -5,6 +5,7 @@ import { routeTable } from 'src/routes/routes';
 
 type RoutePropsT = React.PropsWithChildren<{
   path: string;
+  exact?: boolean;
   name?: string;
 }>;
 
