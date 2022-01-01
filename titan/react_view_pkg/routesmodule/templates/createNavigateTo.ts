@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { generatePath, matchPath } from 'react-router-dom';
+import { generatePath } from 'react-router-dom';
 import { routes } from 'src/routes/routes';
 import { ObjT } from 'src/utils/types';
 
@@ -30,50 +30,36 @@ export function createNavigateTo(
       return;
     }
 
-    const loc = window.location.pathname;
+    const params = {
+      ...renderedRoute.params,
+      ...getParamsFromItem(item),
+    };
 
-    let currentPath = undefined;
-    let params = undefined;
+    let bestUrl = undefined;
+    let bestNrOfMatchedParams = 0;
 
     for (const route of R.values(routes)) {
       const path = route();
-      const match = matchPath(loc, path);
-      if (match?.isExact) {
-        currentPath = path;
-        params = {
-          ...match.params,
-          ...getParamsFromItem(item),
-        };
-      }
-    }
+      if (path.startsWith(renderedRoute.path)) {
+        const newUrl = safeGeneratePath(path, params);
 
-    if (currentPath) {
-      let bestUrl = undefined;
-      let bestNrOfMatchedParams = 0;
-
-      for (const route of R.values(routes)) {
-        const path = route();
-        if (path.startsWith(currentPath)) {
-          const newUrl = safeGeneratePath(path, params);
-
-          if (newUrl && !newUrl.includes(':') && newUrl !== loc) {
-            const nrOfMatchedParams = _getNrOfMatchedParams(
-              path,
-              R.keys(params) as string[]
-            );
-            if (
-              bestUrl === undefined ||
-              nrOfMatchedParams > bestNrOfMatchedParams
-            ) {
-              bestUrl = newUrl;
-              bestNrOfMatchedParams = nrOfMatchedParams;
-            }
+        if (newUrl && !newUrl.includes(':')) {
+          const nrOfMatchedParams = _getNrOfMatchedParams(
+            path,
+            R.keys(params) as string[]
+          );
+          if (
+            bestUrl === undefined ||
+            nrOfMatchedParams > bestNrOfMatchedParams
+          ) {
+            bestUrl = newUrl;
+            bestNrOfMatchedParams = nrOfMatchedParams;
           }
         }
       }
-      if (bestUrl) {
-        window.history.pushState(null, '', bestUrl);
-      }
+    }
+    if (bestUrl && bestUrl !== window.location.pathname) {
+      window.history.pushState(null, '', bestUrl);
     }
   };
 }
