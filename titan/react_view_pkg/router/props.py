@@ -7,6 +7,8 @@ from moonleap.utils.join import join
 from moonleap.utils.queue import Queue
 from titan.react_pkg.pkg.ml_get import ml_react_app
 
+from .create_route_name import create_route_name
+
 
 @dataclass
 class Elm:
@@ -28,15 +30,26 @@ def _append(x, indent, result):
 def render_elm(elm, result, level=0, url=""):
     wraps = elm.config and elm.config.wraps
     url_postfix = get_elm_url_postfix(elm)
+    route_name = create_route_name() if ":" in url_postfix else None
 
     if url_postfix:
         url += f"/{url_postfix}"
         exact = "exact={true} " if not elm.children else ""
-        _append(f'<Route {exact}path="{url}">', level * 2, result)
+        name = f"name='{route_name}' " if route_name else ""
+        _append(f'<Route {exact}{name}path="{url}">', level * 2, result)
         level += 1
 
+    deps = []
     for dep_chain in elm.dep_chains:
-        for dep in dep_chain:
+        deps.extend(dep_chain)
+
+    for dep in deps:
+        if dep.wraps:
+            _append(f"<{dep.component.typ.name} >", level * 2, result)
+            level += 1
+
+    for dep in deps:
+        if not dep.wraps:
             _append(f"<{dep.component.typ.name} />", level * 2, result)
 
     if elm.component:
@@ -52,6 +65,11 @@ def render_elm(elm, result, level=0, url=""):
         if wraps:
             level -= 1
             _append(f"</{elm.component.typ.name}>", (level + 1) * 2, result)
+
+    for dep in reversed(deps):
+        if dep.wraps:
+            level -= 1
+            _append(f"</{dep.component.typ.name} >", (level + 1) * 2, result)
 
     if elm.config and elm.config.url:
         _append("</Route>", level * 2, result)
