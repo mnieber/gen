@@ -2,7 +2,11 @@ from moonleap import u0
 from moonleap.utils.inflect import plural
 from moonleap.utils.magic_replace import magic_replace
 from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
-from titan.react_pkg.pkg.ts_var import ts_type, ts_type_import_path
+from titan.react_pkg.pkg.ts_var import (
+    ts_type,
+    ts_type_from_item_name,
+    ts_type_import_path,
+)
 from titan.react_view_pkg.router import RouterConfig
 
 
@@ -23,13 +27,6 @@ def create_router_configs(self, named_component):
     ]
 
 
-effect_args_template = """
-type ArgsT = {
-    yellowTulip
-};
-"""
-
-
 def get_context(select_item_effect):
     _ = lambda: None
     _.item_name = select_item_effect.item_list.item_name
@@ -42,16 +39,9 @@ def get_context(select_item_effect):
     ]
 
     class Sections:
-        def effect_args(self):
-            args = ", ".join(
+        def select_effect_args(self):
+            return ", ".join(
                 [f"{route_param}: string" for route_param in _.route_params]
-            )
-
-            return magic_replace(
-                effect_args_template,
-                [
-                    ("yellowTulip", args),
-                ],
             )
 
         def declare_params(self):
@@ -66,10 +56,10 @@ def get_context(select_item_effect):
             )
 
         def get_item_id(self):
-            search_function = "(x) => " + (
+            search_function = f"(x: {ts_type_from_item_name(_.item_name)}) => " + (
                 " && ".join(
                     [
-                        f"x.{param} === {_.item_name + u0(param)}"
+                        f"x.{param} === args.{_.item_name + u0(param)}"
                         for param in _.type_spec.select_item_by or []
                     ]
                 )
@@ -81,7 +71,7 @@ def get_context(select_item_effect):
                 ""
                 if _.route_params == [f"{_.item_name}Id"]
                 else f"const {_.item_name}Id = "
-                + f"R.find({search_function})(props.{_.items_name})?.id"
+                + f"R.find({search_function})(args.{_.items_name})?.id"
             )
 
     return dict(sections=Sections(), _=_)

@@ -10,7 +10,13 @@ import * as R from 'ramda';
 import { {{ _.item_ts_type }} } from '{{ _.item_ts_type_import_path }}';
 {% end_clean_up_js_imports %}
 
-{{ sections.effect_args() }}
+type ArgsT = {
+  yellowTulipsSelection: Selection;
+{% if _.route_params and sections.get_item_id() %}
+  yellowTulips: [{{ _.item_ts_type }}];
+{% endif %}
+{{ sections.select_effect_args() }}
+};
 
 type PropsT = {};
 
@@ -26,14 +32,18 @@ export const RedRose: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
 
   return (
     <Effect
-      f={({{ sections.declare_params() }}: ArgsT) => {
+      f={(args: ArgsT) => {
           {{ sections.get_item_id() }};
           if (yellowTulipId) {
-            props.yellowTulipsSelection.selectItem({ itemId: yellowTulipId});
+            args.yellowTulipsSelection.selectItem({ itemId: yellowTulipId});
           }
       }}
       getArgs={(params) => {
         return {
+          yellowTulipsSelection: props.yellowTulipsSelection,
+{% if _.route_params and sections.get_item_id() %}
+          yellowTulips: props.yellowTulips,
+{% endif %}
           {{ sections.extract_params() }}
         }
       }}
