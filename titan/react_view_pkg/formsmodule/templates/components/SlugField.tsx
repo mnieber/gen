@@ -16,7 +16,6 @@ export const UpdateSlugButton = (props: PropsT) => {
     <div
       className={props.className}
       onClick={() => {
-        debugger;
         const newSlug = slugify(formState.values[props.relatedFieldName]);
         if (newSlug) {
           formState.setValue(fieldContext.fieldName, newSlug);
