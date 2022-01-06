@@ -1,0 +1,22 @@
+{% magic_with item_list.item_name as yellowTulip %}
+{% magic_with inline_model as redRose %}
+from django.contrib import admin
+
+from {{ res.name|sn }} import models
+
+{% for item_list in res.item_lists_provided %}
+{% for inline_model in sections.get_inline_models(item_list) %}
+class RedRoseInline(admin.TabularInline):
+    model = models.RedRose
+    extra = 1
+{% endfor %}
+
+class YellowTulipAdmin(admin.ModelAdmin):
+    {{ sections.admin_body(item_list) }}
+{% endfor %}
+
+{% for item_list in res.item_lists_provided %}
+admin.site.register(models.YellowTulip, YellowTulipAdmin)
+{% endfor %}
+{% end_magic_with %}
+{% end_magic_with %}

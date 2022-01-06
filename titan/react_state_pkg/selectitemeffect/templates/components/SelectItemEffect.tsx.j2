@@ -33,10 +33,16 @@ export const RedRose: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
   return (
     <Effect
       f={(args: ArgsT) => {
+{% if sections.get_item_id() %}
           {{ sections.get_item_id() }};
           if (yellowTulipId) {
             args.yellowTulipsSelection.selectItem({ itemId: yellowTulipId});
           }
+{% else %}
+          if (args.yellowTulipId) {
+            args.yellowTulipsSelection.selectItem({ itemId: args.yellowTulipId});
+          }
+{% endif %}
       }}
       getArgs={(params) => {
         return {

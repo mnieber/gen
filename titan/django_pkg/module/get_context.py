@@ -15,7 +15,7 @@ def _on_delete(field):
     )
 
 
-def _model(field):
+def _model(field, item_name):
     t = field.field_type
 
     null_blank = [] if field.required else ["null=True", "blank=True"]
@@ -23,21 +23,29 @@ def _model(field):
     help_text = [f"help_text='{field.description}'"] if field.description else []
 
     if t == "fk":
+        through = field.through
         on_delete = _on_delete(field)
+
         related_name = (
             ['related_name="+"']
             if not field.field_type_attrs.get("hasRelatedSet", True)
+            else [f'related_name="{sn(item_name)}_set"']
+        )
+        through = (
+            [f'through="{through}"']
+            if field.field_type_attrs.get("through", "")
             else []
         )
         args = [
             u0(field.target),
-            f"on_delete={on_delete}",
-            *null_blank,
+            *([] if through else [f"on_delete={on_delete}"]),
+            *through,
+            *([] if through else null_blank),
             *related_name,
             *unique,
             *help_text,
         ]
-        return f"models.ForeignKey({', '.join(args)})"
+        return f"models.{'ManyToManyField' if through else 'ForeignKey'}({', '.join(args)})"
 
     if t == "string":
         max_length = field.field_type_attrs.get("maxLength")
@@ -136,7 +144,7 @@ def get_context(module):
             for field_spec in _field_specs(type_spec):
                 if field_spec.field_type == "relatedSet":
                     continue
-                model = _model(field_spec)
+                model = _model(field_spec, item_name)
                 result.append(indent + f"{sn(field_spec.name)} = {model}")
 
             return "\n".join(result or [indent + "pass"])

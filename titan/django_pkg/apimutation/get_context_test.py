@@ -77,6 +77,8 @@ def get_context_test(mutation, api_module):
             root = CodeBlock(style="python", level=1)
 
             for input_field_spec in _.input_field_specs:
+                input_arg_name = sn(input_field_spec.name)
+
                 if input_field_spec.field_type == "form":
                     create_form_args = []
                     for fk_field_spec in fk_field_specs_for_form_field(
@@ -88,13 +90,13 @@ def get_context_test(mutation, api_module):
 
                     form_item_name = input_field_spec.target + "Form"
                     root.IxI(
-                        f"{sn(input_field_spec.name)}=create_random_{sn(form_item_name)}",
+                        f"{input_arg_name}=create_random_{sn(form_item_name)}",
                         create_form_args,
                         ",",
                     )
                 else:
                     value = field_spec_default_value(input_field_spec)
-                    root.abc(f"{input_field_spec.name}={value}, ")
+                    root.abc(f"{input_arg_name}={value}, ")
 
             root._x_(
                 f"output_values=[",

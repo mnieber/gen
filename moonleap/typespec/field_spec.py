@@ -21,6 +21,10 @@ class FieldSpec:
         return self.field_type_attrs.get("target")
 
     @property
+    def through(self):
+        return self.field_type_attrs.get("through")
+
+    @property
     def related_output(self):
         return self.field_type_attrs.get("related_output")
 
@@ -50,6 +54,8 @@ def _field_type_and_attrs(field_spec_dict):
         attrs["hasRelatedSet"] = field_spec_dict.get("hasRelatedSet", True)
         if "onDelete" in field_spec_dict:
             attrs["onDelete"] = field_spec_dict["onDelete"]
+        if "through" in field_spec_dict:
+            attrs["through"] = field_spec_dict["through"]
     elif t == "relatedSet":
         attrs["target"] = field_spec_dict["target"]
     elif t == "form":

@@ -15,10 +15,14 @@ def get_context(item_type, api_module):
     _.django_app = api_module.django_app
     _.item_name = item_type.name
     _.type_spec = ml_type_spec_from_item_name(_.item_name)
-    _.fk_field_specs = _.type_spec.get_field_specs(["fk"])
+    _.fk_field_specs = [x for x in _.type_spec.get_field_specs(["fk"]) if not x.through]
     _.private_field_specs = [x for x in _.type_spec.field_specs if x.private]
     _.form_type_spec = ml_form_type_spec_from_item_name(_.item_name)
-    _.form_field_specs = [x for x in _.form_type_spec.field_specs if not x.private]
+    _.form_field_specs = (
+        [x for x in _.form_type_spec.field_specs if not x.private]
+        if _.form_type_spec
+        else []
+    )
 
     class Sections:
         def graphql_type_imports(self):
@@ -36,11 +40,14 @@ def get_context(item_type, api_module):
             return f"exclude = [{list_str}]" if list_str else ""
 
         def form_type_fields(self):
-            return os.linesep.join(
-                [
-                    f'    {sn(x.name)} = {x.graphene_output_type("")}'
-                    for x in _.form_field_specs
-                ]
+            return (
+                os.linesep.join(
+                    [
+                        f'    {sn(x.name)} = {x.graphene_output_type("")}'
+                        for x in _.form_field_specs
+                    ]
+                )
+                or "    pass"
             )
 
     return dict(sections=Sections(), _=_)

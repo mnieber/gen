@@ -1,9 +1,0 @@
-{% magic_with item_list.item_name as yellowTulip %}
-from django.contrib import admin
-
-from {{ res.name|sn }} import models
-
-{% for item_list in res.item_lists_provided %}
-admin.site.register(models.YellowTulip)
-{% endfor %}
-{% end_magic_with %}

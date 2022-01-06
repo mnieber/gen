@@ -22,6 +22,7 @@ def get_context_test(module):
             fk_field_names = [
                 f"{sn(field_spec.name + 'Id')}"
                 for field_spec in type_spec.get_field_specs(["fk"])
+                if not field_spec.through
             ]
             return ", ".join(fk_field_names)
 
@@ -31,9 +32,10 @@ def get_context_test(module):
             transform_name = sn if snake_args else lambda x: x
             for field_spec in type_spec.field_specs:
                 if field_spec.field_type == "fk":
-                    args.append(
-                        f"{transform_name(field_spec.name + 'Id')}={sn(field_spec.name + 'Id')}"
-                    )
+                    if not field_spec.through:
+                        args.append(
+                            f"{transform_name(field_spec.name + 'Id')}={sn(field_spec.name + 'Id')}"
+                        )
                 elif field_spec.field_type == "relatedSet":
                     pass
                 else:
