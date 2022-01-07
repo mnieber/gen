@@ -67,7 +67,7 @@ def _field_type_and_attrs(field_spec_dict):
     return t, attrs
 
 
-def field_specs_from_type_spec_dict(type_spec_dict):
+def field_specs_from_type_spec_dict(type_spec_dict, type_name):
     required = type_spec_dict.get("required", [])
     private = type_spec_dict.get("private", [])
     result = []
@@ -75,6 +75,12 @@ def field_specs_from_type_spec_dict(type_spec_dict):
         t, attrs = _field_type_and_attrs(field_spec_dict)
         if t is None:
             raise Exception(f"Unknown field type for field: {field_name}")
+
+        if "_" in field_name:
+            raise Exception(
+                f"Field names should not have underscores. For field: {field_name}"
+                + f" in type: {type_name}"
+            )
 
         result.append(
             FieldSpec(

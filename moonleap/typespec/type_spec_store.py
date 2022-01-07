@@ -38,7 +38,7 @@ class TypeSpecStore:
 
             type_spec = TypeSpec(
                 type_name=type_name,
-                field_specs=field_specs_from_type_spec_dict(type_spec_dict),
+                field_specs=field_specs_from_type_spec_dict(type_spec_dict, type_name),
                 select_item_by=type_spec_dict.get("selectItemBy", ["id"]),
                 query_item_by=type_spec_dict.get("queryItemBy", ["id"]),
                 display_item_by=type_spec_dict.get("displayItemBy", ["id"]),
