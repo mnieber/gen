@@ -47,7 +47,10 @@ class TypeSpecStore:
             self.setdefault(type_name, type_spec)
 
     def _on_add_type_spec(self, type_spec):
-        for field_spec in type_spec.get_field_specs(["fk"]):
+        for field_spec in type_spec.get_field_specs(["fk", "relatedSet"]):
+            if field_spec.field_type == "relatedSet" and not field_spec.through:
+                continue
+
             if field_spec.field_type_attrs.get("hasRelatedSet"):
                 fk_item_name = field_spec.target
                 add_related_set_field_to_type_spec(

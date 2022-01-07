@@ -8,7 +8,7 @@ def get_context_admin(module):
             type_spec = ml_type_spec_from_item_name(item_list.item_name)
             return [
                 u0(item_list.item_name) + "2" + u0(x.target)
-                for x in type_spec.get_field_specs(["fk"])
+                for x in type_spec.get_field_specs(["relatedSet"])
                 if x.through
             ]
 

@@ -12,7 +12,7 @@ def get_member_field_spec(parent_item, member_item):
                 if field_spec.target_type_spec.type_name == ml_type_name(member_item):
                     return field_spec
         if isinstance(member_item, ItemList):
-            if field_spec.field_type == "relatedSet":
+            if field_spec.field_type == "relatedSet" and not field_spec.through:
                 if field_spec.target_type_spec.type_name == ml_type_name(
                     member_item.item
                 ):

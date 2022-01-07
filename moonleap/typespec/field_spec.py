@@ -54,10 +54,10 @@ def _field_type_and_attrs(field_spec_dict):
         attrs["hasRelatedSet"] = field_spec_dict.get("hasRelatedSet", True)
         if "onDelete" in field_spec_dict:
             attrs["onDelete"] = field_spec_dict["onDelete"]
-        if "through" in field_spec_dict:
-            attrs["through"] = field_spec_dict["through"]
     elif t == "relatedSet":
         attrs["target"] = field_spec_dict["target"]
+        if "through" in field_spec_dict:
+            attrs["through"] = field_spec_dict["through"]
     elif t == "form":
         attrs["target"] = field_spec_dict["target"]
     else:

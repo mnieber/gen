@@ -1,6 +1,5 @@
 import os
 
-import ramda as R
 from moonleap import u0
 from moonleap.utils.case import sn
 from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
@@ -23,7 +22,12 @@ def _model(field, item_name):
     help_text = [f"help_text='{field.description}'"] if field.description else []
 
     if t == "fk":
-        through = field.through
+        if field.through:
+            raise Exception(
+                f"Fk fields cannot use 'through'. Use a relatedSet field instead"
+                + f"For field: {field.name} in type: {item_name}"
+            )
+
         on_delete = _on_delete(field)
 
         related_name = (
@@ -31,21 +35,35 @@ def _model(field, item_name):
             if not field.field_type_attrs.get("hasRelatedSet", True)
             else [f'related_name="{sn(item_name)}_set"']
         )
-        through = (
-            [f'through="{through}"']
-            if field.field_type_attrs.get("through", "")
-            else []
-        )
+
         args = [
             u0(field.target),
-            *([] if through else [f"on_delete={on_delete}"]),
-            *through,
-            *([] if through else null_blank),
+            f"on_delete={on_delete}",
+            *null_blank,
             *related_name,
             *unique,
             *help_text,
         ]
-        return f"models.{'ManyToManyField' if through else 'ForeignKey'}({', '.join(args)})"
+        return f"models.ForeignKey({', '.join(args)})"
+
+    if t == "relatedSet":
+        if not field.through:
+            return None
+
+        related_name = (
+            ['related_name="+"']
+            if not field.field_type_attrs.get("hasRelatedSet", True)
+            else [f'related_name="{sn(item_name)}_set"']
+        )
+
+        args = [
+            u0(field.target),
+            f'through="{field.through}"',
+            *related_name,
+            *unique,
+            *help_text,
+        ]
+        return f"models.ManyToManyField({', '.join(args)})"
 
     if t == "string":
         max_length = field.field_type_attrs.get("maxLength")
@@ -122,19 +140,27 @@ def get_context(module):
     _.django_app = module.django_app
 
     class Sections:
-        def model_imports(self, item_name):
+        def model_imports(self, item_list):
             result = []
-            type_spec = ml_type_spec_from_item_name(item_name)
+            type_spec = ml_type_spec_from_item_name(item_list.item_name)
+            tmp = []
             for field_spec in type_spec.get_field_specs(["fk"]):
                 provider_module = find_module_that_provides_item_list(
                     _.django_app, field_spec.target
                 )
+                tmp.append((provider_module, field_spec.target))
+
+            for inline_model in self.get_inline_models(item_list):
+                provider_module = find_module_that_provides_item_list(
+                    _.django_app, inline_model
+                )
+                tmp.append((provider_module, inline_model))
+
+            for (provider_module, target) in tmp:
                 if provider_module:
                     result.append(
-                        f"from {sn(provider_module.name)}.models "
-                        + f"import {u0(field_spec.target)}"
+                        f"from {sn(provider_module.name)}.models import {u0(target)}"
                     )
-
             return "\n".join(result)
 
         def model_fields(self, item_name):
@@ -142,10 +168,9 @@ def get_context(module):
             indent = "    "
             type_spec = ml_type_spec_from_item_name(item_name)
             for field_spec in _field_specs(type_spec):
-                if field_spec.field_type == "relatedSet":
-                    continue
                 model = _model(field_spec, item_name)
-                result.append(indent + f"{sn(field_spec.name)} = {model}")
+                if model:
+                    result.append(indent + f"{sn(field_spec.name)} = {model}")
 
             return "\n".join(result or [indent + "pass"])
 
@@ -161,6 +186,12 @@ def get_context(module):
                     )
 
             return ""
+
+        def get_inline_models(self, item_list):
+            type_spec = ml_type_spec_from_item_name(item_list.item_name)
+            return [
+                x.target for x in type_spec.get_field_specs(["relatedSet"]) if x.through
+            ]
 
         def import_item_types(self):
             result = []
