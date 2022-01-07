@@ -24,7 +24,7 @@ def _model(field, item_name):
     if t == "fk":
         if field.through:
             raise Exception(
-                f"Fk fields cannot use 'through'. Use a relatedSet field instead"
+                f"Fk fields cannot use 'through'. Use a relatedSet field instead. "
                 + f"For field: {field.name} in type: {item_name}"
             )
 
@@ -143,23 +143,20 @@ def get_context(module):
         def model_imports(self, item_list):
             result = []
             type_spec = ml_type_spec_from_item_name(item_list.item_name)
-            tmp = []
+            models = []
             for field_spec in type_spec.get_field_specs(["fk"]):
-                provider_module = find_module_that_provides_item_list(
-                    _.django_app, field_spec.target
-                )
-                tmp.append((provider_module, field_spec.target))
+                models.append(field_spec.target)
 
             for inline_model in self.get_inline_models(item_list):
-                provider_module = find_module_that_provides_item_list(
-                    _.django_app, inline_model
-                )
-                tmp.append((provider_module, inline_model))
+                models.append(inline_model)
 
-            for (provider_module, target) in tmp:
+            for model in models:
+                provider_module = find_module_that_provides_item_list(
+                    _.django_app, model
+                )
                 if provider_module:
                     result.append(
-                        f"from {sn(provider_module.name)}.models import {u0(target)}"
+                        f"from {sn(provider_module.name)}.models import {u0(model)}"
                     )
             return "\n".join(result)
 
