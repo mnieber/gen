@@ -65,7 +65,7 @@ def verb_to_word(verb):
 
 def stem_term(term):
     pos = term.tag.find("~")
-    return Term(term.data, term.tag[:pos]) if pos != -1 else None
+    return Term(term.data, term.tag[:pos] if pos != -1 else term.tag)
 
 
 def _match(lhs, rhs):

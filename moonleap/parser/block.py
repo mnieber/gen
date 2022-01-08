@@ -35,15 +35,15 @@ class Block:
             self._relations.append(relation)
 
     def describes(self, term):
-        title_terms = self.title_line.terms if self.title_line else []
-        for t in [term, stem_term(term)]:
-            if t:
-                if t in title_terms or (
-                    any(match_term_to_pattern(t, x) for x in title_terms)
-                    and any(line for line in self.lines if t in line.terms)
-                ):
-                    return True
-        return False
+        if not self.title_line:
+            return False
+
+        t = stem_term(term)
+        stem_terms = lambda terms: [stem_term(x) for x in terms]
+
+        return any(
+            match_term_to_pattern(t, x) for x in stem_terms(self.title_line.terms)
+        ) and any(line for line in self.lines if t in stem_terms(line.terms))
 
     def get_resource(self, term):
         resources = [x[1] for x in self._resource_by_term if x[0] == term]
