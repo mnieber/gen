@@ -75,10 +75,10 @@ class ExtendQuery:
 
 
 @extend(Item)
-class ExtendNamedItem:
+class ExtendItem:
     provider_queries = P.parents("query", provides)
 
 
 @extend(ItemList)
-class ExtendNamedItemList:
+class ExtendItemList:
     provider_queries = P.parents("query", provides)

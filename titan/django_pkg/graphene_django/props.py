@@ -64,6 +64,6 @@ def get_context(graphene_django):
                     f"    {mutation.name} = {_mutation_py_classname(mutation)}.Field()"
                 )
 
-            return os.linesep.join(result)
+            return os.linesep.join(result) or "    pass"
 
     return dict(sections=Sections())
