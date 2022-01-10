@@ -1,8 +1,18 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, add, create, extend, register_add, rule
+from moonleap import (
+    MemFun,
+    Prop,
+    add,
+    create,
+    create_forward,
+    extend,
+    register_add,
+    rule,
+)
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
+from moonleap.verbs import has
 from titan.tools_pkg.pipdependency import PipRequirement
 
 from . import (
@@ -49,6 +59,8 @@ def create_django(term, block):
 def rule_django_app(django_app):
     if django_app.use_django_extensions:
         add(django_app, PipRequirement(["django-extensions"], is_dev=True))
+
+    return create_forward(django_app, has, "users:module")
 
 
 @extend(DjangoApp)

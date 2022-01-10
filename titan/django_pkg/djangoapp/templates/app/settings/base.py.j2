@@ -27,6 +27,8 @@ CACHES = {
     }
 }
 
+GRAPHENE = {{ res.get_setting_or({}, ['base', 'GRAPHENE']) }}
+
 {% for setting_block in res.get_setting_or([], ['base', 'blocks']) %}
 {{ setting_block }}
 {% endfor %}

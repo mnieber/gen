@@ -1,16 +1,4 @@
-from moonleap import chop0
 from titan.django_pkg.djangoapp.resources import DjangoConfig
-
-block = chop0(
-    """
-GRAPHENE = {
-    "SCHEMA": "api.schema.schema",
-    "MIDDLEWARE": [
-        "graphql_jwt.middleware.JSONWebTokenMiddleware",
-    ],
-}
-"""
-)
 
 
 def get():
@@ -22,9 +10,9 @@ def get():
                 ],
             },
             "base": {
-                "blocks": [
-                    block,
-                ]
+                "GRAPHENE": {
+                    "SCHEMA": "api.schema.schema",
+                }
             },
         },
         urls=['path(r"graphql/", csrf_exempt(GraphQLView.as_view(graphiql=True)))'],

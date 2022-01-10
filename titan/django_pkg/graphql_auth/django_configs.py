@@ -20,8 +20,6 @@ DJANGO_RTK = {
     "EMAIL_FROM": "noreply@projecttogether.org",
 }
 
-TERMS_VERSION = "15-08-2021"
-
 GRAPHQL_JWT = {
     "JWT_VERIFY_EXPIRATION": True,
     "JWT_LONG_RUNNING_REFRESH_TOKEN": True,
@@ -48,6 +46,13 @@ def get():
             "auth": {
                 "AUTHENTICATION_BACKENDS": ["graphql_jwt.backends.JSONWebTokenBackend"],
                 "blocks": [block],
+            },
+            "base": {
+                "GRAPHENE": {
+                    "MIDDLEWARE": [
+                        "graphql_jwt.middleware.JSONWebTokenMiddleware",
+                    ]
+                }
             },
             "installed_apps": {
                 "THIRD_PARTY_APPS": [
