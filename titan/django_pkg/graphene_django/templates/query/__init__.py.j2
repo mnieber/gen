@@ -1,6 +1,12 @@
-import graphene
-
 {{ sections.graphene_query_imports() }}
+
+
+class GrapheneNonEmptyQuery(graphene.ObjectType):
+    test_query = graphene.Field(graphene.String)
+
+    def resolve_test_query(self, root, info, **kwargs):
+        return "Hello world"
+
 
 class Query({{ sections.query_base_classes() }}):
     pass

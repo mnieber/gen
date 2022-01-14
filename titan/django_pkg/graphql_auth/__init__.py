@@ -1,4 +1,7 @@
+import moonleap.resource.props as P
 from moonleap import add, create, extend, rule
+from moonleap.verbs import uses
+from titan.django_pkg.djangoapp import DjangoApp
 from titan.project_pkg.service import Tool
 from titan.tools_pkg.pipdependency import PipRequirement
 
@@ -33,3 +36,8 @@ def created_graphql_auth(graphql_auth):
 @extend(GraphqlAuth)
 class ExtendGraphqlAuth:
     pass
+
+
+@extend(DjangoApp)
+class ExtendDjangoApp:
+    graphql_auth = P.child(uses, "graphql-auth")

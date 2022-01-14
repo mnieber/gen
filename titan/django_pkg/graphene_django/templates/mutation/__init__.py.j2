@@ -1,6 +1,15 @@
-import graphene
-
 {{ sections.mutation_imports() }}
 
-class Mutation({{ sections.mutation_base_classes() }}graphene.ObjectType):
+
+class GrapheneNonEmptyMutation(graphene.Mutation):
+    class Arguments:
+        pass
+
+    test_mutation = graphene.Field(graphene.String)
+
+    def mutate(self, root, info, **kwargs):
+        return GrapheneNonEmptyMutation(test_mutation="Hello world")
+
+
+class Mutation({{ sections.mutation_base_classes() }}):
 {{ sections.mutation_fields() }}
