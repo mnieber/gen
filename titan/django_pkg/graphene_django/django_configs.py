@@ -12,6 +12,9 @@ def get():
             "base": {
                 "GRAPHENE": {
                     "SCHEMA": "api.schema.schema",
+                    "MIDDLEWARE": [
+                        "api.middleware.GraphqlCheckCRCMiddleware",
+                    ],
                 }
             },
         },
