@@ -4,7 +4,7 @@ from titan.react_view_pkg.router import RouterConfig
 
 
 def _wraps(panel):
-    return panel and bool(panel.wraps_children)
+    return panel and bool(panel.typ.wraps_children)
 
 
 def create_router_configs(self, named_component):
@@ -13,7 +13,7 @@ def create_router_configs(self, named_component):
     router_config = RouterConfig(
         component=named_component,
         url=url,
-        wraps=_wraps(self)
+        wraps=bool(self.wraps_children)
         or _wraps(self.top_panel)
         or _wraps(self.middle_panel)
         or _wraps(self.bottom_panel)
