@@ -39,4 +39,4 @@ def ml_type_spec_from_item_name(item_name):
     from moonleap.typespec.type_spec_store import type_spec_store
 
     data_type_name = ml_type_name_from_item_name(item_name)
-    return type_spec_store().get(data_type_name, None)
+    return type_spec_store().get(data_type_name)

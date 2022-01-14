@@ -15,6 +15,9 @@ def _get_faker_value(field_spec):
     if field_spec.field_type == "date":
         return f"f.date()"
 
+    if field_spec.field_type == "json":
+        return "{}"
+
     raise Exception(f"Cannot deduce faker function for {field_spec.field_type}")
 
 
