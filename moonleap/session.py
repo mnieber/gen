@@ -30,7 +30,7 @@ class Session:
         self.settings["spec_dir"] = self.spec_dir
         self.scope_manager.import_packages(self.settings.get("packages_by_scope", {}))
 
-        for one, many in self.settings["plurals"].items():
+        for one, many in self.settings.get("plurals", {}).items():
             install_plural(one, many)
 
     def get_post_process_settings(self):
