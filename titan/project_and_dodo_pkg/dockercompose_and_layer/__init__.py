@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
 from moonleap import add, extend, feeds, receives, rule
 from moonleap.verbs import configured_by, has
@@ -18,6 +20,11 @@ def docker_compose_created(docker_compose):
 def project_has_docker_compose(project, docker_compose):
     if not docker_compose.configured_by_layer:
         receives("dodo_layer_configs")(project, docker_compose)
+
+
+@rule("project", has, "docker-compose")
+def add_docker_compose_override_to_ignore(project, docker_compose):
+    project.add_template_dir(Path(__file__).parent / "templates_project")
 
 
 @extend(DockerCompose)

@@ -14,7 +14,7 @@ from titan.react_pkg.pkg.jsfilemerger import JsFileMerger
 from .props import get_context
 from .resources import Store
 
-JsFileMerger.add_pattern("types.ts")
+JsFileMerger.add_patterns(["types.ts"])
 
 base_tags = [("store", ["component", "react-store"])]
 

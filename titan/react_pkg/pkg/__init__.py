@@ -1,3 +1,7 @@
-from . import jsfilemerger, scssfilemerger
+from moonleap.render import simplefilemerger
 
-file_mergers = [jsfilemerger.JsFileMerger(), scssfilemerger.ScssFileMerger()]
+from . import jsfilemerger
+
+simplefilemerger.SimpleFileMerger.add_patterns(["index.scss", ".gitignore"])
+
+file_mergers = [jsfilemerger.JsFileMerger(), simplefilemerger.SimpleFileMerger()]
