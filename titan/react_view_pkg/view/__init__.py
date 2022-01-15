@@ -18,9 +18,7 @@ base_tags = [
 def create_view(term, block):
     name = u0(kebab_to_camel(term.data))
     view = View(name=f"{name}")
-    view.add_template_dir(
-        Path(__file__).parent / "templates", get_context, skip_render=props.skip_render
-    )
+    view.add_template_dir(Path(__file__).parent / "templates", get_context)
     return view
 
 
