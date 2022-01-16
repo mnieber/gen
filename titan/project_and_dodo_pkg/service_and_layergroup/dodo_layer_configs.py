@@ -15,7 +15,8 @@ def get(layer_group):
                 },
                 "ctrl": {
                     "1": r"${/ROOT/project_dir}/",
-                    "2": r"~/",
+                    "2": r"${/ROOT/config_dir}/",
+                    "3": r"~/",
                 },
             }
         )
