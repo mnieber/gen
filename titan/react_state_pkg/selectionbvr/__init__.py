@@ -18,6 +18,7 @@ def create_behavior(term, block):
 
 @rule("state", provides, "selection")
 def state_provides_selection(state, selection):
+    state.module.react_app.utils_module.use_packages(["mergeClickHandlers"])
     return create_forward(state, provides, f"{selection.item_name}:highlight")
 
 

@@ -13,7 +13,6 @@ import { registerCtr } from 'skandha-mobx';
 import { getIds } from 'src/utils/ids';
 import * as Facets from 'skandha-facets';
 import * as FacetPolicies from 'skandha-facets/policies';
-{{ sections.import_item_types() }}
 {% for bvr in res.behaviors %}
 {{ bvr.sections.imports() }}
 {% endfor %}
@@ -24,11 +23,7 @@ import * as Policies from './policies';
 import * as Handlers from './handlers';
 {% end_clean_up_js_imports %}
 
-type PropsT = {
-{% for item in _.selected_items %}
-  navigateToGreenLily: (greenLily: GreenLilyT) => void;
-{% endfor %}
-};
+type PropsT = {};
 
 export class YellowTulipState {
   @facet inputs: Inputs = new Inputs();

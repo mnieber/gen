@@ -166,14 +166,6 @@ def get_context(state_provider):
             ]
             return os.linesep.join(result)
 
-        def import_item_types(self):
-            result = []
-            for item in _.selected_items:
-                result.append(
-                    f"import {{ {ts_type(item)} }} from '{ts_type_import_path(item)}';"
-                )
-            return os.linesep.join(result)
-
         def get_state_input_values(self):
             result = []
             for chain in _.chains:
@@ -208,8 +200,5 @@ def get_context(state_provider):
                     for bvr in bvrs:
                         result += bvr.sections.default_props(store)
             return result
-
-        def field_names(self, item):
-            return ml_type_spec_from_item_name(item.item_name).select_item_by
 
     return dict(sections=Sections(), _=_)

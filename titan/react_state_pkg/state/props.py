@@ -67,14 +67,6 @@ def get_context(state):
 
             return os.linesep.join([(indent + x) for x in result])
 
-        def import_item_types(self):
-            result = []
-            for item in _.selected_items:
-                result.append(
-                    f"import {{ {ts_type(item)} }} from '{ts_type_import_path(item)}';"
-                )
-            return os.linesep.join(result)
-
         def callbacks(self):
             indent = "  "
             result = []
@@ -89,8 +81,6 @@ def get_context(state):
                 result += [f"_set{u0(redRoses)}Callbacks(props: PropsT) {{"]
 
                 if body:
-                    if [bvr for bvr in state.behaviors if bvr.name == "selection"]:
-                        result += [f"  const inputs = this.inputs;"]
                     result += [f"  const ctr = this.{redRoses};"]
                     result += body
 

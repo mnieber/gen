@@ -1,5 +1,6 @@
 {% magic_with res.item_name as yellowTulip %}
 {% magic_with res.module.name as gardenFlowers %}
+{% magic_with field_name as redRose %}
 {% clean_up_js_imports %}
 import classnames from 'classnames';
 import { always, pipe, map } from 'ramda';
@@ -8,6 +9,12 @@ import { FC, useDefaultProps } from 'react-default-props-context';
 import { YellowTulipListViewItem } from 'src/gardenFlowers/components';
 import { YellowTulipT } from 'src/gardenFlowers/types';
 import { getResourceView } from 'src/utils/components';
+{% if _.selection_bvr %}
+import { useRouteMatch } from 'react-router-dom';
+import { createNavigateTo } from 'src/routes/createNavigateTo';
+import { mergeClickHandlers } from 'src/utils/mergeClickHandlers';
+{% endif %}
+
 
 {{ sections.imports() }}
 
@@ -34,7 +41,20 @@ export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: Props
   });
   if (resourceView) return resourceView;
 
-{{ sections.body() }}
+{% if _.selection_bvr %}
+  const handlerClick = new ClickToSelectItems({
+    selection: props.yellowTulipsSelection
+  });
+{% endif %}
+
+{% if _.selection_bvr %}
+  const renderedRoute = useRouteMatch();
+  const navigateToYellowTulip = createNavigateTo(renderedRoute, (yellowTulip: YellowTulipT) => ({
+{% for field_name in _.type_spec.select_item_by %}
+    yellowTulipRedRose: yellowTulip.redRose,
+{% endfor %}
+  }));
+{% endif %}
 
   const yellowTulipDivs = pipe(
     always(props.yellowTulips),
@@ -46,7 +66,18 @@ export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: Props
 {% if _.deletion_bvr %}
         onDelete={() => props.yellowTulipsDeletion.delete([x.id])}
 {% endif %}
-{{ sections.on_click() }}
+{% if _.selection_bvr %}
+        {...mergeClickHandlers([
+            handlerClick.handle(x.id),
+            {
+                onMouseUp: (e: any) => {
+                    navigateToYellowTulip(x);
+                },
+            },
+        ])}
+{% else %}
+        onMouseUp={(e: any) => {navigateToYellowTulip(x);}}
+{% endif %}
       />
     ))
   )();
@@ -65,5 +96,6 @@ export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: Props
     </div>
   );
 });
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

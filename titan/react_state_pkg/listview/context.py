@@ -74,30 +74,6 @@ def get_context(list_view):
                 ]
             )
 
-        def on_click(self):
-            result = []
-            indent = " " * 10
-            if _.selection_bvr:
-                result.extend([f"{indent}{{...handlerClick.handle(x.id)}}"])
-            else:
-                result.extend(
-                    [
-                        f"{indent}onClick="
-                        + f"{{() => alert('TODO: browse to {list_view.item_name}')}}"
-                    ]
-                )
-
-            return os.linesep.join(result)
-
-        def body(self):
-            result = []
-            if _.selection_bvr:
-                result.append(r"const handlerClick = new ClickToSelectItems({")
-                result.append(f"  selection: props.{list_view.items_name}Selection")
-                result.append(r"});")
-
-            return os.linesep.join(result)
-
         def fields(self):
             result = []
 

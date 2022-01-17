@@ -46,6 +46,7 @@ rules = [
 
 @extend(State)
 class ExtendState:
+    module = P.parent("module", has)
     behaviors = P.children(provides, "behavior")
     item_lists_provided = P.children(provides, "item~list")
     items_provided = P.children(provides, "item")
