@@ -33,6 +33,9 @@ export function SignInForm(props: SignInFormPropsT) {
     values: FormState['values'];
     setError: FormState['setError'];
   }) => {
+    if (!values.email) {
+      setError('email', 'Please enter your email address');
+    }
     if (!values.password) {
       setError('password', 'Please enter your password');
     }

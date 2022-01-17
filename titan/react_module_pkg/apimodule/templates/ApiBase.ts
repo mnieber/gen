@@ -90,8 +90,6 @@ export class ApiBase {
 
         this._dispatchErrored(queryName, vars, getErrorMsg(error));
       });
-
-    return result;
   }
 }
 

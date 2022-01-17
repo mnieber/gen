@@ -33,7 +33,7 @@ export const YellowTulipListViewItem: React.FC<PropsT> = observer((props: PropsT
 {% if _.deletion_bvr %}
       <button
         onClick={() => {
-          props.onDelete().then(() => {});
+          props.onDelete();
         }}
       >
         Delete
