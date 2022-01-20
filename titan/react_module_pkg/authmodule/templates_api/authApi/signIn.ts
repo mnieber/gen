@@ -1,11 +1,19 @@
-import { apiBase } from 'src/api/ApiBase';
+import { useMutation } from 'react-query';
 import { States } from 'src/api/authApi/states';
 import { hasErrorCode, isError } from 'src/api/authApi/utils';
-import { setToken } from 'src/utils/graphqlClient';
+import { AuthState } from 'src/auth/AuthState';
+import { useAuthStore } from 'src/auth/components/useAuthStore';
+import { doQuery, setToken } from 'src/utils/graphqlClient';
 import { ObjT } from 'src/utils/types';
 
-export async function signIn(userId: string, password: string) {
-  const query = `mutation ($email: String!, $password: String!) {
+export type ArgsT = {
+  userId: string;
+  password: string;
+};
+
+export function signIn(args: ArgsT) {
+  return doQuery(
+    `mutation ($email: String!, $password: String!) {
       tokenAuth(
         email: $email,
         password: $password
@@ -15,44 +23,54 @@ export async function signIn(userId: string, password: string) {
         token,
         refreshToken,
       }
-    }`;
-
-  await apiBase.doQuery(
-    'signIn',
-    query,
+    }`,
     {
-      email: userId,
-      password,
-    },
-    (response: ObjT) => {
-      if (
-        hasErrorCode(
-          ['tokenAuth', 'errors', 'nonFieldErrors'],
-          'INVALID_CREDENTIALS'
-        )(response)
-      )
-        return {
-          success: false,
-          errors: [States.INVALID_CREDENTIALS],
-        };
-
-      if (isError(['tokenAuth', 'errors'])(response))
-        return {
-          success: false,
-          errors: [States.SIGN_IN_FAILED],
-        };
-
-      const token = response.tokenAuth.token;
-      setToken(token);
-
-      return {
-        success: true,
-        token,
-        userId,
-      };
-    },
-    (error: ObjT) => {
-      return error.response.errors[0].message;
+      email: args.userId,
+      password: args.password,
     }
-  );
+  ).then((response: ObjT) => {
+    if (
+      hasErrorCode(
+        ['tokenAuth', 'errors', 'nonFieldErrors'],
+        'INVALID_CREDENTIALS'
+      )(response)
+    )
+      return {
+        success: false,
+        errors: [States.INVALID_CREDENTIALS],
+      };
+
+    if (isError(['tokenAuth', 'errors'])(response))
+      return {
+        success: false,
+        errors: [States.SIGN_IN_FAILED],
+      };
+
+    const token = response.tokenAuth.token;
+    setToken(token);
+
+    return {
+      success: true,
+      token,
+      userId: args.userId,
+    };
+  });
 }
+
+export const useSignIn = (authState?: AuthState) => {
+  const authStore = useAuthStore();
+  const queryName = 'signIn';
+
+  return useMutation([queryName], signIn, {
+    onMutate: () => {
+      if (authState) authState.onUpdating(queryName);
+    },
+    onSuccess: (data: ObjT) => {
+      if (authState) authState.onUpdated(queryName, data);
+      authStore.onSignIn(data);
+    },
+    onError: (error: Error) => {
+      if (authState) authState.onErrored(queryName, error.message);
+    },
+  });
+};

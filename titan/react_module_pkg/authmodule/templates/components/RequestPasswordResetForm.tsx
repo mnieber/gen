@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   FormStateProvider,
   HandleSubmitArgsT,
@@ -21,7 +20,7 @@ const getExternalErrors = (errors: Array<string>) => {
 };
 
 type PasswordResetFormPropsT = {
-  resetPassword: (email: string) => any;
+  requestPasswordReset: (email: string) => any;
   errors: Array<string>;
 };
 
@@ -33,7 +32,7 @@ export function RequestPasswordResetForm(props: PasswordResetFormPropsT) {
   };
 
   const handleSubmit = ({ values }: HandleSubmitArgsT) => {
-    props.resetPassword(values.email);
+    props.requestPasswordReset(values.email);
   };
 
   return (

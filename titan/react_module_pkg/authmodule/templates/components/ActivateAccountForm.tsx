@@ -1,5 +1,4 @@
 import { FormState, FormStateProvider } from 'react-form-state-context';
-import { useParams } from 'react-router-dom';
 import { States } from 'src/api/authApi/states';
 import { GlobalError } from 'src/auth/components/formFields/GlobalError';
 import { PasswordField } from 'src/auth/components/formFields/PasswordField';
@@ -39,13 +38,11 @@ const getExternalErrors = (errors: Array<string>) => {
 };
 
 type PropsT = {
-  activateAccount: (email: string, password: string) => any;
+  activateAccount: (password: string) => any;
   errors: Array<string>;
 };
 
 export function ActivateAccountForm(props: PropsT) {
-  const params = useParams();
-
   const handleValidate = ({
     values,
     setError,
@@ -61,7 +58,7 @@ export function ActivateAccountForm(props: PropsT) {
   };
 
   const handleSubmit = ({ values }: { values: FormState['values'] }) => {
-    props.activateAccount(values.activationToken, values.password);
+    props.activateAccount(values.password);
   };
 
   const explanationDiv = (
@@ -73,10 +70,7 @@ export function ActivateAccountForm(props: PropsT) {
 
   return (
     <FormStateProvider
-      initialValues={{
-        activationToken: (params as any).activationToken,
-        password: null,
-      }}
+      initialValues={{ password: null }}
       initialErrors={getExternalErrors(props.errors)}
       handleValidate={handleValidate}
       handleSubmit={handleSubmit}

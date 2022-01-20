@@ -1,14 +1,19 @@
-import { apiBase } from 'src/api/ApiBase';
+import { useMutation } from 'react-query';
 import { States } from 'src/api/authApi/states';
 import { isError } from 'src/api/authApi/utils';
+import { AuthState } from 'src/auth/AuthState';
+import { doQuery } from 'src/utils/graphqlClient';
 import { ObjT } from 'src/utils/types';
 
-export async function signUp(
-  userId: string,
-  acceptsTerms: boolean,
-  termsVersionAccepted: string
-) {
-  const query = `mutation (
+export type ArgsT = {
+  userId: string;
+  acceptsTerms: boolean;
+  termsVersionAccepted: string;
+};
+
+export function signUp(args: ArgsT) {
+  return doQuery(
+    `mutation (
       $email: String!,
       $acceptsTerms: Boolean!,
       $termsVersionAccepted: String!
@@ -22,30 +27,37 @@ export async function signUp(
         activationToken,
         errors,
       }
-    }`;
-
-  await apiBase.doQuery(
-    'signUp',
-    query,
+    }`,
     {
-      email: userId,
-      acceptsTerms,
-      termsVersionAccepted,
-    },
-    (response: ObjT) => {
-      if (isError(['registerAccount', 'errors'])(response))
-        return {
-          success: false,
-          errors: [States.SIGN_UP_FAILED],
-        };
-
-      return {
-        success: true,
-        activationToken: response.registerAccount.activationToken,
-      };
-    },
-    (error: ObjT) => {
-      return error.response.errors[0].message;
+      email: args.userId,
+      acceptsTerms: args.acceptsTerms,
+      termsVersionAccepted: args.termsVersionAccepted,
     }
-  );
+  ).then((response: ObjT) => {
+    if (isError(['registerAccount', 'errors'])(response))
+      return {
+        success: false,
+        errors: [States.SIGN_UP_FAILED],
+      };
+
+    return {
+      success: true,
+      activationToken: response.registerAccount.activationToken,
+    };
+  });
 }
+
+export const useSignUp = (authState?: AuthState) => {
+  const queryName = 'signUp';
+  return useMutation(['signUp'], signUp, {
+    onMutate: () => {
+      if (authState) authState.onUpdating(queryName);
+    },
+    onSuccess: (data: ObjT) => {
+      if (authState) authState.onUpdated(queryName, data);
+    },
+    onError: (error: Error) => {
+      if (authState) authState.onErrored(queryName, error.message);
+    },
+  });
+};

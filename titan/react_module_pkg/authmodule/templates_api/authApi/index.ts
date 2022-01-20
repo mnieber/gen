@@ -1,7 +1,10 @@
-export { activateAccount } from './activateAccount';
-export { loadUserId } from './loadUserId';
-export { requestPasswordReset } from './requestPasswordReset';
-export { resetPassword } from './resetPassword';
-export { signIn } from './signIn';
-export { signOut } from './signOut';
-export { signUp } from './signUp';
+export { activateAccount, useActivateAccount } from './activateAccount';
+export { loadUserId, useLoadUserId } from './loadUserId';
+export {
+  requestPasswordReset,
+  useRequestPasswordReset,
+} from './requestPasswordReset';
+export { resetPassword, useResetPassword } from './resetPassword';
+export { signIn, useSignIn } from './signIn';
+export { signOut, useSignOut } from './signOut';
+export { signUp, useSignUp } from './signUp';

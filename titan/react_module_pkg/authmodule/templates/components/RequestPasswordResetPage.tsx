@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { requestPasswordReset } from 'src/api/authApi';
+import { useRequestPasswordReset } from 'src/api/authApi';
 import { States } from 'src/api/authApi/states';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { RequestPasswordResetForm } from 'src/auth/components/RequestPasswordResetForm';
@@ -8,7 +8,8 @@ import { useAuthStateContext } from 'src/auth/components/useAuthStateContext';
 import { RouterLink } from 'src/routes/components';
 
 export const RequestPasswordResetPage: React.FC = observer(() => {
-  const { errors, state } = useAuthStateContext(true);
+  const authState = useAuthStateContext(true);
+  const requestPasswordReset = useRequestPasswordReset(authState).mutateAsync;
 
   const confirmationDiv = (
     <div>
@@ -20,11 +21,14 @@ export const RequestPasswordResetPage: React.FC = observer(() => {
   return (
     <AuthFrame header="Reset your password">
       <div id="RequestPasswordResetPage" className="">
-        {state === States.REQUEST_PASSWORD_RESET_SUCCEEDED && confirmationDiv}
-        {state !== States.REQUEST_PASSWORD_RESET_SUCCEEDED && (
+        {authState.state === States.REQUEST_PASSWORD_RESET_SUCCEEDED &&
+          confirmationDiv}
+        {authState.state !== States.REQUEST_PASSWORD_RESET_SUCCEEDED && (
           <RequestPasswordResetForm
-            resetPassword={requestPasswordReset}
-            errors={errors}
+            requestPasswordReset={(email: string) =>
+              requestPasswordReset({ email })
+            }
+            errors={authState.errors}
           />
         )}
         <RouterLink dataCy="goToSignInLink" to="/sign-in/">

@@ -1,8 +1,6 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 import * as R from 'ramda';
 import { States } from 'src/api/authApi/states';
-import { storeConnectsToApi } from 'src/app/AppStore/policies';
-import { isErroredRS, isUpdatedRS, isUpdatingRS, RST } from 'src/utils/RST';
 import { ObjT } from 'src/utils/types';
 
 const lutSuccess: ObjT = {
@@ -34,7 +32,6 @@ export class AuthState {
   constructor(initialState: string) {
     makeObservable(this);
     this.state = this.initialState = initialState;
-    storeConnectsToApi(this);
   }
 
   @computed get hasErrors() {
@@ -47,31 +44,37 @@ export class AuthState {
     this.details = {};
   };
 
-  @action onLoadData(rs: RST, queryName: string, vars: ObjT, data: ObjT) {
-    if (
-      [
-        'signIn',
-        'signUp',
-        'requestPasswordReset',
-        'resetPassword',
-        'activateAccount',
-        'signOut',
-      ].includes(queryName)
-    ) {
-      if (isUpdatingRS(rs)) {
-        this.reset();
-      }
-      if (isUpdatedRS(rs)) {
-        this.errors = data.errors ?? [];
-        this.state = data.errors
-          ? (lutFailure[queryName] as string)
-          : (lutSuccess[queryName] as string);
-      }
-      if (isErroredRS(rs)) {
-        this.details = { message: rs.message };
-        this.errors = [lutFailure[queryName]];
-        this.state = lutFailure[queryName];
-      }
+  isTrackedQuery = (queryName: string) => {
+    return [
+      'signIn',
+      'signUp',
+      'requestPasswordReset',
+      'resetPassword',
+      'activateAccount',
+      'signOut',
+    ].includes(queryName);
+  };
+
+  @action onUpdated(queryName: string, data: ObjT) {
+    if (this.isTrackedQuery(queryName)) {
+      this.errors = data.errors ?? [];
+      this.state = data.errors
+        ? (lutFailure[queryName] as string)
+        : (lutSuccess[queryName] as string);
+    }
+  }
+
+  @action onUpdating(queryName: string) {
+    if (this.isTrackedQuery(queryName)) {
+      this.reset();
+    }
+  }
+
+  @action onErrored(queryName: string, message: string) {
+    if (this.isTrackedQuery(queryName)) {
+      this.details = { message: message };
+      this.errors = [lutFailure[queryName]];
+      this.state = lutFailure[queryName];
     }
   }
 }

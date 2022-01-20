@@ -1,15 +1,19 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { activateAccount } from 'src/api/authApi';
+import { useParams } from 'react-router-dom';
+import { useActivateAccount } from 'src/api/authApi';
 import { States } from 'src/api/authApi/states';
 import { ActivateAccountForm } from 'src/auth/components/ActivateAccountForm';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { useAuthStateContext } from 'src/auth/components/useAuthStateContext';
 import { RouterLink } from 'src/routes/components';
 import { routes } from 'src/routes/routes';
+import { ObjT } from 'src/utils/types';
 
 export const ActivateAccountPage: React.FC = observer(() => {
-  const { errors, state } = useAuthStateContext(true);
+  const params = useParams() as ObjT;
+  const authState = useAuthStateContext(true);
+  const activateAccount = useActivateAccount(authState).mutateAsync;
 
   const confirmationDiv = (
     <div>
@@ -22,14 +26,21 @@ export const ActivateAccountPage: React.FC = observer(() => {
   );
 
   const activateAccountForm = (
-    <ActivateAccountForm activateAccount={activateAccount} errors={errors} />
+    <ActivateAccountForm
+      activateAccount={(password: string) =>
+        activateAccount({ password, activationToken: params.activationToken })
+      }
+      errors={authState.errors}
+    />
   );
 
   return (
     <AuthFrame header="Activate your account">
       <div id="ActivateAccountPage" className="">
-        {state === States.ACTIVATE_ACCOUNT_SUCCEEDED && confirmationDiv}
-        {state !== States.ACTIVATE_ACCOUNT_SUCCEEDED && activateAccountForm}
+        {authState.state === States.ACTIVATE_ACCOUNT_SUCCEEDED &&
+          confirmationDiv}
+        {authState.state !== States.ACTIVATE_ACCOUNT_SUCCEEDED &&
+          activateAccountForm}
       </div>
     </AuthFrame>
   );

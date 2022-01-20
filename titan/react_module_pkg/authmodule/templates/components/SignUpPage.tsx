@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { signUp } from 'src/api/authApi';
+import { useSignUp } from 'src/api/authApi';
 import { States } from 'src/api/authApi/states';
 import { termsVersion } from 'src/auth/AuthStore';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
@@ -9,7 +9,8 @@ import { useAuthStateContext } from 'src/auth/components/useAuthStateContext';
 import { RouterLink } from 'src/routes/components';
 
 export const SignUpPage: React.FC = observer(() => {
-  const { errors, state } = useAuthStateContext(true);
+  const authState = useAuthStateContext(true);
+  const signUp = useSignUp(authState).mutateAsync;
 
   const confirmationDiv = (
     <div>
@@ -29,14 +30,18 @@ export const SignUpPage: React.FC = observer(() => {
   return (
     <AuthFrame header="Sign Up">
       <div id="SignUpPage">
-        {state === States.SIGN_UP_SUCCEEDED && confirmationDiv}
-        {state !== States.SIGN_UP_SUCCEEDED && (
+        {authState.state === States.SIGN_UP_SUCCEEDED && confirmationDiv}
+        {authState.state !== States.SIGN_UP_SUCCEEDED && (
           <React.Fragment>
             <SignUpForm
               signUp={(email: string, acceptsTerms: boolean) =>
-                signUp(email, acceptsTerms, termsVersion)
+                signUp({
+                  userId: email,
+                  acceptsTerms,
+                  termsVersionAccepted: termsVersion,
+                })
               }
-              errors={errors}
+              errors={authState.errors}
             />
             {alreadyHaveAnAccountDiv}
           </React.Fragment>

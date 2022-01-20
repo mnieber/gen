@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { signIn } from 'src/api/authApi/signIn';
+import { useSignIn } from 'src/api/authApi';
 import { States } from 'src/api/authApi/states';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { SignInForm } from 'src/auth/components/SignInForm';
@@ -9,11 +9,14 @@ import { RouterLink } from 'src/routes/components';
 import { getNextUrl, useNextUrl } from 'src/utils/useNextUrl';
 
 export const SignInPage: React.FC = observer(() => {
-  const { state, errors } = useAuthStateContext(true);
+  const authState = useAuthStateContext(true);
+  const signIn = useSignIn(authState).mutateAsync;
 
   // Change the url if sign in was successfull
   useNextUrl(
-    state === States.SIGN_IN_SUCCEEDED ? getNextUrl('/home') : undefined
+    authState.state === States.SIGN_IN_SUCCEEDED
+      ? getNextUrl('/home')
+      : undefined
   );
 
   return (
@@ -21,9 +24,9 @@ export const SignInPage: React.FC = observer(() => {
       <div id="SignInPage" className="">
         <SignInForm
           signIn={(email, password) => {
-            signIn(email, password);
+            signIn({ userId: email, password });
           }}
-          errors={errors}
+          errors={authState.errors}
         />
         <RouterLink to="/request-password-reset/">Forgot password?</RouterLink>
         <RouterLink to="/sign-up/">

@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { resetPassword } from 'src/api/authApi';
+import { useResetPassword } from 'src/api/authApi';
 import { States } from 'src/api/authApi/states';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { ResetPasswordForm } from 'src/auth/components/ResetPasswordForm';
@@ -10,7 +10,8 @@ import { RouterLink } from 'src/routes/components';
 
 export const ResetPasswordPage: React.FC = observer(() => {
   const params = useParams();
-  const { errors, state } = useAuthStateContext(true);
+  const authState = useAuthStateContext(true);
+  const resetPassword = useResetPassword(authState).mutateAsync;
 
   const explanationDiv = <div>Please enter your new password.</div>;
   const confirmationDiv = (
@@ -22,7 +23,7 @@ export const ResetPasswordPage: React.FC = observer(() => {
     </div>
   );
 
-  const isPasswordChanged = state === States.RESET_PASSWORD_SUCCEEDED;
+  const isPasswordChanged = authState.state === States.RESET_PASSWORD_SUCCEEDED;
 
   return (
     <AuthFrame header="Change your password">
@@ -31,9 +32,12 @@ export const ResetPasswordPage: React.FC = observer(() => {
         {!isPasswordChanged && explanationDiv}
         {!isPasswordChanged && (
           <ResetPasswordForm
-            errors={errors}
+            errors={authState.errors}
             resetPassword={(password) =>
-              resetPassword(password, (params as any).passwordResetToken)
+              resetPassword({
+                password,
+                passwordResetToken: (params as any).passwordResetToken,
+              })
             }
           />
         )}

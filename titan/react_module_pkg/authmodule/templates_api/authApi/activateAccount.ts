@@ -1,13 +1,18 @@
-import { apiBase } from 'src/api/ApiBase';
+import { useMutation } from 'react-query';
 import { States } from 'src/api/authApi/states';
 import { hasErrorCode, isError } from 'src/api/authApi/utils';
+import { AuthState } from 'src/auth/AuthState';
+import { doQuery } from 'src/utils/graphqlClient';
 import { ObjT } from 'src/utils/types';
 
-export async function activateAccount(
-  activationToken: string,
-  password: string
-) {
-  const query = `mutation (
+export type ArgsT = {
+  activationToken: string;
+  password: string;
+};
+
+export function activateAccount(args: ArgsT) {
+  return doQuery(
+    `mutation (
       $activationToken: String!,
       $password: String!,
     ) {
@@ -18,50 +23,57 @@ export async function activateAccount(
         success,
         errors,
       }
-    }`;
-
-  await apiBase.doQuery(
-    'activateAccount',
-    query,
+    }`,
     {
-      activationToken,
-      password,
-    },
-    (response: ObjT) => {
-      if (
-        hasErrorCode(
-          ['activateAccount', 'errors', 'password'],
-          'TOO_SHORT'
-        )(response)
-      )
-        return {
-          success: false,
-          errors: [States.PASSWORD_TOO_SHORT],
-        };
-
-      if (
-        hasErrorCode(
-          ['activateAccount', 'errors', 'activationToken'],
-          'NOT_FOUND'
-        )(response)
-      )
-        return {
-          success: false,
-          errors: [States.ACTIVATION_TOKEN_NOT_FOUND],
-        };
-
-      if (isError(['activateAccount', 'errors'])(response))
-        return {
-          success: false,
-          errors: [States.ACTIVATE_ACCOUNT_FAILED],
-        };
-
-      return {
-        success: true,
-      };
-    },
-    (error: ObjT) => {
-      return error.response.errors[0].message;
+      activationToken: args.activationToken,
+      password: args.password,
     }
-  );
+  ).then((response: ObjT) => {
+    if (
+      hasErrorCode(
+        ['activateAccount', 'errors', 'password'],
+        'TOO_SHORT'
+      )(response)
+    )
+      return {
+        success: false,
+        errors: [States.PASSWORD_TOO_SHORT],
+      };
+
+    if (
+      hasErrorCode(
+        ['activateAccount', 'errors', 'activationToken'],
+        'NOT_FOUND'
+      )(response)
+    )
+      return {
+        success: false,
+        errors: [States.ACTIVATION_TOKEN_NOT_FOUND],
+      };
+
+    if (isError(['activateAccount', 'errors'])(response))
+      return {
+        success: false,
+        errors: [States.ACTIVATE_ACCOUNT_FAILED],
+      };
+
+    return {
+      success: true,
+    };
+  });
 }
+
+export const useActivateAccount = (authState?: AuthState) => {
+  const queryName = 'activateAccount';
+  return useMutation([queryName], activateAccount, {
+    onMutate: () => {
+      if (authState) authState.onUpdating(queryName);
+    },
+    onSuccess: (data: ObjT) => {
+      if (authState) authState.onUpdated(queryName, data);
+    },
+    onError: (error: Error) => {
+      if (authState) authState.onErrored(queryName, error.message);
+    },
+  });
+};

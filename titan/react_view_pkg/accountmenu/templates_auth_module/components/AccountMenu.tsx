@@ -1,9 +1,9 @@
 import classnames from 'classnames';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { signOut } from 'src/api/authApi';
-import { useStore } from 'src/app/components';
+import { useSignOut } from 'src/api/authApi';
 import { anonymous } from 'src/auth/AuthStore';
+import { useAuthStore } from 'src/auth/components/useAuthStore';
 import { RouterLink } from 'src/routes/components';
 import UIkit from 'uikit';
 import './AccountMenu.scss';
@@ -15,7 +15,8 @@ const closeDropDown = () => {
 type PropsT = React.PropsWithChildren<{}>;
 
 export const AccountMenu: React.FC<PropsT> = observer(() => {
-  const { authStore } = useStore();
+  const authStore = useAuthStore();
+  const signOut = useSignOut().mutateAsync;
 
   const signInDiv = (
     <li className="uk-active">
@@ -30,7 +31,7 @@ export const AccountMenu: React.FC<PropsT> = observer(() => {
       <RouterLink
         dataCy="signOutMenuItem"
         to={'/sign-in'}
-        onClick={() => signOut()}
+        onClick={() => signOut({})}
       >
         Sign out
       </RouterLink>
