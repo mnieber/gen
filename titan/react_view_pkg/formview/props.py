@@ -44,9 +44,7 @@ def get_context(form_view):
     _.fk_field_specs = [x for x in _.type_spec.get_field_specs(["uuid"]) if x.target]
     _.graphql_api = ml_graphql_api(ml_react_app(form_view))
     _.type_reg = TypeRegistry(_.graphql_api)
-
     _.mutation = R.head(form_view.item_posted.poster_mutations)
-    _.postmethod = _.mutation.name
 
     class Sections:
         def form_imports(self):
@@ -54,7 +52,7 @@ def get_context(form_view):
             for field_spec in _.fk_field_specs:
                 item_name = field_spec.target
                 item_list = _.type_reg.get_item_list_by_name(item_name)
-                module = item_list.provider_react_store.module
+                module = item_list.provider_react_state.module
                 root.abc(
                     f"import {{ {ts_type_from_item_name(item_name)} }} "
                     + f"from '{module.module_path}/types'"
@@ -147,7 +145,7 @@ def get_context(form_view):
                 args.append(f"{chopped_name}: undefined")
             args.append(r"} as any")
             root = CodeBlock(style="typescript", level=2)
-            root.IxI(_.postmethod, args, "")
+            root.IxI(_.mutation.name, args, "")
             return root.result
 
     return dict(sections=Sections(), _=_)

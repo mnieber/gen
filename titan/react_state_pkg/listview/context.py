@@ -15,65 +15,6 @@ def get_context(list_view):
     _.highlight_bvr = _find_behavior("highlight")
 
     class Sections:
-        def imports(self):
-            result = []
-            if _.deletion_bvr:
-                result.append("import { Deletion } from 'skandha-facets/Deletion';")
-            if _.highlight_bvr:
-                result.append("import { Highlight } from 'skandha-facets/Highlight';")
-            if _.selection_bvr:
-                result.append("import { Selection } from 'skandha-facets/Selection';")
-                result.append(
-                    "import { ClickToSelectItems } from 'skandha-facets/handlers';"
-                )
-
-            return os.linesep.join(result)
-
-        def default_props(self):
-            result = []
-            if _.deletion_bvr:
-                result.extend([f"          {list_view.items_name}Deletion: Deletion,"])
-            if _.highlight_bvr:
-                result.extend(
-                    [f"          {list_view.items_name}Highlight: Highlight,"]
-                )
-            if _.selection_bvr:
-                result.extend(
-                    [f"          {list_view.items_name}Selection: Selection,"]
-                )
-
-            return os.linesep.join(result)
-
-        def classnames(self):
-            result = []
-            if _.selection_bvr:
-                result.extend(
-                    [
-                        f"          '{list_view.name}Item--selected':",
-                        f"            x && props.{list_view.items_name}Selection.ids.includes(x.id),",  # noqa: E501
-                    ]
-                )
-
-            if _.highlight_bvr:
-                result.extend(
-                    [
-                        f"          '{list_view.name}Item--highlighted':",
-                        f"            x && props.{list_view.items_name}Highlight.id == x.id,",  # noqa: E501
-                    ]
-                )
-
-            if not result:
-                return ""
-
-            return os.linesep.join(
-                [
-                    #
-                    "        className={classnames({",
-                    *result,
-                    "        })}",
-                ]
-            )
-
         def fields(self):
             result = []
 

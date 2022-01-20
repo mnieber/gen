@@ -5,14 +5,13 @@ import ramda as R
 from moonleap import u0
 from moonleap.utils.inflect import plural
 from titan.react_pkg.pkg.ml_get import ml_react_app
-from titan.react_pkg.pkg.ts_var import ts_type, ts_type_import_path
 from titan.react_state_pkg.stateprovider.props import get_items_selected_from_url
 
 
 def _find_module_that_provides_item_list(react_app, item_name):
     for module in react_app.modules:
-        for store in module.stores:
-            for item_list in store.item_lists_stored:
+        for state in module.states:
+            for item_list in state.item_lists_provided:
                 if item_list.item_name == item_name:
                     return module
     return None
@@ -29,16 +28,16 @@ def bvrs_by_item_name(self):
     return result
 
 
-def store_by_item_name(self):
+def state_by_item_name(self):
     result = {}
-    stores = []
+    states = []
     for x in ml_react_app(self).modules:
-        stores.extend(x.stores)
+        states.extend(x.states)
 
     for item_name in bvrs_by_item_name(self).keys():
-        for store in stores:
-            if [x for x in store.item_lists_stored if x.item_name == item_name]:
-                result[item_name] = store
+        for state in states:
+            if [x for x in state.item_lists_provided if x.item_name == item_name]:
+                result[item_name] = state
                 break
     return result
 

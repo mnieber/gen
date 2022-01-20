@@ -14,16 +14,15 @@ type PropsT = {
 
 type DefaultPropsT = {
   yellowTulip: YellowTulipT
-  yellowTulipResUrl: string
+  yellowTulipRS: string
 };
 
 export const YellowTulipView: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
   const props = useDefaultProps<PropsT, DefaultPropsT>(p);
 
-  const resourceView = getResourceView({
-    resUrl: props.yellowTulipResUrl,
-    res: props.yellowTulip
-  });
+  const resourceView = props.yellowTulipRS === 'loading' || !props.yellowTulip ? (
+    <div>Loading...</div>
+  ) : undefined;
   if (resourceView) return resourceView;
 
   return (

@@ -19,63 +19,55 @@ export class AuthStore {
     makeObservable(this);
   }
 
-  @action onLoadData(rs: RST, queryName: string, vars: ObjT, data: ObjT) {
-    const errors = data?.errors ?? [];
-
-    if (queryName === 'signIn') {
-      if (isUpdatedRS(rs)) {
-        if (R.isEmpty(errors)) {
-          this.signedInUserId = data.userId;
-        }
-      }
+  @action onSignIn(data: ObjT) {
+    if (R.isEmpty(data?.errors ?? [])) {
+      this.signedInUserId = data.userId;
     }
+  }
 
+  @action onLoadUserId(data: ObjT) {
+    if (R.isEmpty(data?.errors ?? [])) {
+      this.signedInUserId = data.userId ?? anonymous;
+    }
+  }
+
+  @action onSignOut(data: ObjT) {
+    if (R.isEmpty(data?.errors ?? [])) {
+      this.signedInUserId = anonymous;
+    }
+  }
+
+  @action onSignUp(data: ObjT) {
 {% if res.react_app.cypress %}
-    if (queryName === 'signUp') {
-      if (isUpdatedRS(rs)) {
-        if (data.errors) {
-          maybeSetCypressCookie('cypressAccountActivationToken', '');
-        }
-        else {
-          maybeSetCypressCookie(
-            'cypressAccountActivationToken',
-            data.activationToken
-          );
-        }
-      }
+    if (R.isEmpty(data?.errors ?? [])) {
+      maybeSetCypressCookie(
+        'cypressAccountActivationToken',
+        data.activationToken
+      );
+    }
+    else {
+      maybeSetCypressCookie('cypressAccountActivationToken', '');
     }
 {% endif %}
+  }
 
+  @action onRequestPasswordReset(data: ObjT) {
 {% if res.react_app.cypress %}
-    if (queryName === 'requestPasswordReset') {
-      if (isUpdatedRS(rs)) {
-        if (data.errors) {
-          maybeSetCypressCookie('cypressPasswordResetToken', '');
-        }
-        else {
-          maybeSetCypressCookie(
-            'cypressPasswordResetToken',
-            data.passwordResetToken
-          );
-        }
-      }
+    if (R.isEmpty(data?.errors ?? [])) {
+      maybeSetCypressCookie(
+        'cypressPasswordResetToken',
+        data.passwordResetToken
+      );
+    }
+    else {
+      maybeSetCypressCookie('cypressPasswordResetToken', '');
     }
 {% endif %}
+  }
 
-    if (queryName === 'loadUserId') {
-      if (isUpdatedRS(rs)) {
-        if (R.isEmpty(errors)) {
-          this.signedInUserId = data.userId ?? anonymous;
-        }
-      }
-    }
+  @action onResetPassword(data: ObjT) {
+  }
 
-    if (queryName === 'signOut') {
-      if (isUpdatedRS(rs)) {
-        if (R.isEmpty(errors)) {
-          this.signedInUserId = anonymous;
-        }
-      }
-    }
+  @action onActivateAccount(data: ObjT) {
   }
 }

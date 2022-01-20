@@ -6,9 +6,7 @@ from . import (
     authmodule,
     extendspectypes,
     framesmodule,
-    policy,
     schema,
-    store,
     utilsmodule,
 )
 
@@ -20,8 +18,6 @@ modules = [
     authmodule,
     extendspectypes,
     framesmodule,
-    policy,
     schema,
-    store,
     utilsmodule,
 ]

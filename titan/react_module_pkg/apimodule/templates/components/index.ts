@@ -1,0 +1,1 @@
+export { useQueryData } from './useQueryData';

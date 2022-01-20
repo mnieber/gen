@@ -3,10 +3,12 @@
 import * as React from 'react';
 import * as R from 'ramda';
 import { reaction } from 'mobx';
+import { observer } from 'mobx-react-lite';
 import { log } from 'src/utils/logging';
 import { flags } from 'src/app/flags';
 import { lookUp } from 'src/utils/ids';
 {{ sections.default_prop_type_imports() }}
+{{ sections.query_imports() }}
 
 import { YellowTulipState } from '{{ res.module.module_path }}/YellowTulipState';
 import { CtrProvider, FC, useDefaultProps } from 'react-default-props-context';
@@ -17,46 +19,47 @@ type PropsT = React.PropsWithChildren<{}>;
 
 type DefaultPropsT = { {{ sections.declare_default_input_props() }} };
 
-export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = (p: PropsT) => {
-  const props = useDefaultProps<PropsT, DefaultPropsT>(p);
-  const { {{ sections.input_stores() }} } = useStore();
+export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = observer(
+  (p: PropsT) => {
+    const props = useDefaultProps<PropsT, DefaultPropsT>(p);
+{{ sections.get_queries() }}
 
-  const createState = () => new YellowTulipState({});
+    const createState = () => new YellowTulipState({});
 
-  const updateState = (state: YellowTulipState) => {
-    return reaction(
-      () => {
-        return {
+    const updateState = (state: YellowTulipState) =>
+      reaction(
+        () => {
+          return {
 {{ sections.get_state_input_values() }}
-        }
-      },
-      (inputs) => {
+          }
+        },
+        (inputs) => {
 {{ sections.set_state_input_values() }}
-        if (flags.logStateProviders) {
-          log('YellowTulipState updated', state.getSummary());
+          if (flags.logStateProviders) {
+            log('YellowTulipState updated', state.getSummary());
+          }
+        },
+        {
+          fireImmediately: true,
         }
-      },
-      {
-        fireImmediately: true,
-      }
-    );
-  };
+      );
 
-  const getDefaultProps = (state: YellowTulipState) => {
-    return {
-{{ sections.default_props() }}
+    const getDefaultProps = (state: YellowTulipState) => {
+      return {
+  {{ sections.default_props() }}
+      };
     };
-  };
 
-  return (
-    <CtrProvider
-      createCtr={createState}
-      updateCtr={updateState}
-      destroyCtr={(state: YellowTulipState) => state.destroy()}
-      getDefaultProps={getDefaultProps}
-    >
-      {props.children}
-    </CtrProvider>
-  );
-};
+    return (
+      <CtrProvider
+        createCtr={createState}
+        updateCtr={updateState}
+        destroyCtr={(state: YellowTulipState) => state.destroy()}
+        getDefaultProps={getDefaultProps}
+      >
+        {props.children}
+      </CtrProvider>
+    );
+  }
+);
 {% end_magic_with %}

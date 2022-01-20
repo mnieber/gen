@@ -2,7 +2,9 @@
 {% magic_with _.output_schema_name as postRedRoseOutputs %}
 {% magic_with item_list_deleted.item_name as blueDaisy %}
 import { normalize, schema } from 'normalizr';
-import { apiBase } from 'src/api/ApiBase';
+import { useMutation } from 'react-query';
+import { queryClient } from 'src/api/queryClient';
+import { doQuery } from 'src/utils/graphqlClient';
 import { ObjT } from 'src/utils/types';
 {{ sections.schema_imports() }}
 {{ sections.ts_type_imports() }}
@@ -10,9 +12,8 @@ import { ObjT } from 'src/utils/types';
 export const postRedRoseOutputs = new schema.Entity('postRedRoseOutputs');
 {{ sections.mutation_output_schema_fields() }}
 
-export const postRedRose = ({{ sections.ts_mutation_args() }}) => {
-  return apiBase.doQuery(
-    'postRedRose',
+const postRedRose = ({{ sections.ts_mutation_args() }}) => {
+  return doQuery(
     `mutation postRedRose{{ sections.ts_mutation_graphql_args(True) }} {
         postRedRose{{ sections.ts_mutation_graphql_args(False) }} {
 {{ sections.ts_mutation_graphql_body() }}
@@ -20,23 +21,18 @@ export const postRedRose = ({{ sections.ts_mutation_args() }}) => {
     }`,
     {
 {{ sections.ts_mutation_graphql_variables() }}
-    },
+    }).then(
     (response: ObjT) => {
-{% if res.item_lists_deleted %}
-      return {
-        ...normalize(response.postRedRose, postRedRoseOutputs).entities,
-{% for item_list_deleted in res.item_lists_deleted %}
-        deletedBlueDaisyIds: response.postRedRose.deletedBlueDaisyIds,
-{% endfor %}
-      };
-{% else %}
       return normalize(response.postRedRose, postRedRoseOutputs).entities;
-{% endif %}
+    });
+};
+
+export const usePostRedRose = () => {
+  return useMutation(['postRedRose'], postRedRose, {
+    onSuccess: () => {
+{{ sections.invalidate_queries() }}
     },
-    (error: ObjT) => {
-      return error.response.errors[0].message;
-    }
-  );
+  });
 };
 {% end_magic_with %}
 {% end_magic_with %}

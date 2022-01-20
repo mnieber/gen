@@ -8,6 +8,7 @@ import { input } from "skandha";
 export class Inputs {
 {% for item_name, bvrs in res.bvrs_by_item_name.items() %}
   @input redRoses: Array<RedRoseT> = [];
+  @input redRosesRS: string = "idle";
 
   findRedRoseById(id: string): RedRoseT | undefined {
     return R.find(R.propEq('id', id), this.redRoses) as RedRoseT;

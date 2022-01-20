@@ -1,1 +1,0 @@
-export { getResourceView } from "./getResourceView";

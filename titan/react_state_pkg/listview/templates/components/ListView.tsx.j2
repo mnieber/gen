@@ -1,9 +1,10 @@
 {% magic_with res.item_name as yellowTulip %}
+{% magic_with res.name as blueDaisy %}
 {% magic_with res.module.name as gardenFlowers %}
 {% magic_with field_name as redRose %}
 {% clean_up_js_imports %}
 import classnames from 'classnames';
-import { always, pipe, map } from 'ramda';
+import * as R from 'ramda';
 import { observer } from 'mobx-react-lite';
 import { FC, useDefaultProps } from 'react-default-props-context';
 import { YellowTulipListViewItem } from 'src/gardenFlowers/components';
@@ -15,8 +16,16 @@ import { createNavigateTo } from 'src/routes/createNavigateTo';
 import { mergeClickHandlers } from 'src/utils/mergeClickHandlers';
 {% endif %}
 
-
-{{ sections.imports() }}
+{% if _.deletion_bvr %}
+import { Deletion } from 'skandha-facets/Deletion';
+{% endif %}
+{% if _.highlight_bvr %}
+import { Highlight } from 'skandha-facets/Highlight';
+{% endif %}
+{% if _.selection_bvr %}
+import { Selection } from 'skandha-facets/Selection';
+import { ClickToSelectItems } from 'skandha-facets/handlers';
+{% endif %}
 
 {% end_clean_up_js_imports %}
 
@@ -28,17 +37,17 @@ type PropsT = {
 
 type DefaultPropsT = {
   yellowTulips: YellowTulipT[],
-  yellowTulipsResUrl: string,
-{{ sections.default_props() }}
+  yellowTulipsRS: string,
+{% if _.deletion_bvr %}  yellowTulipsDeletion: Deletion,{% endif %}
+{% if _.highlight_bvr %}  yellowTulipsHighlight: Highlight,{% endif %}
+{% if _.selection_bvr %}  yellowTulipsSelection: Selection,{% endif %}
 };
 
-export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
+export const BlueDaisy: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
   const props = useDefaultProps<PropsT, DefaultPropsT>(p);
 
-  const resourceView = getResourceView({
-    resUrl: props.yellowTulipsResUrl,
-    res: props.yellowTulips
-  });
+  const resourceView =
+    props.yellowTulipsRS === 'loading' ? <div>Loading...</div> : undefined;
   if (resourceView) return resourceView;
 
 {% if _.selection_bvr %}
@@ -56,30 +65,37 @@ export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: Props
   }));
 {% endif %}
 
-  const yellowTulipDivs = pipe(
-    always(props.yellowTulips),
-    map((x: YellowTulipT) => (
-      <YellowTulipListViewItem
-        key={x.id}
-        yellowTulip={x}
-{{ sections.classnames() }}
+  const yellowTulipDivs = R.pipe(
+    R.always(props.yellowTulips),
+    R.map((x: YellowTulipT) => {
+      return (
+        <BlueDaisyItem
+          key={x.id}
+          yellowTulip={x}
+{% if _.selection_bvr or _.highlight_bvr %}
+          className={classnames({
+{% if _.selection_bvr %}'BlueDaisyItem--selected': x && props.yellowTulipsSelection.ids.includes(x.id),{% endif %}
+{% if _.highlight_bvr %}'BlueDaisyItem--highlighted': x && props.yellowTulipsHighlight.id == x.id,{% endif %}
+          })}
+{% endif %}
 {% if _.deletion_bvr %}
-        onDelete={() => props.yellowTulipsDeletion.delete([x.id])}
+          onDelete={() => props.yellowTulipsDeletion.delete([x.id])}
 {% endif %}
 {% if _.selection_bvr %}
-        {...mergeClickHandlers([
-            handlerClick.handle(x.id),
-            {
-                onMouseUp: (e: any) => {
-                    navigateToYellowTulip(x);
-                },
-            },
-        ])}
+          {...mergeClickHandlers([
+              handlerClick.handle(x.id),
+              {
+                  onMouseDown: (e: any) => {
+                      navigateToYellowTulip(x);
+                  },
+              },
+          ])}
 {% else %}
-        onMouseUp={(e: any) => {navigateToYellowTulip(x);}}
+          onMouseUp={(e: any) => {navigateToYellowTulip(x);}}
 {% endif %}
-      />
-    ))
+        />
+      );
+    })
   )();
 
   const noItems = <h2>There are no yellowTulips</h2>;
@@ -96,6 +112,7 @@ export const YellowTulipListView: FC<PropsT, DefaultPropsT> = observer((p: Props
     </div>
   );
 });
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

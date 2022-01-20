@@ -5,13 +5,13 @@ from titan.api_pkg.itemlist.resources import ItemList
 
 
 def ts_var(x):
-    from titan.react_module_pkg.store import Store
+    from titan.react_state_pkg.state import State
 
     if isinstance(x, Item):
         return x.item_name
     if isinstance(x, ItemList):
         return plural(x.item_name)
-    if isinstance(x, Store):
+    if isinstance(x, State):
         return l0(x.name)
     raise Exception(f"tsvar: unknown {x}")
 
@@ -50,10 +50,10 @@ def ts_var_by_id_type_from_item_name(x):
 
 def ts_type_import_path(x):
     if isinstance(x, Item):
-        module = (x.provider_react_store or x.item_list.provider_react_store).module
+        module = (x.provider_react_state or x.item_list.provider_react_state).module
         return f"src/{module.name}/types"
     if isinstance(x, ItemList):
-        module = (x.provider_react_store or x.item.provider_react_store).module
+        module = (x.provider_react_state or x.item.provider_react_state).module
         return f"src/{module.name}/types"
     raise Exception(f"ts_type_import_path: unknown {x}")
 

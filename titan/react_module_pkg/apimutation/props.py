@@ -3,11 +3,13 @@ from pathlib import Path
 
 import ramda as R
 from moonleap import render_templates
+from moonleap.utils.inflect import plural
 from titan.api_pkg.pkg.graphql_args import graphql_args
 from titan.api_pkg.typeregistry import TypeRegistry
 from titan.react_module_pkg.apiquery.graphql_body import graphql_body
 from titan.react_module_pkg.apiquery.props import define_schema_field
 from titan.react_pkg.pkg.field_spec_to_ts_type import field_spec_to_ts_type
+from titan.react_pkg.pkg.get_chain import get_chain_to
 from titan.react_pkg.pkg.ts_var import ts_form_type, ts_type_import_path
 
 
@@ -70,6 +72,22 @@ def get_context(mutation, api_module):
             return tab + ("," + os.linesep + tab).join(
                 [field_spec.name for field_spec in _.input_field_specs]
             )
+
+        def invalidate_queries(self):
+            query_names = set()
+
+            for item_list in mutation.item_lists_deleted:
+                chain = get_chain_to(item_list)
+                query_names.add(chain[0].subj.name)
+
+            for item in mutation.items_posted:
+                chain = get_chain_to(item)
+                query_names.add(chain[0].subj.name)
+
+            result = ""
+            for query_name in query_names:
+                result += f'    queryClient.invalidateQueries("{query_name}");\n'
+            return result
 
     return dict(sections=Sections(), _=_)
 

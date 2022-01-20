@@ -3,11 +3,10 @@ from pathlib import Path
 import moonleap.resource.props as P
 from moonleap import add, create, create_forward, extend, receives, rule
 from moonleap.verbs import has, shows
-from titan.react_module_pkg.store import Store
 from titan.react_pkg.reactapp import ReactApp
 from titan.react_view_pkg.router_and_module import RouteTable
 
-from .resources import AuthSwitchView
+from .resources import AuthStore, AuthSwitchView
 
 
 @rule("react-app", has, "auth:module")
@@ -26,7 +25,12 @@ def react_app_has_auth_module(react_app, auth_module):
 
 @create("auth:store")
 def create_auth_store(term, block):
-    return Store(name="AuthStore")
+    return AuthStore(name="AuthStore")
+
+
+@rule("module", has, "auth:store")
+def module_has_store(module, auth_store):
+    pass
 
 
 @create("auth-switch:view")

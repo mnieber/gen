@@ -3,7 +3,6 @@ from dataclasses import dataclass, field
 
 from moonleap import Resource, Term
 from moonleap.resource.rel import Rel
-from moonleap.utils.inflect import plural
 from moonleap.utils.join import join
 from moonleap.verbs import uses
 from titan.api_pkg.item.resources import Item
@@ -16,33 +15,11 @@ def get_select_item_effect_term(item):
     return Term(f"select-{item.meta.term.data}{name_postfix}", "select-item-effect")
 
 
-def get_load_item_effect_term(item):
-    type_spec = ml_type_spec_from_item_name(item.item_name)
-    name_postfix = join("-by-", "-and-".join(type_spec.query_item_by))
-    return Term(f"load-{item.meta.term.data}{name_postfix}", "load-item-effect")
-
-
-def get_load_items_effect_term(item):
-    type_spec = ml_type_spec_from_item_name(item.item_name)
-    name_postfix = join("-by-", "-and-".join(type_spec.query_items_by))
-    return Term(
-        f"load-{plural(item.meta.term.data)}{name_postfix}", "load-items-effect"
-    )
-
-
 @dataclass
 class ChainElm:
     obj: T.Optional[Resource] = None
     subj: T.Optional[Resource] = None
     side_effects: T.List[Rel] = field(default_factory=list)
-
-
-class TakeItemListFromStore(ChainElm):
-    pass
-
-
-class TakeItemFromStore(ChainElm):
-    pass
 
 
 class TakeItemListFromState(ChainElm):
@@ -52,26 +29,19 @@ class TakeItemListFromState(ChainElm):
 class TakeItemFromState(ChainElm):
     @staticmethod
     def get_side_effects(item):
-        queries = item.provider_queries
-        return [Rel(item, uses, get_load_item_effect_term(item))] if queries else []
+        return []
 
 
 class TakeItemListFromQuery(ChainElm):
     @staticmethod
     def get_side_effects(item_list):
-        queries = item_list.provider_queries
-        return (
-            [Rel(item_list, uses, get_load_items_effect_term(item_list.item))]
-            if queries
-            else []
-        )
+        return []
 
 
 class TakeItemFromQuery(ChainElm):
     @staticmethod
     def get_side_effects(item):
-        queries = item.provider_queries
-        return [Rel(item, uses, get_load_item_effect_term(item))] if queries else []
+        return []
 
 
 class ExtractItemFromItem(ChainElm):
@@ -88,12 +58,7 @@ class TakeHighlightedElmFromState(ChainElm):
 
     @staticmethod
     def get_side_effects(item_list):
-        queries = item_list.provider_queries
-        return [Rel(item_list, uses, get_select_item_effect_term(item_list.item))] + (
-            [Rel(item_list.item, uses, get_load_item_effect_term(item_list.item))]
-            if queries
-            else []
-        )
+        return [Rel(item_list, uses, get_select_item_effect_term(item_list.item))]
 
 
 class StoreItemInState(ChainElm):
@@ -104,23 +69,13 @@ class StoreItemListInState(ChainElm):
     pass
 
 
-class StoreItemInStore(ChainElm):
-    pass
-
-
-class StoreItemListInStore(ChainElm):
-    pass
-
-
 def get_chain_to(target, next_target=None, stop_list=None):
     from titan.api_pkg.itemlist.resources import ItemList
-    from titan.react_module_pkg.store import Store
     from titan.react_state_pkg.state.resources import State
 
     stop_list = stop_list or []
-    consider_stores = isinstance(next_target, State)
-    consider_states = not isinstance(next_target, Store)
-    consider_queries = isinstance(next_target, Store)
+    consider_states = True
+    consider_queries = isinstance(next_target, State)
 
     if isinstance(target, ItemList):
         item_list = target
@@ -163,25 +118,6 @@ def get_chain_to(target, next_target=None, stop_list=None):
             chain = get_chain_to(provider_item, next_target, stop_list + [stop_elm])
             if chain:
                 elm = ExtractItemListFromItem(subj=provider_item, obj=item_list)
-                return chain + [elm]
-
-        # Check if there is a store that provides this item list, then check if
-        # there is a chain that leads to this store
-        for store in item_list.provider_react_stores if consider_stores else []:
-            if store is next_target:
-                continue
-
-            stop_elm = (store, item_list)
-            if stop_elm in stop_list:
-                continue
-
-            chain = get_chain_to(store, item_list, stop_list + [stop_elm])
-            if chain:
-                elm = TakeItemListFromStore(
-                    subj=store,
-                    obj=item_list,
-                )
-
                 return chain + [elm]
 
     elif isinstance(target, Item):
@@ -251,24 +187,6 @@ def get_chain_to(target, next_target=None, stop_list=None):
 
                 return chain + [elm]
 
-        # Check if a store provides this item
-        for store in item.provider_react_stores if consider_stores else []:
-            if store is next_target:
-                continue
-
-            stop_elm = (store, item)
-            if stop_elm in stop_list:
-                continue
-
-            chain = get_chain_to(store, item, stop_list + [stop_elm])
-            if chain:
-                elm = TakeItemFromStore(
-                    subj=store,
-                    obj=item_list,
-                )
-
-                return chain + [elm]
-
     elif isinstance(target, State):
         state = target
 
@@ -283,20 +201,5 @@ def get_chain_to(target, next_target=None, stop_list=None):
             chain = get_chain_to(item, state, stop_list)
             if chain:
                 return chain + [StoreItemInState(subj=item, obj=state)]
-
-    elif isinstance(target, Store):
-        store = target
-
-        if isinstance(next_target, ItemList):
-            item_list = next_target
-            chain = get_chain_to(item_list, store, stop_list)
-            if chain:
-                return chain + [StoreItemListInStore(subj=item_list, obj=store)]
-
-        if isinstance(next_target, Item):
-            item = next_target
-            chain = get_chain_to(item, store, stop_list)
-            if chain:
-                return chain + [StoreItemInStore(subj=item, obj=store)]
 
     return []

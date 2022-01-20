@@ -51,15 +51,17 @@ class ExtendState:
     item_lists_provided = P.children(provides, "item~list")
     items_provided = P.children(provides, "item")
     bvrs_by_item_name = Prop(props.bvrs_by_item_name)
-    store_by_item_name = Prop(props.store_by_item_name)
+    state_by_item_name = Prop(props.state_by_item_name)
     type_import_path = MemFun(props.type_import_path)
 
 
 @extend(Item)
 class ExtendItem:
     provider_react_states = P.parents("react-state", "provides")
+    provider_react_state = P.parent("react-state", "provides")
 
 
 @extend(ItemList)
 class ExtendItemList:
     provider_react_states = P.parents("react-state", "provides")
+    provider_react_state = P.parent("react-state", "provides")

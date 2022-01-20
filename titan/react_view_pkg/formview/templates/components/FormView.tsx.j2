@@ -1,11 +1,12 @@
 {% magic_with res.item_name as yellowTulip %}
+{% magic_with _.mutation.name as postRedRose %}
 {% clean_up_js_imports %}
 import React from 'react';
 import * as R from 'ramda';
 import { observer } from 'mobx-react-lite';
 import { FC, useDefaultProps } from 'react-default-props-context';
 import { FormStateProvider, HandleValidateArgsT, HandleSubmitArgsT } from 'react-form-state-context';
-import { {{ _.postmethod }} } from 'src/api/mutations/{{ _.postmethod }}';
+import { usePostRedRose } from 'src/api/mutations';
 import { ControlledCheckbox, Field, GlobalError, TextField, SaveButton, SlugField, UpdateSlugButton, ValuePickerField } from 'src/forms/components';
 import { createUUID } from 'src/utils/ids';
 {{ sections.form_imports() }}
@@ -23,6 +24,8 @@ export const YellowTulipFormView: FC<PropsT, DefaultPropsT> = observer((p: Props
 {% if _.fk_field_specs %}
   const props = useDefaultProps<PropsT, DefaultPropsT>(p);
 {% endif %}
+  const postRedRose = usePostRedRose().mutateAsync;
+
   const initialValues = {
     id: createUUID(),
 {{ sections.initial_form_values() }}
