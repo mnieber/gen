@@ -1,1 +1,1 @@
-{{ res.fun_name }}.ts
+use{{ res.fun_name | u0 }}.ts
