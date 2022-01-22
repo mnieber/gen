@@ -26,8 +26,12 @@ const getRedRose = ({{ sections.javascript_args() }}) => {
     });
 }
 
-export const useGetRedRose = () => {
-  const query = useQuery(['getRedRose'], getRedRose);
+export const useGetRedRose = ({{ sections.javascript_args() }}) => {
+  const query = useQuery(
+    ['getRedRose',
+    {{ sections.use_javascript_args() }}],
+    () => getRedRose({{ sections.use_javascript_args() }})
+  );
   return useQueryData(query);
 };
 {% end_magic_with %}

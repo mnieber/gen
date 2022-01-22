@@ -50,6 +50,9 @@ def get_context(query, api_module):
                 )
             )
 
+        def use_javascript_args(self):
+            return ", ".join([field_spec.name for field_spec in _.input_field_specs])
+
         def ts_graphql_query_args(self, before):
             return graphql_args(_.input_field_specs, before)
 
