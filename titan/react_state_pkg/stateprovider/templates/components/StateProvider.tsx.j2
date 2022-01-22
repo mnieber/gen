@@ -7,8 +7,12 @@ import { observer } from 'mobx-react-lite';
 import { log } from 'src/utils/logging';
 import { flags } from 'src/app/flags';
 import { lookUp } from 'src/utils/ids';
-{{ sections.default_prop_type_imports() }}
-{{ sections.query_imports() }}
+{% for x in _.default_input_props %}
+import { {{ _.ts_type(x) }} } from '{{ _.ts_type_import_path(x) }}';
+{% endfor %}
+{% for query_name in _.query_names %}
+import { use{{ query_name | u0 }} } from 'src/api/queries';
+{% endfor %}
 
 import { YellowTulipState } from '{{ res.module.module_path }}/YellowTulipState';
 import { CtrProvider, FC, useDefaultProps } from 'react-default-props-context';
@@ -17,24 +21,29 @@ import { useStore } from 'src/app/components';
 
 type PropsT = React.PropsWithChildren<{}>;
 
-type DefaultPropsT = { {{ sections.declare_default_input_props() }} };
+type DefaultPropsT = {
+  {% for x in _.default_input_props %}
+  {{ _.ts_var(x) }}: {{ _.ts_type(x) }};
+  {% endfor %}
+};
 
 export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = observer(
   (p: PropsT) => {
     const props = useDefaultProps<PropsT, DefaultPropsT>(p);
-{{ sections.get_queries() }}
-
+    {% for query_name in _.query_names %}
+    const {{ query_name }} = use{{ query_name | u0 }}();
+    {% endfor %}
     const createState = () => new YellowTulipState({});
 
     const updateState = (state: YellowTulipState) =>
       reaction(
         () => {
           return {
-{{ sections.get_state_input_values() }}
+            {{ sections.get_state_input_values() }}
           }
         },
         (inputs) => {
-{{ sections.set_state_input_values() }}
+          {{ sections.set_state_input_values() }}
           if (flags.logStateProviders) {
             log('YellowTulipState updated', state.getSummary());
           }

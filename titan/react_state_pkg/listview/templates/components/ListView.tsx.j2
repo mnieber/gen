@@ -33,9 +33,15 @@ type PropsT = {
 type DefaultPropsT = {
   yellowTulips: YellowTulipT[],
   yellowTulipsRS: string,
-{% if _.deletion_bvr %}  yellowTulipsDeletion: Deletion,{% endif %}
-{% if _.highlight_bvr %}  yellowTulipsHighlight: Highlight,{% endif %}
-{% if _.selection_bvr %}  yellowTulipsSelection: Selection,{% endif %}
+  {% if _.deletion_bvr %}
+  yellowTulipsDeletion: Deletion,
+  {% endif %}
+  {% if _.highlight_bvr %}
+  yellowTulipsHighlight: Highlight,
+  {% endif %}
+  {% if _.selection_bvr %}
+  yellowTulipsSelection: Selection,
+  {% endif %}
 };
 
 export const BlueDaisy: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
@@ -45,11 +51,11 @@ export const BlueDaisy: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
     props.yellowTulipsRS === 'loading' ? <div>Loading...</div> : undefined;
   if (resourceView) return resourceView;
 
-{% if _.selection_bvr %}
+  {% if _.selection_bvr %}
   const handlerClick = new ClickToSelectItems({
     selection: props.yellowTulipsSelection
   });
-{% endif %}
+  {% endif %}
 
   const yellowTulipDivs = R.pipe(
     R.always(props.yellowTulips),
@@ -58,18 +64,22 @@ export const BlueDaisy: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
         <BlueDaisyItem
           key={x.id}
           yellowTulip={x}
-{% if _.selection_bvr or _.highlight_bvr %}
+          {% if _.selection_bvr or _.highlight_bvr %}
           className={classnames({
-{% if _.selection_bvr %}'BlueDaisyItem--selected': x && props.yellowTulipsSelection.ids.includes(x.id),{% endif %}
-{% if _.highlight_bvr %}'BlueDaisyItem--highlighted': x && props.yellowTulipsHighlight.id == x.id,{% endif %}
+            {% if _.selection_bvr %}
+            'BlueDaisyItem--selected': x && props.yellowTulipsSelection.ids.includes(x.id),
+            {% endif %}
+            {% if _.highlight_bvr %}
+            'BlueDaisyItem--highlighted': x && props.yellowTulipsHighlight.id == x.id,
+            {% endif %}
           })}
-{% endif %}
-{% if _.deletion_bvr %}
+          {% endif %}
+          {% if _.deletion_bvr %}
           onDelete={() => props.yellowTulipsDeletion.delete([x.id])}
-{% endif %}
-{% if _.selection_bvr %}
+          {% endif %}
+          {% if _.selection_bvr %}
           {...handlerClick.handle(x.id)}
-{% endif %}
+          {% endif %}
         />
       );
     })

@@ -43,16 +43,6 @@ def create_router_configs(self, named_component):
     return result
 
 
-def _get_default_input_props(chain):
-    result = []
-    for elm in chain:
-        if isinstance(
-            elm, (TakeItemListFromState, TakeItemFromState, TakeHighlightedElmFromState)
-        ):
-            result += [elm.obj]
-    return result
-
-
 def _start_pos(chain):
     for pos in reversed(range(len(chain))):
         elm = chain[pos]
@@ -66,6 +56,16 @@ def _start_pos(chain):
         ):
             return pos
     return 0
+
+
+def _get_default_input_props(chain):
+    result = []
+    for elm in chain:
+        if isinstance(
+            elm, (TakeItemListFromState, TakeItemFromState, TakeHighlightedElmFromState)
+        ):
+            result += [elm.obj]
+    return result
 
 
 def _expression(chain):
@@ -121,50 +121,30 @@ def get_context(state_provider):
     _.selected_items = get_items_selected_from_url(state_provider)
 
     _.chains = []
+    _.short_chains = []
     for target in list(_.state.items_provided) + list(_.state.item_lists_provided):
         chain = get_chain_to(target, _.state)
-        _.chains.append(chain[_start_pos(chain) : len(chain)])
+        _.chains.append(chain)
+        _.short_chains.append(chain[_start_pos(chain) : len(chain)])
 
     _.default_input_props = []
-    for chain in _.chains:
+    for chain in _.short_chains:
         for default_input_prop in _get_default_input_props(chain):
             if default_input_prop not in _.default_input_props:
                 _.default_input_props.append(default_input_prop)
 
     _.query_names = set()
     for chain in _.chains:
-        elm = chain[-1]
-        if isinstance(elm, TakeItemListFromQuery):
-            _.query_names.add(elm.subj.name)
+        _.query_names.add(chain[0].subj.name)
+
+    _.ts_type = ts_type
+    _.ts_var = ts_var
+    _.ts_type_import_path = ts_type_import_path
 
     class Sections:
-        def declare_default_input_props(self):
-            result = [f"{ts_var(x)}: {ts_type(x)}," for x in _.default_input_props]
-            return "; ".join(result)
-
-        def default_prop_type_imports(self):
-            result = [
-                f"import {{ {ts_type(x)} }} from '{ts_type_import_path(x)}';"
-                for x in _.default_input_props
-            ]
-            return os.linesep.join(result)
-
-        def query_imports(self):
-            return os.linesep.join(
-                [
-                    f"import {{ use{u0(x)} }} from 'src/api/queries';"
-                    for x in _.query_names
-                ]
-            )
-
-        def get_queries(self):
-            return os.linesep.join(
-                [f"    const {x} = use{u0(x)}()" for x in _.query_names]
-            )
-
         def get_state_input_values(self):
             result = []
-            for chain in _.chains:
+            for chain in _.short_chains:
                 provided = ts_var(chain[-1].obj)
                 value, value_rs = _expression(chain)
                 result.append(f"{provided}: {value},")
@@ -175,7 +155,7 @@ def get_context(state_provider):
         def set_state_input_values(self):
             result = []
             tab = " " * 8
-            for chain in _.chains:
+            for chain in _.short_chains:
                 provided = chain[-1].obj
                 result.append(
                     f"{tab}state.inputs.{ts_var(provided)} = inputs.{ts_var(provided)};"
