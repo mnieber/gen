@@ -10,11 +10,6 @@ import { FC, useDefaultProps } from 'react-default-props-context';
 import { YellowTulipListViewItem } from 'src/gardenFlowers/components';
 import { YellowTulipT } from 'src/gardenFlowers/types';
 import { getResourceView } from 'src/utils/components';
-{% if _.selection_bvr %}
-import { useRouteMatch } from 'react-router-dom';
-import { createNavigateTo } from 'src/routes/createNavigateTo';
-import { mergeClickHandlers } from 'src/utils/mergeClickHandlers';
-{% endif %}
 
 {% if _.deletion_bvr %}
 import { Deletion } from 'skandha-facets/Deletion';
@@ -56,15 +51,6 @@ export const BlueDaisy: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
   });
 {% endif %}
 
-{% if _.selection_bvr %}
-  const renderedRoute = useRouteMatch();
-  const navigateToYellowTulip = createNavigateTo(renderedRoute, (yellowTulip: YellowTulipT) => ({
-{% for field_name in _.type_spec.select_item_by %}
-    yellowTulipRedRose: yellowTulip.redRose,
-{% endfor %}
-  }));
-{% endif %}
-
   const yellowTulipDivs = R.pipe(
     R.always(props.yellowTulips),
     R.map((x: YellowTulipT) => {
@@ -82,16 +68,7 @@ export const BlueDaisy: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
           onDelete={() => props.yellowTulipsDeletion.delete([x.id])}
 {% endif %}
 {% if _.selection_bvr %}
-          {...mergeClickHandlers([
-              handlerClick.handle(x.id),
-              {
-                  onMouseDown: (e: any) => {
-                      navigateToYellowTulip(x);
-                  },
-              },
-          ])}
-{% else %}
-          onMouseUp={(e: any) => {navigateToYellowTulip(x);}}
+          {...handlerClick.handle(x.id)}
 {% endif %}
         />
       );
