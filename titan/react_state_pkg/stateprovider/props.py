@@ -1,7 +1,10 @@
 import os
 
+import ramda as R
+from moonleap import u0
 from moonleap.typespec.get_member_field_spec import get_member_field_spec
 from moonleap.utils.inflect import plural
+from titan.api_pkg.itemlist.resources import ItemList
 from titan.react_pkg.component.resources import get_component_base_url
 from titan.react_pkg.pkg.get_chain import (
     ExtractItemFromItem,
@@ -100,11 +103,11 @@ def get_context(state_provider):
     _ = lambda: None
     _.state = state_provider.state
 
-    _.chains = []
+    _.chain_by_id = {}
     _.short_chains = []
     for target in list(_.state.items_provided) + list(_.state.item_lists_provided):
         chain = get_chain_to(target, _.state)
-        _.chains.append(chain)
+        _.chain_by_id[target.id] = chain
         _.short_chains.append(chain[_start_pos(chain) : len(chain)])
 
     _.default_input_props = []
@@ -114,7 +117,7 @@ def get_context(state_provider):
                 _.default_input_props.append(default_input_prop)
 
     _.query_names = set()
-    for chain in _.chains:
+    for chain in R.values(_.chain_by_id):
         _.query_names.add(chain[0].subj.name)
 
     _.ts_type = ts_type
@@ -147,14 +150,29 @@ def get_context(state_provider):
 
             if _.state:
                 result = f"      {_.state.name}State: () => state,\n"
-                for item_name, bvrs in _.state.bvrs_by_item_name.items():
-                    items_name = plural(item_name)
+                for target in list(_.state.items_provided) + list(
+                    _.state.item_lists_provided
+                ):
+                    chain = _.chain_by_id[target.id]
+                    query_name = chain[0].subj.name
 
-                    result += f"      {items_name}: () => state.outputs.{items_name}Display,\n"
-                    result += f"      {items_name}RS: () => state.inputs.{items_name}RS,\n"  # noqa: E501
+                    if isinstance(target, ItemList):
+                        items_name = plural(target.item_name)
+                        result += f"      {items_name}: () => state.outputs.{items_name}Display,\n"
+                        result += (
+                            f"      {items_name}RS: () => get{u0(query_name)}.status,\n"
+                        )
 
-                    for bvr in bvrs:
-                        result += bvr.sections.default_props(_.state)
+                        for bvr in _.state.bvrs_by_item_name[target.item_name]:
+                            result += bvr.sections.default_props(_.state)
+                    else:
+                        item_name = target.item_name
+                        result += (
+                            f"      {item_name}: () => state.outputs.{item_name},\n"
+                        )
+                        result += (
+                            f"      {item_name}RS: () => get{u0(query_name)}.status,\n"
+                        )
             return result
 
     return dict(sections=Sections(), _=_)
