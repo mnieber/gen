@@ -81,7 +81,6 @@ def get_context(mutation, api_module):
                     "",
                 )
 
-            deleted_ids_args = []
             for item_list_deleted in mutation.item_lists_deleted:
                 item_name = item_list_deleted.item_name
                 body.IxI(
@@ -90,12 +89,11 @@ def get_context(mutation, api_module):
                     ".delete()",
                 )
                 body.abc("")
-                deleted_ids_args += [f"deleted_{item_name}_ids={item_name}_ids"]
 
             fk_args = [f"{sn(x.name)}={sn(x.name)}" for x in _.fk_output_field_specs]
             body.IxI(
                 f"return {u0(mutation.name)}",
-                ["success=True", "errors={}"] + fk_args + deleted_ids_args,
+                ["success=True", "errors={}"] + fk_args,
                 "",
             )
             return root.result
