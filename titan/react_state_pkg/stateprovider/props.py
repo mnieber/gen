@@ -12,7 +12,6 @@ from titan.react_pkg.pkg.get_chain import (
     TakeItemListFromState,
     get_chain_to,
 )
-from titan.react_pkg.pkg.ml_get import ml_react_app
 from titan.react_pkg.pkg.ts_var import (
     ts_type,
     ts_type_import_path,
@@ -22,20 +21,6 @@ from titan.react_pkg.pkg.ts_var import (
 from titan.react_view_pkg.pkg.create_component_router_config import (
     create_component_router_config,
 )
-
-
-def _state_by_item_name(state):
-    result = {}
-    states = []
-    for x in ml_react_app(state).modules:
-        states.extend(x.states)
-
-    for item_name in state.bvrs_by_item_name.keys():
-        for a_state in states:
-            if [x for x in a_state.item_lists_provided if x.item_name == item_name]:
-                result[item_name] = a_state
-                break
-    return result
 
 
 def create_router_configs(self, named_component):
@@ -162,16 +147,14 @@ def get_context(state_provider):
 
             if _.state:
                 result = f"      {_.state.name}State: () => state,\n"
-                state_by_item_name = _state_by_item_name(_.state)
                 for item_name, bvrs in _.state.bvrs_by_item_name.items():
-                    state = state_by_item_name.get(item_name)
                     items_name = plural(item_name)
 
                     result += f"      {items_name}: () => state.outputs.{items_name}Display,\n"
                     result += f"      {items_name}RS: () => state.inputs.{items_name}RS,\n"  # noqa: E501
 
                     for bvr in bvrs:
-                        result += bvr.sections.default_props(state)
+                        result += bvr.sections.default_props(_.state)
             return result
 
     return dict(sections=Sections(), _=_)
