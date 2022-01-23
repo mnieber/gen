@@ -11,7 +11,6 @@ from titan.api_pkg.pkg.ml_name import (
 from titan.react_pkg.pkg.field_spec_to_ts_type import field_spec_to_ts_type
 from titan.react_pkg.pkg.ml_get import ml_react_app
 from titan.react_pkg.pkg.ts_var import ts_form_type, ts_type
-from titan.react_state_pkg.stateprovider.props import get_items_selected_from_url
 
 
 def _find_module_that_provides_item_list(react_app, item_name):
@@ -34,20 +33,6 @@ def bvrs_by_item_name(self):
     return result
 
 
-def state_by_item_name(self):
-    result = {}
-    states = []
-    for x in ml_react_app(self).modules:
-        states.extend(x.states)
-
-    for item_name in bvrs_by_item_name(self).keys():
-        for state in states:
-            if [x for x in state.item_lists_provided if x.item_name == item_name]:
-                result[item_name] = state
-                break
-    return result
-
-
 def type_import_path(self, item_name):
     module = _find_module_that_provides_item_list(ml_react_app(self), item_name)
     if module:
@@ -57,7 +42,6 @@ def type_import_path(self, item_name):
 
 def get_context(state):
     _ = lambda: None
-    _.selected_items = get_items_selected_from_url(state.state_provider)
 
     class Sections:
         def constructor(self):

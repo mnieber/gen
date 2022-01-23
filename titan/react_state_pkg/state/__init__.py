@@ -51,7 +51,6 @@ class ExtendState:
     item_lists_provided = P.children(provides, "item~list")
     items_provided = P.children(provides, "item")
     bvrs_by_item_name = Prop(props.bvrs_by_item_name)
-    state_by_item_name = Prop(props.state_by_item_name)
     type_import_path = MemFun(props.type_import_path)
 
 

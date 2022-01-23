@@ -1,11 +1,7 @@
 import os
 
-from moonleap import u0
 from moonleap.typespec.get_member_field_spec import get_member_field_spec
-from moonleap.utils.case import l0
 from moonleap.utils.inflect import plural
-from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
-from titan.api_pkg.typeregistry import TypeRegistry
 from titan.react_pkg.component.resources import get_component_base_url
 from titan.react_pkg.pkg.get_chain import (
     ExtractItemFromItem,
@@ -16,7 +12,7 @@ from titan.react_pkg.pkg.get_chain import (
     TakeItemListFromState,
     get_chain_to,
 )
-from titan.react_pkg.pkg.ml_get import ml_graphql_api, ml_react_app
+from titan.react_pkg.pkg.ml_get import ml_react_app
 from titan.react_pkg.pkg.ts_var import (
     ts_type,
     ts_type_import_path,
@@ -26,6 +22,20 @@ from titan.react_pkg.pkg.ts_var import (
 from titan.react_view_pkg.pkg.create_component_router_config import (
     create_component_router_config,
 )
+
+
+def _state_by_item_name(state):
+    result = {}
+    states = []
+    for x in ml_react_app(state).modules:
+        states.extend(x.states)
+
+    for item_name in state.bvrs_by_item_name.keys():
+        for a_state in states:
+            if [x for x in a_state.item_lists_provided if x.item_name == item_name]:
+                result[item_name] = a_state
+                break
+    return result
 
 
 def create_router_configs(self, named_component):
@@ -101,24 +111,9 @@ def _expression(chain):
     return result, result_rs
 
 
-def get_items_selected_from_url(state_provider):
-    graphql_api = ml_graphql_api(ml_react_app(state_provider))
-    type_reg = TypeRegistry(graphql_api)
-    result = []
-    if state_provider.state:
-        for item_name, bvrs in state_provider.state.bvrs_by_item_name.items():
-            if [x for x in bvrs if x.name == "selection"]:
-                item = type_reg.get_item_by_name(item_name)
-                type_spec = ml_type_spec_from_item_name(item_name)
-                if type_spec.select_item_by:
-                    result.append(item)
-    return result
-
-
 def get_context(state_provider):
     _ = lambda: None
     _.state = state_provider.state
-    _.selected_items = get_items_selected_from_url(state_provider)
 
     _.chains = []
     _.short_chains = []
@@ -167,7 +162,7 @@ def get_context(state_provider):
 
             if _.state:
                 result = f"      {_.state.name}State: () => state,\n"
-                state_by_item_name = _.state.state_by_item_name
+                state_by_item_name = _state_by_item_name(_.state)
                 for item_name, bvrs in _.state.bvrs_by_item_name.items():
                     state = state_by_item_name.get(item_name)
                     items_name = plural(item_name)

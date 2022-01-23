@@ -27,14 +27,6 @@ def get_context(query, api_module):
     )
 
     class Sections:
-        def schema_imports(self):
-            result = []
-            for field_spec in _.fk_output_field_specs:
-                fk_item_name = field_spec.target
-                result.append(f"import {{ {fk_item_name} }} from 'src/api/schema';")
-
-            return os.linesep.join(result)
-
         def query_output_schema_fields(self):
             result = []
             for field_spec in _.fk_output_field_specs:

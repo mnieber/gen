@@ -28,14 +28,6 @@ def get_context(mutation, api_module):
     )
 
     class Sections:
-        def schema_imports(self):
-            result = []
-            for field_spec in _.fk_output_field_specs:
-                fk_item_name = field_spec.target
-                result.append(f"import {{ {fk_item_name} }} from 'src/api/schema';")
-
-            return os.linesep.join(result)
-
         def ts_type_imports(self):
             result = []
             for field_spec in _.form_input_field_specs:
