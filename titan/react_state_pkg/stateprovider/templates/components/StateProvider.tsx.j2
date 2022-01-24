@@ -1,4 +1,5 @@
 {% magic_with res.state.name as yellowTulip %}
+{% magic_with item_name as redRose %}
 {% clean_up_js_imports %}
 import * as React from 'react';
 import * as R from 'ramda';
@@ -12,6 +13,9 @@ import { {{ _.ts_type(x) }} } from '{{ _.ts_type_import_path(x) }}';
 {% endfor %}
 {% for query_name in _.query_names %}
 import { use{{ query_name | u0 }} } from 'src/api/queries';
+{% endfor %}
+{% for mutation in _.mutation_names %}
+import { use{{ mutation | u0 }} } from 'src/api/mutations';
 {% endfor %}
 
 import { YellowTulipState } from '{{ res.module.module_path }}/YellowTulipState';
@@ -33,7 +37,17 @@ export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = observer(
     {% for query_name in _.query_names %}
     const {{ query_name }} = use{{ query_name | u0 }}();
     {% endfor %}
-    const createState = () => new YellowTulipState({});
+    {% for mutation_name in _.mutation_names %}
+    const {{ mutation_name }} = use{{ mutation_name | u0 }}();
+    {% endfor %}
+
+    const createState = () => new YellowTulipState({
+        {% for item_name, bvrs in _.state.bvrs_by_item_name.items() %}
+        {% if "deletion" in _.facet_names_by_item_name[item_name] %}
+        deleteRedRoses: deleteRedRoses.mutateAsync,
+        {% endif %}
+        {% endfor%}
+    });
 
     const updateState = (state: YellowTulipState) =>
       reaction(
@@ -71,4 +85,5 @@ export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = observer(
     );
   }
 );
+{% end_magic_with %}
 {% end_magic_with %}

@@ -23,22 +23,13 @@ class Sections(BehaviourSections):
             self.graphql_api, res.item_name
         )
 
-    def imports(self):
-        result = super().imports()
-        return (
-            result
-            + os.linesep
-            + f"import {{ {self.delete_function_name} }} from "
-            + f"'src/api/mutations/{self.delete_function_name}';"
-        )
-
     def callbacks(self, bvrs):
         return process_lines(
             {
                 101: r"setCallbacks(ctr.deletion, {",
                 102: r"  delete: {",
                 103: r"    deleteItems(this: DeletionCbs['delete']) {",
-                104: f"      return {self.delete_function_name}(this.itemIds);",
+                104: f"      return props.{self.delete_function_name}(this.itemIds);",
                 105: r"    },",
                 106: r"  },",
                 107: r"} as DeletionCbs);",

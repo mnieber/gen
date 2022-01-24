@@ -15,12 +15,7 @@ from titan.react_pkg.pkg.get_chain import (
     TakeItemListFromState,
     get_chain_to,
 )
-from titan.react_pkg.pkg.ts_var import (
-    ts_type,
-    ts_type_import_path,
-    ts_var,
-    ts_var_by_id,
-)
+from titan.react_pkg.pkg.ts_var import ts_type, ts_type_import_path, ts_var
 from titan.react_view_pkg.pkg.create_component_router_config import (
     create_component_router_config,
 )
@@ -66,7 +61,7 @@ def _get_default_input_props(chain):
     return result
 
 
-def _expression(chain):
+def _expression(chain, query_name):
     result = ""
     result_rs = None
     for elm in chain:
@@ -75,26 +70,23 @@ def _expression(chain):
         ):
             result = f"props.{ts_var(elm.obj)}?" + result
         if isinstance(elm, (TakeItemListFromQuery,)):
-            query_name = elm.subj.name
             items_name = plural(elm.obj.item_name)
             result = f"R.values({query_name}.data?.{items_name} ?? {{}})"
             result_rs = f"{query_name}.status"
         elif isinstance(elm, (ExtractItemFromItem)):
-            state = ts_var(elm.obj.item_list.provider_react_state)
-            var_by_id = ts_var_by_id(elm.obj)
             member = get_member_field_spec(
                 parent_item=elm.subj, member_item=elm.obj
             ).name
-            result = f"{state}.{var_by_id}[{result}.{member}]"
+            result = f"{query_name}.data?[{result}.{member}]"
         elif isinstance(elm, (ExtractItemListFromItem)):
-            state = ts_var(elm.obj.provider_react_state)
-            var_by_id = ts_var_by_id(elm.obj.item)
+            items_name = plural(elm.obj.item_name)
             member = get_member_field_spec(
                 parent_item=elm.subj, member_item=elm.obj
             ).name
             result = (
                 f"R.reject(R.isNil)"
-                + f"(lookUp({result}.{member} ?? [], {state}.{var_by_id}))"
+                + f"(lookUp({result}.{member} ?? [], "
+                + f"{query_name}.data?.{items_name} ?? {{}}))"
             )
     return result, result_rs
 
@@ -120,6 +112,16 @@ def get_context(state_provider):
     for chain in R.values(_.chain_by_id):
         _.query_names.add(chain[0].subj.name)
 
+    _.mutation_names = set()
+    for target in list(_.state.item_lists_provided):
+        for bvr in _.state.bvrs_by_item_name[target.item_name]:
+            if bvr.name == "deletion" and target.deleter_mutations:
+                _.mutation_names.add(target.deleter_mutations[0].name)
+
+    _.facet_names_by_item_name = dict()
+    for item_name, bvrs in _.state.bvrs_by_item_name.items():
+        _.facet_names_by_item_name[item_name] = [x.name for x in bvrs]
+
     _.ts_type = ts_type
     _.ts_var = ts_var
     _.ts_type_import_path = ts_type_import_path
@@ -127,9 +129,10 @@ def get_context(state_provider):
     class Sections:
         def get_state_input_values(self):
             result = []
-            for chain in _.short_chains:
+            for short_chain, chain in R.zip(_.short_chains, R.values(_.chain_by_id)):
+                query_name = chain[0].subj.name
                 provided = ts_var(chain[-1].obj)
-                value, value_rs = _expression(chain)
+                value, value_rs = _expression(short_chain, query_name)
                 result.append(f"{provided}: {value},")
                 if value_rs:
                     result.append(f"{provided}RS: {value_rs},")

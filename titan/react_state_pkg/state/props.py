@@ -42,6 +42,9 @@ def type_import_path(self, item_name):
 
 def get_context(state):
     _ = lambda: None
+    _.facet_names_by_item_name = dict()
+    for item_name, bvrs in state.bvrs_by_item_name.items():
+        _.facet_names_by_item_name[item_name] = [x.name for x in bvrs]
 
     class Sections:
         def constructor(self):
@@ -77,22 +80,11 @@ def get_context(state):
 
             return os.linesep.join([(indent + x) for x in result])
 
-        def declare_policies(self, item_name):
-            indent = "    "
-            items = plural(item_name)
-            result = [
-                f"const Inputs_items = [Inputs, '{items}', this] as CMT;",
-                f"const Outputs_display = [Outputs, '{items}Display', this] as CMT;",  # noqa: E501
-            ]
-
-            return os.linesep.join([(indent + x) for x in result])
-
-        def policies(self):
-            facet_names = [x.name for x in state.behaviors]
+        def policies(self, item_name):
             indent = "      "
             result = []
 
-            if "filtering" not in facet_names:
+            if "filtering" not in _.facet_names_by_item_name[item_name]:
                 result += [
                     r"Skandha.mapDataToFacet(Outputs_display, getm(Inputs_items)),",
                 ]

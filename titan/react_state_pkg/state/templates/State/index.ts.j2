@@ -23,7 +23,13 @@ import * as Policies from './policies';
 import * as Handlers from './handlers';
 {% end_clean_up_js_imports %}
 
-type PropsT = {};
+type PropsT = {
+  {% for item_name in res.bvrs_by_item_name.keys() %}
+  {% if "deletion" in _.facet_names_by_item_name[item_name] %}
+  deleteRedRoses: (ids: string[]) => Promise;
+  {% endif %}
+  {% endfor %}
+};
 
 export class YellowTulipState {
   @facet inputs: Inputs = new Inputs();
@@ -35,13 +41,14 @@ export class YellowTulipState {
 
 {% for item_name, bvrs in res.bvrs_by_item_name.items() %}
   _applyRedRosesPolicies(props: PropsT) {
-{{ sections.declare_policies(item_name) }}
+    const Inputs_items = [Inputs, 'redRoses', this] as CMT;
+    const Outputs_display = [Outputs, 'redRosesDisplay', this] as CMT;
 {% for bvr in bvrs %}
 {{ bvr.sections.declare_policies(bvrs) }}
 {% endfor %}
 
     const policies = [
-{{ sections.policies() }}
+{{ sections.policies(item_name) }}
 {% for bvr in bvrs %}
 {{ bvr.sections.policies(bvrs) }}
 {% endfor %}

@@ -14,6 +14,7 @@ from moonleap.utils.inflect import plural
 from moonleap.verbs import deletes, has, posts, returns
 from titan.api_pkg.graphqlapi import GraphqlApi
 from titan.api_pkg.item.resources import Item
+from titan.api_pkg.itemlist.resources import ItemList
 
 from . import props
 from .resources import Mutation
@@ -81,3 +82,8 @@ class ExtendMutation:
 @extend(Item)
 class ExtendItem:
     poster_mutations = P.parents("mutation", posts)
+
+
+@extend(ItemList)
+class ExtendItemList:
+    deleter_mutations = P.parents("mutation", deletes)
