@@ -162,9 +162,7 @@ def get_context(state_provider):
                     if isinstance(target, ItemList):
                         items_name = plural(target.item_name)
                         result += f"      {items_name}: () => state.outputs.{items_name}Display,\n"
-                        result += (
-                            f"      {items_name}RS: () => get{u0(query_name)}.status,\n"
-                        )
+                        result += f"      {items_name}RS: () => {query_name}.status,\n"
 
                         for bvr in _.state.bvrs_by_item_name[target.item_name]:
                             result += bvr.sections.default_props(_.state)
@@ -173,9 +171,7 @@ def get_context(state_provider):
                         result += (
                             f"      {item_name}: () => state.outputs.{item_name},\n"
                         )
-                        result += (
-                            f"      {item_name}RS: () => get{u0(query_name)}.status,\n"
-                        )
+                        result += f"      {item_name}RS: () => {query_name}.status,\n"
             return result
 
     return dict(sections=Sections(), _=_)
