@@ -1,6 +1,5 @@
 import os
 
-from moonleap.render.process_lines import process_lines
 from titan.react_state_pkg.behavior.props import Sections as BehaviourSections
 
 
@@ -10,19 +9,19 @@ class Sections(BehaviourSections):
 
     def callbacks(self, bvrs):
         facet_names = [x.name for x in bvrs]
-        return process_lines(
-            {
-                101: r"setCallbacks(ctr.highlight, {",
-                102: r"  highlightItem: {",
-                103: r"    enter(this: HighlightCbs['highlightItem']) {",
-                104: r"      FacetPolicies.cancelNewItemOnHighlightChange(ctr.highlight, this.id);",  # noqa: E501
-                105: r"    },",
-                106: r"  },",
-                107: r"} as HighlightCbs);",
-            },
-            remove={(102, 106): "addition" not in facet_names},
-            indent=4,
-        )
+        lines = [
+            r"    setCallbacks(ctr.highlight, {",
+            r"      highlightItem: {",
+            r"        enter(this: HighlightCbs['highlightItem']) {",
+            r"          FacetPolicies.cancelNewItemOnHighlightChange(ctr.highlight, this.id);",  # noqa: E501
+            r"        },",
+            r"      },",
+            r"    } as HighlightCbs);",
+        ]
+
+        if "addition" not in facet_names:
+            lines = lines[:1] + lines[6:]
+        return os.linesep.join(lines)
 
     def policies(self, bvrs):
         indent = "      "

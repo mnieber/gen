@@ -1,7 +1,5 @@
 import os
 
-from moonleap import u0
-from moonleap.render.process_lines import process_lines
 from titan.react_state_pkg.behavior.props import Sections as BehaviourSections
 
 
@@ -17,23 +15,22 @@ class Sections(BehaviourSections):
 
     def callbacks(self, bvrs):
         facet_names = [x.name for x in bvrs]
-        return process_lines(
-            {
-                101: r"setCallbacks(ctr.selection, {",
-                102: r"  selectItem: {",
-                103: r"    selectItem(this: SelectionCbs['selectItem']) {",
-                104: r"      handleSelectItem(ctr.selection, this.selectionParams);",
-                105: r"      FacetPolicies.highlightFollowsSelection(",
-                106: r"        ctr.selection,",
-                107: r"        this.selectionParams",
-                108: r"      );",
-                109: r"    }",
-                110: r"  },",
-                111: r"} as SelectionCbs);",
-            },
-            remove={(105, 108): "highlight" not in facet_names},
-            indent=4,
-        )
+        lines = [
+            r"    setCallbacks(ctr.selection, {",
+            r"      selectItem: {",
+            r"        selectItem(this: SelectionCbs['selectItem']) {",
+            r"          handleSelectItem(ctr.selection, this.selectionParams);",
+            r"          FacetPolicies.highlightFollowsSelection(",
+            r"            ctr.selection,",
+            r"            this.selectionParams",
+            r"          );",
+            r"        }",
+            r"      },",
+            r"    } as SelectionCbs);",
+        ]
+        if "highlight" not in facet_names:
+            lines = lines[:4] + lines[8:]
+        return os.linesep.join(lines)
 
     def declare_policies(self, bvrs):
         indent = "    "

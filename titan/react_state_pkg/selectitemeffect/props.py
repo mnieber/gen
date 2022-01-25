@@ -1,6 +1,5 @@
 from moonleap import u0
 from moonleap.utils.inflect import plural
-from moonleap.utils.magic_replace import magic_replace
 from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
 from titan.react_pkg.pkg.ts_var import (
     ts_type,

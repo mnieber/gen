@@ -1,7 +1,5 @@
 import os
 
-from moonleap import u0
-from moonleap.render.process_lines import process_lines
 from titan.react_pkg.pkg.ml_get import ml_graphql_api, ml_react_app
 from titan.react_state_pkg.behavior.props import Sections as BehaviourSections
 
@@ -24,18 +22,16 @@ class Sections(BehaviourSections):
         )
 
     def callbacks(self, bvrs):
-        return process_lines(
-            {
-                101: r"setCallbacks(ctr.deletion, {",
-                102: r"  delete: {",
-                103: r"    deleteItems(this: DeletionCbs['delete']) {",
-                104: f"      return props.{self.delete_function_name}(this.itemIds);",
-                105: r"    },",
-                106: r"  },",
-                107: r"} as DeletionCbs);",
-            },
-            remove={},
-            indent=4,
+        return os.linesep.join(
+            [
+                r"    setCallbacks(ctr.deletion, {",
+                r"      delete: {",
+                r"        deleteItems(this: DeletionCbs['delete']) {",
+                f"          return props.{self.delete_function_name}(this.itemIds);",
+                r"        },",
+                r"      },",
+                r"    } as DeletionCbs);",
+            ]
         )
 
     def policies(self, bvrs):
