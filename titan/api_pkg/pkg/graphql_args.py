@@ -10,6 +10,12 @@ def _field_spec_to_graphql_type(field_spec):
     if field_spec.field_type in ("boolean",):
         return "Boolean" + postfix
 
+    if field_spec.field_type in ("int",):
+        return "Int" + postfix
+
+    if field_spec.field_type in ("float",):
+        return "Float" + postfix
+
     if field_spec.field_type in ("uuid",):
         return "ID" + postfix
 

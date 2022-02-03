@@ -6,6 +6,12 @@ def _get_faker_value(field_spec):
     if field_spec.field_type == "boolean":
         return f"f.boolean()"
 
+    if field_spec.field_type == "int":
+        return f"f.random_int()"
+
+    if field_spec.field_type == "float":
+        return f"f.random_number(digits=2)"
+
     if field_spec.field_type in ("string", "slug"):
         return f"f.word()"
 

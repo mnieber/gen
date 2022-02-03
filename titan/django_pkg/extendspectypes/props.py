@@ -12,6 +12,12 @@ def graphene_input_type(self: FieldSpec):
     if self.field_type == "boolean":
         return f"graphene.Boolean()"
 
+    if self.field_type == "int":
+        return f"graphene.Int()"
+
+    if self.field_type == "float":
+        return f"graphene.Float()"
+
     if self.field_type in ("string", "slug", "json"):
         return f"graphene.String()"
 

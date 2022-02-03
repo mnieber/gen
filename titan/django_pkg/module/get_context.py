@@ -110,6 +110,24 @@ def _model(field, item_name):
         args = [*default_arg, *null_blank, *help_text]
         return f"models.BooleanField({', '.join(args)})"
 
+    if t == "int":
+        default_arg = (
+            [f"default={field.default_value}"]
+            if field.default_value is not None
+            else []
+        )
+        args = [*default_arg, *null_blank, *help_text]
+        return f"models.IntegerField({', '.join(args)})"
+
+    if t == "float":
+        default_arg = (
+            [f"default={field.default_value}"]
+            if field.default_value is not None
+            else []
+        )
+        args = [*default_arg, *null_blank, *help_text]
+        return f"models.FloatField({', '.join(args)})"
+
     if t == "uuid":
         args = [*null_blank, *help_text]
         return f"models.UUIDField({', '.join(args)})"

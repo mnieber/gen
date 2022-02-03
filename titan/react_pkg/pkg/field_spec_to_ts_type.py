@@ -11,6 +11,9 @@ def field_spec_to_ts_type(field_spec, fk_as_str):
     if field_spec.field_type in ("boolean",):
         return "boolean"
 
+    if field_spec.field_type in ("int", "float"):
+        return "number"
+
     if field_spec.field_type in ("date",):
         return "Date"
 

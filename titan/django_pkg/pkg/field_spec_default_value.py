@@ -10,6 +10,12 @@ def field_spec_default_value(field_spec):
     if t == "boolean":
         return r"True"
 
+    if t == "int":
+        return r"123"
+
+    if t == "float":
+        return r"1.23"
+
     if t == "date":
         return r'"01-02-2003"'
 
