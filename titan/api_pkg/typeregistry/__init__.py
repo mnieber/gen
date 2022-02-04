@@ -9,6 +9,14 @@ class TypeRegistry:
             for named_item_list in query.named_item_lists_provided:
                 self.register_item_list(named_item_list.typ)
 
+        for mutation in graphql_api.mutations:
+            for item in mutation.items_posted:
+                self.register_item(item)
+            for named_item in mutation.named_items_returned:
+                self.register_item(named_item.typ)
+            for named_item_list in mutation.named_item_lists_returned:
+                self.register_item_list(named_item_list.typ)
+
     def get_item_by_name(self, item_name):
         return self.item_by_name.get(item_name)
 

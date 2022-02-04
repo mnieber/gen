@@ -17,4 +17,4 @@ def get_member_field_spec(parent_item, member_item):
                     member_item.item
                 ):
                     return field_spec
-    raise Exception(f"ts_member_of_type: Not found {parent_item} {member_item}")
+    raise Exception(f"get_member_field_spec: Not found {parent_item} {member_item}")

@@ -1,7 +1,6 @@
 import os
 
 import ramda as R
-from moonleap import u0
 from moonleap.typespec.get_member_field_spec import get_member_field_spec
 from moonleap.utils.inflect import plural
 from titan.api_pkg.itemlist.resources import ItemList
@@ -10,6 +9,7 @@ from titan.react_pkg.pkg.get_chain import (
     ExtractItemFromItem,
     ExtractItemListFromItem,
     TakeHighlightedElmFromState,
+    TakeItemFromQuery,
     TakeItemFromState,
     TakeItemListFromQuery,
     TakeItemListFromState,
@@ -64,12 +64,17 @@ def _get_default_input_props(chain):
 def _expression(chain, query_name):
     result = ""
     result_rs = None
-    for elm in chain:
+    for elm_idx in range(len(chain)):
+        elm = chain[elm_idx]
         if isinstance(
             elm, (TakeItemListFromState, TakeItemFromState, TakeHighlightedElmFromState)
         ):
-            result = f"props.{ts_var(elm.obj)}?" + result
-        if isinstance(elm, (TakeItemListFromQuery,)):
+            postfix = "?" if elm_idx < len(chain) - 1 else ""
+            result = f"props.{ts_var(elm.obj)}{postfix}" + result
+        elif isinstance(elm, (TakeItemFromQuery,)):
+            result = f"R.values({query_name}.data?.{elm.obj.item_name} ?? {{}})"
+            result_rs = f"{query_name}.status"
+        elif isinstance(elm, (TakeItemListFromQuery,)):
             items_name = plural(elm.obj.item_name)
             result = f"R.values({query_name}.data?.{items_name} ?? {{}})"
             result_rs = f"{query_name}.status"
@@ -124,9 +129,17 @@ def get_context(state_provider):
 
     _.ts_type = ts_type
     _.ts_var = ts_var
-    _.ts_type_import_path = ts_type_import_path
 
     class Sections:
+        def default_input_props_imports(self):
+            result = []
+            for x in _.default_input_props:
+                item_type = x.item if isinstance(x, ItemList) else x
+                result.append(
+                    f"import {{ {ts_type(item_type)} }} from '{ts_type_import_path(item_type)}';"
+                )
+            return os.linesep.join(result)
+
         def get_state_input_values(self):
             result = []
             for short_chain, chain in R.zip(_.short_chains, R.values(_.chain_by_id)):

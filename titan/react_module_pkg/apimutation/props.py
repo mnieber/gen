@@ -70,11 +70,13 @@ def get_context(mutation, api_module):
 
             for item_list in mutation.item_lists_deleted:
                 chain = get_chain_to(item_list)
-                query_names.add(chain[0].subj.name)
+                if chain:
+                    query_names.add(chain[0].subj.name)
 
             for item in mutation.items_posted:
                 chain = get_chain_to(item)
-                query_names.add(chain[0].subj.name)
+                if chain:
+                    query_names.add(chain[0].subj.name)
 
             result = ""
             for query_name in query_names:

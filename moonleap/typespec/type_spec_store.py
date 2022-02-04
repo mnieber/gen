@@ -41,10 +41,13 @@ class TypeSpecStore:
                 field_specs=field_specs_from_type_spec_dict(type_spec_dict, type_name),
                 select_item_by=type_spec_dict.get("selectItemBy", ["id"]),
                 query_item_by=type_spec_dict.get("queryItemBy", ["id"]),
-                display_item_by=type_spec_dict.get("displayItemBy", ["id"]),
+                display_item_by=type_spec_dict.get("displayItemBy", "id"),
                 query_items_by=type_spec_dict.get("queryItemsBy", []),
             )
-            self.setdefault(type_name, type_spec)
+            self._type_spec_by_type_name[type_name] = type_spec
+
+        for type_spec in self._type_spec_by_type_name.values():
+            self._on_add_type_spec(type_spec)
 
     def _on_add_type_spec(self, type_spec):
         for field_spec in type_spec.get_field_specs(["fk", "relatedSet"]):
