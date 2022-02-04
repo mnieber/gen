@@ -2,6 +2,7 @@ from moonleap.utils.case import l0, u0
 from moonleap.utils.inflect import plural
 from titan.api_pkg.item.resources import Item
 from titan.api_pkg.itemlist.resources import ItemList
+from titan.api_pkg.itemtype.resources import ItemType
 
 
 def ts_var(x):
@@ -19,7 +20,9 @@ def ts_var(x):
 def ts_type(x):
     if isinstance(x, Item):
         return ts_type_from_item_name(x.item_name)
-    if isinstance(x, ItemList):
+    elif isinstance(x, ItemType):
+        return ts_type_from_item_name(x.name)
+    elif isinstance(x, ItemList):
         return f"[{ts_type_from_item_name(x.item_name)}]"
     raise Exception(f"ts_type: unknown {x}")
 
@@ -31,6 +34,8 @@ def ts_type_from_item_name(x):
 def ts_form_type(x):
     if isinstance(x, Item):
         return ts_form_type_from_item_name(x.item_name)
+    elif isinstance(x, ItemType):
+        return ts_form_type_from_item_name(x.name)
     raise Exception(f"ts_form_type: unknown {x}")
 
 
@@ -50,11 +55,9 @@ def ts_var_by_id_type_from_item_name(x):
 
 def ts_type_import_path(x):
     if isinstance(x, Item):
-        module = (x.provider_react_state or x.item_list.provider_react_state).module
-        return f"src/{module.name}/types"
+        return f"src/api/types/{x.item_name}"
     if isinstance(x, ItemList):
-        module = (x.provider_react_state or x.item.provider_react_state).module
-        return f"src/{module.name}/types"
+        return f"src/api/types/{x.item.item_name}"
     raise Exception(f"ts_type_import_path: unknown {x}")
 
 

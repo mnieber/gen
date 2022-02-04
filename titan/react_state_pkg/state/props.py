@@ -4,13 +4,7 @@ import os
 import ramda as R
 from moonleap import u0
 from moonleap.utils.inflect import plural
-from titan.api_pkg.pkg.ml_name import (
-    ml_form_type_spec_from_item_name,
-    ml_type_spec_from_item_name,
-)
-from titan.react_pkg.pkg.field_spec_to_ts_type import field_spec_to_ts_type
 from titan.react_pkg.pkg.ml_get import ml_react_app
-from titan.react_pkg.pkg.ts_var import ts_form_type, ts_type
 
 
 def _find_module_that_provides_item_list(react_app, item_name):
@@ -90,41 +84,5 @@ def get_context(state):
                 ]
 
             return os.linesep.join([(indent + x) for x in result])
-
-        def define_type(self, item):
-            result = []
-            type_spec = ml_type_spec_from_item_name(item.item_name)
-
-            result.append(f"export type {ts_type(item)} = {{")
-            for field_spec in type_spec.field_specs:
-                if field_spec.private:
-                    continue
-
-                t = field_spec_to_ts_type(field_spec, fk_as_str=True)
-                postfix = "Id" if field_spec.field_type == "fk" else ""
-                result.append(f"  {field_spec.name}{postfix}: {t};")
-            result.append(f"}}")
-
-            return "\n".join(result)
-
-        def define_form_type(self, item):
-            if not item.item_type.form_type:
-                return ""
-
-            type_spec = ml_form_type_spec_from_item_name(item.item_name)
-
-            result = []
-            result.append(f"export type {ts_form_type(item)} = {{")
-
-            for field_spec in type_spec.field_specs:
-                if field_spec.private:
-                    continue
-
-                t = field_spec_to_ts_type(field_spec, fk_as_str=True)
-                result.append(f"  {field_spec.name}: {t};")
-
-            result.append(r"}")
-
-            return "\n".join(result)
 
     return dict(sections=Sections(), _=_)

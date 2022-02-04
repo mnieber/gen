@@ -51,11 +51,9 @@ def get_context(form_view):
             root = CodeBlock(style="typescript", level=0)
             for field_spec in _.fk_field_specs:
                 item_name = field_spec.target
-                item_list = _.type_reg.get_item_list_by_name(item_name)
-                module = item_list.provider_react_state.module
                 root.abc(
                     f"import {{ {ts_type_from_item_name(item_name)} }} "
-                    + f"from '{module.module_path}/types'"
+                    + f"from 'src/api/types/{item_name}'"
                 )
             return root.result
 
