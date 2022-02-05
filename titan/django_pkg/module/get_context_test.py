@@ -24,6 +24,9 @@ def _get_faker_value(field_spec):
     if field_spec.field_type == "json":
         return "{}"
 
+    if field_spec.field_type == "url":
+        return "www.example.com"
+
     raise Exception(f"Cannot deduce faker function for {field_spec.field_type}")
 
 
