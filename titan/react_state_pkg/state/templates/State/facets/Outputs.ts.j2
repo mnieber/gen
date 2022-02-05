@@ -1,6 +1,6 @@
 {% magic_with item_name as redRose %}
 {% for item_name, bvrs in res.bvrs_by_item_name.items() %}
-import { RedRoseT, RedRoseByIdT } from '{{ res.type_import_path(item_name) }}';
+import { RedRoseT, RedRoseByIdT } from "src/api/types/redRose";
 {% endfor %}
 import { listToItemById } from 'src/utils/ids';
 import { data, output } from 'skandha';

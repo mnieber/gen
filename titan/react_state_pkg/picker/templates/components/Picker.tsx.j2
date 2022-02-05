@@ -1,5 +1,4 @@
 {% magic_with res.item_name as yellowTulip %}
-{% magic_with res.module.name as gardenFlowers %}
 import classnames from 'classnames';
 import { observer } from 'mobx-react-lite';
 import { useDefaultProps, FC } from 'react-default-props-context';
@@ -7,7 +6,7 @@ import { Selection } from 'skandha-facets/Selection';
 import { Highlight } from 'skandha-facets/Highlight';
 
 import { PickerValueT, ValuePicker } from 'src/utils/components/ValuePicker';
-import { YellowTulipT } from 'src/gardenFlowers/types';
+import { YellowTulipT } from 'src/api/types/yellowTulip';
 
 type PropsT = {
 };
@@ -44,6 +43,4 @@ export const YellowTulipPicker: FC<PropsT, DefaultPropsT> = observer((p: PropsT)
     </div>
   );
 });
-
-{% end_magic_with %}
 {% end_magic_with %}

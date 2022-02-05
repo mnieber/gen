@@ -1,7 +1,8 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import MemFun, Prop, add, create, empty_rule, extend, kebab_to_camel, rule
+from moonleap import (MemFun, Prop, add, create, empty_rule, extend,
+                      kebab_to_camel, rule)
 from moonleap.verbs import has, provides
 from titan.api_pkg.item.resources import Item
 from titan.api_pkg.itemlist.resources import ItemList
@@ -51,7 +52,6 @@ class ExtendState:
     item_lists_provided = P.children(provides, "item~list")
     items_provided = P.children(provides, "item")
     bvrs_by_item_name = Prop(props.bvrs_by_item_name)
-    type_import_path = MemFun(props.type_import_path)
 
 
 @extend(Item)

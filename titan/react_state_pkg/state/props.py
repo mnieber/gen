@@ -27,13 +27,6 @@ def bvrs_by_item_name(self):
     return result
 
 
-def type_import_path(self, item_name):
-    module = _find_module_that_provides_item_list(ml_react_app(self), item_name)
-    if module:
-        return f"{module.module_path}/types"
-    return None
-
-
 def get_context(state):
     _ = lambda: None
     _.facet_names_by_item_name = dict()

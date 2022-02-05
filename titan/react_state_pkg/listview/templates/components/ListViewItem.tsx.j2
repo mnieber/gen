@@ -1,9 +1,8 @@
 {% magic_with res.item_name as yellowTulip %}
-{% magic_with res.module.name as gardenFlowers %}
 import React from 'react';
 import classnames from 'classnames';
 import { observer } from 'mobx-react-lite';
-import { YellowTulipT } from 'src/gardenFlowers/types';
+import { YellowTulipT } from 'src/api/types/yellowTulip';
 
 import './YellowTulipListViewItem.scss';
 
@@ -42,5 +41,4 @@ export const YellowTulipListViewItem: React.FC<PropsT> = observer((props: PropsT
     </div>
   );
 });
-{% end_magic_with %}
 {% end_magic_with %}
