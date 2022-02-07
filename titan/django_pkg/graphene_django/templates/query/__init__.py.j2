@@ -1,4 +1,7 @@
+{% clean_up_py_imports %}
 import graphene
+from graphene.types.generic import GenericScalar
+{% end_clean_up_py_imports %}
 {{ sections.graphene_query_imports() }}
 
 

@@ -1,9 +1,7 @@
 import classnames from 'classnames';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { useSignOut } from 'src/api/authApi';
-import { anonymous } from 'src/auth/AuthStore';
-import { useAuthStore } from 'src/auth/components/useAuthStore';
+import { useLoadUserId, useSignOut } from 'src/api/authApi';
 import { RouterLink } from 'src/routes/components';
 import UIkit from 'uikit';
 import './AccountMenu.scss';
@@ -15,8 +13,8 @@ const closeDropDown = () => {
 type PropsT = React.PropsWithChildren<{}>;
 
 export const AccountMenu: React.FC<PropsT> = observer(() => {
-  const authStore = useAuthStore();
   const signOut = useSignOut().mutateAsync;
+  const loadUserId = useLoadUserId();
 
   const signInDiv = (
     <li className="uk-active">
@@ -55,8 +53,8 @@ export const AccountMenu: React.FC<PropsT> = observer(() => {
         }
       >
         <ul className="uk-nav uk-dropdown-nav">
-          {authStore.signedInUserId === anonymous && signInDiv}
-          {authStore.signedInUserId !== anonymous && signOutDiv}
+          {!loadUserId.data?.isAuthenticated && signInDiv}
+          {loadUserId.data?.isAuthenticated && signOutDiv}
         </ul>
       </div>
     </div>

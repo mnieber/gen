@@ -14,7 +14,7 @@ export const {{ _.output_schema_name }} = new schema.Entity('{{ _.output_schema_
 const getRedRose = ({{ sections.javascript_args() }}) => {
   return doQuery(
     `query {{ res.name }}{{ sections.ts_graphql_query_args(True) }} {
-{% for output_field_spec in res.outputs_type_spec.field_specs %}
+{% for output_field_spec in res.outputs_type_spec.get_field_specs(['fk', 'relatedSet']) %}
         {{ output_field_spec.name }}{{ sections.ts_graphql_query_args(False) }} {
 {{ sections.ts_graphql_query_body(output_field_spec) }}
         }

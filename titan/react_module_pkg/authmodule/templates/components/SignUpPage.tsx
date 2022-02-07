@@ -2,11 +2,13 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useSignUp } from 'src/api/authApi';
 import { States } from 'src/api/authApi/states';
-import { termsVersion } from 'src/auth/AuthStore';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { SignUpForm } from 'src/auth/components/SignUpForm';
 import { useAuthStateContext } from 'src/auth/components/useAuthStateContext';
 import { RouterLink } from 'src/routes/components';
+
+export const termsVersion: string =
+  process.env.REACT_APP_TERMS_VERSION ?? '1.0.0';
 
 export const SignUpPage: React.FC = observer(() => {
   const authState = useAuthStateContext(true);

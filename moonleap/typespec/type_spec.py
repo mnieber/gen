@@ -29,7 +29,7 @@ class TypeSpec:
 def add_related_set_field_to_type_spec(type_spec, is_private, related_item_name):
     field_name = related_item_name + "Set"
     if [x for x in type_spec.field_specs if x.name == field_name]:
-        raise Exception("Field spec with name {name} already exists")
+        raise Exception(f"Field spec with name {field_name} already exists")
 
     type_spec.field_specs.append(
         FieldSpec(

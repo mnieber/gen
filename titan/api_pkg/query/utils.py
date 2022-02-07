@@ -10,5 +10,6 @@ def get_output_field_name_for_named_item_list(named_item_list_provided):
 
 def get_output_field_name_for_named_item(named_item_provided):
     item_name = named_item_provided.typ.item_name
-    output_field_name = camel_join(named_item_provided.name, item_name)
-    return item_name, output_field_name
+    if named_item_provided.name:
+        return item_name, named_item_provided.name
+    return item_name, item_name

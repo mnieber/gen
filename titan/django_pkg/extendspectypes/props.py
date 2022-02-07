@@ -34,16 +34,38 @@ def graphene_input_type(self: FieldSpec):
 
 
 def graphene_output_type(self: FieldSpec, args):
+    infix = ", " if args else ""
     if self.field_type == "relatedSet":
-        return f"graphene.List({self.target_type_spec.tn_graphene}{args})"
+        return f"graphene.List({self.target_type_spec.tn_graphene}{infix}{args})"
 
     if self.field_type == "fk":
-        return f"graphene.Field({self.target_type_spec.tn_graphene}{args})"
+        return f"graphene.Field({self.target_type_spec.tn_graphene}{infix}{args})"
 
     if self.field_type in ("form"):
         return f"{self.target_type_spec.tn_graphene}({args})"
 
-    return self.graphene_input_type
+    if self.field_type == "boolean":
+        return f"graphene.Boolean({args})"
+
+    if self.field_type == "int":
+        return f"graphene.Int({args})"
+
+    if self.field_type == "float":
+        return f"graphene.Float({args})"
+
+    if self.field_type in ("string", "slug"):
+        return f"graphene.String({args})"
+
+    if self.field_type == "uuid":
+        return f"graphene.ID({args})"
+
+    if self.field_type == "idList":
+        return f"graphene.List(graphene.String)"
+
+    if self.field_type in ("any", "json"):
+        return f"GenericScalar({args})"
+
+    raise Exception(f"Cannot deduce arg type for {self.field_type}")
 
 
 def target_django_module(self, django_app):
