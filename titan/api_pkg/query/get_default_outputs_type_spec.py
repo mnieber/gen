@@ -1,11 +1,6 @@
 from moonleap.typespec.field_spec import FieldSpec
 from moonleap.typespec.type_spec_store import TypeSpec
 
-from .utils import (
-    get_output_field_name_for_named_item,
-    get_output_field_name_for_named_item_list,
-)
-
 
 def get_default_outputs_type_spec(self, name):
     return TypeSpec(
@@ -24,27 +19,23 @@ def get_default_outputs_type_spec(self, name):
 
 
 def _item_output_field_spec(self, named_item):
-    item_name, output_field_name = get_output_field_name_for_named_item(named_item)
     return FieldSpec(
-        name=output_field_name,
+        name=named_item.output_field_name,
         required=False,
         private=False,
         field_type="fk",
         field_type_attrs=dict(
-            target=item_name,
+            target=named_item.typ.item_name,
             hasRelatedSet=False,
         ),
     )
 
 
 def _item_list_output_field_spec(self, named_item_list):
-    item_name, output_field_name = get_output_field_name_for_named_item_list(
-        named_item_list
-    )
     return FieldSpec(
-        name=output_field_name,
+        name=named_item_list.output_field_name,
         required=False,
         private=False,
         field_type="relatedSet",
-        field_type_attrs=dict(target=item_name),
+        field_type_attrs=dict(target=named_item_list.typ.item_name),
     )

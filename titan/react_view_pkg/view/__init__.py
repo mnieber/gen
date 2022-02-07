@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import MemFun, create, extend, kebab_to_camel, named, rule, u0
+from moonleap import MemFun, create, extend, kebab_to_camel, rule, u0
 from moonleap.verbs import has, wraps
 
 from . import props, router_configs

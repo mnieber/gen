@@ -7,16 +7,16 @@ from {{ res.name }}.models import RedRose
 f = faker.Faker()
 
 {% for item_list in res.item_lists_provided %}
-def create_random_red_rose({{ sections.create_random_args(item_list.item_name) }}):
+def create_random_red_rose({{ sections.create_random_args(item_list) }}):
     obj, created = RedRose.objects.get_or_create(
-        {{ sections.create_random_body(item_list.item_name, snake_args=True) }}
+        {{ sections.create_random_body(item_list, snake_args=True) }}
     )
     return obj
 
 {% if item_list.item.poster_mutations %}
-def create_random_red_rose_form({{ sections.create_random_args(item_list.item_name) }}):
+def create_random_red_rose_form({{ sections.create_random_args(item_list) }}):
     return dict(
-        {{ sections.create_random_body(item_list.item_name, snake_args=False) }}
+        {{ sections.create_random_body(item_list, snake_args=False) }}
     )
 {% endif %}
 {% endfor %}

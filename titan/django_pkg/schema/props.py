@@ -3,10 +3,7 @@ from pathlib import Path
 
 from moonleap import render_templates, u0
 from moonleap.utils.case import sn
-from titan.api_pkg.pkg.ml_name import (
-    ml_form_type_spec_from_item_name,
-    ml_type_spec_from_item_name,
-)
+from titan.api_pkg.pkg.ml_name import ml_form_type_spec_from_item_name
 from titan.django_pkg.graphene_django.utils import find_module_that_provides_item_list
 
 
@@ -14,7 +11,7 @@ def get_context(item_type, api_module):
     _ = lambda: None
     _.django_app = api_module.django_app
     _.item_name = item_type.name
-    _.type_spec = ml_type_spec_from_item_name(_.item_name)
+    _.type_spec = item_type.type_spec
     _.fk_field_specs = [x for x in _.type_spec.get_field_specs(["fk"]) if not x.through]
     _.private_field_specs = [x for x in _.type_spec.field_specs if x.private]
     _.form_type_spec = ml_form_type_spec_from_item_name(_.item_name)

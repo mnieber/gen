@@ -6,12 +6,10 @@ from moonleap.resource.rel import Rel
 from moonleap.utils.join import join
 from moonleap.verbs import uses
 from titan.api_pkg.item.resources import Item
-from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
 
 
 def get_select_item_effect_term(item):
-    type_spec = ml_type_spec_from_item_name(item.item_name)
-    name_postfix = join("-by-", "-and-".join(type_spec.select_item_by))
+    name_postfix = join("-by-", "-and-".join(item.type_spec.select_item_by))
     return Term(f"select-{item.meta.term.data}{name_postfix}", "select-item-effect")
 
 

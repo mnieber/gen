@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import Prop, Term, create, empty_rule, extend, kebab_to_camel, named, rule
+from moonleap import Prop, Term, create, empty_rule, extend, kebab_to_camel, rule
 from moonleap.resource.forward import create_forward
 from moonleap.utils.inflect import plural
 from moonleap.verbs import has, loads, provides

@@ -12,9 +12,9 @@ from app.models import Entity
 
 {% for item_list in res.item_lists_provided %}
 class YellowTulip(Entity):
-{{ sections.model_fields(item_list.item_name)}}
+{{ sections.model_fields(item_list)}}
 
-{{ sections.repr_function(item_list.item_name)}}
+{{ sections.repr_function(item_list)}}
 
 {% for inline_model in sections.get_inline_models(item_list) %}
 class YellowTulip2RedRose(models.Model):

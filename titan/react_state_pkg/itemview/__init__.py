@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from moonleap import MemFun, create, extend, kebab_to_camel, named
+from moonleap import MemFun, create, extend, kebab_to_camel
 from moonleap.utils.case import u0
 
 from . import props

@@ -2,7 +2,6 @@ import os
 
 from moonleap import u0
 from moonleap.utils.case import sn
-from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
 from titan.django_pkg.graphene_django.utils import find_module_that_provides_item_list
 
 
@@ -160,9 +159,8 @@ def get_context(module):
     class Sections:
         def model_imports(self, item_list):
             result = []
-            type_spec = ml_type_spec_from_item_name(item_list.item_name)
             models = []
-            for field_spec in type_spec.get_field_specs(["fk"]):
+            for field_spec in item_list.type_spec.get_field_specs(["fk"]):
                 models.append(field_spec.target)
 
             for inline_model in self.get_inline_models(item_list):
@@ -178,34 +176,33 @@ def get_context(module):
                     )
             return "\n".join(result)
 
-        def model_fields(self, item_name):
+        def model_fields(self, item_list):
             result = []
             indent = "    "
-            type_spec = ml_type_spec_from_item_name(item_name)
-            for field_spec in _field_specs(type_spec):
-                model = _model(field_spec, item_name)
+            for field_spec in _field_specs(item_list.type_spec):
+                model = _model(field_spec, item_list.item_name)
                 if model:
                     result.append(indent + f"{sn(field_spec.name)} = {model}")
 
             return "\n".join(result or [indent + "pass"])
 
-        def repr_function(self, item_name):
+        def repr_function(self, item_list):
             indent = " " * 4
-            type_spec = ml_type_spec_from_item_name(item_name)
-            for field_spec in _field_specs(type_spec):
+            for field_spec in _field_specs(item_list.type_spec):
                 if field_spec.field_type == "string":
                     return (
                         f"{indent}def __str__(self):\n"
-                        + f"{indent}  return '{u0(item_name)}: ' + self."
+                        + f"{indent}  return '{u0(item_list.item_name)}: ' + self."
                         + f"{sn(field_spec.name)}"
                     )
 
             return ""
 
         def get_inline_models(self, item_list):
-            type_spec = ml_type_spec_from_item_name(item_list.item_name)
             return [
-                x.target for x in type_spec.get_field_specs(["relatedSet"]) if x.through
+                x.target
+                for x in item_list.type_spec.get_field_specs(["relatedSet"])
+                if x.through
             ]
 
         def import_item_types(self):

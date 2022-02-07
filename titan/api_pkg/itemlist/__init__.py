@@ -1,5 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import (
+    Prop,
     create,
     create_forward,
     empty_rule,
@@ -11,6 +12,7 @@ from moonleap import (
 from moonleap.verbs import uses
 from titan.api_pkg.item.resources import Item
 
+from . import props
 from .resources import ItemList
 
 
@@ -37,8 +39,14 @@ rules = [(("item~list", uses, "item"), empty_rule())]
 @extend(ItemList)
 class ExtendItemList:
     item = P.child(uses, "item", required=True)
+    type_spec = Prop(props.item_list_type_spec)
 
 
 @extend(Item)
 class ExtendItem:
     item_list = P.parent("item~list", uses, required=True)
+
+
+@extend(named(ItemList))
+class ExtendNamedItemList:
+    output_field_name = Prop(props.named_item_list_output_field_name)
