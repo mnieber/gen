@@ -8,6 +8,7 @@ from moonleap.builder.scope import get_base_tags
 from moonleap.parser.term import Term
 from moonleap.resource.named_class import NamedResource
 from moonleap.resource.rel import Rel
+from moonleap.utils.case import kebab_to_camel
 from moonleap.verbs import is_created_as, uses
 
 
@@ -65,7 +66,7 @@ def _process_relations(relations: T.List[Rel], actions):
                 [Rel(term, is_created_as, term, creator_block, rel.origin)], actions
             )
             if isinstance(res, NamedResource):
-                res.name = term.name
+                res.name = kebab_to_camel(term.name)
                 res.typ = _find_or_create(rel, Term(data=term.data, tag=term.tag))
 
         return res
