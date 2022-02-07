@@ -1,6 +1,6 @@
 from titan.api_pkg.pkg.ml_name import ml_form_type_spec_from_item_name
 from titan.react_pkg.pkg.field_spec_to_ts_type import field_spec_to_ts_type
-from titan.react_pkg.pkg.ts_var import ts_form_type, ts_type
+from titan.react_pkg.pkg.ts_var import ts_form_type
 
 
 def get_context(item_type):
@@ -10,7 +10,7 @@ def get_context(item_type):
         def define_type(self):
             result = []
 
-            result.append(f"export type {ts_type(item_type)} = {{")
+            result.append(f"export type {item_type.ts_type} = {{")
             for field_spec in item_type.type_spec.field_specs:
                 if field_spec.private:
                     continue

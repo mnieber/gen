@@ -7,13 +7,13 @@ import { FC, useDefaultProps } from 'react-default-props-context';
 import { Selection } from 'skandha-facets/Selection';
 import { Effect } from 'src/utils/components';
 import * as R from 'ramda';
-import { {{ _.item_ts_type }} } from '{{ _.item_ts_type_import_path }}';
+import { {{ _.item_list.item.ts_type }} } from '{{ _.item_ts_type_import_path }}';
 {% end_clean_up_js_imports %}
 
 type ArgsT = {
   yellowTulipsSelection: Selection;
 {% if _.route_params and sections.get_item_id() %}
-  yellowTulips: [{{ _.item_ts_type }}];
+  yellowTulips: {{ _.item_list.ts_type }};
 {% endif %}
 {{ sections.select_effect_args() }}
 };
@@ -36,7 +36,7 @@ type PropsT = {};
 type DefaultPropsT = {
   yellowTulipsSelection: Selection;
 {% if _.route_params and sections.get_item_id() %}
-  yellowTulips: [{{ _.item_ts_type }}];
+  yellowTulips: {{ _.item_list.ts_type }};
 {% endif %}
 };
 

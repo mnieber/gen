@@ -17,16 +17,6 @@ def ts_var(x):
     raise Exception(f"tsvar: unknown {x}")
 
 
-def ts_type(x):
-    if isinstance(x, Item):
-        return ts_type_from_item_name(x.item_name)
-    elif isinstance(x, ItemType):
-        return ts_type_from_item_name(x.name)
-    elif isinstance(x, ItemList):
-        return f"[{ts_type_from_item_name(x.item_name)}]"
-    raise Exception(f"ts_type: unknown {x}")
-
-
 def ts_type_from_item_name(x):
     return f"{u0(x)}T"
 
@@ -64,4 +54,4 @@ def ts_type_import_path(x):
 def ts_var_by_id(x):
     if isinstance(x, Item):
         return ts_var(x) + "ById"
-    raise Exception(f"ts_type: unknown {x}")
+    raise Exception(f"ts_var_by_id: unknown {x}")

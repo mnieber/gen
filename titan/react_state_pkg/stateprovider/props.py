@@ -15,7 +15,7 @@ from titan.react_pkg.pkg.get_chain import (
     TakeItemListFromState,
     get_chain_to,
 )
-from titan.react_pkg.pkg.ts_var import ts_type, ts_type_import_path, ts_var
+from titan.react_pkg.pkg.ts_var import ts_type_import_path, ts_var
 from titan.react_view_pkg.pkg.create_component_router_config import (
     create_component_router_config,
 )
@@ -127,7 +127,6 @@ def get_context(state_provider):
     for item_name, bvrs in _.state.bvrs_by_item_name.items():
         _.facet_names_by_item_name[item_name] = [x.name for x in bvrs]
 
-    _.ts_type = ts_type
     _.ts_var = ts_var
 
     class Sections:
@@ -136,7 +135,7 @@ def get_context(state_provider):
             for x in _.default_input_props:
                 item_type = x.item if isinstance(x, ItemList) else x
                 result.append(
-                    f"import {{ {ts_type(item_type)} }} from '{ts_type_import_path(item_type)}';"
+                    f"import {{ {item_type.ts_type} }} from '{ts_type_import_path(item_type)}';"
                 )
             return os.linesep.join(result)
 
