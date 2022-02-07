@@ -10,7 +10,7 @@ from titan.react_module_pkg.apiquery.graphql_body import graphql_body
 from titan.react_module_pkg.apiquery.props import define_schema_field
 from titan.react_pkg.pkg.field_spec_to_ts_type import field_spec_to_ts_type
 from titan.react_pkg.pkg.get_chain import get_chain_to
-from titan.react_pkg.pkg.ts_var import ts_form_type, ts_type_import_path
+from titan.react_pkg.pkg.ts_var import ts_form_type
 
 
 def get_context(mutation, api_module):
@@ -34,7 +34,7 @@ def get_context(mutation, api_module):
                 item_name = field_spec.target
                 item = _.type_reg.get_item_by_name(item_name)
                 result.append(
-                    f"import {{ {ts_form_type(item)} }} from '{ts_type_import_path(item)}';"
+                    f"import {{ {ts_form_type(item)} }} from '{item.item_type.ts_type_import_path}';"
                 )
             return os.linesep.join(result)
 

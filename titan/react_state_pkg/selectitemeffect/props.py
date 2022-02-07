@@ -1,6 +1,6 @@
 from moonleap import u0
 from moonleap.utils.inflect import plural
-from titan.react_pkg.pkg.ts_var import ts_type_from_item_name, ts_type_import_path
+from titan.react_pkg.pkg.ts_var import ts_type_from_item_name
 from titan.react_view_pkg.router import RouterConfig
 
 
@@ -28,7 +28,6 @@ def get_context(select_item_effect):
     _.item_name = _.item_list.item_name
     _.type_spec = _.item_list.type_spec
     _.items_name = plural(_.item_name)
-    _.item_ts_type_import_path = ts_type_import_path(_.item_list.item)
     _.route_params = [
         _.item_name + u0(param) for param in _.type_spec.select_item_by or []
     ]

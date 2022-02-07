@@ -19,3 +19,4 @@ class ExtendItemList:
 @extend(ItemType)
 class ExtendItemType:
     ts_type = Prop(props.item_type_ts_type)
+    ts_type_import_path = Prop(props.item_type_ts_type_import_path)

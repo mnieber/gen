@@ -43,14 +43,6 @@ def ts_var_by_id_type_from_item_name(x):
     return f"{u0(x)}ByIdT"
 
 
-def ts_type_import_path(x):
-    if isinstance(x, Item):
-        return f"src/api/types/{x.item_name}"
-    if isinstance(x, ItemList):
-        return f"src/api/types/{x.item.item_name}"
-    raise Exception(f"ts_type_import_path: unknown {x}")
-
-
 def ts_var_by_id(x):
     if isinstance(x, Item):
         return ts_var(x) + "ById"
