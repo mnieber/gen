@@ -5,9 +5,9 @@ from moonleap.utils.codeblock import CodeBlock
 from moonleap.utils.inflect import plural
 from titan.api_pkg.pkg.ml_name import ml_form_type_spec_from_item_name
 from titan.api_pkg.typeregistry import TypeRegistry
+from titan.react_module_pkg.extendspectypes.props import ts_type_from_item_name
 from titan.react_pkg.component.resources import get_component_base_url
 from titan.react_pkg.pkg.ml_get import ml_graphql_api, ml_react_app
-from titan.react_pkg.pkg.ts_var import ts_type_from_item_name
 from titan.react_view_pkg.pkg.create_component_router_config import (
     create_component_router_config,
 )

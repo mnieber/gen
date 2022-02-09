@@ -17,26 +17,10 @@ def ts_var(x):
     raise Exception(f"tsvar: unknown {x}")
 
 
-def ts_type_from_item_name(x):
-    return f"{u0(x)}T"
-
-
-def ts_form_type(x):
-    if isinstance(x, Item):
-        return ts_form_type_from_item_name(x.item_name)
-    elif isinstance(x, ItemType):
-        return ts_form_type_from_item_name(x.name)
-    raise Exception(f"ts_form_type: unknown {x}")
-
-
 def ts_var_by_id_type(x):
     if isinstance(x, Item):
         return ts_var_by_id_type_from_item_name(x.item_name)
-    raise Exception(f"ts_form_type: unknown {x}")
-
-
-def ts_form_type_from_item_name(x):
-    return f"{u0(x)}FormT"
+    raise Exception(f"ts_var_by_id_type: unknown {x}")
 
 
 def ts_var_by_id_type_from_item_name(x):

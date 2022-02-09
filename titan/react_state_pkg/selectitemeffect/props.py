@@ -1,6 +1,5 @@
 from moonleap import u0
 from moonleap.utils.inflect import plural
-from titan.react_pkg.pkg.ts_var import ts_type_from_item_name
 from titan.react_view_pkg.router import RouterConfig
 
 
@@ -25,6 +24,7 @@ def create_router_configs(self, named_component):
 def get_context(select_item_effect):
     _ = lambda: None
     _.item_list = select_item_effect.item_list
+    _.item_type = select_item_effect.item_list.item.item_type
     _.item_name = _.item_list.item_name
     _.type_spec = _.item_list.type_spec
     _.items_name = plural(_.item_name)
@@ -50,7 +50,7 @@ def get_context(select_item_effect):
             )
 
         def get_item_id(self):
-            search_function = f"(x: {ts_type_from_item_name(_.item_name)}) => " + (
+            search_function = f"(x: {_.item_type.ts_type}) => " + (
                 " && ".join(
                     [
                         f"x.{param} === args.{_.item_name + u0(param)}"
