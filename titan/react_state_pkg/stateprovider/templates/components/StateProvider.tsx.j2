@@ -25,7 +25,7 @@ type PropsT = React.PropsWithChildren<{}>;
 
 type DefaultPropsT = {
   {% for x in _.default_input_props %}
-  {{ _.ts_var(x) }}: {{ x.ts_type }};
+  {{ x.ts_var }}: {{ x.ts_type }};
   {% endfor %}
 };
 

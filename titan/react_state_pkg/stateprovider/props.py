@@ -15,7 +15,6 @@ from titan.react_pkg.pkg.get_chain import (
     TakeItemListFromState,
     get_chain_to,
 )
-from titan.react_pkg.pkg.ts_var import ts_var
 from titan.react_view_pkg.pkg.create_component_router_config import (
     create_component_router_config,
 )
@@ -70,7 +69,7 @@ def _expression(chain, query_name):
             elm, (TakeItemListFromState, TakeItemFromState, TakeHighlightedElmFromState)
         ):
             postfix = "?" if elm_idx < len(chain) - 1 else ""
-            result = f"props.{ts_var(elm.obj)}{postfix}" + result
+            result = f"props.{elm.obj.ts_var}{postfix}" + result
         elif isinstance(elm, (TakeItemFromQuery,)):
             result = f"R.values({query_name}.data?.{elm.obj.item_name} ?? {{}})"
             result_rs = f"{query_name}.status"
@@ -127,8 +126,6 @@ def get_context(state_provider):
     for item_name, bvrs in _.state.bvrs_by_item_name.items():
         _.facet_names_by_item_name[item_name] = [x.name for x in bvrs]
 
-    _.ts_var = ts_var
-
     class Sections:
         def default_input_props_imports(self):
             result = []
@@ -143,7 +140,7 @@ def get_context(state_provider):
             result = []
             for short_chain, chain in R.zip(_.short_chains, R.values(_.chain_by_id)):
                 query_name = chain[0].subj.name
-                provided = ts_var(chain[-1].obj)
+                provided = chain[-1].obj.ts_var
                 value, value_rs = _expression(short_chain, query_name)
                 result.append(f"{provided}: {value},")
                 if value_rs:
@@ -156,7 +153,7 @@ def get_context(state_provider):
             for chain in _.short_chains:
                 provided = chain[-1].obj
                 result.append(
-                    f"{tab}state.inputs.{ts_var(provided)} = inputs.{ts_var(provided)};"
+                    f"{tab}state.inputs.{provided.ts_var} = inputs.{provided.ts_var};"
                 )
             return os.linesep.join(result)
 
