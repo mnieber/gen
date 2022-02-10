@@ -1,7 +1,7 @@
 import ramda as R
-from moonleap import u0
 from moonleap.typespec.recurse_type_specs import recurse_type_specs
 from moonleap.utils.case import sn
+from moonleap.utils.fp import uniq
 
 
 def find_module_that_provides_item_list(django_app, item_type_name):
@@ -21,7 +21,7 @@ def get_django_model_imports(django_app, type_specs):
             module = find_module_that_provides_item_list(django_app, field_spec.target)
             result.append(f"from {sn(module.name)}.models import {field_spec.target}")
 
-    return R.uniq(result)
+    return uniq(result)
 
 
 def get_graphene_type_imports(type_specs):
@@ -38,4 +38,4 @@ def get_graphene_type_imports(type_specs):
                 + f"import {tn_graphene}  # noqa"
             )
 
-    return R.uniq(result)
+    return uniq(result)

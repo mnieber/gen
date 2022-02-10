@@ -1,6 +1,7 @@
 import ramda as R
 from moonleap import get_session
 from moonleap.get_or_create_secret_key import get_or_create_secret_key
+from moonleap.utils.fp import uniq
 from moonleap.utils.merge_into_config import merge_into_config
 from titan.django_pkg.djangoapp.resources import DjangoConfig
 
@@ -12,9 +13,9 @@ def config(self):
         merge_into_config(settings, rhs.settings)
         return DjangoConfig(
             settings=settings,
-            urls=sorted(R.uniq(lhs.urls + rhs.urls)),
-            urls_imports=R.uniq(lhs.urls_imports + rhs.urls_imports),
-            cors_urls=sorted(R.uniq(lhs.cors_urls + rhs.cors_urls)),
+            urls=sorted(uniq(lhs.urls + rhs.urls)),
+            urls_imports=uniq(lhs.urls_imports + rhs.urls_imports),
+            cors_urls=sorted(uniq(lhs.cors_urls + rhs.cors_urls)),
         )
 
     return R.reduce(_merge, DjangoConfig({}), self.django_configs.merged)

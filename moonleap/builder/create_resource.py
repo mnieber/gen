@@ -1,5 +1,5 @@
-import ramda as R
 from moonleap.resource import Resource, ResourceMetaData
+from moonleap.utils.fp import uniq
 
 
 def _create_generic_resource():
@@ -12,7 +12,7 @@ def _get_base_tags(term, block):
     for scope in block.get_scopes():
         result.extend(scope.get_base_tags(term))
 
-    return R.uniq(result)
+    return uniq(result)
 
 
 def create_resource_and_add_to_block(term, block):

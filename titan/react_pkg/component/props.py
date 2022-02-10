@@ -1,4 +1,5 @@
 import ramda as R
+from moonleap.utils.fp import uniq
 
 
 def wrapped_components(self):
@@ -23,4 +24,4 @@ def effect_relations_for_chain(chain):
     effect_terms = []
     for elm in chain:
         effect_terms.extend(elm.side_effects)
-    return R.uniq(effect_terms)
+    return uniq(effect_terms)

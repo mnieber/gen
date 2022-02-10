@@ -1,9 +1,9 @@
 import os
 
-import ramda as R
 from moonleap.typespec.type_spec_store import type_spec_store
 from moonleap.utils.case import l0, sn
 from moonleap.utils.codeblock import CodeBlock
+from moonleap.utils.fp import uniq
 from moonleap.utils.join import join
 from titan.api_pkg.pkg.graphql_args import declare_graphql_variable
 from titan.django_pkg.apiquery.get_context_test import define_fixture
@@ -62,7 +62,7 @@ def get_context_test(mutation, api_module):
                         f"from {import_path} import create_random_{sn(l0(fk_field_spec.target))}"
                     )
 
-            return os.linesep.join(R.uniq(result))
+            return os.linesep.join(uniq(result))
 
         def define_fixtures(self):
             root = CodeBlock(style="python", level=1)
@@ -112,7 +112,7 @@ def get_context_test(mutation, api_module):
             result = []
             for output_field_spec in _.fixture_field_specs:
                 result.append(sn(output_field_spec.name))
-            return join(prefix=", ", infix=", ".join(R.uniq(result)))
+            return join(prefix=", ", infix=", ".join(uniq(result)))
 
         def declare_create_mutation_args(self):
             inputs = list(f"{sn(x.name)}" for x in _.input_field_specs)

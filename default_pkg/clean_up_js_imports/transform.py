@@ -2,6 +2,7 @@ import os
 import re
 
 import ramda as R
+from moonleap.utils.fp import uniq
 from parsimonious import Grammar, NodeVisitor
 
 clean_up_js_imports_tag = "{% clean_up_js_imports %}"
@@ -110,7 +111,7 @@ def has_symbol(x, text):
 
 def filter_packages(record, other_text):
     record["packages"] = sorted(
-        R.uniq([x for x in record["packages"] if has_symbol(x, other_text)])
+        uniq([x for x in record["packages"] if has_symbol(x, other_text)])
     )
     record["star"] = sorted([x for x in record["star"] if has_symbol(x, other_text)])
     record["singleton"] = sorted(

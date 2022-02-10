@@ -4,6 +4,7 @@ import ramda as R
 from moonleap.typespec.field_spec import input_is_used_for_output
 from moonleap.utils.case import l0, sn
 from moonleap.utils.codeblock import CodeBlock
+from moonleap.utils.fp import uniq
 from moonleap.utils.join import join
 from titan.api_pkg.pkg.graphql_args import (
     declare_graphql_variable,
@@ -32,7 +33,7 @@ def get_context_test(query, api_module):
                     f"import create_random_{sn(l0(output_field_spec.target))}"
                 )
 
-            return os.linesep.join(R.uniq(result))
+            return os.linesep.join(uniq(result))
 
         def define_query_fixtures(self):
             root = CodeBlock(style="python", level=1)
@@ -48,7 +49,7 @@ def get_context_test(query, api_module):
                 fixture = sn(output_field_spec.name)
                 result.append(fixture)
 
-            return join(prefix=", ", infix=", ".join(R.uniq(result)))
+            return join(prefix=", ", infix=", ".join(uniq(result)))
 
         def invoke_create_query_args(self):
             args = []

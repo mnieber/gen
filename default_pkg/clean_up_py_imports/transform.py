@@ -2,6 +2,7 @@ import os
 import re
 
 import ramda as R
+from moonleap.utils.fp import uniq
 from parsimonious import Grammar, NodeVisitor
 
 clean_up_py_imports_tag = "{% clean_up_py_imports %}"
@@ -100,7 +101,7 @@ def has_symbol(x, text):
 
 
 def filter_modules(record, other_text):
-    record["modules"] = R.uniq(
+    record["modules"] = uniq(
         [x for x in record["modules"] if has_symbol(x, other_text)]
     )
 
