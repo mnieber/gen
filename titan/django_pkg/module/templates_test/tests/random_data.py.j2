@@ -2,7 +2,7 @@
 {% magic_with item_list.item_name|sn as red_rose %}
 import faker
 {% for item_list in res.item_lists_provided %}
-from {{ res.name }}.models import RedRose
+from {{ res.name|sn }}.models import RedRose
 {% endfor %}
 f = faker.Faker()
 

@@ -1,9 +1,7 @@
 from api.tests.codeblock import CodeBlock
 
 {% magic_with res.name as postRedRose %}
-{% magic_with res.name|sn as post_red_rose %}
 {% magic_with output_field_spec.name as yellowTulip %}
-{% magic_with output_field_spec.name|sn as yellow_tulip %}
 def create_post_red_rose_mutation({{ sections.declare_create_mutation_args() }}):
     root = CodeBlock(style="graphql")
     root.IxI("mutation postRedRose", [{{ sections.declare_graphql_mutation_args() }}], " {")
@@ -22,7 +20,5 @@ def create_post_red_rose_mutation({{ sections.declare_create_mutation_args() }})
     op_name = "postRedRose"
     variables = dict({{ sections.mutation_variables() }})
     return root.result, op_name, variables
-{% end_magic_with %}
-{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

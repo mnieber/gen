@@ -1,6 +1,7 @@
 import ramda as R
 from moonleap import u0
 from moonleap.typespec.recurse_type_specs import recurse_type_specs
+from moonleap.utils.case import sn
 
 
 def find_module_that_provides_item_list(django_app, item_type_name):

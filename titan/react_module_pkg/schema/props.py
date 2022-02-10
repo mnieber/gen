@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 from moonleap import render_templates
+from moonleap.utils.case import l0
 from titan.react_module_pkg.apiquery.props import define_schema_field
 
 
@@ -32,7 +33,7 @@ def get_context(item_types, api_module):
             result = []
             fk_field_specs = item_type.type_spec.get_field_specs(["fk", "relatedSet"])
             for field_spec in fk_field_specs:
-                result.append(define_schema_field(field_spec, item_type.name))
+                result.append(define_schema_field(field_spec, l0(item_type.name)))
             return os.linesep.join(result)
 
     return dict(sections=Sections(), _=_)

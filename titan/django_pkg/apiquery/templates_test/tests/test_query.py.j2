@@ -1,5 +1,4 @@
 {% magic_with res.name as yellowTulip %}
-{% magic_with res.name|sn as yellow_tulip %}
 import pytest
 from api.tests.graphqltestcase import GraphqlTestCase
 from .create_yellow_tulip_query import create_yellow_tulip_query
@@ -19,5 +18,4 @@ class TestYellowTulipQuery(GraphqlTestCase):
 {{ sections.assert_query_response(output_field_spec) }}
 {% endfor %}
 
-{% end_magic_with %}
 {% end_magic_with %}

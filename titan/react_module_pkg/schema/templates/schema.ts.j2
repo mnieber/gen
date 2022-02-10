@@ -1,8 +1,9 @@
+{% magic_with item_type.name as RedRose %}
 import { schema } from 'normalizr';
 
 {% for item_type in _.item_types %}
-export const {{ item_type.name }} = new schema.Entity(
-    '{{ item_type.name | plural }}',
+export const redRose = new schema.Entity(
+    'redRoses',
 {{ sections.process_entity(item_type) }}
 );
 
@@ -11,3 +12,4 @@ export const {{ item_type.name }} = new schema.Entity(
 {{ sections.schema_fields(item_type) }}
 
 {% endfor %}
+{% end_magic_with %}
