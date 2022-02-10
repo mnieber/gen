@@ -1,8 +1,7 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import (MemFun, Prop, add, create, empty_rule, extend,
-                      kebab_to_camel, rule)
+from moonleap import MemFun, Prop, add, create, empty_rule, extend, kebab_to_camel, rule
 from moonleap.verbs import has, provides
 from titan.api_pkg.item.resources import Item
 from titan.api_pkg.itemlist.resources import ItemList
@@ -22,7 +21,13 @@ def create_state(term, block):
     kebab_name = term.data
     name = kebab_to_camel(kebab_name)
     state = State(name=name)
-    state.add_template_dir(Path(__file__).parent / "templates", get_context)
+    state.add_template_dir(
+        Path(__file__).parent / "templates",
+        get_context,
+        # If the state has no behaviors, then the state provider will
+        # provide resources directly from its inputs.
+        skip_render=lambda x: not x.behaviors,
+    )
     add(state, load_node_package_config(__file__))
     return state
 

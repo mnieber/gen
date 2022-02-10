@@ -5,19 +5,15 @@ from moonleap.typespec.get_member_field_spec import get_member_field_spec
 from moonleap.utils.inflect import plural
 from titan.api_pkg.itemlist.resources import ItemList
 from titan.react_pkg.component.resources import get_component_base_url
-from titan.react_pkg.pkg.get_chain import (
-    ExtractItemFromItem,
-    ExtractItemListFromItem,
-    TakeHighlightedElmFromState,
-    TakeItemFromQuery,
-    TakeItemFromState,
-    TakeItemListFromQuery,
-    TakeItemListFromState,
-    get_chain_to,
-)
-from titan.react_view_pkg.pkg.create_component_router_config import (
-    create_component_router_config,
-)
+from titan.react_pkg.pkg.get_chain import (ExtractItemFromItem,
+                                           ExtractItemListFromItem,
+                                           TakeHighlightedElmFromState,
+                                           TakeItemFromQuery,
+                                           TakeItemFromState,
+                                           TakeItemListFromQuery,
+                                           TakeItemListFromState, get_chain_to)
+from titan.react_view_pkg.pkg.create_component_router_config import \
+    create_component_router_config
 
 
 def create_router_configs(self, named_component):
@@ -126,11 +122,6 @@ def get_context(state_provider):
     for item_name, bvrs in _.state.bvrs_by_item_name.items():
         _.facet_names_by_item_name[item_name] = [x.name for x in bvrs]
 
-    _.uses_state = False
-    for item_name, bvrs in _.state.bvrs_by_item_name.items():
-        if bvrs:
-            _.uses_state = True
-
     class Sections:
         def default_input_props_imports(self):
             result = []
@@ -169,7 +160,7 @@ def get_context(state_provider):
             if _.state:
                 result = ""
 
-                if _.uses_state:
+                if _.state.behaviors:
                     result = f"      {_.state.name}State: () => state,\n"
 
                 for target in list(_.state.items_provided) + list(

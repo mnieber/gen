@@ -16,11 +16,11 @@ import { use{{ query_name | u0 }} } from 'src/api/queries';
 import { use{{ mutation | u0 }} } from 'src/api/mutations';
 {% endfor %}
 
-{% if _.uses_state %}
+{% if _.state.behaviors %}
 import { YellowTulipState } from '{{ res.module.module_path }}/YellowTulipState';
 {% endif %}
 import {
-{% if _.uses_state %}
+{% if _.state.behaviors %}
   CtrProvider,
 {% else %}
   NestedDefaultPropsProvider,
@@ -49,7 +49,7 @@ export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = observer(
     const {{ mutation_name }} = use{{ mutation_name | u0 }}();
     {% endfor %}
 
-    {% if _.uses_state %}
+    {% if _.state.behaviors %}
     const createState = () => new YellowTulipState({
         {% for item_name, bvrs in _.state.bvrs_by_item_name.items() %}
         {% if "deletion" in _.facet_names_by_item_name[item_name] %}
@@ -77,7 +77,7 @@ export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = observer(
       );
     {% endif %}
 
-    {% if _.uses_state %}
+    {% if _.state.behaviors %}
     const getDefaultProps = (state: YellowTulipState) => {
       return {
         {{ sections.default_props() }}
