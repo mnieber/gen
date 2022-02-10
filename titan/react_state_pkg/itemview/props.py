@@ -1,6 +1,6 @@
 import os
 
-from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
+from moonleap.typespec.type_spec_store import type_spec_store
 from titan.api_pkg.typeregistry import TypeRegistry
 from titan.react_pkg.component.resources import get_component_base_url
 from titan.react_pkg.pkg.get_chain import get_chain_to
@@ -32,7 +32,7 @@ def get_chain(self):
 
 def get_context(item_view):
     _ = lambda: None
-    _.type_spec = ml_type_spec_from_item_name(item_view.item_name)
+    _.type_spec = type_spec_store().get(item_view.item.item_type.name)
 
     class Sections:
         def fields(self):

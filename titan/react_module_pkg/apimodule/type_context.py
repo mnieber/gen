@@ -1,4 +1,4 @@
-from titan.api_pkg.pkg.ml_name import ml_form_type_spec_from_item_name
+from moonleap.typespec.type_spec_store import type_spec_store
 from titan.react_pkg.pkg.field_spec_to_ts_type import field_spec_to_ts_type
 
 
@@ -25,12 +25,11 @@ def get_context(item_type):
             if not item_type.form_type:
                 return ""
 
-            type_spec = ml_form_type_spec_from_item_name(item_type.name)
-
             result = []
             result.append(f"export type {item_type.ts_form_type} = {{")
 
-            for field_spec in type_spec.field_specs:
+            form_type_spec = type_spec_store().get(item_type.form_type.name, None)
+            for field_spec in form_type_spec.field_specs:
                 if field_spec.private:
                     continue
 

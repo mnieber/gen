@@ -6,7 +6,7 @@ from moonleap import (
     create,
     extend,
     feeds,
-    kebab_to_camel,
+    kebab_to_snake,
 )
 from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has
@@ -24,7 +24,7 @@ base_tags = [("module", ["react-module"])]
 
 @create("module")
 def create_module(term, block):
-    module = Module(name=kebab_to_camel(term.data))
+    module = Module(name=kebab_to_snake(term.data))
     module.output_path = f"src/{module.name}"
     return module
 

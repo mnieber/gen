@@ -1,11 +1,11 @@
 import os
 
 import ramda as R
-from moonleap.utils.case import sn
+from moonleap.typespec.type_spec_store import type_spec_store
+from moonleap.utils.case import l0, sn
 from moonleap.utils.codeblock import CodeBlock
 from moonleap.utils.join import join
 from titan.api_pkg.pkg.graphql_args import declare_graphql_variable
-from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
 from titan.django_pkg.apiquery.get_context_test import define_fixture
 from titan.django_pkg.graphene_django.utils import find_module_that_provides_item_list
 from titan.django_pkg.pkg.field_spec_default_value import field_spec_default_value
@@ -14,7 +14,7 @@ from titan.django_pkg.pkg.field_spec_default_value import field_spec_default_val
 def _get_fixture_field_specs(form_input_field_specs):
     result = []
     for input_field_spec in form_input_field_specs:
-        type_spec = ml_type_spec_from_item_name(input_field_spec.target)
+        type_spec = type_spec_store().get(input_field_spec.target)
         for fk_field_spec in type_spec.get_field_specs(["fk"]):
             if fk_field_spec not in result:
                 result.append(fk_field_spec)
@@ -23,7 +23,7 @@ def _get_fixture_field_specs(form_input_field_specs):
 
 
 def fk_field_specs_for_form_field(form_field_spec):
-    data_type_spec = ml_type_spec_from_item_name(form_field_spec.target)
+    data_type_spec = type_spec_store().get(form_field_spec.target)
     return data_type_spec.get_field_specs(["fk"])
 
 
@@ -48,9 +48,9 @@ def get_context_test(mutation, api_module):
                     _.django_app, form_field_spec.target
                 )
                 import_path = f"{django_module.module_path}.tests.random_data"
-                form_item_name = form_field_spec.target + "Form"
+                form_type_name = form_field_spec.target + "Form"
                 result.append(
-                    f"from {import_path} import create_random_{sn(form_item_name)}"
+                    f"from {import_path} import create_random_{sn(form_type_name)}"
                 )
 
                 for fk_field_spec in fk_field_specs_for_form_field(form_field_spec):
@@ -58,9 +58,8 @@ def get_context_test(mutation, api_module):
                         _.django_app, fk_field_spec.target
                     )
                     import_path = f"{django_module.module_path}.tests.random_data"
-                    item_name = fk_field_spec.target
                     result.append(
-                        f"from {import_path} import create_random_{sn(item_name)}"
+                        f"from {import_path} import create_random_{sn(l0(fk_field_spec.target))}"
                     )
 
             return os.linesep.join(R.uniq(result))
@@ -88,9 +87,9 @@ def get_context_test(mutation, api_module):
                         fixture = sn(fk_field_spec.name)
                         create_form_args.append(f"{arg_name}={fixture + '.id'}")
 
-                    form_item_name = input_field_spec.target + "Form"
+                    form_type_name = l0(input_field_spec.target) + "Form"
                     root.IxI(
-                        f"{input_arg_name}=create_random_{sn(form_item_name)}",
+                        f"{input_arg_name}=create_random_{sn(form_type_name)}",
                         create_form_args,
                         ",",
                     )

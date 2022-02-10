@@ -7,7 +7,7 @@ import { queryClient } from 'src/api/queryClient';
 import { doQuery } from 'src/utils/graphqlClient';
 import { ObjT } from 'src/utils/types';
 {% for field_spec in _.fk_output_field_specs %}
-import { {{ field_spec.target }} } from 'src/api/schema';
+import { {{ field_spec.target | l0 }} } from 'src/api/schema';
 {% endfor %}
 {{ sections.ts_type_imports() }}
 

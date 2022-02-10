@@ -8,11 +8,11 @@ from moonleap import (
     kebab_to_camel,
     named,
     rule,
+    u0,
 )
 from moonleap.typespec.default_field_specs_store import create_fk_field_spec
 from moonleap.verbs import provides, uses
 from titan.api_pkg.itemlist.resources import ItemList
-from titan.api_pkg.pkg.ml_name import ml_type_name_from_item_name
 
 from . import props
 from .resources import Item
@@ -42,7 +42,8 @@ def item_provides_item(provider_item, item):
     from moonleap.typespec.type_spec_store import type_spec_store
 
     type_spec_store().register_default_field_spec(
-        type_name=ml_type_name_from_item_name(provider_item.item_name),
+        # Note: we cannot use provider_item.item_type due to a race condition
+        type_name=u0(provider_item.item_name),
         field_spec=create_fk_field_spec(item.item_name),
     )
 
@@ -52,7 +53,8 @@ def item_provides_item_list(provider_item, item_list):
     from moonleap.typespec.type_spec_store import type_spec_store
 
     type_spec_store().register_default_field_spec(
-        type_name=ml_type_name_from_item_name(item_list.item_name),
+        # Note: we cannot use provider_item.item_type due to a race condition
+        type_name=u0(item_list.item_name),
         field_spec=create_fk_field_spec(provider_item.item_name),
     )
 

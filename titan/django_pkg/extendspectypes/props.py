@@ -69,9 +69,8 @@ def graphene_output_type(self: FieldSpec, args):
 
 
 def target_django_module(self, django_app):
-    item_name = self.target
     return (
-        find_module_that_provides_item_list(django_app, item_name)
-        if item_name
+        find_module_that_provides_item_list(django_app, self.target)
+        if self.target
         else None
     )

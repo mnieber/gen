@@ -1,8 +1,8 @@
-from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
+from moonleap.typespec.type_spec_store import type_spec_store
 
 
 def item_type_spec(item):
-    return ml_type_spec_from_item_name(item.item_name)
+    return type_spec_store().get(item.item_type.name)
 
 
 def named_item_output_field_name(named_item):

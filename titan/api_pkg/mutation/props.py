@@ -10,7 +10,7 @@ def _field_spec_from_item(self, item):
         required=False,
         private=False,
         field_type="form",
-        field_type_attrs=dict(target=item.item_name),
+        field_type_attrs=dict(target=item.item_type.name),
     )
 
 
@@ -20,7 +20,7 @@ def _field_spec_from_deleted_item_list(self, item_list):
         required=True,
         private=False,
         field_type="idList",
-        field_type_attrs=dict(target=item_list.item_name),
+        field_type_attrs=dict(target=item_list.item_type.name),
     )
 
 

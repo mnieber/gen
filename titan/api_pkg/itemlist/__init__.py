@@ -39,12 +39,13 @@ rules = [(("item~list", uses, "item"), empty_rule())]
 @extend(ItemList)
 class ExtendItemList:
     item = P.child(uses, "item", required=True)
+    item_type = Prop(props.item_list_item_type)
     type_spec = Prop(props.item_list_type_spec)
 
 
 @extend(Item)
 class ExtendItem:
-    item_list = P.parent("item~list", uses, required=True)
+    item_list = P.parent("item~list", uses)
 
 
 @extend(named(ItemList))

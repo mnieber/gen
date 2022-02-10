@@ -6,4 +6,4 @@ from . import props
 
 @extend(FieldSpec)
 class ExtendFieldSpec:
-    target_type_spec = Prop(props.target_type_spec)
+    target_type_spec = Prop(props.field_spec_target_type_spec)

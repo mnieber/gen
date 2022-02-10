@@ -1,3 +1,4 @@
+from moonleap import u0
 from moonleap.typespec.field_spec import FieldSpec
 
 default_field_specs = [
@@ -22,7 +23,7 @@ def create_fk_field_spec(fk_item_name):
         name=fk_item_name,
         private=False,
         required=True,
-        field_type_attrs={"hasRelatedSet": True, "target": fk_item_name},
+        field_type_attrs={"hasRelatedSet": True, "target": u0(fk_item_name)},
     )
 
 

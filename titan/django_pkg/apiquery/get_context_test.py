@@ -2,7 +2,7 @@ import os
 
 import ramda as R
 from moonleap.typespec.field_spec import input_is_used_for_output
-from moonleap.utils.case import sn
+from moonleap.utils.case import l0, sn
 from moonleap.utils.codeblock import CodeBlock
 from moonleap.utils.join import join
 from titan.api_pkg.pkg.graphql_args import (
@@ -29,7 +29,7 @@ def get_context_test(query, api_module):
                 django_module = output_field_spec.target_django_module(_.django_app)
                 result.append(
                     f"from {django_module.module_path}.tests.random_data "
-                    f"import create_random_{sn(output_field_spec.target)}"
+                    f"import create_random_{sn(l0(output_field_spec.target))}"
                 )
 
             return os.linesep.join(R.uniq(result))
@@ -70,7 +70,7 @@ def get_context_test(query, api_module):
             root = CodeBlock(style="python", level=2)
             if output_field_spec.field_type == "fk":
                 root.abc(f"assert data['{output_field_spec.name}'] == {{")
-                root.abc(f"  'id': {output_field_spec.name}.id")
+                root.abc(f"  'id': {sn(output_field_spec.name)}.id")
                 root.abc(r"}")
             elif output_field_spec.field_type == "relatedSet":
                 root.abc(f"assert len(data['{output_field_spec.name}'])")

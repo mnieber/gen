@@ -1,9 +1,10 @@
 import ramda as R
 from moonleap import u0
+from moonleap.typespec.type_spec_store import type_spec_store
+from moonleap.utils.case import l0
 from moonleap.utils.chop import chop_postfix
 from moonleap.utils.codeblock import CodeBlock
 from moonleap.utils.inflect import plural
-from titan.api_pkg.pkg.ml_name import ml_form_type_spec_from_item_name
 from titan.api_pkg.typeregistry import TypeRegistry
 from titan.react_module_pkg.extendspectypes.props import ts_type_from_item_name
 from titan.react_pkg.component.resources import get_component_base_url
@@ -39,7 +40,9 @@ def _get_field_name(field_spec, fk_field_specs):
 
 def get_context(form_view):
     _ = lambda: None
-    _.type_spec = ml_form_type_spec_from_item_name(form_view.item_posted.item_name)
+    _.type_spec = type_spec_store().get(
+        form_view.item_posted.item_type.form_type.name, None
+    )
     _.field_specs = [x for x in _.type_spec.field_specs if x.name != "id"]
     _.fk_field_specs = [x for x in _.type_spec.get_field_specs(["uuid"]) if x.target]
     _.graphql_api = ml_graphql_api(ml_react_app(form_view))
@@ -50,7 +53,7 @@ def get_context(form_view):
         def form_imports(self):
             root = CodeBlock(style="typescript", level=0)
             for field_spec in _.fk_field_specs:
-                item_name = field_spec.target
+                item_name = l0(field_spec.target)
                 root.abc(
                     f"import {{ {ts_type_from_item_name(item_name)} }} "
                     + f"from 'src/api/types/{item_name}'"
@@ -60,9 +63,10 @@ def get_context(form_view):
         def form_default_props(self):
             root = CodeBlock(style="typescript", level=0)
             for field_spec in _.fk_field_specs:
+                item_name = l0(field_spec.target)
                 root.abc(
-                    f"  {plural(field_spec.target)}: "
-                    + f"{ts_type_from_item_name(field_spec.target)}[]"
+                    f"  {plural(item_name)}: "
+                    + f"{ts_type_from_item_name(item_name)}[]"
                 )
             return root.result
 

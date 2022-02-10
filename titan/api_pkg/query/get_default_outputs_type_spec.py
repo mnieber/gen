@@ -25,7 +25,7 @@ def _item_output_field_spec(self, named_item):
         private=False,
         field_type="fk",
         field_type_attrs=dict(
-            target=named_item.typ.item_name,
+            target=named_item.typ.item_type.name,
             hasRelatedSet=False,
         ),
     )
@@ -37,5 +37,5 @@ def _item_list_output_field_spec(self, named_item_list):
         required=False,
         private=False,
         field_type="relatedSet",
-        field_type_attrs=dict(target=named_item_list.typ.item_name),
+        field_type_attrs=dict(target=named_item_list.typ.item_type.name),
     )

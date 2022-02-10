@@ -24,7 +24,6 @@ def create_router_configs(self, named_component):
 def get_context(select_item_effect):
     _ = lambda: None
     _.item_list = select_item_effect.item_list
-    _.item_type = select_item_effect.item_list.item.item_type
     _.item_name = _.item_list.item_name
     _.type_spec = _.item_list.type_spec
     _.items_name = plural(_.item_name)
@@ -50,7 +49,7 @@ def get_context(select_item_effect):
             )
 
         def get_item_id(self):
-            search_function = f"(x: {_.item_type.ts_type}) => " + (
+            search_function = f"(x: {_.item_list.item_type.ts_type}) => " + (
                 " && ".join(
                     [
                         f"x.{param} === args.{_.item_name + u0(param)}"

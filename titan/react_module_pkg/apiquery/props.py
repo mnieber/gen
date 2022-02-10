@@ -3,6 +3,7 @@ from pathlib import Path
 
 import ramda as R
 from moonleap import render_templates
+from moonleap.utils.case import l0
 from titan.api_pkg.pkg.graphql_args import graphql_args
 from titan.react_module_pkg.apiquery.graphql_body import graphql_body
 from titan.react_pkg.pkg.field_spec_to_ts_type import field_spec_to_ts_type
@@ -10,8 +11,8 @@ from titan.react_pkg.pkg.field_spec_to_ts_type import field_spec_to_ts_type
 
 def define_schema_field(field_spec, output_schema_name):
     output_many = field_spec.field_type in ("relatedSet",)
-    fk_item_name = field_spec.target
-    value = f"[{fk_item_name}]" if output_many else fk_item_name
+    fk_type_name = l0(field_spec.target)
+    value = f"[{fk_type_name}]" if output_many else fk_type_name
     line = f"{output_schema_name}.define({{ {field_spec.name}: {value} }});"
     return line
 

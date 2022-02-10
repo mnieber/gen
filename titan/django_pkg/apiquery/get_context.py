@@ -19,13 +19,13 @@ def _get_resolve_expression(query, field_spec):
 
     if field_spec.field_type == "relatedSet":
         return (
-            f"{u0(field_spec.field_type_attrs['target'])}.objects.filter"
+            f"{field_spec.field_type_attrs['target']}.objects.filter"
             + f"({filter_args})"
         )
 
     if field_spec.field_type == "fk":
         return (
-            f"{u0(field_spec.field_type_attrs['target'])}.objects.filter"
+            f"{field_spec.field_type_attrs['target']}.objects.filter"
             + f"({filter_args}).first()"
         )
 

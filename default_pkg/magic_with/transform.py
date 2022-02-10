@@ -1,6 +1,6 @@
 import re
 
-from moonleap.utils.case import l0, u0
+from moonleap.utils.case import l0, sn, u0
 
 
 def _find_magic_with_statement(text):
@@ -37,11 +37,23 @@ def process_magic_with(lines):
             change0, change0_str = (u0, "u0") if starts_low else (l0, "l0")
 
             x = x.replace(as_ + "s", "{{ " + var_name + "|plural }}")
+            x = x.replace(sn(as_) + "s", "{{ " + var_name + "|sn|plural }}")
+
             x = x.replace(
                 change0(as_) + "s", "{{ " + var_name + "|plural|%s }}" % change0_str
             )
+            x = x.replace(
+                change0(sn(as_)) + "s",
+                "{{ " + var_name + "|sn|plural|%s }}" % change0_str,
+            )
+
             x = x.replace(as_, "{{ " + var_name + " }}")
+            x = x.replace(sn(as_), "{{ " + var_name + "|sn }}")
+
             x = x.replace(change0(as_), "{{ " + var_name + "|%s }}" % change0_str)
+            x = x.replace(
+                change0(sn(as_)), "{{ " + var_name + "|sn|%s }}" % change0_str
+            )
 
             x = x.replace("{{{", "{{ '{' }}{{")
             x = x.replace("}}}", "}}{{ '}' }}")

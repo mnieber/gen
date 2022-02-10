@@ -3,6 +3,7 @@ from pathlib import Path
 
 import ramda as R
 from moonleap import render_templates
+from moonleap.utils.case import l0
 from moonleap.utils.inflect import plural
 from titan.api_pkg.pkg.graphql_args import graphql_args
 from titan.api_pkg.typeregistry import TypeRegistry
@@ -30,7 +31,7 @@ def get_context(mutation, api_module):
         def ts_type_imports(self):
             result = []
             for field_spec in _.form_input_field_specs:
-                item_name = field_spec.target
+                item_name = l0(field_spec.target)
                 item = _.type_reg.get_item_by_name(item_name)
                 result.append(
                     f"import {{ {item.item_type.ts_form_type} }} "

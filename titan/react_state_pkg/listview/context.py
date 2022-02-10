@@ -1,7 +1,7 @@
 import os
 
 import ramda as R
-from titan.api_pkg.pkg.ml_name import ml_type_spec_from_item_name
+from moonleap.typespec.type_spec_store import type_spec_store
 
 
 def get_context(list_view):
@@ -9,7 +9,7 @@ def get_context(list_view):
         return R.find(lambda x: x.name == name)(list_view.behaviors)
 
     _ = lambda: None
-    _.type_spec = ml_type_spec_from_item_name(list_view.item_name)
+    _.type_spec = type_spec_store().get(list_view.item.item_type.name)
     _.selection_bvr = _find_behavior("selection")
     _.deletion_bvr = _find_behavior("deletion")
     _.highlight_bvr = _find_behavior("highlight")

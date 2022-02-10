@@ -36,7 +36,7 @@ def _model(field, item_name):
         )
 
         args = [
-            u0(field.target),
+            field.target,
             f"on_delete={on_delete}",
             *null_blank,
             *related_name,
@@ -56,7 +56,7 @@ def _model(field, item_name):
         )
 
         args = [
-            u0(field.target),
+            field.target,
             f'through="{field.through}"',
             *related_name,
             *unique,
@@ -159,20 +159,20 @@ def get_context(module):
     class Sections:
         def model_imports(self, item_list):
             result = []
-            models = []
+            targets = []
             for field_spec in item_list.type_spec.get_field_specs(["fk"]):
-                models.append(field_spec.target)
+                targets.append(field_spec.target)
 
             for inline_model in self.get_inline_models(item_list):
-                models.append(inline_model)
+                targets.append(inline_model)
 
-            for model in models:
+            for target in targets:
                 provider_module = find_module_that_provides_item_list(
-                    _.django_app, model
+                    _.django_app, target
                 )
                 if provider_module:
                     result.append(
-                        f"from {sn(provider_module.name)}.models import {u0(model)}"
+                        f"from {sn(provider_module.name)}.models import {target}"
                     )
             return "\n".join(result)
 

@@ -1,7 +1,7 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap.utils.case import l0
+from moonleap.utils.case import l0, u0
 from moonleap.utils.chop import chop_prefix
 
 
@@ -50,21 +50,29 @@ def _field_type_and_attrs(field_spec_dict):
     t = field_spec_dict.get("type")
 
     if t == "fk":
-        attrs["target"] = field_spec_dict["target"]
+        target = attrs["target"] = field_spec_dict["target"]
+        _check_target(target)
         attrs["hasRelatedSet"] = field_spec_dict.get("hasRelatedSet", True)
         if "onDelete" in field_spec_dict:
             attrs["onDelete"] = field_spec_dict["onDelete"]
     elif t == "relatedSet":
-        attrs["target"] = field_spec_dict["target"]
+        target = attrs["target"] = field_spec_dict["target"]
+        _check_target(target)
         if "through" in field_spec_dict:
             attrs["through"] = field_spec_dict["through"]
     elif t == "form":
-        attrs["target"] = field_spec_dict["target"]
+        target = attrs["target"] = field_spec_dict["target"]
+        _check_target(target)
     else:
         if "maxLength" in field_spec_dict:
             attrs["maxLength"] = field_spec_dict["maxLength"]
 
     return t, attrs
+
+
+def _check_target(target):
+    if target != u0(target):
+        raise Exception(f"Target should be capitalized: {target}")
 
 
 def field_specs_from_type_spec_dict(type_spec_dict, type_name):

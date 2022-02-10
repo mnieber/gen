@@ -1,11 +1,8 @@
-from moonleap import u0
-
-
 def get_context_admin(module):
     class Sections:
         def get_inline_models(self, item_list):
             return [
-                u0(item_list.item_name) + "2" + u0(x.target)
+                item_list.item_type.name + "2" + x.target
                 for x in item_list.type_spec.get_field_specs(["relatedSet"])
                 if x.through
             ]

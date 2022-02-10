@@ -3,12 +3,12 @@ from moonleap import u0
 from moonleap.typespec.recurse_type_specs import recurse_type_specs
 
 
-def find_module_that_provides_item_list(django_app, item_name):
+def find_module_that_provides_item_list(django_app, item_type_name):
     for module in django_app.modules:
         for item_list in module.item_lists_provided:
-            if item_list.item_name == item_name:
+            if item_list.item_type.name == item_type_name:
                 return module
-    raise Exception(f"Cannot find module that provides {item_name}")
+    raise Exception(f"Cannot find module that provides {item_type_name}")
 
 
 def get_django_model_imports(django_app, type_specs):
@@ -17,9 +17,8 @@ def get_django_model_imports(django_app, type_specs):
         for field_spec in type_spec.get_field_specs(
             ["fk", "relatedSet", "form", "idList"]
         ):
-            item_name = field_spec.target
-            module = find_module_that_provides_item_list(django_app, item_name)
-            result.append(f"from {module.name}.models import {u0(item_name)}")
+            module = find_module_that_provides_item_list(django_app, field_spec.target)
+            result.append(f"from {sn(module.name)}.models import {field_spec.target}")
 
     return R.uniq(result)
 

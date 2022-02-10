@@ -126,6 +126,11 @@ def get_context(state_provider):
     for item_name, bvrs in _.state.bvrs_by_item_name.items():
         _.facet_names_by_item_name[item_name] = [x.name for x in bvrs]
 
+    _.uses_state = False
+    for item_name, bvrs in _.state.bvrs_by_item_name.items():
+        if bvrs:
+            _.uses_state = True
+
     class Sections:
         def default_input_props_imports(self):
             result = []
@@ -151,36 +156,40 @@ def get_context(state_provider):
             result = []
             tab = " " * 8
             for chain in _.short_chains:
-                provided = chain[-1].obj
-                result.append(
-                    f"{tab}state.inputs.{provided.ts_var} = inputs.{provided.ts_var};"
-                )
+                target = chain[-1].obj
+                if isinstance(target, ItemList):
+                    result.append(
+                        f"{tab}state.inputs.{target.ts_var} = inputs.{target.ts_var};"
+                    )
             return os.linesep.join(result)
 
         def default_props(self):
             result = ""
 
             if _.state:
-                result = f"      {_.state.name}State: () => state,\n"
+                result = ""
+
+                if _.uses_state:
+                    result = f"      {_.state.name}State: () => state,\n"
+
                 for target in list(_.state.items_provided) + list(
                     _.state.item_lists_provided
                 ):
                     chain = _.chain_by_id[target.id]
                     query_name = chain[0].subj.name
+                    bvrs = _.state.bvrs_by_item_name.get(target.item_name, [])
 
-                    if isinstance(target, ItemList):
+                    if bvrs and isinstance(target, ItemList):
                         items_name = plural(target.item_name)
                         result += f"      {items_name}: () => state.outputs.{items_name}Display,\n"
                         result += f"      {items_name}RS: () => {query_name}.status,\n"
 
-                        for bvr in _.state.bvrs_by_item_name[target.item_name]:
+                        for bvr in bvrs:
                             result += bvr.sections.default_props(_.state)
                     else:
                         item_name = target.item_name
-                        result += (
-                            f"      {item_name}: () => state.outputs.{item_name},\n"
-                        )
-                        result += f"      {item_name}RS: () => {query_name}.status,\n"
+                        result += f"      {item_name}: () => ({query_name}.data ?? {{}}).{item_name},\n"
+                        result += f"      {item_name}RS: () => ({query_name}.data ?? {{}}).status\n"
             return result
 
     return dict(sections=Sections(), _=_)

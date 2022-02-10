@@ -16,8 +16,18 @@ import { use{{ query_name | u0 }} } from 'src/api/queries';
 import { use{{ mutation | u0 }} } from 'src/api/mutations';
 {% endfor %}
 
+{% if _.uses_state %}
 import { YellowTulipState } from '{{ res.module.module_path }}/YellowTulipState';
-import { CtrProvider, FC, useDefaultProps } from 'react-default-props-context';
+{% endif %}
+import {
+{% if _.uses_state %}
+  CtrProvider,
+{% else %}
+  NestedDefaultPropsProvider,
+{% endif %}
+  FC,
+  useDefaultProps
+} from 'react-default-props-context';
 import { useStore } from 'src/app/components';
 {% end_clean_up_js_imports %}
 
@@ -39,6 +49,7 @@ export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = observer(
     const {{ mutation_name }} = use{{ mutation_name | u0 }}();
     {% endfor %}
 
+    {% if _.uses_state %}
     const createState = () => new YellowTulipState({
         {% for item_name, bvrs in _.state.bvrs_by_item_name.items() %}
         {% if "deletion" in _.facet_names_by_item_name[item_name] %}
@@ -64,10 +75,12 @@ export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = observer(
           fireImmediately: true,
         }
       );
+    {% endif %}
 
+    {% if _.uses_state %}
     const getDefaultProps = (state: YellowTulipState) => {
       return {
-  {{ sections.default_props() }}
+        {{ sections.default_props() }}
       };
     };
 
@@ -81,6 +94,19 @@ export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = observer(
         {props.children}
       </CtrProvider>
     );
+    {% else %}
+    const getDefaultProps = () => {
+      return {
+        {{ sections.default_props() }}
+      };
+    };
+
+    return (
+      <NestedDefaultPropsProvider value={getDefaultProps()}>
+        {props.children}
+      </NestedDefaultPropsProvider>
+    );
+    {% endif %}
   }
 );
 {% end_magic_with %}

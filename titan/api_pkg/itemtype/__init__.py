@@ -1,4 +1,4 @@
-from moonleap import Prop, create, extend, kebab_to_camel
+from moonleap import Prop, create, extend, kebab_to_camel, u0
 
 from . import props
 from .resources import ItemType
@@ -7,7 +7,7 @@ from .resources import ItemType
 @create("item~type")
 def create_item_type(term, block):
     name = kebab_to_camel(term.data)
-    item_type = ItemType(name=name)
+    item_type = ItemType(name=u0(name))
     return item_type
 
 

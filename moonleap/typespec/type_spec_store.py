@@ -6,10 +6,6 @@ from moonleap.session import get_session
 from moonleap.typespec.default_field_specs_store import DefaultFieldSpecsStore
 from moonleap.typespec.field_spec import field_specs_from_type_spec_dict
 from moonleap.typespec.type_spec import TypeSpec, add_related_set_field_to_type_spec
-from titan.api_pkg.pkg.ml_name import (
-    ml_item_name_from_type_name,
-    ml_type_name_from_item_name,
-)
 
 _default_type_spec_placeholder = TypeSpec(type_name="placeholder", field_specs=[])
 
@@ -55,11 +51,10 @@ class TypeSpecStore:
                 continue
 
             if field_spec.field_type_attrs.get("hasRelatedSet"):
-                fk_item_name = field_spec.target
                 add_related_set_field_to_type_spec(
-                    self.get(ml_type_name_from_item_name(fk_item_name)),
+                    self.get(field_spec.target),
                     is_private=field_spec.private,
-                    related_item_name=ml_item_name_from_type_name(type_spec.type_name),
+                    related_type_name=type_spec.type_name,
                 )
 
     def register_default_field_spec(self, type_name, field_spec):

@@ -9,10 +9,9 @@ from moonleap import (
     create,
     empty_rule,
     extend,
-    kebab_to_camel,
     rule,
 )
-from moonleap.utils.case import kebab_to_camel, sn
+from moonleap.utils.case import kebab_to_snake, sn
 from moonleap.verbs import contains, provides
 from titan.django_pkg.djangoapp import StoreDjangoConfigs
 
@@ -29,7 +28,7 @@ base_tags = [("module", ["django-module"])]
 
 @create("module")
 def create_module(term, block):
-    module = Module(name=kebab_to_camel(term.data))
+    module = Module(name=kebab_to_snake(term.data))
     module.output_path = sn(module.name)
     module.add_template_dir(Path(__file__).parent / "templates", get_context)
     module.add_template_dir(Path(__file__).parent / "templates_test", get_context_test)

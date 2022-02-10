@@ -69,14 +69,15 @@ def get_context(mutation, api_module):
 
             for item_posted in mutation.items_posted:
                 item_name = item_posted.item_name
+                type_name = item_posted.item_type.name
                 prefix = (
                     f"{item_name}, created = "
-                    if [x for x in _.fk_output_field_specs if x.target == item_name]
+                    if [x for x in _.fk_output_field_specs if x.target == type_name]
                     else ""
                 )
                 body.abc(f"{item_name}_id = {item_name}_form.pop('id')")
                 body.IxI(
-                    f"{prefix}{u0(item_name)}.objects.update_or_create",
+                    f"{prefix}{type_name}.objects.update_or_create",
                     [f"id={item_name}_id", f"defaults={item_name}_form"],
                     "",
                 )

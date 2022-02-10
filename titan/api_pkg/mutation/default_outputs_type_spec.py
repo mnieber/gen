@@ -11,7 +11,7 @@ def default_outputs_type_spec(self, name):
             required=False,
             private=False,
             field_type="fk",
-            field_type_attrs=dict(target=named_item.typ.item_name),
+            field_type_attrs=dict(target=named_item.typ.item_type.name),
         )
         for named_item in self.named_items_returned
     ]
@@ -23,7 +23,7 @@ def default_outputs_type_spec(self, name):
             required=False,
             private=False,
             field_type="relatedSet",
-            field_type_attrs=dict(target=named_item_list.typ.item_name),
+            field_type_attrs=dict(target=named_item_list.typ.item_type.name),
         )
         for named_item_list in self.named_item_lists_returned
     ]
