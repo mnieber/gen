@@ -3,11 +3,14 @@
 {% clean_up_js_imports %}
 import * as React from 'react';
 import * as R from 'ramda';
-import { reaction } from 'mobx';
 import { observer } from 'mobx-react-lite';
+import { lookUp } from 'src/utils/ids';
+{% if _.state.behaviors %}
+import { reaction } from 'mobx';
 import { log } from 'src/utils/logging';
 import { flags } from 'src/app/flags';
-import { lookUp } from 'src/utils/ids';
+import { YellowTulipState } from '{{ res.module.module_path }}/YellowTulipState';
+{% endif %}
 {{ sections.default_input_props_imports() }}
 {% for query_name in _.query_names %}
 import { use{{ query_name | u0 }} } from 'src/api/queries';
@@ -16,9 +19,6 @@ import { use{{ query_name | u0 }} } from 'src/api/queries';
 import { use{{ mutation | u0 }} } from 'src/api/mutations';
 {% endfor %}
 
-{% if _.state.behaviors %}
-import { YellowTulipState } from '{{ res.module.module_path }}/YellowTulipState';
-{% endif %}
 import {
 {% if _.state.behaviors %}
   CtrProvider,

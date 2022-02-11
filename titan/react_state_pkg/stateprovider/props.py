@@ -5,15 +5,19 @@ from moonleap.typespec.get_member_field_spec import get_member_field_spec
 from moonleap.utils.inflect import plural
 from titan.api_pkg.itemlist.resources import ItemList
 from titan.react_pkg.component.resources import get_component_base_url
-from titan.react_pkg.pkg.get_chain import (ExtractItemFromItem,
-                                           ExtractItemListFromItem,
-                                           TakeHighlightedElmFromState,
-                                           TakeItemFromQuery,
-                                           TakeItemFromState,
-                                           TakeItemListFromQuery,
-                                           TakeItemListFromState, get_chain_to)
-from titan.react_view_pkg.pkg.create_component_router_config import \
-    create_component_router_config
+from titan.react_pkg.pkg.get_chain import (
+    ExtractItemFromItem,
+    ExtractItemListFromItem,
+    TakeHighlightedElmFromState,
+    TakeItemFromQuery,
+    TakeItemFromState,
+    TakeItemListFromQuery,
+    TakeItemListFromState,
+    get_chain_to,
+)
+from titan.react_view_pkg.pkg.create_component_router_config import (
+    create_component_router_config,
+)
 
 
 def create_router_configs(self, named_component):
@@ -96,14 +100,14 @@ def get_context(state_provider):
     _.state = state_provider.state
 
     _.chain_by_id = {}
-    _.short_chains = []
+    _.short_chain_by_id = {}
     for target in list(_.state.items_provided) + list(_.state.item_lists_provided):
         chain = get_chain_to(target, _.state)
         _.chain_by_id[target.id] = chain
-        _.short_chains.append(chain[_start_pos(chain) : len(chain)])
+        _.short_chain_by_id[target.id] = chain[_start_pos(chain) : len(chain)]
 
     _.default_input_props = []
-    for chain in _.short_chains:
+    for chain in R.values(_.short_chain_by_id):
         for default_input_prop in _get_default_input_props(chain):
             if default_input_prop not in _.default_input_props:
                 _.default_input_props.append(default_input_prop)
@@ -134,7 +138,9 @@ def get_context(state_provider):
 
         def get_state_input_values(self):
             result = []
-            for short_chain, chain in R.zip(_.short_chains, R.values(_.chain_by_id)):
+            for short_chain, chain in R.zip(
+                R.values(_.short_chain_by_id), R.values(_.chain_by_id)
+            ):
                 query_name = chain[0].subj.name
                 provided = chain[-1].obj.ts_var
                 value, value_rs = _expression(short_chain, query_name)
@@ -146,7 +152,7 @@ def get_context(state_provider):
         def set_state_input_values(self):
             result = []
             tab = " " * 8
-            for chain in _.short_chains:
+            for chain in _.R.values(_.short_chain_by_id):
                 target = chain[-1].obj
                 if isinstance(target, ItemList):
                     result.append(
@@ -160,27 +166,34 @@ def get_context(state_provider):
             if _.state:
                 result = ""
 
+                __import__("pudb").set_trace()
                 if _.state.behaviors:
                     result = f"      {_.state.name}State: () => state,\n"
 
                 for target in list(_.state.items_provided) + list(
                     _.state.item_lists_provided
                 ):
+                    items_name = plural(target.item_name)
                     chain = _.chain_by_id[target.id]
+                    short_chain = _.short_chain_by_id[target.id]
                     query_name = chain[0].subj.name
                     bvrs = _.state.bvrs_by_item_name.get(target.item_name, [])
 
                     if bvrs and isinstance(target, ItemList):
-                        items_name = plural(target.item_name)
                         result += f"      {items_name}: () => state.outputs.{items_name}Display,\n"
                         result += f"      {items_name}RS: () => {query_name}.status,\n"
 
                         for bvr in bvrs:
                             result += bvr.sections.default_props(_.state)
                     else:
-                        item_name = target.item_name
-                        result += f"      {item_name}: () => ({query_name}.data ?? {{}}).{item_name},\n"
-                        result += f"      {item_name}RS: () => ({query_name}.data ?? {{}}).status\n"
+                        prop_name = (
+                            items_name
+                            if isinstance(target, ItemList)
+                            else target.item_name
+                        )
+                        value, value_rs = _expression(short_chain, query_name)
+                        result += f"      {prop_name}: () => {value},\n"
+                        result += f"      {prop_name}RS: () => {value_rs},\n"
             return result
 
     return dict(sections=Sections(), _=_)
