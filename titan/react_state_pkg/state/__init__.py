@@ -2,7 +2,7 @@ from pathlib import Path
 
 import moonleap.resource.props as P
 from moonleap import MemFun, Prop, add, create, empty_rule, extend, kebab_to_camel, rule
-from moonleap.verbs import has, provides
+from moonleap.verbs import connects, has, provides
 from titan.api_pkg.item.resources import Item
 from titan.api_pkg.itemlist.resources import ItemList
 from titan.react_pkg.module import Module
@@ -46,6 +46,7 @@ class ExtendModule:
 rules = [
     (("state", provides, "item~list"), empty_rule()),
     (("state", provides, "item"), empty_rule()),
+    (("state", has, "+pipeline"), empty_rule()),
     (("state", provides, "behavior"), empty_rule()),
 ]
 
@@ -54,8 +55,10 @@ rules = [
 class ExtendState:
     module = P.parent("module", has)
     behaviors = P.children(provides, "behavior")
+    pipelines = P.children(has, "+pipeline")
     item_lists_provided = P.children(provides, "item~list")
     items_provided = P.children(provides, "item")
+    bvrs_by_item_name = Prop(props.bvrs_by_item_name)
     bvrs_by_item_name = Prop(props.bvrs_by_item_name)
 
 

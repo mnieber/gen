@@ -6,6 +6,7 @@ from . import (
     itemlist,
     itemtype,
     mutation,
+    pipeline,
     query,
 )
 
@@ -17,5 +18,6 @@ modules = [
     itemlist,
     itemtype,
     mutation,
+    pipeline,
     query,
 ]
