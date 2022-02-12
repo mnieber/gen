@@ -6,7 +6,7 @@
 import classnames from 'classnames';
 import * as R from 'ramda';
 import { observer } from 'mobx-react-lite';
-import { FC, useDefaultProps } from 'react-default-props-context';
+import { withDefaultProps } from 'react-default-props-context';
 import { YellowTulipListViewItem } from 'src/gardenFlowers/components';
 import { YellowTulipT } from 'src/api/types/yellowTulip';
 import { getResourceView } from 'src/utils/components';
@@ -44,61 +44,61 @@ type DefaultPropsT = {
   {% endif %}
 };
 
-export const BlueDaisy: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
-  const props = useDefaultProps<PropsT, DefaultPropsT>(p);
+export const BlueDaisy = observer(
+  withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
+    const resourceView =
+      props.yellowTulipsRS === 'loading' ? <div>Loading...</div> : undefined;
+    if (resourceView) return resourceView;
 
-  const resourceView =
-    props.yellowTulipsRS === 'loading' ? <div>Loading...</div> : undefined;
-  if (resourceView) return resourceView;
+    {% if _.selection_bvr %}
+    const handlerClick = new ClickToSelectItems({
+      selection: props.yellowTulipsSelection
+    });
+    {% endif %}
 
-  {% if _.selection_bvr %}
-  const handlerClick = new ClickToSelectItems({
-    selection: props.yellowTulipsSelection
-  });
-  {% endif %}
-
-  const yellowTulipDivs = R.pipe(
-    R.always(props.yellowTulips),
-    R.map((x: YellowTulipT) => {
-      return (
-        <BlueDaisyItem
-          key={x.id}
-          yellowTulip={x}
-          {% if _.selection_bvr or _.highlight_bvr %}
-          className={classnames({
+    const yellowTulipDivs = R.pipe(
+      R.always(props.yellowTulips),
+      R.map((x: YellowTulipT) => {
+        return (
+          <BlueDaisyItem
+            key={x.id}
+            yellowTulip={x}
+            {% if _.selection_bvr or _.highlight_bvr %}
+            className={classnames({
+              {% if _.selection_bvr %}
+              'BlueDaisyItem--selected': x && props.yellowTulipsSelection.ids.includes(x.id),
+              {% endif %}
+              {% if _.highlight_bvr %}
+              'BlueDaisyItem--highlighted': x && props.yellowTulipsHighlight.id == x.id,
+              {% endif %}
+            })}
+            {% endif %}
+            {% if _.deletion_bvr %}
+            onDelete={() => props.yellowTulipsDeletion.delete([x.id])}
+            {% endif %}
             {% if _.selection_bvr %}
-            'BlueDaisyItem--selected': x && props.yellowTulipsSelection.ids.includes(x.id),
+            {...handlerClick.handle(x.id)}
             {% endif %}
-            {% if _.highlight_bvr %}
-            'BlueDaisyItem--highlighted': x && props.yellowTulipsHighlight.id == x.id,
-            {% endif %}
-          })}
-          {% endif %}
-          {% if _.deletion_bvr %}
-          onDelete={() => props.yellowTulipsDeletion.delete([x.id])}
-          {% endif %}
-          {% if _.selection_bvr %}
-          {...handlerClick.handle(x.id)}
-          {% endif %}
-        />
-      );
-    })
-  )();
+          />
+        );
+      })
+    )();
 
-  const noItems = <h2>There are no yellowTulips</h2>;
+    const noItems = <h2>There are no yellowTulips</h2>;
 
-  return (
-    <div
-      className={classnames(
-        'YellowTulipListView', 'flex flex-col w-full',
-        props.className
-      )}
-    >
-      {yellowTulipDivs.length > 0 && yellowTulipDivs}
-      {yellowTulipDivs.length === 0 && noItems}
-    </div>
-  );
-});
+    return (
+      <div
+        className={classnames(
+          'YellowTulipListView', 'flex flex-col w-full',
+          props.className
+        )}
+      >
+        {yellowTulipDivs.length > 0 && yellowTulipDivs}
+        {yellowTulipDivs.length === 0 && noItems}
+      </div>
+    );
+  })
+);
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

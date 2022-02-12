@@ -1,7 +1,7 @@
 {% magic_with res.item_name as yellowTulip %}
 import classnames from 'classnames';
 import { observer } from 'mobx-react-lite';
-import { useDefaultProps, FC } from 'react-default-props-context';
+import { withDefaultProps } from 'react-default-props-context';
 import { Selection } from 'skandha-facets/Selection';
 import { Highlight } from 'skandha-facets/Highlight';
 
@@ -17,30 +17,30 @@ type DefaultPropsT = {
   yellowTulipsSelection: Selection
 };
 
-export const YellowTulipPicker: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
-  const props = useDefaultProps<PropsT, DefaultPropsT>(p);
+export const YellowTulipPicker: observer(
+  withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
+    const onChange = (value: PickerValueT) => {
+      if (value.__isNew__) {
+        // TODO: add yellowTulip
+      } else if (value.value) {
+        props.yellowTulipsSelection.selectItem({
+          itemId: value.value.id,
+        });
+      }
+    };
 
-  const onChange = (value: PickerValueT) => {
-    if (value.__isNew__) {
-      // TODO: add yellowTulip
-    } else if (value.value) {
-      props.yellowTulipsSelection.selectItem({
-        itemId: value.value.id,
-      });
-    }
-  };
-
-  return (
-    <div className={classnames('YellowTulipPicker', 'mt-2')}>
-      <ValuePicker
-        isMulti={false}
-        isCreatable={true}
-        pickableValues={props.yellowTulips}
-        labelFromValue={(x: any) => x.name}
-        pickableValue={props.yellowTulipsHighlight.item}
-        onChange={onChange}
-      />
-    </div>
-  );
-});
+    return (
+      <div className={classnames('YellowTulipPicker', 'mt-2')}>
+        <ValuePicker
+          isMulti={false}
+          isCreatable={true}
+          pickableValues={props.yellowTulips}
+          labelFromValue={(x: any) => x.name}
+          pickableValue={props.yellowTulipsHighlight.item}
+          onChange={onChange}
+        />
+      </div>
+    );
+  })
+);
 {% end_magic_with %}

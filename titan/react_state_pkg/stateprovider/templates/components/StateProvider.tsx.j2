@@ -25,8 +25,7 @@ import {
 {% else %}
   NestedDefaultPropsProvider,
 {% endif %}
-  FC,
-  useDefaultProps
+  withDefaultProps
 } from 'react-default-props-context';
 import { useStore } from 'src/app/components';
 {% end_clean_up_js_imports %}
@@ -39,9 +38,8 @@ type DefaultPropsT = {
   {% endfor %}
 };
 
-export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = observer(
-  (p: PropsT) => {
-    const props = useDefaultProps<PropsT, DefaultPropsT>(p);
+export const YellowTulipStateProvider = observer(
+  withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
     {% for query_name in _.query_names %}
     const {{ query_name }} = use{{ query_name | u0 }}();
     {% endfor %}
@@ -107,7 +105,7 @@ export const YellowTulipStateProvider: FC<PropsT, DefaultPropsT> = observer(
       </NestedDefaultPropsProvider>
     );
     {% endif %}
-  }
+  })
 );
 {% end_magic_with %}
 {% end_magic_with %}

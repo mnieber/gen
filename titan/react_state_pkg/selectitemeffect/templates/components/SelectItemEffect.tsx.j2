@@ -3,7 +3,7 @@
 {% clean_up_js_imports %}
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { FC, useDefaultProps } from 'react-default-props-context';
+import { withDefaultProps } from 'react-default-props-context';
 import { Selection } from 'skandha-facets/Selection';
 import { Effect } from 'src/utils/components';
 import * as R from 'ramda';
@@ -40,23 +40,25 @@ type DefaultPropsT = {
 {% endif %}
 };
 
-export const RedRose: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
-  const props = useDefaultProps<PropsT, DefaultPropsT>(p);
-
-  return (
-    <Effect
-      f={f}
-      getArgs={(params) => {
-        return {
-          yellowTulipsSelection: props.yellowTulipsSelection,
-{% if _.route_params and sections.get_item_id() %}
-          yellowTulips: props.yellowTulips,
-{% endif %}
-          {{ sections.extract_params() }}
-        }
-      }}
-    />
-  );
-});
+export const RedRose = observer(
+  withDefaultProps<PropsT, DefaultPropsT>(
+    (props: PropsT & DefaultPropsT) => {
+      return (
+        <Effect
+          f={f}
+          getArgs={(params) => {
+            return {
+              yellowTulipsSelection: props.yellowTulipsSelection,
+              {% if _.route_params and sections.get_item_id() %}
+              yellowTulips: props.yellowTulips,
+              {% endif %}
+              {{ sections.extract_params() }}
+            }
+          }}
+        />
+      );
+    }
+  )
+);
 {% end_magic_with %}
 {% end_magic_with %}

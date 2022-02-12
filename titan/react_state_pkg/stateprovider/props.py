@@ -166,7 +166,6 @@ def get_context(state_provider):
             if _.state:
                 result = ""
 
-                __import__("pudb").set_trace()
                 if _.state.behaviors:
                     result = f"      {_.state.name}State: () => state,\n"
 

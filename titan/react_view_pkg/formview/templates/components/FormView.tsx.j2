@@ -4,7 +4,7 @@
 import React from 'react';
 import * as R from 'ramda';
 import { observer } from 'mobx-react-lite';
-import { FC, useDefaultProps } from 'react-default-props-context';
+import { withDefaultProps } from 'react-default-props-context';
 import { FormStateProvider, HandleValidateArgsT, HandleSubmitArgsT } from 'react-form-state-context';
 import { usePostRedRose } from 'src/api/mutations';
 import { ControlledCheckbox, Field, GlobalError, TextField, SaveButton, SlugField, UpdateSlugButton, ValuePickerField } from 'src/forms/components';
@@ -20,41 +20,40 @@ type DefaultPropsT = {
 {{ sections.form_default_props() }}
 }
 
-export const YellowTulipFormView: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
-{% if _.fk_field_specs %}
-  const props = useDefaultProps<PropsT, DefaultPropsT>(p);
-{% endif %}
-  const postRedRose = usePostRedRose().mutateAsync;
+export const YellowTulipFormView: FC<PropsT, DefaultPropsT> = observer(
+  withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
+    const postRedRose = usePostRedRose().mutateAsync;
 
-  const initialValues = {
-    id: createUUID(),
-{{ sections.initial_form_values() }}
-  };
-  const initialErrors = {};
-  const handleValidate = ({values, setError} : HandleValidateArgsT) => {
-{{ sections.validate_form() }}
-  };
-  const handleSubmit = ({ formState, values }: HandleSubmitArgsT) => {
-{{ sections.post_form() }}
-    formState.reset(initialValues, initialErrors);
-  };
+    const initialValues = {
+      id: createUUID(),
+      {{ sections.initial_form_values() }}
+    };
+    const initialErrors = {};
+    const handleValidate = ({values, setError} : HandleValidateArgsT) => {
+      {{ sections.validate_form() }}
+    };
+    const handleSubmit = ({ formState, values }: HandleSubmitArgsT) => {
+      {{ sections.post_form() }}
+      formState.reset(initialValues, initialErrors);
+    };
 
-  return (
-    <div className="YellowTulipFormView flex flex-col w-full">
-      <FormStateProvider
-        initialValues={initialValues}
-        initialErrors={initialErrors}
-        handleValidate={handleValidate}
-        handleSubmit={handleSubmit}
-      >
-        <GlobalError />
-{% for field_spec in _.field_specs %}{{ sections.form_field(field_spec)}}{% endfor %}
-        <SaveButton
-          label="Save"
-          disabled={false}
-        />
-      </FormStateProvider>
-    </div>
-  );
-});
+    return (
+      <div className="YellowTulipFormView flex flex-col w-full">
+        <FormStateProvider
+          initialValues={initialValues}
+          initialErrors={initialErrors}
+          handleValidate={handleValidate}
+          handleSubmit={handleSubmit}
+        >
+          <GlobalError />
+          {% for field_spec in _.field_specs %}{{ sections.form_field(field_spec)}}{% endfor %}
+          <SaveButton
+            label="Save"
+            disabled={false}
+          />
+        </FormStateProvider>
+      </div>
+    );
+  })
+);
 {% end_magic_with %}

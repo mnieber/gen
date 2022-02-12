@@ -1,6 +1,6 @@
 {% magic_with res.name as yellowTulip %}
 {% clean_up_js_imports %}
-import { useDefaultProps, FC } from 'react-default-props-context';
+import { withDefaultProps } from 'react-default-props-context';
 import classnames from 'classnames';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
@@ -15,10 +15,11 @@ import './YellowTulip.scss';
 type DefaultPropsT = {
 };
 
-export const YellowTulip: FC<PropsT, DefaultPropsT> = observer((p: PropsT) => {
-  const props = useDefaultProps<PropsT, DefaultPropsT>(p);
-  return (
-{{ sections.view_div() }}
-  );
-});
+export const YellowTulip = observer(
+  withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
+    return (
+      {{ sections.view_div() }}
+    );
+  })
+);
 {% end_magic_with %}
