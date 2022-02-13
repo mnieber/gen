@@ -8,16 +8,21 @@ from moonleap import (
     kebab_to_camel,
     named,
     rule,
-    u0,
 )
-from moonleap.typespec.default_field_specs_store import create_fk_field_spec
-from moonleap.verbs import provides, uses
-from titan.api_pkg.itemlist.resources import ItemList
+from moonleap.verbs import uses
 
 from . import props
 from .resources import Item
 
-rules = [(("item", uses, "item~type"), empty_rule())]
+rules = [
+    (("item", uses, "item~type"), empty_rule()),
+    (("item", "hacks", "item"), empty_rule()),
+    (("item", "hacks", "item~list"), empty_rule()),
+]
+
+base_tags = [
+    ("item", ["pipeline-elm"]),
+]
 
 
 @create("item")
@@ -37,40 +42,10 @@ def item_created(item):
     return create_forward(item, uses, f"{item.item_name}:item~type")
 
 
-@rule("item", provides, "item")
-def item_provides_item(provider_item, item):
-    from moonleap.typespec.type_spec_store import type_spec_store
-
-    type_spec_store().register_default_field_spec(
-        # Note: we cannot use provider_item.item_type due to a race condition
-        type_name=u0(provider_item.item_name),
-        field_spec=create_fk_field_spec(item.item_name),
-    )
-
-
-@rule("item", provides, "item~list")
-def item_provides_item_list(provider_item, item_list):
-    from moonleap.typespec.type_spec_store import type_spec_store
-
-    type_spec_store().register_default_field_spec(
-        # Note: we cannot use provider_item.item_type due to a race condition
-        type_name=u0(item_list.item_name),
-        field_spec=create_fk_field_spec(provider_item.item_name),
-    )
-
-
 @extend(Item)
 class ExtendItem:
     item_type = P.child(uses, "item~type")
-    items_provided = P.children(provides, "item")
-    item_lists_provided = P.children(provides, "item~list")
-    provider_items = P.parents("item", provides)
     type_spec = Prop(props.item_type_spec)
-
-
-@extend(ItemList)
-class ExtendItemList:
-    provider_items = P.parents("item", provides)
 
 
 @extend(named(Item))

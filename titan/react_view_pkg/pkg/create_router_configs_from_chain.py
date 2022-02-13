@@ -1,10 +1,10 @@
 from moonleap import named
-from titan.react_pkg.component import Component
-from titan.react_pkg.pkg.get_chain import (
+from titan.api_pkg.pipeline.props import (
     TakeHighlightedElmFromState,
     TakeItemFromState,
     TakeItemListFromState,
 )
+from titan.react_pkg.component import Component
 from titan.react_view_pkg.router.resources import concat_router_configs
 
 

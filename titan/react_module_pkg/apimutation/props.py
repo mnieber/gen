@@ -4,13 +4,11 @@ from pathlib import Path
 import ramda as R
 from moonleap import render_templates
 from moonleap.utils.case import l0
-from moonleap.utils.inflect import plural
 from titan.api_pkg.pkg.graphql_args import graphql_args
 from titan.api_pkg.typeregistry import TypeRegistry
 from titan.react_module_pkg.apiquery.graphql_body import graphql_body
 from titan.react_module_pkg.apiquery.props import define_schema_field
 from titan.react_pkg.pkg.field_spec_to_ts_type import field_spec_to_ts_type
-from titan.react_pkg.pkg.get_chain import get_chain_to
 
 
 def get_context(mutation, api_module):
@@ -39,12 +37,6 @@ def get_context(mutation, api_module):
                 )
             return os.linesep.join(result)
 
-        def mutation_output_schema_fields(self):
-            result = []
-            for field_spec in _.fk_output_field_specs:
-                result.append(define_schema_field(field_spec, _.output_schema_name))
-            return ("," + os.linesep).join(result)
-
         def ts_mutation_args(self):
             return ", ".join(
                 R.map(
@@ -70,14 +62,10 @@ def get_context(mutation, api_module):
             query_names = set()
 
             for item_list in mutation.item_lists_deleted:
-                chain = get_chain_to(item_list)
-                if chain:
-                    query_names.add(chain[0].subj.name)
-
-            for item in mutation.items_posted:
-                chain = get_chain_to(item)
-                if chain:
-                    query_names.add(chain[0].subj.name)
+                for query in mutation.graphql_api.queries:
+                    for named_item in query.named_items_provided:
+                        if named_item.typ.item_name == item_list.item_name:
+                            query_names.add(query.name)
 
             result = ""
             for query_name in query_names:

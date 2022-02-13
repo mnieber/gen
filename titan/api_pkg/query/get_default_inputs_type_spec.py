@@ -10,7 +10,7 @@ def _input_field_spec(field_type, field_name, related_output):
         required=False,
         private=False,
         field_type=field_type,
-        field_type_attrs=dict(related_output=related_output),
+        field_type_attrs={"relatedOutput": related_output},
     )
 
 

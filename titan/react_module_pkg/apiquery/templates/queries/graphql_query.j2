@@ -1,15 +1,8 @@
 {% magic_with res.fun_name as getRedRose %}
-import { normalize, schema } from 'normalizr';
 import { useQuery } from 'react-query';
 import { useQueryData } from 'src/api/components';
 import { doQuery } from 'src/utils/graphqlClient';
 import { ObjT } from 'src/utils/types';
-{% for field_spec in _.fk_output_field_specs %}
-import { {{ field_spec.target | l0 }} } from 'src/api/schema';
-{% endfor %}
-
-export const {{ _.output_schema_name }} = new schema.Entity('{{ _.output_schema_name }}');
-{{ sections.query_output_schema_fields() }}
 
 const getRedRose = ({{ sections.javascript_args() }}) => {
   return doQuery(
@@ -24,7 +17,7 @@ const getRedRose = ({{ sections.javascript_args() }}) => {
 {{ sections.graphql_variables() }}
     }).then(
     (response: ObjT) => {
-      return normalize(response, {{ _.output_schema_name }}).entities;
+      return response;
     });
 }
 

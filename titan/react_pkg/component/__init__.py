@@ -38,7 +38,7 @@ def create_load_and_select_effects(component):
     if not hasattr(component, "get_chain"):
         return
 
-    effect_relations = props.effect_relations_for_chain(component.get_chain())
+    effect_relations = props.effect_relations_for_chain([])
     api_module = ml_react_app(component).api_module
     return [
         create_forward(api_module, has, rel.obj, api_module.meta.block)

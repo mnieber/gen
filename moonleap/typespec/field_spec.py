@@ -25,8 +25,12 @@ class FieldSpec:
         return self.field_type_attrs.get("through")
 
     @property
+    def show_inline_in_admin(self):
+        return self.field_type_attrs.get("showInlineInAdmin")
+
+    @property
     def related_output(self):
-        return self.field_type_attrs.get("related_output")
+        return self.field_type_attrs.get("relatedOutput")
 
     @property
     def short_name(self):
@@ -58,6 +62,7 @@ def _field_type_and_attrs(field_spec_dict):
     elif t == "relatedSet":
         target = attrs["target"] = field_spec_dict["target"]
         _check_target(target)
+        attrs["showInlineInAdmin"] = field_spec_dict.get("showInlineInAdmin", True)
         if "through" in field_spec_dict:
             attrs["through"] = field_spec_dict["through"]
     elif t == "form":

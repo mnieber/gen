@@ -8,6 +8,7 @@ class Term:
     data: str
     tag: str
     name: T.Optional[str] = None
+    stars: T.Optional[int] = 0
 
     def __repr__(self):
         return (
@@ -25,6 +26,11 @@ def maybe_term_to_term(maybe_term):
 
 
 def word_to_term(word, default_to_tag=False) -> T.Optional[Term]:
+    stars = 0
+    if word.endswith("*") or word.endswith("^"):
+        stars = 1 if word.endswith("*") else 2
+        word = word[:-1]
+
     sep_name = word.find("+")
     if sep_name != -1:
         name = word[:sep_name]
@@ -43,7 +49,7 @@ def word_to_term(word, default_to_tag=False) -> T.Optional[Term]:
     if sep_tag == -1 and not default_to_tag:
         return None
 
-    return Term(data, tag, name)
+    return Term(data, tag, name, stars)
 
 
 def words_to_terms(words):
@@ -65,7 +71,9 @@ def verb_to_word(verb):
 
 def stem_term(term):
     pos = term.tag.find("~")
-    return Term(term.data, term.tag[:pos] if pos != -1 else term.tag)
+    return Term(
+        data=term.data, tag=term.tag[:pos] if pos != -1 else term.tag, name=term.name
+    )
 
 
 def _match(lhs, rhs):

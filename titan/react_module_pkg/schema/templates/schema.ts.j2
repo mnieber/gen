@@ -2,10 +2,7 @@
 import { schema } from 'normalizr';
 
 {% for item_type in _.item_types %}
-export const redRose = new schema.Entity(
-    'redRoses',
-{{ sections.process_entity(item_type) }}
-);
+export const redRose = new schema.Entity('redRoses');
 
 {% endfor %}
 {% for item_type in _.item_types %}

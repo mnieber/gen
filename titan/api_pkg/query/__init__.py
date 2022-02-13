@@ -4,11 +4,13 @@ from moonleap.resource.forward import create_forward
 from moonleap.utils.inflect import plural
 from moonleap.verbs import has, loads, provides
 from titan.api_pkg.graphqlapi import GraphqlApi
-from titan.api_pkg.item.resources import Item
-from titan.api_pkg.itemlist.resources import ItemList
 
 from . import props
 from .resources import Query
+
+base_tags = [
+    ("query", ["api-endpoint"]),
+]
 
 
 @create("query")
@@ -72,13 +74,3 @@ class ExtendQuery:
     named_item_lists_provided = P.children(provides, "x+item~list")
     inputs_type_spec = Prop(props.inputs_type_spec)
     outputs_type_spec = Prop(props.outputs_type_spec)
-
-
-@extend(Item)
-class ExtendItem:
-    provider_queries = P.parents("query", provides)
-
-
-@extend(ItemList)
-class ExtendItemList:
-    provider_queries = P.parents("query", provides)

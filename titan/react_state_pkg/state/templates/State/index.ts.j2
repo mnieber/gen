@@ -1,6 +1,6 @@
 {% magic_with res.name as yellowTulip %}
 {% magic_with store.name as BlueDaisy %}
-{% magic_with item_name as redRose %}
+{% magic_with pipeline.output.item_name as redRose %}
 
 {% clean_up_js_imports %}
 import { setCallbacks } from 'aspiration';
@@ -12,7 +12,7 @@ import { registerCtr } from 'skandha-mobx';
 import { getIds } from 'src/utils/ids';
 import * as Facets from 'skandha-facets';
 import * as FacetPolicies from 'skandha-facets/policies';
-{% for bvr in res.behaviors %}
+{% for bvr in _.bvrs %}
 {{ bvr.sections.imports() }}
 {% endfor %}
 
@@ -23,8 +23,8 @@ import * as Handlers from './handlers';
 {% end_clean_up_js_imports %}
 
 type PropsT = {
-  {% for item_name in res.bvrs_by_item_name.keys() %}
-  {% if "deletion" in _.facet_names_by_item_name[item_name] %}
+  {% for pipeline in _.pipelines %}
+  {% if pipeline.get_bvr("deletion") %}
   deleteRedRoses: (ids: string[]) => Promise;
   {% endif %}
   {% endfor %}
@@ -38,18 +38,18 @@ export class YellowTulipState {
 
 {{ sections.callbacks() }}
 
-{% for item_name, bvrs in res.bvrs_by_item_name.items() %}
+{% for pipeline in _.pipelines %}
   _applyRedRosesPolicies(props: PropsT) {
     const Inputs_items = [Inputs, 'redRoses', this] as CMT;
     const Outputs_display = [Outputs, 'redRosesDisplay', this] as CMT;
-{% for bvr in bvrs %}
-{{ bvr.sections.declare_policies(bvrs) }}
+{% for bvr in pipeline.bvrs %}
+{{ bvr.sections.declare_policies(pipeline.bvrs) }}
 {% endfor %}
 
     const policies = [
-{{ sections.policies(item_name) }}
-{% for bvr in bvrs %}
-{{ bvr.sections.policies(bvrs) }}
+{{ sections.policies(pipeline) }}
+{% for bvr in pipeline.bvrs %}
+{{ bvr.sections.policies(pipeline.bvrs) }}
 {% endfor %}
     ];
 
@@ -70,7 +70,7 @@ export class YellowTulipState {
     registerCtr({
       ctr: this,
       childCtrs: [
-{% for item_name, bvrs in res.bvrs_by_item_name.items() %}
+        {% for pipeline in _.pipelines %}
         {
           ctr: this.redRoses,
           details: { name: 'RedRoses' },
@@ -80,7 +80,7 @@ export class YellowTulipState {
             addCleanUpFunctionToCtr(this, () => cleanUpCtr(this.redRoses));
           },
         },
-{% endfor %}
+        {% endfor %}
       ],
     });
   }

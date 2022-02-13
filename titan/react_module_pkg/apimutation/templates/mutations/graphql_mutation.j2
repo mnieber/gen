@@ -1,18 +1,11 @@
 {% magic_with res.name as postRedRose %}
 {% magic_with _.output_schema_name as postRedRoseOutputs %}
 {% magic_with item_list_deleted.item_name as blueDaisy %}
-import { normalize, schema } from 'normalizr';
 import { useMutation } from 'react-query';
 import { queryClient } from 'src/api/queryClient';
 import { doQuery } from 'src/utils/graphqlClient';
 import { ObjT } from 'src/utils/types';
-{% for field_spec in _.fk_output_field_specs %}
-import { {{ field_spec.target | l0 }} } from 'src/api/schema';
-{% endfor %}
 {{ sections.ts_type_imports() }}
-
-export const postRedRoseOutputs = new schema.Entity('postRedRoseOutputs');
-{{ sections.mutation_output_schema_fields() }}
 
 const postRedRose = ({{ sections.ts_mutation_args() }}) => {
   return doQuery(
@@ -25,7 +18,7 @@ const postRedRose = ({{ sections.ts_mutation_args() }}) => {
 {{ sections.ts_mutation_graphql_variables() }}
     }).then(
     (response: ObjT) => {
-      return normalize(response.postRedRose, postRedRoseOutputs).entities;
+      return response.postRedRose;
     });
 };
 

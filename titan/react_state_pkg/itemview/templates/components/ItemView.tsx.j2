@@ -16,7 +16,7 @@ type DefaultPropsT = {
   yellowTulipRS: string
 };
 
-export const YellowTulipView: observer(
+export const YellowTulipView = observer(
   withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
     const resourceView = props.yellowTulipRS === 'loading' || !props.yellowTulip ? (
       <div>Loading...</div>

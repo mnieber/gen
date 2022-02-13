@@ -44,6 +44,5 @@ def item_view_created(list_view):
 @extend(ListView)
 class ExtendListView:
     create_router_configs = MemFun(props.create_router_configs)
-    get_chain = MemFun(props.get_chain)
-    behaviors = P.children(has, "behavior")
+    bvrs = P.children(has, "behavior")
     item = P.child(uses, "item", required=True)

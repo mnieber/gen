@@ -29,20 +29,6 @@ class TypeRegistry:
     def get_items(self):
         return [x for x in self.item_by_name.values()]
 
-    def get_items_that_provide_item(self, item_name):
-        return [
-            x
-            for x in self.get_items()
-            if item_name in [i.item_name for i in x.items_provided]
-        ]
-
-    def get_items_that_provide_item_list(self, item_name):
-        return [
-            x
-            for x in self.get_items()
-            if item_name in [i.item.item_name for i in x.item_lists_provided]
-        ]
-
     def register_item(self, item):
         x = self.item_by_name.get(item.item_name)
         if x:
@@ -52,10 +38,6 @@ class TypeRegistry:
                 )
         else:
             self.item_by_name[item.item_name] = item
-            for i in item.items_provided:
-                self.register_item(i)
-            for i in item.item_lists_provided:
-                self.register_item_list(i)
 
     def register_item_list(self, item_list):
         x = self.item_list_by_name.get(item_list.item_name)

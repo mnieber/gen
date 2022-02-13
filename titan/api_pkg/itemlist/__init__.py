@@ -15,6 +15,10 @@ from titan.api_pkg.item.resources import Item
 from . import props
 from .resources import ItemList
 
+base_tags = [
+    ("item~list", ["pipeline-elm"]),
+]
+
 
 @create("item~list")
 def create_item_list(term, block):

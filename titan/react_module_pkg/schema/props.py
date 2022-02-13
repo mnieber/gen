@@ -12,23 +12,6 @@ def get_context(item_types, api_module):
     _.item_types = item_types
 
     class Sections:
-        def process_entity(self, item_type):
-            fk_field_specs = item_type.type_spec.get_field_specs(["fk"])
-            if not fk_field_specs:
-                return ""
-
-            result = [
-                "{},",
-                "{",
-                "processStrategy: (entity: any) => ({",
-                "...entity,",
-            ]
-            for field_spec in fk_field_specs:
-                result.append(f"{field_spec.name}: undefined,")
-            result.append("})")
-            result.append("}")
-            return (os.linesep + "    ").join(result)
-
         def schema_fields(self, item_type):
             result = []
             fk_field_specs = item_type.type_spec.get_field_specs(["fk", "relatedSet"])

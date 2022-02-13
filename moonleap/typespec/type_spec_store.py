@@ -57,9 +57,6 @@ class TypeSpecStore:
                     related_type_name=type_spec.type_name,
                 )
 
-    def register_default_field_spec(self, type_name, field_spec):
-        self.default_field_specs_store.register_field_spec(type_name, field_spec)
-
     def setdefault(self, type_name, default_value):
         assert type_name and type_name[0] == type_name[0].upper()
 

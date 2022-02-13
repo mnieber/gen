@@ -28,12 +28,6 @@ def get_context(query, api_module):
     )
 
     class Sections:
-        def query_output_schema_fields(self):
-            result = []
-            for field_spec in _.fk_output_field_specs:
-                result.append(define_schema_field(field_spec, _.output_schema_name))
-            return os.linesep.join(result)
-
         def javascript_args(self):
             return ", ".join(
                 R.map(

@@ -17,7 +17,7 @@ type DefaultPropsT = {
   yellowTulipsSelection: Selection
 };
 
-export const YellowTulipPicker: observer(
+export const YellowTulipPicker = observer(
   withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
     const onChange = (value: PickerValueT) => {
       if (value.__isNew__) {

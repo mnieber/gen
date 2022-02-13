@@ -32,7 +32,7 @@ class Sections(BehaviourSections):
             lines = lines[:4] + lines[8:]
         return os.linesep.join(lines)
 
-    def declare_policies(self, bvrs):
+    def declare_policies(self, state):
         indent = "    "
         result = [
             f"const Outputs_itemById = [Outputs, '{self.res.item_name}ById', this] as CMT;",  # noqa: E501

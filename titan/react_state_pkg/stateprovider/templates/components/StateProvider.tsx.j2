@@ -1,30 +1,33 @@
 {% magic_with res.state.name as yellowTulip %}
-{% magic_with item_name as redRose %}
+{% magic_with query.name as redRose %}
+{% magic_with mutation.name as blueDaisy %}
+{% magic_with pipeline.output.item_name as greenDaffodil %}
 {% clean_up_js_imports %}
 import * as React from 'react';
 import * as R from 'ramda';
 import { observer } from 'mobx-react-lite';
 import { lookUp } from 'src/utils/ids';
-{% if _.state.behaviors %}
+{% if _.has_behaviors %}
 import { reaction } from 'mobx';
 import { log } from 'src/utils/logging';
 import { flags } from 'src/app/flags';
 import { YellowTulipState } from '{{ res.module.module_path }}/YellowTulipState';
 {% endif %}
-{{ sections.default_input_props_imports() }}
-{% for query_name in _.query_names %}
-import { use{{ query_name | u0 }} } from 'src/api/queries';
+{% for item in _.input_items %}
+import { {{ item.ts_type }} } from '{{ item.item_type.ts_type_import_path }}';
 {% endfor %}
-{% for mutation in _.mutation_names %}
-import { use{{ mutation | u0 }} } from 'src/api/mutations';
+{% for item_list in _.input_item_lists %}
+import { {{ item_list.item.ts_type }} } from '{{ item_list.item_type.ts_type_import_path }}';
+{% endfor %}
+{% for query in _.queries %}
+import { useRedRose } from 'src/api/queries';
+{% endfor %}
+{% for mutation in _.mutations %}
+import { useBlueDaisy } from 'src/api/mutations';
 {% endfor %}
 
 import {
-{% if _.state.behaviors %}
-  CtrProvider,
-{% else %}
-  NestedDefaultPropsProvider,
-{% endif %}
+  {% if _.has_behaviors %}CtrProvider{% else %}NestedDefaultPropsProvider{% endif %},
   withDefaultProps
 } from 'react-default-props-context';
 import { useStore } from 'src/app/components';
@@ -33,38 +36,51 @@ import { useStore } from 'src/app/components';
 type PropsT = React.PropsWithChildren<{}>;
 
 type DefaultPropsT = {
-  {% for x in _.default_input_props %}
-  {{ x.ts_var }}: {{ x.ts_type }};
+  {% for item in _.input_items %}
+    {{ item.ts_var }}: {{ item.ts_type }};
+    {{ item.ts_var }}RS: string;
+  {% endfor %}
+  {% for item_list in _.input_item_lists %}
+    {{ item_list.ts_var }}: {{ item_list.ts_type }};
+    {{ item_list.ts_var }}RS: string;
   {% endfor %}
 };
 
 export const YellowTulipStateProvider = observer(
   withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
-    {% for query_name in _.query_names %}
-    const {{ query_name }} = use{{ query_name | u0 }}();
+    {% for query in _.queries %}
+      const redRose = useRedRose();
     {% endfor %}
-    {% for mutation_name in _.mutation_names %}
-    const {{ mutation_name }} = use{{ mutation_name | u0 }}();
+    {% for mutation in _.mutations %}
+      const blueDaisy = useBlueDaisy();
     {% endfor %}
 
-    {% if _.state.behaviors %}
+    {% if _.has_behaviors %}
     const createState = () => new YellowTulipState({
-        {% for item_name, bvrs in _.state.bvrs_by_item_name.items() %}
-        {% if "deletion" in _.facet_names_by_item_name[item_name] %}
-        deleteRedRoses: deleteRedRoses.mutateAsync,
-        {% endif %}
-        {% endfor%}
+        {% for pipeline in _.state.pipelines %}
+          {% if pipeline.deleter_mutation %}
+            deleteGreenDaffodils: {{ pipeline.deleter_mutation.name }}.mutateAsync,
+          {% endif %}
+        {% endfor %}
     });
 
     const updateState = (state: YellowTulipState) =>
       reaction(
         () => {
           return {
-            {{ sections.get_state_input_values() }}
+            {% for pipeline in _.state.pipelines %}
+              {% if pipeline.bvrs %}
+                {{ pipeline.output.ts_var }}: {{ pipeline.input_expression }},
+              {% endif %}
+            {% endfor %}
           }
         },
         (inputs) => {
-          {{ sections.set_state_input_values() }}
+          {% for pipeline in _.state.pipelines %}
+            {% if pipeline.bvrs %}
+              state.inputs.{{ pipeline.output.ts_var }} = inputs.{{ pipeline.output.ts_var }};
+            {% endif %}
+          {% endfor %}
           if (flags.logStateProviders) {
             log('YellowTulipState updated', state.getSummary());
           }
@@ -75,13 +91,32 @@ export const YellowTulipStateProvider = observer(
       );
     {% endif %}
 
-    {% if _.state.behaviors %}
+    {% if _.has_behaviors %}
     const getDefaultProps = (state: YellowTulipState) => {
+    {% else %}
+    const getDefaultProps = () => {
+    {% endif %}
       return {
-        {{ sections.default_props() }}
+        {% if _.has_behaviors %}
+        yellowTulipState: () => state,
+        {% endif %}
+        {% for pipeline in _.state.pipelines %}
+          {% if pipeline.bvrs %}
+            {{ pipeline.output.ts_var }}: state.outputs.{{ pipeline.output.item_name | plural }}Display,
+            {% for bvr in pipeline.bvrs %}
+            {{ bvr.sections.default_props(_.state) }}
+            {% endfor %}
+          {% else %}
+          {{ pipeline.output.ts_var }}: {{ pipeline.input_expression }},
+          {% endif %}
+          {% if pipeline.status_expression %}
+          {{ pipeline.output.ts_var }}RS: {{ pipeline.status_expression }},
+          {% endif %}
+        {% endfor %}
       };
     };
 
+    {% if _.has_behaviors %}
     return (
       <CtrProvider
         createCtr={createState}
@@ -93,12 +128,6 @@ export const YellowTulipStateProvider = observer(
       </CtrProvider>
     );
     {% else %}
-    const getDefaultProps = () => {
-      return {
-        {{ sections.default_props() }}
-      };
-    };
-
     return (
       <NestedDefaultPropsProvider value={getDefaultProps()}>
         {props.children}
@@ -107,5 +136,7 @@ export const YellowTulipStateProvider = observer(
     {% endif %}
   })
 );
+{% end_magic_with %}
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

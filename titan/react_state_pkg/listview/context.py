@@ -6,7 +6,7 @@ from moonleap.typespec.type_spec_store import type_spec_store
 
 def get_context(list_view):
     def _find_behavior(name):
-        return R.find(lambda x: x.name == name)(list_view.behaviors)
+        return R.find(lambda x: x.name == name)(list_view.bvrs)
 
     _ = lambda: None
     _.type_spec = type_spec_store().get(list_view.item.item_type.name)

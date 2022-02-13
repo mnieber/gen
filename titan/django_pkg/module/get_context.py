@@ -52,12 +52,14 @@ def _model(field, item_name):
         related_name = (
             ['related_name="+"']
             if not field.field_type_attrs.get("hasRelatedSet", True)
-            else [f'related_name="{sn(item_name)}_set"']
+            else [
+                f'related_name="{"+" if field.through == "+" else sn(item_name) + "_set"}"'
+            ]
         )
 
         args = [
             field.target,
-            f'through="{field.through}"',
+            *([] if field.through == "+" else [f'through="{field.through}"']),
             *related_name,
             *unique,
             *help_text,
@@ -163,7 +165,7 @@ def get_context(module):
             for field_spec in item_list.type_spec.get_field_specs(["fk"]):
                 targets.append(field_spec.target)
 
-            for inline_model in self.get_inline_models(item_list):
+            for inline_model in self.get_through_models(item_list):
                 targets.append(inline_model)
 
             for target in targets:
@@ -198,11 +200,11 @@ def get_context(module):
 
             return ""
 
-        def get_inline_models(self, item_list):
+        def get_through_models(self, item_list):
             return [
                 x.target
                 for x in item_list.type_spec.get_field_specs(["relatedSet"])
-                if x.through
+                if x.through and x.through != "+"
             ]
 
         def import_item_types(self):

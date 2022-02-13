@@ -17,7 +17,7 @@ def get_context(item_type):
                 t = field_spec_to_ts_type(field_spec, fk_as_str=True)
                 postfix = "Id" if field_spec.field_type == "fk" else ""
                 result.append(f"  {field_spec.name}{postfix}: {t};")
-            result.append(f"}}")
+            result.append(f"}};")
 
             return "\n".join(result)
 
@@ -36,7 +36,7 @@ def get_context(item_type):
                 t = field_spec_to_ts_type(field_spec, fk_as_str=True)
                 result.append(f"  {field_spec.name}: {t};")
 
-            result.append(r"}")
+            result.append(r"};")
 
             return "\n".join(result)
 

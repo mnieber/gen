@@ -1,7 +1,7 @@
 {% clean_up_py_imports %}
 import uuid
 {% magic_with item_list.item_name as yellowTulip %}
-{% magic_with inline_model as RedRose %}
+{% magic_with through_model as RedRose %}
 from django.db import models
 {% for item_list in res.item_lists_provided %}
 {{ sections.model_imports(item_list)}}
@@ -16,7 +16,7 @@ class YellowTulip(Entity):
 
 {{ sections.repr_function(item_list)}}
 
-{% for inline_model in sections.get_inline_models(item_list) %}
+{% for through_model in sections.get_through_models(item_list) %}
 class YellowTulip2RedRose(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     yellow_tulip = models.ForeignKey(YellowTulip, on_delete=models.CASCADE)

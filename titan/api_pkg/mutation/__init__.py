@@ -19,6 +19,10 @@ from titan.api_pkg.itemlist.resources import ItemList
 from . import props
 from .resources import Mutation
 
+base_tags = [
+    ("mutation", ["api-endpoint"]),
+]
+
 
 @create("mutation")
 def create_mutation(term, block):

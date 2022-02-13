@@ -1,7 +1,5 @@
-import moonleap.resource.props as P
 from moonleap import Prop, create, create_forward, extend, kebab_to_camel, rule
-from moonleap.verbs import provides
-from titan.react_state_pkg.state.resources import State
+from moonleap.verbs import has
 
 from . import props
 from .resources import SelectionBvr
@@ -16,17 +14,14 @@ def create_behavior(term, block):
     return behavior
 
 
-@rule("state", provides, "selection")
-def state_provides_selection(state, selection):
-    state.module.react_app.utils_module.use_packages(["mergeClickHandlers"])
-    return create_forward(state, provides, f"{selection.item_name}:highlight")
+@rule("x+item~list", has, "selection")
+def named_item_list_has_selection(named_item_list, selection):
+    named_item_list.pipeline.state.module.react_app.utils_module.use_packages(
+        ["mergeClickHandlers"]
+    )
+    return create_forward(named_item_list, has, f"{selection.item_name}:highlight")
 
 
 @extend(SelectionBvr)
 class ExtendSelectionBvr:
     sections = Prop(props.Sections)
-
-
-@extend(State)
-class ExtendState:
-    selections = P.children(provides, "selection")

@@ -4,7 +4,7 @@ def get_context_admin(module):
             return [
                 item_list.item_type.name + "2" + x.target
                 for x in item_list.type_spec.get_field_specs(["relatedSet"])
-                if x.through
+                if x.through and x.show_inline_in_admin
             ]
 
         def admin_types(self, item_list):
@@ -15,7 +15,7 @@ def get_context_admin(module):
             if not inline_models:
                 return "pass"
             return (
-                "inlines = (" + ", ".join([x + "Inline," for x in inline_models]) + ")"
+                "inlines = (" + ", ".join([x + "Inline" for x in inline_models]) + ",)"
             )
 
     return dict(sections=Sections())

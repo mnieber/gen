@@ -41,6 +41,5 @@ def create_named_item_view(term, block):
 
 @extend(ItemView)
 class ExtendItemView:
-    get_chain = MemFun(props.get_chain)
     item = P.child(uses, "item", required=True)
     create_router_configs = MemFun(props.create_router_configs)
