@@ -38,6 +38,8 @@ def create_symlinks(session):
     ref_dir = Path(session.expected_dir)
 
     for fn in Path(".moonleap/output").rglob("*"):
+        if fn.is_symlink() and not fn.exists():
+            fn.unlink()
         if not fn.is_dir() and not fn.is_symlink():
             ref_fn = (ref_dir / fn.relative_to(".moonleap/output")).absolute()
             if ref_fn.exists() and _same_file(fn.stat(), ref_fn.stat()):
