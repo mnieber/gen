@@ -1,8 +1,10 @@
 import typing as T
 
 from moonleap.builder.add_meta_data_to_blocks import add_meta_data_to_blocks
-from moonleap.builder.create_resource import (create_resource_in_block,
-                                              find_describing_block)
+from moonleap.builder.create_resource import (
+    create_resource_in_block,
+    find_describing_block,
+)
 from moonleap.builder.find_relations import get_relations
 from moonleap.builder.rule import Action
 from moonleap.builder.scope import get_base_tags
@@ -60,6 +62,8 @@ def _to_list_of_relations(x, action):
 
 def _process_relations(relations: T.List[Rel], actions):
     def _find_or_create(rel, term):
+        has_name = term.name is not None
+
         # Step 1: find existing resource
         res = _find_resource(term, rel.block)
         if res:
@@ -84,16 +88,18 @@ def _process_relations(relations: T.List[Rel], actions):
         if publishing_block.describes(term) and publishing_block.parent_block:
             publishing_block.parent_block.add_resource_for_term(res, term, False)
 
-        # Step 5: process the is_created_as relation
+        # Step 5: handle named term
+        if has_name:
+            assert isinstance(res, NamedResource)
+            res.name = kebab_to_camel(term.name)
+            res.typ = _find_or_create(
+                rel, Term(data=term.data, tag=term.tag, is_title=term.is_title)
+            )
+
+        # Step 6: process the is_created_as relation
         _process_relations(
             [Rel(term, is_created_as, term, publishing_block, rel.origin)], actions
         )
-
-        # Step 6: handle named term
-        if term.name is not None:
-            assert isinstance(res, NamedResource)
-            res.name = kebab_to_camel(term.name)
-            res.typ = _find_or_create(rel, Term(data=term.data, tag=term.tag))
 
         return res
 

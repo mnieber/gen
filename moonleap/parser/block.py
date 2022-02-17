@@ -37,11 +37,10 @@ class Block:
     def describes(self, term):
         def stem_term(term):
             pos = term.tag.find("~")
-            return Term(
-                data=term.data,
-                tag=term.tag[:pos] if pos != -1 else term.tag,
-                name=term.name,
-            )
+            return Term(data=term.data, tag=term.tag[:pos] if pos != -1 else term.tag)
+
+        if term.name is not None:
+            return False
 
         stemmed_term = stem_term(term)
         for line in self.lines:

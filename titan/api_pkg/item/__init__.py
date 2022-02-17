@@ -14,11 +14,7 @@ from moonleap.verbs import uses
 from . import props
 from .resources import Item
 
-rules = [
-    (("item", uses, "item~type"), empty_rule()),
-    (("item", "hacks", "item"), empty_rule()),
-    (("item", "hacks", "item~list"), empty_rule()),
-]
+rules = [(("item", uses, "item~type"), empty_rule())]
 
 base_tags = [
     ("item", ["pipeline-elm"]),
