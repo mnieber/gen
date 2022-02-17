@@ -8,7 +8,7 @@ from . import props
 from .resources import Behavior
 
 rules = [
-    (("+item~list", has, "behavior"), empty_rule()),
+    (("x+item~list", has, "behavior"), empty_rule()),
 ]
 
 

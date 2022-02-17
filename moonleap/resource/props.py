@@ -2,7 +2,7 @@ import typing as T
 from dataclasses import dataclass
 
 from moonleap.builder.scope import get_base_tags
-from moonleap.parser.term import maybe_term_to_term, word_to_term
+from moonleap.parser.term import Term, word_to_term
 from moonleap.resource.memfield import MemField
 from moonleap.resource.prop import Prop
 from moonleap.resource.rel import Rel, fuzzy_match
@@ -29,7 +29,10 @@ class ParentNotFound(RelationNotFound):
 
 
 def child(verb, term, required=False):
-    rel = Rel(verb=verb, obj=maybe_term_to_term(term))
+    rel = Rel(
+        verb=verb,
+        obj=term if isinstance(term, Term) else word_to_term(term, default_to_tag=True),
+    )
     slctr = RelSelector(rel)
 
     def get_child(self):
@@ -47,7 +50,10 @@ def child(verb, term, required=False):
 
 
 def children(verb, term, rdcr=None):
-    rel = Rel(verb=verb, obj=maybe_term_to_term(term))
+    rel = Rel(
+        verb=verb,
+        obj=term if isinstance(term, Term) else word_to_term(term, default_to_tag=True),
+    )
     slctr = RelSelector(rel)
 
     def get_children(self):

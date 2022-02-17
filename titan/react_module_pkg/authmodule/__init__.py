@@ -17,7 +17,7 @@ def react_app_has_auth_module(react_app, auth_module):
     receives("route_tables")(react_app.app_module, auth_module)
     return [
         create_forward(auth_module, has, "auth-switch:view"),
-        create_forward(auth_module, shows, "+auth-switch:view"),
+        create_forward(auth_module, shows, "x+auth-switch:view"),
         create_forward(auth_module, has, "auth:store"),
         create_forward(auth_module.react_app, has, "forms:module"),
     ]

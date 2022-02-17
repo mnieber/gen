@@ -1,7 +1,7 @@
 import typing as T
 
 from moonleap.parser.line import Line
-from moonleap.parser.term import match_term_to_pattern, stem_term
+from moonleap.parser.term import Term
 
 
 class Block:
@@ -35,19 +35,28 @@ class Block:
             self._relations.append(relation)
 
     def describes(self, term):
-        if not self.title_line:
-            return False
+        def stem_term(term):
+            pos = term.tag.find("~")
+            return Term(
+                data=term.data,
+                tag=term.tag[:pos] if pos != -1 else term.tag,
+                name=term.name,
+            )
 
-        t = stem_term(term)
-        stem_terms = lambda terms: [stem_term(x) for x in terms]
+        stemmed_term = stem_term(term)
+        for line in self.lines:
+            for t in line.terms:
+                is_title = line is self.title_line or t.is_title
+                if is_title and stem_term(t) == stemmed_term:
+                    return True
 
-        return any(
-            match_term_to_pattern(t, x) for x in stem_terms(self.title_line.terms)
-        ) and any(line for line in self.lines if t in stem_terms(line.terms))
+        return False
 
     def get_resource(self, term):
-        resources = [x[1] for x in self._resource_by_term if x[0] == term]
-        return resources[0] if resources else None
+        for t, res, _ in self._resource_by_term:
+            if t == term:
+                return res
+        return None
 
     def link(self, parent_block):
         self.parent_block = parent_block

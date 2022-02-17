@@ -62,8 +62,8 @@ rules = [
     (("graphql:api", has, "mutation"), empty_rule()),
     (("mutation", posts, "item"), empty_rule()),
     (("mutation", deletes, "item~list"), empty_rule()),
-    (("mutation", returns, "+item"), empty_rule()),
-    (("mutation", returns, "+item~list"), empty_rule()),
+    (("mutation", returns, "x+item"), empty_rule()),
+    (("mutation", returns, "x+item~list"), empty_rule()),
 ]
 
 
@@ -75,8 +75,8 @@ class ExtendGraphqlApi:
 @extend(Mutation)
 class ExtendMutation:
     item_lists_deleted = P.children(deletes, "item~list")
-    named_items_returned = P.children(returns, "+item")
-    named_item_lists_returned = P.children(returns, "+item~list")
+    named_items_returned = P.children(returns, "x+item")
+    named_item_lists_returned = P.children(returns, "x+item~list")
     items_posted = P.children(posts, "item")
     posts_item = MemFun(props.posts_item)
     inputs_type_spec = Prop(props.inputs_type_spec)

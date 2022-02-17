@@ -27,7 +27,7 @@ def component_has_component(lhs, rhs):
     return create_forward(lhs, has, named_term(rhs.meta.term))
 
 
-@rule("component", has, "+component")
+@rule("component", has, "x+component")
 def component_has_named_component(lhs, rhs):
     if lhs.module and not rhs.typ.module:
         return create_forward(lhs.module, has, rhs.typ.meta.term)
@@ -57,13 +57,13 @@ def create_named_component(term):
 @extend(Component)
 class ExtendComponent(StoreNodePackageConfigs, StoreOutputPaths, StoreTemplateDirs):
     module = P.parent("react-module", has)
-    child_components = P.children(has, "+component")
+    child_components = P.children(has, "x+component")
     create_router_configs = MemFun(router_configs.create_router_configs)
 
 
 @extend(named(Component))
 class ExtendNamedComponent:
-    wrapped_child_components = P.children(wraps, "+component")
+    wrapped_child_components = P.children(wraps, "x+component")
     # Note that this property returns true if the component or any (grand)child
     # has non-empty component.wrapped_child_components
     wrapped_components = Prop(props.wrapped_components)

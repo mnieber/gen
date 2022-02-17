@@ -4,7 +4,7 @@ from moonleap.parser.term import is_it_term, words_to_terms
 
 
 class Line:
-    def __init__(self, text, words, terms, it_term, block=None):
+    def __init__(self, text, words, terms, it_term):
         self.text = text
         self.words = words
         self.terms = terms

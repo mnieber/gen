@@ -1,5 +1,5 @@
 import typing as T
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from fnmatch import fnmatch
 
 
@@ -8,7 +8,8 @@ class Term:
     data: str
     tag: str
     name: T.Optional[str] = None
-    stars: T.Optional[int] = 0
+    # This field is not used in term comparisons
+    is_title: T.Optional[bool] = field(default=False, compare=False)
 
     def __repr__(self):
         return (
@@ -16,40 +17,35 @@ class Term:
             + self.data
             + ":"
             + self.tag
+            + ("^" if self.is_title else "")
         )
 
 
-def maybe_term_to_term(maybe_term):
-    if isinstance(maybe_term, Term):
-        return maybe_term
-    return word_to_term(maybe_term, default_to_tag=True)
-
-
 def word_to_term(word, default_to_tag=False) -> T.Optional[Term]:
-    stars = 0
-    if word.endswith("*") or word.endswith("^"):
-        stars = 1 if word.endswith("*") else 2
-        word = word[:-1]
+    stripped_word = word
 
-    sep_name = word.find("+")
+    is_title = stripped_word.endswith("^")
+    if is_title:
+        stripped_word = stripped_word[:-1]
+
+    sep_name = stripped_word.find("+")
     if sep_name != -1:
-        name = word[:sep_name]
-        word = word[sep_name + 1 :]
+        name = stripped_word[:sep_name] or ""
+        stripped_word = stripped_word[sep_name + 1 :]
     else:
         name = None
 
-    sep_tag = word.rfind(":")
+    sep_tag = stripped_word.rfind(":")
     if sep_tag != -1:
-        tag = word[sep_tag + 1 :]
-        data = word[:sep_tag]
+        tag = stripped_word[sep_tag + len(":") :]
+        data = stripped_word[:sep_tag]
     else:
-        tag = word
+        if not default_to_tag:
+            return None
+        tag = stripped_word
         data = "x"
 
-    if sep_tag == -1 and not default_to_tag:
-        return None
-
-    return Term(data, tag, name, stars)
+    return Term(data, tag, name, is_title)
 
 
 def words_to_terms(words):
@@ -67,13 +63,6 @@ def is_it_term(term):
 
 def verb_to_word(verb):
     return verb[0] if isinstance(verb, tuple) else verb
-
-
-def stem_term(term):
-    pos = term.tag.find("~")
-    return Term(
-        data=term.data, tag=term.tag[:pos] if pos != -1 else term.tag, name=term.name
-    )
 
 
 def _match(lhs, rhs):

@@ -41,7 +41,7 @@ def view_has_panel(view, panel):
     panel.name = view.name + panel.name
 
 
-@rule("+view", wraps, "+component")
+@rule("x+view", wraps, "x+component")
 def named_view_wraps_named_component(named_view, named_component):
     named_view.typ.wraps_children = True
 
@@ -50,8 +50,8 @@ def named_view_wraps_named_component(named_view, named_component):
 class ExtendView:
     create_router_configs = MemFun(router_configs.create_router_configs)
     parent_view = P.parent("view", has)
-    left_panel = P.child(has, "+left:panel")
-    right_panel = P.child(has, "+right:panel")
-    top_panel = P.child(has, "+top:panel")
-    bottom_panel = P.child(has, "+bottom:panel")
-    middle_panel = P.child(has, "+middle:panel")
+    left_panel = P.child(has, "x+left:panel")
+    right_panel = P.child(has, "x+right:panel")
+    top_panel = P.child(has, "x+top:panel")
+    bottom_panel = P.child(has, "x+bottom:panel")
+    middle_panel = P.child(has, "x+middle:panel")

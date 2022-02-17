@@ -7,10 +7,10 @@ rules = [
     (("module", has, "component"), receives("node_package_configs")),
     (("module", has, "component"), receives("react_app_configs")),
     (("module", has, "component"), feeds("output_paths")),
-    (("module", shows, "+component"), empty_rule()),
+    (("module", shows, "x+component"), empty_rule()),
 ]
 
 
 @extend(Module)
 class ExtendModule:
-    routed_components = P.children(shows, "+component")
+    routed_components = P.children(shows, "x+component")

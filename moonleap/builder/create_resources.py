@@ -1,7 +1,8 @@
 import typing as T
 
 from moonleap.builder.add_meta_data_to_blocks import add_meta_data_to_blocks
-from moonleap.builder.create_resource import create_resource_and_add_to_block
+from moonleap.builder.create_resource import (create_resource_in_block,
+                                              find_describing_block)
 from moonleap.builder.find_relations import get_relations
 from moonleap.builder.rule import Action
 from moonleap.builder.scope import get_base_tags
@@ -9,7 +10,7 @@ from moonleap.parser.term import Term
 from moonleap.resource.named_class import NamedResource
 from moonleap.resource.rel import Rel
 from moonleap.utils.case import kebab_to_camel
-from moonleap.verbs import is_created_as, uses
+from moonleap.verbs import is_created_as
 
 
 def _find_resource(term, block):
@@ -59,15 +60,40 @@ def _to_list_of_relations(x, action):
 
 def _process_relations(relations: T.List[Rel], actions):
     def _find_or_create(rel, term):
+        # Step 1: find existing resource
         res = _find_resource(term, rel.block)
-        if not res:
-            res, creator_block = create_resource_and_add_to_block(term, rel.block)
-            _process_relations(
-                [Rel(term, is_created_as, term, creator_block, rel.origin)], actions
-            )
-            if isinstance(res, NamedResource):
-                res.name = kebab_to_camel(term.name)
-                res.typ = _find_or_create(rel, Term(data=term.data, tag=term.tag))
+        if res:
+            return res
+
+        # Step 2: if the resource doesn't exist, find the publishing block. Note that the
+        # publishing block may be some child of the current block, and it may be some
+        # sibling of the parent block.
+        publishing_block = find_describing_block(term, rel.block) or rel.block
+
+        # Step 3: create the resource in the publishing block, and add to current block
+        res = create_resource_in_block(term, publishing_block)
+        if rel.block is not publishing_block:
+            rel.block.add_resource_for_term(res, term, False)
+
+        # Step 4: if a resource appears in the heading of the publishing block, then we add
+        # it to its parent block as well. In other words, a parent block knows
+        # about any resource that is described in its child blocks.
+        # Note that this creates a symmetry between finding resources and creating
+        # them: the blocks that are "competing" for creating the resource are the same
+        # blocks where the resource can be found if it already existed.
+        if publishing_block.describes(term) and publishing_block.parent_block:
+            publishing_block.parent_block.add_resource_for_term(res, term, False)
+
+        # Step 5: process the is_created_as relation
+        _process_relations(
+            [Rel(term, is_created_as, term, publishing_block, rel.origin)], actions
+        )
+
+        # Step 6: handle named term
+        if term.name is not None:
+            assert isinstance(res, NamedResource)
+            res.name = kebab_to_camel(term.name)
+            res.typ = _find_or_create(rel, Term(data=term.data, tag=term.tag))
 
         return res
 
