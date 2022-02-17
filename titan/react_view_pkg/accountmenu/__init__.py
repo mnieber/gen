@@ -9,7 +9,7 @@ base_tags = [("menu", ["component"])]
 
 
 @create("account:menu")
-def create_account_menu(term, block):
+def create_account_menu(term):
     return Component(name="accountMenu")
 
 

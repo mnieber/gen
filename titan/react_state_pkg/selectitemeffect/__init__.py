@@ -16,7 +16,7 @@ rules = [(("item~list", uses, "select-item-effect"), empty_rule())]
 
 
 @create("select-item-effect")
-def create_select_item_effect(term, block):
+def create_select_item_effect(term):
     select_item_effect = SelectItemEffect(name=kebab_to_camel(u0(term.data)) + "Effect")
     select_item_effect.add_template_dir(
         Path(__file__).parent / "templates", props.get_context

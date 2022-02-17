@@ -36,7 +36,7 @@ def add_node_package_config(resource, node_package_config):
 
 
 @create("node-package")
-def create_node_package(term, block):
+def create_node_package(term):
     node_package = NodePackage(name="node-package")
     node_package.add_template_dir(Path(__file__).parent / "templates")
     add(node_package, node_package_configs.get(node_package))

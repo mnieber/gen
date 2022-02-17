@@ -8,7 +8,7 @@ from .resources import AppModule  # noqa
 
 
 @create("app:module")
-def create_app_module(term, block):
+def create_app_module(term):
     module = AppModule(name=kebab_to_camel(term.data))
     module.output_path = sn(module.name)
     return module

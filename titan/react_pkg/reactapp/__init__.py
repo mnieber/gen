@@ -34,7 +34,7 @@ base_tags = [("react-app", ["tool"])]
 
 
 @create("react-app")
-def create_react_app(term, block):
+def create_react_app(term):
     react_app = ReactApp(name="react-app")
     react_app.add_template_dir(Path(__file__).parent / "templates", get_context)
     add(react_app, load_node_package_config(__file__))

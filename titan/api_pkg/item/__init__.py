@@ -26,14 +26,14 @@ base_tags = [
 
 
 @create("item")
-def create_item(term, block):
+def create_item(term):
     name = kebab_to_camel(term.data)
     item = Item(item_name=name)
     return item
 
 
 @create("x+item")
-def create_named_item(term, block):
+def create_named_item(term):
     return named(Item)()
 
 

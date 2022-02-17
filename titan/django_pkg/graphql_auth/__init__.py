@@ -17,7 +17,7 @@ base_tags = [
 
 
 @create("graphql-auth")
-def create_graphql_auth(term, block):
+def create_graphql_auth(term):
     graphql_auth = GraphqlAuth(name="graphql-auth")
     add(graphql_auth, django_configs.get())
     add(

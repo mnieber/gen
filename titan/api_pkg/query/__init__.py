@@ -14,7 +14,7 @@ base_tags = [
 
 
 @create("query")
-def create_query(term, block):
+def create_query(term):
     name = kebab_to_camel(term.data)
     query = Query(name=name, fun_name=kebab_to_camel(term.data))
     return query

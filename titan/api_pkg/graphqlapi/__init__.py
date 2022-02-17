@@ -5,7 +5,7 @@ from .resources import GraphqlApi
 
 
 @create("graphql:api")
-def create_graphql_api(term, block):
+def create_graphql_api(term):
     graphql_api = GraphqlApi()
     return graphql_api
 

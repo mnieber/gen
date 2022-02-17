@@ -8,7 +8,7 @@ from .resources import FormType
 
 
 @create("item~form-type")
-def create_form_type(term, block):
+def create_form_type(term):
     name = kebab_to_camel(term.data)
     form_type = FormType(
         name=u0(name) + "Form",

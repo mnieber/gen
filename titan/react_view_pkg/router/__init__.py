@@ -13,7 +13,7 @@ base_tags = [("router", ["component"])]
 
 
 @create("router")
-def create_router(term, block):
+def create_router(term):
     router = Router(name="UrlRouter")
     router.add_template_dir(Path(__file__).parent / "templates", get_context)
     add(router, load_node_package_config(__file__))

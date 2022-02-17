@@ -8,8 +8,8 @@ ENV LANG=C.UTF-8
 
 
 @create("strapi:docker-image")
-def strapi_docker_image_created(term, block):
-    docker_image = create_docker_image(term, block)
+def strapi_docker_image_created(term):
+    docker_image = create_docker_image(term)
     docker_image.name = "strapi/strapi"
     docker_image.install_command = "apt-get update && apt-get install -y"
     return docker_image

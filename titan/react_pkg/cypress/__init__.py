@@ -15,7 +15,7 @@ base_tags = [("cypress", ["tool"])]
 
 
 @create("cypress")
-def create_cypress(term, block):
+def create_cypress(term):
     cypress = Cypress(name="cypress")
     return cypress
 

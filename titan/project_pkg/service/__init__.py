@@ -19,7 +19,7 @@ rules = [(("service", has + runs, "tool"), feeds("output_paths"))]
 
 
 @create("service")
-def create_service(term, block):
+def create_service(term):
     service = Service(name=kebab_to_camel(term.data), use_default_config=True)
     service.output_path = service.name + "/"
     return service

@@ -15,7 +15,7 @@ base_tags = [
 
 
 @create("view")
-def create_view(term, block):
+def create_view(term):
     name = u0(kebab_to_camel(term.data))
     view = View(name=f"{name}")
     view.add_template_dir(Path(__file__).parent / "templates", get_context)
@@ -28,7 +28,7 @@ def view_wraps_children(view, children):
 
 
 @create("panel")
-def create_panel(term, block):
+def create_panel(term):
     panel = View(name=f"{u0(term.data)}Panel")
     panel.add_template_dir(
         Path(__file__).parent / "templates", get_context, skip_render=props.skip_render

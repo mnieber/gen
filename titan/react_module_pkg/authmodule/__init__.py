@@ -24,7 +24,7 @@ def react_app_has_auth_module(react_app, auth_module):
 
 
 @create("auth:store")
-def create_auth_store(term, block):
+def create_auth_store(term):
     return AuthStore(name="AuthStore")
 
 
@@ -34,7 +34,7 @@ def module_has_store(module, auth_store):
 
 
 @create("auth-switch:view")
-def create_auth_switch(term, block):
+def create_auth_switch(term):
     view = AuthSwitchView(name="AuthSwitch")
     view.add_template_dir(Path(__file__).parent / "templates_auth_switch")
     return view

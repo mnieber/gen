@@ -21,7 +21,7 @@ The example
         return MakefileRule(name="runserver", text=body)
 
     @create("django-app")
-    def create_django(term, block):
+    def create_django(term):
         django_app = DjangoApp(name="django-app")
         add(django_app, get_makefile_rule())  # [1-2]
         return django_app

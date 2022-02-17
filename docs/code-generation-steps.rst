@@ -99,7 +99,7 @@ to match against, and returns a resource object:
     from .resources import Item
 
     @create("item")
-    def create_item(term, block):
+    def create_item(term):
         assert term.tag == "item"
         return Item(item_name=term.data)
 
@@ -146,7 +146,7 @@ An example module
         item_name: str
 
     @create("item")
-    def create_item(term, block):
+    def create_item(term):
         return Item(item_name=kebab_to_camel(term.data))
 
     @rule("graphql:api", posts, "item")

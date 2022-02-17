@@ -30,7 +30,7 @@ class StoreVsCodeProjectConfigs:
 
 
 @create("vscode-project")
-def create_vscode_project(term, block):
+def create_vscode_project(term):
     vscode_project = VsCodeProject()
     vscode_project.add_template_dir(Path(__file__).parent / "templates")
     return vscode_project

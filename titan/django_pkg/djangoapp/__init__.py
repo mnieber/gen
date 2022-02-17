@@ -41,7 +41,7 @@ base_tags = [
 
 
 @create("django-app")
-def create_django(term, block):
+def create_django(term):
     django_app = DjangoApp(name="django-app")
     django_app.add_template_dir(Path(__file__).parent / "templates")
     add(django_app, django_configs.get())

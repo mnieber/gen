@@ -11,7 +11,7 @@ base_tags = [("setup.cfg", ["tool"])]
 
 
 @create("setup.cfg")
-def create_setup_file(term, block):
+def create_setup_file(term):
     setupFile = SetupFile(name="setup-file")
     setupFile.add_template_dir(Path(__file__).parent / "templates", get_context)
     return setupFile

@@ -11,7 +11,7 @@ from .resources import ApiModule  # noqa
 
 
 @create("api:module")
-def create_api_module(term, block):
+def create_api_module(term):
     module = ApiModule(name=kebab_to_camel(term.data))
     module.output_path = sn(module.name)
     module.add_template_dir(Path(__file__).parent / "templates")

@@ -21,7 +21,7 @@ rules = [(("form-view", posts, "item"), empty_rule())]
 
 
 @create("form-view")
-def create_form_view(term, block):
+def create_form_view(term):
     name = kebab_to_camel(term.data)
     form_view = FormView(item_name=name, name=f"{name}FormView")
     form_view.add_template_dir(Path(__file__).parent / "templates", get_context)

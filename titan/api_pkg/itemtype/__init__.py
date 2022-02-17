@@ -5,7 +5,7 @@ from .resources import ItemType
 
 
 @create("item~type")
-def create_item_type(term, block):
+def create_item_type(term):
     name = kebab_to_camel(term.data)
     item_type = ItemType(name=u0(name))
     return item_type

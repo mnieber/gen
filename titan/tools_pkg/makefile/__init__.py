@@ -23,7 +23,7 @@ base_tags = [("makefile", ["tool"])]
 
 
 @create("makefile")
-def create_makefile(term, block):
+def create_makefile(term):
     makefile = Makefile(name="makefile")
     makefile.add_template_dir(Path(__file__).parent / "templates")
 

@@ -14,7 +14,7 @@ base_tags = [("black", ["tool"])]
 
 
 @create("black")
-def create_black(term, block):
+def create_black(term):
     black = Black(name="black")
 
     add(black, PipDependency(["black"], is_dev=True))

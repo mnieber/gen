@@ -16,7 +16,7 @@ base_tags = [("tailwind-css", ["tool"])]
 
 
 @create("tailwind-css")
-def create_tailwind_css(term, block):
+def create_tailwind_css(term):
     tailwind_css = TailwindCss(name="tailwind_css")
     tailwind_css.add_template_dir(Path(__file__).parent / "templates")
     add(tailwind_css, load_node_package_config(__file__))

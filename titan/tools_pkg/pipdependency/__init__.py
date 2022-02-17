@@ -7,12 +7,12 @@ from .resources import PipDependency, PipRequirement
 
 
 @create("pip-dependency")
-def create_pip_dependency(term, block):
+def create_pip_dependency(term):
     return PipDependency([term.data])
 
 
 @create("dev:pip-dependency")
-def create_pip_dependency_dev(term, block):
+def create_pip_dependency_dev(term):
     return PipDependency([term.data], is_dev=True)
 
 

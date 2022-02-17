@@ -8,7 +8,7 @@ from .resources import LayerGroup
 
 
 @create("layer-group")
-def create_layer_group(term, block):
+def create_layer_group(term):
     layer_group = LayerGroup(name=kebab_to_camel(term.data))
     add(layer_group, dodo_layer_configs.get(layer_group))
     return layer_group

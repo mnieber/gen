@@ -23,7 +23,7 @@ base_tags = [("state-provider", ["component"])]
 
 
 @create("state-provider")
-def create_state_provider(term, block):
+def create_state_provider(term):
     base_name = kebab_to_camel(term.data)
     state_provider = StateProvider(name=f"{u0(base_name)}StateProvider")
     state_provider.add_template_dir(Path(__file__).parent / "templates", get_context)

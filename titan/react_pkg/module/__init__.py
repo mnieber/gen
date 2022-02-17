@@ -23,7 +23,7 @@ base_tags = [("module", ["react-module"])]
 
 
 @create("module")
-def create_module(term, block):
+def create_module(term):
     module = Module(name=kebab_to_camel(term.data))
     module.output_path = f"src/{module.name}"
     return module

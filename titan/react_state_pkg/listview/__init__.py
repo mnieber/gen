@@ -27,7 +27,7 @@ rules = [
 
 
 @create("list-view")
-def create_list_view(term, block):
+def create_list_view(term):
     name = kebab_to_camel(term.data)
     list_view = ListView(
         item_name=name, items_name=plural(name), name=f"{u0(name)}ListView"

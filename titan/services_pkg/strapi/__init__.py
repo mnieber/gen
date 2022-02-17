@@ -21,7 +21,7 @@ base_tags = [("strapi", ["tool"])]
 
 
 @create("strapi")
-def create_strapi(term, block):
+def create_strapi(term):
     strapi = Strapi(name="strapi")
     add(strapi, makefile_rules.get_runserver())
     add(strapi, makefile_rules.get_debugserver())

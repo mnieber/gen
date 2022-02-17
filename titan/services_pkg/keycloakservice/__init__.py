@@ -7,8 +7,8 @@ keycloak_env_fn = "./env/keycloak.env"
 
 
 @create("keycloak:service")
-def create_keycloak(term, block):
-    keycloak_service = create_service(term, block)
+def create_keycloak(term):
+    keycloak_service = create_service(term)
     keycloak_service.env_files.append(keycloak_env_fn)
     return keycloak_service
 

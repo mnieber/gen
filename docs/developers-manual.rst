@@ -152,13 +152,13 @@ The example
         item_name: str
 
     @create("item")  # [3]
-    def create_item(term, block):
+    def create_item(term):
         return Item(
             item_name=kebab_to_camel(term.data)  # [4]
         )
 
     @create("project:item")  # [5]
-    def create_item(term, block):
+    def create_item(term):
         return Item(
             item_name="project",
         )
@@ -386,7 +386,7 @@ The example
         return dict(res=item_resource)
 
     @create("item")
-    def create_item(term, block):
+    def create_item(term):
         item = Item(
             item_name=kebab_to_camel(term.data)
         )
@@ -450,7 +450,7 @@ The example
         name: str
 
     @create("module")
-    def create_module(term, block):
+    def create_module(term):
         return Module(
             name=kebab_to_camel(term.data)
         )

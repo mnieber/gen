@@ -26,7 +26,7 @@ class StoreLayerConfigs:
 
 
 @create("layer")
-def create_layer(term, block):
+def create_layer(term):
     layer = Layer(name=kebab_to_camel(term.data))
     layer.output_path = ".dodo_commands"
     layer.add_template_dir(Path(__file__).parent / "templates")

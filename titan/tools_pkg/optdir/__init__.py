@@ -10,7 +10,7 @@ base_tags = [("opt-dir", ["tool"])]
 
 
 @create("opt-dir")
-def create_opt_dir(term, block):
+def create_opt_dir(term):
     opt_dir = OptDir(name="opt-dir")
     add(opt_dir, docker_compose_configs.get(opt_dir))
     return opt_dir

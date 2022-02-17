@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import StoreTemplateDirs, receives, create, extend, rule
+from moonleap import StoreTemplateDirs, create, extend, receives, rule
 from moonleap.verbs import has
 
 from .resources import Dockerfile, DockerImage
@@ -16,14 +16,14 @@ base_tags = [
 
 
 @create("dockerfile")
-def create_dockerfile(term, block):
+def create_dockerfile(term):
     docker_file = Dockerfile(is_dev=term.data == "dev", name="dockerfile")
     docker_file.add_template_dir(Path(__file__).parent / "templates")
     return docker_file
 
 
 @create("docker-image")
-def create_docker_image(term, block):
+def create_docker_image(term):
     docker_image = DockerImage(term.data)
     return docker_image
 

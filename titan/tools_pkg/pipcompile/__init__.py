@@ -23,7 +23,7 @@ base_tags = [("pip-compile", ["tool"])]
 
 
 @create("pip-compile")
-def create_pip_compile(term, block):
+def create_pip_compile(term):
     pip_compile = PipCompile(name="pip-compile")
 
     add(pip_compile, makefile_rules.get_pipcompile())

@@ -25,7 +25,7 @@ base_tags = [
 
 
 @create("mutation")
-def create_mutation(term, block):
+def create_mutation(term):
     mutation = Mutation(name=kebab_to_camel(term.data))
     return mutation
 

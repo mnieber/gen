@@ -10,7 +10,7 @@ base_tags = [("pytest", ["tool"]), ("pytest-html", ["tool"])]
 
 
 @create("pytest")
-def create_pytest(term, block):
+def create_pytest(term):
     pytest = Pytest(name="pytest")
 
     add(pytest, PipRequirement(["pytest"], is_dev=True))
@@ -20,7 +20,7 @@ def create_pytest(term, block):
 
 
 @create("pytest-html")
-def create_pytest_html(term, block):
+def create_pytest_html(term):
     pytest_html = PytestHtml(name="pytest-html")
 
     add(pytest_html, PipRequirement(["pytest-html"], is_dev=True))

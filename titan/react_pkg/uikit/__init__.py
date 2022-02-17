@@ -13,7 +13,7 @@ base_tags = [("uikit", ["tool"])]
 
 
 @create("uikit")
-def create_uikit(term, block):
+def create_uikit(term):
     uikit = UIkit(name="uikit")
     uikit.add_template_dir(Path(__file__).parent / "templates")
     uikit.output_path = "src"

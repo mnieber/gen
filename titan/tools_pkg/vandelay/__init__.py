@@ -16,7 +16,7 @@ def _vandelay_path():
 
 
 @create("vandelay")
-def create_vandelay(term, block):
+def create_vandelay(term):
     vandelay = Vandelay(type=term.data, name="vandelay")
     vandelay.output_path = "../.vandelay"
     vandelay.add_template_dir(get_template_filename),

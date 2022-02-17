@@ -20,7 +20,7 @@ rules = [
 
 
 @create("state")
-def create_state(term, block):
+def create_state(term):
     kebab_name = term.data
     name = kebab_to_camel(kebab_name)
     state = State(name=name)

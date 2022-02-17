@@ -13,7 +13,7 @@ base_tags = [("prettier", ["tool"])]
 
 
 @create("prettier")
-def create_prettier(term, block):
+def create_prettier(term):
     prettier = Prettier(name="prettier")
     prettier.add_template_dir(Path(__file__).parent / "templates")
     add(prettier, load_node_package_config(__file__))

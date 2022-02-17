@@ -14,13 +14,13 @@ rules = [
 
 
 @create("pipeline")
-def create_pipeline(term, block):
+def create_pipeline(term):
     pipeline = Pipeline()
     return pipeline
 
 
 @create("x+pipeline")
-def create_named_pipeline(term, block):
+def create_named_pipeline(term):
     return named(Pipeline)()
 
 

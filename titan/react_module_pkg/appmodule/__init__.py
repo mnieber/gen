@@ -10,7 +10,7 @@ from .resources import AppModule  # noqa
 
 
 @create("app:module")
-def create_app_module(term, block):
+def create_app_module(term):
     module = AppModule(name=kebab_to_camel(term.data))
     module.add_template_dir(Path(__file__).parent / "templates")
     module.output_path = f"src/{module.name}"

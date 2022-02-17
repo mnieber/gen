@@ -7,7 +7,7 @@ from .resources import Project
 
 
 @create("project")
-def create_project(term, block):
+def create_project(term):
     project = Project(name=kebab_to_camel(term.data))
     project.output_path = "src/"
     return project

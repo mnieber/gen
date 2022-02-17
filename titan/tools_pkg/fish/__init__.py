@@ -22,7 +22,7 @@ def service_has_fish(service, fish):
 
 
 @create("fish")
-def create_fish(term, block):
+def create_fish(term):
     fish = Fish(name="fish")
 
     add(fish, PkgDependency(["fish"], is_dev=True))

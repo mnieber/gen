@@ -10,7 +10,7 @@ from .resources import CommandsDir
 
 
 @create("commands-dir")
-def create_commands_dir(term, block):
+def create_commands_dir(term):
     commands_dir = CommandsDir(name=term.data)
     return commands_dir
 

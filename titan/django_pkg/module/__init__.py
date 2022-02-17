@@ -27,7 +27,7 @@ base_tags = [("module", ["django-module"])]
 
 
 @create("module")
-def create_module(term, block):
+def create_module(term):
     module = Module(name=kebab_to_camel(term.data))
     module.output_path = sn(module.name)
     module.add_template_dir(Path(__file__).parent / "templates", get_context)

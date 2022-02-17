@@ -8,7 +8,7 @@ base_tags = [("pudb", ["tool"])]
 
 
 @create("pudb")
-def create_pudb(term, block):
+def create_pudb(term):
     pudb = Pudb(name="pudb")
 
     add(pudb, PipRequirement(["pudb", "ipython"], is_dev=True))

@@ -31,7 +31,7 @@ def create_resource_and_add_to_block(term, block):
             if resource:
                 raise Exception(f"More than 1 create rule for {term}")
 
-            resource = create_rule(term, block)
+            resource = create_rule(term)
             if resource is None:
                 raise Exception(
                     "Resource creation rule returned None: " + str(create_rule)

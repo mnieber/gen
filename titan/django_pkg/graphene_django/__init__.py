@@ -20,7 +20,7 @@ base_tags = [
 
 
 @create("graphene-django")
-def create_graphene_django(term, block):
+def create_graphene_django(term):
     graphene_django = GrapheneDjango(name="graphene-django")
     graphene_django.output_path = "api"
     graphene_django.add_template_dir(Path(__file__).parent / "templates", get_context)
