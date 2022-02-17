@@ -19,6 +19,8 @@ base_tags = [
     ("item~list", ["pipeline-elm"]),
 ]
 
+rules = [(("item~list", uses, "item"), empty_rule())]
+
 
 @create("item~list")
 def create_item_list(term):
@@ -35,9 +37,6 @@ def create_named_item(term):
 @rule("item~list")
 def item_list_created(item_list):
     return create_forward(item_list, uses, f"{item_list.item_name}:item")
-
-
-rules = [(("item~list", uses, "item"), empty_rule())]
 
 
 @extend(ItemList)

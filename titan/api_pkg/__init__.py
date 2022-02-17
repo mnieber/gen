@@ -8,6 +8,7 @@ from . import (
     mutation,
     pipeline,
     query,
+    typeregistry,
 )
 
 modules = [
@@ -19,5 +20,6 @@ modules = [
     itemtype,
     mutation,
     pipeline,
+    typeregistry,
     query,
 ]

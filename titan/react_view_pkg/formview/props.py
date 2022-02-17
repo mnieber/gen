@@ -5,7 +5,6 @@ from moonleap.utils.case import l0
 from moonleap.utils.chop import chop_postfix
 from moonleap.utils.codeblock import CodeBlock
 from moonleap.utils.inflect import plural
-from titan.api_pkg.typeregistry import TypeRegistry
 from titan.react_module_pkg.extendspectypes.props import ts_type_from_item_name
 from titan.react_pkg.component.resources import get_component_base_url
 from titan.react_pkg.pkg.ml_get import ml_graphql_api, ml_react_app
@@ -46,7 +45,6 @@ def get_context(form_view):
     _.field_specs = [x for x in _.type_spec.field_specs if x.name != "id"]
     _.fk_field_specs = [x for x in _.type_spec.get_field_specs(["uuid"]) if x.target]
     _.graphql_api = ml_graphql_api(ml_react_app(form_view))
-    _.type_reg = TypeRegistry(_.graphql_api)
     _.mutation = R.head(form_view.item_posted.poster_mutations)
 
     class Sections:

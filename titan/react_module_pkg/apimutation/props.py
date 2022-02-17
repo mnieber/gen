@@ -5,16 +5,13 @@ import ramda as R
 from moonleap import render_templates
 from moonleap.utils.case import l0
 from titan.api_pkg.pkg.graphql_args import graphql_args
-from titan.api_pkg.typeregistry import TypeRegistry
 from titan.react_module_pkg.apiquery.graphql_body import graphql_body
-from titan.react_module_pkg.apiquery.props import define_schema_field
 from titan.react_pkg.pkg.field_spec_to_ts_type import field_spec_to_ts_type
 
 
 def get_context(mutation, api_module):
     _ = lambda: None
     _.api_module = api_module
-    _.type_reg = TypeRegistry(api_module.graphql_api)
     _.mutation = mutation
     _.input_field_specs = mutation.inputs_type_spec.field_specs
     _.form_input_field_specs = [
@@ -30,7 +27,7 @@ def get_context(mutation, api_module):
             result = []
             for field_spec in _.form_input_field_specs:
                 item_name = l0(field_spec.target)
-                item = _.type_reg.get_item_by_name(item_name)
+                item = _.api_module.graphql_api.type_reg.get_item_by_name(item_name)
                 result.append(
                     f"import {{ {item.item_type.ts_form_type} }} "
                     + f"from '{item.item_type.ts_type_import_path}';"
