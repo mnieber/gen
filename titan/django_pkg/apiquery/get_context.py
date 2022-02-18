@@ -1,10 +1,8 @@
 import os
 
-from moonleap import u0
 from moonleap.typespec.field_spec import input_is_used_for_output
 from moonleap.utils.case import sn
 from moonleap.utils.codeblock import CodeBlock
-from moonleap.utils.join import join
 from titan.django_pkg.graphene_django.utils import (
     get_django_model_imports,
     get_graphene_type_imports,
@@ -31,6 +29,9 @@ def _get_resolve_expression(query, field_spec):
 
     if field_spec.field_type == "json":
         return "{}"
+
+    if field_spec.field_type == "int":
+        return "0"
 
     raise Exception(f"Could not deduce return value for type {field_spec.field_type}")
 

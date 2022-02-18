@@ -13,6 +13,10 @@ from titan.react_view_pkg.pkg.create_component_router_config import (
 )
 
 
+def item_name(self):
+    return self.item_posted.item_name
+
+
 def create_router_configs(self, named_component):
     url = get_component_base_url(self, self.name)
     return [

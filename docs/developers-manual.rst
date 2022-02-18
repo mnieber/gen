@@ -33,8 +33,8 @@ Moonleap turns a markdown-based spec file into a set of source files. There are 
 
 Below, we will explain the process by introducing concepts and use-cases. Note that since Moonleap is a general
 purpose rule-based code generator, it doesn't provide any specific rules that you could use to generate source code.
-However, there is a companion package called Titan (one of the moons around Saturn) that is based on Moonleap,
-which allows you to create a stack based on Docker, Django and React.
+However, there is a companion package called Titan (named after one of the moons around Saturn) that is based on
+Moonleap, which allows you to create a stack based on Docker, Django and React.
 
 
 The spec dir
