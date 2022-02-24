@@ -35,7 +35,7 @@ def create_named_item(term):
 
 @rule("item")
 def item_created(item):
-    return create_forward(item, uses, f"{item.item_name}:item~type")
+    return create_forward(item, uses, f"{item.meta.term.data}:item~type")
 
 
 @extend(Item)

@@ -31,7 +31,7 @@ def graphql_api_loads_item(graphql_api, named_item):
 
 @rule("graphql:api", loads, "x+item~list")
 def graphql_api_loads_item_list(graphql_api, named_item_list):
-    query_term_str = f"get-{plural(named_item_list.typ.item_name)}:query"
+    query_term_str = f"get-{plural(named_item_list.typ.meta.term.data)}:query"
     return [
         create_forward(graphql_api, has, query_term_str),
         create_forward(query_term_str, provides, named_item_list),

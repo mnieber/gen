@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import add, feeds, create_forward, extend, rule
+from moonleap import add, create_forward, extend, feeds, rule
 from moonleap.verbs import has
 from titan.dodo_pkg.layer import StoreLayerConfigs
 from titan.project_pkg.project import Project
@@ -13,7 +13,7 @@ rules = [(("project", has, "config:layer"), feeds("dodo_layer_configs"))]
 def project_has_config_layer(project, config_layer):
     add(project, dodo_config_layers.get(project))
 
-    return [create_forward(project, "has", f"{project.name}:commands-dir")]
+    return [create_forward(project, "has", f"{project.meta.term.data}:commands-dir")]
 
 
 @extend(Project)

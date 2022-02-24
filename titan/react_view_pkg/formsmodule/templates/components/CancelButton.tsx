@@ -1,9 +1,9 @@
-import React from 'react';
 import classnames from 'classnames';
+import React from 'react';
 
 interface PropsT {
   onCancel: Function;
-  className?: string;
+  className?: any;
 }
 
 export const CancelButton: React.FC<PropsT> = (props: PropsT) => (

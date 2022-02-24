@@ -188,18 +188,6 @@ def get_context(module):
 
             return "\n".join(result or [indent + "pass"])
 
-        def repr_function(self, item_list):
-            indent = " " * 4
-            for field_spec in _field_specs(item_list.type_spec):
-                if field_spec.field_type == "string":
-                    return (
-                        f"{indent}def __str__(self):\n"
-                        + f"{indent}  return '{u0(item_list.item_name)}: ' + self."
-                        + f"{sn(field_spec.name)}"
-                    )
-
-            return ""
-
         def get_through_models(self, item_list):
             return [
                 x.target

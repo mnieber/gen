@@ -4,7 +4,7 @@ import { useQueryData } from 'src/api/components';
 import { doQuery } from 'src/utils/graphqlClient';
 import { ObjT } from 'src/utils/types';
 
-const getRedRose = ({{ sections.javascript_args() }}) => {
+export const getRedRose = ({{ sections.javascript_args() }}) => {
   return doQuery(
     `query {{ res.name }}{{ sections.ts_graphql_query_args(True) }} {
 {% for output_field_spec in res.outputs_type_spec.get_field_specs(['fk', 'relatedSet']) %}

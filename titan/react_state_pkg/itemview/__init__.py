@@ -31,7 +31,7 @@ def create_item_view(term):
 
 @rule("item-view")
 def item_view_created(item_view):
-    return create_forward(item_view, uses, f"{item_view.item_name}:item")
+    return create_forward(item_view, uses, f"{item_view.meta.term.data}:item")
 
 
 @create("x+item-view")

@@ -14,16 +14,17 @@ from app.models import Entity
 class YellowTulip(Entity):
 {{ sections.model_fields(item_list)}}
 
-{{ sections.repr_function(item_list)}}
+    def __str__(self):
+        return "YellowTulip: " + self.{{ item_list.type_spec.display_item_by }}
 
 {% for through_model in sections.get_through_models(item_list) %}
-class YellowTulip2RedRose(models.Model):
+class YellowTulipRedRose(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     yellow_tulip = models.ForeignKey(YellowTulip, on_delete=models.CASCADE)
     red_rose = models.ForeignKey(RedRose, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "YellowTulip2RedRose: " + self.yellow_tulip.name + " -> " + self.red_rose.name
+        return "YellowTulipRedRose: " + self.yellow_tulip.name + " -> " + self.red_rose.name
 {% endfor %}
 
 

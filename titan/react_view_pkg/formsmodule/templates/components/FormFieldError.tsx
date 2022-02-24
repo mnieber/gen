@@ -1,8 +1,7 @@
-import classnames from "classnames";
-import React from "react";
-
-import { useFormStateContext } from "react-form-state-context";
-import { useFormFieldContext } from "src/forms/components/FormFieldContext";
+import classnames from 'classnames';
+import React from 'react';
+import { useFormStateContext } from 'react-form-state-context';
+import { useFormFieldContext } from 'src/forms/components/FormFieldContext';
 
 interface IProps {
   extraClass?: string;
@@ -21,9 +20,9 @@ export const FormFieldError: React.FC<IProps> = ({
   const error = formState.getError(fieldContext.fieldName);
 
   return (
-    <p
+    <div
       className={classnames(
-        "text-sm text-red-400",
+        'text-sm text-red-400',
         extraClass,
         extraClassOnError
           ? {
@@ -33,6 +32,6 @@ export const FormFieldError: React.FC<IProps> = ({
       )}
     >
       {error}
-    </p>
+    </div>
   );
 };

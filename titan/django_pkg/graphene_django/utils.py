@@ -9,7 +9,7 @@ def find_module_that_provides_item_list(django_app, item_type_name):
         for item_list in module.item_lists_provided:
             if item_list.item_type.name == item_type_name:
                 return module
-    raise Exception(f"Cannot find module that provides {item_type_name}")
+    raise LookupError(f"Cannot find module that provides {item_type_name}")
 
 
 def get_django_model_imports(django_app, type_specs):

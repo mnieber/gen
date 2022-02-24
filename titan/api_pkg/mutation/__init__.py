@@ -32,8 +32,8 @@ def create_mutation(term):
 
 @rule("graphql:api", posts, "item")
 def graphql_api_posts_item(graphql_api, item):
-    mutation_term_str = f"post-{item.item_name}:mutation"
-    named_item_term = Term(data=item.item_name, tag="item", name="")
+    mutation_term_str = f"post-{item.term.meta.data}:mutation"
+    named_item_term = Term(data=item.term.meta.data, tag="item", name="")
     return [
         create_forward(graphql_api, has, mutation_term_str),
         create_forward(mutation_term_str, posts, item),
@@ -45,13 +45,15 @@ def graphql_api_posts_item(graphql_api, item):
 def mutation_posts_item(mutation, item):
     item_type_term_str = f"{item.meta.term.data}:item~type"
     return [
-        create_forward(item_type_term_str, has, f"{item.item_name}:item~form-type"),
+        create_forward(
+            item_type_term_str, has, f"{item.meta.term.data}:item~form-type"
+        ),
     ]
 
 
 @rule("graphql:api", deletes, "item~list")
 def graphql_api_deletes_item_list(graphql_api, item_list):
-    mutation_term_str = f"delete-{plural(item_list.item_name)}:mutation"
+    mutation_term_str = f"delete-{plural(item_list.meta.term.data)}:mutation"
     return [
         create_forward(graphql_api, has, mutation_term_str),
         create_forward(mutation_term_str, deletes, item_list),

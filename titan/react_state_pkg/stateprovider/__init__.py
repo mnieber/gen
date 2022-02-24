@@ -34,8 +34,8 @@ def create_state_provider(term):
 @rule("state")
 def state_created(state):
     return [
-        create_forward(state.module, has, f"{state.name}:state-provider"),
-        create_forward(state, has, f"{state.name}:state-provider"),
+        create_forward(state.module, has, f"{state.meta.term.data}:state-provider"),
+        create_forward(state, has, f"{state.meta.term.data}:state-provider"),
     ]
 
 

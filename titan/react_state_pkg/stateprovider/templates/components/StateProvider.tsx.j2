@@ -102,15 +102,15 @@ export const YellowTulipStateProvider = observer(
         {% endif %}
         {% for pipeline in _.state.pipelines %}
           {% if pipeline.bvrs %}
-            {{ pipeline.output.ts_var }}: state.outputs.{{ pipeline.output.item_name | plural }}Display,
+            {{ pipeline.output.ts_var }}: () => state.outputs.{{ pipeline.output.item_name | plural }}Display,
             {% for bvr in pipeline.bvrs %}
             {{ bvr.sections.default_props(_.state) }}
             {% endfor %}
           {% else %}
-          {{ pipeline.output.ts_var }}: {{ pipeline.input_expression }},
+          {{ pipeline.output.ts_var }}: () => {{ pipeline.input_expression }},
           {% endif %}
           {% if pipeline.status_expression %}
-          {{ pipeline.output.ts_var }}RS: {{ pipeline.status_expression }},
+          {{ pipeline.output.ts_var }}RS: () => {{ pipeline.status_expression }},
           {% endif %}
         {% endfor %}
       };

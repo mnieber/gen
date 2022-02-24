@@ -19,7 +19,7 @@ def named_item_list_has_selection(named_item_list, selection):
     named_item_list.pipeline.state.module.react_app.utils_module.use_packages(
         ["mergeClickHandlers"]
     )
-    return create_forward(named_item_list, has, f"{selection.item_name}:highlight")
+    return create_forward(named_item_list, has, f"{selection.meta.term.data}:highlight")
 
 
 @extend(SelectionBvr)

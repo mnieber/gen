@@ -27,7 +27,13 @@ def get_context(item_type, api_module):
 
     class Sections:
         def graphql_type_imports(self):
-            module = find_module_that_provides_item_list(_.django_app, _.item_type.name)
+            try:
+                module = find_module_that_provides_item_list(
+                    _.django_app, _.item_type.name
+                )
+            except LookupError:
+                return ""
+
             return (
                 f"from {sn(module.name)}.models import {_.item_type.name}"
                 if module
