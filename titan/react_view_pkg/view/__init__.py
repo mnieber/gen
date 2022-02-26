@@ -16,7 +16,7 @@ base_tags = [
 
 @create("view")
 def create_view(term):
-    name = u0(kebab_to_camel(term.data))
+    name = u0(kebab_to_camel(term.data + ("view" if term.data.endswith("-") else "")))
     view = View(name=f"{name}")
     view.add_template_dir(Path(__file__).parent / "templates", get_context)
     return view
