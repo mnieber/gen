@@ -2,7 +2,7 @@ import typing as T
 from dataclasses import dataclass, field, replace
 
 import ramda as R
-from moonleap.typespec.field_spec import FieldSpec
+from moonleap.typespec.field_spec import FieldSpec, FkFieldSpec
 from moonleap.utils.case import l0
 
 
@@ -32,7 +32,7 @@ def add_related_set_field_to_type_spec(type_spec, is_private, related_type_name)
         raise Exception(f"Field spec with name {field_name} already exists")
 
     type_spec.field_specs.append(
-        FieldSpec(
+        FkFieldSpec(
             name=field_name,
             required=False,
             private=is_private,

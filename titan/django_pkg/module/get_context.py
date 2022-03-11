@@ -217,4 +217,8 @@ def get_context(module):
 
             return os.linesep.join(result)
 
+        def slug_field_specs(self, item_list):
+            slug_field_specs = item_list.type_spec.get_field_specs("slug")
+            return [x for x in slug_field_specs if x.slug_src]
+
     return dict(sections=Sections(), _=_)

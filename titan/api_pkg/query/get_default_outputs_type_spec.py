@@ -1,4 +1,4 @@
-from moonleap.typespec.field_spec import FieldSpec
+from moonleap.typespec.field_spec import FkFieldSpec
 from moonleap.typespec.type_spec_store import TypeSpec
 
 
@@ -19,7 +19,7 @@ def get_default_outputs_type_spec(self, name):
 
 
 def _item_output_field_spec(self, named_item):
-    return FieldSpec(
+    return FkFieldSpec(
         name=named_item.output_field_name,
         required=False,
         private=False,
@@ -32,7 +32,7 @@ def _item_output_field_spec(self, named_item):
 
 
 def _item_list_output_field_spec(self, named_item_list):
-    return FieldSpec(
+    return FkFieldSpec(
         name=named_item_list.output_field_name,
         required=False,
         private=False,

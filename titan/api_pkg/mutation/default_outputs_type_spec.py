@@ -1,4 +1,4 @@
-from moonleap.typespec.field_spec import FieldSpec
+from moonleap.typespec.field_spec import FieldSpec, FkFieldSpec
 from moonleap.typespec.type_spec_store import TypeSpec
 from moonleap.utils.case import camel_join
 from moonleap.utils.inflect import plural
@@ -6,7 +6,7 @@ from moonleap.utils.inflect import plural
 
 def default_outputs_type_spec(self, name):
     fk_field_specs = [
-        FieldSpec(
+        FkFieldSpec(
             name=camel_join(named_item.name, named_item.typ.item_name),
             required=False,
             private=False,
@@ -16,7 +16,7 @@ def default_outputs_type_spec(self, name):
         for named_item in self.named_items_returned
     ]
     related_set_field_specs = [
-        FieldSpec(
+        FkFieldSpec(
             name=camel_join(
                 named_item_list.name, plural(named_item_list.typ.item_name)
             ),

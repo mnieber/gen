@@ -1,8 +1,10 @@
-{% clean_up_py_imports %}
-import uuid
 {% magic_with item_list.item_name as yellowTulip %}
 {% magic_with through_model as RedRose %}
+{% magic_with slug_field_spec.name as blueDaisy %}
+{% clean_up_py_imports %}
+import uuid
 from django.db import models
+from django.utils.text import slugify
 {% for item_list in res.item_lists_provided %}
 {{ sections.model_imports(item_list)}}
 {% endfor %}
@@ -13,6 +15,15 @@ from app.models import Entity
 {% for item_list in _.item_lists_provided %}
 class YellowTulip(Entity):
 {{ sections.model_fields(item_list)}}
+
+{% if sections.slug_field_specs(item_list) %}
+    def save(self, *args, **kwargs):
+        {% for slug_field_spec in sections.slug_field_specs(item_list) %}
+        if self.blueDaisy is None:
+            self.blueDaisy = slugify(self.{{ slug_field_spec.slug_src }})
+        {% endfor %}
+        super().save(*args, **kwargs)
+{% endif %}
 
     def __str__(self):
         return "YellowTulip: " + self.{{ item_list.type_spec.display_item_by }}
@@ -29,4 +40,6 @@ class YellowTulipRedRose(models.Model):
 
 
 {% endfor %}
+{% end_magic_with %}
+{% end_magic_with %}
 {% end_magic_with %}

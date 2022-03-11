@@ -21,6 +21,29 @@ class FieldSpec:
         return self.field_type_attrs.get("target")
 
     @property
+    def related_output(self):
+        return self.field_type_attrs.get("relatedOutput")
+
+    @property
+    def short_name(self):
+        return l0(chop_prefix(self.name, self.related_output or ""))
+
+
+@dataclass
+class SlugFieldSpec(FieldSpec):
+    @property
+    def slug_src(self):
+        return self.field_type_attrs.get("slugSrc")
+
+
+@dataclass
+class FormFieldSpec(FieldSpec):
+    pass
+
+
+@dataclass
+class FkFieldSpec(FieldSpec):
+    @property
     def through(self):
         return self.field_type_attrs.get("through")
 
@@ -29,20 +52,12 @@ class FieldSpec:
         return self.field_type_attrs.get("showInlineInAdmin")
 
     @property
-    def related_output(self):
-        return self.field_type_attrs.get("relatedOutput")
-
-    @property
     def has_related_set(self):
         return self.field_type_attrs.get("hasRelatedSet")
 
     @property
     def add_id_field(self):
         return self.field_type_attrs.get("addIdField")
-
-    @property
-    def short_name(self):
-        return l0(chop_prefix(self.name, self.related_output or ""))
 
 
 def _default_value(field_spec):
@@ -80,6 +95,8 @@ def _field_type_and_attrs(field_spec_dict):
     else:
         if "maxLength" in field_spec_dict:
             attrs["maxLength"] = field_spec_dict["maxLength"]
+        if "slugSrc" in field_spec_dict:
+            attrs["slugSrc"] = field_spec_dict.get("slugSrc")
 
     return t, attrs
 
@@ -104,8 +121,9 @@ def field_specs_from_type_spec_dict(type_spec_dict, type_name):
                 + f" in type: {type_name}"
             )
 
+        constructor = get_field_spec_constructor(t)
         result.append(
-            FieldSpec(
+            constructor(
                 default_value=_default_value(field_spec_dict),
                 description=_description(field_spec_dict),
                 field_type=t,
@@ -117,6 +135,18 @@ def field_specs_from_type_spec_dict(type_spec_dict, type_name):
             )
         )
     return result
+
+
+def get_field_spec_constructor(t):
+    return (
+        FkFieldSpec
+        if t in ("fk", "relatedSet")
+        else SlugFieldSpec
+        if t in ("slug")
+        else FormFieldSpec
+        if t in ("form")
+        else FieldSpec
+    )
 
 
 def input_is_used_for_output(input_field_spec, output_field_spec):
