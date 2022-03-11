@@ -10,7 +10,7 @@ from django.db import models
 
 from app.models import Entity
 
-{% for item_list in res.item_lists_provided %}
+{% for item_list in _.item_lists_provided %}
 class YellowTulip(Entity):
 {{ sections.model_fields(item_list)}}
 

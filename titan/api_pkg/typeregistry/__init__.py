@@ -39,3 +39,4 @@ class ExtendTypeReg:
     item_lists = P.children(has, "item~list")
     item_types = P.children(has, "item~type")
     get_item_by_name = MemFun(props.get_item_by_name)
+    get_item_list_by_name = MemFun(props.get_item_list_by_name)

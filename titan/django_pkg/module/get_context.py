@@ -1,6 +1,6 @@
 import os
 
-from moonleap import u0
+import ramda as R
 from moonleap.utils.case import sn
 from titan.django_pkg.graphene_django.utils import find_module_that_provides_item_list
 
@@ -60,6 +60,7 @@ def _model(field, item_name):
         args = [
             field.target,
             *([] if field.through == "+" else [f'through="{field.through}"']),
+            *([] if field.required else ["blank=True"]),
             *related_name,
             *unique,
             *help_text,
@@ -158,6 +159,17 @@ def get_context(module):
     _ = lambda: None
     _.django_app = module.django_app
 
+    def comp(lhs, rhs):
+        for fk_field_spec in lhs.type_spec.get_field_specs(["fk", "relatedSet"]):
+            if fk_field_spec.target == rhs.type_spec.type_name:
+                return +1
+        for fk_field_spec in rhs.type_spec.get_field_specs(["fk", "relatedSet"]):
+            if fk_field_spec.target == lhs.type_spec.type_name:
+                return -1
+        return 0
+
+    _.item_lists_provided = R.sort(comp, module.item_lists_provided)
+
     class Sections:
         def model_imports(self, item_list):
             result = []
@@ -205,4 +217,4 @@ def get_context(module):
 
             return os.linesep.join(result)
 
-    return dict(sections=Sections())
+    return dict(sections=Sections(), _=_)
