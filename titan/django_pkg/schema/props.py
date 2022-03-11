@@ -13,11 +13,10 @@ def get_context(item_type, api_module):
     _.django_app = api_module.django_app
     _.type_spec = item_type.type_spec
     _.fk_field_specs = [x for x in _.type_spec.get_field_specs(["fk"]) if not x.through]
+    _.fk_field_specs_with_id = [x for x in _.fk_field_specs if x.add_id_field]
     _.private_field_specs = [x for x in _.type_spec.field_specs if x.private]
     _.form_type_spec = (
-        type_spec_store().get(item_type.form_type.name, None)
-        if item_type.form_type
-        else None
+        type_spec_store().get(item_type.form_type.name) if item_type.form_type else None
     )
     _.form_field_specs = (
         [x for x in _.form_type_spec.field_specs if not x.private]
@@ -27,12 +26,9 @@ def get_context(item_type, api_module):
 
     class Sections:
         def graphql_type_imports(self):
-            try:
-                module = find_module_that_provides_item_list(
-                    _.django_app, _.item_type.name
-                )
-            except LookupError:
-                return ""
+            module = find_module_that_provides_item_list(
+                _.django_app, _.item_type.name, raise_if_not_found=False
+            )
 
             return (
                 f"from {sn(module.name)}.models import {_.item_type.name}"
@@ -64,6 +60,16 @@ def get_context(item_type, api_module):
 
 def render_schema(api_module, item_type, write_file, render_template):
     template_path = Path(__file__).parent / "templates"
+    render_templates(template_path, get_context=lambda x: get_context(x, api_module))(
+        item_type,
+        write_file,
+        render_template,
+        output_path=api_module.merged_output_path,
+    )
+
+
+def render_form_schema(api_module, item_type, write_file, render_template):
+    template_path = Path(__file__).parent / "templates_form"
     render_templates(template_path, get_context=lambda x: get_context(x, api_module))(
         item_type,
         write_file,

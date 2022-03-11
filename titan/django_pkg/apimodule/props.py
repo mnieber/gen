@@ -1,7 +1,8 @@
 from moonleap.render.template_renderer import render_templates
 from titan.django_pkg.apimutation.props import render_mutation_endpoint
 from titan.django_pkg.apiquery.props import render_query_endpoint
-from titan.django_pkg.schema.props import render_schema
+from titan.django_pkg.graphene_django.utils import find_module_that_provides_item_list
+from titan.django_pkg.schema.props import render_form_schema, render_schema
 
 
 def render(self, write_file, render_template, output_path):
@@ -13,7 +14,16 @@ def render(self, write_file, render_template, output_path):
         render_mutation_endpoint(self, mutation, write_file, render_template)
 
     for item_type in self.graphql_api.type_reg.item_types:
-        render_schema(self, item_type, write_file, render_template)
+        if find_module_that_provides_item_list(
+            self.django_app, item_type.name, raise_if_not_found=False
+        ):
+            render_schema(self, item_type, write_file, render_template)
+
+    for item_type in self.graphql_api.item_types_posted:
+        if find_module_that_provides_item_list(
+            self.django_app, item_type.name, raise_if_not_found=False
+        ):
+            render_form_schema(self, item_type, write_file, render_template)
 
     for template_dir, get_context, skip_render in self.template_dirs:
         if not skip_render or not skip_render(self):

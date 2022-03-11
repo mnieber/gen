@@ -3,10 +3,7 @@ import os
 from moonleap.typespec.field_spec import input_is_used_for_output
 from moonleap.utils.case import sn
 from moonleap.utils.codeblock import CodeBlock
-from titan.django_pkg.graphene_django.utils import (
-    get_django_model_imports,
-    get_graphene_type_imports,
-)
+from titan.django_pkg.graphene_django.utils import get_django_model_imports
 
 
 def _get_resolve_expression(query, field_spec):
@@ -49,7 +46,6 @@ def get_context(query, api_module):
         def query_imports(self):
             result = []
             type_specs = [_.outputs_type_spec]
-            result.extend(get_graphene_type_imports(type_specs))
             result.extend(get_django_model_imports(_.django_app, type_specs))
 
             return os.linesep.join(result)

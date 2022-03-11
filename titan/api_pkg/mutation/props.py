@@ -56,3 +56,12 @@ def outputs_type_spec(self):
 
 def posts_item(self, item_name):
     return [x for x in self.items_posted if x.item_name == item_name]
+
+
+def graphql_api_item_types_posted(self):
+    result = list()
+    for mutation in self.mutations:
+        for item_posted in mutation.items_posted:
+            if item_posted.item_type not in result:
+                result.append(item_posted.item_type)
+    return result

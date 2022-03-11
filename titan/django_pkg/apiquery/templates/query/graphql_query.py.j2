@@ -2,7 +2,7 @@
 import graphene
 from graphene.types.generic import GenericScalar
 {% end_clean_up_py_imports %}
-
+from api.types import *
 {{ sections.query_imports() }}
 
 class {{ res.name | u0 }}Query:

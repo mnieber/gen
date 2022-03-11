@@ -33,6 +33,14 @@ class FieldSpec:
         return self.field_type_attrs.get("relatedOutput")
 
     @property
+    def has_related_set(self):
+        return self.field_type_attrs.get("hasRelatedSet")
+
+    @property
+    def add_id_field(self):
+        return self.field_type_attrs.get("addIdField")
+
+    @property
     def short_name(self):
         return l0(chop_prefix(self.name, self.related_output or ""))
 
@@ -57,6 +65,7 @@ def _field_type_and_attrs(field_spec_dict):
         target = attrs["target"] = field_spec_dict["target"]
         _check_target(target)
         attrs["hasRelatedSet"] = field_spec_dict.get("hasRelatedSet", True)
+        attrs["addIdField"] = field_spec_dict.get("addIdField", False)
         if "onDelete" in field_spec_dict:
             attrs["onDelete"] = field_spec_dict["onDelete"]
     elif t == "relatedSet":

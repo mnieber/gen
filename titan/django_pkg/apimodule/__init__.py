@@ -7,6 +7,7 @@ from moonleap.verbs import has
 from titan.django_pkg.djangoapp import DjangoApp
 
 from . import props
+from .get_context import get_context
 from .resources import ApiModule  # noqa
 
 
@@ -14,7 +15,7 @@ from .resources import ApiModule  # noqa
 def create_api_module(term):
     module = ApiModule(name=kebab_to_camel(term.data))
     module.output_path = sn(module.name)
-    module.add_template_dir(Path(__file__).parent / "templates")
+    module.add_template_dir(Path(__file__).parent / "templates", get_context)
     return module
 
 
@@ -27,3 +28,4 @@ class ExtendDjangoApp:
 class ExtendApiModule:
     render = MemFun(props.render)
     graphql_api = P.child(has, "graphql:api")
+    django_app = P.parent("django-app", has)

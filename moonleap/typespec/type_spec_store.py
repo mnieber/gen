@@ -50,7 +50,7 @@ class TypeSpecStore:
             if field_spec.field_type == "relatedSet" and not field_spec.through:
                 continue
 
-            if field_spec.field_type_attrs.get("hasRelatedSet"):
+            if field_spec.has_related_set:
                 add_related_set_field_to_type_spec(
                     self.get(field_spec.target),
                     is_private=field_spec.private,

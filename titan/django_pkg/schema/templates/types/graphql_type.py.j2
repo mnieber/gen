@@ -7,7 +7,7 @@ from graphene_django.types import DjangoObjectType
 {% end_clean_up_py_imports %}
 
 class YellowTulipType(DjangoObjectType):
-{% for fk_field_spec in _.fk_field_specs %}
+{% for fk_field_spec in _.fk_field_specs_with_id %}
     red_rose_id = graphene.ID()
 {% endfor %}
 
@@ -15,7 +15,7 @@ class YellowTulipType(DjangoObjectType):
         model = YellowTulip
         {{ sections.graphql_type_exclude() }}
 
-{% for fk_field_spec in _.fk_field_specs %}
+{% for fk_field_spec in _.fk_field_specs_with_id %}
     def resolve_red_rose_id(self, info):
         return self.red_rose.id
 

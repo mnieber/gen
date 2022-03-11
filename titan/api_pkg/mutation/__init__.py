@@ -72,6 +72,7 @@ rules = [
 @extend(GraphqlApi)
 class ExtendGraphqlApi:
     mutations = P.children(has, "mutation")
+    item_types_posted = Prop(props.graphql_api_item_types_posted)
 
 
 @extend(Mutation)
