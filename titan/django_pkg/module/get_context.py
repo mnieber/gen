@@ -147,7 +147,7 @@ def _model(field, item_name):
         return f"models.EmailField({', '.join(args)})"
 
     if t == "date":
-        args = [*unique, *help_text]
+        args = [*null_blank, *unique, *help_text]
         return f"models.DateField({', '.join(args)})"
 
     raise Exception(f"Unknown model field type: {t}")

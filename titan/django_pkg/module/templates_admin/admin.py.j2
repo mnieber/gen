@@ -1,18 +1,19 @@
 {% magic_with item_list.item_name as yellowTulip %}
-{% magic_with inline_model as redRose %}
+{% magic_with inline_model_field.target as redRose %}
 from django.contrib import admin
 
 from {{ res.name|sn }} import models
 
 {% for item_list in res.item_lists_provided %}
-{% for inline_model in sections.get_inline_models(item_list) %}
-class RedRoseInline(admin.TabularInline):
-    model = models.RedRose
+{% for inline_model_field in sections.get_inline_model_fields(item_list) %}
+class YellowTulipRedRoseInline(admin.TabularInline):
+    model = models.YellowTulipRedRose
     extra = 1
+{{ sections.inline_model_autocomplete_fields(inline_model_field) }}
 {% endfor %}
 
 class YellowTulipAdmin(admin.ModelAdmin):
-    {{ sections.admin_body(item_list) }}
+{{ sections.admin_body(item_list) }}
 {% endfor %}
 
 {% for item_list in res.item_lists_provided %}
