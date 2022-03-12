@@ -21,6 +21,10 @@ class FieldSpec:
         return self.field_type_attrs.get("target")
 
     @property
+    def index(self):
+        return self.field_type_attrs.get("index", False)
+
+    @property
     def related_output(self):
         return self.field_type_attrs.get("relatedOutput")
 
@@ -48,8 +52,8 @@ class FkFieldSpec(FieldSpec):
         return self.field_type_attrs.get("through")
 
     @property
-    def show_inline_in_admin(self):
-        return self.field_type_attrs.get("showInlineInAdmin")
+    def admin_inline(self):
+        return self.field_type_attrs.get("adminInline")
 
     @property
     def has_related_set(self):
@@ -86,15 +90,18 @@ def _field_type_and_attrs(field_spec_dict):
     elif t == "relatedSet":
         target = attrs["target"] = field_spec_dict["target"]
         _check_target(target)
-        attrs["showInlineInAdmin"] = field_spec_dict.get("showInlineInAdmin", True)
+        attrs["adminInline"] = field_spec_dict.get("adminInline", True)
         if "through" in field_spec_dict:
             attrs["through"] = field_spec_dict["through"]
     elif t == "form":
         target = attrs["target"] = field_spec_dict["target"]
         _check_target(target)
     else:
+        attrs["index"] = field_spec_dict.get("index", False)
         if "maxLength" in field_spec_dict:
             attrs["maxLength"] = field_spec_dict["maxLength"]
+        if "choices" in field_spec_dict:
+            attrs["choices"] = field_spec_dict["choices"]
         if "slugSrc" in field_spec_dict:
             attrs["slugSrc"] = field_spec_dict.get("slugSrc")
 

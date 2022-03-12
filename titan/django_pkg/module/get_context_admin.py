@@ -4,7 +4,7 @@ def get_context_admin(module):
             return [
                 item_list.item_type.name + x.target
                 for x in item_list.type_spec.get_field_specs(["relatedSet"])
-                if x.through and x.show_inline_in_admin
+                if x.through and x.admin_inline
             ]
 
         def admin_types(self, item_list):

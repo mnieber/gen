@@ -14,7 +14,12 @@ from app.models import Entity
 
 {% for item_list in _.item_lists_provided %}
 class YellowTulip(Entity):
-{{ sections.model_fields(item_list)}}
+    {% if sections.indexed_field_specs(item_list) %}
+    class Meta:
+        indexes = [{{ sections.indexed_field_specs(item_list) }}]
+
+    {% endif %}
+{{ sections.model_fields(item_list) }}
 
 {% if sections.slug_field_specs(item_list) %}
     def save(self, *args, **kwargs):

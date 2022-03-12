@@ -72,9 +72,14 @@ def _model(field, item_name):
         default_arg = (
             [f'default="{field.default_value}"'] if field.default_value else []
         )
+        choices = field.field_type_attrs.get("choices", [])
+        choice_items = [f'("{x}", "{x}")' for x in choices]
+        choices_arg = [f"choices=[{', '.join(choice_items)}]"] if choice_items else []
+
         if max_length is not None:
             args = [
                 f"max_length={max_length}",
+                *choices_arg,
                 *default_arg,
                 *null_blank,
                 *unique,
@@ -220,5 +225,14 @@ def get_context(module):
         def slug_field_specs(self, item_list):
             slug_field_specs = item_list.type_spec.get_field_specs("slug")
             return [x for x in slug_field_specs if x.slug_src]
+
+        def indexed_field_specs(self, item_list):
+            return ", ".join(
+                [
+                    f'models.Index(fields=["{x.name}"])'
+                    for x in item_list.type_spec.field_specs
+                    if x.index
+                ]
+            )
 
     return dict(sections=Sections(), _=_)
