@@ -8,10 +8,10 @@ def get_context(module):
     _.django_app = module.django_app
 
     def comp(lhs_model, rhs_model):
-        for fk_field in lhs_model.fk_fields:
+        for fk_field in lhs_model.fk_fields + lhs_model.many_to_many_fields:
             if fk_field.target == rhs_model.name:
                 return +1
-        for fk_field in rhs_model.fk_fields:
+        for fk_field in rhs_model.fk_fields + rhs_model.many_to_many_fields:
             if fk_field.target == lhs_model.name:
                 return -1
         return 0

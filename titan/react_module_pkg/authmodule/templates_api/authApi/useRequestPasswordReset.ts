@@ -2,7 +2,6 @@ import { useMutation } from 'react-query';
 import { States } from 'src/api/authApi/states';
 import { isError } from 'src/api/authApi/utils';
 import { AuthState } from 'src/auth/AuthState';
-import { useAuthStore } from 'src/auth/components/useAuthStore';
 import { doQuery } from 'src/utils/graphqlClient';
 import { ObjT } from 'src/utils/types';
 
@@ -39,7 +38,6 @@ export function requestPasswordReset(args: ArgsT) {
 }
 
 export const useRequestPasswordReset = (authState?: AuthState) => {
-  const authStore = useAuthStore();
   const queryName = 'requestPasswordReset';
 
   return useMutation([queryName], requestPasswordReset, {
@@ -48,7 +46,6 @@ export const useRequestPasswordReset = (authState?: AuthState) => {
     },
     onSuccess: (data: ObjT) => {
       if (authState) authState.onUpdated(queryName, data);
-      authStore.onRequestPasswordReset(data);
     },
     onError: (error: Error) => {
       if (authState) authState.onErrored(queryName, error.message);

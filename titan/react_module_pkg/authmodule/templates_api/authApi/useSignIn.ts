@@ -2,7 +2,6 @@ import { useMutation } from 'react-query';
 import { States } from 'src/api/authApi/states';
 import { hasErrorCode, isError } from 'src/api/authApi/utils';
 import { AuthState } from 'src/auth/AuthState';
-import { useAuthStore } from 'src/auth/components/useAuthStore';
 import { doQuery, setToken } from 'src/utils/graphqlClient';
 import { ObjT } from 'src/utils/types';
 
@@ -58,7 +57,6 @@ export function signIn(args: ArgsT) {
 }
 
 export const useSignIn = (authState?: AuthState) => {
-  const authStore = useAuthStore();
   const queryName = 'signIn';
 
   return useMutation([queryName], signIn, {
@@ -67,7 +65,6 @@ export const useSignIn = (authState?: AuthState) => {
     },
     onSuccess: (data: ObjT) => {
       if (authState) authState.onUpdated(queryName, data);
-      authStore.onSignIn(data);
     },
     onError: (error: Error) => {
       if (authState) authState.onErrored(queryName, error.message);

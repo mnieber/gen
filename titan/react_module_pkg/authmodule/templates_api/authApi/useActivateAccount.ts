@@ -2,7 +2,6 @@ import { useMutation } from 'react-query';
 import { States } from 'src/api/authApi/states';
 import { hasErrorCode, isError } from 'src/api/authApi/utils';
 import { AuthState } from 'src/auth/AuthState';
-import { useAuthStore } from 'src/auth/components/useAuthStore';
 import { doQuery } from 'src/utils/graphqlClient';
 import { ObjT } from 'src/utils/types';
 
@@ -65,7 +64,6 @@ export function activateAccount(args: ArgsT) {
 }
 
 export const useActivateAccount = (authState?: AuthState) => {
-  const authStore = useAuthStore();
   const queryName = 'activateAccount';
 
   return useMutation([queryName], activateAccount, {
@@ -74,7 +72,6 @@ export const useActivateAccount = (authState?: AuthState) => {
     },
     onSuccess: (data: ObjT) => {
       if (authState) authState.onUpdated(queryName, data);
-      authStore.onActivateAccount(data);
     },
     onError: (error: Error) => {
       if (authState) authState.onErrored(queryName, error.message);
