@@ -14,7 +14,7 @@ class TypeSpec:
     display_item_by: T.Optional[str] = None
     query_item_by: T.Optional[T.List[str]] = None
     query_items_by: T.Optional[T.List[str]] = None
-    admin_search_by: T.Optional[T.List[str]] = None
+    admin_search_by: T.Optional[T.List[str]] = field(default_factory=list)
 
     def get_field_specs(self, field_types, exclude_names=None):
         return [

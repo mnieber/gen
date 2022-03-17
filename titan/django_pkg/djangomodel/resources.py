@@ -40,8 +40,6 @@ class DjangoModelField(Resource):
             *self.arg_help_text(),
         ]
         args_str = ", ".join(args)
-        if args_str.startswith(","):
-            __import__("pudb").set_trace()
         return f"models.{self.field_name}({args_str})"
 
 
