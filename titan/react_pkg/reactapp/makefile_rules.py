@@ -2,12 +2,12 @@ from moonleap import chop0
 from titan.tools_pkg.makefile import MakefileRule
 
 
-def get_runserver():
+def get_run_server():
     return MakefileRule(
-        name="runserver",
+        name="run-server",
         text=chop0(
             """
-runserver:
+run-server:
 \tyarn start
 """
         ),

@@ -1,1 +1,1 @@
-{{ res.name | l0 }}.ts
+{{ res.name }}T.ts

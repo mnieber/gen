@@ -19,7 +19,7 @@ def item_ts_var(item):
 
 
 def item_type_ts_type_import_path(item_type):
-    return f"src/api/types/{l0(item_type.name)}"
+    return f"src/api/types/{item_type.name}T"
 
 
 def item_list_ts_type(item_list):

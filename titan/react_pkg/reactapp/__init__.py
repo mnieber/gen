@@ -40,7 +40,7 @@ def create_react_app(term):
     add(react_app, load_node_package_config(__file__))
     add(react_app, docker_compose_configs.get(is_dev=True))
     add(react_app, docker_compose_configs.get(is_dev=False))
-    add(react_app, makefile_rules.get_runserver())
+    add(react_app, makefile_rules.get_run_server())
     add(react_app, makefile_rules.get_install())
     return react_app
 

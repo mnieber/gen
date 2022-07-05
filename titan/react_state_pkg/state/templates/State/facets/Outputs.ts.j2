@@ -1,6 +1,6 @@
 {% magic_with pipeline.output.item_name as redRose %}
 {% for pipeline in _.pipelines %}
-import { RedRoseT, RedRoseByIdT } from "src/api/types/redRose";
+import { RedRoseT, RedRoseByIdT } from "src/api/types/RedRoseT";
 {% endfor %}
 import { listToItemById } from 'src/utils/ids';
 import { data, output } from 'skandha';

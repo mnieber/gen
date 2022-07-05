@@ -58,7 +58,7 @@ def get_context(form_view):
                 item_name = l0(field_spec.target)
                 root.abc(
                     f"import {{ {ts_type_from_item_name(item_name)} }} "
-                    + f"from 'src/api/types/{item_name}'"
+                    + f"from 'src/api/types/{field_spec.target}T'"
                 )
             return root.result
 
