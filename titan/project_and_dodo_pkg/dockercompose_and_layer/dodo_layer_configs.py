@@ -5,7 +5,7 @@ from titan.dodo_pkg.layer import LayerConfig
 def get(docker_compose):
     def inner():
         project = docker_compose.project
-        name = sn(project.name) + "_dev"
+        name = sn(project.kebab_name) + "-dev"
         return {
             "DOCKER_COMPOSE": {
                 "compose_project_name": name,

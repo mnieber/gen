@@ -8,7 +8,7 @@ from .resources import Project
 
 @create("project")
 def create_project(term):
-    project = Project(name=kebab_to_camel(term.data))
+    project = Project(name=kebab_to_camel(term.data), kebab_name=term.data)
     project.output_path = "src/"
     return project
 

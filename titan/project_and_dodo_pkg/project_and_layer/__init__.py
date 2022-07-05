@@ -11,7 +11,7 @@ rules = [(("project", has, "config:layer"), feeds("dodo_layer_configs"))]
 
 @rule("project", has, "config:layer")
 def project_has_config_layer(project, config_layer):
-    add(project, dodo_config_layers.get(project))
+    add(project, dodo_config_layers.get_for_project(project))
 
     return [create_forward(project, "has", f"{project.meta.term.data}:commands-dir")]
 

@@ -27,7 +27,7 @@ def get_docker_options(service):
             #
             DOCKER_OPTIONS={
                 #
-                "*": {"container": f"{sn(project.name)}_dev_{service.name}_1"}
+                "*": {"container": f"{sn(project.kebab_name)}-dev_{service.name}_1"}
             }
         )
 

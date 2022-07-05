@@ -7,14 +7,14 @@ def get(service, is_dev):
         if not service.dockerfile and not service.docker_image:
             return {}
 
-        image_postfix = "_dev" if is_dev else ""
+        image_postfix = "-dev" if is_dev else ""
 
         port = service.port or "80"
         body = dict(
             depends_on=[],
             ports=[f"{port}:{port}"],
             image=(
-                f"{sn(service.project.name)}_{service.name}{image_postfix}"
+                f"{sn(service.project.kebab_name)}-{service.name}{image_postfix}"
                 if service.dockerfile
                 else service.docker_image.name
             ),

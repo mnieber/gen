@@ -1,7 +1,7 @@
 from titan.dodo_pkg.layer import LayerConfig
 
 
-def get(service_name):
+def get_for_project(service_name):
     def inner():
         return dict(
             MENU=dict(

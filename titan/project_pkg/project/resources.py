@@ -6,3 +6,4 @@ from moonleap import Resource
 @dataclass
 class Project(Resource):
     name: str
+    kebab_name: str

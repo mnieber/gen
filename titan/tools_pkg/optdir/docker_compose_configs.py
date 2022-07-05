@@ -8,7 +8,7 @@ from titan.project_pkg.dockercompose import DockerComposeConfig
 def _make_abs(service, p):
     result = Path(p)
     if not Path(os.path.expandvars(p)).is_absolute():
-        base_path = Path("/opt") / sn(service.project.name) / service.name
+        base_path = Path("/opt") / service.project.kebab_name / service.name
         result = base_path / p
     return result
 

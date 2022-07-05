@@ -1,1 +1,1 @@
-{{res.project.name|sn}}.code-workspace.j2
+{{res.project.kebab_name}}.code-workspace.j2

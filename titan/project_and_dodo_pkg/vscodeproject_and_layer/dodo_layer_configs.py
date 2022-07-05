@@ -14,7 +14,9 @@ def get(project):
     if not base_dir:
         return None
 
-    code_workspace_fn = os.path.join(base_dir, f"{sn(project.name)}.code-workspace")
+    code_workspace_fn = os.path.join(
+        base_dir, f"{sn(project.kebab_name)}.code-workspace"
+    )
 
     def inner():
         return dict(ROOT=dict(aliases=dict(code=f"exec 'code {code_workspace_fn}'")))
