@@ -16,6 +16,7 @@ def get(docker_compose):
                 "aliases": {
                     "up": 'docker-compose "up --detach"',
                     "down": "docker-compose down",
+                    "down-volumes": 'docker-compose "down --volumes"',
                     "build": "docker-compose build",
                 }
             },
