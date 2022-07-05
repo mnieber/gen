@@ -7,7 +7,7 @@ def get():
             ROOT=dict(
                 aliases=dict(
                     install=r"make install",
-                    serve=r"make runserver",
+                    serve=r"make run-server",
                 ),
                 decorators=dict(docker=["make"]),
             ),

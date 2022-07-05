@@ -2,24 +2,24 @@ from moonleap import chop0
 from titan.tools_pkg.makefile import MakefileRule
 
 
-def get_runserver():
+def get_run_server():
     return MakefileRule(
-        name="runserver",
+        name="run-server",
         text=chop0(
             """
-runserver:
+run-server:
 \tdocker-entrypoint.sh strapi develop
 """
         ),
     )
 
 
-def get_debugserver():
+def get_debug_server():
     return MakefileRule(
-        name="debugserver",
+        name="debug-server",
         text=chop0(
             """
-debugserver:
+debug-server:
 \t/usr/local/bin/node --inspect=0.0.0.0:9229 --no-lazy /usr/local/bin/strapi develop
 """
         ),
@@ -31,10 +31,9 @@ def get_createdb():
         name="create-db",
         text=chop0(
             """
-create-db:
-\tenv PGPASSWORD=dev psql -h postgres -d postgres -U postgres -c "CREATE USER strapi WITH CREATEDB PASSWORD 'dev';"
-\tenv PGPASSWORD=dev psql -h postgres -d postgres -U strapi -c "CREATE DATABASE strapi;"
-\tenv PGPASSWORD=dev psql -h postgres -d postgres -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE strapi TO strapi;"
+\tPGPASSWORD=${POSTGRES_PASSWORD} psql -h postgres -d postgres -U postgres -c "CREATE USER ${DJANGO_DATABASE_USER} WITH CREATEDB PASSWORD '${DJANGO_DATABASE_PASSWORD}';" || true
+\tPGPASSWORD=${POSTGRES_PASSWORD} psql -h postgres -d postgres -U ${DJANGO_DATABASE_USER} -c "CREATE DATABASE ${DJANGO_DATABASE_NAME};" || true
+\tPGPASSWORD=${POSTGRES_PASSWORD} psql -h postgres -d postgres -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE ${DJANGO_DATABASE_NAME} TO ${DJANGO_DATABASE_USER};"
 """  # noqa: E501
         ),
     )

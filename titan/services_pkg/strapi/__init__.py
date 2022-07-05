@@ -23,8 +23,8 @@ base_tags = [("strapi", ["tool"])]
 @create("strapi")
 def create_strapi(term):
     strapi = Strapi(name="strapi")
-    add(strapi, makefile_rules.get_runserver())
-    add(strapi, makefile_rules.get_debugserver())
+    add(strapi, makefile_rules.get_run_server())
+    add(strapi, makefile_rules.get_debug_server())
     add(strapi, dodo_layer_configs.get())
     return strapi
 

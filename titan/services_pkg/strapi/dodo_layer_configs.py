@@ -6,8 +6,8 @@ def get():
         return dict(
             ROOT=dict(
                 aliases=dict(
-                    serve="make runserver",
-                    debug="make debugserver",
+                    serve="make run-server",
+                    debug="make debug-server",
                 )
             ),
         )

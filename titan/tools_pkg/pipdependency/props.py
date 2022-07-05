@@ -1,7 +1,16 @@
-def list_of_package_names(get_pkgs, add_via=True):
+import typing as T
+
+from moonleap import get_session
+
+
+def list_of_package_names(get_pkgs, add_via: T.Any = False):
     def f(self, is_dev=False):
+        nonlocal add_via
         result = []
         pkg_names = []
+
+        if add_via is None:
+            add_via = get_session().settings.get("add_via", False)
 
         for tool in self.tools:
             for pkg in get_pkgs(tool):
@@ -19,7 +28,9 @@ def list_of_package_names(get_pkgs, add_via=True):
 
 
 def get_pip_pkg_names():
-    return list_of_package_names(lambda tool: tool.pip_dependencies.merged)
+    return list_of_package_names(
+        lambda tool: tool.pip_dependencies.merged, add_via=None
+    )
 
 
 def get_pip_requirements():

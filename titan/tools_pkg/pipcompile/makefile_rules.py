@@ -8,8 +8,9 @@ def get_pipcompile():
         text=chop0(
             """
 pip-compile:
-\tpip-compile requirements.in -o requirements.txt
+\tpip-compile requirements.base.in -o requirements.base.txt
 \tpip-compile requirements.dev.in -o requirements.dev.txt
+\tpip-compile requirements.prod.in -o requirements.prod.txt
 """
         ),
     )
