@@ -1,4 +1,5 @@
 import ramda as R
+from moonleap import get_session
 from moonleap.utils.merge_into_config import merge_into_config
 
 
@@ -34,3 +35,9 @@ def get_docker_compose_config(self, is_dev, is_override):
         merge_into_config(config, global_body)
 
     return config
+
+
+def get_docker_compose_override_fn(self):
+    return get_session().get_tweak_or(
+        "docker-compose.dev.override.yml", ["docker_compose_override_fn"]
+    )

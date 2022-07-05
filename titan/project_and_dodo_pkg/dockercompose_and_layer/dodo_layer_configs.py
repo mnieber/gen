@@ -6,11 +6,12 @@ def get(docker_compose):
     def inner():
         project = docker_compose.project
         name = sn(project.kebab_name) + "-dev"
+
         return {
             "DOCKER_COMPOSE": {
                 "compose_project_name": name,
                 "cwd": r"${/ROOT/src_dir}",
-                "files": ["docker-compose.dev.yml", "docker-compose.dev.override.yml"],
+                "files": ["docker-compose.dev.yml", docker_compose.override_fn],
             },
             "ROOT": {
                 "aliases": {

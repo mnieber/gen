@@ -3,6 +3,7 @@ from pathlib import Path
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
+    Prop,
     StoreOutputPaths,
     StoreTemplateDirs,
     create,
@@ -34,6 +35,7 @@ def create_docker_compose(term):
 @extend(DockerCompose)
 class ExtendDockerCompose(StoreOutputPaths, StoreTemplateDirs):
     get_config = MemFun(props.get_docker_compose_config)
+    override_fn = Prop(props.get_docker_compose_override_fn)
 
 
 @extend(Tool)
