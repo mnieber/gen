@@ -10,8 +10,8 @@ from moonleap.outputpath import StoreOutputPaths  # noqa
 from moonleap.parser.block_collector import get_blocks  # noqa
 from moonleap.parser.term import Term, word_to_term  # noqa
 from moonleap.render.render_resources import render_resources  # noqa
+from moonleap.render.render_templates import render_templates  # noqa
 from moonleap.render.storetemplatedirs import StoreTemplateDirs  # noqa
-from moonleap.render.template_renderer import render_templates  # noqa
 from moonleap.report.report_resources import report_resources  # noqa
 from moonleap.resource import Resource  # noqa
 from moonleap.resource.forward import create_forward  # noqa

@@ -44,17 +44,22 @@ def render_templates(template_path, get_context=None):
         for template_fn in template_paths:
             if template_fn.suffix == ".fn":
                 continue
-            if not template_fn.is_dir():
-                output_fn = Path(output_path) / _resolve_output_fn(
-                    templates_dir,
-                    template_fn.relative_to(templates_dir),
-                    **context_kwargs
-                )
-                write_file(
-                    output_fn,
-                    render_template(
+
+            output_fn = Path(output_path) / _resolve_output_fn(
+                templates_dir, template_fn.relative_to(templates_dir), **context_kwargs
+            )
+            is_dir = template_fn.is_dir()
+
+            write_file(
+                output_fn,
+                content=(
+                    ""
+                    if is_dir
+                    else render_template(
                         template_fn, settings=get_session().settings, **context_kwargs
-                    ),
-                )
+                    )
+                ),
+                is_dir=is_dir,
+            )
 
     return render

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from moonleap.render.template_renderer import render_templates
+from moonleap.render.render_templates import render_templates
 from titan.react_module_pkg.apimutation.props import render_mutation_endpoint
 from titan.react_module_pkg.apiquery.props import render_query_endpoint
 from titan.react_module_pkg.schema.props import render_schema

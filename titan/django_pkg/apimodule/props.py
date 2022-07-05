@@ -1,4 +1,4 @@
-from moonleap.render.template_renderer import render_templates
+from moonleap.render.render_templates import render_templates
 from titan.django_pkg.apimutation.props import render_mutation_endpoint
 from titan.django_pkg.apiquery.props import render_query_endpoint
 from titan.django_pkg.graphene_django.utils import find_module_that_provides_item_list

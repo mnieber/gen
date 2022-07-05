@@ -1,4 +1,4 @@
-from moonleap.render.template_renderer import render_templates
+from moonleap.render.render_templates import render_templates
 from moonleap.resource.memfield import MemField
 from moonleap.resource.memfun import MemFun
 
