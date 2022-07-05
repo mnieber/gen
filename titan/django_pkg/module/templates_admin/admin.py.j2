@@ -12,12 +12,9 @@ class YellowTulipRedRoseInline(admin.TabularInline):
 {{ sections.inline_model_autocomplete_fields(inline_model_field) }}
 {% endfor %}
 
+@admin.register(models.YellowTulip)
 class YellowTulipAdmin(admin.ModelAdmin):
 {{ sections.admin_body(item_list) }}
-{% endfor %}
-
-{% for item_list in res.item_lists_provided %}
-admin.site.register(models.YellowTulip, YellowTulipAdmin)
 {% endfor %}
 {% end_magic_with %}
 {% end_magic_with %}

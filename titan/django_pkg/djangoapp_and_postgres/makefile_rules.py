@@ -8,9 +8,9 @@ def get_create_db():
         text=chop0(
             """
 create-db:
-\tenv PGPASSWORD=dev psql -h postgres -d postgres -U postgres -c "CREATE USER django WITH CREATEDB PASSWORD 'dev';"
-\tenv PGPASSWORD=dev psql -h postgres -d postgres -U django -c "CREATE DATABASE django;"
-\tenv PGPASSWORD=dev psql -h postgres -d postgres -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE django TO django;"
+\tPGPASSWORD=${POSTGRES_PASSWORD} psql -h ${POSTGRES_HOST} -d postgres -U postgres -c "CREATE USER ${DJANGO_DATABASE_USER} WITH CREATEDB PASSWORD '${DJANGO_DATABASE_PASSWORD}';" || true
+\tPGPASSWORD=${POSTGRES_PASSWORD} psql -h ${POSTGRES_HOST} -d postgres -U ${DJANGO_DATABASE_USER} -c "CREATE DATABASE ${DJANGO_DATABASE_NAME};" || true
+\tPGPASSWORD=${POSTGRES_PASSWORD} psql -h ${POSTGRES_HOST} -d postgres -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE ${DJANGO_DATABASE_NAME} TO ${DJANGO_DATABASE_USER};"
 """  # noqa: E501
         ),
     )
@@ -22,7 +22,7 @@ def get_pgcli():
         text=chop0(
             """
 pgcli:
-\tpgcli `./manage.py sqldsn --quiet --style=uri`
+\tpgcli `python manage.py sqldsn --quiet --style=uri`
 """  # noqa: E501
         ),
     )

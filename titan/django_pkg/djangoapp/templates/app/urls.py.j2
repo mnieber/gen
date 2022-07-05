@@ -1,15 +1,26 @@
+import typing as T
+
 {% clean_up_py_imports %}
 from django.conf import settings
-from django.conf.urls.static import static
-from django.urls import path
+from django.contrib import admin
+from django.urls import include, path
 from django.views.decorators.csrf import csrf_exempt
 {% for url_import in res.config.urls_imports %}
 {{ url_import }}
 {% endfor %}
 {% end_clean_up_py_imports %}
 
-urlpatterns = [
-{% for url in res.config.urls %}
-    {{ url}},
-{% endfor %}
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+from app.utils.serve_static import serve_static
+
+urlpatterns = (
+    T.cast(
+        T.Any,
+        [
+            path(r"admin/", admin.site.urls),
+            {% for url in res.config.urls %}
+                {{ url}},
+            {% endfor %}
+        ],
+    )
+    + serve_static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+)

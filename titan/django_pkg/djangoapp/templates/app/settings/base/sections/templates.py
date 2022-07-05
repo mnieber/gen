@@ -1,7 +1,15 @@
+import os
+
+from .paths import APP_DIR
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            # Strange enough, without adding "/app/src/app/templates" to DIRS
+            # Django won't use this directory, even though "app" is in INSTALLED_APPS.
+            os.path.join(APP_DIR, "templates"),
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

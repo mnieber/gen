@@ -213,7 +213,7 @@ class DjangoModel(Resource):
 
 def import_type_spec(type_spec, django_model):
     django_model.name = type_spec.type_name
-    django_model.display_field_name = type_spec.display_item_by
+    django_model.display_field_name = type_spec.display_item_by or "id"
 
     for field_spec in type_spec.field_specs:
         args = dict(
@@ -238,7 +238,11 @@ def import_type_spec(type_spec, django_model):
                     on_delete=_on_delete(field_spec),
                     admin_inline=field_spec.admin_inline,
                     related_name=(
-                        f"{sn(l0(type_spec.type_name))}_set"
+                        sn(
+                            field_spec.field_type_attrs.get(
+                                "relatedSetName", f"{l0(type_spec.type_name)}_set"
+                            )
+                        )
                         if field_spec.has_related_set
                         else "+"
                     ),
