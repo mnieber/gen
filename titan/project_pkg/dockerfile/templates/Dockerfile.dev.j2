@@ -3,7 +3,7 @@ FROM {{ res.image_name }}
 
 {{ res.custom_steps_pre_dev }}
 
-{% for PKG in res.service.get_pkg_names() %}{% if loop.first %}
+{% for PKG in res.service.get_pkg_names("prod") %}{% if loop.first %}
 # install pkg dependencies
 RUN {{ res.docker_image.install_command }} \
 {% endif %}{% if not loop.last %}
@@ -12,7 +12,7 @@ RUN {{ res.docker_image.install_command }} \
     {{ PKG }}
 {% endif %}{% endfor %}
 
-{% for PKG in res.service.get_pip_pkg_names() %}{% if loop.first %}
+{% for PKG in res.service.get_pip_pkg_names("base") %}{% if loop.first %}
 # install pip dependencies
 RUN {{ res.docker_image.pip }} install \
 {% endif %}{% if not loop.last %}
@@ -21,7 +21,7 @@ RUN {{ res.docker_image.pip }} install \
     {{ PKG }}
 {% endif %}{% endfor %}
 
-{% for PKG in res.service.get_pkg_names(is_dev=True) %}{% if loop.first %}
+{% for PKG in res.service.get_pkg_names("dev") %}{% if loop.first %}
 # install dev pkg dependencies
 RUN {{ res.docker_image.install_command }} \
 {% endif %}{% if not loop.last %}
@@ -30,7 +30,7 @@ RUN {{ res.docker_image.install_command }} \
     {{ PKG }}
 {% endif %}{% endfor %}
 
-{% for PKG in res.service.get_pip_pkg_names(is_dev=True) %}{% if loop.first %}
+{% for PKG in res.service.get_pip_pkg_names("dev") %}{% if loop.first %}
 # install dev pip dependencies
 RUN {{ res.docker_image.pip }} install \
 {% endif %}{% if not loop.last %}

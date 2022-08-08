@@ -7,10 +7,10 @@ from moonleap import Resource
 @dataclass
 class PipDependency(Resource):
     package_names: T.List[str]
-    is_dev: bool = False
+    target: str
 
 
 @dataclass
 class PipRequirement(Resource):
     package_names: T.List[str]
-    is_dev: bool = False
+    target: str

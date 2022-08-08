@@ -1,11 +1,11 @@
 from titan.project_pkg.dockercompose import DockerComposeConfig
 
 
-def get(is_dev: bool):
+def get(target: str):
     def service_body():
         body = {}
         volumes = body.setdefault("volumes", [])
-        if is_dev:
+        if target == "dev":
             volumes.append("postgres_data:/var/lib/postgresql/data")
         return body
 
@@ -13,7 +13,7 @@ def get(is_dev: bool):
         body = {}
         volumes = body.setdefault("volumes", {})
 
-        if is_dev:
+        if target == "dev":
             volumes["postgres_data"] = {}
 
         return body
@@ -21,5 +21,6 @@ def get(is_dev: bool):
     return DockerComposeConfig(
         get_service_body=lambda x, service_name: service_body(),
         get_global_body=lambda x, service_name: global_body(),
-        is_dev=is_dev,
+        target=target,
+        is_override=False,
     )

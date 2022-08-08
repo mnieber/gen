@@ -25,7 +25,7 @@ def service_has_fish(service, fish):
 def create_fish(term):
     fish = Fish(name="fish")
 
-    add(fish, PkgDependency(["fish"], is_dev=True))
+    add(fish, PkgDependency(["fish"], target="dev"))
     add(fish, opt_paths.fish_opt_path)
 
     return fish

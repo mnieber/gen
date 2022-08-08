@@ -4,7 +4,7 @@ from moonleap import get_session
 
 
 def list_of_package_names(get_pkgs, add_via: T.Any = False):
-    def f(self, is_dev=False):
+    def f(self, target):
         nonlocal add_via
         result = []
         pkg_names = []
@@ -14,7 +14,7 @@ def list_of_package_names(get_pkgs, add_via: T.Any = False):
 
         for tool in self.tools:
             for pkg in get_pkgs(tool):
-                if pkg.is_dev == is_dev:
+                if pkg.target == target:
                     for pkg_name in pkg.package_names:
                         if pkg_name not in pkg_names:
                             pkg_names.append(pkg_name)

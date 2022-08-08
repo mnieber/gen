@@ -8,12 +8,12 @@ from .resources import PipDependency, PipRequirement
 
 @create("pip-dependency")
 def create_pip_dependency(term):
-    return PipDependency([term.data])
+    return PipDependency([term.data], target="base")
 
 
 @create("dev:pip-dependency")
 def create_pip_dependency_dev(term):
-    return PipDependency([term.data], is_dev=True)
+    return PipDependency([term.data], target="dev")
 
 
 @register_add(PipDependency)

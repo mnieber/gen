@@ -29,6 +29,6 @@ def create_isort(term):
     isort = ISort(name="isort")
 
     add(isort, SetupFileConfig(setup_file_config))
-    add(isort, PipDependency(["isort"], is_dev=True))
+    add(isort, PipDependency(["isort"], target="dev"))
 
     return isort

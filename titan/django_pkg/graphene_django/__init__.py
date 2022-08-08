@@ -25,7 +25,7 @@ def create_graphene_django(term):
     graphene_django.output_path = "api"
     graphene_django.add_template_dir(Path(__file__).parent / "templates", get_context)
     add(graphene_django, django_configs.get())
-    add(graphene_django, PipRequirement(["graphene-django"]))
+    add(graphene_django, PipRequirement(["graphene-django"], target="base"))
     return graphene_django
 
 

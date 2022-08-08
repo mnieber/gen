@@ -17,6 +17,6 @@ base_tags = [("black", ["tool"])]
 def create_black(term):
     black = Black(name="black")
 
-    add(black, PipDependency(["black"], is_dev=True))
+    add(black, PipDependency(["black"], target="dev"))
 
     return black

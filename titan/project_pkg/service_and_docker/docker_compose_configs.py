@@ -2,12 +2,12 @@ from moonleap.utils.case import sn
 from titan.project_pkg.dockercompose import DockerComposeConfig
 
 
-def get(service, is_dev):
+def get(service, target):
     def inner():
         if not service.dockerfile and not service.docker_image:
             return {}
 
-        image_postfix = "-dev" if is_dev else ""
+        image_postfix = "-dev" if target == "dev" else ""
 
         port = service.port or "80"
         body = dict(
@@ -26,32 +26,33 @@ def get(service, is_dev):
                 if env_file not in env_file_section:
                     env_file_section.append(env_file)
 
-        if is_dev and service.env_files_dev:
+        if target == "dev" and service.env_files_dev:
             env_file_section = body.setdefault("env_file", [])
             for env_file in service.env_files_dev:
                 if env_file not in env_file_section:
                     env_file_section.append(env_file)
 
         volumes = body.setdefault("volumes", [])
-        if is_dev and service.dockerfile:
+        if target == "dev" and service.dockerfile:
             volumes.append(f"./{service.name}:{service.install_dir}/src")
             body["command"] = "sleep infinity"
 
         if service.dockerfile:
             build = body.setdefault("build", {})
             build["context"] = f"./{service.name}"
-            build["dockerfile"] = "Dockerfile" + (".dev" if is_dev else ".prod")
+            build["dockerfile"] = "Dockerfile" + "." + target
 
         return body
 
     return DockerComposeConfig(
         get_service_body=lambda x, service_name: inner(),
         get_global_body=lambda x, service_name: {},
-        is_dev=is_dev,
+        target=target,
+        is_override=False,
     )
 
 
-def add_depends_on(depends_on_service, is_dev):
+def add_depends_on(depends_on_service, target):
     def inner():
         body = {}
         depends_on = body.setdefault("depends_on", [])
@@ -61,5 +62,6 @@ def add_depends_on(depends_on_service, is_dev):
     return DockerComposeConfig(
         get_service_body=lambda x, service_name: inner(),
         get_global_body=lambda x, service_name: {},
-        is_dev=is_dev,
+        target=target,
+        is_override=False,
     )

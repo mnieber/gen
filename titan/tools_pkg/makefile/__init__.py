@@ -27,7 +27,7 @@ def create_makefile(term):
     makefile = Makefile(name="makefile")
     makefile.add_template_dir(Path(__file__).parent / "templates")
 
-    add(makefile, PkgDependency(["make"], is_dev=True))
+    add(makefile, PkgDependency(["make"], target="prod"))
     add(makefile, dodo_layer_configs.get())
 
     return makefile

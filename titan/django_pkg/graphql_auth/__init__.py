@@ -22,7 +22,7 @@ def create_graphql_auth(term):
     add(graphql_auth, django_configs.get())
     add(
         graphql_auth,
-        PipRequirement(["django-rtk-green"]),
+        PipRequirement(["django-rtk-green"], target="base"),
     )
     return graphql_auth
 

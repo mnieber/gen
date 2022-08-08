@@ -17,7 +17,9 @@ base_tags = [
 
 @create("dockerfile")
 def create_dockerfile(term):
-    docker_file = Dockerfile(is_dev=term.data == "dev", name="dockerfile")
+    docker_file = Dockerfile(
+        target="dev" if term.data == "dev" else "prod", name="dockerfile"
+    )
     docker_file.add_template_dir(Path(__file__).parent / "templates")
     return docker_file
 

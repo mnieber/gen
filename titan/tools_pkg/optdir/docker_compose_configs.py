@@ -28,6 +28,6 @@ def get(opt_dir):
     return DockerComposeConfig(
         get_service_body=lambda x, service_name: inner(),
         get_global_body=lambda x, service_name: {},
-        is_dev=True,
+        target="dev",
         is_override=True,
     )

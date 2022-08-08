@@ -10,8 +10,8 @@ from . import docker_compose_configs
 @rule("service")
 def service_created(service):
     if service.use_default_config:
-        add(service, docker_compose_configs.get(service, is_dev=True))
-        add(service, docker_compose_configs.get(service, is_dev=False))
+        add(service, docker_compose_configs.get(service, target="dev"))
+        add(service, docker_compose_configs.get(service, target="prod"))
 
 
 @rule("dockerfile", has, "docker-image")
@@ -21,10 +21,10 @@ def dockerfile_use_docker_image(dockerfile, docker_image):
 
 @rule("service", uses, "service")
 def service_uses_service(client_service, server_service):
-    for is_dev in (True, False):
+    for target in ("dev", "prod"):
         add(
             client_service,
-            docker_compose_configs.add_depends_on(server_service, is_dev=is_dev),
+            docker_compose_configs.add_depends_on(server_service, target=target),
         )
 
 

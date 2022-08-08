@@ -11,7 +11,7 @@ base_tags = [("pudb", ["tool"])]
 def create_pudb(term):
     pudb = Pudb(name="pudb")
 
-    add(pudb, PipRequirement(["pudb", "ipython"], is_dev=True))
+    add(pudb, PipRequirement(["pudb", "ipython"], target="dev"))
     add(pudb, opt_paths.pudb_opt_path())
     add(pudb, opt_paths.ipython_opt_path())
 

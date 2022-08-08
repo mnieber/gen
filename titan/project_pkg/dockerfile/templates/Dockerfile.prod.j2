@@ -3,7 +3,7 @@ FROM {{ res.image_name }}
 
 {{ res.custom_steps_pre }}
 
-{% for PKG in res.service.get_pkg_names() %}{% if loop.first %}
+{% for PKG in res.service.get_pkg_names("prod") %}{% if loop.first %}
 # install pkg dependencies
 RUN {{ res.docker_image.install_command }} \
 {% endif %}{% if not loop.last %}
@@ -12,7 +12,7 @@ RUN {{ res.docker_image.install_command }} \
     {{ PKG }}
 {% endif %}{% endfor %}
 
-{% for PKG in res.service.get_pip_pkg_names() %}{% if loop.first %}
+{% for PKG in res.service.get_pip_pkg_names("base") %}{% if loop.first %}
 # install pip dependencies
 RUN pip install \
 {% endif %}{% if not loop.last %}

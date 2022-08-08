@@ -12,8 +12,8 @@ postgres_env_fn = "./env/postgres.env"
 def create_postgres_service(term):
     postgres_service = create_service(term)
     postgres_service.env_files.append(postgres_env_fn)
-    add(postgres_service, docker_compose_configs.get(is_dev=True))
-    add(postgres_service, docker_compose_configs.get(is_dev=False))
+    add(postgres_service, docker_compose_configs.get("dev"))
+    add(postgres_service, docker_compose_configs.get("prod"))
     return postgres_service
 
 

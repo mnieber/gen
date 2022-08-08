@@ -6,7 +6,7 @@ from titan.project_pkg.service import Tool
 
 @dataclass
 class Dockerfile(Tool):
-    is_dev: bool = False
+    target: str
     image_name: T.Optional[str] = None
     custom_steps_pre: str = ""
     custom_steps_pre_dev: str = ""

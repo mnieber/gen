@@ -11,7 +11,7 @@ from . import props
 @dataclass
 class PkgDependency(Resource):
     package_names: T.List[str]
-    is_dev: bool = False
+    target: str
 
 
 @register_add(PkgDependency)

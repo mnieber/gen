@@ -21,5 +21,6 @@ def get(docker_image):
     return DockerComposeConfig(
         get_service_body=lambda x, service_name: get_service_body(service_name),
         get_global_body=lambda x, service_name: get_global_body(service_name),
-        is_dev=True,
+        target="dev",
+        is_override=False,
     )

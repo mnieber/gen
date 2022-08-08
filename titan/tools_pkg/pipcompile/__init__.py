@@ -29,7 +29,7 @@ def create_pip_compile(term):
     add(pip_compile, makefile_rules.get_pipcompile())
     add(pip_compile, makefile_rules.get_install())
     add(pip_compile, dodo_layer_configs.get())
-    add(pip_compile, PipDependency(["pip-tools"], is_dev=True))
+    add(pip_compile, PipDependency(["pip-tools"], target="base"))
 
     return pip_compile
 
