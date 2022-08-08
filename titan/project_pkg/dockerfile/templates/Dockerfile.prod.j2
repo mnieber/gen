@@ -23,5 +23,8 @@ RUN pip install \
 
 {{ res.custom_steps }}
 
+# Install requirements
+RUN pip install -r /app/src/.requirements/prod.txt
+
 WORKDIR {{ res.service.install_dir }}/src
 {% end_trim_newlines %}
