@@ -34,7 +34,7 @@ def process_right_column(lines):
             result.extend(reversed(all_lines))
         else:
             result.extend(reversed(prev_lines))
-            result.append(this_line)
+            result.append(this_line.rstrip())
             result.extend(reversed(next_lines))
 
     return result
