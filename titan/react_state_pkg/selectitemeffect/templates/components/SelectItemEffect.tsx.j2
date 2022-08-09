@@ -12,32 +12,25 @@ import { {{ _.item_list.item.ts_type }} } from '{{ _.item_list.item_type.ts_type
 
 type ArgsT = {
   yellowTulipsSelection: Selection;
-{% if _.route_params and sections.get_item_id() %}
-  yellowTulips: {{ _.item_list.ts_type }};
-{% endif %}
+  yellowTulips: {{ _.item_list.ts_type }};                                                          {% if _.route_params and sections.get_item_id() %}{% endif %}
 {{ sections.select_effect_args() }}
 };
 
 const f = (args: ArgsT) => {
-{% if sections.get_item_id() %}
-  {{ sections.get_item_id() }};
+  {{ sections.get_item_id() }};                                                                     {% if sections.get_item_id() %}
   if (yellowTulipId) {
     args.yellowTulipsSelection.selectItem({ itemId: yellowTulipId});
   }
-{% else %}
-  if (args.yellowTulipId) {
+  if (args.yellowTulipId) {                                                                         {% else %}
     args.yellowTulipsSelection.selectItem({ itemId: args.yellowTulipId});
-  }
-{% endif %}
+  }                                                                                                 {% endif %}
 };
 
 type PropsT = {};
 
 type DefaultPropsT = {
   yellowTulipsSelection: Selection;
-{% if _.route_params and sections.get_item_id() %}
-  yellowTulips: {{ _.item_list.ts_type }};
-{% endif %}
+  yellowTulips: {{ _.item_list.ts_type }};                                                          {% if _.route_params and sections.get_item_id() %}{% endif %}
 };
 
 export const RedRose = observer(
@@ -49,9 +42,7 @@ export const RedRose = observer(
           getArgs={(params) => {
             return {
               yellowTulipsSelection: props.yellowTulipsSelection,
-              {% if _.route_params and sections.get_item_id() %}
-              yellowTulips: props.yellowTulips,
-              {% endif %}
+              yellowTulips: props.yellowTulips,                                                     {% if _.route_params and sections.get_item_id() %}{% endif %}
               {{ sections.extract_params() }}
             }
           }}

@@ -1,11 +1,8 @@
 .App {
-{% if res.react_app.has_tailwind_css %}
-  @apply mx-auto;
-{% else %}
-  margin-left: auto;
+  @apply mx-auto;                     {% if res.react_app.has_tailwind_css %}
+  margin-left: auto;                  {% else %}
   margin-right: auto;
-  width: 66.66667%;
-{% endif %}
+  width: 66.66667%;                   {% endif %}
 }
 
 .App__Header {

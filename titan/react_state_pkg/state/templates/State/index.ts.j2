@@ -2,8 +2,7 @@
 {% magic_with store.name as BlueDaisy %}
 {% magic_with pipeline.output.item_name as redRose %}
 
-{% clean_up_js_imports %}
-import { setCallbacks } from 'aspiration';
+import { setCallbacks } from 'aspiration';                                                  {% clean_up_js_imports %}
 import { makeObservable } from 'mobx';
 import { addCleanUpFunctionToCtr, cleanUpCtr } from 'react-default-props-context';
 import * as Skandha from 'skandha';
@@ -12,22 +11,17 @@ import { registerCtr } from 'skandha-mobx';
 import { getIds } from 'src/utils/ids';
 import * as Facets from 'skandha-facets';
 import * as FacetPolicies from 'skandha-facets/policies';
-{% for bvr in _.bvrs %}
-{{ bvr.sections.imports() }}
-{% endfor %}
+{{ bvr.sections.imports() }}                                                                {% for bvr in _.bvrs %}{% endfor %}
 
 import { Inputs } from '{{ res.module.module_path }}/YellowTulipState/facets/Inputs';
 import { Outputs } from '{{ res.module.module_path }}/YellowTulipState/facets/Outputs';
 import * as Policies from './policies';
-import * as Handlers from './handlers';
-{% end_clean_up_js_imports %}
+import * as Handlers from './handlers';                                                     {% end_clean_up_js_imports %}
 
 type PropsT = {
-  {% for pipeline in _.pipelines %}
-  {% if pipeline.get_bvr("deletion") %}
-  deleteRedRoses: (ids: string[]) => Promise;
-  {% endif %}
-  {% endfor %}
+                                                                                            {% for pipeline in _.pipelines %}
+  deleteRedRoses: (ids: string[]) => Promise;                                               {% if pipeline.get_bvr("deletion") %}{% endif %}
+                                                                                            {% endfor %}
 };
 
 export class YellowTulipState {
@@ -37,26 +31,18 @@ export class YellowTulipState {
 {{ sections.constructor() }}
 
 {{ sections.callbacks() }}
-
-{% for pipeline in _.pipelines %}
-  _applyRedRosesPolicies(props: PropsT) {
+  _applyRedRosesPolicies(props: PropsT) {                                                   {% for pipeline in _.pipelines %}
     const Inputs_items = [Inputs, 'redRoses', this] as CMT;
     const Outputs_display = [Outputs, 'redRosesDisplay', this] as CMT;
-{% for bvr in pipeline.bvrs %}
-{{ bvr.sections.declare_policies(pipeline.bvrs) }}
-{% endfor %}
+    {{ bvr.sections.declare_policies(pipeline.bvrs) }}                                      {% for bvr in pipeline.bvrs %}{% endfor %}
 
     const policies = [
-{{ sections.policies(pipeline) }}
-{% for bvr in pipeline.bvrs %}
-{{ bvr.sections.policies(pipeline.bvrs) }}
-{% endfor %}
+      {{ sections.policies(pipeline) }}
+      {{ bvr.sections.policies(pipeline.bvrs) }}                                            {% for bvr in pipeline.bvrs %}{% endfor %}
     ];
 
     Skandha.installPolicies<any>(policies, this.redRoses);
-  }
-
-{% endfor %}
+  }                                                                                         {% endfor %}
 
   getSummary() {
     return Skandha.getCtrState(this);
@@ -70,8 +56,7 @@ export class YellowTulipState {
     registerCtr({
       ctr: this,
       childCtrs: [
-        {% for pipeline in _.pipelines %}
-        {
+        {                                                                                   {% for pipeline in _.pipelines %}
           ctr: this.redRoses,
           details: { name: 'RedRoses' },
           initCtr: () => {
@@ -79,8 +64,7 @@ export class YellowTulipState {
             this._applyRedRosesPolicies(props);
             addCleanUpFunctionToCtr(this, () => cleanUpCtr(this.redRoses));
           },
-        },
-        {% endfor %}
+        },                                                                                  {% endfor %}
       ],
     });
   }

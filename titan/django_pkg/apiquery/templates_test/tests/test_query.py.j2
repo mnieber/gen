@@ -14,8 +14,7 @@ class TestYellowTulipQuery(GraphqlTestCase):
 
         # check that the response is as expected
         data = response.json()['data']
-{% for output_field_spec in _.outputs_type_spec.field_specs %}
-{{ sections.assert_query_response(output_field_spec) }}
-{% endfor %}
+
+{{ sections.assert_query_response(output_field_spec) }}         {% for output_field_spec in _.outputs_type_spec.field_specs %}{% endfor %}
 
 {% end_magic_with %}

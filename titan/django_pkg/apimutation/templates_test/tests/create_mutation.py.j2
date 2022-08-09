@@ -6,12 +6,12 @@ def create_post_red_rose_mutation({{ sections.declare_create_mutation_args() }})
     root = CodeBlock(style="graphql")
     root.IxI("mutation postRedRose", [{{ sections.declare_graphql_mutation_args() }}], " {")
     root.IxI("  postRedRose", [{{ sections.invoke_mutation_endpoint() }}], " {")
-{% for output_field_spec in _.fk_output_field_specs %}
-    if yellow_tulip_outputs:
+
+    if yellow_tulip_outputs:                                                                    {% for output_field_spec in _.fk_output_field_specs %}
         root.abc("    yellowTulip {")
         root._x_("      ", yellow_tulip_outputs, "")
-        root.abc("    }")
-{% endfor %}
+        root.abc("    }")                                                                       {% endfor %}
+
     if output_values:
         root._x_("    ", output_values, "")
     root.abc("  }")

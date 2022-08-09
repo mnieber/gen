@@ -46,7 +46,7 @@ export const YellowTulipFormView = observer(
           handleSubmit={handleSubmit}
         >
           <GlobalError />
-          {% for field_spec in _.field_specs %}{{ sections.form_field(field_spec)}}{% endfor %}
+          {{ sections.form_field(field_spec)}}                                        {% for field_spec in _.field_specs %}{% endfor %}
           <SaveButton
             label="Save"
             disabled={false}

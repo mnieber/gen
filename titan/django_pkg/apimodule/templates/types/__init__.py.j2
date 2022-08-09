@@ -1,6 +1,3 @@
-{% for item_type in _.item_types %}
-from api.types.{{ item_type.name | lower }}type import {{ item_type.name}}Type  # noqa
-{% endfor %}
-{% for item_type in _.item_form_types %}
-from api.types.{{ item_type.name | lower }}formtype import {{ item_type.name }}FormType  # noqa
-{% endfor %}
+from api.types.{{ item_type.name | lower }}type import {{ item_type.name}}Type  # noqa              {% for item_type in _.item_types %}{% endfor %}
+from api.types.{{ item_type.name | lower }}formtype import {{ item_type.name }}FormType  # noqa     {% for item_type in _.item_form_types %}{% endfor %}
+

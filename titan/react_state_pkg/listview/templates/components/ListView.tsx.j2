@@ -11,16 +11,10 @@ import { YellowTulipListViewItem } from 'src/gardenFlowers/components';
 import { YellowTulipT } from 'src/api/types/YellowTulipT';
 import { getResourceView } from 'src/utils/components';
 
-{% if _.deletion_bvr %}
-import { Deletion } from 'skandha-facets/Deletion';
-{% endif %}
-{% if _.highlight_bvr %}
-import { Highlight } from 'skandha-facets/Highlight';
-{% endif %}
-{% if _.selection_bvr %}
-import { Selection } from 'skandha-facets/Selection';
-import { ClickToSelectItems } from 'skandha-facets/handlers';
-{% endif %}
+import { Deletion } from 'skandha-facets/Deletion';                                               {% if _.deletion_bvr %}{% endif %}
+import { Highlight } from 'skandha-facets/Highlight';                                             {% if _.highlight_bvr %}{% endif %}
+import { Selection } from 'skandha-facets/Selection';                                             {% if _.selection_bvr %}
+import { ClickToSelectItems } from 'skandha-facets/handlers';                                     {% endif %}
 
 {% end_clean_up_js_imports %}
 
@@ -33,15 +27,9 @@ type PropsT = {
 type DefaultPropsT = {
   yellowTulips: YellowTulipT[],
   yellowTulipsRS: string,
-  {% if _.deletion_bvr %}
-  yellowTulipsDeletion: Deletion,
-  {% endif %}
-  {% if _.highlight_bvr %}
-  yellowTulipsHighlight: Highlight,
-  {% endif %}
-  {% if _.selection_bvr %}
-  yellowTulipsSelection: Selection,
-  {% endif %}
+  yellowTulipsDeletion: Deletion,                                                                 {% if _.deletion_bvr %}{% endif %}
+  yellowTulipsHighlight: Highlight,                                                               {% if _.highlight_bvr %}{% endif %}
+  yellowTulipsSelection: Selection,                                                               {% if _.selection_bvr %}{% endif %}
 };
 
 export const BlueDaisy = observer(
@@ -50,11 +38,9 @@ export const BlueDaisy = observer(
       props.yellowTulipsRS === 'loading' ? <div>Loading...</div> : undefined;
     if (resourceView) return resourceView;
 
-    {% if _.selection_bvr %}
-    const handlerClick = new ClickToSelectItems({
+    const handlerClick = new ClickToSelectItems({                                                 {% if _.selection_bvr %}
       selection: props.yellowTulipsSelection
-    });
-    {% endif %}
+    });                                                                                           {% endif %}
 
     const yellowTulipDivs = R.pipe(
       R.always(props.yellowTulips),
@@ -63,22 +49,12 @@ export const BlueDaisy = observer(
           <BlueDaisyItem
             key={x.id}
             yellowTulip={x}
-            {% if _.selection_bvr or _.highlight_bvr %}
-            className={classnames({
-              {% if _.selection_bvr %}
-              'BlueDaisyItem--selected': x && props.yellowTulipsSelection.ids.includes(x.id),
-              {% endif %}
-              {% if _.highlight_bvr %}
-              'BlueDaisyItem--highlighted': x && props.yellowTulipsHighlight.id == x.id,
-              {% endif %}
-            })}
-            {% endif %}
-            {% if _.deletion_bvr %}
-            onDelete={() => props.yellowTulipsDeletion.delete([x.id])}
-            {% endif %}
-            {% if _.selection_bvr %}
-            {...handlerClick.handle(x.id)}
-            {% endif %}
+            className={classnames({                                                               {% if _.selection_bvr or _.highlight_bvr %}
+              'BlueDaisyItem--selected': x && props.yellowTulipsSelection.ids.includes(x.id),     {% if _.selection_bvr %}{% endif %}
+              'BlueDaisyItem--highlighted': x && props.yellowTulipsHighlight.id == x.id,          {% if _.highlight_bvr %}{% endif %}
+            })}                                                                                   {% endif %}
+            onDelete={() => props.yellowTulipsDeletion.delete([x.id])}                            {% if _.deletion_bvr %}{% endif %}
+            {...handlerClick.handle(x.id)}                                                        {% if _.selection_bvr %}{% endif %}
           />
         );
       })

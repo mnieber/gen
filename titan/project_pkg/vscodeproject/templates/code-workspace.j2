@@ -3,11 +3,9 @@
     {
       "path": "{{ settings.references.src }}"
     },
-{% for path in res.paths %}
-    {
+    {                                           {% for path in res.paths %}
       "path": "{{ path }}"
-    },
-{% endfor %}
+    },                                          {% endfor %}
   ],
   "settings": {}
 }

@@ -1,18 +1,13 @@
 {% magic_with pipeline.output.item_name as redRose %}
-{% for pipeline in _.pipelines %}
-import { RedRoseT, RedRoseByIdT } from "src/api/types/RedRoseT";
-{% endfor %}
+import { RedRoseT, RedRoseByIdT } from "src/api/types/RedRoseT";                  {% for pipeline in _.pipelines %}{% endfor %}
 import { listToItemById } from 'src/utils/ids';
 import { data, output } from 'skandha';
 
 export class Outputs {
-  {% for pipeline in _.pipelines %}
-  @output redRosesDisplay: Array<RedRoseT> = [];
+  @output redRosesDisplay: Array<RedRoseT> = [];                                  {% for pipeline in _.pipelines %}
 
   @data get redRoseById(): RedRoseByIdT {
     return listToItemById(this.redRosesDisplay);
-  }
-
-  {% endfor %}
+  }                                                                               {% endfor %}
 }
 {% end_magic_with %}

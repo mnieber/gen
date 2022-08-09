@@ -2,15 +2,11 @@
 import datetime
 
 AUTHENTICATION_BACKENDS = [
-{% for x in res.get_setting_or([], ['auth', 'AUTHENTICATION_BACKENDS']) %}
-    "{{ x }}",
-{% endfor %}
+    "{{ x }}",                                     {% for x in res.get_setting_or([], ['auth', 'AUTHENTICATION_BACKENDS']) %}{% endfor %}
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-{% for setting_block in res.get_setting_or([], ['auth', 'blocks']) %}
-{{ setting_block }}
-{% endfor %}
+{{ setting_block }}                                {% for setting_block in res.get_setting_or([], ['auth', 'blocks']) %}{% endfor %}
 
 AUTH_USER_MODEL = "users.User"
 

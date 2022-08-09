@@ -1,9 +1,7 @@
-{% if res.has_tailwind_css %}
-@tailwind base;
+@tailwind base;                                                                     {% if res.has_tailwind_css %}
 @tailwind components;
 @tailwind utilities;
-
-{% endif %}
+                                                                                    {% endif %}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -19,19 +17,13 @@ code {
 }
 
 h1 {
-{% if res.has_tailwind_css %}
-  @apply text-xl;
-{% else %}
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-{% endif %}
+  @apply text-xl;                                                                   {% if res.has_tailwind_css %}
+  font-size: 1.25rem;                                                               {% else %}
+  line-height: 1.75rem;                                                             {% endif %}
 }
 
 h2 {
-{% if res.has_tailwind_css %}
-  @apply text-lg;
-{% else %}
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-{% endif %}
+  @apply text-lg;                                                                   {% if res.has_tailwind_css %}
+  font-size: 1.125rem;                                                              {% else %}
+  line-height: 1.75rem;                                                             {% endif %}
 }

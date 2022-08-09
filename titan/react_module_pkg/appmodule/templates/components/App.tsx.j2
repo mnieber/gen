@@ -1,9 +1,7 @@
 import { QueryClientProvider } from 'react-query';
 import { queryClient } from 'src/api/queryClient';
 import 'src/frames/components/index.scss';
-{% if res.react_app.routes_module %}
-import { UrlRouter } from 'src/routes/components';
-{% endif %}
+import { UrlRouter } from 'src/routes/components';                                                {% if res.react_app.routes_module %}{% endif %}
 import './App.scss';
 
 export function App() {
@@ -11,9 +9,7 @@ export function App() {
     <QueryClientProvider client={queryClient}>
       <div className="App w-screen {% if res.react_app.has_tailwind_css %}lg:w-2/3{% endif %}">
         <header className="App__Header">
-{% if res.react_app.routes_module %}
-          <UrlRouter />
-{% endif %}
+          <UrlRouter />                                                                           {% if res.react_app.routes_module %}{% endif %}
         </header>
       </div>
     </QueryClientProvider>

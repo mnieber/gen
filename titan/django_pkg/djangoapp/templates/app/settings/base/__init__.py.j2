@@ -16,6 +16,5 @@ from .sections.templates import *
 from .sections.urls import *
 from .sections.wsgi import *
 
-{% for setting_block in res.get_setting_or([], ['base', 'blocks']) %}
-{{ setting_block }}
-{% endfor %}
+{{ setting_block }}                         {% for setting_block in res.get_setting_or([], ['base', 'blocks']) %}{% endfor %}
+

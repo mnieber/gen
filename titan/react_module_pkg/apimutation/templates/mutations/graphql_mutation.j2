@@ -11,7 +11,7 @@ const postRedRose = ({{ sections.ts_mutation_args() }}) => {
   return doQuery(
     `mutation postRedRose{{ sections.ts_mutation_graphql_args(True) }} {
         postRedRose{{ sections.ts_mutation_graphql_args(False) }} {
-{{ sections.ts_mutation_graphql_body() }}
+          {{ sections.ts_mutation_graphql_body() }}
         }
     }`,
     {

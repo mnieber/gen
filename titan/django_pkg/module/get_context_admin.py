@@ -67,6 +67,6 @@ def get_context_admin(module):
             )
             if not autocomplete_fields:
                 return ""
-            return "    autocomplete_fields = (" + ", ".join(autocomplete_fields) + ",)"
+            return "autocomplete_fields = (" + ", ".join(autocomplete_fields) + ",)"
 
     return dict(sections=Sections())

@@ -5,14 +5,13 @@ from api.tests.codeblock import CodeBlock
 def create_get_red_rose_query({{ sections.declare_create_query_args() }}):
     root = CodeBlock(style="graphql")
     root.IxI("query getRedRose", [{{ sections.declare_graphql_query_args() }}], " {")
-{% for output_field_spec in res.outputs_type_spec.field_specs %}
-    if yellow_tulip_outputs:
+
+    if yellow_tulip_outputs:                                                                            {% for output_field_spec in res.outputs_type_spec.field_specs %}
         root.IxI("  yellowTulip", [{{ sections.invoke_query_endpoint(output_field_spec) }}], " {")
         root._x_("    ", yellow_tulip_outputs, "")
-        root.abc("  }")
-{% endfor %}
-    root.abc("}")
+        root.abc("  }")                                                                                 {% endfor %}
 
+    root.abc("}")
 
     op_name = "getRedRose"
     variables = {{ sections.query_variables() }}

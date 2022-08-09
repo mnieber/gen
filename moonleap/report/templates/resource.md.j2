@@ -7,22 +7,18 @@
 
 |                   |        |                                 |
 | ----------------- | ------ | -------------------------------:|
-{% for prop_name, prop_value in props.items() %}
-| {{ prop_name }}   | :      |   {{ prop_value }}              |
-{% endfor %}
+| {{ prop_name }}   | :      |   {{ prop_value }}              |                                {% for prop_name, prop_value in props.items() %}{% endfor %}
+
 
 ## Relations (child)
 
 |                               |                              |
 | ----------------------------- | ----------------------------:|
-{% for rel, rhs in child_relations %}
-| {{ rel.verb | verb_to_word }} | <a href="{{ rhs.id }}.html">{{ rel.obj | to_str }}</a> |
-{% endfor %}
+| {{ rel.verb | verb_to_word }} | <a href="{{ rhs.id }}.html">{{ rel.obj | to_str }}</a> |      {% for rel, rhs in child_relations %}{% endfor %}
 
 ## Relations (parent)
 
 |                               |                              |
 | ----------------------------- | ----------------------------:|
-{% for rel, rhs in parent_relations %}
-| <a href="{{ rhs.id }}.html">{{ rel.subj | to_str }}</a> | {{ rel.verb | verb_to_word }} |
-{% endfor %}
+| <a href="{{ rhs.id }}.html">{{ rel.subj | to_str }}</a> | {{ rel.verb | verb_to_word }} |     {% for rel, rhs in parent_relations %}{% endfor %}
+

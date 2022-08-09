@@ -3,6 +3,5 @@
 ---
 ## Resources
 
-{% for term_str, res in resource_by_term_str %}
-- <a href="{{ res.id }}.html">{{ term_str }}</a>
-{% endfor %}
+- <a href="{{ res.id }}.html">{{ term_str }}</a>            {% for term_str, res in resource_by_term_str %}{% endfor %}
+

@@ -37,7 +37,7 @@ class Sections(BehaviourSections):
         result = [
             f"const Outputs_itemById = [Outputs, '{self.res.item_name}ById', this] as CMT;",  # noqa: E501
         ]
-        return os.linesep.join([(indent + x) for x in result])
+        return (os.linesep + indent).join(result)
 
     def policies(self, bvrs):
         indent = "      "

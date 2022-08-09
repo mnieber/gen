@@ -11,6 +11,4 @@ def _args():  # noqa
 
 if Dodo.is_main(__name__):
     args = _args()
-{% for service in res.services %}
-    Dodo.run(["dodo", "{{ service.name }}.make", "init"])
-{% endfor %}
+    Dodo.run(["dodo", "{{ service.name }}.make", "init"])                                   {% for service in res.services %}{% endfor %}

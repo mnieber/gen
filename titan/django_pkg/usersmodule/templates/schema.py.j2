@@ -1,31 +1,21 @@
 import graphene
 
-{% if res.django_app.service.graphql_auth %}
-import django_rtk_green.mutations
+import django_rtk_green.mutations                                           {% if res.django_app.service.graphql_auth %}
 import django_rtk_green.queries
-import graphql_jwt
-{% endif %}
-
+import graphql_jwt                                                          {% endif %}
 
 class Mutation(
-{% if res.django_app.service.graphql_auth %}
-    django_rtk_green.mutations.Mutation,
-{% endif %}
+    django_rtk_green.mutations.Mutation,                                    {% if res.django_app.service.graphql_auth %}{% endif %}
     graphene.ObjectType
 ):
-{% if res.django_app.service.graphql_auth %}
-    verify_token = graphql_jwt.Verify.Field()
+    verify_token = graphql_jwt.Verify.Field()                               {% if res.django_app.service.graphql_auth %}
     refresh_token = graphql_jwt.Refresh.Field()
     revoke_token = graphql_jwt.Revoke.Field()
-{% else %}
-    pass
-{% endif %}
+    pass                                                                    {% else %}{% endif %}
 
 
 class Query(
-{% if res.django_app.service.graphql_auth %}
-    django_rtk_green.queries.Query,
-{% endif %}
+    django_rtk_green.queries.Query,                                         {% if res.django_app.service.graphql_auth %}{% endif %}
     graphene.ObjectType
 ):
     pass

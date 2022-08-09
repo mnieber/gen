@@ -1,32 +1,18 @@
 {% magic_with res.item_name as yellowTulip %}
 .YellowTulipListViewItem {
-{% if res.module.react_app.has_tailwind_css %}
-  @apply cursor-pointer;
-{% else %}
-  cursor: pointer;
-{% endif %}
+  @apply cursor-pointer;                              {% if res.module.react_app.has_tailwind_css %}
+  cursor: pointer;                                    {% else %}{% endif %}
 }
-{% for bvr in res.bvrs %}
-{% if bvr.name == "selection" %}
+                                                      {% for bvr in res.bvrs %}
+.YellowTulipListViewItem--selected {                  {% if bvr.name == "selection" %}
+  @apply bg-yellow-400 font-bold;                     {% if res.module.react_app.has_tailwind_css %}
+  background-color: #ffeb3b;                          {% else %}{% endif %}
+}                                                     {% endif %}
 
-.YellowTulipListViewItem--selected {
-{% if res.module.react_app.has_tailwind_css %}
-  @apply bg-yellow-400 font-bold;
-{% else %}
-  background-color: #ffeb3b;
-{% endif %}
-}
-{% endif %}
-{% if bvr.name == "highlight" %}
-
-.YellowTulipListViewItem--highlighted {
-{% if res.module.react_app.has_tailwind_css %}
-  @apply border-4 border-blue-300;
-{% else %}
-  border-color: #0070f3;
-  border-width: 4px;
-{% endif %}
-}
-{% endif %}
-{% endfor %}
+.YellowTulipListViewItem--highlighted {               {% if bvr.name == "highlight" %}
+  @apply border-4 border-blue-300;                    {% if res.module.react_app.has_tailwind_css %}
+  border-color: #0070f3;                              {% else %}
+  border-width: 4px;                                  {% endif %}
+}                                                     {% endif %}
+                                                      {% endfor %}
 {% end_magic_with %}

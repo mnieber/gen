@@ -31,6 +31,6 @@ def graphql_body(type_spec, indent=0, skip=None, recurse=True):
             result.append(f"{field_spec.name}")
 
     if is_top_level:
-        return " " * 10 + (os.linesep + (" " * 10)).join(result)
+        return (os.linesep + (" " * 10)).join(result)
     else:
         return [(" " * indent) + x for x in result]

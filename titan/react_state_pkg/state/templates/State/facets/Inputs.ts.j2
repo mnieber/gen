@@ -1,17 +1,13 @@
 {% magic_with pipeline.output.item_name as redRose %}
 import * as R from 'ramda';
-{% for pipeline in _.pipelines %}
-import { RedRoseT } from "src/api/types/RedRoseT";
-{% endfor %}
+import { RedRoseT } from "src/api/types/RedRoseT";                        {% for pipeline in _.pipelines %}{% endfor %}
 import { input } from "skandha";
 
 export class Inputs {
-{% for pipeline in _.pipelines %}
-  @input redRoses: Array<RedRoseT> = [];
+  @input redRoses: Array<RedRoseT> = [];                                  {% for pipeline in _.pipelines %}
 
   findRedRoseById(id: string): RedRoseT | undefined {
     return R.find(R.propEq('id', id), this.redRoses) as RedRoseT;
-  }
-{% endfor %}
+  }                                                                       {% endfor %}
 }
 {% end_magic_with %}

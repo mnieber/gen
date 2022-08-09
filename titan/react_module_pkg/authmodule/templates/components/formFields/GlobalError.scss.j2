@@ -1,7 +1,4 @@
 .formField__error {
-{% if res.react_app.has_tailwind_css %}
-  @apply text-red-400;
-{% else %}
-  color: #ff6b6b;
-{% endif %}
+  @apply text-red-400;        {% if res.react_app.has_tailwind_css %}
+  color: #ff6b6b;             {% else %}{% endif %}
 }

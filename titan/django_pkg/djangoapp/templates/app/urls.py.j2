@@ -5,9 +5,8 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 from django.views.decorators.csrf import csrf_exempt
-{% for url_import in res.config.urls_imports %}
-{{ url_import }}
-{% endfor %}
+{{ url_import }}                                                               {% for url_import in res.config.urls_imports %}{% endfor %}
+
 {% end_clean_up_py_imports %}
 
 from app.utils.serve_static import serve_static
@@ -17,9 +16,7 @@ urlpatterns = (
         T.Any,
         [
             path(r"admin/", admin.site.urls),
-            {% for url in res.config.urls %}
-                {{ url}},
-            {% endfor %}
+            {{ url}},                                                          {% for url in res.config.urls %}{% endfor %}
         ],
     )
     + serve_static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
