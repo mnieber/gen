@@ -2,7 +2,7 @@ from pathlib import Path
 
 from moonleap import MemField, add, create, create_forward, extend, rule
 from moonleap.verbs import has, uses
-from titan.django_pkg.module import Module
+from titan.django_pkg.module.resources import Module
 from titan.project_pkg.service import Tool
 from titan.tools_pkg.pipdependency import PipRequirement
 

@@ -26,8 +26,7 @@ def get_context(graphene_django):
                 result.append(f"from .{classname.lower()} import {classname}")
 
             for module in _.modules:
-                if module.has_graphql_schema:
-                    result.append(f"import {sn(module.name)}.schema")
+                result.append(f"import {sn(module.name)}.schema")
 
             return os.linesep.join(result)
 
@@ -51,8 +50,7 @@ def get_context(graphene_django):
                 result.append(f"from .{classname.lower()} import {classname}")
 
             for module in _.modules:
-                if module.has_graphql_schema:
-                    result.append(f"import {sn(module.name)}.schema")
+                result.append(f"import {sn(module.name)}.schema")
 
             return os.linesep.join(result)
 

@@ -1,4 +1,5 @@
 from . import (
+    accountsmodule,
     apimodule,
     appmodule,
     djangoapp,
@@ -14,6 +15,7 @@ from . import (
 )
 
 modules = [
+    accountsmodule,
     apimodule,
     appmodule,
     djangoapp_and_postgres,
