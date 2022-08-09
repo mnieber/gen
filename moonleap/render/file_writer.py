@@ -4,7 +4,7 @@ import json
 import zlib
 from pathlib import Path
 
-from moonleap.render.merge import get_file_merger
+from moonleap.render.file_merger import get_file_merger
 from moonleap.session import get_session
 
 

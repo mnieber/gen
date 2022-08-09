@@ -1,4 +1,4 @@
-from moonleap.render.merge import add_file_merger
+from moonleap.render.file_merger import add_file_merger
 from moonleap.render.template_env import add_filter
 from moonleap.render.transforms import register_transforms
 from moonleap.resource.memfield import MemField

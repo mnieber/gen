@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from moonleap.render.merge import FileMerger
+from moonleap.render.file_merger import FileMerger
 
 
 class SimpleFileMerger(FileMerger):
