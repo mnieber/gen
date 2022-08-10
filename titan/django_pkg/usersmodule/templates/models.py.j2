@@ -2,13 +2,10 @@ import typing as T
 import uuid
 
 from django.conf import settings
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-    BaseUserManager,
-    PermissionsMixin,
-)
+from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
+                                        PermissionsMixin)
 from django.db import models
-
+from user_profiles.models import UserProfile                                                {% if _.create_user_profile %}{% endif %}
 
 class UserManager(BaseUserManager):
     def create_user(
@@ -28,6 +25,10 @@ class UserManager(BaseUserManager):
         user.terms_version_accepted = terms_version_accepted or settings.TERMS_VERSION
         user.set_password(password)
         user.save()
+
+        user_profile = UserProfile.objects.create(owner=user)                               {% if _.create_user_profile %}
+        user_profile.save()                                                                 {% endif %}
+
         return user
 
     def create_superuser(self, email: str, password: str = None, **kwargs: T.Any):

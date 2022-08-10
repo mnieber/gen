@@ -1,8 +1,7 @@
-from . import keycloakservice, nodedockerimage, postgresservice, pythondockerimage
+from . import nodedockerimage, postgresservice, pythondockerimage
 
 modules = [
     nodedockerimage,
-    keycloakservice,
     pythondockerimage,
     postgresservice,
 ]
