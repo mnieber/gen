@@ -1,25 +1,21 @@
 from . import (
     dockercompose,
-    dockercompose_and_project,
-    dockercompose_and_service,
     dockerfile,
+    make,
     pkg,
     project,
-    project_and_service,
     service,
-    service_and_docker,
+    tools,
     vscodeproject,
 )
 
 modules = [
     dockercompose,
-    dockercompose_and_project,
-    dockercompose_and_service,
     dockerfile,
+    make,
     pkg,
     project,
-    project_and_service,
     service,
-    service_and_docker,
+    tools,
     vscodeproject,
 ]

@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import create, empty_rule, extend, kebab_to_camel, rule, u0
+from moonleap import Prop, create, empty_rule, extend, kebab_to_camel, rule, u0
 from moonleap.verbs import has
 from titan.api_pkg.itemtype.resources import ItemType
 
@@ -28,3 +28,8 @@ rules = [(("item~type", has, "item~form-type"), empty_rule())]
 @extend(ItemType)
 class ExtendItemType:
     form_type = P.child(has, "item~form-type")
+
+
+@extend(FormType)
+class ExtendFormType:
+    type_spec = Prop(props.form_type_type_spec)

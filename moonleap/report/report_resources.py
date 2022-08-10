@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 import markdown
-from moonleap.render.render_resources import render_template
+from moonleap.render.render_template import render_template
 from moonleap.session import get_session
 
 

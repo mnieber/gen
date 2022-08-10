@@ -1,1 +1,0 @@
-use{{ res.name | u0 }}.ts

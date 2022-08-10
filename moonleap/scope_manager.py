@@ -1,8 +1,8 @@
 import importlib
 import re
 
-from moonleap.builder.install import install_package
-from moonleap.builder.scope import Scope
+from moonleap.packages.install import install_package
+from moonleap.packages.scope import Scope
 
 
 def _import_package(package_name):

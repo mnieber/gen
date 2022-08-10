@@ -1,0 +1,8 @@
+DOCKER_COMPOSE:                                                       {% if _.layer.configures_docker_compose %}
+  compose_project_name: {{ _.project.kebab_name }}-dev
+  cwd: ${/ROOT/src_dir}
+  files:
+    - docker-compose.dev.yml
+    - {{ _.project.docker_compose.override_fn }}                      {% ?? _.project.docker_compose.override_fn %}
+
+                                                                      {% endif %}

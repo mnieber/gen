@@ -1,0 +1,20 @@
+{% trim_newlines keep=1 %}
+
+{% include_snippet '__moonleap__/Makefile.postgres.j2' %}
+{% include_snippet '__moonleap__/Makefile.pip.j2' %}
+{% include_snippet '__moonleap__/Makefile.django.j2' %}
+{% include_snippet '__moonleap__/Makefile.react.j2' %}
+
+#
+# Stack
+#
+
+init-dev: \																			{% break_line min_lines=2 %}
+	create-db \            															{% ?? _.service.django_app %}
+	pip-compile \																	{% ?? _.service.pip %}
+	install \
+	migrate \            															{% ?? _.service.django_app %}
+	collect-static \       															{% ?? _.service.django_app %}
+	create-superuser																{% ?? _.service.django_app %}
+																					{% end_break_line %}
+{% end_trim_newlines %}

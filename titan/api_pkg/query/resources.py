@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 
-from moonleap import Resource
+from moonleap import RenderMixin, Resource
 
 
 @dataclass
-class Query(Resource):
+class Query(RenderMixin, Resource):
     name: str
-    fun_name: str

@@ -1,20 +1,14 @@
-from pathlib import Path
-
 import moonleap.resource.props as P
-from moonleap import (
-    StoreOutputPaths,
-    StoreTemplateDirs,
-    create,
-    empty_rule,
-    extend,
-    rule,
-)
+from moonleap import create, empty_rule, extend, rule
 from moonleap.utils.case import kebab_to_camel
 from moonleap.verbs import contains, has, provides
 
 from .resources import DjangoModel, import_type_spec
 
-rules = [(("module", contains + provides, "item~list"), empty_rule())]
+rules = [
+    (("module", contains + provides, "item~list"), empty_rule()),
+    (("module", has, "django-model"), empty_rule()),
+]
 
 base_tags = [("module", ["django-module"])]
 
@@ -31,6 +25,6 @@ def django_model_provides_item_list(django_model, item_list):
 
 
 @extend(DjangoModel)
-class ExtendDjangoModel(StoreTemplateDirs, StoreOutputPaths):
+class ExtendDjangoModel:
     item_list = P.child(provides, "item~list")
     module = P.parent("module", has)

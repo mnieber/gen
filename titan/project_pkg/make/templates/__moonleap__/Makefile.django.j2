@@ -1,0 +1,16 @@
+#																					{% if _.service.django_app %}
+# Django
+#
+
+collect-static:
+	python manage.py collectstatic --link
+
+create-superuser:
+	python manage.py createsuperuser --noinput || true
+
+migrate:
+	python manage.py migrate
+
+run-server:
+	python manage.py runserver 0.0.0.0:{{ _.service.ports.django_app }}
+																					{% endif %}

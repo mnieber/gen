@@ -1,15 +1,33 @@
-{% magic_with res.name as YellowTulipFormView %}
-{% magic_with _.mutation.name as postRedRose %}
+{% magic_with _.component.name as YellowTulipFormView %}
+{% magic_with __.mutation.name as postRedRose %}
+{% magic_with field_spec.ts_type as fieldSpecTsType %}
+{% magic_with field_spec.ts_default_value as fieldSpecTsDefaultValue %}
+{% magic_with field_spec.name as fieldSpecName %}
+{% magic_with field_spec.target as FieldSpecTarget %}
 {% clean_up_js_imports %}
 import React from 'react';
 import * as R from 'ramda';
 import { observer } from 'mobx-react-lite';
 import { withDefaultProps } from 'react-default-props-context';
-import { FormStateProvider, HandleValidateArgsT, HandleSubmitArgsT } from 'react-form-state-context';
+import {
+  FormStateProvider,
+  HandleValidateArgsT,
+  HandleSubmitArgsT
+} from 'react-form-state-context';
 import { usePostRedRose } from 'src/api/mutations';
-import { ControlledCheckbox, Field, GlobalError, TextField, SaveButton, SlugField, UpdateSlugButton, ValuePickerField } from 'src/forms/components';
+import {
+  ControlledCheckbox,
+  Field,
+  GlobalError,
+  TextField,
+  SaveButton,
+  SlugField,
+  UpdateSlugButton,
+  ValuePickerField
+} from 'src/forms/components';
 import { createUUID } from 'src/utils/ids';
-{{ sections.form_imports() }}
+import { cn } from 'src/utils/classnames';
+import { fieldSpecTsType } from 'src/api/types/fieldSpecTsType'                             {% for field_spec in __.fk_field_specs %}{% endfor %}
 {% end_clean_up_js_imports %}
 
 import './YellowTulipFormView.scss';
@@ -17,8 +35,8 @@ import './YellowTulipFormView.scss';
 type PropsT = {};
 
 type DefaultPropsT = {
-{{ sections.form_default_props() }}
-}
+  fieldSpecTargets: fieldSpecTsType[],                                                      {% for field_spec in __.type_spec.get_field_specs("uuid") %}{% ?? field_spec.target %}{% endfor %}
+};
 
 export const YellowTulipFormView = observer(
   withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
@@ -26,19 +44,29 @@ export const YellowTulipFormView = observer(
 
     const initialValues = {
       id: createUUID(),
-      {{ sections.initial_form_values() }}
+      fieldSpecName: fieldSpecTsDefaultValue,                                               {% for field_spec in __.field_specs %}{% ?? not field_spec.target %}{% endfor %}
     };
     const initialErrors = {};
     const handleValidate = ({values, setError} : HandleValidateArgsT) => {
-      {{ sections.validate_form() }}
+      if (R.isNil(values.fieldSpecName)) {                                                  {% for field_spec in __.field_specs %}{% if field_spec.required %}
+        setError('fieldSpecName', 'This field is required');
+      }                                                                                     {% endif %}{% endfor %}
     };
     const handleSubmit = ({ formState, values }: HandleSubmitArgsT) => {
-      {{ sections.post_form() }}
+      postRedRose({
+        ...values,
+        fieldSpecName: values.fieldSpecName.id,                                             {% for field_spec in __.field_specs %}{% ?? field_spec.field_type in ("uuid",) and field_spec.target %}{% endfor %}
+      });
       formState.reset(initialValues, initialErrors);
     };
 
     return (
-      <div className="YellowTulipFormView flex flex-col w-full">
+      <div
+        className={cn(
+          "YellowTulipFormView",
+          "flex flex-col items-center",
+          "w-full"
+        )}>
         <FormStateProvider
           initialValues={initialValues}
           initialErrors={initialErrors}
@@ -46,7 +74,26 @@ export const YellowTulipFormView = observer(
           handleSubmit={handleSubmit}
         >
           <GlobalError />
-          {{ sections.form_field(field_spec)}}                                        {% for field_spec in _.field_specs %}{% endfor %}
+          <Field                                                                                      {% for field_spec in _.field_specs %}
+            fieldName="fieldSpecName"
+            label="FieldSpecName"
+            buttons={[                                                                                {% if field_spec.field_type in ("slug",) %}
+              <UpdateSlugButton
+                key="1"
+                relatedFieldName="{{ field_spec.field_type_attrs.get("relatedFieldName") }}"
+              />
+            ]}                                                                                        {% endif %}
+          >
+            <TextField controlled={true} />                                                           {% ?? field_spec.field_type in ("string", "url") %}
+            <SlugField />                                                                             {% ?? field_spec.field_type in ("slug",) %}
+            <ValuePickerField                                                                         {% if field_spec.field_type in ("uuid",) and field_spec.target %}
+              isCreatable={false}
+              isMulti={false}
+              pickableValues={props.fieldSpecTargets}
+              labelFromValue={(x: any) => x.{{ field_spec.target_type_spec.display_item_by }} }
+            />                                                                                        {% endif %}
+            <ControlledCheckbox />                                                                    {% ?? field_spec.field_type in ("boolean",) %}
+          </Field>                                                                                    {% endfor %}
           <SaveButton
             label="Save"
             disabled={false}
@@ -56,4 +103,9 @@ export const YellowTulipFormView = observer(
     );
   })
 );
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
 {% end_magic_with %}

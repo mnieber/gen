@@ -20,6 +20,6 @@ modules = [
     itemtype,
     mutation,
     pipeline,
-    typeregistry,
     query,
+    typeregistry,
 ]

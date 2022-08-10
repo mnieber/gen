@@ -1,0 +1,16 @@
+#																					{% if _.service.react_app %}
+# React
+#
+
+create-bundle:
+	rm -rf {{ _.service.install_dir }}/bundle/*
+	yarn build
+	cp -rf ./build/* {{ _.service.install_dir }}/bundle
+
+install:
+	yarn install
+
+run-dev-server:
+	PORT=3001 yarn start
+
+																					{% endif %}

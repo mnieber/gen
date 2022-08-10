@@ -1,0 +1,4 @@
+    build: docker-compose build                                  {% if _.layer.configures_docker_compose %}
+    down: docker-compose down
+    down-volumes: docker-compose "down --volumes"
+    up: docker-compose "up --detach"                             {% endif %}

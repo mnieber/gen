@@ -1,11 +1,9 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import MemFun, create, extend, kebab_to_camel, rule, u0
+from moonleap import create, extend, kebab_to_camel, rule, u0
 from moonleap.verbs import has, wraps
 
-from . import props, router_configs
-from .props import get_context
 from .resources import View
 
 base_tags = [
@@ -18,7 +16,7 @@ base_tags = [
 def create_view(term):
     name = u0(kebab_to_camel(term.data + ("view" if term.data.endswith("-") else "")))
     view = View(name=f"{name}")
-    view.add_template_dir(Path(__file__).parent / "templates", get_context)
+    view.template_dir = Path(__file__).parent / "templates"
     return view
 
 
@@ -30,9 +28,7 @@ def view_wraps_children(view, children):
 @create("panel")
 def create_panel(term):
     panel = View(name=f"{u0(term.data)}Panel")
-    panel.add_template_dir(
-        Path(__file__).parent / "templates", get_context, skip_render=props.skip_render
-    )
+    panel.template_dir = Path(__file__).parent / "templates"
     return panel
 
 
@@ -48,7 +44,6 @@ def named_view_wraps_named_component(named_view, named_component):
 
 @extend(View)
 class ExtendView:
-    create_router_configs = MemFun(router_configs.create_router_configs)
     parent_view = P.parent("view", has)
     left_panel = P.child(has, "x+left:panel")
     right_panel = P.child(has, "x+right:panel")

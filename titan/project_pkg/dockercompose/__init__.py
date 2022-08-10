@@ -1,43 +1,44 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    Prop,
-    StoreOutputPaths,
-    StoreTemplateDirs,
-    create,
-    extend,
-    register_add,
-)
-from titan.project_pkg.service import Tool
+from moonleap import create, extend, rule
+from moonleap.verbs import has, runs
+from titan.project_pkg.project import Project
 
-from . import props
-from .resources import DockerCompose, DockerComposeConfig  # noqa
-
-
-class StoreDockerComposeConfigs:
-    docker_compose_configs = P.tree("docker_compose_configs")
-
-
-@register_add(DockerComposeConfig)
-def add_docker_compose_config(resource, docker_compose_config):
-    resource.docker_compose_configs.add(docker_compose_config)
+from .resources import DockerCompose  # noqa
 
 
 @create("docker-compose")
 def create_docker_compose(term):
-    docker_compose = DockerCompose()
-    docker_compose.add_template_dir(Path(__file__).parent / "templates")
-    return docker_compose
+    return DockerCompose()
+
+
+@rule("project", has, "docker-compose")
+def project_has_docker_compose(project, docker_compose):
+    project.renders(
+        docker_compose,
+        "",
+        dict(docker_compose=docker_compose),
+        [Path(__file__).parent / "templates"],
+    )
+
+
+@rule("docker-compose", runs, "service")
+def docker_compose_runs_service(docker_compose, service):
+    service.renders(
+        docker_compose,
+        "",
+        dict(docker_compose=docker_compose),
+        [Path(__file__).parent / "templates_service"],
+    )
 
 
 @extend(DockerCompose)
-class ExtendDockerCompose(StoreOutputPaths, StoreTemplateDirs):
-    get_config = MemFun(props.get_docker_compose_config)
-    override_fn = Prop(props.get_docker_compose_override_fn)
+class ExtendDockerCompose:
+    services = P.children(runs, "service")
+    project = P.parent("project", has)
 
 
-@extend(Tool)
-class ExtendTool(StoreDockerComposeConfigs):
-    pass
+@extend(Project)
+class ExtendProject:
+    docker_compose = P.child(has, "docker-compose")

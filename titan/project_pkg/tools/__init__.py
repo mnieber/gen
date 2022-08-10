@@ -1,0 +1,56 @@
+from pathlib import Path
+
+import moonleap.resource.props as P
+from moonleap import create, extend, rule
+from moonleap.verbs import runs, uses
+from titan.project_pkg.service import Service, Tool
+
+base_tags = [
+    ("black", ["tool"]),
+    ("cypress", ["tool"]),
+    ("fish", ["tool"]),
+    ("isort", ["tool"]),
+    ("opt-dir", ["tool"]),
+    ("pip-compile", ["tool"]),
+    ("prettier", ["tool"]),
+    ("pudb", ["tool"]),
+    ("pytest", ["tool"]),
+    ("setup.cfg", ["tool"]),
+    ("tailwind-css", ["tool"]),
+    ("uikit", ["tool"]),
+    ("vandelay", ["tool"]),
+]
+
+
+@create("tool")
+def create_tool(term):
+    name = term.tag
+    tool = Tool(name=name)
+    return tool
+
+
+@rule("service", runs + uses, "vandelay")
+def service_uses_vandelay(service, vandelay):
+    service.project.renders(
+        vandelay,
+        ".vandelay",
+        dict(service=service),
+        [Path(__file__).parent / "templates_vandelay"],
+    )
+
+
+@extend(Service)
+class ExtendService:
+    black = P.child(runs + uses, "black")
+    cypress = P.child(runs + uses, "cypress")
+    fish = P.child(runs + uses, "fish")
+    isort = P.child(runs + uses, "isort")
+    opt_dir = P.child(runs + uses, "opt-dir")
+    pip_compile = P.child(runs + uses, "pip-compile")
+    prettier = P.child(runs + uses, "prettier")
+    pudb = P.child(runs + uses, "pudb")
+    pytest = P.child(runs + uses, "pytest")
+    setup_cfg = P.child(runs + uses, "setup.cfg")
+    tailwindcss = P.child(runs + uses, "tailwind-css")
+    uikit = P.child(runs + uses, "uikit")
+    vandelay = P.child(runs + uses, "vandelay")

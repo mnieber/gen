@@ -4,7 +4,9 @@ from pathlib import Path
 import yaml
 from moonleap.session import get_session
 from moonleap.typespec.default_field_specs_store import DefaultFieldSpecsStore
-from moonleap.typespec.field_spec import field_specs_from_type_spec_dict
+from moonleap.typespec.field_specs_from_type_spec_dict import (
+    field_specs_from_type_spec_dict,
+)
 from moonleap.typespec.type_spec import TypeSpec, add_related_set_field_to_type_spec
 
 _default_type_spec_placeholder = TypeSpec(type_name="placeholder", field_specs=[])

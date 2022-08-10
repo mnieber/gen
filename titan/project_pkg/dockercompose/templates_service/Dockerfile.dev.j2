@@ -1,0 +1,34 @@
+{% trim_newlines keep=1 %}
+FROM {{ __.dockerfile.image_name }}
+
+RUN {{ _.service.pip }} install --upgrade pip                                   {% ?? _.service.pip %}
+
+# install pkg dependencies                                                      {% break_line min_lines=2 %}
+RUN {{ __.docker_image.install_command }} \
+    make                                                                        {% end_break_line %}
+
+# install pip dependencies                                                      {% break_line min_lines=2 %}
+RUN {{ __.docker_image.pip }} install \                                         {% end_break_line %}
+
+# install dev pkg dependencies                                                  {% break_line min_lines=2 %}
+RUN {{ __.docker_image.install_command }} \
+    curl \
+    fish \                                                                      {% ?? _.service.fish %}
+    nano \
+    postgresql-client                                                           {% ?? _.service.is_dependent_on("postgres") %}
+                                                                                {% end_break_line %}
+
+# install dev pip dependencies                                                  {% if _.service.pip %}{% break_line min_lines=2 %}
+RUN {{ _.service.pip }} install \
+    black \                                                                     {% ?? _.service.black %}
+    isort \                                                                     {% ?? _.service.isort %}
+    pgcli==3.4.1 \                                                              {% ?? _.service.is_dependent_on("postgres") %}
+    pip-tools                                                                   {% ?? _.service.pip_compile %}
+                                                                                {% end_break_line %}{% endif %}
+
+# create a python venv that we can easily store inside a docker volume          {% if _.service.pip %}
+RUN python3 -m venv {{ _.service.install_dir }}/env
+ENV PATH="{{ _.service.install_dir }}/env/bin:${PATH}"                          {% endif %}
+
+WORKDIR {{ __.dockerfile.service.install_dir }}/src
+{% end_trim_newlines %}

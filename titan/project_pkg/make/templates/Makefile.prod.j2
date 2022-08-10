@@ -1,0 +1,23 @@
+{% trim_newlines keep=1 %}
+
+{% include_snippet '__moonleap__/Makefile.postgres.j2' %}
+{% include_snippet '__moonleap__/Makefile.prod.django.j2' %}
+{% include_snippet '__moonleap__/Makefile.prod.react.j2' %}
+
+#
+# Stack
+#
+
+init-prod: \																		{% break_line min_lines=2 %}
+	create-db \            															{% ?? _.service.django_app %}
+	install \
+	migrate \            															{% ?? _.service.django_app %}
+	collect-static \       															{% ?? _.service.django_app %}
+	create-superuser																{% ?? _.service.django_app %}
+																					{% end_break_line %}
+
+start-prod:
+	uwsgi --http :${DJANGO_PORT} --module app.wsgi  						        {% ?? _.service.django_app %}
+	yarn global add serve                            						        {% ?? _.service.react_app %}
+
+{% end_trim_newlines %}

@@ -1,17 +1,15 @@
 import os
 
-from moonleap.render.template_env import template_env
+from moonleap.render.template_env import get_template
 from moonleap.render.transforms import get_post_transforms
 
 
 def render_template(template_fn, **kwargs):
     if template_fn.suffix == ".j2":
-        template = template_env.get_template(str(template_fn))
-        content = template.render(**kwargs)
-
+        content = get_template(template_fn).render(**kwargs)
         lines = content.split(os.linesep)
         for post_transform in get_post_transforms():
-            lines = post_transform(lines)
+            lines = post_transform(lines, template_fn)
         content = os.linesep.join(lines)
     else:
         try:

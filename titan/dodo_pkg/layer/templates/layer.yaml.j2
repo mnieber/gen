@@ -1,3 +1,50 @@
 {% trim_newlines keep=1 %}
-{{ {name: section} | to_nice_yaml }}        {% for name, section in res.get_config().get_body().items() %}{% endfor %}
+
+{% include_snippet "__moonleap__/dial.yaml.j2" %}
+{% include_snippet "__moonleap__/docker-compose.yaml.j2" %}
+{% include_snippet "__moonleap__/menu.yaml.j2" %}
+
+
+DJANGO:                                                               {% if _.service|dot("django_app") %}
+  cwd: ${/SERVER/src_dir}
+  python: python                                                      {% endif %}
+
+
+DOCKER_OPTIONS:                                                       {% if _.service and _.project.docker_compose %}
+  '*':
+    container: {{ _.project.kebab_name }}-dev_{{ _.service.name }}_1  {% endif %}
+
+
+MAKE:                                                                 {% if _.service %}
+  cwd: ${/SERVER/src_dir}                                             {% endif %}
+
+
+NODE:                                                                 {% if _.service|dot("node_package") %}
+  node_modules_dir: ${/SERVER/src_dir}/node_modules                   {% endif %}
+
+
+PYTEST:                                                               {% if _.service|dot("pytest") %}
+  capture: false
+  cwd: ${/SERVER/src_dir}
+  html_report: ${/SERVER/install_dir}/pytest_report.html              {% endif %}
+
+
+ROOT:
+  aliases:                                                            {% ?? _.service or _.layer.configures_docker_compose %}
+    install: make install                                             {% if _.service %}
+    pip-compile: make pip-compile                                     {% ?? _.service.pip_compile %}
+    serve: {{ _.service.serve_command_dev }}                          {% ?? _.service.serve_command_dev %}
+    shell: exec {{ _.service.shell }}                                 {% endif %}
+{% include_snippet "__moonleap__/docker-compose-aliases.yaml.j2" %}
+  decorators:                                                         {% if _.service %}
+    docker:
+      - exec
+      - make
+      - pytest                                                        {% ?? _.service.pytest %}
+      - django-manage                                                 {% ?? _.service.django_app %}
+                                                                      {% endif %}
+
+SERVER:                                                               {% if _.service %}
+  install_dir: {{ _.service.install_dir }}
+  src_dir: ${/SERVER/install_dir}/src                                 {% endif %}
 {% end_trim_newlines %}

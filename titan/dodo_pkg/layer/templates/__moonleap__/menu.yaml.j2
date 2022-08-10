@@ -1,0 +1,7 @@
+MENU:                                                                 {% if _.layer.dodo_menu %}
+  session_id: {{ _.project.kebab_name }}
+  commands:
+    serve:
+      - dodo {{ service.name }}.serve                                   {% for service in _.project.services %}{% ?? service.serve_command_dev %}{% endfor %}
+
+                                                                      {% endif %}

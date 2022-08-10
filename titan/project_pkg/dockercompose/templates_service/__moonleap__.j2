@@ -1,0 +1,2 @@
+'.':
+    include: {{ _.project.docker_compose|bool and _.service.dockerfile|bool }}

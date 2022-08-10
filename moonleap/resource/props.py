@@ -1,13 +1,10 @@
 import typing as T
 from dataclasses import dataclass
 
-from moonleap.builder.scope import get_base_tags
 from moonleap.parser.term import Term, word_to_term
-from moonleap.resource.memfield import MemField
 from moonleap.resource.prop import Prop
 from moonleap.resource.rel import Rel, fuzzy_match
 from moonleap.resource.slctrs import RelSelector
-from moonleap.resource.tree import Tree
 
 
 @dataclass
@@ -67,7 +64,7 @@ def _get_parents(parent_term_str, verb, child_term, inv_relations):
     parents = []
     pattern_rel = Rel(word_to_term(parent_term_str, True), verb, child_term)
     for rel, subj_res in inv_relations:
-        if fuzzy_match(rel, pattern_rel, get_base_tags(subj_res), []):
+        if fuzzy_match(rel, pattern_rel, subj_res.meta.base_tags, []):
             if subj_res not in parents:
                 parents.append(subj_res)
     return parents
@@ -96,24 +93,6 @@ def parents(parent_term_str, verb):
         )
 
     return Prop(get_value=get_parent)
-
-
-def tree(name):
-    return MemField(lambda: Tree(name))
-
-
-def receives(prop_name):
-    def f(subj, obj):
-        getattr(subj, prop_name).add_source(obj)
-
-    return f
-
-
-def feeds(prop_name):
-    def f(subj, obj):
-        getattr(obj, prop_name).add_source(subj)
-
-    return f
 
 
 def empty_rule():

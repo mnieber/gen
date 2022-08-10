@@ -11,12 +11,13 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "corsheaders",
-    "django_extensions",                                                {% if res.use_django_extensions %}{% endif %}
-    "{{ x }}",                                                          {% for x in res.third_party_apps %}{% endfor %}
+    "django_extensions",
+    "graphene_django",                                                  {% if _.service.graphene_django %}{% endif %}
+    "django_rtk_green",                                                 {% if _.service.graphql_auth %}
+    "graphql_jwt.refresh_token.apps.RefreshTokenConfig",                {% endif %}
 ]
 
 LOCAL_APPS = [
-    "{{ x }}",                                                          {% for x in res.local_apps %}{% endfor %}
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

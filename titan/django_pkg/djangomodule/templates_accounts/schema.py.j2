@@ -1,0 +1,21 @@
+import graphene
+
+import django_rtk_green.mutations                                           {% if _.service.graphql_auth %}
+import django_rtk_green.queries
+import graphql_jwt                                                          {% endif %}
+
+class Mutation(
+    django_rtk_green.mutations.Mutation,                                    {% if _.service.graphql_auth %}{% endif %}
+    graphene.ObjectType
+):
+    verify_token = graphql_jwt.Verify.Field()                               {% if _.service.graphql_auth %}
+    refresh_token = graphql_jwt.Refresh.Field()
+    revoke_token = graphql_jwt.Revoke.Field()
+    pass                                                                    {% else %}{% endif %}
+
+
+class Query(
+    django_rtk_green.queries.Query,                                         {% if _.service.graphql_auth %}{% endif %}
+    graphene.ObjectType
+):
+    pass

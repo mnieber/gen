@@ -2,20 +2,28 @@ from titan.react_view_pkg import accountmenu
 
 from . import (
     accountmenu,
-    formsmodule,
+    behavior,
     formview,
+    itemview,
+    listview,
+    picker,
     router,
-    router_and_module,
-    routesmodule,
+    selectitemeffect,
+    state,
+    stateprovider,
     view,
 )
 
 modules = [
     accountmenu,
-    formsmodule,
+    behavior,
     formview,
+    itemview,
+    listview,
+    picker,
     router,
-    router_and_module,
-    routesmodule,
+    selectitemeffect,
+    state,
+    stateprovider,
     view,
 ]

@@ -10,6 +10,7 @@ from moonleap import (
     rule,
 )
 from moonleap.verbs import uses
+from titan.api_pkg.itemtype.resources import ItemType
 
 from . import props
 from .resources import Item
@@ -42,6 +43,11 @@ def item_created(item):
 class ExtendItem:
     item_type = P.child(uses, "item~type")
     type_spec = Prop(props.item_type_spec)
+
+
+@extend(ItemType)
+class ExtendItemType:
+    item = P.parent("item~type", uses)
 
 
 @extend(named(Item))

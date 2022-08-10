@@ -1,22 +1,35 @@
 import moonleap.resource.props as P
-from moonleap import add, create, empty_rule, extend, kebab_to_camel
-from moonleap.verbs import contains
-from titan.dodo_pkg.layer import StoreLayerConfigs
+from moonleap import Term, create, empty_rule, extend, kebab_to_camel
+from moonleap.verbs import contains, has
+from titan.dodo_pkg.layer.resources import DodoLayer
 
-from . import dodo_layer_configs
-from .resources import LayerGroup
+from .resources import DodoLayerGroup
+
+rules = [
+    (("layer-group", contains, "layer"), empty_rule()),
+    (("layer", has, "layer-group"), empty_rule()),
+]
 
 
 @create("layer-group")
 def create_layer_group(term):
-    layer_group = LayerGroup(name=kebab_to_camel(term.data))
-    add(layer_group, dodo_layer_configs.get(layer_group))
+    layer_group = DodoLayerGroup(name=kebab_to_camel(term.data))
     return layer_group
 
 
-rules = [(("layer-group", contains, "layer"), empty_rule())]
+@create("service:layer-group")
+def create_service_layer_group(term):
+    layer_group = create_layer_group(Term("server", "layer-group"))
+    return layer_group
 
 
-@extend(LayerGroup)
-class ExtendLayerGroup(StoreLayerConfigs):
+@extend(DodoLayerGroup)
+class ExtendDodoLayerGroup:
     layers = P.children(contains, "layer")
+
+
+@extend(DodoLayer)
+class ExtendLayer:
+    parent_layer_group = P.parent("layer-group", contains)
+    layer_groups = P.children(has, "layer-group")
+    service_layer_group = P.child(has, "service:layer-group")

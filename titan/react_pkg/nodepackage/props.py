@@ -1,14 +1,12 @@
 import ramda as R
 from moonleap.utils.merge_into_config import merge_into_config
 
-from .resources import NodePackageConfig
-
 
 def merge(lhs, rhs):
     new_body = dict()
-    merge_into_config(new_body, lhs.get_body())
-    merge_into_config(new_body, rhs.get_body())
-    return NodePackageConfig(body=new_body)
+    merge_into_config(new_body, lhs)
+    merge_into_config(new_body, rhs)
+    return new_body
 
 
 def get_sort_index(key):
@@ -27,9 +25,9 @@ def get_sort_index(key):
 
 def get_node_package_config(self):
     service_configs = list(self.node_package_configs.merged)
-    config = R.reduce(merge, NodePackageConfig(body={}), service_configs)
+    config = R.reduce(merge, {}, service_configs)
     result = R.pipe(
-        R.always(config.get_body()),
+        R.always(config),
         R.to_pairs,
         R.sort_by(lambda x: get_sort_index(x[0])),
         R.from_pairs,

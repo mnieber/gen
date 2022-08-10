@@ -6,7 +6,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
-            # Strange enough, without adding "/app/src/app/templates" to DIRS
+            # Strange enough, without adding the templates dir to DIRS
             # Django won't use this directory, even though "app" is in INSTALLED_APPS.
             os.path.join(APP_DIR, "templates"),
         ],

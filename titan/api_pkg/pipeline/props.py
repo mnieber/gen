@@ -1,12 +1,10 @@
 import typing as T
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from moonleap import Resource, Term, named
-from moonleap.resource.rel import Rel
 from moonleap.typespec.get_member_field_spec import get_member_field_spec
 from moonleap.utils.fp import aperture
 from moonleap.utils.join import join
-from moonleap.verbs import uses
 from titan.api_pkg.item.resources import Item
 from titan.api_pkg.itemlist.resources import ItemList
 from titan.api_pkg.mutation.resources import Mutation
@@ -22,7 +20,6 @@ def get_select_item_effect_term(item):
 class PipelineElement:
     obj: T.Optional[Resource] = None
     subj: T.Optional[Resource] = None
-    side_effects: T.List[Rel] = field(default_factory=list)
 
 
 class TakeItemListFromState(PipelineElement):
@@ -30,21 +27,15 @@ class TakeItemListFromState(PipelineElement):
 
 
 class TakeItemFromState(PipelineElement):
-    @staticmethod
-    def get_side_effects(item):
-        return []
+    pass
 
 
 class TakeItemListFromQuery(PipelineElement):
-    @staticmethod
-    def get_side_effects(item_list):
-        return []
+    pass
 
 
 class TakeItemFromQuery(PipelineElement):
-    @staticmethod
-    def get_side_effects(item):
-        return []
+    pass
 
 
 class ExtractItemFromItem(PipelineElement):
@@ -59,10 +50,6 @@ class ExtractItemListFromItem(PipelineElement):
 class TakeHighlightedElmFromState(PipelineElement):
     item_list: T.Any = None
 
-    @staticmethod
-    def get_side_effects(item_list):
-        return [Rel(item_list, uses, get_select_item_effect_term(item_list.item))]
-
 
 class StoreItemInState(PipelineElement):
     pass
@@ -73,7 +60,7 @@ class StoreItemListInState(PipelineElement):
 
 
 def elements(self):
-    from titan.react_state_pkg.state.resources import State
+    from titan.react_view_pkg.state.resources import State
 
     if hasattr(self, "_elements"):
         return self._elements
@@ -139,12 +126,7 @@ def elements(self):
                             found = True
                             result.append(
                                 TakeHighlightedElmFromState(
-                                    subj=state,
-                                    item_list=p.output,
-                                    side_effects=TakeHighlightedElmFromState.get_side_effects(
-                                        p.output
-                                    ),
-                                    obj=item,
+                                    subj=state, item_list=p.output, obj=item
                                 )
                             )
                     if not found:

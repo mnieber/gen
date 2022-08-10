@@ -4,7 +4,7 @@ from moonleap.utils.case import l0, sn, u0
 
 
 def _find_magic_with_statement(text):
-    regex = r"{% magic_with (?P<var_name>[A-Za-z0-9_\.\|]+) as (?P<as>.+)\s* %}"
+    regex = r"{% magic_with (?P<var_name>[A-Za-z0-9_\.\\(\)|]+) as (?P<as>.+)\s* %}"
     matches = list(re.finditer(regex, text, re.MULTILINE))
     return (
         (
@@ -16,7 +16,7 @@ def _find_magic_with_statement(text):
     )
 
 
-def process_magic_with(lines):
+def process_magic_with(lines, template_fn=None):
     result = []
     var_names = []
     for block_line in lines:

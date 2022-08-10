@@ -1,3 +1,0 @@
-{% magic_with res.item_name as yellowTulip %}
-YellowTulipListView.scss
-{% end_magic_with %}

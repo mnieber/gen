@@ -1,0 +1,37 @@
+{% magic_with input_field_spec.name as inputFieldName %}
+{% magic_with output_field_spec.name as outputFieldName %}
+{% magic_with item_posted.name as itemPostedName %}
+{% magic_with item_posted.item_type.name as ItemPostedTypeName %}
+{% magic_with item_list_deleted.item_type.name as ItemPostedTypeName %}
+{% magic_with _.mutation.name as mutationName %}
+{% clean_up_py_imports %}
+import graphene
+from graphene.types.generic import GenericScalar
+{% end_clean_up_py_imports %}
+from api.types import *
+from {{ item_type.django_module.module_path }}.models import {item_type.name}                           {% for item_type in __.item_types_to_import %}{% endfor %}
+
+class MutationName(graphene.Mutation):
+    output_field_name = {{ output_field_spec.graphene_output_type("") }}                                {% for output_field_spec in __.output_field_specs %}
+
+    class Arguments:
+        input_field_name = {{ __.graphene_output_type(input_field_spec) }}                              {% for input_field_spec in __.input_field_specs %}
+        pass                                                                                            {% empty %}{% endfor %}
+
+    def mutate(
+        self,
+        info,
+        input_field_name,                                                                               {% for input_field_spec in __.input_field_specs %}{% endfor %}
+    ):
+        item_posted_name, created = ItemPostedTypeName.objects.update_or_create(                        {% for item_posted in _.mutation.items_posted %}
+            id=item_posted_name_id, default=item_posted_name_form
+        )                                                                                               {% endfor %}
+        ItemListDeletedTypeName.objects.filter(id__in=item_list_deleted_name_ids).delete()              {% for item_list_deleted in _.mutation.item_lists_deleted %}{% endfor %}
+
+        return MutationName(success=True, errors={})
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}

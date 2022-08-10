@@ -1,8 +1,0 @@
-{% magic_with item_type.name as RedRose %}
-import { schema } from 'normalizr';
-
-export const redRose = new schema.Entity('redRoses');           {% for item_type in _.item_types %}{% endfor %}
-
-{{ sections.schema_fields(item_type) }}                         {% for item_type in _.item_types %}
-                                                                {% endfor %}
-{% end_magic_with %}

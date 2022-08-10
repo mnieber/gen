@@ -1,21 +1,27 @@
 import moonleap.resource.props as P
-from moonleap import StoreOutputPaths, create, empty_rule, extend, kebab_to_camel
-from moonleap.render.storetemplatedirs import StoreTemplateDirs
+from moonleap import MemFun, create, extend, get_root_resource, kebab_to_camel, rule
 from moonleap.verbs import has
 
+from . import props
 from .resources import Project
 
 
 @create("project")
 def create_project(term):
-    project = Project(name=kebab_to_camel(term.data), kebab_name=term.data)
-    project.output_path = "src/"
-    return project
+    return Project(name=kebab_to_camel(term.data), kebab_name=term.data)
 
 
-rules = [(("project", has, "src-dir"), empty_rule())]
+@rule("project")
+def created_project(project):
+    get_root_resource().renders(
+        project,
+        "src",
+        dict(project=project),
+        [],
+    )
 
 
 @extend(Project)
-class ExtendProject(StoreOutputPaths, StoreTemplateDirs):
-    src_dir = P.child(has, "src-dir")
+class ExtendProject:
+    services = P.children(has, "service")
+    get_service_by_name = MemFun(props.get_service_by_name)

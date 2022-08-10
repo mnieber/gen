@@ -3,7 +3,7 @@
     {
       "path": "{{ settings.references.src }}"
     },
-    {                                           {% for path in res.paths %}
+    {                                           {% for path in _.vscode_project.paths %}
       "path": "{{ path }}"
     },                                          {% endfor %}
   ],

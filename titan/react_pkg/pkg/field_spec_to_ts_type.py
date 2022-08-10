@@ -1,5 +1,5 @@
 from moonleap.utils.case import l0
-from titan.react_module_pkg.extendspectypes.props import (
+from titan.react_pkg.extendspectypes.props import (
     ts_form_type_from_item_name,
     ts_type_from_item_name,
 )

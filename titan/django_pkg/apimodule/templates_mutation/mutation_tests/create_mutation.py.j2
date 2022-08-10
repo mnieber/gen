@@ -1,0 +1,36 @@
+{% magic_with _.mutation.name as postFooItem %}
+{% magic_with output_field_spec.name as outputFieldName %}
+{% magic_with input_field_spec.name as inputFieldName %}
+from api.tests.codeblock import CodeBlock
+
+def create_post_foo_item_mutation(
+    input_field_name,                                                                           {% for input_field_spec in __.input_field_specs %}{% endfor %}
+    output_field_name_outputs=None,                                                             {% for output_field_spec in __.fk_output_field_specs %}{% endfor %}
+    output_values=None
+):
+    root = CodeBlock(style="graphql")
+    root.IxI("mutation postFooItem", [
+        inputFieldName: inputFieldTsType,                                                       {% for input_field_spec in __.input_field_specs %}{% endfor %}
+    ], " {")
+    root.IxI("  postFooItem", [
+          inputFieldName: $inputFieldName                                                       {% for input_field_spec in __.input_field_specs %}{% endfor %}
+    ], " {")
+
+    if output_field_name_outputs:                                                               {% for output_field_spec in _.fk_output_field_specs %}
+        root.abc("    outputFieldName {")
+        root._x_("      ", output_field_name_outputs, "")
+        root.abc("    }")                                                                       {% endfor %}
+
+    if output_values:
+        root._x_("    ", output_values, "")
+    root.abc("  }")
+    root.abc("}")
+
+    op_name = "postFooItem"
+    variables = dict(
+          inputFieldName=input_field_name                                                       {% for input_field_spec in __.input_field_specs %}{% endfor %}
+    )
+    return root.result, op_name, variables
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}

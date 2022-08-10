@@ -1,0 +1,6 @@
+export const flags = {
+  logQueries: false,                                                        {% if _.react_app.api_module %}
+  logResourceView: false,                                                   {% endif %}
+  logSkandha: false,                                                        {% if _.react_app.uses_states %}
+  logStateProviders: false,                                                 {% endif %}
+};

@@ -1,3 +1,0 @@
-{% magic_with res.name as yellowTulip %}
-YellowTulipState
-{% end_magic_with %}

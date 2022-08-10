@@ -1,23 +1,95 @@
+import os
+import typing as T
+from dataclasses import dataclass, field
+from pathlib import Path
+
 from moonleap.render.render_templates import render_templates
-from moonleap.resource.memfield import MemField
-from moonleap.resource.memfun import MemFun
+from moonleap.resource import Resource
 
 
-def render(self, write_file, render_template, output_path):
-    for template_dir, get_context, skip_render in self.template_dirs:
-        if skip_render and skip_render(self):
-            continue
-        render_templates(
-            template_dir, self, write_file, render_template, output_path, get_context
+def render_resource(
+    res, write_file, render_template, output_path, context=None, template_dirs=None
+):
+    if context is None:
+        context = dict()
+
+    for maybe_template_dir in template_dirs or []:
+        template_dir = (
+            maybe_template_dir(res)
+            if callable(maybe_template_dir)
+            else maybe_template_dir
+        )
+        if template_dir is not None:
+            render_templates(
+                template_dir,
+                write_file,
+                render_template,
+                output_path,
+                context=context,
+                sections=dict(),
+            )
+
+    for render_task in res.render_tasks:
+        extra_context = (
+            render_task.context(render_task.res)
+            if callable(render_task.context)
+            else render_task.context
+        )
+
+        render_resource(
+            render_task.res,
+            write_file,
+            render_template,
+            os.path.join(output_path, render_task.output_path),
+            context=dict(**context, **extra_context),
+            template_dirs=render_task.template_dirs,
         )
 
 
-def add_template_dir(self, template_dir, get_context=None, skip_render=None):
-    if not [x for x in self.template_dirs if x[0] == template_dir]:
-        self.template_dirs.append((template_dir, get_context, skip_render))
+@dataclass
+class RenderTask:
+    res: Resource
+    output_path: str
+    context: dict
+    template_dirs: list
 
 
-class StoreTemplateDirs:
-    template_dirs = MemField(lambda: list())
-    render = MemFun(render)
-    add_template_dir = MemFun(add_template_dir)
+@dataclass
+class RenderMixin:
+    render_tasks: list = field(
+        default_factory=list, init=False, compare=False, repr=False
+    )
+
+    def renders(self, res, output_path, context, template_dirs):
+        render_task = RenderTask(
+            res=res,
+            output_path=output_path,
+            context=context,
+            template_dirs=template_dirs,
+        )
+
+        for t in self.render_tasks:
+            if t.res.id == render_task.res.id:
+                raise Exception(f"Resource {self} already renders {res}")
+
+        self.render_tasks.append(render_task)
+
+
+@dataclass
+class TemplateDirMixin:
+    template_dir: T.Optional[Path] = field(default=None, init=False, repr=False)
+    template_context: dict = field(default_factory=dict, init=False, repr=False)
+
+
+class RootResource(RenderMixin, Resource):
+    pass
+
+
+_root_resource = None
+
+
+def get_root_resource():
+    global _root_resource
+    if not _root_resource:
+        _root_resource = RootResource()
+    return _root_resource

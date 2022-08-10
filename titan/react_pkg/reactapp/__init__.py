@@ -1,26 +1,12 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import (MemFun, Priorities, add, create, create_forward, extend,
-                      register_add, rule)
-from moonleap.render.storetemplatedirs import StoreTemplateDirs
-from moonleap.verbs import has
-from titan.react_pkg.nodepackage import load_node_package_config
+from moonleap import MemFun, Priorities, create, create_forward, extend, rule
+from moonleap.verbs import has, runs
+from titan.project_pkg.service import Service
 from titan.react_pkg.packages.use_packages import use_packages
 
-from . import docker_compose_configs, makefile_rules, props, react_app_configs
-from .props import get_context
-from .resources import ReactApp, ReactAppConfig
-
-
-@register_add(ReactAppConfig)
-def add_react_app_config(resource, app_module_config):
-    resource.react_app_configs.add(app_module_config)
-
-
-class StoreReactAppConfigs:
-    react_app_configs = P.tree("react_app_configs")
-
+from .resources import ReactApp
 
 base_tags = [("react-app", ["tool"])]
 
@@ -28,12 +14,8 @@ base_tags = [("react-app", ["tool"])]
 @create("react-app")
 def create_react_app(term):
     react_app = ReactApp(name="react-app")
-    react_app.add_template_dir(Path(__file__).parent / "templates", get_context)
-    add(react_app, load_node_package_config(__file__))
-    add(react_app, docker_compose_configs.get("dev"))
-    add(react_app, docker_compose_configs.get("prod"))
-    add(react_app, makefile_rules.get_run_server())
-    add(react_app, makefile_rules.get_install())
+    react_app.template_dir = Path(__file__).parent / "templates"
+    react_app.template_context = dict(react_app=react_app)
     return react_app
 
 
@@ -49,11 +31,20 @@ def create_react_created(react_app):
 @rule("react-app")
 def use_webvitals(react_app):
     if react_app.service.get_tweak_or(True, ["react_app", "reportWebVitals"]):
-        add(react_app, react_app_configs.get())
+        react_app.use_webvitals = True
         react_app.use_packages(["reportWebVitals"])
 
 
+@rule("service", runs, "react-app")
+def service_uses_react_app(service, react_app):
+    return [create_forward(service, has, ":node-package")]
+
+
+@extend(Service)
+class ExtendService:
+    react_app = P.child(runs, "react-app")
+
+
 @extend(ReactApp)
-class ExtendReactApp(StoreTemplateDirs, StoreReactAppConfigs):
+class ExtendReactApp:
     use_packages = MemFun(use_packages)
-    get_flags = MemFun(props.get_flags)

@@ -1,14 +1,10 @@
-import typing as T
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
-from moonleap import Resource
-
-
-@dataclass
-class VsCodeProject(Resource):
-    pass
+from moonleap import RenderMixin, Resource, get_session
 
 
 @dataclass
-class VsCodeProjectConfig(Resource):
-    paths: T.List[str] = field(default_factory=list)
+class VsCodeProject(RenderMixin, Resource):
+    @property
+    def code_workspaces_dir(self):
+        return get_session().settings.get("code_workspaces_dir")

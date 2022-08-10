@@ -1,4 +1,4 @@
-from moonleap.typespec.field_spec import FkFieldSpec
+from moonleap.typespec.field_spec import FieldSpec, FkFieldSpec
 from moonleap.typespec.type_spec_store import type_spec_store
 
 
@@ -9,3 +9,30 @@ def field_spec_target_type_spec(self: FkFieldSpec):
     return type_spec_store().get(
         self.target + ("Form" if self.field_type == "form" else "")
     )
+
+
+def field_spec_graphql_type(self: FieldSpec):
+    postfix = "!" if self.required else ""
+
+    if self.field_type in ("string", "json", "url", "slug"):
+        return "String" + postfix
+
+    if self.field_type in ("boolean",):
+        return "Boolean" + postfix
+
+    if self.field_type in ("int",):
+        return "Int" + postfix
+
+    if self.field_type in ("float",):
+        return "Float" + postfix
+
+    if self.field_type in ("uuid",):
+        return "ID" + postfix
+
+    if self.field_type in ("form",):
+        return f"{self.target_type_spec.type_name}Type" + postfix
+
+    if self.field_type in ("idList",):
+        return r"[String]" + postfix
+
+    raise Exception(f"Cannot deduce graphql type for {self.field_type}")

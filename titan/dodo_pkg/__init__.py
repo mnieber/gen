@@ -1,3 +1,3 @@
-from . import commandsdir, dodomenu, layer, layer_and_layergroup, layergroup, startdir
+from . import commandsdir, layer, layergroup
 
-modules = [commandsdir, dodomenu, layer, layergroup, layer_and_layergroup, startdir]
+modules = [commandsdir, layer, layergroup]

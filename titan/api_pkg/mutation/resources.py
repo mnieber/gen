@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from moonleap import Resource
+from moonleap import RenderMixin, Resource
 
 
 @dataclass
-class Mutation(Resource):
+class Mutation(RenderMixin, Resource):
     name: str

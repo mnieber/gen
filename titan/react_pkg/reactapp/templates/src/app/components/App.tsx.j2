@@ -1,0 +1,17 @@
+import { QueryClientProvider } from 'react-query';
+import { queryClient } from 'src/api/queryClient';
+import 'src/frames/components/index.scss';
+import { UrlRouter } from 'src/routes/components';                                                        {% if _.react_app.routes_module %}{% endif %}
+import './App.scss';
+
+export function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <div className="App w-screen {% if _.service.tailwindcss %}lg:w-2/3{% endif %}">
+        <header className="App__Header">
+          <UrlRouter />                                                                                   {% if _.react_app.routes_module %}{% endif %}
+        </header>
+      </div>
+    </QueryClientProvider>
+  );
+}

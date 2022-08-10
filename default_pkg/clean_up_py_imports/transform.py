@@ -65,13 +65,15 @@ def parse_imports(text):
     return visitor.imports
 
 
-def process_clean_up_py_imports(lines):
-    def t(x):
-        has_tag = x == clean_up_py_imports_tag or x == end_clean_up_py_imports_tag
-
-        return ("{% raw %}" + x + "{% endraw %}" + os.linesep) if has_tag else x
-
-    return R.map(t, lines)
+def process_clean_up_py_imports(lines, template_fn=None):
+    result = []
+    for line in lines:
+        result.extend(
+            ["{% raw %}" + line + "{% endraw %}", ""]
+            if line == clean_up_py_imports_tag or line == end_clean_up_py_imports_tag
+            else [line]
+        )
+    return result
 
 
 def get_other_text(lines):
@@ -106,7 +108,7 @@ def filter_modules(record, other_text):
     )
 
 
-def post_process_clean_up_py_imports(lines):
+def post_process_clean_up_py_imports(lines, template_fn=None):
     result = []
     removing = False
     block = []
@@ -135,6 +137,11 @@ def post_process_clean_up_py_imports(lines):
                         for module in record["modules"]:
                             result.extend([f"import {module}"])
         elif removing:
+            if line.strip().startswith("#"):
+                raise Exception(
+                    "Sorry, comments are not yet supported by clean_up_py_imports"
+                )
+
             block.append(line)
         else:
             result.append(line)

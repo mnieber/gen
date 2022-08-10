@@ -8,14 +8,14 @@ from titan.project_pkg.service import Tool
 class Dockerfile(Tool):
     target: str
     image_name: T.Optional[str] = None
-    custom_steps_pre: str = ""
-    custom_steps_pre_dev: str = ""
-    custom_steps: str = ""
-    custom_steps_dev: str = ""
 
 
 @dataclass
 class DockerImage(Tool):
     name: T.Optional[str] = None
-    install_command: str = "apt-get update && apt-get install -y"
-    pip: str = "pip3"
+
+    @property
+    def install_command(self):
+        if self.name and self.name.startswith("node:"):
+            return "apk update && apk add"
+        return "apt-get update && apt-get install -y"

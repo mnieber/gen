@@ -1,0 +1,29 @@
+{% magic_with module.name as fooModule %}
+{% magic_with mutation.name as fooMutation %}
+{% clean_up_py_imports %}
+import graphene
+from graphene.types.generic import GenericScalar
+{% end_clean_up_py_imports %}
+from .{{ mutation.name|lower }} import FooMutation                              {% for mutation in _.graphql_api.mutations %}{% endfor %}
+import foo_module.schema                                                        {% for module in __.modules %}{% endfor %}
+
+
+class GrapheneNonEmptyMutation(graphene.Mutation):
+    class Arguments:
+        pass
+
+    test_mutation = graphene.Field(graphene.String)
+
+    def mutate(self, root, info, **kwargs):
+        return GrapheneNonEmptyMutation(test_mutation="Hello world")
+
+
+class Mutation(
+    foo_module.schema.Mutation,                                                 {% for module in __.modules %}{% endfor %}
+    GrapheneNonEmptyMutation
+):
+    foo_mutation = FooMutation.Field()                                          {% for mutation in _.graphql_api.mutations %}
+    pass                                                                        {% empty %}{% endfor %}
+
+{% end magic_with %}
+{% end magic_with %}

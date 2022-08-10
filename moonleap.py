@@ -5,10 +5,12 @@ import sys
 from argparse import ArgumentParser
 from pathlib import Path
 
-from moonleap import create_resources, get_blocks, render_resources, report_resources
+from moonleap import create_resources, get_blocks, report_resources
 from moonleap.parser.expand_markdown import expand_markdown
 from moonleap.render.file_writer import FileWriter
 from moonleap.render.post_process_output_files import post_process_output_files
+from moonleap.render.render_template import render_template
+from moonleap.render.storetemplatedirs import get_root_resource, render_resource
 from moonleap.report.create_expected_dir import create_expected_dir
 from moonleap.report.diff import create_symlinks, diff
 from moonleap.session import Session, set_session
@@ -65,7 +67,13 @@ def generate_code(spec_file, session, file_writer):
     create_resources(blocks)
 
     session.report("Rendering...")
-    render_resources(blocks, file_writer.write_file)
+    render_resource(
+        get_root_resource(),
+        write_file=file_writer.write_file,
+        render_template=render_template,
+        output_path="",
+    )
+
     file_writer.write_merged_files()
     for warning in file_writer.warnings:
         session.report(warning)

@@ -4,5 +4,5 @@ from moonleap import Resource
 
 
 @dataclass
-class LayerGroup(Resource):
+class DodoLayerGroup(Resource):
     name: str

@@ -1,0 +1,31 @@
+{% magic_with model.name as MyModel %}
+{% magic_with field.target as MyThroughModel %}
+{% magic_with field.name as my_field %}
+
+import uuid                                                                                 {% clean_up_py_imports %}
+from django.db import models
+from django.utils.text import slugify
+from {{ item_type.django_module.module_path }}.models import {{ item_type.name }}           {% for item_type in __.item_types_to_import %}{% endfor %}
+                                                                                            {% end_clean_up_py_imports %}
+from app.models import Entity
+
+class MyModel(Entity):                                                                      {% for model in _.django_models %}
+    class Meta:                                                                             {% if model.indexed_fields %}
+        indexes = [
+            models.Index(fields=["my_field"])                                               {% for field in model.indexed_fields %}{% endfor %}
+        ]
+                                                                                            {% endif %}
+    my_field = {{ field.body }}                                                             {% for field in model.fields %}{% if field.name != 'id' %}{% endif %}{% endfor %}
+
+    def save(self, *args, **kwargs):                                                        {% if model.slug_fields %}
+        if self.my_field is None:                                                           {% for field in model.slug_fields %}
+            self.my_field = slugify(self.{{ field.slug_src }})                              {% endfor %}
+        super().save(*args, **kwargs)                                                       {% endif %}
+
+    def __str__(self):
+        return "MyModel: " + self.{{ model.display_field_name }}
+
+                                                                                            {% endfor %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}

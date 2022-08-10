@@ -1,1 +1,0 @@
-export { AuthSwitch } from "./AuthSwitch";

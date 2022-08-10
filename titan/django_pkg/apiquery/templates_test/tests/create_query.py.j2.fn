@@ -1,1 +1,0 @@
-create_{{ res.name|sn }}_query.py.j2

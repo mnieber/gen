@@ -23,7 +23,9 @@ def dict2yaml(x):
 
 
 def dbg(x):
-    __import__("pudb").set_trace()
+    import pudb
+
+    pudb.set_trace()
     return x
 
 

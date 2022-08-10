@@ -1,0 +1,47 @@
+{% magic_with _.mutation.name as postRedRose %}
+{% magic_with item_list_deleted.item_name as blueDaisy %}
+{% magic_with input_field_spec.name as inputFieldName %}
+{% magic_with input_field_spec.ts_type as inputFieldTsType %}
+{% magic_with input_field_spec.graphql_type as inputFieldGqlType %}
+{% magic_with query.name as fooQueryName %}
+
+import { useMutation } from 'react-query';
+import { queryClient } from 'src/api/queryClient';
+import { doQuery } from 'src/utils/graphqlClient';
+import { ObjT } from 'src/utils/types';
+import { {{ item_type.ts_form_type }} } from 'src/api/types/{{ item_type.name }}T';       {% for item_type in __.form_input_item_types %}{% endfor %}
+
+const postRedRose = (
+  inputFieldName: inputFieldTsType,                                                       {% for input_field_spec in __.input_field_specs %}{% endfor %}
+) => {
+  return doQuery(
+    `mutation postRedRose(
+      $inputFieldName: inputFieldGqlType                                                  {% for input_field_spec in __.input_field_specs %}{% endfor %}
+    ) {
+        postRedRose(
+          inputFieldShortName: $inputFieldName                                            {% for input_field_spec in __.input_field_specs %}{% endfor %}
+        ) {
+          {{ __.get_graphql_body() }}
+        }
+    }`,
+    {
+      inputFieldName,                                                                     {% for input_field_spec in __.input_field_specs %}{% endfor %}
+    }).then(
+    (response: ObjT) => {
+      return response.postRedRose;
+    });
+};
+
+export const usePostRedRose = () => {
+  return useMutation(['postRedRose'], postRedRose, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("fooQueryName");                                      {% for query in __.invalidated_queries %}{% endfor %}
+    }
+  });
+};
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}

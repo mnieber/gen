@@ -1,4 +1,4 @@
-@tailwind base;                                                                     {% if res.has_tailwind_css %}
+@tailwind base;                                                                     {% if _.service.tailwindcss %}
 @tailwind components;
 @tailwind utilities;
                                                                                     {% endif %}
@@ -17,13 +17,13 @@ code {
 }
 
 h1 {
-  @apply text-xl;                                                                   {% if res.has_tailwind_css %}
+  @apply text-xl;                                                                   {% if _.service.tailwindcss %}
   font-size: 1.25rem;                                                               {% else %}
   line-height: 1.75rem;                                                             {% endif %}
 }
 
 h2 {
-  @apply text-lg;                                                                   {% if res.has_tailwind_css %}
+  @apply text-lg;                                                                   {% if _.service.tailwindcss %}
   font-size: 1.125rem;                                                              {% else %}
   line-height: 1.75rem;                                                             {% endif %}
 }

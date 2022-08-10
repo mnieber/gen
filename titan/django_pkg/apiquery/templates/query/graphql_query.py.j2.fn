@@ -1,1 +1,0 @@
-{{ res.name.lower() }}query.py

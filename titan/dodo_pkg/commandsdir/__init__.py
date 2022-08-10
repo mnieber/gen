@@ -1,24 +1,31 @@
+from dataclasses import dataclass
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import add, create, extend, rule
+from moonleap import RenderMixin, Resource, create, extend, rule
 from moonleap.verbs import has
 from titan.project_pkg.project import Project
 
-from . import dodo_layer_configs
-from .resources import CommandsDir
+
+@dataclass
+class CommandsDir(RenderMixin, Resource):
+    pass
 
 
 @create("commands-dir")
 def create_commands_dir(term):
-    commands_dir = CommandsDir(name=term.data)
-    return commands_dir
+    return CommandsDir()
 
 
 @rule("project", has, "commands-dir")
 def project_has_commands_dir(project, commands_dir):
-    project.add_template_dir(Path(__file__).parent / "templates_project")
-    add(project, dodo_layer_configs.get(project))
+    project.renders(
+        #
+        commands_dir,
+        "",
+        dict(),
+        [Path(__file__).parent / "templates"],
+    )
 
 
 @extend(Project)

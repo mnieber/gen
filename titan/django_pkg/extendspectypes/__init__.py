@@ -14,4 +14,4 @@ class ExtendTypeSpec:
 class ExtendFieldSpec:
     graphene_input_type = Prop(props.graphene_input_type)
     graphene_output_type = MemFun(props.graphene_output_type)
-    target_django_module = MemFun(props.target_django_module)
+    target_item_type = Prop(props.target_item_type)

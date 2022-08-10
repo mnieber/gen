@@ -1,54 +1,98 @@
-import os
+import importlib
+import sys
+from argparse import Namespace
 from pathlib import Path
 
-import ramda as R
 from jinja2 import Template
-from moonleap.render.template_env import template_env
+from moonleap.render.template_env import get_template
 from moonleap.session import get_session
+from moonleap.utils.ruamel_yaml import ruamel_yaml
 
 
-def _resolve_output_fn(templates_path, template_fn, **kwargs):
-    if str(template_fn) == ".":
-        return template_fn
+def render_templates(
+    templates_dir, write_file, render_template, output_path, context, sections
+):
+    if not Path(templates_dir).is_dir():
+        raise Exception(f"{templates_dir} is not a directory")
 
-    meta_filename = str(templates_path / template_fn) + ".fn"
+    next_sections, meta_data_by_fn, skip = _load_moonleap_data(templates_dir, context)
+    if skip:
+        return
+
+    sections = next_sections or sections
+
+    # create output directory
+    write_file(output_path, content="", is_dir=True)
+
+    # render templates
+    for template_fn in Path(templates_dir).glob("*"):
+        print(template_fn)
+        if template_fn.name.startswith("__moonleap__"):
+            continue
+
+        meta_data = meta_data_by_fn.get(template_fn.name, dict())
+        if not meta_data.get("include", True):
+            continue
+
+        output_fn = _get_output_fn(output_path, template_fn, meta_data, context)
+        if template_fn.is_dir():
+            render_templates(
+                template_fn,
+                write_file,
+                render_template,
+                output_fn,
+                context,
+                sections,
+            )
+        else:
+            write_file(
+                output_fn,
+                content=render_template(
+                    template_fn,
+                    settings=get_session().settings,
+                    _=context,
+                    __=sections,
+                ),
+                is_dir=False,
+            )
+
+
+def _get_output_fn(output_path, template_fn, meta_data, context):
     name = (
-        (template_env.get_template(meta_filename).render(**kwargs).split(os.linesep)[0])
-        if Path(meta_filename).exists()
-        else Template(template_fn.name).render(**kwargs)
+        meta_data["name"]
+        if "name" in meta_data
+        else Template(template_fn.name).render(_=Namespace(**context))
     )
 
     if name.endswith(".j2"):
         name = name[:-3]
 
-    return _resolve_output_fn(templates_path, template_fn.parent, **kwargs) / name
+    return Path(output_path) / name
 
 
-def render_templates(
-    templates_dir, resource, write_file, render_template, output_path, get_context=None
-):
-    context_kwargs = dict(res=resource)
-    if get_context:
-        context_kwargs = R.merge(context_kwargs, get_context(resource))
-
-    assert Path(templates_dir).is_dir()
-    for template_fn in Path(templates_dir).glob("**/*"):
-        if template_fn.suffix in (".fn", ".ml-meta"):
-            continue
-
-        output_fn = Path(output_path) / _resolve_output_fn(
-            templates_dir, template_fn.relative_to(templates_dir), **context_kwargs
-        )
-        is_dir = template_fn.is_dir()
-
-        write_file(
-            output_fn,
-            content=(
-                ""
-                if is_dir
-                else render_template(
-                    template_fn, settings=get_session().settings, **context_kwargs
+def _load_moonleap_data(dir_fn, context):
+    meta_data_by_fn = dict()
+    meta_filename = dir_fn / "__moonleap__.j2"
+    if meta_filename.exists():
+        content = get_template(meta_filename).render(_=Namespace(**context))
+        meta_data_by_fn = ruamel_yaml.load(content)
+        for fn, meta_data in meta_data_by_fn.items():
+            if not isinstance(meta_data.get("include", False), bool):
+                raise Exception(
+                    f"Invalid include value: "
+                    + f"{meta_data.get('include')} for filename {fn} in {meta_filename}"
                 )
-            ),
-            is_dir=is_dir,
-        )
+
+    skip = not meta_data_by_fn.get(".", {}).get("include", True)
+    sections = None
+
+    if not skip and (dir_fn / "__moonleap__.py").exists():
+        sys.path.insert(0, str(dir_fn))
+        m = importlib.import_module("__moonleap__")
+        importlib.reload(m)
+        sys.path.pop(0)
+
+        if hasattr(m, "get_helpers"):
+            sections = m.get_helpers(_=Namespace(**context))
+
+    return sections, meta_data_by_fn, skip

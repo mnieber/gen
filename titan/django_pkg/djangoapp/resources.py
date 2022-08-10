@@ -1,17 +1,11 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
-from moonleap import Resource
+from moonleap import get_session
+from moonleap.utils.get_or_create_secret_key import get_or_create_secret_key
 from titan.project_pkg.service import Tool
 
 
 @dataclass
 class DjangoApp(Tool):
-    pass
-
-
-@dataclass
-class DjangoConfig(Resource):
-    settings: dict = field(default_factory=dict)
-    urls: list = field(default_factory=list)
-    urls_imports: list = field(default_factory=list)
-    cors_urls: list = field(default_factory=list)
+    def secret_key(self):
+        return get_or_create_secret_key(get_session(), "django_dev")

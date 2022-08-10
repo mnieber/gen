@@ -74,13 +74,16 @@ def parse_imports(text):
     return visitor.imports
 
 
-def process_clean_up_js_imports(lines):
-    def t(x):
-        has_tag = x == clean_up_js_imports_tag or x == end_clean_up_js_imports_tag
+def process_clean_up_js_imports(lines, template_fn=None):
+    result = []
+    for line in lines:
+        result.extend(
+            ["{% raw %}" + line + "{% endraw %}", ""]
+            if line == clean_up_js_imports_tag or line == end_clean_up_js_imports_tag
+            else [line]
+        )
 
-        return ("{% raw %}" + x + "{% endraw %}" + os.linesep) if has_tag else x
-
-    return R.map(t, lines)
+    return result
 
 
 def get_other_text(lines):
@@ -119,7 +122,7 @@ def filter_packages(record, other_text):
     )
 
 
-def post_process_clean_up_js_imports(lines):
+def post_process_clean_up_js_imports(lines, template_fn=None):
     result = []
     removing = False
     block = []
@@ -149,6 +152,11 @@ def post_process_clean_up_js_imports(lines):
                     package_list = ", ".join(record["packages"])
                     result.extend([f"import {{ {package_list} }} from {location}"])
         elif removing:
+            if line.strip().startswith("//"):
+                raise Exception(
+                    "Sorry, comments are not yet supported by clean_up_js_imports"
+                )
+
             block.append(line)
         else:
             result.append(line)
@@ -168,7 +176,6 @@ if __name__ == "__main__":
         import { makeObservable } from 'mobx';
 
         import { action, observable, makeObservable } from 'mobx';
-        import { RST, resetRS, updateRes } from 'src/utils/RST';
         import { forEach } from 'ramda';
         import * as initiativesApi from 'src/initiatives/api';
     """

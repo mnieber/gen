@@ -1,20 +1,11 @@
-import random
 import typing as T
-import uuid
 from dataclasses import dataclass, field
 
 from moonleap.parser.block import Block
 from moonleap.parser.term import Term
 from moonleap.resource.rel import Rel
 from moonleap.resource.slctrs import RelSelector
-
-# Use a fixed seed for the id generator
-rd = random.Random()
-rd.seed(0)
-
-
-def get_id():
-    return uuid.UUID(int=rd.getrandbits(128)).hex
+from moonleap.utils.get_id import get_id
 
 
 @dataclass

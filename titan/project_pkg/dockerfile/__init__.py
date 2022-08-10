@@ -1,13 +1,8 @@
-from pathlib import Path
-
 import moonleap.resource.props as P
-from moonleap import StoreTemplateDirs, create, extend, receives, rule
+from moonleap import create, extend, rule
 from moonleap.verbs import has
 
 from .resources import Dockerfile, DockerImage
-
-rules = [(("dockerfile", has, "docker-image"), receives("docker_compose_configs"))]
-
 
 base_tags = [
     ("dockerfile", ["tool"]),
@@ -20,7 +15,6 @@ def create_dockerfile(term):
     docker_file = Dockerfile(
         target="dev" if term.data == "dev" else "prod", name="dockerfile"
     )
-    docker_file.add_template_dir(Path(__file__).parent / "templates")
     return docker_file
 
 
@@ -36,5 +30,5 @@ def dockerfile_use_docker_image(dockerfile, docker_image):
 
 
 @extend(Dockerfile)
-class ExtendDockerfile(StoreTemplateDirs):
+class ExtendDockerfile:
     docker_image = P.child(has, "docker-image")

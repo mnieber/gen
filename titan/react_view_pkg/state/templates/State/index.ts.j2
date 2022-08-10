@@ -1,0 +1,108 @@
+{% magic_with _.component.name as yellowTulip %}
+{% magic_with store.name as BlueDaisy %}
+{% magic_with pipeline.output.item_name as redRose %}
+{% magic_with bvr.name as purpleFlower %}
+
+import { setCallbacks } from 'aspiration';                                                              {% clean_up_js_imports %}
+import { makeObservable } from 'mobx';
+import { addCleanUpFunctionToCtr, cleanUpCtr } from 'react-default-props-context';
+import * as Skandha from 'skandha';
+import { ClassMemberT as CMT, facet, getm } from 'skandha';
+import { registerCtr } from 'skandha-mobx';
+import { getIds } from 'src/utils/ids';
+import * as Facets from 'skandha-facets';
+import * as FacetPolicies from 'skandha-facets/policies';
+import { PurpleFlower, PurpleFlowerCbs } from 'skandha-facets/PurpleFlower';                            {% for bvr in _.bvrs %}{% endfor %}
+
+import { Inputs } from '{{ _.component.module.module_path }}/YellowTulipState/facets/Inputs';
+import { Outputs } from '{{ _.component.module.module_path }}/YellowTulipState/facets/Outputs';
+import * as Policies from './policies';
+import * as Handlers from './handlers';                                                                 {% end_clean_up_js_imports %}
+
+type PropsT = {
+  deleteRedRoses: (ids: string[]) => Promise;                                                           {% for pipeline in __.pipelines %}{% if pipeline.get_bvr("deletion") %}{% endif %}{% endfor %}
+};
+
+export class YellowTulipState {
+  @facet inputs: Inputs = new Inputs();
+  @facet outputs: Outputs = new Outputs();
+
+  redRoses = {                                                                                          {% for pipeline in __.pipelines %}
+    purpleFlower: new PurpleFlower(),                                                                   {% for bvr in pipeline.bvrs %}{% endfor %}
+  }                                                                                                     {% endfor %}
+
+  _setRedRosesCallbacks(props: PropsT) {                                                                {% for pipeline in __.pipelines %}
+    const ctr = this.redRoses;
+    setCallbacks(ctr.deletion, {                                                                          {% if pipeline.get_bvr("deletion") %}
+      delete: {
+        deleteItems(this: DeletionCbs['delete']) {
+          return props.{self.delete_function_name}(this.itemIds);
+        },
+      },
+    } as DeletionCbs);                                                                                    {% endif %}
+    setCallbacks(ctr.highlight, {
+      highlightItem: {                                                                                    {% if pipeline.get_bvr("addition") %}
+        enter(this: HighlightCbs['highlightItem']) {
+          FacetPolicies.cancelNewItemOnHighlightChange(ctr.highlight, this.id);    # noqa: E501
+        },
+      },                                                                                                  {% endif %}
+    } as HighlightCbs);
+    setCallbacks(ctr.selection, {                                                                         {% if pipeline.get_bvr("selection") %}
+      selectItem: {
+        selectItem(this: SelectionCbs['selectItem']) {
+          handleSelectItem(ctr.selection, this.selectionParams);
+          FacetPolicies.highlightFollowsSelection(                                                        {% if pipeline.get_bvr("highlight") %}
+            ctr.selection,
+            this.selectionParams
+          );                                                                                              {% endif %}
+        }
+      },
+    } as SelectionCbs);                                                                                   {% endif %}
+  }                                                                                                     {% endfor %}
+
+  _applyRedRosesPolicies(props: PropsT) {                                                               {% for pipeline in __.pipelines %}
+    const Inputs_items = [Inputs, 'redRoses', this] as CMT;
+    const Outputs_display = [Outputs, 'redRosesDisplay', this] as CMT;
+    const Outputs_itemById = [Outputs, '{self.res.item_name}ById', this] as CMT;                          {% if pipeline.get_bvr("selection") %}{% endif %}
+
+    const policies = [
+      // highlight                                                                                        {% if pipeline.get_bvr("highlight") %}
+      Facets.highlightUsesItemLookUpTable(getm(Outputs_itemById)),                                        {% endif %}
+      Skandha.mapDataToFacet(Outputs_display, getm(Inputs_items)),                                        {% ?? not pipeline.get_bvr("filtering") == False %}
+      // selection                                                                                        {% if pipeline.get_bvr("highlight") %}
+      Facets.selectionUsesSelectableIds(getm(Outputs_display), getIds),
+      Facets.selectionUsesItemLookUpTable(getm(Outputs_itemById)),                                        {% endif %}
+    ];
+
+    Skandha.installPolicies<any>(policies, this.redRoses);
+  }                                                                                                     {% endfor %}
+
+  getSummary() {
+    return Skandha.getCtrState(this);
+  }
+
+  destroy() {
+    cleanUpCtr(this);
+  }
+
+  constructor(props: PropsT) {
+    registerCtr({
+      ctr: this,
+      childCtrs: [
+        {                                                                                               {% for pipeline in __.pipelines %}
+          ctr: this.redRoses,
+          details: { name: 'RedRoses' },
+          initCtr: () => {
+            this._setRedRosesCallbacks(props);
+            this._applyRedRosesPolicies(props);
+            addCleanUpFunctionToCtr(this, () => cleanUpCtr(this.redRoses));
+          },
+        },                                                                                              {% endfor %}
+      ],
+    });
+  }
+}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}

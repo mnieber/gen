@@ -1,0 +1,33 @@
+{% magic_with _.query.name as queryName %}
+{% magic_with input_field_spec.name as inputFieldName %}
+{% magic_with input_field_spec.short_name as inputFieldShortName %}
+{% magic_with output_field_spec.name as outputFieldName %}
+{% magic_with output_field_spec.target as OutputFieldTarget %}
+{% clean_up_py_imports %}
+import graphene
+from graphene.types.generic import GenericScalar
+{% end_clean_up_py_imports %}
+from api.types import *
+from {{ item_type.django_module.module_path }.models import {item_type.name}        {% for item_type in __.item_types_to_import %}{% endfor %}
+
+class QueryNameQuery:
+    output_field_name = {{ __.graphene_output_type(output_field_spec) }}            {% for output_field_spec in __.output_field_specs %}{% endfor %}
+
+    def resolve_output_field_name(                                                  {% for output_field_spec in __.output_field_specs %}
+        self,
+        info,
+        input_field_name,                                                           {% for input_field_spec in __.input_field_specs %}{% endfor %}
+    ):
+        return OutputFieldTarget.objects.filter(                                    {% if output_field_spec.field_type in ("relatedSet", "fk") %}
+            input_field_short_name=input_field_short_name,                          {% for input_field_spec in __.input_field_specs %}{% endfor %}
+        ).first()                                                                   {% ?? output_field_spec.field_type == "fk") %}
+        )                                                                           {% ?? output_field_spec.field_type == "relatedSet") %}{% endif %}
+        return {}                                                                   {% ?? output_field_spec.field_type == "json" %}
+        return 0                                                                    {% ?? output_field_spec.field_type == "int" %}
+        return ""                                                                   {% ?? output_field_spec.field_type not in ("fk", "related_set", "json", "int") %}
+                                                                                    {% endfor %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}

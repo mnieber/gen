@@ -1,3 +1,13 @@
 version: "3.7"
 
-{{ res.get_config(target="dev", is_override=True) | to_nice_yaml }}
+services:
+{{ service.name }}:                                                                                                       {% for service in _.project.services %}
+    volumes:                                                                                                              {% if service.opt_dir %}
+      - {{ __.pudb_path }}:/root/.config/pudb                                                                             {% ?? service.pudb %}
+      - {{ _.project.opt_dir_fn }}/{{ service.name }}/fish_history:/root/.local/share/fish/fish_history                   {% ?? service.fish %}
+      - {{ _.project.opt_dir_fn }}/{{ service.name }}/ipython:/root/.ipython                                              {% ?? service.pudb %}
+      - {{ _.project.opt_dir_fn }}/{{ service.name }}/pytest_report.html:{{ service.install_dir }}/pytest_report.html     {% ?? service.pytest %}
+      - {{ _.project.opt_dir_fn }}/{{ service.name }}/assets:{{ service.install_dir }}/assets                             {% ?? service.pytest %}
+      - {{ _.project.opt_dir_fn }}/{{ service.name }}/static:{{ service.install_dir }}/static                             {% ?? service.django_app %}
+      - {{ _.project.opt_dir_fn }}/{{ service.name }}/media:{{ service.install_dir }}/media                               {% ?? service.django_app %}
+                                                                                                                          {% endif %}{% endfor %}

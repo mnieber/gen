@@ -1,0 +1,14 @@
+from argparse import ArgumentParser
+
+from dodo_commands import Dodo
+
+
+def _args():  # noqa
+    parser = ArgumentParser(description=("Initialize the {{ _.project.name }} project."))
+    args = Dodo.parse_args(parser)
+    return args
+
+
+if Dodo.is_main(__name__):
+    args = _args()
+    Dodo.run(["dodo", "{{ service.name }}.make", "init-dev"])                                   {% for service in _.project.services %}{% endfor %}

@@ -1,0 +1,24 @@
+{% trim_newlines keep=1 %}
+
+{% include_snippet "__moonleap__/dial.yaml.j2" %}
+{% include_snippet "__moonleap__/docker-compose.yaml.j2" %}
+{% include_snippet "__moonleap__/menu.yaml.j2" %}
+
+
+LAYER_GROUPS:                                                         {% if _.layer.layer_groups %}
+  {{ layer_group.name }}:                                               {% for layer_group in _.layer.layer_groups %}
+    - {{ layer.name }}: {}                                                {% for layer in layer_group.layers %}{% endfor %}
+                                                                        {% endfor %}
+
+                                                                      {% endif %}
+ROOT:
+  aliases:                                                            {% ?? _.layer.configures_docker_compose or _.project.vscode_project %}
+{% include_snippet "__moonleap__/docker-compose-aliases.yaml.j2" %}
+    code: exec 'code {{ __.vscode_project_fn }}'                      {% ?? __.vscode_project_fn %}
+  command_path:
+    - ~/.dodo_commands/default_project/commands/*
+    - ${/ROOT/src_dir}/extra/{{ _.project.name }}_commands            {% ?? _.project.commands_dir %}
+  shared_config_dir: ${/ROOT/src_dir}/extra/.dodo_commands
+  src_dir: ${/ROOT/project_dir}/src
+  version: 1.0.0
+{% end_trim_newlines %}

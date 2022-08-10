@@ -1,7 +1,7 @@
 import re
 
 
-def process_right_column(lines):
+def process_right_column(lines, template_fn=None):
     result = []
 
     for line in lines:
@@ -40,5 +40,5 @@ def process_right_column(lines):
     return result
 
 
-def post_process_right_column(lines):
+def post_process_right_column(lines, template_fn=None):
     return lines

@@ -24,21 +24,19 @@ base_tags = [
 ]
 
 
+rules = [
+    (("graphql:api", has, "mutation"), empty_rule()),
+    (("mutation", posts, "item"), empty_rule()),
+    (("mutation", deletes, "item~list"), empty_rule()),
+    (("mutation", returns, "x+item"), empty_rule()),
+    (("mutation", returns, "x+item~list"), empty_rule()),
+]
+
+
 @create("mutation")
 def create_mutation(term):
     mutation = Mutation(name=kebab_to_camel(term.data))
     return mutation
-
-
-@rule("graphql:api", posts, "item")
-def graphql_api_posts_item(graphql_api, item):
-    mutation_term_str = f"post-{item.term.meta.data}:mutation"
-    named_item_term = Term(data=item.term.meta.data, tag="item", name="")
-    return [
-        create_forward(graphql_api, has, mutation_term_str),
-        create_forward(mutation_term_str, posts, item),
-        create_forward(mutation_term_str, returns, named_item_term),
-    ]
 
 
 @rule("mutation", posts, "item")
@@ -51,28 +49,9 @@ def mutation_posts_item(mutation, item):
     ]
 
 
-@rule("graphql:api", deletes, "item~list")
-def graphql_api_deletes_item_list(graphql_api, item_list):
-    mutation_term_str = f"delete-{plural(item_list.meta.term.data)}:mutation"
-    return [
-        create_forward(graphql_api, has, mutation_term_str),
-        create_forward(mutation_term_str, deletes, item_list),
-    ]
-
-
-rules = [
-    (("graphql:api", has, "mutation"), empty_rule()),
-    (("mutation", posts, "item"), empty_rule()),
-    (("mutation", deletes, "item~list"), empty_rule()),
-    (("mutation", returns, "x+item"), empty_rule()),
-    (("mutation", returns, "x+item~list"), empty_rule()),
-]
-
-
 @extend(GraphqlApi)
 class ExtendGraphqlApi:
     mutations = P.children(has, "mutation")
-    item_types_posted = Prop(props.graphql_api_item_types_posted)
 
 
 @extend(Mutation)

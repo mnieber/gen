@@ -1,7 +1,7 @@
 from moonleap import u0
 from moonleap.typespec.field_spec import FieldSpec
 from moonleap.typespec.type_spec_store import TypeSpec
-from titan.django_pkg.graphene_django.utils import find_module_that_provides_item_list
+from titan.api_pkg.typeregistry import get_type_reg
 
 
 def tn_graphene(self: TypeSpec):
@@ -68,9 +68,5 @@ def graphene_output_type(self: FieldSpec, args):
     raise Exception(f"Cannot deduce arg type for {self.field_type}")
 
 
-def target_django_module(self, django_app):
-    return (
-        find_module_that_provides_item_list(django_app, self.target)
-        if self.target
-        else None
-    )
+def target_item_type(self):
+    return get_type_reg().get_item_type_by_name(self.target) if self.target else None

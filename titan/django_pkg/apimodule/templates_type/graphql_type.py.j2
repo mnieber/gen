@@ -1,0 +1,19 @@
+{% magic_with fk_field_spec.name as redRose %}
+{% magic_with _.item_type.name as yellowTulip %}
+{% magic_with field_spec.name as fieldSpecName %}
+
+import graphene                                                             {% clean_up_py_imports %}
+from graphene_django.types import DjangoObjectType
+from {{ __.item_list.django_module|sn }}.models import YellowTulip          {% ?? if __.item_list.django_module %}
+                                                                            {% end_clean_up_py_imports %}
+
+class YellowTulipType(DjangoObjectType):
+    class Meta:
+        model = YellowTulip
+        exclude = [                                                         {% if __.private_field_specs %}
+          "fieldSpecName",                                                  {% for field_spec in __.private_field_specs %}{% endfor %}
+        ]                                                                   {% endif %}
+
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}

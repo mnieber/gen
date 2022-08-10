@@ -10,7 +10,7 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
 
-# Strange enough, without adding "/app/src/app/static" to STATICFILES_DIRS Django won't
+# Strange enough, without adding the static dir to STATICFILES_DIRS Django won't
 # use this directory, even though "app" is in INSTALLED_APPS.
 STATICFILES_DIRS = [os.path.join(APP_DIR, "static")]
 

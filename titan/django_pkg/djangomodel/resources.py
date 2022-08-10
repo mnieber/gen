@@ -1,10 +1,16 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap import Resource
+from moonleap import RenderMixin, Resource
 from moonleap.utils.case import l0, sn
 
-from .utils import _on_delete
+
+def _on_delete(field):
+    return (
+        "models.CASCADE"
+        if field.field_type_attrs.get("onDelete", "") == "cascade"
+        else "models.SET_NULL"
+    )
 
 
 @dataclass
@@ -189,7 +195,7 @@ class DjangoDateField(DjangoModelField):
 
 
 @dataclass
-class DjangoModel(Resource):
+class DjangoModel(RenderMixin, Resource):
     name: str
     display_field_name: str = ""
     fields: T.List[DjangoModelField] = field(default_factory=list)

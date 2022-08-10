@@ -1,0 +1,8 @@
+{% magic_with _.item_type.name as yellowTulip %}
+{{ __.define_type() }}
+
+export type YellowTulipByIdT = { [id: string]: YellowTulipT };
+
+{{ __.define_form_type() }}
+
+{% end_magic_with %}

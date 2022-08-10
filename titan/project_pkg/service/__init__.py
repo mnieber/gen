@@ -1,44 +1,68 @@
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
-    StoreOutputPaths,
     create,
+    create_forward,
+    empty_rule,
     extend,
-    feeds,
     kebab_to_camel,
     rule,
 )
-from moonleap.render.storetemplatedirs import StoreTemplateDirs
 from moonleap.verbs import has, runs, uses
 
 from . import props
 from .resources import Service, Tool
-from .tweaks import tweak
 
-rules = [(("service", has + runs, "tool"), feeds("output_paths"))]
+render_the_service = lambda x: "render the {x.name} service"
+
+rules = [
+    (("service", has, "docker-image"), empty_rule()),
+    (("service", has + runs, "tool"), empty_rule()),
+    (("service", uses, "service"), empty_rule()),
+]
 
 
 @create("service")
 def create_service(term):
-    service = Service(name=kebab_to_camel(term.data), use_default_config=True)
-    service.output_path = service.name + "/"
+    service = Service(name=kebab_to_camel(term.data))
     return service
 
 
-@rule("service")
-def service_uses_tweaks(service):
-    tweak(service)
+@rule("dockerfile", has, "docker-image")
+def dockerfile_use_docker_image(dockerfile, docker_image):
+    return create_forward(dockerfile.service, has, docker_image)
+
+
+@rule("service", uses + has + runs, "tool")
+def service_runs_tool(service, tool):
+    service.renders(
+        tool,
+        "",
+        tool.template_context,
+        [tool.template_dir],
+    )
+
+
+@rule("project", has, "service")
+def project_has_service(project, service):
+    project.renders(
+        service,
+        service.name,
+        dict(service=service),
+        [],
+    )
 
 
 @extend(Service)
-class ExtendService(
-    StoreOutputPaths,
-    StoreTemplateDirs,
-):
+class ExtendService:
+    dockerfile = P.child(has, "dockerfile")
+    docker_image = P.child(has, "docker-image")
+    depends_on = P.children(uses, "service")
+    is_dependent_on = MemFun(props.is_dependent_on)
     tools = P.children(uses + runs + has, "tool")
-    get_tweak_or = MemFun(props.get_tweak_or)
+    project = P.parent("project", has)
 
 
 @extend(Tool)
-class ExtendTool(StoreOutputPaths, StoreTemplateDirs):
+class ExtendTool:
     service = P.parent("service", has + runs, required=True)

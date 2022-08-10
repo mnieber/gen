@@ -6,8 +6,7 @@ from moonleap.builder.create_resource import (
     find_describing_block,
 )
 from moonleap.builder.find_relations import get_relations
-from moonleap.builder.rule import Action
-from moonleap.builder.scope import get_base_tags
+from moonleap.packages.rule import Action
 from moonleap.parser.term import Term
 from moonleap.resource.named_class import NamedResource
 from moonleap.resource.rel import Rel
@@ -29,8 +28,8 @@ def _find_rules(rel, subj_res, obj_res):
     for scope in rel.block.get_scopes():
         for rule in scope.find_rules(
             rel,
-            subj_base_tags=get_base_tags(subj_res),
-            obj_base_tags=get_base_tags(obj_res),
+            subj_base_tags=subj_res.meta.base_tags,
+            obj_base_tags=obj_res.meta.base_tags,
         ):
             rules.append(rule)
 

@@ -75,7 +75,7 @@ Directories that appear in the :template-directory are also created in the :outp
 ```
 def custom_render(self, write_file, render_template, output_path):
     template_path = Path(__file__).parent / "templates"
-    render_templates(template_path, self, write_file, render_template, output_path)
+    render_templates(template_path, write_file, render_template, output_path, dict(res=self))
 
 @extend(Item)
 class ExtendItem:

@@ -1,0 +1,6 @@
+# Prevent any problems with stale .pyc files preventing the use of the latest .py files                 {% if _.service.pip %}
+ENV PYTHONDONTWRITEBYTECODE 1
+
+# Ensure that no messages are still in the buffer (and never printed) in case of a crash
+ENV PYTHONUNBUFFERED 1
+                                                                                                        {% endif %}
