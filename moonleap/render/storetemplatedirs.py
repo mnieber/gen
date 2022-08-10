@@ -7,8 +7,8 @@ def render(self, write_file, render_template, output_path):
     for template_dir, get_context, skip_render in self.template_dirs:
         if skip_render and skip_render(self):
             continue
-        render_templates(template_dir, get_context)(
-            self, write_file, render_template, output_path
+        render_templates(
+            template_dir, self, write_file, render_template, output_path, get_context
         )
 
 

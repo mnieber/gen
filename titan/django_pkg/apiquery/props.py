@@ -9,9 +9,17 @@ from .get_context_test import get_context_test
 def render_query_endpoint(api_module, query, write_file, render_template):
     render_templates(
         Path(__file__).parent / "templates",
+        query,
+        write_file,
+        render_template,
+        output_path=api_module.merged_output_path,
         get_context=lambda x: get_context(x, api_module),
-    )(query, write_file, render_template, output_path=api_module.merged_output_path)
+    )
     render_templates(
         Path(__file__).parent / "templates_test",
+        query,
+        write_file,
+        render_template,
+        output_path=api_module.merged_output_path,
         get_context=lambda x: get_context_test(x, api_module),
-    )(query, write_file, render_template, output_path=api_module.merged_output_path)
+    )

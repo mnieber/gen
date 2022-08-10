@@ -62,6 +62,11 @@ def get_context(query, api_module):
 
 def render_query_endpoint(api_module, query, write_file, render_template):
     template_path = Path(__file__).parent / "templates"
-    render_templates(template_path, get_context=lambda x: get_context(x, api_module))(
-        query, write_file, render_template, output_path=api_module.merged_output_path
+    render_templates(
+        template_path,
+        query,
+        write_file,
+        render_template,
+        output_path=api_module.merged_output_path,
+        get_context=lambda x: get_context(x, api_module),
     )

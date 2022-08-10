@@ -74,6 +74,11 @@ def get_context(mutation, api_module):
 
 def render_mutation_endpoint(api_module, mutation, write_file, render_template):
     template_path = Path(__file__).parent / "templates"
-    render_templates(template_path, get_context=lambda x: get_context(x, api_module))(
-        mutation, write_file, render_template, output_path=api_module.merged_output_path
+    render_templates(
+        template_path,
+        mutation,
+        write_file,
+        render_template,
+        output_path=api_module.merged_output_path,
+        get_context=lambda x: get_context(x, api_module),
     )

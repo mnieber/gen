@@ -60,19 +60,23 @@ def get_context(item_type, api_module):
 
 def render_schema(api_module, item_type, write_file, render_template):
     template_path = Path(__file__).parent / "templates"
-    render_templates(template_path, get_context=lambda x: get_context(x, api_module))(
+    render_templates(
+        template_path,
         item_type,
         write_file,
         render_template,
         output_path=api_module.merged_output_path,
+        get_context=lambda x: get_context(x, api_module),
     )
 
 
 def render_form_schema(api_module, item_type, write_file, render_template):
     template_path = Path(__file__).parent / "templates_form"
-    render_templates(template_path, get_context=lambda x: get_context(x, api_module))(
+    render_templates(
+        template_path,
         item_type,
         write_file,
         render_template,
         output_path=api_module.merged_output_path,
+        get_context=lambda x: get_context(x, api_module),
     )
