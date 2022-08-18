@@ -1,0 +1,31 @@
+{% magic_with _.query.name as getFoo %}
+{% magic_with output_field_spec.name as outputFieldName %}
+{% magic_with input_field_spec.name as inputFieldName %}
+{% magic_with input_field_spec.graphql_type as inputFieldGqlType %}
+
+def create_get_foo_query(
+    input_field_name,                                                         {% !! input_field_spec in __.input_field_specs %}
+    output_field_name_outputs=None,                                           {% !! output_field_spec in __.fk_output_field_specs %}
+
+):
+    result = """
+        query getFoo(
+            $inputFieldName: inputFieldGqlType,                               {% !! input_field_spec in __.input_field_specs %}
+        ) {
+            getFoo(
+                $inputFieldName: inputFieldName,                              {% !! input_field_spec in __.input_field_specs %}
+            ) {
+                output_field_name_outputs                                     {% !! output_field_spec in __.fk_output_field_specs %}
+            }
+        }
+    """
+
+    op_name = "getFoo"
+    variables = dict(
+        inputFieldName=input_field_name,                                        {% !! input_field_spec in __.input_field_specs %}
+    )
+    return root.result, op_name, variables
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}

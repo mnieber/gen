@@ -5,7 +5,7 @@ import os
 import jinja2
 from moonleap import get_session
 from moonleap.parser.term import verb_to_word
-from moonleap.utils.__init__ import dbg
+from moonleap.utils import dbg
 from moonleap.utils.case import l0, sn, u0
 from moonleap.utils.inflect import plural
 from moonleap.utils.ruamel_yaml import ruamel_yaml
@@ -32,7 +32,11 @@ def dot(x, path):
     for part in path.split("."):
         if result is None or isinstance(result, jinja2.runtime.Undefined):
             return result
-        result = result.get(part) if isinstance(result, dict) else getattr(result, part)
+        result = (
+            result.get(part)
+            if isinstance(result, dict)
+            else getattr(result, part, None)
+        )
     return result
 
 

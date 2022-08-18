@@ -1,14 +1,7 @@
-.App {
-  @apply mx-auto;                     {% if _.service.tailwindcss %}
-  margin-left: auto;                  {% else %}
-  margin-right: auto;
-  width: 66.66667%;                   {% endif %}
-}
+@import 'src/frames/index.scss';
 
-.App__Header {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: calc(10px + 2vmin);
+.App {
+  height: 100vh;
+  min-width: $breakpoint-xs;
+  overflow-x: hidden;
 }

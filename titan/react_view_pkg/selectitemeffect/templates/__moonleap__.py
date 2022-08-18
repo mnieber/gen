@@ -10,7 +10,7 @@ def get_helpers(_):
     class Helpers:
         item_list = _item_list
         item_name = _item_name
-        type_spec = item_list.type_spec
+        type_spec = item_list.item.type_spec
         items_name = plural(item_name)
         route_params = [
             _item_name + u0(param) for param in type_spec.select_item_by or []
@@ -33,7 +33,7 @@ def get_helpers(_):
             )
 
         def get_item_id(self):
-            search_function = f"(x: {self.item_list.item_type.ts_type}) => " + (
+            search_function = f"(x: {self.item_list.item.ts_type}) => " + (
                 " && ".join(
                     [
                         f"x.{param} === args.{self.item_name + u0(param)}"

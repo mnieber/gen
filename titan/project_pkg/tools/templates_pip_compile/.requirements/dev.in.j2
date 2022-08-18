@@ -1,0 +1,7 @@
+-r base.txt
+
+{% sort_lines %}
+pytest                                              {% if _.service.pytest %}
+pytest-html                                         {% endif %}
+{% include_snippet '__moonleap__/dev.in.django.j2' %}
+{% end_sort_lines %}

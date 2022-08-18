@@ -1,0 +1,6 @@
+// 1. UIKit rules (this also imports various scss variables)                {% if _.service.uikit %}
+@import 'src/frames/styles/uikit.scss';
+
+@tailwind base;                                                             {% endif %}{% if _.service.tailwindcss %}
+@tailwind components;
+@tailwind utilities;                                                        {% endif %}

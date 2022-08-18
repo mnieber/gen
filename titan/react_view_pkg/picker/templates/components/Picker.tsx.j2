@@ -1,5 +1,5 @@
 {% magic_with _.component.item_name as yellowTulip %}
-import classnames from 'classnames';
+import { cn } from 'src/utils/classnames';
 import { observer } from 'mobx-react-lite';
 import { withDefaultProps } from 'react-default-props-context';
 import { Selection } from 'skandha-facets/Selection';
@@ -24,13 +24,13 @@ export const YellowTulipPicker = observer(
         // TODO: add yellowTulip
       } else if (value.value) {
         props.yellowTulipsSelection.selectItem({
-          itemId: value.value.id,
+          itemId: value.value.id
         });
       }
     };
 
     return (
-      <div className={classnames('YellowTulipPicker', 'mt-2')}>
+      <div className={cn('YellowTulipPicker', 'mt-2')}>
         <ValuePicker
           isMulti={false}
           isCreatable={true}

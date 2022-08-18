@@ -1,26 +1,50 @@
-from moonleap.utils.fp import add_to_list_as_set
+from moonleap.utils.fp import add_to_list_as_set, uniq
 
 
 def get_helpers(_):
     class Helpers:
-        inputs_type_spec = _.mutation.inputs_type_spec
-        outputs_type_spec = _.mutation.outputs_type_spec
-        input_field_specs = list(inputs_type_spec.field_specs)
-        output_field_specs = list(outputs_type_spec.field_specs)
-        fk_output_field_specs = outputs_type_spec.get_field_specs(["fk"])
+        input_field_specs = _.mutation.gql_spec.get_inputs()
+        fk_input_field_specs = _.mutation.gql_spec.get_inputs(["fk", "relatedSet"])
+        output_field_specs = _.mutation.gql_spec.get_outputs()
+        fk_output_field_specs = _.mutation.gql_spec.get_outputs(["fk", "relatedSet"])
 
         @property
-        def item_types_to_import(self):
+        def items_deleted(self):
+            return uniq(
+                list(_.mutation.items_deleted)
+                + [x.item for x in _.mutation.item_lists_deleted]
+            )
+
+        @property
+        def items_saved(self):
+            return uniq(
+                list(_.mutation.items_saved)
+                + [x.item for x in _.mutation.item_lists_saved]
+            )
+
+        @property
+        def items_to_import(self):
             result = []
-            for type_spec in [self.inputs_type_spec, self.outputs_type_spec]:
-                for field_spec in type_spec.get_field_specs(
-                    ["fk", "relatedSet", "form", "idList"]
-                ):
-                    add_to_list_as_set(result, field_spec.target_item_type)
+            for field_spec in self.fk_input_field_specs + self.fk_output_field_specs:
+                add_to_list_as_set(result, field_spec.target_item)
+
+            for item in _.mutation.items_saved:
+                add_to_list_as_set(result, item)
+
+            for item_list in _.mutation.item_lists_saved:
+                add_to_list_as_set(result, item_list.item)
+
+            for item in _.mutation.items_deleted:
+                add_to_list_as_set(result, item)
+
+            for item_list in _.mutation.item_lists_deleted:
+                add_to_list_as_set(result, item_list.item)
 
             return result
 
-        def graphene_output_type(self, field_spec):
-            return field_spec.graphene_output_type(f"required={field_spec.required}")
+        def graphene_type(self, field_spec):
+            return field_spec.graphene_type(
+                "" if field_spec.required else "required=False"
+            )
 
     return Helpers()

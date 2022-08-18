@@ -1,6 +1,8 @@
-export const flags = {
+import { observable } from 'mobx';
+
+export const flags = observable({
   logQueries: false,                                                        {% if _.react_app.api_module %}
   logResourceView: false,                                                   {% endif %}
-  logSkandha: false,                                                        {% if _.react_app.uses_states %}
+  logSkandha: false,                                                        {% if __.states %}
   logStateProviders: false,                                                 {% endif %}
-};
+});

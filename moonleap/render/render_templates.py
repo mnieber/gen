@@ -10,26 +10,29 @@ from moonleap.utils.ruamel_yaml import ruamel_yaml
 
 
 def render_templates(
-    templates_dir, write_file, render_template, output_path, context, sections
+    templates_dir, write_file, render_template, output_path, context, helpers
 ):
     if not Path(templates_dir).is_dir():
         raise Exception(f"{templates_dir} is not a directory")
 
-    next_sections, meta_data_by_fn, skip = _load_moonleap_data(templates_dir, context)
+    next_helpers, meta_data_by_fn, skip = _load_moonleap_data(templates_dir, context)
     if skip:
         return
 
-    sections = next_sections or sections
+    helpers = next_helpers or helpers
 
     # create output directory
     write_file(output_path, content="", is_dir=True)
 
     # render templates
     for template_fn in Path(templates_dir).glob("*"):
-        print(template_fn)
-        if template_fn.name.startswith("__moonleap__"):
+        if (
+            template_fn.name.startswith("__moonleap__")
+            or template_fn.name == "__pycache__"
+        ):
             continue
 
+        print(template_fn)
         meta_data = meta_data_by_fn.get(template_fn.name, dict())
         if not meta_data.get("include", True):
             continue
@@ -42,7 +45,7 @@ def render_templates(
                 render_template,
                 output_fn,
                 context,
-                sections,
+                helpers,
             )
         else:
             write_file(
@@ -51,7 +54,7 @@ def render_templates(
                     template_fn,
                     settings=get_session().settings,
                     _=context,
-                    __=sections,
+                    __=helpers,
                 ),
                 is_dir=False,
             )
@@ -84,15 +87,18 @@ def _load_moonleap_data(dir_fn, context):
                 )
 
     skip = not meta_data_by_fn.get(".", {}).get("include", True)
-    sections = None
+    helpers = None
 
     if not skip and (dir_fn / "__moonleap__.py").exists():
         sys.path.insert(0, str(dir_fn))
         m = importlib.import_module("__moonleap__")
+        # TODO: if the new __moonleap__ file does not define get_helpers then
+        # the one from the previously loaded __moonleap__ file will be used,
+        # potentially crashing the code.
         importlib.reload(m)
         sys.path.pop(0)
 
         if hasattr(m, "get_helpers"):
-            sections = m.get_helpers(_=Namespace(**context))
+            helpers = m.get_helpers(_=Namespace(**context))
 
-    return sections, meta_data_by_fn, skip
+    return helpers, meta_data_by_fn, skip

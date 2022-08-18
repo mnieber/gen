@@ -1,5 +1,5 @@
 import { runInAction } from 'mobx';
-import * as React from 'react';
+import React from 'react';
 import { QueryData } from 'src/api/QueryData';
 import { ObjT } from 'src/utils/types';
 

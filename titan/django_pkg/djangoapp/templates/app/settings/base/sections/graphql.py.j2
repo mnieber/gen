@@ -1,8 +1,0 @@
-GRAPHENE: {
-    "SCHEMA": "api.schema.schema",
-    "MIDDLEWARE": [
-        "api.middleware.GraphqlCheckCRCMiddleware",
-        "graphql_jwt.middleware.JSONWebTokenMiddleware",            {% if _.service.graphql_auth %}{% endif %}
-    ],
-}
-

@@ -1,33 +1,36 @@
-{% magic_with _.component.item_name as yellowTulip %}
-{% clean_up_js_imports %}
+{% magic_with _.component.item_name as fooItem %}
+{% magic_with field_spec.name as fieldSpecName %}
 import { observer } from 'mobx-react-lite';
 import { withDefaultProps } from 'react-default-props-context';
-import { YellowTulipT } from 'src/api/types/YellowTulipT'
+import { FooItemT } from 'src/api/types/FooItemT'
 import { getResourceView } from 'src/utils/components';
-{% end_clean_up_js_imports %}
-
 import './{{ _.component.name }}.scss';
 
 type PropsT = {
+  className?: any;
 };
 
 type DefaultPropsT = {
-  yellowTulip: YellowTulipT
-  yellowTulipRS: string
+  fooItem: FooItemT
+  fooItemRS: string
 };
 
-export const YellowTulipView = observer(
+export const FooItemView = observer(
   withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
-    const resourceView = props.yellowTulipRS === 'loading' || !props.yellowTulip ? (
-      <div>Loading...</div>
+    const resourceView = props.fooItemRS === 'loading' || !props.fooItem ? (
+      <div />
     ) : undefined;
     if (resourceView) return resourceView;
 
     return (
-      <div className="YellowTulipView flex flex-col w-full">
-        {{ __.fields() }}
+      <div className={cn("FooItemView", "flex flex-col", props.className)}>
+        <div>                                                                               {% for field_spec in __.fields %}
+          fieldSpecName: {props.fooItem.fieldSpecName}                                      {% ?? field_spec.field_type not in ("boolean",) %}
+          fieldSpecName: {props.fooItem.fieldSpecName ? 'Yes' : 'No'}                       {% ?? field_spec.field_type in ("boolean",) %}
+        </div>                                                                              {% endfor %}
       </div>
     );
   })
 );
+{% end_magic_with %}
 {% end_magic_with %}

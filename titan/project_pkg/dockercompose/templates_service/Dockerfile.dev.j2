@@ -3,32 +3,37 @@ FROM {{ __.dockerfile.image_name }}
 
 RUN {{ _.service.pip }} install --upgrade pip                                   {% ?? _.service.pip %}
 
-# install pkg dependencies                                                      {% break_line min_lines=2 %}
+# Add ppa for postgresql-client-13                                              {% if _.service.is_dependent_on("postgres") %}
+RUN apt install curl ca-certificates gnupg
+RUN curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
+RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" >> /etc/apt/sources.list.d/postgresql.list'
+                                                                                {% endif %}
+# install pkg dependencies
 RUN {{ __.docker_image.install_command }} \
-    make                                                                        {% end_break_line %}
+    make
 
-# install pip dependencies                                                      {% break_line min_lines=2 %}
-RUN {{ __.docker_image.pip }} install \                                         {% end_break_line %}
-
-# install dev pkg dependencies                                                  {% break_line min_lines=2 %}
+# install dev pkg dependencies                                                  {% min_lines count=3 %}
 RUN {{ __.docker_image.install_command }} \
     curl \
     fish \                                                                      {% ?? _.service.fish %}
     nano \
-    postgresql-client                                                           {% ?? _.service.is_dependent_on("postgres") %}
-                                                                                {% end_break_line %}
-
-# install dev pip dependencies                                                  {% if _.service.pip %}{% break_line min_lines=2 %}
-RUN {{ _.service.pip }} install \
-    black \                                                                     {% ?? _.service.black %}
-    isort \                                                                     {% ?? _.service.isort %}
-    pgcli==3.4.1 \                                                              {% ?? _.service.is_dependent_on("postgres") %}
-    pip-tools                                                                   {% ?? _.service.pip_compile %}
-                                                                                {% end_break_line %}{% endif %}
+    postgresql-client-13 \                                                      {% ?? _.service.is_dependent_on("postgres") %}
+    {% remove_trailing suffix="__backslash__" %}                                {% end_min_lines %}
 
 # create a python venv that we can easily store inside a docker volume          {% if _.service.pip %}
 RUN python3 -m venv {{ _.service.install_dir }}/env
-ENV PATH="{{ _.service.install_dir }}/env/bin:${PATH}"                          {% endif %}
+ENV PATH="{{ _.service.install_dir }}/env/bin:${PATH}"
+
+# install dev pip dependencies                                                  {% min_lines count=3 %}
+RUN {{ _.service.pip }} install \
+    black \                                                                     {% ?? _.service.black %}
+    ipython \                                                                   {% ?? _.service.pudb %}
+    isort \                                                                     {% ?? _.service.isort %}
+    pgcli==3.4.1 \                                                              {% ?? _.service.is_dependent_on("postgres") %}
+    pip-tools \                                                                 {% ?? _.service.pip_compile %}
+    pudb \                                                                      {% ?? _.service.pudb %}
+    {% remove_trailing suffix="__backslash__" %}                                {% end_min_lines %}
+                                                                                {% endif %}
 
 WORKDIR {{ __.dockerfile.service.install_dir }}/src
 {% end_trim_newlines %}

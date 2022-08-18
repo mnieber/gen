@@ -18,7 +18,7 @@ def create_vscode_project(term):
 @rule("vscode-project")
 def created_vscode_project(vscode_project):
     get_root_resource().renders(
-        vscode_project,
+        [vscode_project],
         "",
         dict(vscode_project=vscode_project),
         [Path(__file__).parent / "templates"],

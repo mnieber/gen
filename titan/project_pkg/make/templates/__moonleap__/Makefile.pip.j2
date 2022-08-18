@@ -1,13 +1,13 @@
-#																					{% if _.service.pip %}
+#																					{% if _.service.pip_compile %}
 # Python
 #
 
 install:
 	{{ _.service.pip }} install -r .requirements/dev.txt
 
-pip-compile:                                                                        {% if _.service.pip_compile %}
+pip-compile:
 	pip-compile .requirements/base.in -o .requirements/base.txt
 	pip-compile .requirements/dev.in -o .requirements/dev.txt
-	pip-compile .requirements/prod.in -o .requirements/prod.txt						{% endif %}
+	pip-compile .requirements/prod.in -o .requirements/prod.txt
 
                                                                                     {% endif %}

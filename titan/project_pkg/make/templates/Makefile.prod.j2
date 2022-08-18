@@ -8,13 +8,13 @@
 # Stack
 #
 
-init-prod: \																		{% break_line min_lines=2 %}
+init-prod: \
 	create-db \            															{% ?? _.service.django_app %}
 	install \
 	migrate \            															{% ?? _.service.django_app %}
 	collect-static \       															{% ?? _.service.django_app %}
 	create-superuser																{% ?? _.service.django_app %}
-																					{% end_break_line %}
+    {% remove_trailing suffix="__backslash__" %}
 
 start-prod:
 	uwsgi --http :${DJANGO_PORT} --module app.wsgi  						        {% ?? _.service.django_app %}

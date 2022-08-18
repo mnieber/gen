@@ -1,13 +1,9 @@
 {% magic_with _.component.name as yellowTulip %}
-{% clean_up_js_imports %}
 import { withDefaultProps } from 'react-default-props-context';
-import classnames from 'classnames';
+import { cn } from 'src/utils/classnames';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-
 {{ __.view_imports() }}
-{% end_clean_up_js_imports %}
-
 import './YellowTulip.scss';
 
 {{ __.view_props_type() }}

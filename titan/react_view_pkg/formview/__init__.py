@@ -1,24 +1,14 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    Prop,
-    create,
-    create_forward,
-    empty_rule,
-    extend,
-    kebab_to_camel,
-    rule,
-    u0,
-)
-from moonleap.verbs import has, posts
+from moonleap import (Prop, create, create_forward, empty_rule, extend,
+                      kebab_to_camel, rule, u0)
+from moonleap.verbs import has, runs
 
-from . import props
 from .resources import FormView
 
 base_tags = [("form-view", ["component"])]
-rules = [(("form-view", posts, "item"), empty_rule())]
+rules = [(("form-view", runs, "mutation"), empty_rule())]
 
 
 @create("form-view")
@@ -36,5 +26,4 @@ def service_has_forms_module(module, form_view):
 
 @extend(FormView)
 class ExtendFormView:
-    item_posted = P.child(posts, "item")
-    item_name = Prop(props.item_name)
+    mutation = P.child(runs, "mutation")

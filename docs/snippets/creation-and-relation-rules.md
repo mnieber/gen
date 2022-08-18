@@ -49,7 +49,7 @@ def graphql_api_posts_item(graphql_api, item):
 
 ## Fact
 
-A :Moonleap-module can also contains :relation-rules. A :relation-rule has an subject term-pattern, a verb and an object term-pattern. It receives the matching resources as arguments.
+A :Moonleap-module can also contains :relation-rules. A :relation-rule has three parts: a subject term-pattern, a verb and an object term-pattern. If it matches then it receives the matching resources as arguments.
 
 ## Fact
 
@@ -57,11 +57,7 @@ For every relation between resources that the :spec-file describes, all matching
 
 ## Fact
 
-A :relation-rule may return a list of additional relations, which are processed in the same way as the relations in the :spec-file. Here, we return two additional relations.
-
-## Fact
-
-When you return an additional relation, you can use a term to refer to some other resource (`f"post-{item.item_name}:mutation"`) or you can directly insert the resource itself (`item`).
+A :relation-rule may return a list of additional relations, which are processed in the same way as the relations in the :spec-file. Here, we return two additional relations. When you return an additional relation, you can refer to the object using a term (`f"post-{item.item_name}:mutation"`) or using a resource (`item`).
 
 ## Snippet (`bar_pkg/item/__init__.py`)
 

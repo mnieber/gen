@@ -1,0 +1,17 @@
+{% magic_with _.module.name as moduleName %}
+{% magic_with route.name as routeName %}
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import { useRoutes } from 'src/routes/hooks/useRoutes';
+
+export const ModuleNameSwitch: React.FC = () => {
+  const routes = useRoutes();
+  return (
+    <Switch>
+        <Route exact={true} path={routes.routeName()}>                          {% for route in _.module.routes %}
+        </Route>                                                                {% endfor %}
+    </Switch>
+  );
+};
+{% end_magic_with %}
+{% end_magic_with %}

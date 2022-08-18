@@ -1,0 +1,8 @@
+from django.apps import AppConfig
+from app.tr import tr                                               {% if _.django_app.use_translation %}
+from app.utils.case import u0                                       {% endif %}
+
+
+class AccountsConfig(AppConfig):
+    name = "accounts"
+    verbose_name = u0(tr("accounts"))                               {% ?? _.django_app.use_translation %}

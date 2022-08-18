@@ -1,0 +1,17 @@
+@import 'src/frames/index.scss';
+
+.Field {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  min-height: 72px;
+
+  .Field__SmartLabel {
+    @apply text-base;                                   {% if _.service.tailwindcss %}
+
+    color: $global-emphasis-color;                      {% endif %}
+  }
+
+  textarea, input {
+    background-color: transparent !important;
+  }
+}

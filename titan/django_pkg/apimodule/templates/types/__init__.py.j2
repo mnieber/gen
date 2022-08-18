@@ -1,0 +1,3 @@
+{% for item in __.items %}
+from api.types.{{ item.type_name | lower }}_t import {{ item.type_name}}T  # noqa               {% ?? item in __.public_items %}
+{% endfor %}

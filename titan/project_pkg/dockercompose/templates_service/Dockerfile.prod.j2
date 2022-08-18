@@ -3,21 +3,26 @@ FROM {{ __.dockerfile.image_name }}
 
 RUN {{ _.service.pip }} install --upgrade pip                                                   {% ?? _.service.pip %}
 
-# install pkg dependencies                                                                      {% break_line min_lines=2 %}
+# install pkg dependencies
 RUN {{ __.docker_image.install_command }} \
-    make                                                                                        {% end_break_line %}
+    make
 
-# install dev pkg dependencies                                                                  {% break_line min_lines=2 %}
+{% min_lines count=3 %}
+# install dev pkg dependencies
 RUN {{ __.docker_image.install_command }} \
     fish \                                                                                      {% ?? _.service.fish %}
     nano \
-    postgresql-client                                                                           {% ?? _.service.is_dependent_on("postgres") %}
-                                                                                                {% end_break_line %}
+    postgresql-client \                                                                         {% ?? _.service.is_dependent_on("postgres") %}
+    {% remove_trailing suffix="__backslash__" %}
+{% end_min_lines %}
 
-# install dev pip dependencies                                                                  {% if _.service.pip %}{% break_line min_lines=2 %}
+{% min_lines count=3 %}
+{% if _.service.pip %}
+# install dev pip dependencies
 RUN {{ _.service.pip }} install \
-    pgcli==3.4.1 \                                                                              {% ?? _.service.is_dependent_on("postgres") %}
-                                                                                                {% end_break_line %}{% endif %}
+    pgcli==3.4.1                                                                                {% ?? _.service.is_dependent_on("postgres") %}
+{% endif %}
+{% end_min_lines %}
 
 {% include_snippet '__moonleap__/Dockerfile.prod.python.j2' %}
 

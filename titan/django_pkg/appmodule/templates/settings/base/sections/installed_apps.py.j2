@@ -1,0 +1,29 @@
+{% magic_with django_module.name as djangoModuleName %}
+from django_rtk_green import django_rtk_green_apps                      {% ?? _.django_app.accounts_module %}
+
+DJANGO_APPS = [
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.admin",
+    "django.contrib.sites",
+    "django.contrib.sitemaps",
+    "django.contrib.staticfiles",
+    "django.contrib.messages",
+]
+
+THIRD_PARTY_APPS = [
+    "corsheaders",
+    "django_extensions",
+    *django_rtk_green_apps,                                             {% ?? _.django_app.accounts_module %}
+    "graphene_django",                                                  {% ?? _.django_app.api_module %}
+    "graphql_jwt.refresh_token.apps.RefreshTokenConfig",                {% ?? _.django_app.accounts_module %}
+]
+
+LOCAL_APPS = [
+    "django_module_name.apps.DjangoModuleNameConfig",                   {% !! django_module in _.django_app.modules|sort(attribute="name") %}
+]
+
+# https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+{% end_magic_with %}

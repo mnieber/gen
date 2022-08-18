@@ -1,14 +1,19 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import MemFun, create, extend
+from moonleap import MemFun, create, empty_rule, extend
 from moonleap.verbs import has
 from titan.project_pkg.service import Service
 
 from . import props
-from .resources import NodePackage  # noqa
+from .resources import NodePackage, Pkg  # noqa
 
 base_tags = [("node-package", ["tool"])]
+
+
+rules = [
+    (("node-package", has, "node-pkg"), empty_rule()),
+]
 
 
 @create("node-package")
@@ -19,9 +24,15 @@ def create_node_package(term):
     return node_package
 
 
+@create("node-pkg")
+def create_package(term):
+    return Pkg(name=term.data)
+
+
 @extend(NodePackage)
 class ExtendNodePackage:
-    get_config = MemFun(props.get_node_package_config)
+    pkgs = P.children(has, "node-pkg")
+    has_pkg = MemFun(props.has_pkg)
 
 
 @extend(Service)

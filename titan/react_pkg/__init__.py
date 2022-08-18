@@ -8,6 +8,7 @@ from . import (
     pkg,
     reactapp,
     reactmodule,
+    routesmodule,
 )
 
 modules = [
@@ -20,4 +21,5 @@ modules = [
     pkg,
     reactapp,
     reactmodule,
+    routesmodule,
 ]

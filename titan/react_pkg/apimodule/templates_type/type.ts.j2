@@ -1,8 +1,25 @@
-{% magic_with _.item_type.name as yellowTulip %}
-{{ __.define_type() }}
+{% magic_with _.item.type_name as YellowTulip %}
+{% magic_with field_spec.name as fieldSpecName %}
+{% magic_with field_spec.ts_type as fieldSpecTsType %}
+{% magic_with field_spec.target as FieldSpecTarget %}
+{% magic_with type_spec.type_name as TypeSpecName %}
+import { FieldSpecTargetT } from 'src/api/types/FieldSpecTargetT';          {% !! field_spec in __.fk_field_specs %}
+import { typeSpecNameFields } from 'src/api/types/TypeSpecNameT';           {% !! type_spec in __.dependency_type_specs %}
+
+export type YellowTulipT = {
+  fieldSpecName: fieldSpecTsType;                                           {% !! field_spec in __.field_specs %}
+};
 
 export type YellowTulipByIdT = { [id: string]: YellowTulipT };
 
-{{ __.define_form_type() }}
+export type {{ _.item.ts_form_type }} = {                                   {% if __.form_field_specs %}
+  fieldSpecName: fieldSpecTsType;                                           {% !! field_spec in __.form_field_specs %}
+};                                                                          {% endif %}
 
+export const yellowTulipFields = ```                                        {% if _.item.type_spec.extract_gql_fields %}
+  {{ __.graphql_fields() }}
+```                                                                         {% endif %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
 {% end_magic_with %}

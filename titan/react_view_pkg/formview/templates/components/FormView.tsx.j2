@@ -4,7 +4,6 @@
 {% magic_with field_spec.ts_default_value as fieldSpecTsDefaultValue %}
 {% magic_with field_spec.name as fieldSpecName %}
 {% magic_with field_spec.target as FieldSpecTarget %}
-{% clean_up_js_imports %}
 import React from 'react';
 import * as R from 'ramda';
 import { observer } from 'mobx-react-lite';
@@ -27,15 +26,14 @@ import {
 } from 'src/forms/components';
 import { createUUID } from 'src/utils/ids';
 import { cn } from 'src/utils/classnames';
-import { fieldSpecTsType } from 'src/api/types/fieldSpecTsType'                             {% for field_spec in __.fk_field_specs %}{% endfor %}
-{% end_clean_up_js_imports %}
+import { fieldSpecTsType } from 'src/api/types/fieldSpecTsType'                             {% !! field_spec in __.fk_field_specs %}
 
 import './YellowTulipFormView.scss';
 
 type PropsT = {};
 
 type DefaultPropsT = {
-  fieldSpecTargets: fieldSpecTsType[],                                                      {% for field_spec in __.type_spec.get_field_specs("uuid") %}{% ?? field_spec.target %}{% endfor %}
+  fieldSpecTargets: fieldSpecTsType[],                                                      {% !! field_spec in __.fk_field_specs %}
 };
 
 export const YellowTulipFormView = observer(
@@ -80,11 +78,11 @@ export const YellowTulipFormView = observer(
             buttons={[                                                                                {% if field_spec.field_type in ("slug",) %}
               <UpdateSlugButton
                 key="1"
-                relatedFieldName="{{ field_spec.field_type_attrs.get("relatedFieldName") }}"
+                relatedFieldName="{{ field_spec.slug_src }}"
               />
             ]}                                                                                        {% endif %}
           >
-            <TextField controlled={true} />                                                           {% ?? field_spec.field_type in ("string", "url") %}
+            <TextField controlled={true} />                                                           {% ?? field_spec.field_type in ("string", "text", "url") %}
             <SlugField />                                                                             {% ?? field_spec.field_type in ("slug",) %}
             <ValuePickerField                                                                         {% if field_spec.field_type in ("uuid",) and field_spec.target %}
               isCreatable={false}

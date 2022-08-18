@@ -14,7 +14,15 @@ def field_spec_target_type_spec(self: FkFieldSpec):
 def field_spec_graphql_type(self: FieldSpec):
     postfix = "!" if self.required else ""
 
-    if self.field_type in ("string", "json", "url", "slug"):
+    if self.field_type in (
+        "string",
+        "text",
+        "json",
+        "url",
+        "slug",
+        "image",
+        "markdown",
+    ):
         return "String" + postfix
 
     if self.field_type in ("boolean",):
@@ -23,6 +31,9 @@ def field_spec_graphql_type(self: FieldSpec):
     if self.field_type in ("int",):
         return "Int" + postfix
 
+    if self.field_type in ("string[]",):
+        return "String[]" + postfix
+
     if self.field_type in ("float",):
         return "Float" + postfix
 
@@ -30,7 +41,7 @@ def field_spec_graphql_type(self: FieldSpec):
         return "ID" + postfix
 
     if self.field_type in ("form",):
-        return f"{self.target_type_spec.type_name}Type" + postfix
+        return f"{self.target_type_spec.form_type_name}T" + postfix
 
     if self.field_type in ("idList",):
         return r"[String]" + postfix

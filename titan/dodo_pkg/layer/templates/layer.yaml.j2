@@ -30,19 +30,18 @@ PYTEST:                                                               {% if _.se
 
 
 ROOT:
-  aliases:                                                            {% ?? _.service or _.layer.configures_docker_compose %}
-    install: make install                                             {% if _.service %}
-    pip-compile: make pip-compile                                     {% ?? _.service.pip_compile %}
-    serve: {{ _.service.serve_command_dev }}                          {% ?? _.service.serve_command_dev %}
-    shell: exec {{ _.service.shell }}                                 {% endif %}
-{% include_snippet "__moonleap__/docker-compose-aliases.yaml.j2" %}
-  decorators:                                                         {% if _.service %}
+  aliases:                                                            {% min_lines count=2 %}
+    install: make install                                             {% ?? _.service %}
+    pip-compile: make pip-compile                                     {% ?? _.service|dot("pip_compile") %}
+    serve: {{ _.service.serve_command_dev }}                          {% ?? _.service|dot("serve_command_dev") %}
+    shell: exec {{ _.service.shell }}                                 {% ?? _.service %}
+{% include_snippet "__moonleap__/docker-compose-aliases.yaml.j2" %}   {% end_min_lines %}
+  decorators:                                                         {% min_lines count=3 %}
     docker:
-      - exec
-      - make
-      - pytest                                                        {% ?? _.service.pytest %}
-      - django-manage                                                 {% ?? _.service.django_app %}
-                                                                      {% endif %}
+      - exec                                                          {% ?? _.service %}
+      - make                                                          {% ?? _.service %}
+      - pytest                                                        {% ?? _.service|dot("pytest") %}
+      - django-manage                                                 {% ?? _.service|dot("django_app") %}{% end_min_lines %}
 
 SERVER:                                                               {% if _.service %}
   install_dir: {{ _.service.install_dir }}

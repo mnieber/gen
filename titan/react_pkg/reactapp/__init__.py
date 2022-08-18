@@ -33,6 +33,7 @@ def use_webvitals(react_app):
     if react_app.service.get_tweak_or(True, ["react_app", "reportWebVitals"]):
         react_app.use_webvitals = True
         react_app.use_packages(["reportWebVitals"])
+        return create_forward(":node-package", has, "web-vitals:node-pkg")
 
 
 @rule("service", runs, "react-app")
@@ -48,3 +49,4 @@ class ExtendService:
 @extend(ReactApp)
 class ExtendReactApp:
     use_packages = MemFun(use_packages)
+    frames_module = P.child(has, "frames:module")

@@ -2,207 +2,270 @@ import typing as T
 from dataclasses import dataclass, field
 
 from moonleap import RenderMixin, Resource
-from moonleap.utils.case import l0, sn
+from moonleap.typespec.field_spec import FieldSpec
+from moonleap.typespec.type_spec import TypeSpec
+from moonleap.utils.case import sn
 
-
-def _on_delete(field):
-    return (
-        "models.CASCADE"
-        if field.field_type_attrs.get("onDelete", "") == "cascade"
-        else "models.SET_NULL"
-    )
+verbose_name_block_list = ["id", "sort_pos", "slug"]
 
 
 @dataclass
 class DjangoModelField(Resource):
+    field_spec: FieldSpec
     name: str
     field_name: str
-    index: bool = False
-    required: T.Optional[bool] = None
-    unique: T.Optional[bool] = None
     help_text: T.Optional[str] = None
+    translation_id: T.Optional[T.Union[str, bool]] = None
 
-    def field_args(self):
+    def field_args(self, django_model):
         return []
 
     def arg_null_blank(self):
-        return [] if self.required else ["null=True", "blank=True"]
+        return (
+            []
+            if (self.field_spec.required or self.field_spec.required is None)
+            else ["null=True", "blank=True"]
+        )
 
     def arg_unique(self):
-        return ["unique=True"] if self.unique else []
+        return ["unique=True"] if self.field_spec.unique else []
 
     def arg_help_text(self):
-        return [f'help_text="{self.help_text}"'] if self.help_text else []
+        return [f"help_text={self.help_text}"] if self.help_text else []
+
+    def arg_primary_key(self):
+        return ["primary_key=True"] if self.field_spec.primary_key else []
+
+    def arg_readonly(self):
+        return ["editable=False"] if self.field_spec.readonly else []
+
+    def arg_verbose_name(self):
+        return (
+            [f'verbose_name=tr("{self.translation_id}")']
+            if (self.translation_id and self.name not in verbose_name_block_list)
+            else []
+        )
 
     def arg_default(self):
-        return []
+        return (
+            [f"default={self.field_spec.default_value}"]
+            if self.field_spec.default_value is not None
+            else []
+        )
 
-    @property
-    def body(self):
-        args = [x for x in self.field_args() if x is not None] + [
+    def body(self, django_model):
+        args = [x for x in self.field_args(django_model) if x is not None] + [
+            *self.arg_primary_key(),
             *self.arg_default(),
             *self.arg_null_blank(),
             *self.arg_unique(),
+            *self.arg_readonly(),
             *self.arg_help_text(),
+            *self.arg_verbose_name(),
         ]
         args_str = ", ".join(args)
-        return f"models.{self.field_name}({args_str})"
+        return f"{self.field_name}({args_str})"
 
 
 @dataclass
 class DjangoFkField(DjangoModelField):
-    target: str = ""
-    admin_inline: bool = False
-    related_name: str = "+"
-    on_delete: str = "models.SET_NULL"
-    field_name: str = "ForeignKey"
+    field_name: str = "models.ForeignKey"
 
-    def field_args(self):
+    def field_args(self, django_model):
         return [
-            self.target,
-            f"on_delete={self.on_delete}",
-            f'related_name="{self.related_name}"',
+            self.field_spec.target,
+            "on_delete=models.SET_NULL"
+            if self.field_spec.set_null
+            else "on_delete=models.CASCADE",
+            *(
+                [f'related_name="{sn(self.field_spec.related_name)}"']
+                if self.field_spec.related_name
+                else []
+            ),
         ]
 
 
 @dataclass
 class DjangoManyToManyField(DjangoModelField):
-    target: str = ""
-    admin_inline: bool = False
-    through: str = "+"
-    related_name: str = "+"
-    field_name: str = "ManyToManyField"
+    field_name: str = "models.ManyToManyField"
 
     def arg_null_blank(self):
-        return [] if self.required else ["blank=True"]
+        return [] if self.field_spec.required else ["blank=True"]
 
-    def field_args(self):
+    def field_args(self, django_model):
         return [
-            self.target,
-            None if self.through == "+" else f'through="{self.through}"',
-            f'related_name="{self.related_name}"',
+            self.field_spec.target,
+            None
+            if self.field_spec.through == "+"
+            else f'through="{self.field_spec.through}"',
+            *(
+                [f'related_name="{sn(self.field_spec.related_name)}"']
+                if self.field_spec.related_name
+                else []
+            ),
         ]
 
 
 @dataclass
 class DjangoCharField(DjangoModelField):
-    max_length: int = 80
-    default: T.Optional[str] = None
-    choices: T.List[str] = field(default_factory=list)
-    field_name: str = "CharField"
+    field_name: str = "models.CharField"
 
     def arg_default(self):
-        return [f'default="{self.default}"'] if self.default else []
+        return (
+            [f'default="{self.field_spec.default_value}"']
+            if self.field_spec.default_value
+            else []
+        )
 
-    def field_args(self):
-        choice_items = [f'("{x}", "{x}")' for x in self.choices or []]
+    def field_args(self, django_model):
+        choice_items = (
+            [f'("{x[0]}", tr("{x[1]}"))' for x in self.field_spec.choices or []]
+            if django_model.module.django_app.use_translation
+            else [f'("{x[0]}", "{x[1]}")' for x in self.field_spec.choices or []]
+        )
         choices_arg = f"choices=[{', '.join(choice_items)}]" if choice_items else None
         return [
-            f"max_length={self.max_length}",
+            f"max_length={self.field_spec.max_length}",
             choices_arg,
         ]
 
 
 @dataclass
 class DjangoTextField(DjangoModelField):
-    default: T.Optional[str] = None
-    field_name: str = "TextField"
+    field_name: str = "models.TextField"
 
     def arg_default(self):
-        return [f'default="{self.default}"'] if self.default else []
+        return (
+            [f'default="{self.field_spec.default_value}"']
+            if self.field_spec.default_value
+            else []
+        )
 
 
 @dataclass
 class DjangoJsonField(DjangoModelField):
-    default: T.Optional[str] = None
-    field_name: str = "JSONField"
+    field_name: str = "models.JSONField"
 
     def arg_default(self):
-        return [f'default="{self.default}"'] if self.default else []
+        return (
+            [f'default="{self.field_spec.default_value}"']
+            if self.field_spec.default_value
+            else []
+        )
 
 
 @dataclass
 class DjangoSlugField(DjangoModelField):
-    max_length: int = 80
     slug_src: T.Optional[str] = None
-    field_name: str = "SlugField"
+    field_name: str = "models.SlugField"
 
-    def field_args(self):
-        return [f"max_length={self.max_length}"]
+    def field_args(self, django_model):
+        return [f"max_length={self.field_spec.max_length}"]
+
+
+@dataclass
+class DjangoImageField(DjangoModelField):
+    field_name: str = "models.ImageField"
+
+    def field_args(self, django_model):
+        return [
+            f'upload_to="img/{django_model.name}.{self.name}"',
+            "validators=[validate_image_file]",
+        ]
+
+
+@dataclass
+class DjangoMarkdownField(DjangoModelField):
+    field_name: str = "MartorField"
+
+    def field_args(self, django_model):
+        return []
 
 
 @dataclass
 class DjangoUrlField(DjangoModelField):
-    max_length: int = 80
-    default: T.Optional[str] = None
-    field_name: str = "URLField"
+    field_name: str = "models.URLField"
 
     def arg_default(self):
-        return [f'default="{self.default}"'] if self.default else []
+        return (
+            [f'default="{self.field_spec.default_value}"']
+            if self.field_spec.default_value
+            else []
+        )
 
-    def field_args(self):
-        return [f"max_length={self.max_length}"]
+    def field_args(self, django_model):
+        return [f"max_length={self.field_spec.max_length}"]
 
 
 @dataclass
 class DjangoBooleanField(DjangoModelField):
-    default: T.Optional[bool] = None
-    field_name: str = "BooleanField"
+    field_name: str = "models.BooleanField"
 
     def arg_default(self):
         return (
-            [f'default={"True" if self.default else "False"}']
-            if self.default in (True, False)
+            [f'default={"True" if self.field_spec.default_value else "False"}']
+            if self.field_spec.default_value in (True, False)
             else []
         )
 
 
 @dataclass
 class DjangoIntegerField(DjangoModelField):
-    default: T.Optional[int] = None
-    field_name: str = "IntegerField"
+    field_name: str = "models.IntegerField"
 
     def arg_default(self):
-        return [f"default={self.default}"] if self.default is not None else []
+        return (
+            [f"default={self.field_spec.default_value}"]
+            if self.field_spec.default_value is not None
+            else []
+        )
 
 
 @dataclass
 class DjangoFloatField(DjangoModelField):
-    default: T.Optional[float] = None
-    field_name: str = "FloatField"
+    field_name: str = "models.FloatField"
 
     def arg_default(self):
-        return [f"default={self.default}"] if self.default is not None else []
+        return (
+            [f"default={self.field_spec.default_value}"]
+            if self.field_spec.default_value is not None
+            else []
+        )
 
 
 @dataclass
 class DjangoUuidField(DjangoModelField):
-    field_name: str = "UUIDField"
+    field_name: str = "models.UUIDField"
 
 
 @dataclass
 class DjangoEmailField(DjangoModelField):
-    default: T.Optional[str] = None
-    field_name: str = "EmailField"
+    field_name: str = "models.EmailField"
 
     def arg_default(self):
-        return [f"default={self.default}"] if self.default else []
+        return (
+            [f"default={self.field_spec.default_value}"]
+            if self.field_spec.default_value
+            else []
+        )
 
 
 @dataclass
 class DjangoDateField(DjangoModelField):
-    field_name: str = "DateField"
+    field_name: str = "models.DateField"
 
 
 @dataclass
 class DjangoModel(RenderMixin, Resource):
     name: str
+    kebab_name: str
     display_field_name: str = ""
+    type_spec: T.Optional[TypeSpec] = None
     fields: T.List[DjangoModelField] = field(default_factory=list)
 
     @property
     def indexed_fields(self):
-        return [x for x in self.fields if x.index]
+        return [x for x in self.fields if x.field_spec.index]
 
     @property
     def slug_fields(self):
@@ -215,145 +278,3 @@ class DjangoModel(RenderMixin, Resource):
     @property
     def many_to_many_fields(self):
         return [x for x in self.fields if isinstance(x, DjangoManyToManyField)]
-
-
-def import_type_spec(type_spec, django_model):
-    django_model.name = type_spec.type_name
-    django_model.display_field_name = type_spec.display_item_by or "id"
-
-    for field_spec in type_spec.field_specs:
-        args = dict(
-            name=sn(field_spec.name),
-            unique=field_spec.unique,
-            required=field_spec.required,
-            index=field_spec.index,
-            help_text=field_spec.description,
-        )
-
-        if field_spec.field_type == "fk":
-            if field_spec.through:
-                raise Exception(
-                    f"Fk fields cannot use 'through'. Use a relatedSet field instead. "
-                    + f"For field: {field_spec.name} in type: {django_model.name}"
-                )
-
-            django_model.fields.append(
-                DjangoFkField(
-                    **args,
-                    target=field_spec.target,
-                    on_delete=_on_delete(field_spec),
-                    admin_inline=field_spec.admin_inline,
-                    related_name=(
-                        sn(
-                            field_spec.field_type_attrs.get(
-                                "relatedSetName", f"{l0(type_spec.type_name)}_set"
-                            )
-                        )
-                        if field_spec.has_related_set
-                        else "+"
-                    ),
-                )
-            )
-        elif field_spec.field_type == "relatedSet":
-            if field_spec.through:
-                django_model.fields.append(
-                    DjangoManyToManyField(
-                        **args,
-                        target=field_spec.target,
-                        through=field_spec.through,
-                        admin_inline=field_spec.admin_inline,
-                        related_name=(
-                            "+"
-                            if field_spec.through == "+"
-                            else f"{sn(l0(type_spec.type_name))}_set"
-                        ),
-                    )
-                )
-        elif field_spec.field_type == "string":
-            max_length = field_spec.field_type_attrs.get("maxLength")
-            django_model.fields.append(
-                DjangoCharField(
-                    **args,
-                    default=field_spec.default_value,
-                    max_length=max_length,
-                    choices=field_spec.field_type_attrs.get("choices"),
-                )
-                if max_length
-                else DjangoTextField(
-                    **args,
-                    default=field_spec.default_value,
-                )
-            )
-        elif field_spec.field_type == "slug":
-            max_length = field_spec.field_type_attrs.get("maxLength")
-            django_model.fields.append(
-                DjangoSlugField(
-                    **args,
-                    **(dict(max_length=max_length) if max_length else {}),
-                    slug_src=sn(field_spec.slug_src),
-                )
-            )
-        elif field_spec.field_type == "json":
-            django_model.fields.append(
-                DjangoJsonField(
-                    **args,
-                    default=field_spec.default_value,
-                )
-            )
-        elif field_spec.field_type == "url":
-            max_length = field_spec.field_type_attrs.get("maxLength")
-            django_model.fields.append(
-                DjangoUrlField(
-                    **args,
-                    default=field_spec.default_value,
-                    **(dict(max_length=max_length) if max_length else {}),
-                )
-            )
-        elif field_spec.field_type == "boolean":
-            django_model.fields.append(
-                DjangoBooleanField(
-                    **args,
-                    default=field_spec.default_value,
-                )
-            )
-        elif field_spec.field_type == "int":
-            django_model.fields.append(
-                DjangoIntegerField(
-                    **args,
-                    default=int(field_spec.default_value)
-                    if field_spec.default_value is not None
-                    else None,
-                )
-            )
-        elif field_spec.field_type == "float":
-            django_model.fields.append(
-                DjangoFloatField(
-                    **args,
-                    default=float(field_spec.default_value)
-                    if field_spec.default_value is not None
-                    else None,
-                )
-            )
-        elif field_spec.field_type == "uuid":
-            django_model.fields.append(
-                DjangoUuidField(
-                    **args,
-                )
-            )
-        elif field_spec.field_type == "email":
-            django_model.fields.append(
-                DjangoEmailField(
-                    **args,
-                    default=field_spec.default_value,
-                )
-            )
-        elif field_spec.field_type == "date":
-            django_model.fields.append(
-                DjangoDateField(
-                    **args,
-                )
-            )
-        else:
-            raise ValueError(f"Unknown field type: {field_spec.field_type}")
-
-    django_model.fields = sorted(django_model.fields, key=lambda x: x.name)

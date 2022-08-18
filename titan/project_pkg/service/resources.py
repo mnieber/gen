@@ -18,8 +18,8 @@ class Service(RenderMixin, Resource):
 
     @property
     def pip(self):
-        if self.django_app:
-            return "pip3"
+        if getattr(self, "pip_compile", None):
+            return "pip"
         return None
 
     @property
@@ -31,23 +31,23 @@ class Service(RenderMixin, Resource):
     @property
     def ports(self):
         result = {}
-        if self.django_app:
+        if getattr(self, "django_app", None):
             result["django_app"] = "8000"
-        if self.react_app:
+        if getattr(self, "react_app", None):
             result["react_app"] = "3000"
-        if self.postgres:
+        if getattr(self, "postgres", None):
             result["postgres"] = "5432"
         return result
 
     @property
     def serve_command_dev(self):
-        if self.django_app or self.react_app:
+        if getattr(self, "django_app", None) or getattr(self, "react_app", None):
             return "make run-server"
         return None
 
     @property
     def shell(self):
-        if self.fish:
+        if getattr(self, "fish", None):
             return "fish"
         return "sh"
 

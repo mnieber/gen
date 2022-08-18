@@ -19,3 +19,5 @@ export function createUUID() {
 export const lookUp = (keys: Array<any>, obj: any): Array<any> => {
   return keys.map((x) => obj[x]);
 };
+
+export const hasId = (id: string) => (x: any) => x.id === id;

@@ -31,7 +31,7 @@ def create_layer(term):
 @rule("project", has, "layer")
 def project_has_layer(project, layer):
     get_root_resource().renders(
-        layer,
+        [layer],
         ".dodo_commands",
         lambda layer: dict(
             project=project, layer=layer, service=layer.configures_service

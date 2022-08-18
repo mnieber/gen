@@ -1,46 +1,61 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import Priorities, create, extend, rule
+from moonleap import create, extend, rule
 from moonleap.verbs import has
-from titan.api_pkg.typeregistry.__init__ import get_type_reg
+from titan.api_pkg.gqlregistry import get_gql_reg
+from titan.api_pkg.typeregistry import get_type_reg
 from titan.django_pkg.djangoapp import DjangoApp
-from titan.django_pkg.djangomodule import DjangoModule
+
+from .resources import ApiModule  # noqa
 
 
 @create("api:module")
 def create_api_module(term):
-    api_module = DjangoModule(name="api")
+    api_module = ApiModule(name="api")
     api_module.template_dir = Path(__file__).parent / "templates"
-    api_module.template_context = dict(api_module=api_module)
+    api_module.template_context = lambda api_module: dict(
+        api_module=api_module,
+        gql_reg=get_gql_reg(),
+        type_reg=get_type_reg(),
+    )
     return api_module
 
 
-@rule("django-app", has, "api:module", priority=Priorities.LOW.value)
+@rule("django-app", has, "api:module")
 def add_query_render_tasks(django_app, api_module):
-    for query in api_module.graphql_api.queries:
-        api_module.renders(
-            query,
-            "query",
-            dict(query=query),
-            [Path(__file__).parent / "templates_query"],
-        )
+    api_module.renders(
+        lambda: get_gql_reg().queries,
+        "query",
+        lambda query: dict(query=query),
+        [Path(__file__).parent / "templates_query"],
+    )
+    api_module.renders(
+        lambda: get_gql_reg().queries,
+        "tests",
+        lambda query: dict(query=query),
+        [Path(__file__).parent / "templates_query_tests"],
+    )
 
-    for mutation in api_module.graphql_api.mutations:
-        api_module.renders(
-            mutation,
-            "mutation",
-            dict(mutation=mutation),
-            [Path(__file__).parent / "templates_mutation"],
-        )
+    api_module.renders(
+        lambda: get_gql_reg().mutations,
+        "mutation",
+        lambda mutation: dict(mutation=mutation),
+        [Path(__file__).parent / "templates_mutation"],
+    )
+    api_module.renders(
+        lambda: get_gql_reg().mutations,
+        "tests",
+        lambda mutation: dict(mutation=mutation),
+        [Path(__file__).parent / "templates_mutation_tests"],
+    )
 
-    for item_type in get_type_reg().item_types:
-        api_module.renders(
-            item_type,
-            "types",
-            dict(item_type=item_type),
-            [Path(__file__).parent / "templates_type"],
-        )
+    api_module.renders(
+        lambda: get_gql_reg().get_public_items("server"),
+        "types",
+        lambda item: dict(item=item),
+        [Path(__file__).parent / "templates_type"],
+    )
 
 
 @extend(DjangoApp)

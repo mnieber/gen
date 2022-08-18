@@ -16,7 +16,7 @@ def create_docker_compose(term):
 @rule("project", has, "docker-compose")
 def project_has_docker_compose(project, docker_compose):
     project.renders(
-        docker_compose,
+        [docker_compose],
         "",
         dict(docker_compose=docker_compose),
         [Path(__file__).parent / "templates"],
@@ -26,7 +26,7 @@ def project_has_docker_compose(project, docker_compose):
 @rule("docker-compose", runs, "service")
 def docker_compose_runs_service(docker_compose, service):
     service.renders(
-        docker_compose,
+        [docker_compose],
         "",
         dict(docker_compose=docker_compose),
         [Path(__file__).parent / "templates_service"],

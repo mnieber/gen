@@ -9,5 +9,7 @@ export class Outputs {
   @data get redRoseById(): RedRoseByIdT {
     return listToItemById(this.redRosesDisplay);
   }                                                                               {% endfor %}
+
+  static className = () => 'Outputs';
 }
 {% end_magic_with %}

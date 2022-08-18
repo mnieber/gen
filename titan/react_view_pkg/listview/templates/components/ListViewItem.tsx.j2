@@ -1,40 +1,57 @@
-{% magic_with _.component.item_name as yellowTulip %}
+{% magic_with _.component.item_name as fooBar %}
+{% magic_with field_spec.name as fieldSpecName %}
 import React from 'react';
-import classnames from 'classnames';
+import { cn } from 'src/utils/classnames';
 import { observer } from 'mobx-react-lite';
-import { YellowTulipT } from 'src/api/types/YellowTulipT';
+import { FooBarT } from 'src/api/types/FooBarT';
+import { withDefaultProps } from 'react-default-props-context';
 
-import './YellowTulipListViewItem.scss';
+import './FooBarListViewItem.scss';
 
 export type PropsT = {
-  yellowTulip: YellowTulipT;
-  onDelete: Function;                                                                             {% if _.deletion_bvr %}{% endif %}
   className?: any;
+  isSelected: boolean;                                                                            {% ?? __.selection_bvr %}
+  isHighlighted: boolean;                                                                         {% ?? __.highlight_bvr %}
   onClick?: any;
+  onDelete: Function;                                                                             {% ?? __.deletion_bvr %}
   onMouseDown?: any;
   onMouseUp?: any;
+  fooBar: FooBarT;
 };
 
-export const YellowTulipListViewItem: React.FC<PropsT> = observer((props: PropsT) => {
-  return (
-    <div
-      className={classnames(
-        'YellowTulipListViewItem', 'flex flex-col flex-1 mb-2',
-        props.className
-      )}
-      onClick={props.onClick}
-      onMouseDown={props.onMouseDown}
-      onMouseUp={props.onMouseUp}
-    >
-      // TODO: use item_view.Helpers.fields
-      <button                                                                                     {% if _.deletion_bvr %}
-        onClick={() => {
-          props.onDelete();
-        }}
+type DefaultPropsT = {
+};
+
+export const FooBarListViewItem: React.FC<PropsT> = observer(
+  withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
+    return (
+      <div
+        className={cn(
+          'FooBarListViewItem', 'flex flex-col flex-1 mb-2',
+          {                                                                                         {% if __.selection_bvr or __.highlight_bvr %}
+            'FooBarListViewItem--selected': props.isSelected,                                       {% ?? __.selection_bvr %}
+            'FooBarListViewItem--highlighted': props.isHighlighted,                                 {% ?? __.highlight_bvr %}
+          },                                                                                        {% endif %}
+          props.className
+        )}
+        onClick={props.onClick}
+        onMouseDown={props.onMouseDown}
+        onMouseUp={props.onMouseUp}
       >
-        Delete
-      </button>                                                                                   {% endif %}
-    </div>
-  );
-});
+        <div>                                                                                       {% for field_spec in __.fields %}
+          fieldSpecName: {props.fooBar.fieldSpecName}                                               {% ?? field_spec.field_type not in ("boolean",) %}
+          fieldSpecName: {props.fooBar.fieldSpecName ? 'Yes' : 'No'}                                {% ?? field_spec.field_type in ("boolean",) %}
+        </div>                                                                                      {% endfor %}
+        <button                                                                                     {% if __.deletion_bvr %}
+          onClick={() => {
+            props.onDelete();
+          }}
+        >
+          Delete
+        </button>                                                                                   {% endif %}
+      </div>
+    );
+  })
+);
+{% end_magic_with %}
 {% end_magic_with %}

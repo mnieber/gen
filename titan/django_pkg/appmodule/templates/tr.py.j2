@@ -1,0 +1,8 @@
+from {{ module.name }}.tr import page as {{ module.name }}_page         {% !! module in _.django_app.modules %}
+
+source = [
+    {{ module.name|sn }}_page,                                          {% !! module in _.django_app.modules %}
+]
+
+tr_options = TranslatorOptions(check_sources=True)
+tr = get_translate(source, tr_options)

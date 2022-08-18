@@ -1,0 +1,20 @@
+page = {
+    "{{ model.kebab_name }}": {                                             {% for model in __.django_models %}
+        #
+        "v": 1,
+        "en_1": "{{ model.kebab_name }}",
+        "de_0": "{{ model.kebab_name }}",
+    },
+    "{{ model.kebab_name|plural }}": {
+        #
+        "v": 1,
+        "en_1": "{{ model.kebab_name|plural }}",
+        "de_0": "{{ model.kebab_name|plural }}",
+    },
+    "{{ model_field.translation_id }}": {                                   {% for model_field in model.fields %}{% if model_field.translation_id %}
+        #
+        "v": 1,
+        "en_1": "{{ model_field.name }}",
+        "de_0": "{{ model_field.name }}",
+    },                                                                      {% endif %}{% endfor %}{% endfor %}
+}

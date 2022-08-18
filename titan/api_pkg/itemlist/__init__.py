@@ -24,8 +24,8 @@ rules = [(("item~list", uses, "item"), empty_rule())]
 
 @create("item~list")
 def create_item_list(term):
-    name = kebab_to_camel(term.data)
-    item_list = ItemList(item_name=name)
+    item_name = kebab_to_camel(term.data)
+    item_list = ItemList(item_name=item_name)
     return item_list
 
 
@@ -42,8 +42,6 @@ def item_list_created(item_list):
 @extend(ItemList)
 class ExtendItemList:
     item = P.child(uses, "item", required=True)
-    item_type = Prop(props.item_list_item_type)
-    type_spec = Prop(props.item_list_type_spec)
 
 
 @extend(Item)

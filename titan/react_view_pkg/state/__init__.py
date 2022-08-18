@@ -1,7 +1,16 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import Prop, create, empty_rule, extend, kebab_to_camel, named
+from moonleap import (
+    Prop,
+    create,
+    create_forward,
+    empty_rule,
+    extend,
+    kebab_to_camel,
+    named,
+    rule,
+)
 from moonleap.verbs import has
 from titan.api_pkg.pipeline.resources import Pipeline
 from titan.react_pkg.reactmodule import ReactModule
@@ -24,6 +33,11 @@ def create_state(term):
     state = State(name=name)
     state.template_dir = Path(__file__).parent / "templates"
     return state
+
+
+@rule("state")
+def created_state(state):
+    return create_forward(":node-package", has, f"states:node-pkg")
 
 
 @extend(ReactModule)

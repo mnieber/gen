@@ -2,6 +2,6 @@ MENU:                                                                 {% if _.la
   session_id: {{ _.project.kebab_name }}
   commands:
     serve:
-      - dodo {{ service.name }}.serve                                   {% for service in _.project.services %}{% ?? service.serve_command_dev %}{% endfor %}
+      - dodo {{ service.name }}.serve                                 {% for service in _.project.services %}{% ?? service.serve_command_dev %}{% endfor %}
 
                                                                       {% endif %}

@@ -1,0 +1,9 @@
+admin:
+    name: .
+    include: {{ _.module.django_models|bool }}
+migrations:
+    include: {{ _.module.django_models|bool }}
+models.py:
+    include: {{ _.module.django_models|bool }}
+tr.py:
+    include: {{ _.django_app.use_translation|bool }}

@@ -1,5 +1,7 @@
 from moonleap.utils.case import sn
 
+field_name_block_list = ["sortPos"]
+
 
 def _get_faker_value(field_spec):
     if field_spec.field_type == "boolean":
@@ -11,8 +13,11 @@ def _get_faker_value(field_spec):
     if field_spec.field_type == "float":
         return f"f.random_number(digits=2)"
 
-    if field_spec.field_type in ("string", "slug"):
+    if field_spec.field_type in ("string", "text", "slug"):
         return f"f.word()"
+
+    if field_spec.field_type == "string[]":
+        return f"[f.word(), f.word()]"
 
     if field_spec.field_type == "uuid":
         return f"f.uuid4()"
@@ -23,6 +28,12 @@ def _get_faker_value(field_spec):
     if field_spec.field_type == "json":
         return "{}"
 
+    if field_spec.field_type == "image":
+        return "image.jpg"
+
+    if field_spec.field_type == "markdown":
+        return '"# " + f.word()'
+
     if field_spec.field_type == "url":
         return "'www.example.com'"
 
@@ -31,22 +42,28 @@ def _get_faker_value(field_spec):
 
 def get_helpers(_):
     class Helpers:
-        def create_random_args(self, item_list):
+        def create_random_args(self, django_model):
+            type_spec = django_model.type_spec
             fk_field_names = [
                 f"{sn(field_spec.name + 'Id')}"
-                for field_spec in item_list.type_spec.get_field_specs(["fk"])
+                for field_spec in type_spec.get_field_specs(
+                    ["fk"], exclude_derived=True
+                )
             ]
             return ", ".join(fk_field_names)
 
-        def create_random_body(self, item_list, snake_args):
+        def create_random_body(self, django_model, snake_args):
             args = []
             transform_name = sn if snake_args else lambda x: x
-            for field_spec in item_list.type_spec.field_specs:
+            type_spec = django_model.type_spec
+            for field_spec in type_spec.get_field_specs(exclude_derived=True):
                 if field_spec.field_type == "fk":
                     args.append(
                         f"{transform_name(field_spec.name + 'Id')}={sn(field_spec.name + 'Id')}"
                     )
                 elif field_spec.field_type == "relatedSet":
+                    pass
+                elif field_spec.name in field_name_block_list:
                     pass
                 else:
                     args.append(

@@ -1,0 +1,11 @@
+import { RouteTable } from 'src/routes/utils/RouteTable';
+
+export const getRouteTable = () => {
+  const routeTable = new RouteTable();
+
+  routeTable.addRoutes({
+    {{ route.name }}: () => '/{{ _.module.name }}/{{ route.path }}',                 {% !! route in _.module.routes %}
+  });
+
+  return routeTable;
+};

@@ -2,6 +2,7 @@ import moonleap.resource.props as P
 from moonleap import Prop, create, create_forward, extend, named, rule
 from moonleap.parser.term import named_term
 from moonleap.verbs import has, wraps
+from titan.react_pkg.reactmodule import ReactModule
 
 from . import props
 from .resources import Component  # noqa
@@ -10,7 +11,7 @@ from .resources import Component  # noqa
 @rule("module", has, "component")
 def module_has_component(module, component):
     module.renders(
-        component,
+        [component],
         "",
         dict(component=component),
         [component.template_dir],
@@ -46,3 +47,8 @@ class ExtendNamedComponent:
     # Note that this property returns true if the component or any (grand)child
     # has non-empty component.wrapped_child_components
     wrapped_components = Prop(props.wrapped_components)
+
+
+@extend(ReactModule)
+class ExtendReactModule:
+    components = P.children(has, "component")

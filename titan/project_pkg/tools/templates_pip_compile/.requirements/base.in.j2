@@ -1,0 +1,4 @@
+{% sort_lines %}
+psycopg2                                                      {% ?? _.service.is_dependent_on("postgres") %}
+{% include_snippet '__moonleap__/base.in.django.j2' %}
+{% end_sort_lines %}

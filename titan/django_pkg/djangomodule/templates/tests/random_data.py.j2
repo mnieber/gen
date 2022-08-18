@@ -1,20 +1,13 @@
-{% magic_with item_list.item_name as redRose %}
-{% magic_with item_list.item_name|sn as red_rose %}
+{% magic_with django_model.item_list.item_name as redRose %}
 import faker
-from {{ _.module.name|sn }}.models import RedRose                                   {% for item_list in _.module.item_lists_provided %}{% endfor %}
+from {{ _.module.name|sn }}.models import RedRose                                   {% !! django_model in _.module.django_models %}
 
 f = faker.Faker()
 
-def create_random_red_rose({{ __.create_random_args(item_list) }}):                 {% for item_list in _.module.item_lists_provided %}
+def create_random_red_rose({{ __.create_random_args(django_model) }}):              {% for django_model in _.module.django_models %}
     obj, created = RedRose.objects.get_or_create(
-        {{ __.create_random_body(item_list, snake_args=True) }}
+        {{ __.create_random_body(django_model, snake_args=True) }}
     )
     return obj
-
-def create_random_red_rose_form({{ __.create_random_args(item_list) }}):            {% if item_list.item.poster_mutations %}
-    return dict(
-        {{ __.create_random_body(item_list, snake_args=False) }}
-    )                                                                               {% endif %}
                                                                                     {% endfor %}
-{% end_magic_with %}
 {% end_magic_with %}

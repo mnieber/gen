@@ -3,9 +3,9 @@
     {
       "path": "{{ settings.references.src }}"
     },
-    {                                           {% for path in _.vscode_project.paths %}
-      "path": "{{ path }}"
-    },                                          {% endfor %}
+    {                                                               {% if __.has_vandelay %}
+      "path": "{{ settings.references.src }}/.vandelay"
+    },                                                              {% endif %}
   ],
   "settings": {}
 }

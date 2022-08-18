@@ -1,0 +1,26 @@
+{% magic_with _.mutation.name as postFoo %}
+{% magic_with output_field_spec.name as outputFieldName %}
+import pytest
+from api.tests.graphqltestcase import GraphqlTestCase
+from .create_post_foo_mutation import create_post_foo_mutation
+{{ __.mutation_fixture_imports() }}
+
+class TestPostFooMutation(GraphqlTestCase):
+{{ __.define_fixtures() }}
+
+    @pytest.mark.django_db()
+    def test_post_foo(
+        self,
+        client_query,
+    ):
+        query, op_name, variables = create_post_foo_mutation(
+            {{ __.create_mutation_args() }}
+        );
+        response = client_query(query, op_name=op_name, variables=variables)
+        data = response.json()["data"]
+
+        # check that the response is as expected
+        assert data["postFoo"] == {"errors": {}, "success": True}
+
+{% end_magic_with %}
+{% end_magic_with %}

@@ -69,8 +69,8 @@ def _process_relations(relations: T.List[Rel], actions):
             return res
 
         # Step 2: if the resource doesn't exist, find the publishing block. Note that the
-        # publishing block may be some child of the current block, and it may be some
-        # sibling of the parent block.
+        # publishing block may be some child of the current block, some parent of the current block
+        # or some sibling of some parent block.
         publishing_block = find_describing_block(term, rel.block) or rel.block
 
         # Step 3: create the resource in the publishing block, and add to current block

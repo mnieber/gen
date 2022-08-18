@@ -33,3 +33,11 @@ def aperture(size, items):
 def add_to_list_as_set(l, new_element):
     if new_element not in l:
         l.append(new_element)
+
+
+def count(condition, items):
+    result = 0
+    for item in items:
+        if condition(item):
+            result += 1
+    return result

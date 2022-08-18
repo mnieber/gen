@@ -1,3 +1,0 @@
-create-opt-paths:                                                             {% for service in _.project.services %}
-	sudo mkdir -p /opt/{{ _.project.name }}/{{ _.service.name }}/static       {% ?? service.django-app %}
-                                                                              {% endfor %}

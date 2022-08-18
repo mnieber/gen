@@ -1,28 +1,31 @@
-{% clean_up_js_imports %}
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import { App } from 'src/app/components';
-import reportWebVitals from './reportWebVitals';                                      {% if _.react_app.use_web_vitals %}{% endif %}
+import reportWebVitals from './reportWebVitals';                                      {% ?? _.react_app.use_web_vitals %}
 import { toJS } from 'mobx';                                                          {% if _.react_app.use_states %}
 import { setOptions } from 'skandha';                                                 {% endif %}
 import { flags } from 'src/app/flags';
-
-{% end_clean_up_js_imports %}
-import './index.css';
-import "./uikit.scss";                                                                {% if _.react_app.uikit %}{% endif %}
+import { applyFormatters } from 'mobx-log';
+import { RoutesProvider } from 'src/routes/components/RoutesProvider';                {% ?? _.react_app.routes_module %}
+import 'src/frames/styles/index.scss';                                                {% ?? _.react_app.frames_module %}
 
 const strict = false;
 
-ReactDOM.render(
-  strict ? (
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  ) : (
-    <App />
-  ),
-  document.getElementById('root')
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
 );
+
+if (process.env.NODE_ENV === 'development') {
+  applyFormatters();
+}
+
+const body = (
+  <RoutesProvider>                                                                    {% ?? _.react_app.routes_module %}
+    <App />
+  </RoutesProvider>                                                                   {% ?? _.react_app.routes_module %}
+);
+
+root.render(strict ? <React.StrictMode>{body}</React.StrictMode> : body);
 
 // If you want to start measuring performance in your app, pass a function            {% if _.react_app.use_web_vitals %}
 // to log results (for example: reportWebVitals(console.log))

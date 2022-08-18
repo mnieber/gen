@@ -1,8 +1,0 @@
-{
-    "dependencies": {
-        "micro-signals": "^2.4.0",
-        "normalizr": "^3.6.1"
-    },
-    "devDependencies": {
-    }
-}

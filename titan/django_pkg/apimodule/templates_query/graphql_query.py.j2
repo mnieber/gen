@@ -1,32 +1,42 @@
 {% magic_with _.query.name as queryName %}
 {% magic_with input_field_spec.name as inputFieldName %}
-{% magic_with input_field_spec.short_name as inputFieldShortName %}
 {% magic_with output_field_spec.name as outputFieldName %}
 {% magic_with output_field_spec.target as OutputFieldTarget %}
 {% clean_up_py_imports %}
 import graphene
 from graphene.types.generic import GenericScalar
+from {{ item.django_module.module_path }}.models import {{ item.type_name }}        {% for item in __.items_to_import %}{% endfor %}
 {% end_clean_up_py_imports %}
 from api.types import *
-from {{ item_type.django_module.module_path }.models import {item_type.name}        {% for item_type in __.item_types_to_import %}{% endfor %}
 
-class QueryNameQuery:
-    output_field_name = {{ __.graphene_output_type(output_field_spec) }}            {% for output_field_spec in __.output_field_specs %}{% endfor %}
+class QueryNameOutputs(graphene.ObjectType):
+    output_field_name = {{ output_field_spec.graphene_type("") }}                   {% for output_field_spec in __.output_field_specs %}
+    pass                                                                            {% else %}{% endfor %}
 
-    def resolve_output_field_name(                                                  {% for output_field_spec in __.output_field_specs %}
+class QueryName:
+    query_name = graphene.Field(
+        QueryNameOutputs,
+        input_field_name={{ input_field_spec.graphene_type("") }},                  {% for input_field_spec in __.input_field_specs %}{% endfor %}
+        {% remove_trailing suffix="," %}
+    )
+
+    def resolve_query_name(
         self,
         info,
         input_field_name,                                                           {% for input_field_spec in __.input_field_specs %}{% endfor %}
+        {% remove_trailing suffix="," %}
     ):
-        return OutputFieldTarget.objects.filter(                                    {% if output_field_spec.field_type in ("relatedSet", "fk") %}
-            input_field_short_name=input_field_short_name,                          {% for input_field_spec in __.input_field_specs %}{% endfor %}
-        ).first()                                                                   {% ?? output_field_spec.field_type == "fk") %}
-        )                                                                           {% ?? output_field_spec.field_type == "relatedSet") %}{% endif %}
-        return {}                                                                   {% ?? output_field_spec.field_type == "json" %}
-        return 0                                                                    {% ?? output_field_spec.field_type == "int" %}
-        return ""                                                                   {% ?? output_field_spec.field_type not in ("fk", "related_set", "json", "int") %}
+        # Moonleap Todo: implement query
+        return QueryNameOutputs(
+                                                                                    {% for output_field_spec in __.output_field_specs %}
+            output_field_name=OutputFieldTarget.objects.filter().first(),           {% ?? output_field_spec.field_type == "fk" %}
+            output_field_name=OutputFieldTarget.objects.filter(),                   {% ?? output_field_spec.field_type == "relatedSet" %}
+            output_field_name={},                                                   {% ?? output_field_spec.field_type == "json" %}
+            output_field_name=0,                                                    {% ?? output_field_spec.field_type == "int" %}
+            output_field_name="",                                                   {% ?? output_field_spec.field_type not in ("fk", "relatedSet", "json", "int") %}
                                                                                     {% endfor %}
-{% end_magic_with %}
+            {% remove_trailing suffix="," %}
+        )
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

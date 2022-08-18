@@ -1,17 +1,17 @@
 from . import (
+    apimodule,
+    appmodule,
     djangoapp,
     djangomodel,
     djangomodule,
     extendspectypes,
-    graphene_django,
-    graphql_auth,
 )
 
 modules = [
+    appmodule,
+    apimodule,
     djangoapp,
     djangomodel,
     djangomodule,
     extendspectypes,
-    graphene_django,
-    graphql_auth,
 ]

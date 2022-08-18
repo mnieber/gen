@@ -1,10 +1,8 @@
 from . import (
     extendspectypes,
-    formtype,
-    graphqlapi,
+    gqlregistry,
     item,
     itemlist,
-    itemtype,
     mutation,
     pipeline,
     query,
@@ -13,13 +11,11 @@ from . import (
 
 modules = [
     extendspectypes,
-    formtype,
-    graphqlapi,
     item,
     itemlist,
-    itemtype,
     mutation,
     pipeline,
     query,
     typeregistry,
+    gqlregistry,
 ]

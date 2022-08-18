@@ -3,7 +3,7 @@
 {% magic_with mutation.name as myMutation %}
 {% magic_with pipeline.output.item_name as myItem %}
 
-import * as React from 'react';                                                                   {% clean_up_js_imports %}
+import React from 'react';
 import * as R from 'ramda';
 import { observer } from 'mobx-react-lite';
 import { lookUp } from 'src/utils/ids';
@@ -13,8 +13,8 @@ import { log } from 'src/utils/logging';
 import { flags } from 'src/app/flags';
 import { MyComponentState } from '{{ _.component.module.module_path }}/MyComponentState';         {% endif %}
 
-import { {{ item.ts_type }} } from 'src/api/types/{{ item.item_type.name }}T';                    {% for item in _.input_items %}{% endfor %}
-import { {{ item_list.item.ts_type }} } from 'src/api/types/{{ item_list.item_type.name }}T';     {% for item_list in _.input_item_lists %}{% endfor %}
+import { {{ item.ts_type }} } from 'src/api/types/{{ item.type_name }}T';                         {% for item in _.input_items %}{% endfor %}
+import { {{ item_list.item.ts_type }} } from 'src/api/types/{{ item_list.item.type_name }}T';     {% for item_list in _.input_item_lists %}{% endfor %}
 import { useMyQuery } from 'src/api/queries';                                                     {% for query in _.queries %}{% endfor %}
 import { useMyMutation } from 'src/api/mutations';                                                {% for mutation in _.mutations %}{% endfor %}
 
@@ -24,7 +24,7 @@ import {
 
   withDefaultProps
 } from 'react-default-props-context';
-import { useStore } from 'src/app/components';                                                    {% end_clean_up_js_imports %}
+import { useStore } from 'src/app/components';
 
 type PropsT = React.PropsWithChildren<{}>;
 
@@ -41,18 +41,18 @@ export const MyComponentStateProvider = observer(
     const myMutation = useMyMutation();                                                           {% for mutation in _.mutations %}{% endfor %}
 
     const createState = () => new MyComponentState({                                              {% if _.has_behaviors %}
-      deleteMyItems: {{ pipeline.deleter_mutation.name }}.mutateAsync,                            {% for pipeline in __.state.pipelines %}{% if pipeline.deleter_mutation %}{% endif %}{% endfor %}
+      deleteMyItems: {{ pipeline.deleter_mutation.name }}.mutateAsync,                            {% for pipeline in __.state.pipelines %}{% ?? pipeline.deleter_mutation %}{% endfor %}
     });
 
     const updateState = (state: MyComponentState) =>
       reaction(
         () => {
           return {
-            {{ pipeline.output.ts_var }}: {{ pipeline.input_expression }},                        {% for pipeline in __.state.pipelines %}{% if pipeline.bvrs %}{% endif %}{% endfor %}
+            {{ pipeline.output.ts_var }}: {{ pipeline.input_expression }},                        {% for pipeline in __.state.pipelines %}{% ?? pipeline.bvrs %}{% endfor %}
           }
         },
         (inputs) => {
-          state.inputs.{{ pipeline.output.ts_var }} = inputs.{{ pipeline.output.ts_var }};        {% for pipeline in __.state.pipelines %}{% if pipeline.bvrs %}{% endif %}{% endfor %}
+          state.inputs.{{ pipeline.output.ts_var }} = inputs.{{ pipeline.output.ts_var }};        {% for pipeline in __.state.pipelines %}{% ?? pipeline.bvrs %}{% endfor %}
           if (flags.logStateProviders) {
             log('MyComponentState updated', state.getSummary());
           }

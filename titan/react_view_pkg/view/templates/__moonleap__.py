@@ -1,7 +1,3 @@
-# TODO:
-# use skip_render
-
-
 import os
 
 from moonleap import u0
@@ -18,20 +14,8 @@ def _panels(view):
     return [x for x in panels if x]
 
 
-def _collapses(panel):
-    return panel.module.react_app.service.get_tweak_or(
-        True,
-        [
-            "react_app",
-            "components",
-            panel.name,
-            "collapses",
-        ],
-    )
-
-
 def _named_components(panel):
-    if _collapses(panel.typ):
+    if panel.typ.collapses:
         return list(panel.typ.child_components)
     else:
         return [panel]
@@ -45,7 +29,7 @@ def _panel(divClassName, panel):
     if not named_components and not panel.typ.wraps_children:
         return []
 
-    collapses = _collapses(panel.typ)
+    collapses = panel.typ.collapses
     indent = 2
     result = []
 
@@ -58,8 +42,7 @@ def _panel(divClassName, panel):
     for named_component in named_components:
         result.extend(
             [
-                " " * indent + '<div className="Card">',
-                " " * (indent + 2) + f"<h2>{named_component.typ.get_title()}</h2>",
+                " " * indent + "<div>",
                 " " * (indent + 2) + named_component.typ.react_tag,
                 " " * indent + "</div>",
             ]
@@ -108,13 +91,13 @@ def get_helpers(_):
                 result.extend(
                     [
                         r"<div",
-                        r"  className={classnames(",
+                        r"  className={cn(",
                         f"    {rootClass}'flex flex-col w-full', props.className",
                         r"  )}",
                         r">",
                     ]
                 )
-            result.extend(_panel(self.view.name + "__topPanel", self.view.top_panel))
+            result.extend(_panel(self.view.name + "__TopPanel", self.view.top_panel))
 
             # mid section
             if self.view.left_panel or self.view.right_panel:
@@ -126,18 +109,18 @@ def get_helpers(_):
                 result.extend(
                     [
                         r"<div",
-                        r"  className={classnames(",
+                        r"  className={cn(",
                         f"    {rootClass}'flex flex-row', props.className",
                         r"  )}",
                         r">",
                     ]
                 )
-            result.extend(_panel(self.view.name + "__leftPanel", self.view.left_panel))
+            result.extend(_panel(self.view.name + "__LeftPanel", self.view.left_panel))
             result.extend(
-                _panel(self.view.name + "__middlePanel", self.view.middle_panel)
+                _panel(self.view.name + "__MiddlePanel", self.view.middle_panel)
             )
             result.extend(
-                _panel(self.view.name + "__rightPanel", self.view.right_panel)
+                _panel(self.view.name + "__RightPanel", self.view.right_panel)
             )
 
             for named_component in self.view.child_components:
@@ -154,7 +137,7 @@ def get_helpers(_):
 
             # bottom section
             result.extend(
-                _panel(self.view.name + "__bottomPanel", self.view.bottom_panel)
+                _panel(self.view.name + "__BottomPanel", self.view.bottom_panel)
             )
             if self.has_col:
                 result.append(r"</div>")
@@ -172,12 +155,8 @@ def get_helpers(_):
                 for named_component in named_components:
                     result.append(
                         f"import {{ {u0(named_component.typ.name)} }} from "
-                        + f"'{named_component.typ.module.module_path}/components';"
+                        + f"'src/{named_component.typ.module.module_path}/components';"
                     )
             return "\n".join(result)
 
     return Helpers()
-
-
-def skip_render(self):
-    return self.parent_view and _collapses(self)

@@ -77,7 +77,7 @@ def parent(parent_term_str, verb, required=False):
         )
 
         if len(parents) > 1:
-            raise Exception("More than 1 parent")
+            raise Exception(f"More than 1 parent for {parent_term_str}: {parents}")
         elif required and not parents:
             raise ParentNotFound(subj=parent_term_str, verb=verb, obj=self)
 

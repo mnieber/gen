@@ -1,0 +1,9 @@
+create-opt-paths:
+{% for service in _.project.services %}
+	sudo mkdir -p /opt/{{ _.project.name }}/{{ service.name }}/fish_history                   {% ?? service.fish %}
+	sudo mkdir -p /opt/{{ _.project.name }}/{{ service.name }}/ipython                        {% ?? service.pudb %}
+	sudo mkdir -p /opt/{{ _.project.name }}/{{ service.name }}/assets                         {% ?? service.pytest %}
+	sudo touch    /opt/{{ _.project.name }}/{{ service.name }}/pytest_report.html             {% ?? service.pytest %}
+	sudo mkdir -p /opt/{{ _.project.name }}/{{ service.name }}/media                          {% ?? service.django_app %}
+	sudo mkdir -p /opt/{{ _.project.name }}/{{ service.name }}/static                         {% ?? service.django_app %}
+{% endfor %}

@@ -36,7 +36,7 @@ def dockerfile_use_docker_image(dockerfile, docker_image):
 @rule("service", uses + has + runs, "tool")
 def service_runs_tool(service, tool):
     service.renders(
-        tool,
+        [tool],
         "",
         tool.template_context,
         [tool.template_dir],
@@ -46,7 +46,7 @@ def service_runs_tool(service, tool):
 @rule("project", has, "service")
 def project_has_service(project, service):
     project.renders(
-        service,
+        [service],
         service.name,
         dict(service=service),
         [],

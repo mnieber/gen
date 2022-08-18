@@ -1,19 +1,22 @@
-{% magic_with fk_field_spec.name as redRose %}
-{% magic_with _.item_type.name as yellowTulip %}
+{% magic_with _.item.type_name as myItem %}
 {% magic_with field_spec.name as fieldSpecName %}
-
-import graphene                                                             {% clean_up_py_imports %}
+import graphene                                                                 {% clean_up_py_imports %}
 from graphene_django.types import DjangoObjectType
-from {{ __.item_list.django_module|sn }}.models import YellowTulip          {% ?? if __.item_list.django_module %}
-                                                                            {% end_clean_up_py_imports %}
 
-class YellowTulipType(DjangoObjectType):
+from {{ __.django_module.module_path }}.models import MyItem                    {% ?? __.django_module %}
+                                                                                {% end_clean_up_py_imports %}
+
+class MyItemT(DjangoObjectType):
     class Meta:
-        model = YellowTulip
-        exclude = [                                                         {% if __.private_field_specs %}
-          "fieldSpecName",                                                  {% for field_spec in __.private_field_specs %}{% endfor %}
-        ]                                                                   {% endif %}
+        model = MyItem
+        exclude = [                                                             {% if __.excluded_field_specs %}
+          "fieldSpecName",                                                      {% !! field_spec in __.excluded_field_specs %}
+        ]                                                                       {% endif %}
 
-{% end_magic_with %}
+    field_spec_name = {{ field_spec.graphene_type("") }}                        {% !! field_spec in __.derived_field_specs %}
+
+    def resolve_field_spec_name(self, info):                                    {% for field_spec in __.derived_field_specs %}
+        return None  # Moonleap Todo
+                                                                                {% endfor %}
 {% end_magic_with %}
 {% end_magic_with %}

@@ -1,7 +1,3 @@
-# TODO:
-# If the state has no behaviors, then skip because the state provider will provide resources directly from its inputs.
-
-
 def get_helpers(_):
     class Helpers:
         state = _.component
@@ -15,5 +11,8 @@ def get_helpers(_):
                     if bvr.name not in bvr_names:
                         bvr_names.add(bvr.name)
                         self.bvrs.append(bvr)
+
+        def has_bvr(self, name):
+            return [x for x in self.bvrs if x.name == name]
 
     return Helpers()

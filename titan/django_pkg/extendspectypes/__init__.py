@@ -12,6 +12,5 @@ class ExtendTypeSpec:
 
 @extend(FieldSpec)
 class ExtendFieldSpec:
-    graphene_input_type = Prop(props.graphene_input_type)
-    graphene_output_type = MemFun(props.graphene_output_type)
-    target_item_type = Prop(props.target_item_type)
+    graphene_type = MemFun(props.graphene_type)
+    target_item = Prop(props.target_item)

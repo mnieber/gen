@@ -1,17 +1,44 @@
-{% magic_with item_list.item_name as yellowTulip %}
-{% magic_with inline_model_field.target as redRose %}
+{% magic_with item_list.item_name as myModel %}
+{% magic_with inline_model_field.target as myInlineModel %}
+{% magic_with model_field.name as modelFieldName %}
+{% clean_up_py_imports %}
+from adminsortable2.admin import SortableAdminBase, SortableInlineAdminMixin
+{% end_clean_up_py_imports %}
 from django.contrib import admin
 
 from {{ _.module.name|sn }} import models
-                                                                                {% for item_list in _.module.item_lists_provided %}
-class YellowTulipRedRoseInline(admin.TabularInline):                            {% for inline_model_field in __.get_inline_model_fields(item_list) %}
-    model = models.YellowTulipRedRose
+                                                                                {% for item_list, data in __.get_data() %}
+class MyModelInline(                                                            {% if data.create_inline_model %}
+    SortableInlineAdminMixin,                                                   {% ?? data.type_spec.is_sorted %}
+    admin.TabularInline
+):
+    model = models.MyModel
     extra = 1
-    {{ __.inline_model_autocomplete_fields(inline_model_field) }}               {% endfor %}
+    autocomplete_fields = (                                                     {% min_lines count=3 %}
+        "{{ autocomplete_field }}",                                             {% !! autocomplete_field in __.get_autocomplete_fields(data.type_spec) %}
+    )                                                                           {% end_min_lines %}
 
-@admin.register(models.YellowTulip)
-class YellowTulipAdmin(admin.ModelAdmin):
-{{ __.admin_body(item_list) }}
+                                                                                {% endif %}{% endfor %}
+
+@admin.register(models.MyModel)                                                 {% for item_list, data in __.get_data() %}
+class MyModelAdmin(
+    SortableAdminBase,                                                          {% ?? data.has_sortable_inlines %}
+    admin.ModelAdmin
+):
+    exclude = (                                                                 {% min_lines count=3 %}
+        "modelFieldName",                                                       {% !! model_field in data.excluded_model_fields %}
+    )                                                                           {% end_min_lines %}
+    inlines = (                                                                 {% min_lines count=3 %}
+        myInlineModelInline,                                                    {% !! inline_model_field in data.inline_model_fields %}
+    )                                                                           {% end_min_lines %}
+    search_fields = (                                                           {% min_lines count=3 %}
+        "{{ search_field }}",                                                   {% !! search_field in data.search_by %}
+    )                                                                           {% end_min_lines %}
+    autocomplete_fields = (                                                     {% min_lines count=3 %}
+        "{{ autocomplete_field }}",                                             {% !! autocomplete_field in data.autocomplete_fields %}
+    )                                                                           {% end_min_lines %}
+    pass                                                                        {% ?? not (data.inline_model_fields or data.autocomplete_fields or data.search_by or data.excluded_model_fields) %}
                                                                                 {% endfor %}
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

@@ -1,0 +1,17 @@
+{{ '{% block subject %}' }}Someone (hopefully you) has registered at {{ '{{ project_name }}' }} with your email{{ '{% endblock subject %}' }}
+{% raw %}
+{% block text_body %}
+If you tried to sign-in, then please try again at {{ domain }}/sign-in
+{% endraw %}
+The {{ project_name }} team{% raw %}
+{% endblock text_body %}
+
+{% block html_body %}
+<p>
+  If you tried to sign-in, then please try again at
+  <a href="{{ domain }}/sign-in">{{ domain }}/sign-in</a>
+</p>
+
+{% endraw %}
+<p>The {{ '{{ project_name }}' }} team</p>
+{{ '{% endblock html_body %}' }}

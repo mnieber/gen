@@ -1,0 +1,32 @@
+{% magic_with _.mutation.name as postFooItem %}
+{% magic_with output_field_spec.name as outputFieldName %}
+{% magic_with input_field_spec.name as inputFieldName %}
+{% magic_with input_field_spec.graphql_type as inputFieldGqlType %}
+
+def create_post_foo_item_mutation(
+    input_field_name,                                                                           {% for input_field_spec in __.input_field_specs %}{% endfor %}
+    output_field_name_outputs=None,                                                             {% for output_field_spec in __.fk_output_field_specs %}{% endfor %}
+    output_values=None
+):
+    result = """
+        mutation postFooItem(
+            inputFieldName: inputFieldGqlType,                                                  {% for input_field_spec in __.input_field_specs %}{% endfor %}
+        ) {
+            postFooItem(
+                inputFieldName: $inputFieldName,                                                {% !! input_field_spec in __.input_field_specs %}
+            ) {
+                output_field_name_outputs                                                       {% !! output_field_spec in _.fk_output_field_specs %}
+                output_values
+            }
+        }
+    """
+
+    op_name = "postFooItem"
+    variables = dict(
+        inputFieldName=input_field_name,                                                      {% for input_field_spec in __.input_field_specs %}{% endfor %}
+    )
+    return result, op_name, variables
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}

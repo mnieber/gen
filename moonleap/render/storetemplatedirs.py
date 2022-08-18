@@ -26,29 +26,35 @@ def render_resource(
                 render_template,
                 output_path,
                 context=context,
-                sections=dict(),
+                helpers=dict(),
             )
 
-    for render_task in res.render_tasks:
-        extra_context = (
-            render_task.context(render_task.res)
-            if callable(render_task.context)
-            else render_task.context
+    for render_task in T.cast(T.List[RenderTask], getattr(res, "render_tasks", [])):
+        resources = (
+            render_task.resources()
+            if callable(render_task.resources)
+            else render_task.resources
         )
+        for res in resources:
+            extra_context = (
+                render_task.context(res)
+                if callable(render_task.context)
+                else render_task.context
+            )
 
-        render_resource(
-            render_task.res,
-            write_file,
-            render_template,
-            os.path.join(output_path, render_task.output_path),
-            context=dict(**context, **extra_context),
-            template_dirs=render_task.template_dirs,
-        )
+            render_resource(
+                res,
+                write_file,
+                render_template,
+                os.path.join(output_path, render_task.output_path),
+                context=dict(**context, **extra_context),
+                template_dirs=render_task.template_dirs,
+            )
 
 
 @dataclass
 class RenderTask:
-    res: Resource
+    resources: T.Union[T.List[Resource], T.Callable[[], T.List[Resource]]]
     output_path: str
     context: dict
     template_dirs: list
@@ -60,25 +66,22 @@ class RenderMixin:
         default_factory=list, init=False, compare=False, repr=False
     )
 
-    def renders(self, res, output_path, context, template_dirs):
+    def renders(self, resources, output_path, context, template_dirs):
         render_task = RenderTask(
-            res=res,
+            resources=resources,
             output_path=output_path,
             context=context,
             template_dirs=template_dirs,
         )
-
-        for t in self.render_tasks:
-            if t.res.id == render_task.res.id:
-                raise Exception(f"Resource {self} already renders {res}")
-
         self.render_tasks.append(render_task)
 
 
 @dataclass
 class TemplateDirMixin:
     template_dir: T.Optional[Path] = field(default=None, init=False, repr=False)
-    template_context: dict = field(default_factory=dict, init=False, repr=False)
+    template_context: T.Union[dict, T.Callable] = field(
+        default_factory=dict, init=False, repr=False
+    )
 
 
 class RootResource(RenderMixin, Resource):

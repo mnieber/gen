@@ -2,6 +2,7 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
+from moonleap.utils.fp import add_to_list_as_set
 from plumbum import local
 
 
@@ -30,7 +31,7 @@ def _get_post_process_tools(bin_config):
     isort = bin_config.get("isort")
     if isort:
         isort_bin = local[isort["exe"]]
-        result["isort"] = lambda fns: isort_bin(["--overwrite-in-place", *fns])
+        result["isort"] = lambda fns: isort_bin("--overwrite-in-place", *fns)
 
     return result
 
@@ -43,7 +44,7 @@ def post_process_output_files(output_filenames, post_process_configs, bin_config
         for suffix_regex, tool_names in post_process_configs.items():
             if re.match(suffix_regex, Path(output_fn).suffix):
                 for tool_name in tool_names:
-                    fns_by_tool_name[tool_name].append(output_fn)
+                    add_to_list_as_set(fns_by_tool_name[tool_name], output_fn)
 
     for tool_name, fns in fns_by_tool_name.items():
         tool = tool_by_name.get(tool_name)

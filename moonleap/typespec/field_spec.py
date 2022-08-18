@@ -1,43 +1,29 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap.utils.case import l0
-from moonleap.utils.chop import chop_prefix
-
 
 @dataclass
 class FieldSpec:
     field_type: str
     name: str
-    private: bool
-    required: bool
+    admin_search: bool = False
+    admin: bool = True
+    api: T.List[str] = field(default_factory=lambda: ["server", "client"])
+    choices: T.Optional[T.List[T.Any]] = None
     default_value: T.Any = None
+    derived: T.Optional[bool] = None
     description: T.Optional[str] = None
-    unique: bool = False
-    field_type_attrs: dict = field(default_factory=dict)
-
-    @property
-    def target(self):
-        return self.field_type_attrs.get("target")
-
-    @property
-    def index(self):
-        return self.field_type_attrs.get("index", False)
-
-    @property
-    def related_output(self):
-        return self.field_type_attrs.get("relatedOutput")
-
-    @property
-    def short_name(self):
-        return l0(chop_prefix(self.name, self.related_output or ""))
-
-
-@dataclass
-class SlugFieldSpec(FieldSpec):
-    @property
-    def slug_src(self):
-        return self.field_type_attrs.get("slugSrc")
+    display: T.Optional[bool] = None
+    help: T.Optional[bool] = None
+    index: T.Optional[bool] = None
+    is_slug_src: T.Optional[bool] = None
+    max_length: T.Optional[int] = None
+    primary_key: T.Optional[bool] = None
+    readonly: T.Optional[bool] = None
+    required: T.Optional[bool] = None
+    target: T.Optional[str] = None
+    readonly: T.Optional[bool] = None
+    unique: T.Optional[bool] = None
 
 
 @dataclass
@@ -47,19 +33,21 @@ class FormFieldSpec(FieldSpec):
 
 @dataclass
 class FkFieldSpec(FieldSpec):
-    @property
-    def through(self):
-        return self.field_type_attrs.get("through")
-
-    @property
-    def admin_inline(self):
-        return self.field_type_attrs.get("adminInline")
-
-    @property
-    def has_related_set(self):
-        return self.field_type_attrs.get("hasRelatedSet")
+    through: T.Optional[str] = None
+    through_as: T.Optional[str] = None
+    is_parent_of_target: T.Optional[bool] = None
+    is_parent_of_through: T.Optional[bool] = None
+    is_reverse_of_related_set: T.Optional["FkFieldSpec"] = None
+    admin_inline: T.Optional[bool] = None
+    related_name: T.Optional[T.Union[str, bool]] = None
+    set_null: T.Optional[bool] = None
 
 
-def input_is_used_for_output(input_field_spec, output_field_spec):
-    related_output = input_field_spec.related_output
-    return not related_output or output_field_spec.name == related_output
+def get_field_spec_constructor(t):
+    return (
+        FkFieldSpec
+        if t in ("fk", "relatedSet")
+        else FormFieldSpec
+        if t in ("form")
+        else FieldSpec
+    )

@@ -1,9 +1,10 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import create, extend, kebab_to_camel, rule, u0
+from moonleap import Prop, create, extend, kebab_to_camel, rule, u0
 from moonleap.verbs import has, wraps
 
+from . import props
 from .resources import View
 
 base_tags = [
@@ -50,3 +51,4 @@ class ExtendView:
     top_panel = P.child(has, "x+top:panel")
     bottom_panel = P.child(has, "x+bottom:panel")
     middle_panel = P.child(has, "x+middle:panel")
+    collapses = Prop(props.view_collapses)

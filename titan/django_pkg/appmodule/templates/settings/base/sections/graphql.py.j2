@@ -1,0 +1,8 @@
+GRAPHENE = {
+    "MIDDLEWARE": [
+        "graphql_jwt.middleware.JSONWebTokenMiddleware",            {% ?? _.django_app.accounts_module %}
+        "api.middleware.GraphqlCheckCRCMiddleware",
+    ],
+    "SCHEMA": "api.schema.schema",
+}
+

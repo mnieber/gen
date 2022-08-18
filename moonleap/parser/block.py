@@ -4,6 +4,17 @@ from moonleap.parser.line import Line
 from moonleap.parser.term import Term
 
 
+def _get_base_tags(term, block, include_self):
+    from moonleap.utils.fp import uniq
+
+    result = []
+
+    for scope in block.get_scopes():
+        result.extend(scope.get_base_tags(term, include_self))
+
+    return uniq(result)
+
+
 class Block:
     def __init__(self, name, level, scope_names):
         self.name = name
@@ -48,6 +59,10 @@ class Block:
                 is_title = line is self.title_line or t.is_title
                 if is_title and stem_term(t) == stemmed_term:
                     return True
+
+        for base_tag in _get_base_tags(stemmed_term, self, False):
+            if self.describes(Term(data="", tag=base_tag)):
+                return True
 
         return False
 

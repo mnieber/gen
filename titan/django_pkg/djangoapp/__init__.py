@@ -20,6 +20,11 @@ def create_django(term):
     return django_app
 
 
+@rule("django-app")
+def created_django(django_app):
+    return create_forward(django_app, has, "app:module")
+
+
 @rule("django-app", connects, "postgres:service")
 def django_uses_postgres_service(django_app, postgres_service):
     return create_forward(django_app.service, uses, "postgres:service")

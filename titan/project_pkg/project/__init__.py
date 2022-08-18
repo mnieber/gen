@@ -14,7 +14,7 @@ def create_project(term):
 @rule("project")
 def created_project(project):
     get_root_resource().renders(
-        project,
+        [project],
         "src",
         dict(project=project),
         [],

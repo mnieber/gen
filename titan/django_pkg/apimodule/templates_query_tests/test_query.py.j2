@@ -1,0 +1,28 @@
+{% magic_with _.query.name as yellowTulip %}
+{% magic_with output_field_spec.name as outputFieldName %}
+import pytest
+from api.tests.graphqltestcase import GraphqlTestCase
+from .create_yellow_tulip_query import create_yellow_tulip_query
+{{ __.query_fixture_imports() }}
+
+class TestYellowTulipQuery(GraphqlTestCase):
+{{ __.define_query_fixtures() }}
+
+    @pytest.mark.django_db()
+    def test_yellow_tulip(
+        self,
+        client_query,
+        output_field_name,                                                      {% !! output_field_spec in __.fk_output_field_specs %}
+    ):
+        query, op_name, variables = create_yellow_tulip_query(
+            {{ __.invoke_create_query_args() }}
+        )
+        response = client_query(query, op_name=op_name, variables=variables)
+
+        # check that the response is as expected
+        data = response.json()['data']
+
+{{ __.assert_query_response(output_field_spec) }}                               {% !! output_field_spec in __.output_field_specs %}
+
+{% end_magic_with %}
+{% end_magic_with %}

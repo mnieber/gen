@@ -16,5 +16,5 @@ def get_module_by_name(django_app, module_name, default="__notset__"):
     return default
 
 
-def item_type_django_module(item_type):
-    return item_type.item.item_list.django_module
+def item_django_module(item):
+    return item.item_list.django_module if item.item_list else None

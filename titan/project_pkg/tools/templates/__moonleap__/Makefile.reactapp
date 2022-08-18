@@ -1,5 +1,0 @@
-run-server:
-	yarn start
-
-install:
-	yarn install

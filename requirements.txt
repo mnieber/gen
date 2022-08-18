@@ -1,7 +1,7 @@
 inflect
 jinja2
 markdown
-mistune
+mistune==0.8.4
 nltk
 parsimonious
 plumbum

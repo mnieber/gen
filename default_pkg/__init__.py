@@ -1,11 +1,12 @@
 from . import (
-    break_line,
-    clean_up_js_imports,
     clean_up_py_imports,
     include_snippets,
     inline_right_column,
     magic_with,
+    min_lines,
+    remove_trailing,
     shortcut_if,
+    sort_lines,
     trim_newlines,
 )
 
@@ -14,8 +15,9 @@ modules = [
     shortcut_if,
     inline_right_column,
     magic_with,
-    break_line,
+    remove_trailing,
+    min_lines,
     trim_newlines,
-    clean_up_js_imports,
     clean_up_py_imports,
+    sort_lines,
 ]

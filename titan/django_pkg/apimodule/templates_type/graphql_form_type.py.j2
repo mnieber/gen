@@ -1,10 +1,10 @@
-{% magic_with _.item_type.name as yellowTulip %}
+{% magic_with _.item.type_name as yellowTulip %}
 {% clean_up_py_imports %}
 import graphene
 from graphene.types.generic import GenericScalar
 {% end_clean_up_py_imports %}
 
-class YellowTulipFormType(graphene.InputObjectType):
-  field_spec_name = {{ field_spec.graphene_output_type("") }}           {% for field_spec in __.form_field_specs %}
-  pass                                                                  {% empty %}{% endfor %}
+class YellowTulipFormT(graphene.InputObjectType):
+  field_spec_name = {{ field_spec.graphene_type("") }}                  {% for field_spec in __.form_field_specs %}
+  pass                                                                  {% else %}{% endfor %}
 {% end_magic_with %}

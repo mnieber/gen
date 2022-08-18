@@ -21,7 +21,7 @@ def create_commands_dir(term):
 def project_has_commands_dir(project, commands_dir):
     project.renders(
         #
-        commands_dir,
+        [commands_dir],
         "",
         dict(),
         [Path(__file__).parent / "templates"],

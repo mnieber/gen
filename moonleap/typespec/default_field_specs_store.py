@@ -1,18 +1,8 @@
 from moonleap.typespec.field_spec import FieldSpec
 
 default_field_specs = [
-    FieldSpec(
-        name="id",
-        required=True,
-        private=False,
-        field_type="uuid",
-    ),
-    FieldSpec(
-        name="name",
-        required=True,
-        private=False,
-        field_type="string",
-    ),
+    FieldSpec(name="id", field_type="uuid", required=True),
+    FieldSpec(name="name", field_type="string", required=True),
 ]
 
 

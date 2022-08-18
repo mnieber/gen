@@ -9,12 +9,13 @@
 # Stack
 #
 
-init-dev: \																			{% break_line min_lines=2 %}
+init-dev: \
 	create-db \            															{% ?? _.service.django_app %}
 	pip-compile \																	{% ?? _.service.pip %}
 	install \
 	migrate \            															{% ?? _.service.django_app %}
 	collect-static \       															{% ?? _.service.django_app %}
-	create-superuser																{% ?? _.service.django_app %}
-																					{% end_break_line %}
+	create-superuser \  															{% ?? _.service.django_app %}
+	{% remove_trailing suffix="__backslash__" %}
+
 {% end_trim_newlines %}

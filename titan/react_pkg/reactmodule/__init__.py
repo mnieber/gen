@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
 from moonleap import MemFun, Prop, create, empty_rule, extend, kebab_to_camel, rule
 from moonleap.verbs import has
@@ -18,13 +20,15 @@ base_tags = [("module", ["react-module"])]
 @create("module")
 def create_module(term):
     module = ReactModule(name=kebab_to_camel(term.data))
+    module.template_dir = Path(__file__).parent / "templates"
+    module.template_context = dict(module=module)
     return module
 
 
 @rule("react-app", has, "module")
 def react_app_has_module(react_app, module):
     react_app.renders(
-        module,
+        [module],
         f"src/{module.name}",
         module.template_context,
         [module.template_dir],

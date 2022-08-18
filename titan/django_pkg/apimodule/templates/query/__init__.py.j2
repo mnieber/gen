@@ -4,23 +4,23 @@
 import graphene
 from graphene.types.generic import GenericScalar
 {% end_clean_up_py_imports %}
-from .{{ query.name|lower }} import FooQuery                              {% for query in _.graphql_api.queries %}{% endfor %}
+from .{{ query.name|lower }} import FooQuery                              {% for query in _.gql_reg.queries %}{% endfor %}
 import foo_module.schema                                                  {% for module in __.modules %}{% endfor %}
 
 
 class GrapheneNonEmptyQuery(graphene.ObjectType):
     test_query = graphene.Field(graphene.String)
 
-    def resolve_test_query(self, root, info, **kwargs):
+    def resolve_test_query(self, info, **kwargs):
         return "Hello world"
 
 
 class Query(
     foo_module.schema.Query,                                              {% for module in __.modules %}{% endfor %}
-    FooQueryQuery,                                                        {% for query in _.graphql_api.queries %}{% endfor %}
+    FooQuery,                                                             {% for query in _.gql_reg.queries %}{% endfor %}
     GrapheneNonEmptyQuery
 ):
     pass
 
-{% end magic_with %}
-{% end magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}

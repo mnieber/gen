@@ -1,0 +1,5 @@
+@import 'src/frames/index.scss';
+
+.SubmitButton {
+  @extend .BigButton;
+}
