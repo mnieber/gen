@@ -1,7 +1,7 @@
 {% magic_with module.name as moduleName %}
 import React from 'react';
 import { RouteTable } from 'src/routes/utils/RouteTable';
-import { getRouteTable as getAuthRouteTable } from 'src/auth/routeTable';                       {% ?? _.service.auth_module %}
+import { getRouteTable as getAuthRouteTable } from 'src/auth/routeTable';                       {% ?? _.react_app.auth_module %}
 import { getRouteTable as getModuleNameRouteTable } from 'src/moduleName/routeTable';           {% for module in _.react_app.modules %}{% ?? module.routes %}{% endfor %}
 
 export const RoutesContext = React.createContext<RouteTable>(new RouteTable());
@@ -10,7 +10,7 @@ type PropsT = React.PropsWithChildren<{}>;
 
 export const RoutesProvider = (props: PropsT) => {
   const routeTable = new RouteTable();
-  routeTable.addTable(getAuthRouteTable(), '');                                                 {% ?? _.service.auth_module %}
+  routeTable.addTable(getAuthRouteTable(), '');                                                 {% ?? _.react_app.auth_module %}
   routeTable.addTable(getModuleNameRouteTable(), '');                                           {% for module in _.react_app.modules %}{% ?? module.routes %}{% endfor %}
 
   return (

@@ -7,4 +7,5 @@ from titan.project_pkg.service import Tool
 
 @dataclass
 class ReactApp(Tool):
-    use_webvitals: boolean = False
+    use_web_vitals: boolean = False
+    use_states: boolean = True

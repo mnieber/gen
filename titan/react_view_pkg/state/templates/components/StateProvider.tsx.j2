@@ -8,18 +8,18 @@ import * as R from 'ramda';
 import { observer } from 'mobx-react-lite';
 import { lookUp } from 'src/utils/ids';
 
-import { reaction } from 'mobx';                                                                  {% if _.has_behaviors %}
+import { reaction } from 'mobx';                                                                  {% if __.has_behaviors %}
 import { log } from 'src/utils/logging';
 import { flags } from 'src/app/flags';
 import { MyComponentState } from '{{ _.component.module.module_path }}/MyComponentState';         {% endif %}
 
-import { {{ item.ts_type }} } from 'src/api/types/{{ item.type_name }}T';                         {% for item in _.input_items %}{% endfor %}
-import { {{ item_list.item.ts_type }} } from 'src/api/types/{{ item_list.item.type_name }}T';     {% for item_list in _.input_item_lists %}{% endfor %}
-import { useMyQuery } from 'src/api/queries';                                                     {% for query in _.queries %}{% endfor %}
-import { useMyMutation } from 'src/api/mutations';                                                {% for mutation in _.mutations %}{% endfor %}
+import { {{ item.ts_type }} } from 'src/api/types/{{ item.type_name }}T';                         {% for item in __.input_items %}{% endfor %}
+import { {{ item_list.item.ts_type }} } from 'src/api/types/{{ item_list.item.type_name }}T';     {% for item_list in __.input_item_lists %}{% endfor %}
+import { useMyQuery } from 'src/api/queries';                                                     {% for query in __.queries %}{% endfor %}
+import { useMyMutation } from 'src/api/mutations';                                                {% for mutation in __.mutations %}{% endfor %}
 
 import {
-  CtrProvider,                                                                                    {% if _.has_behaviors %}
+  CtrProvider,                                                                                    {% if __.has_behaviors %}
   NestedDefaultPropsProvider,                                                                     {% else %}{% endif %}
 
   withDefaultProps
@@ -29,18 +29,18 @@ import { useStore } from 'src/app/components';
 type PropsT = React.PropsWithChildren<{}>;
 
 type DefaultPropsT = {
-    {{ item.ts_var }}: {{ item.ts_type }};                                                        {% for item in _.input_items %}
+    {{ item.ts_var }}: {{ item.ts_type }};                                                        {% for item in __.input_items %}
     {{ item.ts_var }}RS: string;                                                                  {% endfor %}
-    {{ item_list.ts_var }}: {{ item_list.ts_type }};                                              {% for item_list in _.input_item_lists %}
+    {{ item_list.ts_var }}: {{ item_list.ts_type }};                                              {% for item_list in __.input_item_lists %}
     {{ item_list.ts_var }}RS: string;                                                             {% endfor %}
 };
 
 export const MyComponentStateProvider = observer(
   withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
-    const myQuery = useMyQuery();                                                                 {% for query in _.queries %}{% endfor %}
-    const myMutation = useMyMutation();                                                           {% for mutation in _.mutations %}{% endfor %}
+    const myQuery = useMyQuery();                                                                 {% for query in __.queries %}{% endfor %}
+    const myMutation = useMyMutation();                                                           {% for mutation in __.mutations %}{% endfor %}
 
-    const createState = () => new MyComponentState({                                              {% if _.has_behaviors %}
+    const createState = () => new MyComponentState({                                              {% if __.has_behaviors %}
       deleteMyItems: {{ pipeline.deleter_mutation.name }}.mutateAsync,                            {% for pipeline in __.state.pipelines %}{% ?? pipeline.deleter_mutation %}{% endfor %}
     });
 
@@ -62,11 +62,11 @@ export const MyComponentStateProvider = observer(
         }
       );                                                                                          {% endif %}
 
-    const getDefaultProps = (state: MyComponentState) => {                                        {% if _.has_behaviors %}
+    const getDefaultProps = (state: MyComponentState) => {                                        {% if __.has_behaviors %}
     const getDefaultProps = () => {                                                               {% else %}{% endif %}
 
       return {
-        myComponentState: () => state,                                                            {% ?? _.has_behaviors %}
+        myComponentState: () => state,                                                            {% ?? __.has_behaviors %}
         {{ pipeline.output.ts_var }}: () => state.outputs.myItemsDisplay,                         {% for pipeline in __.state.pipelines %}{% if pipeline.bvrs %}
         myItemsDeletion: () => state.myItems.deletion,                                            {% ?? pipeline.get_bvr('deletion') %}
         myItemsSelection: () => state.myItems.selection,                                          {% ?? pipeline.get_bvr('selection') %}
@@ -78,7 +78,7 @@ export const MyComponentStateProvider = observer(
       };
     };
 
-    return (                                                                                      {% if _.has_behaviors %}
+    return (                                                                                      {% if __.has_behaviors %}
       <CtrProvider
         createCtr={createState}
         updateCtr={updateState}

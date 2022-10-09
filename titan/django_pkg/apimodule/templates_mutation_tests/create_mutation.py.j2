@@ -15,7 +15,7 @@ def create_post_foo_item_mutation(
             postFooItem(
                 inputFieldName: $inputFieldName,                                                {% !! input_field_spec in __.input_field_specs %}
             ) {
-                output_field_name_outputs                                                       {% !! output_field_spec in _.fk_output_field_specs %}
+                output_field_name_outputs                                                       {% !! output_field_spec in __.fk_output_field_specs %}
                 output_values
             }
         }

@@ -32,7 +32,6 @@ def render_templates(
         ):
             continue
 
-        print(template_fn)
         meta_data = meta_data_by_fn.get(template_fn.name, dict())
         if not meta_data.get("include", True):
             continue

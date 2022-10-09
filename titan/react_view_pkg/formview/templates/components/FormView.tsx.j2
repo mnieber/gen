@@ -72,7 +72,7 @@ export const YellowTulipFormView = observer(
           handleSubmit={handleSubmit}
         >
           <GlobalError />
-          <Field                                                                                      {% for field_spec in _.field_specs %}
+          <Field                                                                                      {% for field_spec in __.field_specs %}
             fieldName="fieldSpecName"
             label="FieldSpecName"
             buttons={[                                                                                {% if field_spec.field_type in ("slug",) %}
