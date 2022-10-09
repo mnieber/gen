@@ -11,6 +11,7 @@ from moonleap.session import get_session
 class FileWriter:
     def __init__(self, snapshot_fn, check_crc_before_write, restore_missing_files):
         self.output_filenames = []
+        self.all_output_filenames = []
         self.warnings = []
         self.root_dir = Path(get_session().output_dir)
         self.check_crc_before_write = check_crc_before_write
@@ -49,8 +50,10 @@ class FileWriter:
     def _write(self, fn, content):
         fn_str = str(fn)
 
-        if fn_str in self.output_filenames:
+        if fn_str in self.all_output_filenames:
             self.warnings.append(f"Warning: writing twice to {fn_str}")
+        else:
+            self.all_output_filenames.append(fn_str)
 
         crc = self._crc(content)
         if (

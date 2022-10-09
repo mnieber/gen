@@ -35,6 +35,13 @@ def create_parser():
         dest="restore_missing_files",
         help="If true, missing output files are recreated when using --smart mode",
     )
+    parser.add_argument(
+        "--post-process-all",
+        required=False,
+        action="store_true",
+        dest="post_process_all_files",
+        help="If true, post process all output files, not just the ones that were written",
+    )
     parser.add_argument("--output-dir", required=False, default=".moonleap")
     parser.add_argument("--sudo", required=False, action="store_true")
     parser.add_argument("--stacktrace", required=False, action="store_true")
@@ -52,7 +59,7 @@ def _create_file_writer(args):
     return file_writer
 
 
-def generate_code(spec_file, session, file_writer):
+def generate_code(spec_file, session, file_writer, post_process_all_files):
     expanded_markdown = expand_markdown(spec_file)
     expanded_markdown_fn = Path(".moonleap") / "spec.md"
 
@@ -83,7 +90,9 @@ def generate_code(spec_file, session, file_writer):
 
     session.report("Post processing...")
     post_process_output_files(
-        file_writer.output_filenames,
+        file_writer.all_output_filenames
+        if post_process_all_files
+        else file_writer.output_filenames,
         session.get_post_process_settings(),
         session.get_bin_settings(),
     )
@@ -130,7 +139,9 @@ if __name__ == "__main__":
             if args.smart:
                 create_symlinks(session)
             create_expected_dir(session.expected_dir, session.settings["references"])
-            generate_code(spec_fn, session, _create_file_writer(args))
+            generate_code(
+                spec_fn, session, _create_file_writer(args), args.post_process_all_files
+            )
         # except Exception as e:
         #     report("Error: " + str(e))
         #     if args.stacktrace:
