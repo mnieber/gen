@@ -1,12 +1,11 @@
 from moonleap.typespec.field_spec import get_field_spec_constructor
-from moonleap.typespec.load_type_specs.get_scalar_field_attrs import (
-    get_scalar_field_attrs,
+from moonleap.typespec.load_type_specs.get_generic_field_attrs import (
+    get_generic_field_attrs,
 )
 
 
 def get_scalar_field_spec(key, field_spec_value):
-    key, field_attrs = get_scalar_field_attrs(key)
-    field_spec_value = field_spec_value.strip()
+    field_attrs = get_generic_field_attrs(key, field_spec_value.split("."))
 
     #
     # default value

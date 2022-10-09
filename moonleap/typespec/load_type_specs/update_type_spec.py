@@ -1,10 +1,4 @@
-import typing as T
-
-from moonleap.typespec.field_spec import FkFieldSpec
 from moonleap.typespec.load_type_specs.get_field_spec import get_field_spec
-from moonleap.typespec.load_type_specs.set_is_reverse_of_fk_value import (
-    set_is_reverse_of_fk_value,
-)
 from moonleap.typespec.type_spec import TypeSpec
 
 
@@ -13,7 +7,7 @@ def update_type_spec(
 ):
     type_spec = type_spec_store.get(type_attrs["type_name"], None)
     if type_attrs["type_name"] == "+":
-        if type_spec_dict.items():
+        if [x for x in type_spec_dict.items() if not x[0].startswith("__")]:
             raise Exception('Cannot add fields to the special "+" through type')
         return
 
@@ -32,7 +26,6 @@ def update_type_spec(
     # Add the field specs (on the first pass)
     if first_pass:
         type_spec_dict["__type_name__"] = type_spec.type_name
-        type_spec_dict["__field_names__"] = []
         for key, field_spec_value in type_spec_dict.items():
             if key.startswith("__"):
                 continue
@@ -44,21 +37,23 @@ def update_type_spec(
                 parent_node=type_spec_dict,
                 first_pass=first_pass,
             )
-            type_spec.field_specs.append(field_spec)
-            type_spec_dict["__field_names__"].append(field_spec.name)
+            maybe_set_reverse_of_related_set(
+                type_spec_store, parent_node, field_spec_value, field_spec
+            )
 
-    # If in the second pass, then this is our chance to determine if the fk field spec
-    # is the reverse of another relatedSet field spec (we need the parent_node for that,
-    # so that we can determine pairs of fk/relatedSet).
-    if not first_pass:
-        for field_name in type_spec_dict["__field_names__"]:
-            field_spec = type_spec.get_field_spec(field_name, False)
-            if field_spec and field_spec.field_type == "fk":
-                set_is_reverse_of_fk_value(
-                    type_spec_store,
-                    type_spec,
-                    T.cast(FkFieldSpec, field_spec),
-                    parent_node,
-                )
+            type_spec.field_specs.append(field_spec)
 
     return type_spec
+
+
+def maybe_set_reverse_of_related_set(
+    type_spec_store, parent_node, field_spec_value, field_spec
+):
+    is_reverse_of_related_set = field_spec_value.get(
+        "__is_reverse_of_related_set__", None
+    )
+    if is_reverse_of_related_set:
+        assert parent_node
+        field_spec.is_reverse_of_related_set = type_spec_store.get(
+            parent_node["__type_name__"]
+        ).get_field_spec(is_reverse_of_related_set, False)

@@ -1,39 +1,31 @@
 import typing as T
 from dataclasses import dataclass
 
-from moonleap.typespec.load_type_specs.get_scalar_field_attrs import (
-    get_scalar_field_attrs,
+from moonleap.typespec.load_type_specs.get_generic_field_attrs import (
+    get_generic_field_attrs,
 )
 from moonleap.utils.case import u0
-from moonleap.utils.pop import pop
 
 
 @dataclass
 class Data:
     var: T.Optional[str] = None
     var_type: T.Optional[str] = None
-    is_entity: T.Optional[bool] = None
-    set_null: T.Optional[bool] = None
     is_parent: T.Optional[bool] = None
-    is_sorted: T.Optional[bool] = None
-    admin_inline: T.Optional[bool] = None
-    extract_gql_fields: T.Optional[bool] = None
     field_type: T.Optional[str] = None
 
 
 def get_fk_field_attrs(key, init, init_target):
-    key = key.replace("_", "")
     init_parts = init.split(".") if init else []
     init_target_parts = init_target.split(".") if init_target else []
 
-    # Using the example of foo.var as foo.var_type through bar.var as bar.var_type
-    foo = Data()
-    bar = Data()
+    foo_parts = init_target_parts or init_parts
+    bar_parts = init_parts
 
-    key, field_attrs = get_scalar_field_attrs(key)
-    if "name" in field_attrs:
-        del field_attrs["name"]
+    field_attrs = get_generic_field_attrs(key, foo_parts)
     type_attrs = {"field_specs": []}
+
+    foo, bar = Data(), Data()
 
     #
     # through
@@ -48,10 +40,10 @@ def get_fk_field_attrs(key, init, init_target):
     # foo as bar
     #
     if foo.var_type:
-        _process_data(foo, init_target_parts if bar.var_type else init_parts)
+        _process_data(foo)
 
     if bar.var_type:
-        _process_data(bar, init_parts)
+        _process_data(bar)
 
     # set results
     field_attrs["target"] = foo.var_type
@@ -59,19 +51,19 @@ def get_fk_field_attrs(key, init, init_target):
     type_attrs["type_name"] = foo.var_type
     field_attrs["name"] = foo.var
 
-    if foo.is_sorted:
+    if "is_sorted" in foo_parts:
         type_attrs["is_sorted"] = True
 
-    if foo.is_entity:
+    if "is_entity" in foo_parts:
         type_attrs["is_entity"] = True
 
-    if foo.admin_inline:
+    if "admin_inline" in foo_parts:
         field_attrs["admin_inline"] = True
 
-    if foo.set_null:
+    if "set_null" in foo_parts:
         field_attrs["set_null"] = True
 
-    if foo.extract_gql_fields:
+    if "extract_gql_fields" in foo_parts:
         type_attrs["extract_gql_fields"] = True
 
     field_attrs["is_parent_of_target"] = foo.is_parent
@@ -86,32 +78,10 @@ def get_fk_field_attrs(key, init, init_target):
     return key, type_attrs, field_attrs
 
 
-def _process_data(data, init_parts):
+def _process_data(data):
     parts_as = data.var_type.split(" as ")
     if len(parts_as) == 2:
         data.var, data.var_type = parts_as
-
-    data.var_type, is_parent = pop(data.var_type, "$")
-    if is_parent:
-        data.is_parent = True
-
-    data.var_type, is_sorted = pop(data.var_type, ">")
-    if is_sorted:
-        data.is_sorted = True
-
-    data.var_type, admin_inline = pop(data.var_type, "=")
-    if admin_inline or "admin_inline" in init_parts:
-        data.admin_inline = True
-
-    data.var_type, is_entity = pop(data.var_type, "@")
-    if is_entity:
-        data.is_entity = True
-
-    if "extract_gql_fields" in init_parts:
-        data.extract_gql_fields = True
-
-    if "set_null" in init_parts:
-        data.set_null = True
 
     if data.var_type != "+":
         if not data.var:
