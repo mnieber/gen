@@ -9,7 +9,7 @@ def form_type_spec_from_data_type_spec(data_type_spec, form_type_name):
         changes = {}
         if field_spec.field_type in ("fk",):
             changes = dict(
-                name=field_spec.name + "Id",
+                key=field_spec.key + "Id",
                 field_type="uuid",
                 target=field_spec.target,
             )

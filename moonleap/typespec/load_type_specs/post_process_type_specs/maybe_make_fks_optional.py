@@ -4,7 +4,7 @@ def maybe_make_fks_optional(type_spec_store, type_spec):
         if field_spec.is_reverse_of_related_set:
             target_type_spec = type_spec_store.get(field_spec.target)
             related_field_spec = target_type_spec.get_field_spec(
-                field_spec.is_reverse_of_related_set.name, False
+                field_spec.is_reverse_of_related_set.name
             )
             if related_field_spec and related_field_spec.field_type == "relatedSet":
                 assert (

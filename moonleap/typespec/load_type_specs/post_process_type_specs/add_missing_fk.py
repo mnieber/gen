@@ -9,21 +9,24 @@ def add_missing_fk(type_spec_store, type_spec):
         target_type_spec = get_target_type_spec(type_spec_store, fk_field_spec)
 
         if target_type_spec and fk_field_spec.field_type == "relatedSet":
-            has_fk = False
+            reverse_fk = None
             for target_field_spec in target_type_spec.get_field_specs(["fk"]):
                 if target_field_spec.target == type_spec.type_name:
-                    has_fk = True
+                    reverse_fk = target_field_spec
                     break
 
-            if not has_fk:
+            if not reverse_fk:
                 reverse_fk = FkFieldSpec(
-                    name=l0(type_spec.type_name),
+                    key=l0(type_spec.type_name),
                     target=type_spec.type_name,
                     field_type="fk",
                 )
-
-                reverse_fk.is_reverse_of_related_set = fk_field_spec
                 target_type_spec.field_specs.append(reverse_fk)
+
+            if reverse_fk.is_reverse_of_related_set:
+                assert reverse_fk.is_reverse_of_related_set == fk_field_spec
+            else:
+                reverse_fk.is_reverse_of_related_set = fk_field_spec
 
         if fk_field_spec.through and fk_field_spec.through != "+":
             through_type_spec = type_spec_store.get(fk_field_spec.through)
@@ -38,7 +41,7 @@ def add_missing_fk(type_spec_store, type_spec):
             if not has_fk:
                 through_type_spec.field_specs.append(
                     FkFieldSpec(
-                        name=l0(type_spec.type_name),
+                        key=l0(type_spec.type_name),
                         field_type="fk",
                         target=type_spec.type_name,
                     )
@@ -54,7 +57,7 @@ def add_missing_fk(type_spec_store, type_spec):
             if not has_fk:
                 through_type_spec.field_specs.append(
                     FkFieldSpec(
-                        name=l0(fk_field_spec.target),
+                        key=l0(fk_field_spec.target),
                         field_type="fk",
                         target=fk_field_spec.target,
                     )
@@ -71,7 +74,7 @@ def add_missing_fk(type_spec_store, type_spec):
                 default_name = l0(fk_field_spec.through) + "Set"
                 type_spec.field_specs.append(
                     FkFieldSpec(
-                        name=fk_field_spec.through_as or default_name,
+                        key=fk_field_spec.through_as or default_name,
                         field_type="relatedSet",
                         target=fk_field_spec.through,
                     )

@@ -27,9 +27,5 @@ class TypeSpec:
             and not (x.derived and exclude_derived)
         ]
 
-    def get_field_spec(self, field_name, derived):
-        return R.head(
-            x
-            for x in self.get_field_specs()
-            if x.name == field_name and bool(x.derived) == derived
-        )
+    def get_field_spec(self, field_name):
+        return R.head(x for x in self.get_field_specs() if x.name == field_name)

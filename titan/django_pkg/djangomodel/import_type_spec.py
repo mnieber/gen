@@ -44,7 +44,7 @@ def import_type_spec(type_spec, django_model):
             if field_spec.through:
                 raise Exception(
                     f"Fk fields cannot use 'through'. Use a relatedSet field instead. "
-                    + f"For field: {field_spec.name} in type: {django_model.name}"
+                    + f"For field: {field_spec.key} in type: {django_model.name}"
                 )
 
             django_model.fields.append(DjangoFkField(**args))

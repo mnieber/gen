@@ -6,27 +6,31 @@ from moonleap.typespec.load_type_specs.get_generic_field_attrs import (
 
 def get_scalar_field_spec(key, field_spec_value):
     field_attrs = get_generic_field_attrs(key, field_spec_value.split("."))
+    parts = field_spec_value.split(".")
 
-    #
-    # default value
-    #
-    parts = field_spec_value.split(" = ")
-    if len(parts) == 2:
-        field_attrs["default_value"] = parts[1]
-        field_spec_value = parts[0]
+    count_is = 0
+    for part in parts:
+        parts_is = part.split(" = ")
+        if len(parts_is) == 2:
+            if count_is:
+                raise Exception("Only one ' = ' is allowed in a field spec.")
+            count_is += 1
+            field_attrs["default_value"] = parts_is[1]
+            parts.remove(part)
+            parts.insert(0, parts_is[0])
 
     #
     # choices
     #
-    parts = field_spec_value.split(".")[0].split(" | ")
-    if len(parts) > 1:
-        field_attrs["choices"] = [(x, x) for x in parts]
+    for part in parts:
+        parts_choice = part.split(" | ")
+        if len(parts_choice) > 1:
+            field_attrs["choices"] = [(x, x) for x in parts_choice]
 
     #
     # field_type
     #
     if True:
-        parts = field_spec_value.split(".")
 
         if field_attrs["choices"]:
             field_attrs["field_type"] = "string"
@@ -96,6 +100,7 @@ def get_scalar_field_spec(key, field_spec_value):
     #
     if "primary_key" in parts:
         field_attrs["primary_key"] = True
+        field_attrs["readonly"] = True
         if field_attrs["field_type"] == "uuid":
             if not field_attrs.get("default_value", None):
                 field_attrs["default_value"] = "uuid.uuid4"
@@ -111,7 +116,7 @@ def get_scalar_field_spec(key, field_spec_value):
     #
     # unique
     #
-    if "unique" in parts:
+    if "unique" in parts or field_attrs["field_type"] in ("slug",):
         field_attrs["unique"] = True
 
     #

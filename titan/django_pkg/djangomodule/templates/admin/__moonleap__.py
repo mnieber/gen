@@ -1,3 +1,4 @@
+from moonleap import u0
 from moonleap.utils.case import sn
 
 
@@ -52,5 +53,23 @@ def get_helpers(_):
                 for x in self.get_inline_model_fields(type_spec)
                 if x.target_type_spec.is_sorted
             ]
+
+        @property
+        def inline_models(self):
+            result = []
+            item_lists = []
+            for dummy, data in self.get_data():
+                for inline_model_field in data["inline_model_fields"]:
+                    item_list = inline_model_field.target_item.item_list
+                    if item_list not in item_lists:
+                        if not (item_list.django_module is _.module):
+                            item_lists.append(item_list)
+                            result.append(
+                                (
+                                    item_list.django_module,
+                                    u0(item_list.item_name) + "Inline",
+                                )
+                            )
+            return result
 
     return Helpers()

@@ -10,7 +10,7 @@ class MyItemT(DjangoObjectType):
     class Meta:
         model = MyItem
         exclude = [                                                             {% if __.excluded_field_specs %}
-          "fieldSpecName",                                                      {% !! field_spec in __.excluded_field_specs %}
+          "field_spec_name",                                                      {% !! field_spec in __.excluded_field_specs %}
         ]                                                                       {% endif %}
 
     field_spec_name = {{ field_spec.graphene_type("") }}                        {% !! field_spec in __.derived_field_specs %}

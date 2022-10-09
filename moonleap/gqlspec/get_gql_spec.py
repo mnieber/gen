@@ -19,16 +19,12 @@ def get_gql_spec(gql_spec_store, type_spec_store, endpoint_key, endpoint_spec_di
 
     inputs = []
     for key, field_spec_value in endpoint_spec_dict.get("inputs", {}).items():
-        field_spec = get_field_spec(
-            type_spec_store, key, field_spec_value, None, first_pass=True
-        )
+        field_spec = get_field_spec(type_spec_store, key, field_spec_value)
         inputs.append(field_spec)
 
     outputs = []
     for key, field_spec_value in endpoint_spec_dict.get("outputs", {}).items():
-        field_spec = get_field_spec(
-            type_spec_store, key, field_spec_value, None, first_pass=True
-        )
+        field_spec = get_field_spec(type_spec_store, key, field_spec_value)
         outputs.append(field_spec)
 
     deletes = []
@@ -44,7 +40,7 @@ def get_gql_spec(gql_spec_store, type_spec_store, endpoint_key, endpoint_spec_di
     if is_mutation:
         outputs.append(
             FieldSpec(
-                name="success",
+                key="success",
                 required=False,
                 field_type="boolean",
             )
@@ -52,7 +48,7 @@ def get_gql_spec(gql_spec_store, type_spec_store, endpoint_key, endpoint_spec_di
 
         outputs.append(
             FieldSpec(
-                name="errors",
+                key="errors",
                 required=False,
                 field_type="any",
             )

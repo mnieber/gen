@@ -5,6 +5,7 @@
 from adminsortable2.admin import SortableAdminBase, SortableInlineAdminMixin
 {% end_clean_up_py_imports %}
 from django.contrib import admin
+from {{ django_module.module_path }} import {{ model_name }}                    {% !! django_module, model_name in __.inline_models %}
 
 from {{ _.module.name|sn }} import models
                                                                                 {% for item_list, data in __.get_data() %}
@@ -13,7 +14,7 @@ class MyModelInline(                                                            
     admin.TabularInline
 ):
     model = models.MyModel
-    extra = 1
+    extra = 3
     autocomplete_fields = (                                                     {% min_lines count=3 %}
         "{{ autocomplete_field }}",                                             {% !! autocomplete_field in __.get_autocomplete_fields(data.type_spec) %}
     )                                                                           {% end_min_lines %}
@@ -30,6 +31,7 @@ class MyModelAdmin(
     )                                                                           {% end_min_lines %}
     inlines = (                                                                 {% min_lines count=3 %}
         myInlineModelInline,                                                    {% !! inline_model_field in data.inline_model_fields %}
+        {% remove_trailing suffix="," %}
     )                                                                           {% end_min_lines %}
     search_fields = (                                                           {% min_lines count=3 %}
         "{{ search_field }}",                                                   {% !! search_field in data.search_by %}

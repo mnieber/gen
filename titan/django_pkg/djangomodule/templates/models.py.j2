@@ -22,8 +22,8 @@ class MyModel(                                                                  
             models.Index(fields=["my_field"])                                                   {% for field in model.indexed_fields %}{% endfor %}
         ]                                                                                       {% endif %}
         ordering = ["sort_pos"]                                                                 {% ?? model.type_spec.is_sorted %}
-        verbose_name = u0(tr("{{ model.kebab_name }}"))                                         {% if _.django_app.use_translation %}
-        verbose_name_plural = u0(tr("{{ model.kebab_name|plural }}"))                           {% endif %}{% end_min_lines %}
+        verbose_name = tr("{{ model.kebab_name }}")                                             {% if _.django_app.use_translation %}
+        verbose_name_plural = tr("{{ model.kebab_name|plural }}")                               {% endif %}{% end_min_lines %}
 
     my_field = {{ field.body(model) }}                                                          {% !! field in model.fields %}
 

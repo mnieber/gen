@@ -5,7 +5,8 @@ from django.conf import settings
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
                                         PermissionsMixin)
 from django.db import models
-from user_profiles.models import UserProfile                                                {% if _.django_app.get_module_by_name("userProfiles") %}{% endif %}
+from app.tr import tr                                                                       {% ?? _.django_app.use_translation %}
+from user_profiles.models import UserProfile                                                {% ?? _.django_app.get_module_by_name("userProfiles") %}
 
 class UserManager(BaseUserManager):
     def create_user(
@@ -40,6 +41,10 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    class Meta:                                                                             {% if _.django_app.use_translation %}
+        verbose_name = tr("user")
+        verbose_name_plural = tr("users")
+                                                                                            {% endif %}
     objects = UserManager()
 
     USERNAME_FIELD = "email"

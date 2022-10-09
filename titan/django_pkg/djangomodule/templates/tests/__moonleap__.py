@@ -29,7 +29,7 @@ def _get_faker_value(field_spec):
         return "{}"
 
     if field_spec.field_type == "image":
-        return "image.jpg"
+        return '"image.jpg"'
 
     if field_spec.field_type == "markdown":
         return '"# " + f.word()'

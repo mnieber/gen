@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 @dataclass
 class FieldSpec:
     field_type: str
-    name: str
+    key: str
     admin_search: bool = False
     admin: bool = True
     api: T.List[str] = field(default_factory=lambda: ["server", "client"])
@@ -24,6 +24,10 @@ class FieldSpec:
     target: T.Optional[str] = None
     readonly: T.Optional[bool] = None
     unique: T.Optional[bool] = None
+
+    @property
+    def name(self):
+        return self.key.removesuffix("^")
 
 
 @dataclass

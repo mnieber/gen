@@ -15,15 +15,13 @@ def load_type_specs(type_spec_store, spec_dir):
         with open(fn) as f:
             root_type_spec_dict = yaml.load(f, Loader=yaml.SafeLoader)
             root_type_spec_dict = convert_type_spec_symbols(root_type_spec_dict)
-            for first_pass in (True, False):
-                get_root_type_spec(type_spec_store, root_type_spec_dict, first_pass)
+            get_root_type_spec(type_spec_store, root_type_spec_dict)
     post_process_type_specs(type_spec_store)
 
 
-def get_root_type_spec(type_spec_store, root_type_spec_dict, first_pass):
-    root_type_spec_dict["__type_name__"] = "root"
+def get_root_type_spec(type_spec_store, root_type_spec_dict):
     for key, field_spec_dict in root_type_spec_dict.items():
         if key.startswith("__"):
             continue
 
-        get_field_spec(type_spec_store, key, field_spec_dict, None, first_pass)
+        get_field_spec(type_spec_store, key, field_spec_dict)

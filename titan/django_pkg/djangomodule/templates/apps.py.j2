@@ -1,7 +1,6 @@
 from django.apps import AppConfig
-from app.tr import tr                                               {% if _.django_app.use_translation %}
-from app.utils.case import u0                                       {% endif %}
+from app.tr import tr                                               {% ?? _.django_app.use_translation %}
 
 class {{ _.module.name | u0 }}Config(AppConfig):
     name = "{{ _.module.name|sn }}"
-    verbose_name = u0(tr("{{ _.module.name|sn }}"))                 {% ?? _.django_app.use_translation %}
+    verbose_name = tr("{{ _.module.name|sn }}")                     {% ?? _.django_app.use_translation %}

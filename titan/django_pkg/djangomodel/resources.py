@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from moonleap import RenderMixin, Resource
 from moonleap.typespec.field_spec import FieldSpec
 from moonleap.typespec.type_spec import TypeSpec
-from moonleap.utils.case import sn
+from moonleap.utils.case import sn, snake_to_kebab
 
 verbose_name_block_list = ["id", "sort_pos", "slug"]
 
@@ -80,6 +80,7 @@ class DjangoFkField(DjangoModelField):
             *(
                 [f'related_name="{sn(self.field_spec.is_reverse_of_related_set.name)}"']
                 if self.field_spec.is_reverse_of_related_set
+                and not self.field_spec.is_reverse_of_related_set.through
                 else []
             ),
         ]
@@ -98,11 +99,7 @@ class DjangoManyToManyField(DjangoModelField):
             None
             if self.field_spec.through == "+"
             else f'through="{self.field_spec.through}"',
-            *(
-                [f'related_name="{sn(self.field_spec.is_reverse_of_related_set.name)}"']
-                if self.field_spec.is_reverse_of_related_set
-                else []
-            ),
+            *([f'related_name="+"']),
         ]
 
 
@@ -119,7 +116,10 @@ class DjangoCharField(DjangoModelField):
 
     def field_args(self, django_model):
         choice_items = (
-            [f'("{x[0]}", tr("{x[1]}"))' for x in self.field_spec.choices or []]
+            [
+                f'("{x[0]}", tr("{snake_to_kebab(x[1])}"))'
+                for x in self.field_spec.choices or []
+            ]
             if django_model.module.django_app.use_translation
             else [f'("{x[0]}", "{x[1]}")' for x in self.field_spec.choices or []]
         )

@@ -1,8 +1,8 @@
 from moonleap.typespec.field_spec import FieldSpec
 
 default_field_specs = [
-    FieldSpec(name="id", field_type="uuid", required=True),
-    FieldSpec(name="name", field_type="string", required=True),
+    FieldSpec(key="id", field_type="uuid", required=True),
+    FieldSpec(key="name", field_type="string", required=True),
 ]
 
 
@@ -12,11 +12,11 @@ class DefaultFieldSpecsStore:
 
     def register_field_spec(self, type_name, field_spec):
         for default_field_spec in self.get_field_specs(type_name):
-            if default_field_spec.name == field_spec.name:
+            if default_field_spec.key == field_spec.key:
                 if default_field_spec.field_type == field_spec.field_type:
                     return
                 raise Exception(
-                    f"Error: trying to register a default field spec ({field_spec.name})"
+                    f"Error: trying to register a default field spec ({field_spec.key})"
                     + f" that already exists for type {type_name}."
                 )
 
@@ -24,4 +24,4 @@ class DefaultFieldSpecsStore:
 
     def get_field_specs(self, type_name):
         field_specs = list(default_field_specs) + self._field_specs.get(type_name, [])
-        return sorted(field_specs, key=lambda x: x.name)
+        return sorted(field_specs, key=lambda x: x.key)
