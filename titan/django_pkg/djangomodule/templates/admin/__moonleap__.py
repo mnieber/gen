@@ -1,12 +1,13 @@
 from moonleap import u0
 from moonleap.utils.case import sn
+from titan.django_pkg.djangomodel.sort_django_models import sort_django_models
 
 
 def get_helpers(_):
     class Helpers:
         def get_data(self):
             result = []
-            for django_model in _.module.django_models:
+            for django_model in sort_django_models(_.module.django_models):
                 item_list = django_model.item_list
                 type_spec = django_model.type_spec
                 data = dict(
