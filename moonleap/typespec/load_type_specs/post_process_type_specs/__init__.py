@@ -1,7 +1,6 @@
 from . import (
     add_missing_fk,
     add_missing_parent_child,
-    add_missing_related_name,
     add_sortpos_field,
     assert_no_duplicate_fields,
     maybe_make_fks_optional,
@@ -18,9 +17,6 @@ def post_process_type_specs(type_spec_store):
 
     for type_spec in type_spec_store.type_specs():
         add_sortpos_field.add_sortpos_field(type_spec)
-
-    for type_spec in type_spec_store.type_specs():
-        add_missing_related_name.add_missing_related_name(type_spec)
 
     for type_spec in type_spec_store.type_specs():
         add_missing_fk.add_missing_fk(type_spec_store, type_spec)

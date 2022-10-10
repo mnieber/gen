@@ -78,8 +78,8 @@ class DjangoFkField(DjangoModelField):
             if self.field_spec.set_null
             else "on_delete=models.CASCADE",
             *(
-                [f'related_name="{sn(self.field_spec.related_name)}"']
-                if self.field_spec.related_name
+                [f'related_name="{sn(self.field_spec.is_reverse_of_related_set.name)}"']
+                if self.field_spec.is_reverse_of_related_set
                 else []
             ),
         ]
@@ -99,8 +99,8 @@ class DjangoManyToManyField(DjangoModelField):
             if self.field_spec.through == "+"
             else f'through="{self.field_spec.through}"',
             *(
-                [f'related_name="{sn(self.field_spec.related_name)}"']
-                if self.field_spec.related_name
+                [f'related_name="{sn(self.field_spec.is_reverse_of_related_set.name)}"']
+                if self.field_spec.is_reverse_of_related_set
                 else []
             ),
         ]

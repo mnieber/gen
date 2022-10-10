@@ -1,10 +1,10 @@
 def maybe_make_fks_optional(type_spec_store, type_spec):
     optional_fk_field_specs = []
     for field_spec in type_spec.get_field_specs(["fk"]):
-        if field_spec.related_name:
+        if field_spec.is_reverse_of_related_set:
             target_type_spec = type_spec_store.get(field_spec.target)
             related_field_spec = target_type_spec.get_field_spec(
-                field_spec.related_name, False
+                field_spec.is_reverse_of_related_set.name, False
             )
             if related_field_spec and related_field_spec.field_type == "relatedSet":
                 assert (

@@ -20,7 +20,6 @@ def add_missing_fk(type_spec_store, type_spec):
                     name=l0(type_spec.type_name),
                     target=type_spec.type_name,
                     field_type="fk",
-                    related_name=fk_field_spec.name,
                 )
 
                 reverse_fk.is_reverse_of_related_set = fk_field_spec

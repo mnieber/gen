@@ -39,7 +39,6 @@ class FkFieldSpec(FieldSpec):
     is_parent_of_through: T.Optional[bool] = None
     is_reverse_of_related_set: T.Optional["FkFieldSpec"] = None
     admin_inline: T.Optional[bool] = None
-    related_name: T.Optional[T.Union[str, bool]] = None
     set_null: T.Optional[bool] = None
 
 
