@@ -16,10 +16,10 @@ def get_helpers(_):
             self.type_specs_to_import = []
             self.graphql_body = {}
             for output_field_spec in self.fk_output_field_specs:
-                (
-                    type_specs_to_import,
-                    self.graphql_body[output_field_spec.name],
-                ) = graphql_body(output_field_spec.target_type_spec)
+                type_specs_to_import, body = graphql_body(
+                    output_field_spec.target_type_spec
+                )
+                self.graphql_body[output_field_spec.name] = body
                 self.type_specs_to_import.extend(type_specs_to_import)
 
     return Helpers()
