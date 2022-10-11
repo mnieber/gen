@@ -3,26 +3,28 @@
 {% magic_with input_field_spec.ts_type as inputFieldTsType %}
 {% magic_with input_field_spec.graphql_type as inputFieldGqlType %}
 {% magic_with query.name as fooQueryName %}
+{% magic_with type_spec.type_name as TypeSpecName %}
 import { useMutation } from '@tanstack/react-query';
-import { queryClient } from 'src/api/queryClient';
+import { queryClient } from 'src/api/queryClient';                                      {% ?? _.mutation.gql_spec.invalidates %}
 import { doQuery } from 'src/api/graphqlClient';
 import { useMutationData } from 'src/api/hooks';
 import { ObjT } from 'src/utils/types';
-import { {{ item.ts_form_type }} } from 'src/api/types/{{ item.type_name }}T';            {% for item in __.form_input_items %}{% endfor %}
+import { {{ item.ts_form_type }} } from 'src/api/types/{{ item.type_name }}T';          {% !! item in __.form_input_items %}
+import { typeSpecNameGqlFields } from 'src/api/types/TypeSpecNameT'                     {% !! type_spec in __.type_specs_to_import %}
 
 export type ArgsT = {
-  inputFieldName: inputFieldTsType,                                                       {% for input_field_spec in __.input_field_specs %}{% endfor %}
+  inputFieldName: inputFieldTsType,                                                     {% !! input_field_spec in __.input_field_specs %}
 };
 
 const postRedRose = (args: ArgsT) => {
   return doQuery(
     `mutation postRedRose(
-      $inputFieldName: inputFieldGqlType                                                   {% for input_field_spec in __.input_field_specs %}{% endfor %}
+      $inputFieldName: inputFieldGqlType                                                {% !! input_field_spec in __.input_field_specs %}
     ) {
         postRedRose(
-          inputFieldName: $inputFieldName                                                 {% for input_field_spec in __.input_field_specs|sort(attribute="name") %}{% endfor %}
+          inputFieldName: $inputFieldName                                               {% !! input_field_spec in __.input_field_specs|sort(attribute="name") %}
         ) {
-          {{ __.graphql_body() }}
+          {{ __.graphql_body }}
         }
     }`,
     args
@@ -36,11 +38,15 @@ const postRedRose = (args: ArgsT) => {
 export const usePostRedRose = () => {
   const mutation = useMutation(['postRedRose'], postRedRose, {
     onSuccess: () => {
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries([                                                   {% if _.mutation.gql_spec.invalidates %}
+        '{{ queryName }}',                                                              {% !! queryName in _.mutation.gql_spec.invalidates %}
+        {% remove_trailing suffix="," %}
+      ]);                                                                               {% endif %}
     }
   });
   return useMutationData(mutation);
 };
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

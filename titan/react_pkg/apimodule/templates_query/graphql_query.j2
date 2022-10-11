@@ -3,10 +3,12 @@
 {% magic_with input_field_spec.graphql_type as inputFieldGqlType %}
 {% magic_with input_field_spec.ts_type as inputFieldTsType %}
 {% magic_with output_field_spec.name as outputFieldName %}
+{% magic_with type_spec.type_name as TypeSpecName %}
 import { useQuery } from '@tanstack/react-query';
 import { useQueryData } from 'src/api/hooks';
 import { doQuery } from 'src/api/graphqlClient';
 import { ObjT } from 'src/utils/types';
+import { typeSpecNameGqlFields } from 'src/api/types/TypeSpecNameT'                        {% !! type_spec in __.type_specs_to_import %}
 
 export type ArgsT = {
   inputFieldName: inputFieldTsType,                                                        {% for input_field_spec in __.input_field_specs %}{% endfor %}
@@ -22,7 +24,7 @@ export const getFooQuery = (args: ArgsT) => {
       ) {
         outputFieldName                                                                    {% for output_field_spec in __.scalar_output_field_specs %}{% endfor %}
         outputFieldName {                                                                  {% for output_field_spec in __.fk_output_field_specs %}
-          {{ __.ts_graphql_query_body(output_field_spec) }}
+          {{ __.graphql_body[output_field_spec.name] }}
         }                                                                                  {% endfor %}
       }
     }`,
@@ -38,6 +40,7 @@ export const useGetFooQuery = (args: ArgsT) => {
   const query = useQuery(['getFooQuery', args], () => getFooQuery(args));
   return useQueryData(query);
 };
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

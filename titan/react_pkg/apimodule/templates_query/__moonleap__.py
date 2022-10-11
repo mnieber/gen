@@ -12,7 +12,14 @@ def get_helpers(_):
             if x.field_type not in ["relatedSet", "fk"]
         ]
 
-        def ts_graphql_query_body(self, output_field_spec):
-            return graphql_body(output_field_spec.target_type_spec)
+        def __init__(self):
+            self.type_specs_to_import = []
+            self.graphql_body = {}
+            for output_field_spec in self.fk_output_field_specs:
+                (
+                    type_specs_to_import,
+                    self.graphql_body[output_field_spec.name],
+                ) = graphql_body(output_field_spec.target_type_spec)
+                self.type_specs_to_import.extend(type_specs_to_import)
 
     return Helpers()

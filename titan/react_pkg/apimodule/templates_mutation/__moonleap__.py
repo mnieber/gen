@@ -7,8 +7,10 @@ def get_helpers(_):
         form_input_field_specs = _.mutation.gql_spec.get_inputs(["form"])
         fk_output_field_specs = _.mutation.gql_spec.get_outputs(["relatedSet", "fk"])
 
-        def graphql_body(self):
-            return graphql_body(_.mutation.gql_spec.outputs_type_spec, recurse=True)
+        def __init__(self):
+            self.type_specs_to_import, self.graphql_body = graphql_body(
+                _.mutation.gql_spec.outputs_type_spec, recurse=True
+            )
 
         @property
         def form_input_items(self):

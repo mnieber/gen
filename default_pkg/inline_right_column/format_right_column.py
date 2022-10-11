@@ -16,7 +16,7 @@ def format_right_column(fn):
         right_part = None
         for match in reversed(list(re.finditer(r"{%\s*[^%]+\s*%}", line))):
             l, r = match.span()
-            if line[r:].strip():
+            if left_part[r:].strip():
                 # we are no longer in the right column
                 break
 

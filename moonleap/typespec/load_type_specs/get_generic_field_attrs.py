@@ -6,7 +6,7 @@ def get_generic_field_attrs(key, value_parts):
     field_attrs["api"] = []
     if "server_api" in value_parts or "no_api" not in value_parts:
         field_attrs["api"].append("server")
-    elif "client_api" in value_parts or "no_api" not in value_parts:
+    if "client_api" in value_parts or "no_api" not in value_parts:
         field_attrs["api"].append("client")
     field_attrs["key"] = key.strip()
 

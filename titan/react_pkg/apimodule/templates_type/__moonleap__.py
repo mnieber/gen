@@ -17,7 +17,8 @@ def get_helpers(_):
         form_field_specs = [x for x in _.item.form_type_spec.get_field_specs()]
 
         def graphql_fields(self):
-            return graphql_body(_.item.type_spec, recurse=True)
+            type_specs_to_import, body = graphql_body(_.item.type_spec, recurse=True)
+            return body
 
         @property
         def dependency_type_specs(self):

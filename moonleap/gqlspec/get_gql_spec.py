@@ -37,6 +37,8 @@ def get_gql_spec(gql_spec_store, type_spec_store, endpoint_key, endpoint_spec_di
         is_list = item_name.endswith("Set")
         saves.append((item_name.removesuffix("Set"), is_list))
 
+    invalidates = endpoint_spec_dict.get("invalidates", [])
+
     if is_mutation:
         outputs.append(
             FieldSpec(
@@ -61,6 +63,7 @@ def get_gql_spec(gql_spec_store, type_spec_store, endpoint_key, endpoint_spec_di
             is_mutation=is_mutation,
             deletes=deletes,
             saves=saves,
+            invalidates=invalidates,
             inputs_type_spec=TypeSpec(type_name=name + "Inputs", field_specs=inputs),
             outputs_type_spec=TypeSpec(type_name=name + "Outputs", field_specs=outputs),
         ),

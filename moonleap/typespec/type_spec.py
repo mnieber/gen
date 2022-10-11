@@ -16,14 +16,11 @@ class TypeSpec:
     extract_gql_fields: bool = False
     is_sorted: bool = False
 
-    def get_field_specs(
-        self, field_types=None, exclude_names=None, exclude_derived=False
-    ):
+    def get_field_specs(self, field_types=None, exclude_derived=False):
         return [
             x
             for x in self.field_specs
             if (field_types is None or x.field_type in field_types)
-            and x.name not in (exclude_names or [])
             and not (x.derived and exclude_derived)
         ]
 

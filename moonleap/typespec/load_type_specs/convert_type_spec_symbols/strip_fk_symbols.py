@@ -14,6 +14,14 @@ def strip_fk_symbols(key):
     if is_sorted:
         parts.append("is_sorted")
 
+    key, is_sorted = pop(key, "&")
+    if is_sorted:
+        parts.append("extract_gql_fields")
+
+    key, is_sorted = pop(key, "!")
+    if is_sorted:
+        parts.append("help")
+
     key, admin_inline = pop(key, "=")
     if admin_inline:
         parts.append("admin_inline")
