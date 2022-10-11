@@ -45,7 +45,7 @@ def graphql_body(
                     )
                     if include_field_name:
                         indent -= 2
-                        result.append("}")
+                        result.append(" " * indent + "}")
 
     if is_top_level:
         return type_specs_to_import, (os.linesep + (" " * 10)).join(result)

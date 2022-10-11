@@ -31,24 +31,30 @@ def strip_symbols(type_spec_dict, parent_field=None):
             new_value = dict(value)
             foo, bar = get_foo_bar(key)
 
-            if True:
-                # The user supplied models.yaml may already have the __init__ key
-                init_parts = new_value.get("__init__", "").split(".")
-                foo.var_type, more_init_parts = strip_fk_symbols(foo.var_type)
+            # The user supplied models.yaml may already have the __init__ key
+            init_parts = (
+                new_value["__init__"].split(".") if "__init__" in new_value else []
+            )
+            init_target_parts = (
+                new_value["__init_target__"].split(".")
+                if "__init_target__" in new_value
+                else []
+            )
+            foo.var_type, more_init_parts = strip_fk_symbols(foo.var_type)
+
+            if bar:
+                init_target_parts += more_init_parts
+            else:
                 init_parts += more_init_parts
 
+            new_key = foo.var_type
+            if foo.var:
+                foo.var, more_init_parts = strip_fk_symbols(foo.var)
                 if bar:
-                    # The user supplied models.yaml may already have the __init_target__ key
-                    init_target_parts = new_value.get("__init_target__", "").split(".")
-                    init_target_parts += init_parts
-                    new_value["__init_target__"] = ".".join(init_target_parts)
-                    init_parts = []
-                new_key = foo.var_type
-
-                if foo.var:
-                    foo.var, more_init_parts = strip_fk_symbols(foo.var)
+                    init_target_parts += more_init_parts
+                else:
                     init_parts += more_init_parts
-                    new_key = foo.var + " as " + new_key
+                new_key = foo.var + " as " + new_key
 
             if bar:
                 bar.var_type, more_init_parts = strip_fk_symbols(bar.var_type)
@@ -63,6 +69,8 @@ def strip_symbols(type_spec_dict, parent_field=None):
                 new_key += " through " + bar_key
 
             new_value["__init__"] = ".".join(init_parts)
+            if bar:
+                new_value["__init_target__"] = ".".join(init_target_parts)
 
             #
             # Use recursion to convert child type specs

@@ -8,7 +8,8 @@ def get_fk_field_attrs(key, init, init_target):
     init_parts = init.split(".") if init else []
     init_target_parts = init_target.split(".") if init_target else []
 
-    field_attrs = get_generic_field_attrs(key, init_parts)
+    field_parts = init_target_parts or init_parts
+    field_attrs = get_generic_field_attrs(key, field_parts)
     type_attrs = {"field_specs": []}
 
     foo, bar = get_foo_bar(key)
@@ -25,29 +26,29 @@ def get_fk_field_attrs(key, init, init_target):
     if "is_sorted" in init_parts:
         type_attrs["is_sorted"] = True
 
-    if "help" in init_parts:
+    if "help" in field_parts:
         field_attrs["help"] = True
 
     if "entity" in init_parts:
         type_attrs["is_entity"] = True
 
-    if "admin_inline" in init_parts:
+    if "admin_inline" in field_parts:
         field_attrs["admin_inline"] = True
 
-    if "set_null" in init_parts:
+    if "set_null" in field_parts:
         field_attrs["set_null"] = True
 
     if "extract_gql_fields" in init_parts:
         type_attrs["extract_gql_fields"] = True
 
-    field_attrs["is_parent_of_target"] = "is_parent" in init_parts
+    field_attrs["is_parent_of_target"] = "is_parent" in field_parts
 
     if bar and bar.var:
         field_attrs["through_as"] = bar.var
 
     if bar and bar.var_type:
         type_attrs["type_name"] = field_attrs["through"] = bar.var_type
-        field_attrs["is_parent_of_through"] = "is_parent" in init_target_parts
+        field_attrs["is_parent_of_through"] = "is_parent" in init_parts
 
     return key, type_attrs, field_attrs
 
