@@ -6,7 +6,7 @@ from moonleap.typespec.load_type_specs.post_process_type_specs import (
     post_process_type_specs,
 )
 
-from .convert_type_spec_symbols import convert_type_spec_symbols
+from .prepare_type_spec_dict import prepare_type_spec_dict
 
 
 def load_type_specs(type_spec_store, spec_dir):
@@ -14,7 +14,7 @@ def load_type_specs(type_spec_store, spec_dir):
     if os.path.exists(fn):
         with open(fn) as f:
             root_type_spec_dict = yaml.load(f, Loader=yaml.SafeLoader)
-            root_type_spec_dict = convert_type_spec_symbols(root_type_spec_dict)
+            root_type_spec_dict = prepare_type_spec_dict(root_type_spec_dict)
             get_root_type_spec(type_spec_store, root_type_spec_dict)
     post_process_type_specs(type_spec_store)
 

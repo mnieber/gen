@@ -5,7 +5,7 @@ from .strip_fk_symbols import strip_fk_symbols
 from .strip_generic_symbols import strip_generic_symbols
 
 
-def convert_type_spec_symbols(type_spec_dict, parent_field=None):
+def strip_symbols(type_spec_dict, parent_field=None):
     if parent_field is None:
         type_spec_dict["__type_name__"] = "root"
 
@@ -70,9 +70,11 @@ def convert_type_spec_symbols(type_spec_dict, parent_field=None):
             new_value["__type_name__"] = u0(
                 bar.var_type if bar else foo.var_type
             ).removesuffix("Set")
-            new_value = convert_type_spec_symbols(
+
+            field_name = new_key.split()[0]
+            new_value = strip_symbols(
                 new_value,
-                parent_field=type_spec_dict["__type_name__"] + "." + new_key.split()[0],
+                parent_field=type_spec_dict["__type_name__"] + "." + field_name,
             )
 
         result[new_key] = new_value

@@ -1,22 +1,13 @@
-import ramda as R
 from moonleap.utils.fp import add_to_list_as_set
 from moonleap.utils.inflect import plural
-
-
-def comp(lhs_model, rhs_model):
-    for field_spec in lhs_model.type_spec.get_field_specs(["fk", "relatedSet"]):
-        if field_spec.target == rhs_model.name:
-            return +1
-    for field_spec in rhs_model.type_spec.get_field_specs(["fk", "relatedSet"]):
-        if field_spec.target == lhs_model.name:
-            return -1
-    return 0
+from titan.django_pkg.djangomodel.sort_django_models import sort_django_models
 
 
 def get_helpers(_):
     class Helpers:
         django_app = _.module.django_app
-        django_models = R.sort(comp, _.module.django_models)
+
+        django_models = sort_django_models(_.module.django_models)
         translations = []
 
         def __init__(self):
