@@ -1,4 +1,4 @@
-from moonleap.utils.fp import add_to_list_as_set
+from moonleap.utils.fp import append_uniq
 
 
 def get_helpers(_):
@@ -12,7 +12,7 @@ def get_helpers(_):
             for field_spec in _.query.gql_spec.get_outputs(
                 ["fk", "relatedSet", "idList"]
             ):
-                add_to_list_as_set(result, field_spec.target_item)
+                append_uniq(result, field_spec.target_item)
 
             return result
 

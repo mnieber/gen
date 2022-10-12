@@ -4,7 +4,12 @@ from moonleap.utils.case import l0
 
 
 def graphql_body(
-    type_spec, indent=0, skip=None, recurse=True, type_specs_to_import=None
+    type_spec,
+    define_type=False,
+    indent=0,
+    skip=None,
+    recurse=True,
+    type_specs_to_import=None,
 ):
     is_top_level = not skip
     skip = skip or [type_spec.type_name]
@@ -12,14 +17,14 @@ def graphql_body(
         type_specs_to_import = []
 
     result = []
-    if type_spec.extract_gql_fields:
+    if type_spec.extract_gql_fields and not (define_type and is_top_level):
         type_specs_to_import.append(type_spec)
         result.append(" " * indent + "${" + l0(type_spec.type_name) + "GqlFields}")
     else:
         field_specs = [
             x
             for x in sorted(list(type_spec.get_field_specs()), key=lambda x: x.name)
-            if "client" in x.api
+            if "client" in x.has_api
         ]
 
         for field_spec in field_specs:
@@ -37,6 +42,7 @@ def graphql_body(
                     result.extend(
                         graphql_body(
                             target_type_spec,
+                            define_type,
                             indent,
                             skip + [target_type_spec.type_name],
                             recurse=recurse,
@@ -48,7 +54,7 @@ def graphql_body(
                         result.append(" " * indent + "}")
 
     if is_top_level:
-        return type_specs_to_import, (os.linesep + (" " * 10)).join(result)
+        return type_specs_to_import, os.linesep.join(result)
     else:
         return result
 

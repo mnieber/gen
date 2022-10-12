@@ -3,4 +3,4 @@ from app.tr import tr                                               {% ?? _.djan
 
 class {{ _.module.name | u0 }}Config(AppConfig):
     name = "{{ _.module.name|sn }}"
-    verbose_name = tr("{{ _.module.name|sn }}")                     {% ?? _.django_app.use_translation %}
+    verbose_name = tr("{{ _.module.kebab_name }}")                     {% ?? _.django_app.use_translation %}

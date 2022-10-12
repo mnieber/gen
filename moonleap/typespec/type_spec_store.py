@@ -45,10 +45,8 @@ class TypeSpecStore:
     def type_specs(self) -> T.List[TypeSpec]:
         return self._type_spec_by_type_name.values()
 
-    def register_parent_child(self, parent_type_name, child_type_name, is_sure_parent):
-        self.parents_by_type_name[child_type_name].append(
-            (parent_type_name, is_sure_parent)
-        )
+    def register_parent_child(self, parent_type_name, child_type_name):
+        self.parents_by_type_name[child_type_name].append(parent_type_name)
 
 
 _type_spec_store = None

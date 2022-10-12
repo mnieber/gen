@@ -11,8 +11,8 @@ def field_spec_target_type_spec(self: FkFieldSpec):
     )
 
 
-def field_spec_graphql_type(self: FieldSpec):
-    postfix = "!" if self.required else ""
+def field_spec_graphql_type(self: FieldSpec, host):
+    postfix = "" if host in self.optional else "!"
 
     if self.field_type in (
         "string",
@@ -33,6 +33,9 @@ def field_spec_graphql_type(self: FieldSpec):
 
     if self.field_type in ("string[]",):
         return "String[]" + postfix
+
+    if self.field_type in ("int[]",):
+        return "Int[]" + postfix
 
     if self.field_type in ("float",):
         return "Float" + postfix

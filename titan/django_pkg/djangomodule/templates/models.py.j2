@@ -25,7 +25,7 @@ class MyModel(                                                                  
         verbose_name = tr("{{ model.kebab_name }}")                                             {% if _.django_app.use_translation %}
         verbose_name_plural = tr("{{ model.kebab_name|plural }}")                               {% endif %}{% end_min_lines %}
 
-    my_field = {{ field.body(model) }}                                                          {% !! field in model.fields %}
+    my_field = {{ field.body(model) }}                                                          {% !! field in __.fields(model) %}
 
     def save(self, *args, **kwargs):                                                            {% if model.slug_fields %}
         if self.my_field is None:                                                               {% for field in model.slug_fields %}

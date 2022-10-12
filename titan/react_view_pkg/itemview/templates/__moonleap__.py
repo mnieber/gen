@@ -8,10 +8,10 @@ def get_helpers(_):
             result = []
 
             for field_spec in self.type_spec.get_field_specs():
-                if not (
-                    "client" not in field_spec.api
-                    or field_spec.name in ("id",)
-                    or field_spec.field_type in ("slug", "fk", "relatedSet")
+                if (
+                    "client" in field_spec.has_model
+                    and field_spec.name not in ("id",)
+                    and field_spec.field_type not in ("slug", "fk", "relatedSet")
                 ):
                     result.append(field_spec)
 

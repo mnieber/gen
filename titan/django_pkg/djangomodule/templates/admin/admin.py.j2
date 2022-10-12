@@ -1,5 +1,4 @@
 {% magic_with item_list.item_name as myModel %}
-{% magic_with inline_model_field.target as myInlineModel %}
 {% magic_with model_field.name as modelFieldName %}
 {% clean_up_py_imports %}
 from adminsortable2.admin import SortableAdminBase, SortableInlineAdminMixin
@@ -30,8 +29,8 @@ class MyModelAdmin(
         "modelFieldName",                                                       {% !! model_field in data.excluded_model_fields %}
     )                                                                           {% end_min_lines %}
     inlines = (                                                                 {% min_lines count=3 %}
-        myInlineModelInline,                                                    {% !! inline_model_field in data.inline_model_fields %}
-        {% remove_trailing suffix="," %}
+        {{ inline_model_field.through or inline_model_field.target }}Inline,    {% !! inline_model_field in data.inline_model_fields %}
+        {% remove_trailing suffix="," tuple=True %}
     )                                                                           {% end_min_lines %}
     search_fields = (                                                           {% min_lines count=3 %}
         "{{ search_field }}",                                                   {% !! search_field in data.search_by %}
@@ -41,6 +40,5 @@ class MyModelAdmin(
     )                                                                           {% end_min_lines %}
     pass                                                                        {% ?? not (data.inline_model_fields or data.autocomplete_fields or data.search_by or data.excluded_model_fields) %}
                                                                                 {% endfor %}
-{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

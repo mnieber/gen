@@ -52,6 +52,9 @@ def field_spec_ts_type(field_spec):
     if field_spec.field_type in ("string[]",):
         return "string[]"
 
+    if field_spec.field_type in ("int[]",):
+        return "int[]"
+
     if field_spec.field_type in ("boolean",):
         return "boolean"
 

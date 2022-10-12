@@ -1,6 +1,6 @@
 from moonleap.utils.case import sn
 
-field_name_block_list = ["sortPos"]
+field_name_block_list = ["sortPos", "id"]
 
 
 def _get_faker_value(field_spec):
@@ -18,6 +18,9 @@ def _get_faker_value(field_spec):
 
     if field_spec.field_type == "string[]":
         return f"[f.word(), f.word()]"
+
+    if field_spec.field_type == "int[]":
+        return f"[f.random_int(), f.random_int()]"
 
     if field_spec.field_type == "uuid":
         return f"f.uuid4()"
@@ -46,9 +49,8 @@ def get_helpers(_):
             type_spec = django_model.type_spec
             fk_field_names = [
                 f"{sn(field_spec.name + 'Id')}"
-                for field_spec in type_spec.get_field_specs(
-                    ["fk"], exclude_derived=True
-                )
+                for field_spec in type_spec.get_field_specs(["fk"])
+                if "server" in field_spec.has_model
             ]
             return ", ".join(fk_field_names)
 
@@ -56,7 +58,9 @@ def get_helpers(_):
             args = []
             transform_name = sn if snake_args else lambda x: x
             type_spec = django_model.type_spec
-            for field_spec in type_spec.get_field_specs(exclude_derived=True):
+            for field_spec in [
+                x for x in type_spec.get_field_specs() if "server" in x.has_model
+            ]:
                 if field_spec.field_type == "fk":
                     args.append(
                         f"{transform_name(field_spec.name + 'Id')}={sn(field_spec.name + 'Id')}"

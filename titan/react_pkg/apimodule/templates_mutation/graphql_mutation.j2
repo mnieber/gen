@@ -1,7 +1,7 @@
 {% magic_with _.mutation.name as postRedRose %}
 {% magic_with input_field_spec.name as inputFieldName %}
 {% magic_with input_field_spec.ts_type as inputFieldTsType %}
-{% magic_with input_field_spec.graphql_type as inputFieldGqlType %}
+{% magic_with input_field_spec.graphql_type("client") as inputFieldGqlType %}
 {% magic_with query.name as fooQueryName %}
 {% magic_with type_spec.type_name as TypeSpecName %}
 import { useMutation } from '@tanstack/react-query';
@@ -24,7 +24,7 @@ const postRedRose = (args: ArgsT) => {
         postRedRose(
           inputFieldName: $inputFieldName                                               {% !! input_field_spec in __.input_field_specs|sort(attribute="name") %}
         ) {
-          {{ __.graphql_body }}
+{{ __.graphql_body }}
         }
     }`,
     args

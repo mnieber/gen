@@ -1,12 +1,10 @@
 from dataclasses import dataclass
-from moonleap import (
-    RenderMixin,
-    Resource,
-    TemplateDirMixin,
-)
+
+from moonleap import RenderMixin, Resource, TemplateDirMixin
 
 
 @dataclass
 class DjangoModule(TemplateDirMixin, RenderMixin, Resource):
     name: str
+    kebab_name: str
     has_graphql_schema: bool = False

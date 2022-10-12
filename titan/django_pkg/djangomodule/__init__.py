@@ -33,7 +33,7 @@ base_tags = [("module", ["django-module"])]
 
 @create("module")
 def create_module(term):
-    module = DjangoModule(name=kebab_to_camel(term.data))
+    module = DjangoModule(name=kebab_to_camel(term.data), kebab_name=term.data)
     module.template_dir = Path(__file__).parent / "templates"
     module.template_context = dict(module=module)
     return module
@@ -41,7 +41,7 @@ def create_module(term):
 
 @create("accounts:module")
 def create_accounts_module(term):
-    module = DjangoModule(name=kebab_to_camel(term.data))
+    module = DjangoModule(name=kebab_to_camel(term.data), kebab_name=term.data)
     module.template_dir = Path(__file__).parent / "templates_accounts"
     module.template_context = dict(module=module)
     module.has_graphql_schema = True
@@ -50,7 +50,7 @@ def create_accounts_module(term):
 
 @create("users:module")
 def create_users_module(term):
-    module = DjangoModule(name=kebab_to_camel(term.data))
+    module = DjangoModule(name=kebab_to_camel(term.data), kebab_name=term.data)
     module.template_dir = Path(__file__).parent / "templates_users"
     module.template_context = dict(module=module)
     return module
@@ -68,7 +68,7 @@ def django_app_has_module(django_app, module):
 
 @rule("django-app", priority=Priorities.LOW.value)
 def django_modules_provide_item_lists(django_app):
-    lut = get_map_from_item_to_django_module()
+    lut = get_map_from_item_to_django_module(django_app.modules)
     forwards = []
     for data in lut.values():
         django_model_term = f"{data.item.meta.term.data}:django-model"
@@ -102,5 +102,6 @@ class ExtendItem:
 
 @extend(DjangoApp)
 class ExtendDjangoApp:
+    modules = P.children(has, "module")
     accounts_module = P.child(has, "accounts:module")
     get_module_by_name = MemFun(props.get_module_by_name)

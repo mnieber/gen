@@ -1,4 +1,4 @@
-from moonleap.utils.fp import add_to_list_as_set, uniq
+from moonleap.utils.fp import append_uniq, uniq
 
 
 def get_helpers(_):
@@ -26,25 +26,25 @@ def get_helpers(_):
         def items_to_import(self):
             result = []
             for field_spec in self.fk_input_field_specs + self.fk_output_field_specs:
-                add_to_list_as_set(result, field_spec.target_item)
+                append_uniq(result, field_spec.target_item)
 
             for item in _.mutation.items_saved:
-                add_to_list_as_set(result, item)
+                append_uniq(result, item)
 
             for item_list in _.mutation.item_lists_saved:
-                add_to_list_as_set(result, item_list.item)
+                append_uniq(result, item_list.item)
 
             for item in _.mutation.items_deleted:
-                add_to_list_as_set(result, item)
+                append_uniq(result, item)
 
             for item_list in _.mutation.item_lists_deleted:
-                add_to_list_as_set(result, item_list.item)
+                append_uniq(result, item_list.item)
 
             return result
 
         def graphene_type(self, field_spec):
             return field_spec.graphene_type(
-                "" if field_spec.required else "required=False"
+                "required=False" if "server" in field_spec.optional else ""
             )
 
     return Helpers()

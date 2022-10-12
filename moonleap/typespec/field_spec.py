@@ -6,28 +6,32 @@ from dataclasses import dataclass, field
 class FieldSpec:
     field_type: str
     key: str
-    admin_search: bool = False
-    admin: bool = True
-    api: T.List[str] = field(default_factory=lambda: ["server", "client"])
-    choices: T.Optional[T.List[T.Any]] = None
-    default_value: T.Any = None
-    derived: T.Optional[bool] = None
-    description: T.Optional[str] = None
-    display: T.Optional[bool] = None
-    help: T.Optional[bool] = None
-    index: T.Optional[bool] = None
-    is_slug_src: T.Optional[bool] = None
-    max_length: T.Optional[int] = None
-    primary_key: T.Optional[bool] = None
-    readonly: T.Optional[bool] = None
-    required: T.Optional[bool] = None
+    admin_search: bool = field(default=False, repr=False)
+    admin: bool = field(default=True, repr=False)
+    has_api: T.List[str] = field(default_factory=lambda: [])
+    has_model: T.List[str] = field(default_factory=lambda: [])
+    choices: T.Optional[T.List[T.Any]] = field(default=None, repr=False)
+    default_value: T.Any = field(default=None, repr=False)
+    description: T.Optional[str] = field(default=None, repr=False)
+    display: T.Optional[bool] = field(default=None, repr=False)
+    help: T.Optional[bool] = field(default=None, repr=False)
+    index: T.Optional[bool] = field(default=None, repr=False)
+    is_slug_src: T.Optional[bool] = field(default=None, repr=False)
+    max_length: T.Optional[int] = field(default=None, repr=False)
+    primary_key: T.Optional[bool] = field(default=None, repr=False)
+    readonly: T.Optional[bool] = field(default=None, repr=False)
+    is_auto: T.Optional[bool] = field(default=None)
+    # If "server" in optional, then the field is optional on the server.
+    # Sometimes, a field is labelled explicitly as required by adding "required_server" to optional.
+    # This is used when the default is optional by default (e.g. in a many-to-many relationship).
+    optional: T.List[str] = field(default_factory=lambda: [])
     target: T.Optional[str] = None
-    readonly: T.Optional[bool] = None
-    unique: T.Optional[bool] = None
+    readonly: T.Optional[bool] = field(default=None, repr=False)
+    unique: T.Optional[bool] = field(default=None, repr=False)
 
     @property
     def name(self):
-        return self.key.removesuffix("^")
+        return self.key.removesuffix("~")
 
 
 @dataclass
@@ -38,10 +42,8 @@ class FormFieldSpec(FieldSpec):
 @dataclass
 class FkFieldSpec(FieldSpec):
     through: T.Optional[str] = None
-    through_as: T.Optional[str] = None
-    is_parent_of_target: T.Optional[bool] = None
-    is_parent_of_through: T.Optional[bool] = None
-    is_reverse_of_related_set: T.Optional["FkFieldSpec"] = None
+    through_var: T.Optional[str] = None
+    related_name: T.Optional[str] = None
     admin_inline: T.Optional[bool] = None
     set_null: T.Optional[bool] = None
 
@@ -51,6 +53,6 @@ def get_field_spec_constructor(t):
         FkFieldSpec
         if t in ("fk", "relatedSet")
         else FormFieldSpec
-        if t in ("form")
+        if t in ("form",)
         else FieldSpec
     )

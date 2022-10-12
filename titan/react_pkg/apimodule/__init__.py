@@ -46,7 +46,9 @@ def add_api_render_tasks(react_app, api_module):
     )
 
     api_module.renders(
-        lambda: get_gql_reg().get_public_items("client"),
+        lambda: get_gql_reg().get_public_items(
+            lambda field_spec: "client" in field_spec.has_model
+        ),
         "types",
         lambda item: dict(item=item),
         [Path(__file__).parent / "templates_type"],

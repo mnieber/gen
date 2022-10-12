@@ -1,13 +1,21 @@
 from moonleap.typespec.field_spec import get_field_spec_constructor
-from moonleap.typespec.load_type_specs.get_fk_field_attrs import get_fk_field_attrs
-from moonleap.typespec.load_type_specs.update_type_spec import update_type_spec
+
+from .foreign_key import ForeignKey
+from .get_fk_field_attrs import get_fk_field_attrs
 
 
-def get_fk_field_spec(type_spec_store, key, field_spec_value):
-    (key, type_attrs, field_attrs) = get_fk_field_attrs(
-        key, field_spec_value.get("__init__"), field_spec_value.get("__init_target__")
+def get_fk_field_spec(host, fk: ForeignKey, related_name):
+    field_attrs = get_fk_field_attrs(
+        host,
+        fk.var,
+        fk.foo,
+        fk.bar,
+        fk.data_parts,
+        fk.target_parts,
     )
 
-    update_type_spec(type_spec_store, type_attrs, field_spec_value)
+    field_spec = get_field_spec_constructor(field_attrs["field_type"])(**field_attrs)
+    if field_spec.field_type == "fk" and related_name:
+        field_spec.related_name = related_name
 
-    return get_field_spec_constructor(field_attrs["field_type"])(**field_attrs)
+    return field_spec

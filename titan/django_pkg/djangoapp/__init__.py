@@ -30,11 +30,6 @@ def django_uses_postgres_service(django_app, postgres_service):
     return create_forward(django_app.service, uses, "postgres:service")
 
 
-@extend(DjangoApp)
-class ExtendDjangoApp:
-    modules = P.children(has, "module")
-
-
 @extend(Service)
 class ExtendService:
     django_app = P.child(runs, ":django-app")

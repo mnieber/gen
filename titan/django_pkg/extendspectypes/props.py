@@ -25,6 +25,9 @@ def graphene_type(self: FieldSpec, args):
     if self.field_type == "int":
         return f"graphene.Int({args})"
 
+    if self.field_type == "int[]":
+        return f"graphene.List(graphene.Int{infix}{args})"
+
     if self.field_type == "float":
         return f"graphene.Float({args})"
 

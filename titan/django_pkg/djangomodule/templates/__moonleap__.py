@@ -1,4 +1,4 @@
-from moonleap.utils.fp import add_to_list_as_set
+from moonleap.utils.fp import append_uniq
 from moonleap.utils.inflect import plural
 from titan.django_pkg.djangomodel.sort_django_models import sort_django_models
 
@@ -12,6 +12,13 @@ def get_helpers(_):
 
         def __init__(self):
             self._init_translations()
+
+        def fields(self, model):
+            return [
+                x
+                for x in model.fields
+                if not (model.type_spec.is_entity and x.name in ("id", "created"))
+            ]
 
         def _init_translations(self):
             for django_model in self.django_models:
@@ -35,7 +42,7 @@ def get_helpers(_):
                 ):
                     item = field_spec.target_item
                     if item.django_module is not _.module:
-                        add_to_list_as_set(result, item)
+                        append_uniq(result, item)
             return result
 
     return Helpers()

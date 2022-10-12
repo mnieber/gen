@@ -46,7 +46,7 @@ export const YellowTulipFormView = observer(
     };
     const initialErrors = {};
     const handleValidate = ({values, setError} : HandleValidateArgsT) => {
-      if (R.isNil(values.fieldSpecName)) {                                                  {% for field_spec in __.field_specs %}{% if field_spec.required %}
+      if (R.isNil(values.fieldSpecName)) {                                                  {% for field_spec in __.field_specs %}{% if "client" not in field_spec.optional %}
         setError('fieldSpecName', 'This field is required');
       }                                                                                     {% endif %}{% endfor %}
     };

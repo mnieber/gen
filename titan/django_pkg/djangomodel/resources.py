@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from moonleap import RenderMixin, Resource
 from moonleap.typespec.field_spec import FieldSpec
 from moonleap.typespec.type_spec import TypeSpec
-from moonleap.utils.case import sn, snake_to_kebab
+from moonleap.utils.case import l0, sn, snake_to_kebab
 
 verbose_name_block_list = ["id", "sort_pos", "slug"]
 
@@ -22,9 +22,7 @@ class DjangoModelField(Resource):
 
     def arg_null_blank(self):
         return (
-            []
-            if (self.field_spec.required or self.field_spec.required is None)
-            else ["null=True", "blank=True"]
+            ["null=True", "blank=True"] if "server" in self.field_spec.optional else []
         )
 
     def arg_unique(self):
@@ -72,17 +70,20 @@ class DjangoFkField(DjangoModelField):
     field_name: str = "models.ForeignKey"
 
     def field_args(self, django_model):
+        default_related_name = l0(django_model.name) + "Set"
+        related_name = (
+            "+"
+            if not self.field_spec.related_name
+            else ""
+            if self.field_spec.related_name == default_related_name
+            else self.field_spec.related_name
+        )
         return [
             self.field_spec.target,
             "on_delete=models.SET_NULL"
             if self.field_spec.set_null
             else "on_delete=models.CASCADE",
-            *(
-                [f'related_name="{sn(self.field_spec.is_reverse_of_related_set.name)}"']
-                if self.field_spec.is_reverse_of_related_set
-                and not self.field_spec.is_reverse_of_related_set.through
-                else []
-            ),
+            *([f'related_name="{sn(related_name)}"'] if related_name else []),
         ]
 
 
@@ -91,7 +92,7 @@ class DjangoManyToManyField(DjangoModelField):
     field_name: str = "models.ManyToManyField"
 
     def arg_null_blank(self):
-        return [] if self.field_spec.required else ["blank=True"]
+        return [] if "required_server" in self.field_spec.optional else ["blank=True"]
 
     def field_args(self, django_model):
         return [

@@ -1,7 +1,7 @@
 {% magic_with _.query.name as getFoo %}
 {% magic_with output_field_spec.name as outputFieldName %}
 {% magic_with input_field_spec.name as inputFieldName %}
-{% magic_with input_field_spec.graphql_type as inputFieldGqlType %}
+{% magic_with input_field_spec.graphql_type("server") as inputFieldGqlType %}
 
 def create_get_foo_query(
     input_field_name,                                                         {% !! input_field_spec in __.input_field_specs %}

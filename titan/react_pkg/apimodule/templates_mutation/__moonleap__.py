@@ -9,7 +9,7 @@ def get_helpers(_):
 
         def __init__(self):
             self.type_specs_to_import, self.graphql_body = graphql_body(
-                _.mutation.gql_spec.outputs_type_spec, recurse=True
+                _.mutation.gql_spec.outputs_type_spec, indent=10
             )
 
         @property

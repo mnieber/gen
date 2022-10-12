@@ -4,8 +4,8 @@ from moonleap.typespec.load_type_specs.get_generic_field_attrs import (
 )
 
 
-def get_scalar_field_spec(key, field_spec_value):
-    field_attrs = get_generic_field_attrs(key, field_spec_value.split("."))
+def get_scalar_field_spec(host, key, field_spec_value):
+    field_attrs = get_generic_field_attrs(host, key, field_spec_value.split("."))
     parts = field_spec_value.split(".")
 
     count_is = 0
@@ -41,6 +41,10 @@ def get_scalar_field_spec(key, field_spec_value):
                 if "String" in parts
                 else "string[]"
                 if "String[]" in parts
+                else "int[]"
+                if "Int[]" in parts
+                else "float[]"
+                if "Float[]" in parts
                 else "uuid"
                 if "Id" in parts
                 else "date"

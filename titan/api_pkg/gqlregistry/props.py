@@ -1,7 +1,7 @@
 from moonleap.utils.queue import Queue
 
 
-def get_public_items(gql_reg, api_category):
+def get_public_items(gql_reg, predicate):
     result = []
     q = Queue(lambda x: x.type_name, [])
 
@@ -25,7 +25,7 @@ def get_public_items(gql_reg, api_category):
             [
                 field_spec.target_item
                 for field_spec in item.type_spec.get_field_specs(["fk", "relatedSet"])
-                if api_category in field_spec.api
+                if predicate(field_spec)
             ]
         )
 

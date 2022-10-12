@@ -1,27 +1,23 @@
 import os
 
 import yaml
-from moonleap.typespec.load_type_specs.get_field_spec import get_field_spec
-from moonleap.typespec.load_type_specs.post_process_type_specs import (
-    post_process_type_specs,
-)
 
-from .prepare_type_spec_dict import prepare_type_spec_dict
+from .add_host_to_type_specs import add_host_to_type_specs
+from .type_spec_parser import TypeSpecParser
 
 
 def load_type_specs(type_spec_store, spec_dir):
     fn = os.path.join(spec_dir, "models.yaml")
     if os.path.exists(fn):
         with open(fn) as f:
-            root_type_spec_dict = yaml.load(f, Loader=yaml.SafeLoader)
-            root_type_spec_dict = prepare_type_spec_dict(root_type_spec_dict)
-            get_root_type_spec(type_spec_store, root_type_spec_dict)
-    post_process_type_specs(type_spec_store)
+            type_spec_dict = yaml.load(f, Loader=yaml.SafeLoader)
+            __import__("pudb").set_trace()
+            parser = TypeSpecParser(type_spec_store)
+            new_dict = parser.parse("server", type_spec_dict["server"])
 
+            from pprint import pprint as pp
 
-def get_root_type_spec(type_spec_store, root_type_spec_dict):
-    for key, field_spec_dict in root_type_spec_dict.items():
-        if key.startswith("__"):
-            continue
+            pp(new_dict)
 
-        get_field_spec(type_spec_store, key, field_spec_dict)
+            add_host_to_type_specs("client", type_spec_store)
+            parser.parse("client", type_spec_dict["client"])

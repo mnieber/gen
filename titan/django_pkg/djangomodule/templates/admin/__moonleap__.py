@@ -1,4 +1,5 @@
 from moonleap import u0
+from moonleap.typespec.type_spec_store import type_spec_store
 from moonleap.utils.case import sn
 from titan.django_pkg.djangomodel.sort_django_models import sort_django_models
 
@@ -23,14 +24,14 @@ def get_helpers(_):
             return result
 
         def get_create_inline_model(self, type_spec):
-            return bool(
-                [
-                    x
-                    for x in type_spec.get_field_specs(["fk"])
-                    if x.is_reverse_of_related_set
-                    and x.is_reverse_of_related_set.admin_inline
-                ]
-            )
+            for type_spec in type_spec_store().type_specs():
+                for field_spec in type_spec.get_field_specs(["relatedSet"]):
+                    if (
+                        field_spec.admin_inline
+                        and field_spec.target == type_spec.type_name
+                    ):
+                        return True
+            return False
 
         def get_inline_model_fields(self, type_spec):
             return [

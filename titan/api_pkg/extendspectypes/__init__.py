@@ -1,4 +1,4 @@
-from moonleap import Prop, extend
+from moonleap import MemFun, Prop, extend
 from moonleap.typespec.field_spec import FieldSpec, FkFieldSpec, FormFieldSpec
 
 from . import props
@@ -16,4 +16,4 @@ class ExtendFormFieldSpec:
 
 @extend(FieldSpec)
 class ExtendFieldSpec:
-    graphql_type = Prop(props.field_spec_graphql_type)
+    graphql_type = MemFun(props.field_spec_graphql_type)

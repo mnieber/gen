@@ -30,7 +30,7 @@ def aperture(size, items):
     return result
 
 
-def add_to_list_as_set(l, new_element):
+def append_uniq(l, new_element):
     if new_element not in l:
         l.append(new_element)
 

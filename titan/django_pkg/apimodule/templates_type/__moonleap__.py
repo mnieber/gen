@@ -8,12 +8,12 @@ def get_helpers(_):
         django_module = item_list.django_module
         type_spec = _.item.type_spec
         model_field_specs = [
-            x for x in _.item.type_spec.get_field_specs() if not x.derived
+            x for x in _.item.type_spec.get_field_specs() if "server" in x.has_model
         ]
         derived_field_specs = [
             x
             for x in _.item.type_spec.get_field_specs()
-            if x.derived and "server" in x.api
+            if ("server" in x.has_api and "server" not in x.has_model)
         ]
         form_field_specs = []
 
@@ -23,7 +23,7 @@ def get_helpers(_):
             result = [
                 field_spec
                 for field_spec in self.model_field_specs
-                if "server" not in field_spec.api
+                if "server" not in field_spec.has_api
                 and field_spec.name not in derived_field_names
             ]
             return result

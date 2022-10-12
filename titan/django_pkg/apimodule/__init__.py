@@ -12,7 +12,7 @@ from .resources import ApiModule  # noqa
 
 @create("api:module")
 def create_api_module(term):
-    api_module = ApiModule(name="api")
+    api_module = ApiModule(name="api", kebab_name="api")
     api_module.template_dir = Path(__file__).parent / "templates"
     api_module.template_context = lambda api_module: dict(
         api_module=api_module,
@@ -51,7 +51,9 @@ def add_query_render_tasks(django_app, api_module):
     )
 
     api_module.renders(
-        lambda: get_gql_reg().get_public_items("server"),
+        lambda: get_gql_reg().get_public_items(
+            lambda field_spec: "server" in field_spec.has_api
+        ),
         "types",
         lambda item: dict(item=item),
         [Path(__file__).parent / "templates_type"],

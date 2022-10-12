@@ -1,6 +1,6 @@
 {% magic_with _.query.name as getFooQuery %}
 {% magic_with input_field_spec.name as inputFieldName %}
-{% magic_with input_field_spec.graphql_type as inputFieldGqlType %}
+{% magic_with input_field_spec.graphql_type("client") as inputFieldGqlType %}
 {% magic_with input_field_spec.ts_type as inputFieldTsType %}
 {% magic_with output_field_spec.name as outputFieldName %}
 {% magic_with type_spec.type_name as TypeSpecName %}
@@ -24,7 +24,7 @@ export const getFooQuery = (args: ArgsT) => {
       ) {
         outputFieldName                                                                    {% for output_field_spec in __.scalar_output_field_specs %}{% endfor %}
         outputFieldName {                                                                  {% for output_field_spec in __.fk_output_field_specs %}
-          {{ __.graphql_body[output_field_spec.name] }}
+{{ __.graphql_body[output_field_spec.name] }}
         }                                                                                  {% endfor %}
       }
     }`,
@@ -36,8 +36,17 @@ export const getFooQuery = (args: ArgsT) => {
   );
 }
 
-export const useGetFooQuery = (args: ArgsT) => {
-  const query = useQuery(['getFooQuery', args], () => getFooQuery(args));
+export const useGetFooQuery = (
+  args: ArgsT                                                                               {% ?? __.input_field_specs %}
+) => {
+  const query = useQuery([
+      'getFooQuery',
+      args                                                                                  {% ?? __.input_field_specs %}
+      {% remove_trailing suffix="," %}
+    ], () => getFooQuery(
+    args                                                                                    {% ?? __.input_field_specs %}
+    {}                                                                                      {% ?? not __.input_field_specs %}
+  ));
   return useQueryData(query);
 };
 {% end_magic_with %}

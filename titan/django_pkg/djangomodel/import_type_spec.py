@@ -23,7 +23,7 @@ def import_type_spec(type_spec, django_model):
     django_model.name = type_spec.type_name
     django_model.display_field_name = type_spec.display_item_by or "id"
 
-    field_specs = type_spec.get_field_specs(exclude_derived=True)
+    field_specs = [x for x in type_spec.get_field_specs() if "server" in x.has_model]
     django_app = django_model.module.django_app
     for field_spec in field_specs:
         kebab_name = camel_to_kebab(field_spec.name)

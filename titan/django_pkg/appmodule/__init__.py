@@ -11,7 +11,7 @@ rules = [(("app:module", has, "graphql:app"), empty_rule())]
 
 @create("app:module")
 def create_app_module(term):
-    app_module = DjangoModule(name="app")
+    app_module = DjangoModule(name="app", kebab_name="app")
     app_module.template_dir = Path(__file__).parent / "templates"
     app_module.template_context = dict(app_module=app_module)
     return app_module

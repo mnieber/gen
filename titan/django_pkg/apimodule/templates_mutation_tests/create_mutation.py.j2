@@ -1,7 +1,7 @@
 {% magic_with _.mutation.name as postFooItem %}
 {% magic_with output_field_spec.name as outputFieldName %}
 {% magic_with input_field_spec.name as inputFieldName %}
-{% magic_with input_field_spec.graphql_type as inputFieldGqlType %}
+{% magic_with input_field_spec.graphql_type("server") as inputFieldGqlType %}
 
 def create_post_foo_item_mutation(
     input_field_name,                                                                           {% for input_field_spec in __.input_field_specs %}{% endfor %}
