@@ -3,14 +3,14 @@
 # - If a related fk is added manually, then by default it belongs to the server api.
 # - Two related fks are added automatically for a through-type.
 #   By default, these related fks belong to the server_api.
+import typing as T
+
+from moonleap.typespec.load_type_specs.foreign_key import ForeignKey
 
 from .add_field_spec import add_field_spec
 from .apply_special_rules import apply_special_rules
 from .apply_type_updates import apply_type_updates
-from .foreign_key import ForeignKey
-from .get_fk_field_spec import get_fk_field_spec
-from .get_scalar_field_spec import get_scalar_field_spec
-from .strip_generic_symbols import strip_generic_symbols
+from .field_spec_from_dict import field_spec_from_dict, is_pass, is_related_fk
 from .update_or_create_type_spec import update_or_create_type_spec
 
 
@@ -26,7 +26,6 @@ class TypeSpecParser:
         trace = dict()
 
         if "__update__" in type_spec_dict:
-            __import__("pudb").set_trace()
             apply_type_updates(host, type_spec, type_spec_dict["__update__"])
 
         items = [x for x in type_spec_dict.items() if not _is_private_member(x[0])]
@@ -37,32 +36,29 @@ class TypeSpecParser:
             raise Exception("The root type spec dict cannot contain scalar fields")
 
         for key, value in scalar_items:
-            clean_key, value_parts = strip_generic_symbols(key)
-            new_value = ".".join(value.split(".") + value_parts)
-            trace[clean_key] = new_value
+            # Get field spec and related data from key/value pair
+            field_spec_data = field_spec_from_dict(host, key, value)
+            trace[field_spec_data["new_key"]] = field_spec_data["new_value"]
 
-            field_spec = get_scalar_field_spec(host, clean_key, new_value)
+            # Add field spec to type spec
             if type_spec:
-                add_field_spec(type_spec, field_spec)
+                add_field_spec(type_spec, field_spec_data["field_spec"])
 
         while fk_items:
             key, value = fk_items.pop(0)
-            org_value = value
 
-            is_related_fk = _is_related_fk(value)
-            is_pass = _is_pass(value)
-            if is_related_fk or is_pass:
-                value = {"__init__": ".".join(value.split(".")[1:])}
-
-            # Parse key
-            fk = ForeignKey(key, value)
-
-            # Add field spec
-            field_spec = get_fk_field_spec(
-                host, fk, related_parent_field_name if type_spec else None
+            # Get field spec and related data from key/value pair
+            field_spec_data = field_spec_from_dict(
+                host, key, value, related_parent_field_name if type_spec else None
             )
+            org_value, value = value, field_spec_data["new_value"]
+            is_related_fk = field_spec_data["is_related_fk"]
+            is_pass = field_spec_data["is_pass"]
+            fk = T.cast(ForeignKey, field_spec_data["fk"])
+
+            # Add field spec to type spec
             if type_spec:
-                add_field_spec(type_spec, field_spec)
+                add_field_spec(type_spec, field_spec_data["field_spec"])
 
             # Get/update type spec
             if fk.data.var_type != "+":
@@ -120,12 +116,4 @@ def _is_private_member(key):
 
 
 def _is_fk_item(item):
-    return isinstance(item[1], dict) or _is_related_fk(item[1]) or _is_pass(item[1])
-
-
-def _is_related_fk(value):
-    return isinstance(value, str) and value.split(".")[0] == "RelatedFk"
-
-
-def _is_pass(value):
-    return value == "pass"
+    return isinstance(item[1], dict) or is_related_fk(item[1]) or is_pass(item[1])

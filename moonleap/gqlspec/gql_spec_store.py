@@ -3,7 +3,6 @@ import typing as T
 from moonleap.gqlspec.gql_spec import GqlSpec
 from moonleap.gqlspec.load_gql_specs import load_gql_specs
 from moonleap.session import get_session
-from moonleap.typespec.type_spec_store import type_spec_store
 
 
 class GqlSpecStore:
@@ -36,5 +35,5 @@ def gql_spec_store():
     global _gql_spec_store
     if _gql_spec_store is None:
         _gql_spec_store = GqlSpecStore()
-        load_gql_specs(_gql_spec_store, type_spec_store(), get_session().spec_dir)
+        load_gql_specs(_gql_spec_store, get_session().spec_dir)
     return _gql_spec_store
