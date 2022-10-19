@@ -76,7 +76,10 @@ class TypeSpecParser:
                     # We already have a related set to the target type (through the through-type).
                     # Now also add a related set to the through type.
                     fk_items.append(
-                        (f"{fk.through_var} as {fk.through_var_type}", "pass")
+                        (
+                            f"{fk.through_var} as {fk.through_var_type}",
+                            ".".join(["pass", ".".join(fk.data_parts)]),
+                        )
                     )
 
                 #

@@ -36,4 +36,4 @@ def is_related_fk(value):
 
 
 def is_pass(value):
-    return value == "pass"
+    return isinstance(value, str) and value.split(".")[0] == "pass"

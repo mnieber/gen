@@ -29,7 +29,7 @@ class MyModelAdmin(
         "modelFieldName",                                                       {% !! model_field in data.excluded_model_fields %}
     )                                                                           {% end_min_lines %}
     inlines = (                                                                 {% min_lines count=3 %}
-        {{ inline_model_field.through or inline_model_field.target }}Inline,    {% !! inline_model_field in data.inline_model_fields %}
+        {{ inline_model_field.target }}Inline,                                  {% !! inline_model_field in data.inline_model_fields %}
         {% remove_trailing suffix="," tuple=True %}
     )                                                                           {% end_min_lines %}
     search_fields = (                                                           {% min_lines count=3 %}
