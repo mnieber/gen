@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from moonleap import RenderMixin, Resource
 from moonleap.typespec.field_spec import FieldSpec
 from moonleap.typespec.type_spec import TypeSpec
-from moonleap.utils.case import l0, sn, snake_to_kebab
+from moonleap.utils.case import sn, snake_to_kebab
 
 verbose_name_block_list = ["id", "sort_pos", "slug"]
 
@@ -70,13 +70,8 @@ class DjangoFkField(DjangoModelField):
     field_name: str = "models.ForeignKey"
 
     def field_args(self, django_model):
-        default_related_name = l0(django_model.name) + "Set"
         related_name = (
-            "+"
-            if not self.field_spec.related_name
-            else ""
-            if self.field_spec.related_name == default_related_name
-            else self.field_spec.related_name
+            "+" if not self.field_spec.related_name else self.field_spec.related_name
         )
         return [
             self.field_spec.target,
