@@ -1,8 +1,3 @@
-# Rules for related fks:
-# - A related fk for a related set is added automatically, with "no_server_api".
-# - If a related fk is added manually, then by default it belongs to the server api.
-# - Two related fks are added automatically for a through-type.
-#   By default, these related fks belong to the server_api.
 import typing as T
 
 from moonleap.typespec.load_type_specs.foreign_key import ForeignKey
