@@ -4,7 +4,7 @@ from .get_scalar_field_spec import get_scalar_field_spec
 from .strip_generic_symbols import strip_generic_symbols
 
 
-def field_spec_from_dict(host, key, value, related_name=None):
+def field_spec_from_dict(host, key, value):
     flag_is_related_fk = is_related_fk(value)
     flag_is_pass = is_pass(value)
     if flag_is_related_fk or flag_is_pass:
@@ -13,7 +13,7 @@ def field_spec_from_dict(host, key, value, related_name=None):
 
     if is_fk:
         fk = ForeignKey(key, value)
-        field_spec = get_fk_field_spec(host, fk, related_name)
+        field_spec = get_fk_field_spec(host, fk)
         return dict(
             is_fk=is_fk,
             fk=fk,

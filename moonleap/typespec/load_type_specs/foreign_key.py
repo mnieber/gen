@@ -58,6 +58,10 @@ class ForeignKey:
         return self.foo.var or self.foo.default_var
 
     @property
+    def var_type(self):
+        return self.foo.var_type
+
+    @property
     def through_var(self):
         return self.bar.var or self.bar.default_var
 

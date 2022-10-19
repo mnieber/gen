@@ -4,7 +4,7 @@ from .foreign_key import ForeignKey
 from .get_fk_field_attrs import get_fk_field_attrs
 
 
-def get_fk_field_spec(host, fk: ForeignKey, related_name):
+def get_fk_field_spec(host, fk: ForeignKey):
     field_attrs = get_fk_field_attrs(
         host,
         fk.var,
@@ -15,7 +15,4 @@ def get_fk_field_spec(host, fk: ForeignKey, related_name):
     )
 
     field_spec = get_field_spec_constructor(field_attrs["field_type"])(**field_attrs)
-    if field_spec.field_type == "fk" and related_name:
-        field_spec.related_name = related_name
-
     return field_spec

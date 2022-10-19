@@ -18,4 +18,8 @@ def strip_fk_symbols(key):
     if is_entity:
         parts.append("entity")
 
+    key, is_entity = pop(key, "$")
+    if is_entity:
+        parts.append("is_owner")
+
     return key, parts
