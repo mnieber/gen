@@ -87,9 +87,7 @@ class TypeSpecParser:
                     value,
                     fk_type_spec,
                     related_parent_field_name=(
-                        None
-                        if (fk.bar or not type_spec)
-                        else (type_spec.type_name, fk.var)
+                        None if not type_spec else (type_spec.type_name, fk.var)
                     ),
                 )
 
