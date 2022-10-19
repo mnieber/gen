@@ -18,7 +18,7 @@ def apply_special_rules(type_spec, value, fk: ForeignKey, parent_type_spec=None)
         and not type_spec.get_field_spec_by_key("sortPos")
         and not value.get("sortPos")
     ):
-        value["sortPos"] = "Int"
+        value["sortPos|"] = "Int"
 
     # If we are adding a related set, then create a related fk auto-field
     if fk.foo.field_type == "relatedSet" and parent_type_spec:

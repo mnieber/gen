@@ -101,6 +101,7 @@ class TypeSpecParser:
                 )
 
         if "__update__" in type_spec_dict:
+            trace["__update__"] = type_spec_dict["__update__"]
             apply_type_updates(host, type_spec, type_spec_dict["__update__"])
 
         return trace

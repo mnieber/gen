@@ -24,8 +24,8 @@ def get_helpers(_):
             return result
 
         def get_create_inline_model(self, type_spec):
-            for type_spec in type_spec_store().type_specs():
-                for field_spec in type_spec.get_field_specs(["relatedSet"]):
+            for parent_type_spec in type_spec_store().type_specs():
+                for field_spec in parent_type_spec.get_field_specs(["relatedSet"]):
                     if (
                         field_spec.admin_inline
                         and field_spec.target == type_spec.type_name
