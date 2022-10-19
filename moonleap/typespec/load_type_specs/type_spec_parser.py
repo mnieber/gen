@@ -20,9 +20,6 @@ class TypeSpecParser:
         # interprets and modifies the type_spec_dict.
         trace = dict()
 
-        if "__update__" in type_spec_dict:
-            apply_type_updates(host, type_spec, type_spec_dict["__update__"])
-
         items = [x for x in type_spec_dict.items() if not _is_private_member(x[0])]
         scalar_items = [item for item in items if not _is_fk_item(item)]
         fk_items = [item for item in items if _is_fk_item(item)]
@@ -102,6 +99,9 @@ class TypeSpecParser:
                 trace[fk.clean_key] = (
                     org_value if is_related_fk or is_pass else fk_trace
                 )
+
+        if "__update__" in type_spec_dict:
+            apply_type_updates(host, type_spec, type_spec_dict["__update__"])
 
         return trace
 
