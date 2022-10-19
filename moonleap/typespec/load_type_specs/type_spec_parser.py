@@ -40,17 +40,15 @@ class TypeSpecParser:
             key, value = fk_items.pop(0)
 
             # Get field spec and related data from key/value pair
-            field_spec_data = field_spec_from_dict(
-                host, key, value, related_parent_field_name if type_spec else None
-            )
+            field_spec_data = field_spec_from_dict(host, key, value)
             org_value, value = value, field_spec_data["new_value"]
             is_related_fk = field_spec_data["is_related_fk"]
-            is_pass = field_spec_data["is_pass"]
             fk = T.cast(ForeignKey, field_spec_data["fk"])
+            field_spec = field_spec_data["field_spec"]
 
             # Add field spec to type spec
             if type_spec:
-                add_field_spec(type_spec, field_spec_data["field_spec"])
+                add_field_spec(type_spec, field_spec)
 
             # Get/update type spec
             if fk.data.var_type != "+":
@@ -88,23 +86,42 @@ class TypeSpecParser:
                     host,
                     value,
                     fk_type_spec,
-                    related_parent_field_name=None if fk.bar else fk.var,
+                    related_parent_field_name=(
+                        None
+                        if (fk.bar or not type_spec)
+                        else (type_spec.type_name, fk.var)
+                    ),
                 )
+
+                # Set related name. If there is no type spec then we are in the root and in
+                # that case we never want to set a related name.
+                if type_spec and field_spec.field_type == "fk":
+                    _set_related_name(
+                        type_spec, related_parent_field_name, field_spec, fk_type_spec
+                    )
 
                 # Update trace
                 if fk.data_parts:
                     fk_trace["__init__"] = ".".join(fk.data_parts)
                 if fk.target_parts:
                     fk_trace["__init_target__"] = ".".join(fk.target_parts)
-                trace[fk.clean_key] = (
-                    org_value if is_related_fk or is_pass else fk_trace
-                )
+                trace[fk.clean_key] = org_value if is_related_fk else fk_trace
 
         if "__update__" in type_spec_dict:
             trace["__update__"] = type_spec_dict["__update__"]
             apply_type_updates(host, type_spec, type_spec_dict["__update__"])
 
         return trace
+
+
+def _set_related_name(type_spec, related_parent_field_name, field_spec, fk_type_spec):
+    if related_parent_field_name and field_spec.target == related_parent_field_name[0]:
+        field_spec.related_name = related_parent_field_name[1]
+    else:
+        # Find a matching related set in the fk type spec
+        for related_set_field in fk_type_spec.get_field_specs(["relatedSet"]):
+            if related_set_field.target == type_spec.type_name:
+                field_spec.related_name = related_set_field.name
 
 
 def _is_private_member(key):
