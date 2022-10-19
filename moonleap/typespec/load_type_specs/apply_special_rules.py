@@ -27,7 +27,7 @@ def apply_special_rules(type_spec, value, fk: ForeignKey, parent_type_spec=None)
     # non-auto field matches it.
     if fk.foo.field_type == "relatedSet" and parent_type_spec:
         key = l0(parent_type_spec.type_name)
-        if not type_spec.get_field_spec_by_key(key) and not value.get(key):
+        if not value.get(key):
             required = is_speccing_a_through_type or "is_owner" in fk.data_parts
             value[key] = "RelatedFk.auto" + ("" if required else ".optional")
 
@@ -35,5 +35,5 @@ def apply_special_rules(type_spec, value, fk: ForeignKey, parent_type_spec=None)
     if is_speccing_a_through_type:
         assert fk.foo.var_type
         key = l0(fk.foo.var_type)
-        if key not in value and not type_spec.get_field_spec_by_key(key):
+        if key not in value:
             value[key] = "RelatedFk.auto"
