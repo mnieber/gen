@@ -50,7 +50,22 @@ class TypeSpecParser:
             if type_spec:
                 add_field_spec(type_spec, field_spec)
 
-            # Get/update type spec
+            # Get/update the target type in a many-to-many through-bar relationship
+            if fk.bar:
+                update_or_create_type_spec(
+                    self.type_spec_store,
+                    fk.foo.var_type,
+                    fk.target_parts,
+                    fk.foo.module_name,
+                    parent_type_spec=type_spec,
+                )
+
+                # Add a related set to the through type.
+                related_set_key = f"{fk.through_var} as {fk.through_var_type}"
+                related_set_value = ".".join(["pass", ".".join(fk.data_parts)])
+                fk_items.append((related_set_key, related_set_value))
+
+            # Get/update the specced type
             if fk.data.var_type != "+":
                 fk_type_spec = update_or_create_type_spec(
                     self.type_spec_store,
@@ -60,27 +75,6 @@ class TypeSpecParser:
                     parent_type_spec=None if is_related_fk else type_spec,
                 )
                 apply_special_rules(fk_type_spec, value, fk, parent_type_spec=type_spec)
-
-                if fk.bar:
-                    assert fk.bar.var_type != "+"
-
-                    # The through type was already created. Now create the target type.
-                    update_or_create_type_spec(
-                        self.type_spec_store,
-                        fk.foo.var_type,
-                        fk.target_parts,
-                        fk.foo.module_name,
-                        parent_type_spec=type_spec,
-                    )
-
-                    # We already have a related set to the target type (through the through-type).
-                    # Now also add a related set to the through type.
-                    fk_items.append(
-                        (
-                            f"{fk.through_var} as {fk.through_var_type}",
-                            ".".join(["pass", ".".join(fk.data_parts)]),
-                        )
-                    )
 
                 #
                 # Use recursion to convert child type specs

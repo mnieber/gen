@@ -1,5 +1,4 @@
 from moonleap.typespec.type_spec import TypeSpec
-from moonleap.utils.case import l0
 
 
 def update_or_create_type_spec(
