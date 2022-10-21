@@ -1,7 +1,7 @@
-{% magic_with _.mutation.name as postRedRose %}
-{% magic_with input_field_spec.name as inputFieldName %}
-{% magic_with input_field_spec.ts_type as inputFieldTsType %}
-{% magic_with input_field_spec.graphql_type("client") as inputFieldGqlType %}
+{% magic_with _.mutation.name as callEndpoint %}
+{% magic_with field_spec.name as fieldName %}
+{% magic_with field_spec.ts_type as fieldTsType %}
+{% magic_with field_spec.graphql_type("client") as fieldGqlType %}
 {% magic_with query.name as fooQueryName %}
 {% magic_with type_spec.type_name as TypeSpecName %}
 import { useMutation } from '@tanstack/react-query';
@@ -11,33 +11,37 @@ import { useMutationData } from 'src/api/hooks';
 import { ObjT } from 'src/utils/types';
 import { {{ item.ts_form_type }} } from 'src/api/types/{{ item.type_name }}T';          {% !! item in __.form_input_items %}
 import { typeSpecNameGqlFields } from 'src/api/types/TypeSpecNameT'                     {% !! type_spec in __.type_specs_to_import %}
+import { getFieldName } from 'src/api/types/{{ field_spec.target }}T';                  {% !! field_spec in __.derived_fields %}
 
 export type ArgsT = {
-  inputFieldName: inputFieldTsType,                                                     {% !! input_field_spec in __.input_field_specs %}
+  fieldName: fieldTsType,                                                               {% !! field_spec in __.input_field_specs %}
 };
 
-const postRedRose = (args: ArgsT) => {
+export const callEndpoint = (args: ArgsT) => {
   return doQuery(
-    `mutation postRedRose(
-      $inputFieldName: inputFieldGqlType                                                {% !! input_field_spec in __.input_field_specs %}
+    `mutation callEndpoint(
+      $fieldName: fieldGqlType                                                          {% !! field_spec in __.input_field_specs %}
     ) {
-        postRedRose(
-          inputFieldName: $inputFieldName                                               {% !! input_field_spec in __.input_field_specs|sort(attribute="name") %}
-        ) {
+      callEndpoint(
+        fieldName: $fieldName                                                           {% !! field_spec in __.input_field_specs|sort(attribute="name") %}
+      ) {
 {{ __.graphql_body }}
-        }
+      }
     }`,
     args
   ).then(
     (response: ObjT) => {
-      return response.postRedRose;
+      return response.callEndpoint;
     }
   );
 };
 
-export const usePostRedRose = () => {
-  const mutation = useMutation(['postRedRose'], postRedRose, {
-    onSuccess: () => {
+export const useCallEndpoint = () => {
+  const mutation = useMutation(['callEndpoint'], callEndpoint, {
+    onSuccess: (response: ObjT) => {
+      // Moonleap todo: set contents for object with (nested) derived fields            {% if __.derived_fields %}
+      response.field_name = getFieldName(response.field_name);                          {% !! field_spec in __.derived_fields %}
+                                                                                        {% endif %}
       queryClient.invalidateQueries([                                                   {% if _.mutation.gql_spec.invalidates %}
         '{{ queryName }}',                                                              {% !! queryName in _.mutation.gql_spec.invalidates %}
         {% remove_trailing suffix="," %}

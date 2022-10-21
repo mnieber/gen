@@ -1,52 +1,53 @@
-{% magic_with _.query.name as getFooQuery %}
+{% magic_with _.query.name as callEndpoint %}
 {% magic_with input_field_spec.name as inputFieldName %}
 {% magic_with input_field_spec.graphql_type("client") as inputFieldGqlType %}
 {% magic_with input_field_spec.ts_type as inputFieldTsType %}
 {% magic_with output_field_spec.name as outputFieldName %}
 {% magic_with type_spec.type_name as TypeSpecName %}
 import { useQuery } from '@tanstack/react-query';
-import { useQueryData } from 'src/api/hooks';
 import { doQuery } from 'src/api/graphqlClient';
+import { useQueryData } from 'src/api/hooks';
 import { ObjT } from 'src/utils/types';
-import { typeSpecNameGqlFields } from 'src/api/types/TypeSpecNameT'                        {% !! type_spec in __.type_specs_to_import %}
+import { typeSpecNameGqlFields } from 'src/api/types/TypeSpecNameT'                     {% !! type_spec in __.type_specs_to_import %}
 
 export type ArgsT = {
-  inputFieldName: inputFieldTsType,                                                        {% for input_field_spec in __.input_field_specs %}{% endfor %}
+  inputFieldName: inputFieldTsType,                                                     {% !! input_field_spec in __.input_field_specs %}
 };
 
-export const getFooQuery = (args: ArgsT) => {
+export const callEndpoint = (args: ArgsT) => {
   return doQuery(
-    `query getFooQuery(
-      $inputFieldName: inputFieldGqlType                                                   {% for input_field_spec in __.input_field_specs %}{% endfor %}
+    `query callEndpoint(
+      $inputFieldName: inputFieldGqlType                                                {% !! input_field_spec in __.input_field_specs %}
     ) {
-      getFooQuery(
-        inputFieldName: $inputFieldName                                                    {% for input_field_spec in __.input_field_specs %}{% endfor %}
+      callEndpoint(
+        inputFieldName: $inputFieldName                                               {% !! input_field_spec in __.input_field_specs|sort(attribute="name") %}
       ) {
-        outputFieldName                                                                    {% for output_field_spec in __.scalar_output_field_specs %}{% endfor %}
-        outputFieldName {                                                                  {% for output_field_spec in __.fk_output_field_specs %}
-{{ __.graphql_body[output_field_spec.name] }}
-        }                                                                                  {% endfor %}
+{{ __.graphql_body }}
       }
     }`,
     args
   ).then(
     (response: ObjT) => {
-      return response.getFooQuery;
+      return response.callEndpoint;
     }
   );
 }
 
-export const useGetFooQuery = (
+export const useCallEndpoint = (
   args: ArgsT                                                                               {% ?? __.input_field_specs %}
 ) => {
   const query = useQuery([
-      'getFooQuery',
+      'callEndpoint',
       args                                                                                  {% ?? __.input_field_specs %}
       {% remove_trailing suffix="," %}
-    ], () => getFooQuery(
+    ], () => callEndpoint(
     args                                                                                    {% ?? __.input_field_specs %}
     {}                                                                                      {% ?? not __.input_field_specs %}
-  ));
+  ))
+  .then((response: ObjT) => {                                                               {% if __.derived_fields %}
+    response.outputFieldName = getOutputFieldName(response.outputFieldName);                {% !! output_field_spec in __.derived_fields %}
+  })                                                                                        {% endif %}
+  ;
   return useQueryData(query);
 };
 {% end_magic_with %}
