@@ -5,7 +5,7 @@ from moonleap.typespec.load_type_specs.foreign_key import ForeignKey
 from .add_field_spec import add_field_spec
 from .apply_special_rules import apply_special_rules
 from .apply_type_updates import apply_type_updates
-from .field_spec_from_dict import field_spec_from_dict, is_pass, is_related_fk
+from .field_spec_from_dict import field_spec_from_dict, is_pass
 from .update_or_create_type_spec import update_or_create_type_spec
 
 
@@ -42,7 +42,7 @@ class TypeSpecParser:
             # Get field spec and related data from key/value pair
             field_spec_data = field_spec_from_dict(host, key, value)
             org_value, value = value, field_spec_data["new_value"]
-            is_related_fk = field_spec_data["is_related_fk"]
+            is_pass = field_spec_data["is_pass"]
             fk = T.cast(ForeignKey, field_spec_data["fk"])
             field_spec = field_spec_data["field_spec"]
 
@@ -73,7 +73,7 @@ class TypeSpecParser:
                     fk.data.var_type,
                     fk.data_parts,
                     fk.data.module_name or value.get("__module__"),
-                    parent_type_spec=None if is_related_fk else type_spec,
+                    parent_type_spec=type_spec,
                 )
                 apply_special_rules(fk_type_spec, value, fk, parent_type_spec=type_spec)
 
@@ -101,7 +101,7 @@ class TypeSpecParser:
                     fk_trace["__init__"] = ".".join(fk.data_parts)
                 if fk.target_parts:
                     fk_trace["__init_target__"] = ".".join(fk.target_parts)
-                trace[fk.clean_key] = org_value if is_related_fk else fk_trace
+                trace[fk.clean_key] = org_value if is_pass else fk_trace
 
         if "__update__" in type_spec_dict:
             trace["__update__"] = type_spec_dict["__update__"]
@@ -125,4 +125,4 @@ def _is_private_member(key):
 
 
 def _is_fk_item(item):
-    return isinstance(item[1], dict) or is_related_fk(item[1]) or is_pass(item[1])
+    return isinstance(item[1], dict) or is_pass(item[1])
