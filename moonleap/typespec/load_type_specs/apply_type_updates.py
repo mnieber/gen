@@ -1,6 +1,7 @@
 from moonleap.typespec.load_type_specs.strip_generic_symbols import (
     strip_generic_symbols,
 )
+from moonleap.utils.fp import append_uniq
 
 
 def apply_type_updates(host, type_spec, updates):
@@ -18,7 +19,7 @@ def apply_type_updates(host, type_spec, updates):
             field_spec.has_api.remove(host)
 
         if "optional" in parts and host not in field_spec.optional:
-            field_spec.optional.append(host)
+            append_uniq(field_spec.optional, host)
 
-        if "required" in parts and f"required_{host}" not in field_spec.optional:
-            field_spec.optional.append(f"required_{host}")
+        if "required":
+            append_uniq(field_spec.optional, f"required_{host}")

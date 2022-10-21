@@ -61,9 +61,10 @@ class TypeSpecParser:
                 )
 
                 # Add a related set to the through type.
-                related_set_key = f"{fk.through_var} as {fk.through_var_type}"
-                related_set_value = ".".join(["pass", ".".join(fk.data_parts)])
-                fk_items.append((related_set_key, related_set_value))
+                if fk.data.var_type != "+":
+                    related_set_key = f"{fk.through_var} as {fk.through_var_type}"
+                    related_set_value = ".".join(["pass", ".".join(fk.data_parts)])
+                    fk_items.append((related_set_key, related_set_value))
 
             # Get/update the specced type
             if fk.data.var_type != "+":
