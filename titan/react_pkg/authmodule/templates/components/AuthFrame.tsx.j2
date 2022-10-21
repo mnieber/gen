@@ -7,8 +7,10 @@ type PropsT = React.PropsWithChildren<{
   header: string;
 }>;
 
+const DefaultProps = {};
+
 export const AuthFrame = observer(
-  withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
+  withDefaultProps((props: PropsT & typeof DefaultProps) => {
     return (
       <div
         id={props.id}
@@ -30,5 +32,5 @@ export const AuthFrame = observer(
         {props.children}
       </div>
     );
-  })
+  }, DefaultProps)
 );

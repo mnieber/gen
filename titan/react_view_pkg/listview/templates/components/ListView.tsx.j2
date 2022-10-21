@@ -21,16 +21,16 @@ type PropsT = {
   className?: any;
 };
 
-type DefaultPropsT = {
-  fooItems: FooItemT[],
-  fooItemsRS: string,
-  fooItemsDeletion: Deletion,                                                                   {% ?? __.deletion_bvr %}
-  fooItemsHighlight: Highlight,                                                                 {% ?? __.highlight_bvr %}
-  fooItemsSelection: Selection,                                                                 {% ?? __.selection_bvr %}
+const DefaultProps = {
+  ...dps.fooItems,
+  ...dps.fooItemsRS,
+  ...dps.fooItemsDeletion,                                                                      {% ?? __.deletion_bvr %}
+  ...dps.fooItemsHighlight,                                                                     {% ?? __.highlight_bvr %}
+  ...dps.fooItemsSelection,                                                                     {% ?? __.selection_bvr %}
 };
 
 export const FooListView = observer(
-  withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
+  withDefaultProps((props: PropsT & typeof DefaultProps) => {
     const resourceView =
       props.fooItemsRS === 'loading' ? <div /> : undefined;
     if (resourceView) return resourceView;
@@ -68,7 +68,7 @@ export const FooListView = observer(
         {fooItemDivs.length === 0 && noItems}
       </div>
     );
-  })
+  }, DefaultProps)
 );
 {% end_magic_with %}
 {% end_magic_with %}

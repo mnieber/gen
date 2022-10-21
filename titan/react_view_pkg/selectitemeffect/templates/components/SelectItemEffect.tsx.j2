@@ -26,28 +26,26 @@ const f = (args: ArgsT) => {
 
 type PropsT = {};
 
-type DefaultPropsT = {
-  yellowTulipsSelection: Selection;
-  yellowTulips: {{ _.item_list.ts_type }};                                                          {% ?? _.route_params and __.get_item_id() %}
+const DefaultProps = {
+  ...dps.yellowTulipsSelection,
+  ...dps.yellowTulips,                                                                            {% ?? _.route_params and __.get_item_id() %}
 };
 
 export const RedRose = observer(
-  withDefaultProps<PropsT, DefaultPropsT>(
-    (props: PropsT & DefaultPropsT) => {
-      return (
-        <Effect
-          f={f}
-          getArgs={(params) => {
-            return {
-              yellowTulipsSelection: props.yellowTulipsSelection,
-              yellowTulips: props.yellowTulips,                                                     {% ?? _.route_params and __.get_item_id() %}
-              {{ __.extract_params() }}
-            }
-          }}
-        />
-      );
-    }
-  )
+  withDefaultProps((props: PropsT & typeof DefaultProps) => {
+    return (
+      <Effect
+        f={f}
+        getArgs={(params) => {
+          return {
+            yellowTulipsSelection: props.yellowTulipsSelection,
+            yellowTulips: props.yellowTulips,                                                     {% ?? _.route_params and __.get_item_id() %}
+            {{ __.extract_params() }}
+          }
+        }}
+      />
+    );
+  }, DefaultProps)
 );
 {% end_magic_with %}
 {% end_magic_with %}

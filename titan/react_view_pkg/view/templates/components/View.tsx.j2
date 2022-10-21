@@ -8,14 +8,13 @@ import './YellowTulip.scss';
 
 {{ __.view_props_type() }}
 
-type DefaultPropsT = {
-};
+const DefaultProps = {};
 
 export const YellowTulip = observer(
-  withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
+  withDefaultProps((props: PropsT & typeof DefaultProps) => {
     return (
       {{ __.view_div() }}
     );
-  })
+  }, DefaultProps)
 );
 {% end_magic_with %}

@@ -19,11 +19,11 @@ export type PropsT = {
   fooBar: FooBarT;
 };
 
-type DefaultPropsT = {
+const DefaultProps = {
 };
 
 export const FooBarListViewItem: React.FC<PropsT> = observer(
-  withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
+  withDefaultProps((props: PropsT & typeof DefaultProps) => {
     return (
       <div
         className={cn(
@@ -51,7 +51,7 @@ export const FooBarListViewItem: React.FC<PropsT> = observer(
         </button>                                                                                   {% endif %}
       </div>
     );
-  })
+  }, DefaultProps)
 );
 {% end_magic_with %}
 {% end_magic_with %}

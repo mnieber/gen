@@ -11,7 +11,7 @@ export const SaveButton: React.FC<PropsT> = (props: PropsT) => {
   const formState = useFormStateContext();
   return (
     <button
-      className={props.className ?? 'ml-2'}
+      className={props.className ?? '{% if _.service.uikit %}uk-button uk-button-default {%endif %}ml-2'}
       onClick={(e) => {
         e.preventDefault();
         formState.submit();

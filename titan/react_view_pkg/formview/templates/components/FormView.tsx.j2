@@ -32,12 +32,12 @@ import './YellowTulipFormView.scss';
 
 type PropsT = {};
 
-type DefaultPropsT = {
-  fieldSpecTargets: fieldSpecTsType[],                                                      {% !! field_spec in __.fk_field_specs %}
+const DefaultProps = {
+  ...dps.fieldSpecTargets,                                                                  {% !! field_spec in __.fk_field_specs %}
 };
 
 export const YellowTulipFormView = observer(
-  withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
+  withDefaultProps((props: PropsT & typeof DefaultProps) => {
     const postRedRose = usePostRedRose().mutateAsync;
 
     const initialValues = {
@@ -99,7 +99,7 @@ export const YellowTulipFormView = observer(
         </FormStateProvider>
       </div>
     );
-  })
+  }, DefaultProps)
 );
 {% end_magic_with %}
 {% end_magic_with %}

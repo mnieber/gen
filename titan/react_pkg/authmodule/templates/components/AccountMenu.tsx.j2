@@ -9,20 +9,20 @@ import { cn } from 'src/utils/classnames';
 import UIkit from 'uikit';
 import './AccountMenu.scss';
 
-type PropsT = React.PropsWithChildren<{}>;
+type PropsT = React.PropsWithChildren<{ className?: any }>;
 
 export const AccountMenu: React.FC<PropsT> = observer(() => {
   const routes = useRoutes();
   const signOut = useSignOut().mutateAsync;
   const loadUserId = useLoadUserId();
-  const menuRef = React.useRef(null);
+  const menuRef = React.useRef(null);                                                           {% ?? _.service.uikit %}
 
   const closeDropDown = () => {
     jQuery(menuRef.current as any).hide();
   };
 
   const signInDiv = (
-    <li className="uk-active">
+    <li className="{% if _.service.uikit %}uk-active{% endif %}">
       <RouterLink to={routes.signIn()} onClick={closeDropDown}>
         Sign in
       </RouterLink>
@@ -30,7 +30,7 @@ export const AccountMenu: React.FC<PropsT> = observer(() => {
   );
 
   const signOutDiv = (
-    <li className="uk-active">
+    <li className="{% if _.service.uikit %}uk-active{% endif %}">
       <RouterLink
         dataCy="signOutMenuItem"
         to={routes.signIn()}
@@ -47,16 +47,16 @@ export const AccountMenu: React.FC<PropsT> = observer(() => {
   );
 
   return (
-    <div className={cn('AccountMenu', 'uk-inline')}>
+    <div className={cn('AccountMenu'{% if _.service.uikit %}, 'uk-inline'{% endif %})}>
       <button
         data-cy="accountMenu"
-        className="uk-button uk-button-default"
+        className="{% if _.service.uikit %}uk-button uk-button-default{% endif %}"
         type="button"
       >
         Account
       </button>
       <div
-        ref={(elm: any) => {
+        ref={(elm: any) => {                                                                    {% if _.service.uikit %}
           menuRef.current = elm;
           UIkit.dropdown(elm, {
             animation: 'uk-animation-slide-top-small',
@@ -64,9 +64,9 @@ export const AccountMenu: React.FC<PropsT> = observer(() => {
             mode: 'click',
             'delay-hide': 100,
           });
-        }}
+        }}                                                                                      {% endif %}
       >
-        <ul className="uk-nav uk-dropdown-nav">
+        <ul className="{% if _.service.uikit %}uk-nav uk-dropdown-nav{% endif %}">
           {!loadUserId.data?.isAuthenticated && signInDiv}
           {loadUserId.data?.isAuthenticated && signOutDiv}
         </ul>

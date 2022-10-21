@@ -2,7 +2,6 @@
 {% magic_with field_spec.name as fieldSpecName %}
 import { observer } from 'mobx-react-lite';
 import { withDefaultProps } from 'react-default-props-context';
-import { FooItemT } from 'src/api/types/FooItemT'
 import { getResourceView } from 'src/utils/components';
 import './{{ _.component.name }}.scss';
 
@@ -10,13 +9,13 @@ type PropsT = {
   className?: any;
 };
 
-type DefaultPropsT = {
-  fooItem: FooItemT
-  fooItemRS: string
+const DefaultProps = {
+  ...dps.fooItem,
+  ...dps.fooItemRS,
 };
 
 export const FooItemView = observer(
-  withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
+  withDefaultProps((props: PropsT & typeof DefaultProps) => {
     const resourceView = props.fooItemRS === 'loading' || !props.fooItem ? (
       <div />
     ) : undefined;
@@ -30,7 +29,7 @@ export const FooItemView = observer(
         </div>                                                                              {% endfor %}
       </div>
     );
-  })
+  }, DefaultProps)
 );
 {% end_magic_with %}
 {% end_magic_with %}

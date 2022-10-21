@@ -28,15 +28,15 @@ import { useStore } from 'src/app/components';
 
 type PropsT = React.PropsWithChildren<{}>;
 
-type DefaultPropsT = {
-    {{ item.ts_var }}: {{ item.ts_type }};                                                        {% for item in __.input_items %}
-    {{ item.ts_var }}RS: string;                                                                  {% endfor %}
-    {{ item_list.ts_var }}: {{ item_list.ts_type }};                                              {% for item_list in __.input_item_lists %}
-    {{ item_list.ts_var }}RS: string;                                                             {% endfor %}
+const DefaultProps = {
+    ...dps.{{ item.ts_var }},                                                                    {% for item in __.input_items %}
+    ...dps.{{ item.ts_var }}RS,                                                                  {% endfor %}
+    ...dps.{{ item_list.ts_var }},                                                               {% for item_list in __.input_item_lists %}
+    ...dps.{{ item_list.ts_var }}RS,                                                             {% endfor %}
 };
 
 export const MyComponentStateProvider = observer(
-  withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
+  withDefaultProps((props: PropsT & typeof DefaultProps) => {
     const myQuery = useMyQuery();                                                                 {% for query in __.queries %}{% endfor %}
     const myMutation = useMyMutation();                                                           {% for mutation in __.mutations %}{% endfor %}
 
@@ -93,7 +93,7 @@ export const MyComponentStateProvider = observer(
         {props.children}
       </NestedDefaultPropsProvider>
     );                                                                                            {% endif %}
-  })
+  }, DefaultProps)
 );
 {% end_magic_with %}
 {% end_magic_with %}

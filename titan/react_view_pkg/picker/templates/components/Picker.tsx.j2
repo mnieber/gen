@@ -11,14 +11,14 @@ import { YellowTulipT } from 'src/api/types/YellowTulipT';
 type PropsT = {
 };
 
-type DefaultPropsT = {
-  yellowTulips: YellowTulipT[]
-  yellowTulipsHighlight: Highlight
-  yellowTulipsSelection: Selection
+const DefaultProps = {
+  ...dps.yellowTulips,
+  ...dps.yellowTulipsHighlight,
+  ...dps.yellowTulipsSelection,
 };
 
 export const YellowTulipPicker = observer(
-  withDefaultProps<PropsT, DefaultPropsT>((props: PropsT & DefaultPropsT) => {
+  withDefaultProps((props: PropsT & typeof DefaultProps) => {
     const onChange = (value: PickerValueT) => {
       if (value.__isNew__) {
         // TODO: add yellowTulip
@@ -41,6 +41,6 @@ export const YellowTulipPicker = observer(
         />
       </div>
     );
-  })
+  }, DefaultProps)
 );
 {% end_magic_with %}
