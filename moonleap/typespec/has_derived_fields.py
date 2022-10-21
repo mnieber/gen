@@ -1,6 +1,4 @@
 def has_derived_fields(type_spec, host, skip=None):
-    if type_spec.type_name == "ParameterType":
-        __import__("pudb").set_trace()
     if skip is None:
         skip = []
     skip.append(type_spec.type_name)
