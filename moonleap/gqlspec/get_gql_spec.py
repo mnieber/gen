@@ -1,11 +1,10 @@
 from moonleap.gqlspec.gql_spec import GqlSpec
 from moonleap.typespec.field_spec import FieldSpec
-from moonleap.typespec.load_type_specs.field_spec_from_dict import \
-    field_spec_from_dict
+from moonleap.typespec.load_type_specs.field_spec_from_dict import field_spec_from_dict
 from moonleap.typespec.type_spec import TypeSpec
 
 
-def get_gql_spec(gql_spec_store, endpoint_key, endpoint_spec_dict):
+def get_gql_spec(gql_spec_store, host, endpoint_key, endpoint_spec_dict):
     parts = endpoint_key.split()
     if not parts:
         raise Exception("Invalid endpoint key: " + endpoint_key)
@@ -20,12 +19,12 @@ def get_gql_spec(gql_spec_store, endpoint_key, endpoint_spec_dict):
 
     inputs = []
     for key, field_spec_value in endpoint_spec_dict.get("inputs", {}).items():
-        field_spec_data = field_spec_from_dict("gql", key, field_spec_value)
+        field_spec_data = field_spec_from_dict(host, key, field_spec_value)
         inputs.append(field_spec_data["field_spec"])
 
     outputs = []
     for key, field_spec_value in endpoint_spec_dict.get("outputs", {}).items():
-        field_spec_data = field_spec_from_dict("gql", key, field_spec_value)
+        field_spec_data = field_spec_from_dict(host, key, field_spec_value)
         outputs.append(field_spec_data["field_spec"])
 
     deletes = []
@@ -45,6 +44,7 @@ def get_gql_spec(gql_spec_store, endpoint_key, endpoint_spec_dict):
             FieldSpec(
                 key="success",
                 field_type="boolean",
+                has_api=[host],
             )
         )
 
@@ -52,6 +52,7 @@ def get_gql_spec(gql_spec_store, endpoint_key, endpoint_spec_dict):
             FieldSpec(
                 key="errors",
                 field_type="any",
+                has_api=[host],
             )
         )
 
