@@ -7,7 +7,7 @@ from .strip_generic_symbols import strip_generic_symbols
 def field_spec_from_dict(host, key, value):
     flag_is_pass = is_pass(value)
     if flag_is_pass:
-        value = {"__init__": ".".join(value.split(".")[1:])}
+        value = {"__type__": ".".join(value.split(".")[1:])}
     is_fk = isinstance(value, dict)
 
     if is_fk:

@@ -98,9 +98,9 @@ class TypeSpecParser:
 
                 # Update trace
                 if fk.data_parts:
-                    fk_trace["__init__"] = ".".join(fk.data_parts)
+                    fk_trace["__type__"] = ".".join(fk.data_parts)
                 if fk.target_parts:
-                    fk_trace["__init_target__"] = ".".join(fk.target_parts)
+                    fk_trace["__target_type__"] = ".".join(fk.target_parts)
                 trace[fk.clean_key] = org_value if is_pass else fk_trace
 
         if "__update__" in type_spec_dict:
