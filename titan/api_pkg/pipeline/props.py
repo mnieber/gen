@@ -174,7 +174,11 @@ def elements(self):
 def output(self):
     named_res = self.resources[-1]
     assert isinstance(named_res, (named(Item), named(ItemList)))
-    return self.resources[-1].typ
+    return named_res
+
+
+def output_name(self):
+    return self.output.name or self.output.typ.ts_var
 
 
 def deleter_mutation(self):
@@ -195,7 +199,7 @@ def get_bvr(self, name):
     return None
 
 
-def input_expression(self):
+def result_expression(self):
     result = ""
     nr_elms = len(self.elements)
 
