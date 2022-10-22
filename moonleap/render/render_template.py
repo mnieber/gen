@@ -9,7 +9,7 @@ def render_template(template_fn, **kwargs):
         try:
             content = get_template(template_fn).render(**kwargs)
         except Exception:
-            print_last_template()
+            print_last_template(template_fn)
             raise
 
         lines = content.split(os.linesep)
