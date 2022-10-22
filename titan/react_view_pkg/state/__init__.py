@@ -18,12 +18,12 @@ from titan.react_pkg.reactmodule import ReactModule
 from . import props
 from .resources import State
 
-base_tags = [("state", ["component", "react-state"])]
+base_tags = {"state": ["component", "react-state"]}
 
-rules = [
-    (("state", has, "x+pipeline"), empty_rule()),
-    (("module", has, "state"), empty_rule()),
-]
+rules = {
+    ("state", has, "x+pipeline"): empty_rule(),
+    ("module", has, "state"): empty_rule(),
+}
 
 
 @create("state")

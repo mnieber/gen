@@ -5,7 +5,7 @@ from moonleap.verbs import has
 
 from .resources import Picker
 
-base_tags = [("picker", ["component"])]
+base_tags = {"picker": ["component"]}
 
 
 @create("picker")

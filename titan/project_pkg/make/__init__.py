@@ -6,13 +6,13 @@ from moonleap import create, create_forward, empty_rule, extend, rule
 from moonleap.verbs import has
 from titan.project_pkg.service import Service, Tool
 
-rules = [
-    (("service", has, "makefile"), empty_rule()),
-]
+rules = {
+    ("service", has, "makefile"): empty_rule(),
+}
 
-base_tags = [
-    ("makefile", ["tool"]),
-]
+base_tags = {
+    "makefile": ["tool"],
+}
 
 
 @dataclass

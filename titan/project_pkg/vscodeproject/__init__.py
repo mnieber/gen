@@ -7,7 +7,7 @@ from titan.project_pkg.project import Project
 
 from .resources import VsCodeProject
 
-rules = [(("project", has, "vscode-project"), empty_rule())]
+rules = {("project", has, "vscode-project"): empty_rule()}
 
 
 @create("vscode-project")

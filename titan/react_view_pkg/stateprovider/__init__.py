@@ -5,7 +5,7 @@ from titan.react_view_pkg.state.resources import State
 
 from .resources import StateProvider
 
-base_tags = [("state-provider", ["component"])]
+base_tags = {"state~provider": ["component"]}
 
 
 @create("state-provider")

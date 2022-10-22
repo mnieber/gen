@@ -7,18 +7,18 @@ from titan.api_pkg.itemlist.resources import ItemList
 from . import props
 from .resources import Mutation
 
-base_tags = [
-    ("mutation", ["api-endpoint"]),
-]
+base_tags = {
+    "mutation": ["api-endpoint"],
+}
 
 
-rules = [
-    ((":gql-registry", has, "mutation"), empty_rule()),
-    (("mutation", saves, "item"), empty_rule()),
-    (("mutation", deletes, "item~list"), empty_rule()),
-    (("mutation", provides, "x+item"), empty_rule()),
-    (("mutation", provides, "x+item~list"), empty_rule()),
-]
+rules = {
+    (":gql-registry", has, "mutation"): empty_rule(),
+    ("mutation", saves, "item"): empty_rule(),
+    ("mutation", deletes, "item~list"): empty_rule(),
+    ("mutation", provides, "x+item"): empty_rule(),
+    ("mutation", provides, "x+item~list"): empty_rule(),
+}
 
 
 @create("mutation")

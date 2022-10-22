@@ -7,12 +7,12 @@ from moonleap.verbs import deletes, has, provides, saves
 from ..gqlregistry import props
 from .resources import GqlRegistry
 
-rules = [
-    (("gql-registry", has, "api-endpoint"), empty_rule()),
-    (("gql-registry", has, "mutation"), empty_rule()),
-    (("gql-registry", has, "query"), empty_rule()),
-    (("project", has, "gql-registry"), empty_rule()),
-]
+rules = {
+    ("gql-registry", has, "api-endpoint"): empty_rule(),
+    ("gql-registry", has, "mutation"): empty_rule(),
+    ("gql-registry", has, "query"): empty_rule(),
+    ("project", has, "gql-registry"): empty_rule(),
+}
 
 _gql_registry = None
 

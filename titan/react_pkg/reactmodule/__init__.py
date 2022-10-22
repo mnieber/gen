@@ -9,12 +9,12 @@ from titan.react_pkg.reactapp import ReactApp
 from . import props
 from .resources import ReactModule  # noqa
 
-rules = [
-    (("react-app", has, "module"), empty_rule()),
-]
+rules = {
+    ("react-app", has, "module"): empty_rule(),
+}
 
 
-base_tags = [("module", ["react-module"])]
+base_tags = {"module": ["react-module"]}
 
 
 @create("module")

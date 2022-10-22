@@ -8,10 +8,10 @@ from titan.api_pkg.itemlist.resources import ItemList
 
 from .resources import SelectItemEffect
 
-base_tags = [("select-item-effect", ["component", "api-effect"])]
+base_tags = {"select-item-effect": ["component", "api-effect"]}
 
 
-rules = [(("item~list", uses, "select-item-effect"), empty_rule())]
+rules = {("item~list", uses, "select-item-effect"): empty_rule()}
 
 
 @create("select-item-effect")

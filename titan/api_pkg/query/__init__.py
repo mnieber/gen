@@ -6,15 +6,15 @@ from moonleap.verbs import has, provides
 from . import props
 from .resources import Query
 
-base_tags = [
-    ("query", ["api-endpoint"]),
-]
+base_tags = {
+    "query": ["api-endpoint"],
+}
 
-rules = [
-    ((":gql-registry", has, "query"), empty_rule()),
-    (("query", provides, "item"), empty_rule()),
-    (("query", provides, "item~list"), empty_rule()),
-]
+rules = {
+    (":gql-registry", has, "query"): empty_rule(),
+    ("query", provides, "item"): empty_rule(),
+    ("query", provides, "item~list"): empty_rule(),
+}
 
 
 @create("query")

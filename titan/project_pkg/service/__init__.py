@@ -15,11 +15,11 @@ from .resources import Service, Tool
 
 render_the_service = lambda x: "render the {x.name} service"
 
-rules = [
-    (("service", has, "docker-image"), empty_rule()),
-    (("service", has + runs, "tool"), empty_rule()),
-    (("service", uses, "service"), empty_rule()),
-]
+rules = {
+    ("service", has, "docker-image"): empty_rule(),
+    ("service", has + runs, "tool"): empty_rule(),
+    ("service", uses, "service"): empty_rule(),
+}
 
 
 @create("service")

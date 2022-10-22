@@ -8,9 +8,9 @@ from titan.react_pkg.reactmodule import ReactModule
 
 from .resources import Route  # noqa
 
-rules = [
-    (("module", has, "route"), empty_rule()),
-]
+rules = {
+    ("module", has, "route"): empty_rule(),
+}
 
 
 @create("routes:module")

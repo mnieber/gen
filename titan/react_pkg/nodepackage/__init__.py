@@ -8,12 +8,12 @@ from titan.project_pkg.service import Service
 from . import props
 from .resources import NodePackage, Pkg  # noqa
 
-base_tags = [("node-package", ["tool"])]
+base_tags = {"node-package": ["tool"]}
 
 
-rules = [
-    (("node-package", has, "node-pkg"), empty_rule()),
-]
+rules = {
+    ("node-package", has, "node-pkg"): empty_rule(),
+}
 
 
 @create("node-package")

@@ -17,9 +17,9 @@ from titan.project_pkg.service import Service
 
 from .resources import DodoLayer
 
-rules = [
-    (("layer", contains, "dodo-menu"), empty_rule()),
-]
+rules = {
+    ("layer", contains, "dodo-menu"): empty_rule(),
+}
 
 
 @create("layer")

@@ -5,10 +5,10 @@ from titan.dodo_pkg.layer.resources import DodoLayer
 
 from .resources import DodoLayerGroup
 
-rules = [
-    (("layer-group", contains, "layer"), empty_rule()),
-    (("layer", has, "layer-group"), empty_rule()),
-]
+rules = {
+    ("layer-group", contains, "layer"): empty_rule(),
+    ("layer", has, "layer-group"): empty_rule(),
+}
 
 
 @create("layer-group")

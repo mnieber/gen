@@ -5,16 +5,16 @@ from titan.api_pkg.itemlist.resources import ItemList
 
 from .resources import Behavior
 
-base_tags = [
-    ("highlight", ["behavior"]),
-    ("selection", ["behavior"]),
-    ("filtering", ["behavior"]),
-    ("deletion", ["behavior"]),
-]
+base_tags = {
+    "highlight": ["behavior"],
+    "selection": ["behavior"],
+    "filtering": ["behavior"],
+    "deletion": ["behavior"],
+}
 
-rules = [
-    (("x+item~list", has, "behavior"), empty_rule()),
-]
+rules = {
+    ("x+item~list", has, "behavior"): empty_rule(),
+}
 
 
 @create("behavior")

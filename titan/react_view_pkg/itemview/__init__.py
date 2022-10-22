@@ -7,9 +7,9 @@ from moonleap.verbs import uses
 
 from .resources import ItemView, NamedItemView
 
-base_tags = [("item-view", ["component"])]
+base_tags = {"item-view": ["component"]}
 
-rules = [(("item-view", uses, "item"), empty_rule())]
+rules = {("item-view", uses, "item"): empty_rule()}
 
 
 @create("item-view")

@@ -28,11 +28,11 @@ class Scope:
             if hasattr(f, "moonleap_rule"):
                 self.rules.append(f.moonleap_rule)
 
-        for rel_tuple, f in getattr(module, "rules", []):
+        for rel_tuple, f in getattr(module, "rules", {}).items():
             rule = rule_decorator(*rel_tuple)(f).moonleap_rule
             self.rules.append(rule)
 
-        for tag, base_tags in getattr(module, "base_tags", []):
+        for tag, base_tags in getattr(module, "base_tags", {}).items():
             self.register_base_tags(tag, base_tags)
 
     def find_create_rule(self, subj_term):
@@ -69,9 +69,6 @@ class Scope:
                 input_rel, rule.rel, subj_base_tags or [], obj_base_tags or []
             )
         ]
-
-    def drop_rule(self, rule):
-        self.rules = [x for x in self.rules if x is not rule]
 
     def register_base_tags(self, tag, base_tags):
         self.base_tags_by_tag.setdefault(tag, []).extend(base_tags)

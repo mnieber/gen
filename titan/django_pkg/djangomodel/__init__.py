@@ -6,12 +6,12 @@ from moonleap.verbs import contains, has, provides
 from .import_type_spec import import_type_spec
 from .resources import DjangoModel
 
-rules = [
-    (("module", contains + provides, "item~list"), empty_rule()),
-    (("module", has, "django-model"), empty_rule()),
-]
+rules = {
+    ("module", contains + provides, "item~list"): empty_rule(),
+    ("module", has, "django-model"): empty_rule(),
+}
 
-base_tags = [("module", ["django-module"])]
+base_tags = {"module": ["django-module"]}
 
 
 @create("django-model")

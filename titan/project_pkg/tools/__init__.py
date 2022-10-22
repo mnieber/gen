@@ -7,21 +7,21 @@ from titan.project_pkg.service import Service, Tool
 
 from .resources import Vandelay
 
-base_tags = [
-    ("black", ["tool"]),
-    ("cypress", ["tool"]),
-    ("fish", ["tool"]),
-    ("isort", ["tool"]),
-    ("opt-dir", ["tool"]),
-    ("pip-compile", ["tool"]),
-    ("prettier", ["tool"]),
-    ("pudb", ["tool"]),
-    ("pytest", ["tool"]),
-    ("setup.cfg", ["tool"]),
-    ("tailwind-css", ["tool"]),
-    ("uikit", ["tool"]),
-    ("vandelay", ["tool"]),
-]
+base_tags = {
+    "black": ["tool"],
+    "cypress": ["tool"],
+    "fish": ["tool"],
+    "isort": ["tool"],
+    "opt-dir": ["tool"],
+    "pip-compile": ["tool"],
+    "prettier": ["tool"],
+    "pudb": ["tool"],
+    "pytest": ["tool"],
+    "setup.cfg": ["tool"],
+    "tailwind-css": ["tool"],
+    "uikit": ["tool"],
+    "vandelay": ["tool"],
+}
 
 
 @create("tool")

@@ -8,12 +8,12 @@ from moonleap.verbs import has, uses
 
 from .resources import ListView
 
-base_tags = [("list-view", ["component"])]
+base_tags = {"list-view": ["component"]}
 
-rules = [
-    (("list-view", uses, "item"), empty_rule()),
-    (("list-view", has, "behavior"), empty_rule()),
-]
+rules = {
+    ("list-view", uses, "item"): empty_rule(),
+    ("list-view", has, "behavior"): empty_rule(),
+}
 
 
 @create("list-view")

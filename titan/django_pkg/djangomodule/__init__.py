@@ -24,11 +24,11 @@ from titan.django_pkg.djangomodule.get_map_from_item_to_django_module import (
 from . import props
 from .resources import DjangoModule
 
-rules = [
-    (("module", contains + provides, "item~list"), empty_rule()),
-]
+rules = {
+    ("module", contains + provides, "item~list"): empty_rule(),
+}
 
-base_tags = [("module", ["django-module"])]
+base_tags = {"module": ["django-module"]}
 
 
 @create("module")

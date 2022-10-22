@@ -8,7 +8,7 @@ from titan.react_pkg.reactapp import ReactApp
 
 from .resources import ApiModule  # noqa
 
-rules = []
+rules = {}
 
 
 @create("api:module")

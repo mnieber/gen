@@ -6,7 +6,7 @@ from moonleap.verbs import has
 from titan.django_pkg.djangoapp import DjangoApp
 from titan.django_pkg.djangomodule import DjangoModule
 
-rules = [(("app:module", has, "graphql:app"), empty_rule())]
+rules = {("app:module", has, "graphql:app"): empty_rule()}
 
 
 @create("app:module")

@@ -7,8 +7,8 @@ from moonleap.verbs import has, runs
 
 from .resources import FormView
 
-base_tags = [("form-view", ["component"])]
-rules = [(("form-view", runs, "mutation"), empty_rule())]
+base_tags = {"form-view": ["component"]}
+rules = {("form-view", runs, "mutation"): empty_rule()}
 
 
 @create("form-view")

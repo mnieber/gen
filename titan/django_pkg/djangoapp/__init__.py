@@ -7,9 +7,9 @@ from titan.project_pkg.service import Service
 
 from .resources import DjangoApp
 
-base_tags = [
-    ("django-app", ["tool"]),
-]
+base_tags = {
+    "django-app": ["tool"],
+}
 
 
 @create("django-app")

@@ -8,7 +8,7 @@ from titan.react_pkg.packages.use_packages import use_packages
 
 from .resources import ReactApp
 
-base_tags = [("react-app", ["tool"])]
+base_tags = {"react-app": ["tool"]}
 
 
 @create("react-app")

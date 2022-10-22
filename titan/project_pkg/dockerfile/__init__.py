@@ -4,10 +4,10 @@ from moonleap.verbs import has
 
 from .resources import Dockerfile, DockerImage
 
-base_tags = [
-    ("dockerfile", ["tool"]),
-    ("docker-image", ["tool"]),
-]
+base_tags = {
+    "dockerfile": ["tool"],
+    "docker-image": ["tool"],
+}
 
 
 @create("dockerfile")

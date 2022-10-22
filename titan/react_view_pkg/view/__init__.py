@@ -7,10 +7,10 @@ from moonleap.verbs import has, wraps
 from . import props
 from .resources import View
 
-base_tags = [
-    ("view", ["component", "react-view"]),
-    ("panel", ["view", "react-panel"]),
-]
+base_tags = {
+    "view": ["component", "react-view"],
+    "panel": ["view", "react-panel"],
+}
 
 
 @create("view")

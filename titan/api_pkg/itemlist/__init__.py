@@ -15,11 +15,11 @@ from titan.api_pkg.item.resources import Item
 from . import props
 from .resources import ItemList
 
-base_tags = [
-    ("item~list", ["pipeline-elm"]),
-]
+base_tags = {
+    "item~list": ["pipeline-elm"],
+}
 
-rules = [(("item~list", uses, "item"), empty_rule())]
+rules = {("item~list", uses, "item"): empty_rule()}
 
 
 @create("item~list")
