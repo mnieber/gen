@@ -1,0 +1,36 @@
+{% magic_with _.container.name as myContainer %}
+{% magic_with _.container.state.name as MyState %}
+import { PropsT, MyState } from 'src/search/MyState';
+import * as FacetPolicies from 'skandha-facets/policies';
+
+export const initMyContainer = (state: MyState, props: PropsT) => {
+  const ctr = state.myContainer;
+  addCleanUpFunctionToCtr(state, () => cleanUpCtr(ctr));
+
+  setCallbacks(ctr.deletion, {                                                                        {% if _.container.get_bvr("deletion") %}
+    delete: {
+      deleteItems(this: DeletionCbs['delete']) {
+        return props.{self.delete_function_name}(this.itemIds);
+      },
+    },
+  } as DeletionCbs);                                                                                  {% endif %}
+  setCallbacks(ctr.highlight, {
+    highlightItem: {                                                                                  {% if _.container.get_bvr("addition") %}
+      enter(this: HighlightCbs['highlightItem']) {
+        FacetPolicies.cancelNewItemOnHighlightChange(ctr.highlight, this.id);    # noqa: E501
+      },
+    },                                                                                                {% endif %}
+  } as HighlightCbs);
+  setCallbacks(ctr.selection, {                                                                       {% if _.container.get_bvr("selection") %}
+    selectItem: {
+      selectItem(this: SelectionCbs['selectItem']) {
+        handleSelectItem(ctr.selection, this.selectionParams);
+        FacetPolicies.highlightFollowsSelection(                                                      {% if _.container.get_bvr("highlight") %}
+          ctr.selection,
+          this.selectionParams
+        );                                                                                            {% endif %}
+      }
+    },
+  } as SelectionCbs);                                                                                 {% endif %}
+}
+{% end_magic_with %}

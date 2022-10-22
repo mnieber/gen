@@ -185,9 +185,7 @@ def deleter_mutation(self):
 
 
 def bvrs(self):
-    named_res = self.resources[-1]
-    assert isinstance(named_res, (named(Item), named(ItemList)))
-    return named_res.bvrs if isinstance(named_res, named(ItemList)) else []
+    return []
 
 
 def get_bvr(self, name):

@@ -95,5 +95,10 @@ def parents(parent_term_str, verb):
     return Prop(get_value=get_parent)
 
 
-def empty_rule():
-    return lambda *args, **kwargs: None
+def empty_rule(dbg=False):
+    def f(*args, **kwargs):
+        if dbg:
+            __import__("pudb").set_trace()
+        return None
+
+    return f

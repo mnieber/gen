@@ -1,16 +1,15 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, Prop, create, empty_rule, extend, named
-from moonleap.verbs import connects
-from titan.api_pkg.itemlist.resources import ItemList
+from moonleap.verbs import connects, has
 
 from . import props
 from .resources import Pipeline
 
-rules = [
-    (("x+pipeline", connects, "x+pipeline-elm"), empty_rule()),
-    (("x+pipeline", connects, "api-endpoint"), empty_rule()),
-    (("x+pipeline", connects, "state"), empty_rule()),
-]
+rules = {
+    ("x+pipeline", connects, "x+pipeline-elm"): empty_rule(),
+    ("x+pipeline", connects, "api-endpoint"): empty_rule(),
+    ("x+pipeline", connects, "state"): empty_rule(),
+}
 
 
 @create("pipeline")
@@ -37,8 +36,4 @@ class ExtendNamedPipeline:
     root_query = P.child(connects, "api-endpoint")
     root_state = P.child(connects, "state")
     status_expression = Prop(props.status_expression)
-
-
-@extend(named(ItemList))
-class ExtendNamedItemList:
-    pipeline = P.parent("x+pipeline", connects)
+    state_provider = P.parent("state~provider", has)

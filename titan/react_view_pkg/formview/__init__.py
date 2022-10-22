@@ -1,8 +1,16 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import (Prop, create, create_forward, empty_rule, extend,
-                      kebab_to_camel, rule, u0)
+from moonleap import (
+    Prop,
+    create,
+    create_forward,
+    empty_rule,
+    extend,
+    kebab_to_camel,
+    rule,
+    u0,
+)
 from moonleap.verbs import has, runs
 
 from .resources import FormView

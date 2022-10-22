@@ -3,6 +3,7 @@ from titan.react_view_pkg import accountmenu
 from . import (
     accountmenu,
     behavior,
+    container,
     formview,
     itemview,
     listview,
@@ -16,6 +17,7 @@ from . import (
 modules = [
     accountmenu,
     behavior,
+    container,
     formview,
     itemview,
     listview,

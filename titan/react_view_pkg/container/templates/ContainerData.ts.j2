@@ -1,0 +1,18 @@
+{% magic_with _.container.name as myContainer %}
+{% magic_with _.container.item_name as myItem %}
+import { input, output } from 'skandha';
+import { MyItemByIdT, MyItemT } from 'src/api/types/MyItemT';
+import { listToItemById } from 'src/utils/ids';
+
+export class MyContainerData {
+  static className = () => 'MyContainerData';
+
+  @input myItems: Array<MyItemT> = [];
+  @output myItemsDisplay: Array<MyItemT> = [];
+
+  @output get myItemById(): MyItemByIdT {
+    return listToItemById(this.myItemsDisplay);
+  }
+}
+{% end_magic_with %}
+{% end_magic_with %}

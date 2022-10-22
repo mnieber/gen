@@ -5,6 +5,6 @@ config.yaml.j2:
     include: {{ _.layer.is_root }}
 
 layer.yaml.j2:
-    name: {{ _.layer.basename }}.yaml.j2
+    name: {{ _.layer.basename }}.yaml
     include: {{ _.layer.is_root|negate }}
 

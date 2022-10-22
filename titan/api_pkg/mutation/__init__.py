@@ -1,8 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import Prop, create, empty_rule, extend, kebab_to_camel
 from moonleap.verbs import deletes, has, provides, saves
-from titan.api_pkg.item.resources import Item
-from titan.api_pkg.itemlist.resources import ItemList
 
 from . import props
 from .resources import Mutation
@@ -34,13 +32,3 @@ class ExtendMutation:
     items_deleted = P.children(deletes, "item")
     item_lists_deleted = P.children(deletes, "item~list")
     gql_spec = Prop(props.gql_spec)
-
-
-@extend(Item)
-class ExtendItem:
-    poster_mutations = P.parents("mutation", saves)
-
-
-@extend(ItemList)
-class ExtendItemList:
-    deleter_mutations = P.parents("mutation", deletes)
