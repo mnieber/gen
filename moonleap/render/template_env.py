@@ -4,12 +4,12 @@ import jinja2
 from moonleap.render.transforms import get_transforms
 from moonleap.utils import chop
 
-_last_template_by_fn = dict()
+_template_by_fn = dict()
 
 
 def print_last_template(template_fn):
     print("Template: %s" % template_fn)
-    print(os.linesep.join(_last_template_by_fn[str(template_fn)]))
+    print(os.linesep.join(_template_by_fn[str(template_fn)]))
 
 
 def load_template(template_fn):
@@ -20,7 +20,7 @@ def load_template(template_fn):
     for t in get_transforms():
         transformed_lines = t(transformed_lines, template_fn)
 
-    _last_template_by_fn[str(template_fn)] = [
+    _template_by_fn[str(template_fn)] = [
         "%3d: %s" % (i + 1, transformed_lines[i]) for i in range(len(transformed_lines))
     ]
 
