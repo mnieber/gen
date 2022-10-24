@@ -12,7 +12,7 @@ def field_spec_target_type_spec(self: FkFieldSpec):
 
 
 def field_spec_graphql_type(self: FieldSpec, host):
-    postfix = "" if host in self.optional else "!"
+    postfix = "" if self.is_optional(host) else "!"
 
     if self.field_type in (
         "string",

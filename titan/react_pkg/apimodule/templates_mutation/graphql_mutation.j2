@@ -39,7 +39,7 @@ export const callEndpoint = (args: ArgsT) => {
 export const useCallEndpoint = () => {
   const mutation = useMutation(['callEndpoint'], callEndpoint, {
     onSuccess: (response: ObjT) => {
-      // Moonleap todo: set contents for object with (nested) derived fields            {% if __.derived_fields %}
+      // Moonleap todo: set contents for objects with (nested) derived fields           {% if __.derived_fields %}
       response.field_name = getFieldName(response.field_name);                          {% !! field_spec in __.derived_fields %}
                                                                                         {% endif %}
       queryClient.invalidateQueries([                                                   {% if _.mutation.gql_spec.invalidates %}

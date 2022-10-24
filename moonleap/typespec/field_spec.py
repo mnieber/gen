@@ -29,6 +29,9 @@ class FieldSpec:
     readonly: T.Optional[bool] = field(default=None, repr=False)
     unique: T.Optional[bool] = field(default=None, repr=False)
 
+    def is_optional(self, host):
+        return host in self.optional and f"required_{host}" not in self.optional
+
     @property
     def name(self):
         return self.key.removesuffix("~")
@@ -44,8 +47,9 @@ class FkFieldSpec(FieldSpec):
     through: T.Optional[str] = None
     through_var: T.Optional[str] = None
     related_name: T.Optional[str] = None
-    admin_inline: T.Optional[bool] = None
-    set_null: T.Optional[bool] = None
+    admin_inline: T.Optional[bool] = field(default=None, repr=False)
+    set_null: T.Optional[bool] = field(default=None, repr=False)
+    is_related_fk: T.Optional[bool] = None
 
 
 def get_field_spec_constructor(t):

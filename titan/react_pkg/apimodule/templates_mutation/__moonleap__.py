@@ -16,7 +16,7 @@ def get_helpers(_):
         def __init__(self):
             self.derived_fields = self.get_derived_fields()
             self.type_specs_to_import, self.graphql_body = graphql_body(
-                _.mutation.gql_spec.outputs_type_spec, indent=10
+                _.mutation.gql_spec.outputs_type_spec, indent=8
             )
 
         @property

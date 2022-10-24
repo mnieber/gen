@@ -22,7 +22,7 @@ class DjangoModelField(Resource):
 
     def arg_null_blank(self):
         return (
-            ["null=True", "blank=True"] if "server" in self.field_spec.optional else []
+            ["null=True", "blank=True"] if self.field_spec.is_optional("server") else []
         )
 
     def arg_unique(self):

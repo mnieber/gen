@@ -9,13 +9,12 @@ def add_host_to_type_specs(host, type_spec_store):
 
             # By default, if the field is optional in the server host,
             # then it's optional in the new host as well.
-            if "server" in field_spec.optional:
+            if field_spec.is_optional("server"):
                 field_spec.optional.append(host)
 
-        # By default, automatically added fks are not used
-        # in the new host.
+        # By default, related fks are not used in the new host.
         for field_spec in type_spec.get_field_specs(["fk"]):
-            if field_spec.is_auto:
+            if field_spec.is_related_fk:
                 if host in field_spec.has_model:
                     field_spec.has_model.remove(host)
                 if host in field_spec.has_api:

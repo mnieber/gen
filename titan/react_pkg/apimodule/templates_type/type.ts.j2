@@ -7,7 +7,7 @@ import { FieldSpecTargetT } from 'src/api/types/FieldSpecTargetT';              
 import { typeSpecNameFields } from 'src/api/types/TypeSpecNameT';                                   {% !! type_spec in __.dependency_type_specs %}
 
 export type YellowTulipT = {
-  fieldSpecName{% if "client" in field_spec.optional %}?{% endif %}: fieldSpecTsType;               {% !! field_spec in __.field_specs %}
+  fieldSpecName{% if field_spec.is_optional("client") %}?{% endif %}: fieldSpecTsType;               {% !! field_spec in __.field_specs %}
 };
 
 export type YellowTulipByIdT = { [id: string]: YellowTulipT };

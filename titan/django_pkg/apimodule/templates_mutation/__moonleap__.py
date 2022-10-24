@@ -44,7 +44,7 @@ def get_helpers(_):
 
         def graphene_type(self, field_spec):
             return field_spec.graphene_type(
-                "required=False" if "server" in field_spec.optional else ""
+                "required=False" if field_spec.is_optional("server") else ""
             )
 
     return Helpers()
