@@ -1,12 +1,6 @@
-import { makeObservable, observable } from 'mobx';
+import { EndpointData } from 'src/api/EndpointData';
 import { ObjT } from 'src/utils/types';
 
-export class QueryData {
+export class QueryData extends EndpointData {
   query: ObjT = {};
-  @observable data: ObjT | undefined = undefined;
-  @observable status: string = '';
-
-  constructor() {
-    makeObservable(this);
-  }
 }

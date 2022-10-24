@@ -27,7 +27,7 @@ export function loadUserId(args: ArgsT): Promise<any> {
     .catch((error: ObjT) => {
       const message = error.response.errors[0].message;
       if (
-        message === 'Signature has expired' &&
+        ['Signature has expired', 'Signature has expired'].includes(message) &&
         getRefreshToken() &&
         args.maybeRefreshToken
       ) {

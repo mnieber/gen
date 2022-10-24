@@ -11,7 +11,7 @@ import './AccountMenu.scss';
 
 type PropsT = React.PropsWithChildren<{ className?: any }>;
 
-export const AccountMenu: React.FC<PropsT> = observer(() => {
+export const AccountMenu = observer(() => {
   const routes = useRoutes();
   const signOut = useSignOut().mutateAsync;
   const loadUserId = useLoadUserId();
