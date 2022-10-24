@@ -24,11 +24,6 @@ def api_module_created(api_module):
     return create_forward(":node-package", has, "graphql-api:node-pkg")
 
 
-@rule("react-app", has, "module")
-def react_app_has_module(react_app, module):
-    react_app.get_module("utils").use_packages(["graphqlClient"])
-
-
 @rule("react-app", has, "api:module")
 def add_api_render_tasks(react_app, api_module):
     api_module.renders(

@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from moonleap import Resource
+
 
 def use_packages(self, package_names, packages_dir=None):
     packages_dir = packages_dir or Path(__file__).parent.parent / "packages"
@@ -9,6 +11,9 @@ def use_packages(self, package_names, packages_dir=None):
 
         files_dir = package_dir / "files"
         if files_dir.exists():
-            # TODO
-            # add template dir(packages_dir / files_dir.relative_to(packages_dir))
-            pass
+            self.renders(
+                [Resource()],
+                "",
+                dict(),
+                [files_dir],
+            )
