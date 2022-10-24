@@ -1,0 +1,26 @@
+{% magic_with data.item_list.item_name as listItem %}
+{% magic_with data.item.item_name as singleItem %}
+{% magic_with bvr.item_name as bvrItem %}
+import { stub } from 'src/utils/stub';
+import { {{ bvr_name|u0 }} } from 'skandha-facets/{{ bvr_name|u0 }}';           {% !! bvr_name in __.bvr_names %}
+import { {{ item_name|u0 }}T } from 'src/api/types/{{ item_name|u0 }}T';        {% !! item_name in __.item_names %}
+export { withDefaultProps } from 'react-default-props-context';
+
+const dps{{ item_name|u0|plural }} = {                                          {% for item_name, data in __.provided_data %}
+    listItems: {                                                                {% if data.item_list %}
+      listItems: stub as ListItemT[],
+    },                                                                          {% endif %}
+    singleItem: {                                                               {% if data.item %}
+      singleItem: stub as SingleItemT,
+    },                                                                          {% endif %}
+    bvrItems{{ bvr.name|u0 }}: {                                                {% for bvr in data.bvrs %}
+      bvrItems{{ bvr.name|u0 }}: stub as {{ bvr.name|u0 }},
+    },                                                                          {% endfor %}
+};
+
+                                                                                {% endfor %}
+export const defaultProps = {
+    ...dps{{ item_name|u0|plural }},                                            {% !! item_name, data in __.provided_data %}
+};
+{% end_magic_with %}
+{% end_magic_with %}

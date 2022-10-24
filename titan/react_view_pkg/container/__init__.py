@@ -58,6 +58,7 @@ class ExtendState:
 class ExtendContainer:
     state = P.parent("state", has)
     named_item_list = P.child(has, "x+item~list")
+    named_item = P.child(has, "x+item")
     item_name = Prop(props.container_item_name)
     bvrs = P.children(has, "behavior")
     get_bvr = MemFun(props.get_bvr)
