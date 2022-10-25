@@ -5,5 +5,5 @@ migrations:
     include: {{ _.module.django_models|bool }}
 models.py:
     include: {{ _.module.django_models|bool }}
-tr.py:
+tr.py.j2:
     include: {{ _.django_app.use_translation|bool }}

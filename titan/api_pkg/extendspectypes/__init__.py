@@ -6,12 +6,12 @@ from . import props
 
 @extend(FkFieldSpec)
 class ExtendFkFieldSpec:
-    target_type_spec = Prop(props.field_spec_target_type_spec)
+    target_type_spec = Prop(props.fk_field_spec_target_type_spec)
 
 
 @extend(FormFieldSpec)
 class ExtendFormFieldSpec:
-    target_type_spec = Prop(props.field_spec_target_type_spec)
+    target_type_spec = Prop(props.form_field_spec_target_type_spec)
 
 
 @extend(FieldSpec)

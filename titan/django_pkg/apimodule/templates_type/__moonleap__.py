@@ -15,7 +15,6 @@ def get_helpers(_):
             for x in _.item.type_spec.get_field_specs()
             if ("server" in x.has_api and "server" not in x.has_model)
         ]
-        form_field_specs = []
 
         @property
         def excluded_field_specs(self):

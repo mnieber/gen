@@ -1,0 +1,10 @@
+{% magic_with _.form_type_spec.type_name as MyItemForm %}
+{% clean_up_py_imports %}
+import graphene
+from graphene.types.generic import GenericScalar
+{% end_clean_up_py_imports %}
+
+class MyItemForm(graphene.InputObjectType):
+  {{ field_spec.name }} = {{ field_spec.graphene_type(__.args(field_spec)) }}                   {% for field_spec in __.field_specs %}
+  pass                                                                                          {% else %}{% endfor %}
+{% end_magic_with %}

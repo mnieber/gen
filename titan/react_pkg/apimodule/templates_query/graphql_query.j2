@@ -11,7 +11,7 @@ import { ObjT } from 'src/utils/types';
 import { typeSpecNameGqlFields } from 'src/api/types/TypeSpecNameT'                     {% !! type_spec in __.type_specs_to_import %}
 
 export type ArgsT = {
-  inputFieldName: inputFieldTsType,                                                     {% !! input_field_spec in __.input_field_specs %}
+  inputFieldName: inputFieldTsType;                                                     {% !! input_field_spec in __.input_field_specs %}
 };
 
 export const callEndpoint = (args: ArgsT) => {

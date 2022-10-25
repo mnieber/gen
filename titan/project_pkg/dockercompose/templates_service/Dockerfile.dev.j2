@@ -7,6 +7,7 @@ RUN {{ _.service.pip }} install --upgrade pip                                   
 RUN apt install curl ca-certificates gnupg
 RUN curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
 RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" >> /etc/apt/sources.list.d/postgresql.list'
+
                                                                                 {% endif %}
 # install pkg dependencies
 RUN {{ __.docker_image.install_command }} \

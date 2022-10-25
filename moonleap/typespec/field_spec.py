@@ -23,7 +23,7 @@ class FieldSpec:
     is_auto: T.Optional[bool] = field(default=None)
     # If "server" in optional, then the field is optional on the server.
     # Sometimes, a field is labelled explicitly as required by adding "required_server" to optional.
-    # This is used when the default is optional by default (e.g. in a many-to-many relationship).
+    # This is used for fields that are optional by default (e.g. in a many-to-many relationship).
     optional: T.List[str] = field(default_factory=lambda: [])
     target: T.Optional[str] = None
     readonly: T.Optional[bool] = field(default=None, repr=False)

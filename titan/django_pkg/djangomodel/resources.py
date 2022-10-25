@@ -70,9 +70,7 @@ class DjangoFkField(DjangoModelField):
     field_name: str = "models.ForeignKey"
 
     def field_args(self, django_model):
-        related_name = (
-            "+" if not self.field_spec.related_name else self.field_spec.related_name
-        )
+        related_name = self.field_spec.related_name or "+"
         return [
             self.field_spec.target,
             "on_delete=models.SET_NULL"

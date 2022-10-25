@@ -2,6 +2,8 @@ import os
 
 import yaml
 from moonleap.gqlspec.get_gql_spec import get_gql_spec
+from moonleap.gqlspec.post_process_gql_specs import post_process_gql_specs
+from moonleap.typespec.type_spec_store import type_spec_store
 
 
 def load_gql_specs(gql_spec_store, spec_dir):
@@ -10,6 +12,7 @@ def load_gql_specs(gql_spec_store, spec_dir):
         with open(fn) as f:
             root_gql_spec_dict = yaml.load(f, Loader=yaml.SafeLoader)
             get_all_gql_specs(gql_spec_store, "client", root_gql_spec_dict)
+            post_process_gql_specs(gql_spec_store, type_spec_store())
 
 
 def get_all_gql_specs(gql_spec_store, host, root_gql_spec_dict):

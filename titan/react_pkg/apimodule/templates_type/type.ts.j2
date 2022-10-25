@@ -13,7 +13,7 @@ export type YellowTulipT = {
 export type YellowTulipByIdT = { [id: string]: YellowTulipT };
 
 export type {{ _.item.ts_form_type }} = {                                                           {% if __.form_field_specs %}
-  fieldSpecName: fieldSpecTsType;                                                                   {% !! field_spec in __.form_field_specs %}
+  fieldSpecName{% if field_spec.is_optional("client") %}?{% endif %}: fieldSpecTsType;              {% !! field_spec in __.form_field_specs %}
 };                                                                                                  {% endif %}
 
 export const yellowTulipGqlFields = `                                                               {% if _.item.type_spec.extract_gql_fields %}

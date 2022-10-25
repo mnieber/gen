@@ -28,18 +28,18 @@ class Data:
 # type spec dict.
 class ForeignKey:
     def __init__(self, key, value):
-        self._init_parts = value["__type__"].split(".") if "__type__" in value else []
-        self._init_target_parts = (
+        _init_parts = value["__type__"].split(".") if "__type__" in value else []
+        _init_target_parts = (
             value["__target_type__"].split(".") if "__target_type__" in value else []
         )
         parts_through = key.split(" through ")
         if len(parts_through) == 2:
             self.foo, self.bar = Data(), Data()
-            _process_data(self.foo, parts_through[0])
-            _process_data(self.bar, parts_through[1])
+            _process_data(self.foo, parts_through[0], _init_target_parts)
+            _process_data(self.bar, parts_through[1], _init_parts)
         else:
             self.foo, self.bar = Data(), None
-            _process_data(self.foo, key)
+            _process_data(self.foo, key, _init_parts)
 
     @property
     def data(self):
@@ -47,11 +47,11 @@ class ForeignKey:
 
     @property
     def data_parts(self):
-        return self.data.parts + self._init_parts
+        return self.data.parts
 
     @property
     def target_parts(self):
-        return [] if not self.bar else self.foo.parts + self._init_target_parts
+        return [] if not self.bar else self.foo.parts
 
     @property
     def var(self):
@@ -74,23 +74,25 @@ class ForeignKey:
         return self.foo.key + ((" through " + self.bar.key) if self.bar else "")
 
 
-def _process_data(data, value):
+def _process_data(data, value, parts):
+    data.parts = list(parts)
     parts_as = value.split(" as ")
 
-    parts_as[-1], data.parts = strip_fk_symbols(parts_as[-1])
+    parts_as[-1], more_parts = strip_fk_symbols(parts_as[-1])
+    data.parts += more_parts
     parts_module = parts_as[-1].split(".")
     if len(parts_module) > 1:
         data.module_name, parts_as[-1] = parts_module
-
-    data.var_type = u0(parts_as[-1])
-    if data.var_type.endswith("Set"):
-        data.var_type = data.var_type[:-3]
-        data.field_type = "relatedSet"
-    else:
-        data.field_type = "fk"
 
     if len(parts_as) == 2:
         data.var, more_parts = strip_fk_symbols(parts_as[0])
         data.parts += more_parts
     else:
         data.default_var = parts_as[-1]
+
+    data.var_type = u0(parts_as[-1])
+    if data.var_type.endswith("Set"):
+        data.var_type = data.var_type[:-3]
+        data.field_type = "relatedSet"
+    else:
+        data.field_type = "form" if "form" in data.parts else "fk"

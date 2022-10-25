@@ -7,11 +7,6 @@ def get_helpers(_):
         input_field_specs = _.mutation.gql_spec.get_inputs()
         form_input_field_specs = _.mutation.gql_spec.get_inputs(["form"])
         fk_output_field_specs = _.mutation.gql_spec.get_outputs(["relatedSet", "fk"])
-        scalar_output_field_specs = [
-            x
-            for x in _.mutation.gql_spec.get_outputs()
-            if x.field_type not in ["relatedSet", "fk"] and "client" in x.has_api
-        ]
 
         def __init__(self):
             self.derived_fields = self.get_derived_fields()

@@ -78,3 +78,4 @@ class ExtendGqlReg:
     mutations = P.children(has, "mutation")
     queries = P.children(has, "query")
     get_public_items = MemFun(props.get_public_items)
+    get_form_type_specs = MemFun(props.get_form_type_specs)

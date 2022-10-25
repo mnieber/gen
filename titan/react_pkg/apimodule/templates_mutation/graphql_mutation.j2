@@ -14,7 +14,7 @@ import { typeSpecNameGqlFields } from 'src/api/types/TypeSpecNameT'             
 import { getFieldName } from 'src/api/types/{{ field_spec.target }}T';                  {% !! field_spec in __.derived_fields %}
 
 export type ArgsT = {
-  fieldName: fieldTsType,                                                               {% !! field_spec in __.input_field_specs %}
+  fieldName: fieldTsType;                                                               {% !! field_spec in __.input_field_specs %}
 };
 
 export const callEndpoint = (args: ArgsT) => {

@@ -13,7 +13,11 @@ def get_helpers(_):
         fk_field_specs = [
             x for x in field_specs if x.field_type in ("fk", "relatedSet")
         ]
-        form_field_specs = [x for x in _.item.form_type_spec.get_field_specs()]
+        form_field_specs = [
+            x
+            for x in _.item.form_type_spec.get_field_specs()
+            if "client" in x.has_model
+        ]
 
         def graphql_fields(self):
             type_specs_to_import, body = graphql_body(

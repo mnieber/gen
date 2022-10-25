@@ -59,6 +59,13 @@ def add_query_render_tasks(django_app, api_module):
         [Path(__file__).parent / "templates_type"],
     )
 
+    api_module.renders(
+        lambda: get_gql_reg().get_form_type_specs(),
+        "types",
+        lambda form_type_spec: dict(form_type_spec=form_type_spec),
+        [Path(__file__).parent / "templates_form_type"],
+    )
+
 
 @extend(DjangoApp)
 class ExtendDjangoApp:

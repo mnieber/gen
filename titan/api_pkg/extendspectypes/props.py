@@ -2,13 +2,18 @@ from moonleap.typespec.field_spec import FieldSpec, FkFieldSpec
 from moonleap.typespec.type_spec_store import type_spec_store
 
 
-def field_spec_target_type_spec(self: FkFieldSpec):
+def fk_field_spec_target_type_spec(self: FkFieldSpec):
     if not self.target:
         return None
 
-    return type_spec_store().get(
-        self.target + ("Form" if self.field_type == "form" else "")
-    )
+    return type_spec_store().get(self.target)
+
+
+def form_field_spec_target_type_spec(self: FkFieldSpec):
+    if not self.target:
+        return None
+
+    return type_spec_store().get(self.target + "Form")
 
 
 def field_spec_graphql_type(self: FieldSpec, host):
@@ -44,7 +49,7 @@ def field_spec_graphql_type(self: FieldSpec, host):
         return "ID" + postfix
 
     if self.field_type in ("form",):
-        return f"{self.target_type_spec.form_type_name}T" + postfix
+        return f"{self.target_type_spec.type_name}T" + postfix
 
     if self.field_type in ("idList",):
         return r"[String]" + postfix
