@@ -11,7 +11,8 @@ def get_helpers(_):
         translations = []
 
         def __init__(self):
-            self._init_translations()
+            if self.django_app.use_translation:
+                self._init_translations()
 
         def fields(self, model):
             return [

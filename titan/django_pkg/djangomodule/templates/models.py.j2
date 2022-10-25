@@ -28,8 +28,8 @@ class MyModel(                                                                  
     my_field = {{ field.body(model) }}                                                          {% !! field in __.fields(model) %}
 
     def save(self, *args, **kwargs):                                                            {% if model.slug_fields %}
-        if self.my_field is None:                                                               {% for field in model.slug_fields %}
-            self.my_field = slugify(self.{{ field.slug_src }})                                  {% endfor %}
+        if self.my_field is None:                                                               {% for field in model.slug_fields %}{% min_lines count=2 %}
+            self.my_field = slugify(self.{{ field.slug_src }})                                  {% ?? field.slug_src %}{% end_min_lines %}{% endfor %}
         super().save(*args, **kwargs)                                                           {% endif %}
 
     def __str__(self):

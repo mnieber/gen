@@ -1,19 +1,13 @@
 import typing as T
 from dataclasses import dataclass
 
-from moonleap import Resource, Term, named
+from moonleap import Resource, named
 from moonleap.typespec.get_member_field_spec import get_member_field_spec
 from moonleap.utils.fp import aperture
-from moonleap.utils.join import join
 from titan.api_pkg.item.resources import Item
 from titan.api_pkg.itemlist.resources import ItemList
 from titan.api_pkg.mutation.resources import Mutation
 from titan.api_pkg.query.resources import Query
-
-
-def get_select_item_effect_term(item):
-    name_postfix = join("-by-", "-and-".join(item.type_spec.select_item_by))
-    return Term(f"select-{item.meta.term.data}{name_postfix}", "select-item-effect")
 
 
 @dataclass
@@ -22,11 +16,11 @@ class PipelineElement:
     subj: T.Optional[Resource] = None
 
 
-class TakeItemListFromState(PipelineElement):
+class TakeItemListFromStateProvider(PipelineElement):
     pass
 
 
-class TakeItemFromState(PipelineElement):
+class TakeItemFromStateProvider(PipelineElement):
     pass
 
 
@@ -47,20 +41,12 @@ class ExtractItemListFromItem(PipelineElement):
 
 
 @dataclass
-class TakeHighlightedElmFromState(PipelineElement):
+class TakeHighlightedElmFromStateProvider(PipelineElement):
     item_list: T.Any = None
 
 
-class StoreItemInState(PipelineElement):
-    pass
-
-
-class StoreItemListInState(PipelineElement):
-    pass
-
-
 def elements(self):
-    from titan.react_view_pkg.state.resources import State
+    from titan.react_view_pkg.stateprovider.resources import StateProvider
 
     if hasattr(self, "_elements"):
         return self._elements
@@ -70,8 +56,8 @@ def elements(self):
     result = []
     if self.root_query:
         resources.insert(0, self.root_query)
-    elif self.root_state:
-        resources.insert(0, self.root_state)
+    elif self.root_state_provider:
+        resources.insert(0, self.root_state_provider)
     else:
         raise Exception("No query or state")
 
@@ -99,44 +85,47 @@ def elements(self):
             else:
                 raise Exception(f"Unexpected resource sequence: {res}, {next_res}")
 
-        elif isinstance(res, State):
-            state = res
+        elif isinstance(res, StateProvider):
+            state_provider = res
             if isinstance(next_res, named(Item)):
+                found = False
                 named_item = next_res
-                pipelines = [p for p in state.pipelines if p.output == named_item.typ]
-                if pipelines:
-                    if _source_pipeline:
-                        raise Exception("Multiple source pipelines")
-                    _source_pipeline = pipelines[0]
-                    result.append(
-                        TakeItemFromState(
-                            subj=state,
-                            obj=named_item.typ,
+                for provided_named_item in state_provider.named_items:
+                    if _match_named_item(named_item, provided_named_item):
+                        found = True
+                        result.append(
+                            TakeItemFromStateProvider(
+                                subj=state_provider,
+                                obj=named_item.typ,
+                            )
                         )
-                    )
-                else:
-                    pipelines = [
-                        p
-                        for p in state.pipelines
-                        if isinstance(p.output, ItemList) and p.output.item == item
-                    ]
-                    found = False
-                    for p in pipelines:
-                        if p.get_bvr("highlight"):
+
+                if not found and state_provider.state:
+                    for c in state_provider.state.containers:
+                        highlight = c.get_bvr("highlight")
+                        if (
+                            highlight
+                            and highlight.item_name == named_item.typ.item_name
+                        ):
                             found = True
                             result.append(
-                                TakeHighlightedElmFromState(
-                                    subj=state, item_list=p.output, obj=item
+                                TakeHighlightedElmFromStateProvider(
+                                    subj=state_provider,
+                                    item_list=None,
+                                    obj=named_item.typ,
                                 )
                             )
-                    if not found:
-                        raise Exception(f"Cannot take {next_res} from state {res}")
+
+                if not found:
+                    raise Exception(
+                        f"Cannot take {next_res} from state provider {state_provider}"
+                    )
 
             elif isinstance(next_res, named(ItemList)):
                 item_list = next_res.typ
                 result.append(
                     TakeItemListFromState(
-                        subj=state,
+                        subj=state_provider.state,
                         obj=item_list,
                     )
                 )
@@ -169,6 +158,13 @@ def elements(self):
     setattr(self, "_elements", result)
     setattr(self, "_source_pipeline", _source_pipeline)
     return result
+
+
+def _match_named_item(named_item, provided_named_item):
+    return (
+        provided_named_item.name == named_item.name
+        and provided_named_item.typ.item_name == named_item.typ.item_name
+    )
 
 
 def output(self):
@@ -206,7 +202,12 @@ def result_expression(self):
     for elm_idx in range(nr_elms):
         elm = self.elements[elm_idx]
         if isinstance(
-            elm, (TakeItemListFromState, TakeItemFromState, TakeHighlightedElmFromState)
+            elm,
+            (
+                TakeItemListFromStateProvider,
+                TakeItemFromStateProvider,
+                TakeHighlightedElmFromStateProvider,
+            ),
         ):
             postfix = "?" if elm_idx < nr_elms - 1 else ""
             result = f"props.{elm.obj.ts_var}{postfix}" + result
@@ -224,7 +225,12 @@ def result_expression(self):
 def status_expression(self):
     elm = self.elements[0]
     if isinstance(
-        elm, (TakeItemListFromState, TakeItemFromState, TakeHighlightedElmFromState)
+        elm,
+        (
+            TakeItemListFromStateProvider,
+            TakeItemFromStateProvider,
+            TakeHighlightedElmFromStateProvider,
+        ),
     ):
         return f"props.{elm.obj.ts_var}RS"
     elif isinstance(elm, (TakeItemFromQuery, TakeItemListFromQuery)):
@@ -235,10 +241,10 @@ def status_expression(self):
 
 
 def root_pipeline(self):
-    if not self.root_state:
+    if not self.root_state_provider:
         return self
 
-    for p in self.root_state.pipelines:
+    for p in self.root_state_provider.pipelines:
         if p.output == self.resources[-1].typ:
             return p
 

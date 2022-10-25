@@ -8,7 +8,7 @@ from .resources import Pipeline
 rules = {
     ("x+pipeline", connects, "x+pipeline-elm"): empty_rule(),
     ("x+pipeline", connects, "api-endpoint"): empty_rule(),
-    ("x+pipeline", connects, "state"): empty_rule(),
+    ("x+pipeline", connects, "state~provider"): empty_rule(),
 }
 
 
@@ -35,6 +35,6 @@ class ExtendNamedPipeline:
     resources = P.children(connects, "x+pipeline-elm")
     root_pipeline = Prop(props.root_pipeline)
     root_query = P.child(connects, "api-endpoint")
-    root_state = P.child(connects, "state")
+    root_state_provider = P.child(connects, "state~provider")
     status_expression = Prop(props.status_expression)
     state_provider = P.parent("state~provider", has)

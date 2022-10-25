@@ -2,7 +2,6 @@ from pathlib import Path
 
 import moonleap.resource.props as P
 from moonleap import (
-    Prop,
     create,
     create_forward,
     empty_rule,

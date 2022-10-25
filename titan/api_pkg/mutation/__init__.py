@@ -14,6 +14,7 @@ rules = {
     (":gql-registry", has, "mutation"): empty_rule(),
     ("mutation", saves, "item"): empty_rule(),
     ("mutation", deletes, "item~list"): empty_rule(),
+    ("mutation", deletes, "item"): empty_rule(),
     ("mutation", provides, "x+item"): empty_rule(),
     ("mutation", provides, "x+item~list"): empty_rule(),
 }

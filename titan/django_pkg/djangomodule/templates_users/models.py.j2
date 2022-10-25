@@ -6,7 +6,7 @@ from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
                                         PermissionsMixin)
 from django.db import models
 from app.tr import tr                                                                       {% ?? _.django_app.use_translation %}
-from user_profiles.models import UserProfile                                                {% ?? _.django_app.get_module_by_name("userProfiles") %}
+from user_profiles.models import UserProfile                                                {% ?? _.django_app.get_module_by_name("userProfiles", None) %}
 
 class UserManager(BaseUserManager):
     def create_user(
@@ -27,7 +27,7 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save()
 
-        user_profile = UserProfile.objects.create(owner=user)                               {% if _.django_app.get_module_by_name("userProfiles") %}
+        user_profile = UserProfile.objects.create(owner=user)                               {% if _.django_app.get_module_by_name("userProfiles", None) %}
         user_profile.save()                                                                 {% endif %}
 
         return user

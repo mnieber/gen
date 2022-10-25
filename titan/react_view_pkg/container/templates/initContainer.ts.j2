@@ -10,7 +10,7 @@ export const initMyContainer = (state: MyState, props: PropsT) => {
   setCallbacks(ctr.deletion, {                                                                        {% if _.container.get_bvr("deletion") %}
     delete: {
       deleteItems(this: DeletionCbs['delete']) {
-        return props.{self.delete_function_name}(this.itemIds);
+        return props.self.deleteFooItems(this.itemIds);
       },
     },
   } as DeletionCbs);                                                                                  {% endif %}

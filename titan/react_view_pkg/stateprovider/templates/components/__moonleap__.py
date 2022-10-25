@@ -1,7 +1,7 @@
 from titan.api_pkg.pipeline.props import (
-    TakeHighlightedElmFromState,
-    TakeItemFromState,
-    TakeItemListFromState,
+    TakeHighlightedElmFromStateProvider,
+    TakeItemFromStateProvider,
+    TakeItemListFromStateProvider,
 )
 
 
@@ -25,13 +25,17 @@ def get_helpers(_):
                         else self.mutations
                     )
                     enpoints.append(pipeline.root_query)
-                elif pipeline.root_state:
+                elif pipeline.root_state_provider:
                     pipeline_elm = pipeline.elements[1]
                     if isinstance(
-                        pipeline_elm, (TakeItemFromState, TakeHighlightedElmFromState)
+                        pipeline_elm,
+                        (
+                            TakeItemFromStateProvider,
+                            TakeHighlightedElmFromStateProvider,
+                        ),
                     ):
                         self.input_items.append(pipeline_elm.obj)
-                    elif isinstance(pipeline_elm, TakeItemListFromState):
+                    elif isinstance(pipeline_elm, TakeItemListFromStateProvider):
                         self.input_item_lists.append(pipeline_elm.obj)
 
             if self.state:

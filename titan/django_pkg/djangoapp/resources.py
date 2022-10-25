@@ -18,7 +18,7 @@ class DjangoApp(Tool):
 
     @property
     def use_translation(self):
-        return True
+        return False
 
     def add_translation(self, id, value, translations):
         if id in self.translation_ids:

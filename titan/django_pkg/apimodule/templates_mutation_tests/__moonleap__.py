@@ -43,6 +43,9 @@ def field_spec_default_value(field_spec):
     if t == "idList":
         return r"[]"
 
+    if t == "string[]":
+        return r'["foo", "bar"]'
+
     raise Exception(f"Unknown graphene field type: {t} in spec for {field_spec.name}")
 
 
