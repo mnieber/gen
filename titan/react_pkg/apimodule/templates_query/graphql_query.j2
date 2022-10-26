@@ -16,12 +16,14 @@ export type ArgsT = {
 
 export const callEndpoint = (args: ArgsT) => {
   return doQuery(
-    `query callEndpoint(
+    `query callEndpoint(                                                                {% if __.input_field_specs %}
       $inputFieldName: inputFieldGqlType                                                {% !! input_field_spec in __.input_field_specs %}
     ) {
       callEndpoint(
-        inputFieldName: $inputFieldName                                               {% !! input_field_spec in __.input_field_specs|sort(attribute="name") %}
+        inputFieldName: $inputFieldName                                                 {% !! input_field_spec in __.input_field_specs|sort(attribute="name") %}
       ) {
+    `query callEndpoint {                                                               {% else %}
+      callEndpoint {                                                                    {% endif %}
 {{ __.graphql_body }}
       }
     }`,

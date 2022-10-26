@@ -19,12 +19,14 @@ export type ArgsT = {
 
 export const callEndpoint = (args: ArgsT) => {
   return doQuery(
-    `mutation callEndpoint(
+    `mutation callEndpoint(                                                             {% if __.input_field_specs %}
       $fieldName: fieldGqlType                                                          {% !! field_spec in __.input_field_specs %}
     ) {
       callEndpoint(
         fieldName: $fieldName                                                           {% !! field_spec in __.input_field_specs|sort(attribute="name") %}
       ) {
+    `mutation callEndpoint {                                                            {% else %}
+      callEndpoint {                                                                    {% endif %}
 {{ __.graphql_body }}
       }
     }`,
