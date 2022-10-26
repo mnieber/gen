@@ -38,10 +38,10 @@ export const FooBarListViewItem: React.FC<PropsT> = observer(
         onMouseDown={props.onMouseDown}
         onMouseUp={props.onMouseUp}
       >
-        <div>                                                                                       {% for field_spec in __.fields %}
+        <div>                                                                                       {% for field_spec in __.fields %}{% if field_spec.display %}
           fieldSpecName: {props.fooBar.fieldSpecName}                                               {% ?? field_spec.field_type not in ("boolean",) %}
           fieldSpecName: {props.fooBar.fieldSpecName ? 'Yes' : 'No'}                                {% ?? field_spec.field_type in ("boolean",) %}
-        </div>                                                                                      {% endfor %}
+        </div>                                                                                      {% endif %}{% endfor %}
         <button                                                                                     {% if __.deletion_bvr %}
           onClick={() => {
             props.onDelete();
