@@ -16,7 +16,7 @@ import { Filtering, FilteringCbs } from 'skandha-facets/Filtering';             
 import { Deletion, DeletionCbs } from 'skandha-facets/Deletion';                                        {% ?? __.has_bvr("deletion") %}
 
 export type PropsT = {
-  deleteFoobars: (ids: string[]) => Promise;                                                            {% for container in __.containers %}{% ?? container.get_bvr("deletion") %}{% endfor %}
+  deleteMyItems: (ids: string[]) => Promise;                                                            {% for container in __.containers %}{% ?? container.get_bvr("deletion") %}{% endfor %}
 };
 
 export class MyState {
