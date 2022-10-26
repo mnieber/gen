@@ -16,7 +16,13 @@ class Data:
 
     @property
     def key(self):
-        suffix = "Set" if self.field_type == "relatedSet" else ""
+        suffix = (
+            "Set"
+            if self.field_type == "relatedSet"
+            else "Form"
+            if self.field_type == "form"
+            else ""
+        )
         return (
             f"{self.var} as {l0(self.var_type)}{suffix}"
             if self.var
@@ -94,5 +100,8 @@ def _process_data(data, value, parts):
     if data.var_type.endswith("Set"):
         data.var_type = data.var_type[:-3]
         data.field_type = "relatedSet"
+    elif data.var_type.endswith("Form"):
+        data.var_type = data.var_type[:-4]
+        data.field_type = "form"
     else:
-        data.field_type = "form" if "form" in data.parts else "fk"
+        data.field_type = "fk"
