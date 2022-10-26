@@ -2,6 +2,7 @@ from pathlib import Path
 
 from moonleap import create, kebab_to_camel, rule, u0
 from moonleap.verbs import has
+from titan.react_pkg.packages.use_react_packages import use_react_packages
 
 from .resources import Picker
 
@@ -19,4 +20,4 @@ def create_picker(term):
 
 @rule("module", has, "picker")
 def create_utils_module(module, picker):
-    module.react_app.get_module("utils").use_packages(["ValuePicker"])
+    use_react_packages(module.react_app.get_module("utils"), ["ValuePicker"])

@@ -4,7 +4,7 @@ import moonleap.resource.props as P
 from moonleap import MemFun, Priorities, create, create_forward, extend, rule
 from moonleap.verbs import has, runs
 from titan.project_pkg.service import Service
-from titan.react_pkg.packages.use_packages import use_packages
+from titan.react_pkg.packages.use_react_packages import use_react_packages
 
 from .resources import ReactApp
 
@@ -32,7 +32,7 @@ def create_react_created(react_app):
 def use_webvitals(react_app):
     if react_app.service.get_tweak_or(True, ["react_app", "reportWebVitals"]):
         react_app.use_webvitals = True
-        react_app.use_packages(["reportWebVitals"])
+        use_react_packages(react_app, ["reportWebVitals"])
         return create_forward(":node-package", has, "web-vitals:node-pkg")
 
 
@@ -48,5 +48,4 @@ class ExtendService:
 
 @extend(ReactApp)
 class ExtendReactApp:
-    use_packages = MemFun(use_packages)
     frames_module = P.child(has, "frames:module")

@@ -13,6 +13,7 @@ from moonleap import (
     rule,
 )
 from moonleap.verbs import has
+from titan.react_pkg.packages.use_react_packages import use_react_packages
 from titan.react_view_pkg.state.resources import State
 
 from . import props
@@ -33,8 +34,9 @@ def create_container(term):
 
 @rule("container", has, "selection", priority=Priorities.LOW.value)
 def container_has_named_selection(container, selection):
-    container.state.state_provider.module.react_app.get_module("utils").use_packages(
-        ["mergeClickHandlers"]
+    use_react_packages(
+        container.state.state_provider.module.react_app.get_module("utils"),
+        ["mergeClickHandlers"],
     )
     return create_forward(container, has, f"{selection.meta.term.data}:highlight")
 

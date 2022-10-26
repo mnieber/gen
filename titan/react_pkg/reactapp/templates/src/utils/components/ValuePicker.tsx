@@ -2,18 +2,6 @@ import { observer } from 'mobx-react-lite';
 import { isNil } from 'ramda';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import { ObjT } from 'src/utils/types';
-
-export function controlRemoveBorder(state: ObjT) {
-  return {
-    border: state.isFocused ? 0 : 0,
-    // This line disable the blue border
-    boxShadow: state.isFocused ? 0 : 0,
-    '&:hover': {
-      border: state.isFocused ? 0 : 0,
-    },
-  };
-}
 
 export interface PickerValueT {
   value: any;

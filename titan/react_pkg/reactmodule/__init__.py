@@ -3,7 +3,6 @@ from pathlib import Path
 import moonleap.resource.props as P
 from moonleap import MemFun, Prop, create, empty_rule, extend, kebab_to_camel, rule
 from moonleap.verbs import has
-from titan.react_pkg.packages.use_packages import use_packages
 from titan.react_pkg.reactapp import ReactApp
 
 from . import props
@@ -38,7 +37,6 @@ def react_app_has_module(react_app, module):
 @extend(ReactModule)
 class ExtendModule:
     react_app = P.parent("react-app", has, required=True)
-    use_packages = MemFun(use_packages)
     module_path = Prop(props.module_path)
 
 
