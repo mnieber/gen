@@ -10,7 +10,8 @@ from titan.project_pkg.service import Tool
 class DjangoApp(Tool):
     translation_ids: T.List[str] = field(default_factory=list)
 
-    def secret_key(self):
+    @property
+    def secret_key_dev(self):
         return get_or_create_secret_key(get_session(), "django_dev")
 
     def __post_init__(self):

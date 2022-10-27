@@ -73,22 +73,9 @@ def _get_output_fn(output_path, template_fn, meta_data, context):
 
 
 def _load_moonleap_data(dir_fn, context):
-    meta_data_by_fn = dict()
-    meta_filename = dir_fn / "__moonleap__.j2"
-    if meta_filename.exists():
-        content = get_template(meta_filename).render(_=Namespace(**context))
-        meta_data_by_fn = ruamel_yaml.load(content)
-        for fn, meta_data in meta_data_by_fn.items():
-            if not isinstance(meta_data.get("include", False), bool):
-                raise Exception(
-                    f"Invalid include value: "
-                    + f"{meta_data.get('include')} for filename {fn} in {meta_filename}"
-                )
-
-    skip = not meta_data_by_fn.get(".", {}).get("include", True)
     helpers = None
 
-    if not skip and (dir_fn / "__moonleap__.py").exists():
+    if (dir_fn / "__moonleap__.py").exists():
         sys.path.insert(0, str(dir_fn))
         m = importlib.import_module("__moonleap__")
         # TODO: if the new __moonleap__ file does not define get_helpers then
@@ -100,4 +87,17 @@ def _load_moonleap_data(dir_fn, context):
         if hasattr(m, "get_helpers"):
             helpers = m.get_helpers(_=Namespace(**context))
 
+    meta_data_by_fn = dict()
+    meta_filename = dir_fn / "__moonleap__.j2"
+    if meta_filename.exists():
+        content = get_template(meta_filename).render(_=Namespace(**context), __=helpers)
+        meta_data_by_fn = ruamel_yaml.load(content)
+        for fn, meta_data in meta_data_by_fn.items():
+            if not isinstance(meta_data.get("include", False), bool):
+                raise Exception(
+                    f"Invalid include value: "
+                    + f"{meta_data.get('include')} for filename {fn} in {meta_filename}"
+                )
+
+    skip = not meta_data_by_fn.get(".", {}).get("include", True)
     return helpers, meta_data_by_fn, skip

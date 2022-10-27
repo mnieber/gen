@@ -1,3 +1,9 @@
+init-dev:
+	pip install compile-env==0.4.1
+
+compile-env:
+	cd ${ROOT_DIR}/env/dev && compile-env env-spec.yaml
+
 create-opt-paths:
 {% for service in _.project.services %}
 	sudo mkdir -p /opt/{{ _.project.name }}/{{ service.name }}/fish_history                   {% ?? service.fish %}

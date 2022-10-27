@@ -1,0 +1,13 @@
+settings:
+  is_strict: True
+
+global_dependencies:                                                            {% min_lines count=2 %}
+  - django.env                                                                  {% ?? __.django_service %}
+  - postgres.env                                                                {% ?? __.postgres_service %}
+  - react.env                                                                   {% ?? __.react_service %}
+                                                                                {% end_min_lines %}
+
+outputs:
+  ../../{{ service.name }}/.env/dev.injected.env:                               {% for service in _.project.services|sort(attribute="name") %}
+    targets:
+      - ../../{{ service.name }}/.env/dev.injected.env.in                       {% endfor %}

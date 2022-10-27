@@ -1,6 +1,7 @@
 from . import (
     dockercompose,
     dockerfile,
+    env,
     make,
     pkg,
     project,
@@ -12,6 +13,7 @@ from . import (
 modules = [
     dockercompose,
     dockerfile,
+    env,
     make,
     pkg,
     project,
