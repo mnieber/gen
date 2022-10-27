@@ -35,7 +35,9 @@ def docker_compose_runs_service(docker_compose, service):
 
 @extend(DockerCompose)
 class ExtendDockerCompose:
-    services = P.children(runs, "service")
+    services = P.children(
+        runs, "service", lambda services: sorted(services, key=lambda x: x.name)
+    )
     project = P.parent("project", has)
 
 

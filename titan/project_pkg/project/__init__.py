@@ -23,5 +23,7 @@ def created_project(project):
 
 @extend(Project)
 class ExtendProject:
-    services = P.children(has, "service")
+    services = P.children(
+        has, "service", lambda services: sorted(services, key=lambda x: x.name)
+    )
     get_service_by_name = MemFun(props.get_service_by_name)

@@ -9,7 +9,7 @@ services:
     depends_on:                                                                 {% min_lines count=2 %}
       - {{ other_service.name }}                                                {% !! other_service in service.depends_on %}{% end_min_lines %}
     env_file:                                                                   {% min_lines count=2 %}
-      - {{ env_file }}                                                          {% !! env_file in service.env_files_dev %}{% end_min_lines %}
+      - ./{{ service.name }}/.env/dev.injected.env                              {% end_min_lines %}
     environment:                                                                {% min_lines count=2 %}
       - DJANGO_SETTINGS_MODULE=app.settings.dev                                 {% ?? service.django_app %}
       - CHOKIDAR_USEPOLLING=true                                                {% ?? service.react_app %}{% end_min_lines %}

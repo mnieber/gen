@@ -102,6 +102,8 @@ class ExtendItem:
 
 @extend(DjangoApp)
 class ExtendDjangoApp:
-    modules = P.children(has, "module")
+    modules = P.children(
+        has, "module", lambda modules: sorted(modules, key=lambda x: x.name)
+    )
     accounts_module = P.child(has, "accounts:module")
     get_module_by_name = MemFun(props.get_module_by_name)

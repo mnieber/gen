@@ -42,5 +42,7 @@ class ExtendModule:
 
 @extend(ReactApp)
 class ExtendReactApp:
-    modules = P.children(has, "module")
+    modules = P.children(
+        has, "module", lambda modules: sorted(modules, key=lambda x: x.name)
+    )
     get_module = MemFun(props.get_module)

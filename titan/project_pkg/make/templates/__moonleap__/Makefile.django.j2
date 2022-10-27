@@ -8,6 +8,10 @@ collect-static:
 create-superuser:
 	python manage.py createsuperuser --noinput || true
 
+make-migrations-users:																{% if _.service.django_app.get_module_by_name("users") %}
+	python manage.py makemigrations users
+
+																					{% endif %}
 migrate:
 	python manage.py migrate
 

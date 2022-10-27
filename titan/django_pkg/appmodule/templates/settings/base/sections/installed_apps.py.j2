@@ -21,7 +21,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "django_module_name.apps.DjangoModuleNameConfig",                   {% !! django_module in _.django_app.modules|sort(attribute="name") %}
+    "django_module_name.apps.DjangoModuleNameConfig",                   {% !! django_module in _.django_app.modules %}
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

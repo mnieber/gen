@@ -8,6 +8,6 @@ global_dependencies:                                                            
                                                                                 {% end_min_lines %}
 
 outputs:
-  ../../{{ service.name }}/.env/dev.injected.env:                               {% for service in _.project.services|sort(attribute="name") %}
+  ../../{{ service.name }}/.env/dev.injected.env:                               {% for service in _.project.services %}
     targets:
       - ../../{{ service.name }}/.env/dev.injected.env.in                       {% endfor %}

@@ -8,8 +8,6 @@ from moonleap import RenderMixin, Resource, TemplateDirMixin, get_session
 class Service(RenderMixin, Resource):
     name: str
     install_dir: str = "/app"
-    env_files: T.List[str] = field(default_factory=lambda: [])
-    env_files_dev: T.List[str] = field(default_factory=lambda: [])
 
     def get_tweak_or(self, default_value, rel_path):
         return get_session().get_tweak_or(
