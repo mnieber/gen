@@ -1,4 +1,5 @@
 from titan.api_pkg.pipeline.props import (
+    ExtractItemListFromItem,
     TakeHighlightedElmFromStateProvider,
     TakeItemFromStateProvider,
     TakeItemListFromStateProvider,
@@ -32,11 +33,12 @@ def get_helpers(_):
                         (
                             TakeItemFromStateProvider,
                             TakeHighlightedElmFromStateProvider,
+                            ExtractItemListFromItem,
                         ),
                     ):
-                        self.input_items.append(pipeline_elm.obj)
+                        self.input_items.append(pipeline_elm.subj)
                     elif isinstance(pipeline_elm, TakeItemListFromStateProvider):
-                        self.input_item_lists.append(pipeline_elm.obj)
+                        self.input_item_lists.append(pipeline_elm.subj)
 
             if self.state:
                 for container in self.state.containers:

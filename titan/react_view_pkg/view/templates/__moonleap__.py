@@ -58,8 +58,10 @@ def _panel(divClassName, panel):
 def get_helpers(_):
     class Helpers:
         view = _.component
-        wraps_children = view.wraps_children
         panels = _panels(view)
+        wraps_children = view.wraps_children or [
+            x for x in panels if x.typ.wraps_children and x.typ.collapses
+        ]
         has_col = (
             view.top_panel
             or view.bottom_panel
@@ -128,7 +130,7 @@ def get_helpers(_):
                     result.append(f"  {named_component.typ.react_tag}")
 
             if self.view.wraps_children and not [
-                x for x in self.view.child_components if x.typ.wraps_children
+                x for x in self.panels if x.typ.wraps_children
             ]:
                 result.append(r"  {props.children}")
 

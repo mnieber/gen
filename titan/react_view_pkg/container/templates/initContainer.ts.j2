@@ -1,8 +1,16 @@
 {% magic_with _.container.item_name as myItem %}
 {% magic_with _.container.name as myContainer %}
 {% magic_with _.container.state.name as MyState %}
-import { PropsT, MyState } from 'src/search/MyState';
+import { PropsT, MyState } from 'src/{{ _.module.name }}/MyState';
 import * as FacetPolicies from 'skandha-facets/policies';
+import { SelectionCbs, handleSelectItem } from 'skandha-facets/Selection';                            {% ?? _.container.get_bvr("selection") %}
+import { HighlightCbs } from 'skandha-facets/Highlight';                                              {% ?? _.container.get_bvr("highlight") %}
+import { DeletionCbs } from 'skandha-facets/Deletion';                                                {% ?? _.container.get_bvr("deletion") %}
+import { setCallbacks } from 'aspiration';
+import {
+  addCleanUpFunctionToCtr,
+  cleanUpCtr,
+} from 'react-default-props-context';
 
 export const initMyContainer = (state: MyState, props: PropsT) => {
   const ctr = state.myContainer;
@@ -11,17 +19,17 @@ export const initMyContainer = (state: MyState, props: PropsT) => {
   setCallbacks(ctr.deletion, {                                                                        {% if _.container.get_bvr("deletion") %}
     delete: {
       deleteItems(this: DeletionCbs['delete']) {
-        return props.self.deleteMyItems(this.itemIds);
+        return props.deleteMyItems(this.itemIds);
       },
     },
   } as DeletionCbs);                                                                                  {% endif %}
-  setCallbacks(ctr.highlight, {
+  setCallbacks(ctr.highlight, {                                                                       {% if _.container.get_bvr("selection") %}
     highlightItem: {                                                                                  {% if _.container.get_bvr("addition") %}
       enter(this: HighlightCbs['highlightItem']) {
         FacetPolicies.cancelNewItemOnHighlightChange(ctr.highlight, this.id);    # noqa: E501
       },
     },                                                                                                {% endif %}
-  } as HighlightCbs);
+  } as HighlightCbs);                                                                                 {% endif %}
   setCallbacks(ctr.selection, {                                                                       {% if _.container.get_bvr("selection") %}
     selectItem: {
       selectItem(this: SelectionCbs['selectItem']) {

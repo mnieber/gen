@@ -5,13 +5,14 @@
 import { cn } from 'src/utils/classnames';
 import * as R from 'ramda';
 import { observer } from 'mobx-react-lite';
-import { withDefaultProps } from 'src/app/defaultProps';
+import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { FooItemListViewItem } from 'src/myReactModule/components';
 import { FooItemT } from 'src/api/types/FooItemT';
 import { getResourceView } from 'src/utils/components';
+import { isLoaded } from 'src/api/loadingState';
 
 import { Deletion } from 'skandha-facets/Deletion';                                             {% ?? __.deletion_bvr %}
-import { Highlight } from 'skandha-facets/Highlight';                                           {% ?? __.highlight_bvr %}
+import { Highlight } from 'skandha-facets/Highlight';                                           {% ?? __.selection_bvr %}
 import { Selection } from 'skandha-facets/Selection';                                           {% if __.selection_bvr %}
 import { ClickToSelectItems } from 'skandha-facets/handlers';                                   {% endif %}
 
@@ -23,17 +24,16 @@ type PropsT = {
 
 const DefaultProps = {
   ...dps.fooItems,
-  ...dps.fooItemsRS,
   ...dps.fooItemsDeletion,                                                                      {% ?? __.deletion_bvr %}
-  ...dps.fooItemsHighlight,                                                                     {% ?? __.highlight_bvr %}
+  ...dps.fooItemsHighlight,                                                                     {% ?? __.selection_bvr %}
   ...dps.fooItemsSelection,                                                                     {% ?? __.selection_bvr %}
 };
 
 export const FooListView = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
-    const resourceView =
-      props.fooItemsRS === 'loading' ? <div /> : undefined;
-    if (resourceView) return resourceView;
+    if (!isLoaded(props.fooItems)) {
+      return null;
+    }
 
     const handleClick = new ClickToSelectItems({                                                {% if __.selection_bvr %}
       selection: props.fooItemsSelection

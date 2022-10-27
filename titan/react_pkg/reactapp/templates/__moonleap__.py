@@ -63,6 +63,12 @@ def get_helpers(_):
             append_uniq(provided_data.bvrs, bvr)
             append_uniq(self.bvr_names, bvr.name)
 
+            # HACK: this shouldn't be necessary because the state provider should
+            # already declare that it's providing the item
+            if bvr.name == "highlight":
+                provided_data.item = Item(item_name=bvr.item_name)
+                append_uniq(self.item_names, bvr.item_name)
+
         @property
         def provided_data(self):
             return sorted(self._provided_data_by_item_name.items(), key=lambda x: x[0])

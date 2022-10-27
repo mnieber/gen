@@ -11,11 +11,13 @@ import {
 import { cn } from 'src/utils/classnames';
 import './Field.scss';
 
-type PropsT = FormFieldContextPropsT & {
-  buttons?: any[];
-  className?: any;
-  classNameWithLabel?: any;
-};
+type PropsT = React.PropsWithChildren<
+  FormFieldContextPropsT & {
+    buttons?: any[];
+    className?: any;
+    classNameWithLabel?: any;
+  }
+>;
 
 export const Field: React.FC<PropsT> = observer((props: PropsT) => {
   const formState = useFormStateContext();

@@ -4,6 +4,7 @@
 {% magic_with container.item_name as myItem %}
 import { setCallbacks } from 'aspiration';
 import { makeObservable } from 'mobx';
+import { mapDataToProps } from 'skandha';
 import { addCleanUpFunctionToCtr, cleanUpCtr } from 'react-default-props-context';
 import * as Skandha from 'skandha';
 import { ClassMemberT as CMT, facet, getm } from 'skandha';
@@ -14,15 +15,16 @@ import { Selection, SelectionCbs, handleSelectItem } from 'skandha-facets/Select
 import { Highlight, HighlightCbs } from 'skandha-facets/Highlight';                                     {% ?? __.has_bvr("highlight") %}
 import { Filtering, FilteringCbs } from 'skandha-facets/Filtering';                                     {% ?? __.has_bvr("filtering") %}
 import { Deletion, DeletionCbs } from 'skandha-facets/Deletion';                                        {% ?? __.has_bvr("deletion") %}
+import { initMyContainer, MyItemsData } from './myItems';                                               {% !! container in __.containers %}
 
 export type PropsT = {
-  deleteMyItems: (ids: string[]) => Promise;                                                            {% for container in __.containers %}{% ?? container.get_bvr("deletion") %}{% endfor %}
+  deleteMyItems: (ids: string[]) => Promise<void>;                                                      {% for container in __.containers %}{% ?? container.get_bvr("deletion") %}{% endfor %}
 };
 
 export class MyState {
   myContainer = {                                                                                       {% for container in __.containers %}
     data: new MyContainerData(),
-    myBvr: new MyBvr(),                                                                                 {% for bvr in container.bvrs %}{% endfor %}
+    myBvr: new MyBvr(),                                                                                 {% !! bvr in container.bvrs %}
   }                                                                                                     {% endfor %}
 
   _myContainerMapData(props: PropsT) {                                                                  {% for container in __.containers %}

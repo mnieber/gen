@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   createFormFieldProps,
   FormState,
@@ -12,10 +13,11 @@ import { handleEnterAsTabToNext } from 'src/forms/utils';
 type FieldTypeT = 'checkbox' | 'text' | 'password';
 
 export type FieldPropsT = {
-  fieldType: FieldTypeT;
-  placeholder?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   controlled?: boolean;
+  disabled?: boolean;
+  fieldType: FieldTypeT;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
 };
 
 export const useFieldProps = (props: FieldPropsT) => {
@@ -29,6 +31,7 @@ export const useFieldProps = (props: FieldPropsT) => {
       fieldType: props.fieldType,
       onChange: props.onChange,
       controlled: props.controlled,
+      disabled: props.disabled,
     }),
     onKeyDown: handleKeyDown(fieldContext, formState),
     placeholder:

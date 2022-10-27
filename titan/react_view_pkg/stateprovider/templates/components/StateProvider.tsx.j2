@@ -13,20 +13,15 @@ import { flags } from 'src/app/flags';
 import { MyState } from 'src/{{ __.state.state_provider.module.module_path }}/MyState';                                     {% ?? __.state %}
 import { useMyQuery } from 'src/api/queries';                                                                               {% for query in __.queries %}{% endfor %}
 import { useMyMutation } from 'src/api/mutations';                                                                          {% for mutation in __.mutations %}{% endfor %}
-
-import {
-  NestedDefaultPropsContext,
-  withDefaultProps
-} from 'react-default-props-context';
+import {NestedDefaultPropsContext} from 'react-default-props-context';
+import {defaultProps as dps, withDefaultProps} from 'src/app/defaultProps';
 import { useStore } from 'src/app/components';
 
 type PropsT = React.PropsWithChildren<{}>;
 
 const DefaultProps = {
-    ...dps.{{ item.ts_var }},                                                                                               {% for item in __.input_items %}
-    ...dps.{{ item.ts_var }}RS,                                                                                             {% endfor %}
-    ...dps.{{ item_list.ts_var }},                                                                                          {% for item_list in __.input_item_lists %}
-    ...dps.{{ item_list.ts_var }}RS,                                                                                        {% endfor %}
+    ...dps.{{ item.ts_var }},                                                                                               {% !! item in __.input_items %}
+    ...dps.{{ item_list.ts_var }},                                                                                          {% !! item_list in __.input_item_lists %}
 };
 
 export const {{ _.component.name }} = observer(

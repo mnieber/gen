@@ -11,7 +11,7 @@ import './FooBarListViewItem.scss';
 export type PropsT = {
   className?: any;
   isSelected: boolean;                                                                            {% ?? __.selection_bvr %}
-  isHighlighted: boolean;                                                                         {% ?? __.highlight_bvr %}
+  isHighlighted: boolean;                                                                         {% ?? __.selection_bvr %}
   onClick?: any;
   onDelete: Function;                                                                             {% ?? __.deletion_bvr %}
   onMouseDown?: any;
@@ -28,10 +28,10 @@ export const FooBarListViewItem: React.FC<PropsT> = observer(
       <div
         className={cn(
           'FooBarListViewItem', 'flex flex-col flex-1 mb-2',
-          {                                                                                         {% if __.selection_bvr or __.highlight_bvr %}
+          {                                                                                         {% min_lines count=3 %}
             'FooBarListViewItem--selected': props.isSelected,                                       {% ?? __.selection_bvr %}
-            'FooBarListViewItem--highlighted': props.isHighlighted,                                 {% ?? __.highlight_bvr %}
-          },                                                                                        {% endif %}
+            'FooBarListViewItem--highlighted': props.isHighlighted,                                 {% ?? __.selection_bvr %}
+          },                                                                                        {% end_min_lines %}
           props.className
         )}
         onClick={props.onClick}

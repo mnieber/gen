@@ -1,10 +1,12 @@
 {% magic_with data.item_list.item_name as listItem %}
 {% magic_with data.item.item_name as singleItem %}
 {% magic_with bvr.item_name as bvrItem %}
-import { stub } from 'src/utils/stub';
+import { stub as hackStub } from 'aspiration';
 import { {{ bvr_name|u0 }} } from 'skandha-facets/{{ bvr_name|u0 }}';           {% !! bvr_name in __.bvr_names %}
 import { {{ item_name|u0 }}T } from 'src/api/types/{{ item_name|u0 }}T';        {% !! item_name in __.item_names %}
 export { withDefaultProps } from 'react-default-props-context';
+
+const stub = hackStub() as any;
 
 const dps{{ item_name|u0|plural }} = {                                          {% for item_name, data in __.provided_data %}
     listItems: {                                                                {% if data.item_list %}

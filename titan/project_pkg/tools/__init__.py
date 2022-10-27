@@ -38,17 +38,17 @@ def create_vandelay(term):
 
 @rule("cypress")
 def created_cypress(cypress):
-    return create_forward("node-package", has, "cypress:node-pkg")
+    return create_forward(":node-package", has, "cypress:node-pkg")
 
 
 @rule("uikit")
 def created_uikit(uikit):
-    return create_forward("node-package", has, "uikit:node-pkg")
+    return create_forward(":node-package", has, "uikit:node-pkg")
 
 
 @rule("tailwind-css")
 def created_tailwind_css(tailwind_css):
-    return create_forward("node-package", has, "tailwind-css:node-pkg")
+    return create_forward(":node-package", has, "tailwind-css:node-pkg")
 
 
 @rule("setup.cfg")
