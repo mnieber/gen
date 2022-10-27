@@ -2,41 +2,41 @@
 {% magic_with field.target as MyThroughModel %}
 {% magic_with field.name as my_field %}
 
-import uuid                                                                                     {% clean_up_py_imports %}
+import uuid                                                                                             {% clean_up_py_imports %}
 from django.db import models
 from django.utils.text import slugify
 from martor.models import MartorField
-from {{ item.django_module.module_path }}.models import {{ item.type_name }}                    {% for item in __.items_to_import %}{% endfor %}
+from {{ item.django_module.module_path }}.models import {{ item.type_name }}                            {% for item in __.items_to_import %}{% endfor %}
 from app.utils.validate_file import validate_image_file
 from app.models import Entity
-from app.tr import tr                                                                           {% if _.django_app.use_translation %}
-from app.utils.case import u0                                                                   {% endif %}
-                                                                                                {% end_clean_up_py_imports %}
+from app.tr import tr                                                                                   {% if _.django_app.use_translation %}
+from app.utils.case import u0                                                                           {% endif %}
+                                                                                                        {% end_clean_up_py_imports %}
 
-class MyModel(                                                                                  {% for model in __.django_models %}
-    Entity                                                                                      {% ?? model.type_spec.is_entity %}
-    models.Model                                                                                {% ?? not model.type_spec.is_entity %}
+class MyModel(                                                                                          {% for model in __.django_models %}
+    Entity                                                                                              {% ?? model.type_spec.is_entity %}
+    models.Model                                                                                        {% ?? not model.type_spec.is_entity %}
 ):
-    class Meta:                                                                                 {% min_lines count=2 %}
-        indexes = [                                                                             {% if model.indexed_fields %}
-            models.Index(fields=["my_field"])                                                   {% for field in model.indexed_fields %}{% endfor %}
-        ]                                                                                       {% endif %}
-        ordering = ["sort_pos"]                                                                 {% ?? model.type_spec.is_sorted %}
-        verbose_name = tr("{{ model.kebab_name }}")                                             {% if _.django_app.use_translation %}
-        verbose_name_plural = tr("{{ model.kebab_name|plural }}")                               {% endif %}{% end_min_lines %}
+    class Meta:                                                                                         {% min_lines count=2 %}
+        indexes = [                                                                                     {% if model.indexed_fields %}
+            models.Index(fields=["my_field"])                                                           {% for field in model.indexed_fields %}{% endfor %}
+        ]                                                                                               {% endif %}
+        ordering = ["sort_pos"]                                                                         {% ?? model.type_spec.is_sorted %}
+        verbose_name = tr("{{ model.kebab_name }}")                                                     {% if _.django_app.use_translation %}
+        verbose_name_plural = tr("{{ model.kebab_name|plural }}")                                       {% endif %}{% end_min_lines %}
 
-    my_field = {{ field.body(model) }}                                                          {% !! field in __.fields(model) %}
+    my_field = {{ field.body(model) }}                                                                  {% !! field in __.fields(model) %}
 
-    def save(self, *args, **kwargs):                                                            {% if model.slug_fields %}
-        if self.my_field is None:                                                               {% for field in model.slug_fields %}{% min_lines count=2 %}
-            self.my_field = slugify(self.{{ field.slug_src }})                                  {% ?? field.slug_src %}{% end_min_lines %}{% endfor %}
-        super().save(*args, **kwargs)                                                           {% endif %}
+    def save(self, *args, **kwargs):                                                                    {% if model.slug_fields %}
+        if self.my_field is None:                                                                       {% for field in model.slug_fields %}{% min_lines count=2 %}
+            self.my_field = slugify(self.{{ field.slug_src }})                                          {% ?? field.slug_src %}{% end_min_lines %}{% endfor %}
+        super().save(*args, **kwargs)                                                                   {% endif %}
 
     def __str__(self):
-        return f"{u0(tr('{{ model.kebab_name }}'))}: {self.{{ model.display_field_name }}}"     {% ?? _.django_app.use_translation %}
-        return "MyModel: " + self.{{ model.display_field_name }}                                {% ?? not _.django_app.use_translation %}
+        return f"{u0(tr('{{ model.kebab_name }}'))}: {{{ __.display_field_expr(model) }}}"              {% ?? _.django_app.use_translation %}
+        return "MyModel: " + {{ __.display_field_expr(model) }}                                         {% ?? not _.django_app.use_translation %}
 
-                                                                                                {% endfor %}
+                                                                                                        {% endfor %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

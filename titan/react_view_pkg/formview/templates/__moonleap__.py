@@ -40,4 +40,7 @@ def get_helpers(_):
         def label(self, name):
             return u0(name.replace(".", " "))
 
+        def display_field_name(self, type_spec):
+            return type_spec.display_field.name if type_spec.display_field else "id"
+
     return Helpers()

@@ -10,7 +10,7 @@ class TypeSpec:
     type_name: str
     field_specs: T.List[FieldSpec] = field(repr=False)
     admin_search_by: T.List[str] = field(default_factory=list, repr=False)
-    display_item_by: T.Optional[str] = field(default=None, repr=False)
+    display_field: T.Optional[FieldSpec] = field(default=None, repr=False)
     module_name: T.Optional[str] = None
     select_item_by: T.List[str] = field(default_factory=list, repr=False)
     is_entity: T.Optional[bool] = None

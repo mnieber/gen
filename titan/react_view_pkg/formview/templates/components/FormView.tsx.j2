@@ -85,7 +85,7 @@ export const YellowTulipFormView = observer(
               isCreatable={false}
               isMulti={false}
               pickableValues={props.fieldSpecTargets}
-              labelFromValue={(x: any) => x.{{ field_spec.target_type_spec.display_item_by }} }
+              labelFromValue={(x: any) => x.{{ __.display_field_name(field_spec.target_type_spec) }}}
             />                                                                                          {% endif %}
             <ControlledCheckbox />                                                                      {% ?? field_spec.field_type in ("boolean",) %}
           </Field>                                                                                      {% endfor %}

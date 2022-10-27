@@ -29,7 +29,7 @@ def add_field_spec(type_spec, field_spec):
     type_spec.add_field_spec(field_spec)
 
     if field_spec.display:
-        type_spec.display_item_by = field_spec.key
+        type_spec.display_field = field_spec
 
     if field_spec.admin_search:
         type_spec.admin_search_by.append(field_spec.key)
@@ -59,5 +59,5 @@ def _remove_field_spec_by_key(type_spec, key):
     if type_spec.select_item_by:
         type_spec.select_item_by = [x for x in type_spec.select_item_by if x != key]
 
-    if type_spec.display_item_by == key:
-        type_spec.display_item_by = None
+    if type_spec.display_field and type_spec.display_field.key == key:
+        type_spec.display_field = None

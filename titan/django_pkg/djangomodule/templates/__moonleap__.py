@@ -46,4 +46,11 @@ def get_helpers(_):
                         append_uniq(result, item)
             return result
 
+        def display_field_expr(self, django_model):
+            if django_model.type_spec.display_field:
+                if django_model.type_spec.display_field.field_type == "uuid":
+                    return f"str(self.{django_model.type_spec.display_field.name})"
+                return f"self.{django_model.type_spec.display_field.name}"
+            return "str(self.id)"
+
     return Helpers()

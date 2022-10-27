@@ -253,7 +253,6 @@ class DjangoDateField(DjangoModelField):
 class DjangoModel(RenderMixin, Resource):
     name: str
     kebab_name: str
-    display_field_name: str = ""
     type_spec: T.Optional[TypeSpec] = None
     fields: T.List[DjangoModelField] = field(default_factory=list)
 

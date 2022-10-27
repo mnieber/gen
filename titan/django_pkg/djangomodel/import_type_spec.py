@@ -21,7 +21,6 @@ from titan.django_pkg.djangomodel.resources import (
 def import_type_spec(type_spec, django_model):
     django_model.type_spec = type_spec
     django_model.name = type_spec.type_name
-    django_model.display_field_name = type_spec.display_item_by or "id"
 
     field_specs = [x for x in type_spec.get_field_specs() if "server" in x.has_model]
     django_app = django_model.module.django_app
