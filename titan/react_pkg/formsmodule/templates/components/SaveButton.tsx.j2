@@ -7,7 +7,7 @@ interface PropsT {
   className?: any;
 }
 
-export const SaveButton: React.FC<PropsT> = (props: PropsT) => {
+export const SaveButton = (props: PropsT) => {
   const formState = useFormStateContext();
   return (
     <button

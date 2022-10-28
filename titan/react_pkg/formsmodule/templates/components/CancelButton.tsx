@@ -6,7 +6,7 @@ interface PropsT {
   className?: any;
 }
 
-export const CancelButton: React.FC<PropsT> = (props: PropsT) => (
+export const CancelButton = (props: PropsT) => (
   <button
     className={cn(props.className ?? 'button button--wide', 'ml-2')}
     onClick={(e) => {

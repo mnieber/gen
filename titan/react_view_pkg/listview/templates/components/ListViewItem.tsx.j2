@@ -22,7 +22,7 @@ export type PropsT = {
 const DefaultProps = {
 };
 
-export const FooBarListViewItem: React.FC<PropsT> = observer(
+export const FooBarListViewItem = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
     return (
       <div

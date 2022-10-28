@@ -8,7 +8,7 @@ type PropsT = React.PropsWithChildren<{
   buttons?: any[];
 }>;
 
-export const FormFieldLabel: React.FC<PropsT> = (props: PropsT) => {
+export const FormFieldLabel = (props: PropsT) => {
   const fieldContext = useFormFieldContext();
 
   const ColWrapper =

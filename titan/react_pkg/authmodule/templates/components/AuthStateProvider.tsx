@@ -8,7 +8,7 @@ export const AuthStateContext = React.createContext<AuthState | undefined>(
 
 type PropsT = React.PropsWithChildren<{}>;
 
-export const AuthStateProvider: React.FC<PropsT> = (props: PropsT) => {
+export const AuthStateProvider = (props: PropsT) => {
   const [authState] = React.useState(() => new AuthState(States.INITIAL));
 
   return (

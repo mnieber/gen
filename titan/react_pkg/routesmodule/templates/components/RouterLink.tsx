@@ -9,7 +9,7 @@ type PropsT = React.PropsWithChildren<{
   onClick?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }>;
 
-export const RouterLink: React.FC<PropsT> = (props: PropsT) => {
+export const RouterLink = (props: PropsT) => {
   return (
     <Link
       data-cy={props.dataCy}

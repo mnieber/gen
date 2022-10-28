@@ -19,7 +19,7 @@ type PropsT = React.PropsWithChildren<
   }
 >;
 
-export const Field: React.FC<PropsT> = observer((props: PropsT) => {
+export const Field = observer((props: PropsT) => {
   const formState = useFormStateContext();
 
   const value = formState.values[props.fieldName];

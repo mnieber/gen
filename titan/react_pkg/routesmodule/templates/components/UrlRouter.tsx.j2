@@ -10,7 +10,7 @@ type PropsT = {};
 
 export const history = createBrowserHistory();
 
-export const UrlRouter: React.FC<PropsT> = observer((props: PropsT) => {
+export const UrlRouter = observer((props: PropsT) => {
   return (
     <Router history={history}>
       <ModuleNameSwitch />                                                   {% for module in _.react_app.modules %}{% ?? module.routes %}{% endfor %}
