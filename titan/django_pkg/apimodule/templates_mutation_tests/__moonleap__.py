@@ -34,14 +34,14 @@ def field_spec_default_value(field_spec):
     if t == "uuid":
         return r'"41f55a14-a1b7-5697-84ef-c00e3f51c7e2"'
 
+    if t == "uuid[]":
+        return r'["41f55a14-a1b7-5697-84ef-c00e3f51c7e2"]'
+
     if t in ("string", "text"):
         return r'"foo"'
 
     if t == "url":
         return r'"https://foo.bar.com"'
-
-    if t == "idList":
-        return r"[]"
 
     if t == "string[]":
         return r'["foo", "bar"]'

@@ -47,6 +47,8 @@ def get_scalar_field_spec(host, key, field_spec_value):
                 if "Float[]" in parts
                 else "uuid"
                 if "Id" in parts
+                else "uuid[]"
+                if "Id[]" in parts
                 else "date"
                 if "Date" in parts
                 else "json"

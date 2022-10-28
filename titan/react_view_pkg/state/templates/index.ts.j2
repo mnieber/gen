@@ -18,7 +18,7 @@ import { Deletion, DeletionCbs } from 'skandha-facets/Deletion';                
 import { initMyContainer, MyItemsData } from './myItems';                                               {% !! container in __.containers %}
 
 export type PropsT = {
-  deleteMyItems: (ids: string[]) => Promise<void>;                                                      {% for container in __.containers %}{% ?? container.get_bvr("deletion") %}{% endfor %}
+  deleteMyItems: (ids: string[]) => Promise<any>;                                                       {% for container in __.containers %}{% ?? container.get_bvr("deletion") %}{% endfor %}
 };
 
 export class MyState {

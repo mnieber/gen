@@ -4,7 +4,7 @@ import graphene
 from graphene.types.generic import GenericScalar
 {% end_clean_up_py_imports %}
 
-class MyItemForm(graphene.InputObjectType):
+class MyItemFormT(graphene.InputObjectType):
   {{ field_spec.name }} = {{ field_spec.graphene_type(__.args(field_spec)) }}                   {% for field_spec in __.field_specs %}
   pass                                                                                          {% else %}{% endfor %}
 {% end_magic_with %}

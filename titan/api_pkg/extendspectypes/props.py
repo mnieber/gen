@@ -48,10 +48,10 @@ def field_spec_graphql_type(self: FieldSpec, host):
     if self.field_type in ("uuid",):
         return "ID" + postfix
 
+    if self.field_type in ("uuid[]",):
+        return "ID[]" + postfix
+
     if self.field_type in ("form",):
         return f"{self.target_type_spec.type_name}T" + postfix
-
-    if self.field_type in ("idList",):
-        return r"[String]" + postfix
 
     raise Exception(f"Cannot deduce graphql type for {self.field_type}")

@@ -25,6 +25,9 @@ def _get_faker_value(field_spec):
     if field_spec.field_type == "uuid":
         return f"f.uuid4()"
 
+    if field_spec.field_type == "uuid[]":
+        return f"[f.uuid4(), f.uuid4()]"
+
     if field_spec.field_type == "date":
         return f"f.date()"
 

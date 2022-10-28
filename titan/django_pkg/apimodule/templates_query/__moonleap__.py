@@ -9,9 +9,7 @@ def get_helpers(_):
         @property
         def items_to_import(self):
             result = []
-            for field_spec in _.query.gql_spec.get_outputs(
-                ["fk", "relatedSet", "idList"]
-            ):
+            for field_spec in _.query.gql_spec.get_outputs(["fk", "relatedSet"]):
                 append_uniq(result, field_spec.target_item)
 
             return result

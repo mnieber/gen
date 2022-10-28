@@ -6,9 +6,7 @@
   min-height: 72px;
 
   .Field__SmartLabel {
-    @apply text-base;                                   {% if _.service.tailwindcss %}
-
-    color: $global-emphasis-color;                      {% endif %}
+    @apply text-base;                                   {% ?? _.service.tailwindcss %}
   }
 
   textarea, input {

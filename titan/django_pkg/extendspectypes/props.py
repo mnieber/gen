@@ -40,8 +40,8 @@ def graphene_type(self: FieldSpec, args):
     if self.field_type == "uuid":
         return f"graphene.ID({args})"
 
-    if self.field_type == "idList":
-        return f"graphene.List(graphene.String)"
+    if self.field_type == "uuid[]":
+        return f"graphene.List(graphene.ID{infix}{args})"
 
     if self.field_type in ("any", "json"):
         return f"GenericScalar({args})"

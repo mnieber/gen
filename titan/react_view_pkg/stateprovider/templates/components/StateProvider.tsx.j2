@@ -29,7 +29,10 @@ export const {{ _.component.name }} = observer(
     const myQuery = useMyQuery();                                                                                           {% !! query in __.queries %}
     const myMutation = useMyMutation();                                                                                     {% !! mutation in __.mutations %}
 
-    const [state] = React.useState(() => new MyState({}));                                                                  {% if __.state %}
+    const [state] = React.useState(() => new MyState({                                                                      {% if __.state %}
+      deleteContainerItems: (ids: string[]) => {{ mutation.name }}.mutateAsync(ids),                                        {% for container, mutation, is_list in __.delete_mutations %}{% ?? is_list %}
+      deleteContainerItems: (ids: string[]) => Promise.all(R.map((x: string) => deleteTodolist.mutateAsync(x), ids)),       {% ?? not is_list %}{% endfor %}
+    }));
 
     (React.useEffect as any)(() => {
       const cleanUpReaction = reaction(
