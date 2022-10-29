@@ -1,5 +1,5 @@
 import ramda as R
-from moonleap.utils.case import l0, sn, u0
+from moonleap.utils.case import u0
 
 
 def get_helpers(_):
@@ -17,7 +17,7 @@ def get_helpers(_):
             for form_field_spec in self.form_field_specs:
                 self.fields.extend(
                     [
-                        (f"{sn(form_field_spec.name)}.{x.name}", x)
+                        (f"{form_field_spec.name}.{x.name}", x)
                         for x in self._form_fields(form_field_spec)
                     ]
                 )
