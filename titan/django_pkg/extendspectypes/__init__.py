@@ -1,6 +1,6 @@
 from moonleap import MemFun, Prop, extend
-from moonleap.typespec.field_spec import FieldSpec
-from moonleap.typespec.type_spec_store import TypeSpec
+from titan.types_pkg.typeregistry.field_spec import FieldSpec
+from titan.types_pkg.typeregistry.type_spec import TypeSpec
 
 from . import props
 

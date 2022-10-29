@@ -1,7 +1,6 @@
-from moonleap.typespec.field_spec import get_field_spec_constructor
-from moonleap.typespec.load_type_specs.get_generic_field_attrs import (
-    get_generic_field_attrs,
-)
+from titan.types_pkg.typeregistry.field_spec import get_field_spec_constructor
+
+from .get_generic_field_attrs import get_generic_field_attrs
 
 
 def get_scalar_field_spec(host, key, field_spec_value):

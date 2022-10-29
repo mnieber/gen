@@ -5,7 +5,7 @@
 {% clean_up_py_imports %}
 import graphene
 from graphene.types.generic import GenericScalar
-from {{ item.django_module.module_path }}.models import {{ item.type_name }}        {% for item in __.items_to_import %}{% endfor %}
+from {{ item.django_module.module_path }}.models import {{ item.type_name }}        {% !! item in __.items_to_import %}
 {% end_clean_up_py_imports %}
 from api.types import *
 
@@ -16,14 +16,14 @@ class QueryNameOutputs(graphene.ObjectType):
 class QueryName:
     query_name = graphene.Field(
         QueryNameOutputs,
-        input_field_name={{ input_field_spec.graphene_type("") }},                  {% for input_field_spec in __.input_field_specs %}{% endfor %}
+        input_field_name={{ input_field_spec.graphene_type("") }},                  {% !! input_field_spec in __.input_field_specs %}
         {% remove_trailing suffix="," %}
     )
 
     def resolve_query_name(
         self,
         info,
-        input_field_name,                                                           {% for input_field_spec in __.input_field_specs %}{% endfor %}
+        input_field_name,                                                           {% !! input_field_spec in __.input_field_specs %}
         {% remove_trailing suffix="," %}
     ):
         # Moonleap Todo: implement query

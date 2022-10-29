@@ -1,4 +1,4 @@
-from titan.api_pkg.typeregistry import get_type_reg
+from titan.types_pkg.typeregistry import get_type_reg
 
 
 def get_helpers(_):

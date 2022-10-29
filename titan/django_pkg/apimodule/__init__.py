@@ -4,8 +4,8 @@ import moonleap.resource.props as P
 from moonleap import create, extend, rule
 from moonleap.verbs import has
 from titan.api_pkg.gqlregistry import get_gql_reg
-from titan.api_pkg.typeregistry import get_type_reg
 from titan.django_pkg.djangoapp import DjangoApp
+from titan.types_pkg.typeregistry import get_type_reg
 
 from .resources import ApiModule  # noqa
 

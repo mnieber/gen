@@ -31,13 +31,13 @@ export const useFieldProps = (props: FieldPropsT) => {
       fieldType: props.fieldType,
       onChange: props.onChange,
       controlled: props.controlled,
-      disabled: props.disabled,
     }),
     onKeyDown: handleKeyDown(fieldContext, formState),
     placeholder:
       props.placeholder ??
       (fieldContext.useSmartLabel ? fieldContext.label : undefined),
     autoFocus: fieldContext.autoFocus,
+    disabled: props.disabled,
   };
 };
 

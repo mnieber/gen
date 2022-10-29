@@ -1,19 +1,19 @@
-from moonleap.typespec.field_spec import FieldSpec, FkFieldSpec
-from moonleap.typespec.type_spec_store import type_spec_store
+from titan.types_pkg.typeregistry import get_type_reg
+from titan.types_pkg.typeregistry.field_spec import FieldSpec, FkFieldSpec
 
 
 def fk_field_spec_target_type_spec(self: FkFieldSpec):
     if not self.target:
         return None
 
-    return type_spec_store().get(self.target)
+    return get_type_reg().get(self.target)
 
 
 def form_field_spec_target_type_spec(self: FkFieldSpec):
     if not self.target:
         return None
 
-    return type_spec_store().get(self.target + "Form")
+    return get_type_reg().get(self.target + "Form")
 
 
 def field_spec_graphql_type(self: FieldSpec, host):

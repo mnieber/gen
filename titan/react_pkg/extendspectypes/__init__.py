@@ -1,7 +1,7 @@
 from moonleap import Prop, extend
-from moonleap.typespec.field_spec import FieldSpec
-from titan.api_pkg.item.resources import Item
-from titan.api_pkg.itemlist.resources import ItemList
+from titan.types_pkg.item.resources import Item
+from titan.types_pkg.itemlist.resources import ItemList
+from titan.types_pkg.typeregistry.field_spec import FieldSpec
 
 from . import props
 

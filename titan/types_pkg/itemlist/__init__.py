@@ -10,7 +10,7 @@ from moonleap import (
     rule,
 )
 from moonleap.verbs import uses
-from titan.api_pkg.item.resources import Item
+from titan.types_pkg.item.resources import Item
 
 from . import props
 from .resources import ItemList

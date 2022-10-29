@@ -2,9 +2,9 @@ import typing as T
 from dataclasses import dataclass, field
 
 from moonleap.utils.fp import append_uniq
-from titan.api_pkg.item import Item
-from titan.api_pkg.itemlist import ItemList
 from titan.react_view_pkg.behavior import Behavior
+from titan.types_pkg.item import Item
+from titan.types_pkg.itemlist import ItemList
 
 
 @dataclass

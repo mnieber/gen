@@ -1,4 +1,4 @@
-from moonleap.typespec.field_spec import get_field_spec_constructor
+from titan.types_pkg.typeregistry.field_spec import get_field_spec_constructor
 
 from .foreign_key import ForeignKey
 from .get_fk_field_attrs import get_fk_field_attrs

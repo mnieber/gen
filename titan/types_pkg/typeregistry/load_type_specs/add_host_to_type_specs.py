@@ -1,5 +1,5 @@
-def add_host_to_type_specs(host, type_spec_store):
-    for type_spec in type_spec_store.type_specs():
+def add_host_to_type_specs(host, type_reg):
+    for type_spec in type_reg.type_specs():
         for field_spec in type_spec.get_field_specs():
             # By default, if the fk field is in the server api,
             # then it exists in the client

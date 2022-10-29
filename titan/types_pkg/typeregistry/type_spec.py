@@ -2,7 +2,7 @@ import typing as T
 from dataclasses import dataclass, field
 
 import ramda as R
-from moonleap.typespec.field_spec import FieldSpec
+from titan.types_pkg.typeregistry.field_spec import FieldSpec
 
 
 @dataclass
@@ -16,6 +16,7 @@ class TypeSpec:
     is_entity: T.Optional[bool] = None
     extract_gql_fields: bool = field(default=False, repr=False)
     is_sorted: bool = field(default=False, repr=False)
+    is_form: bool = field(default=False, repr=False)
 
     def get_field_specs(self, field_types=None):
         return [

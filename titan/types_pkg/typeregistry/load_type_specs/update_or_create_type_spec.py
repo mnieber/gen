@@ -1,13 +1,13 @@
-from moonleap.typespec.type_spec import TypeSpec
+from titan.types_pkg.typeregistry.type_spec import TypeSpec
 
 
 def update_or_create_type_spec(
-    type_spec_store, type_name, parts, module_name, parent_type_spec
+    type_reg, type_name, parts, module_name, parent_type_spec
 ):
-    type_spec = type_spec_store.get(type_name, default=None)
+    type_spec = type_reg.get(type_name, default=None)
     if not type_spec:
         type_spec = TypeSpec(type_name=type_name, field_specs=[])
-        type_spec_store.setdefault(type_name, type_spec)
+        type_reg.setdefault(type_name, type_spec)
 
     # Update module name
     if module_name:
@@ -29,8 +29,6 @@ def update_or_create_type_spec(
 
     # Register parent
     if parent_type_spec:
-        type_spec_store.register_parent_child(
-            parent_type_spec.type_name, type_spec.type_name
-        )
+        type_reg.register_parent_child(parent_type_spec.type_name, type_spec.type_name)
 
     return type_spec

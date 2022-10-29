@@ -2,12 +2,12 @@ import typing as T
 from dataclasses import dataclass
 
 from moonleap import Resource, named
-from moonleap.typespec.get_member_field_spec import get_member_field_spec
 from moonleap.utils.fp import aperture
-from titan.api_pkg.item.resources import Item
-from titan.api_pkg.itemlist.resources import ItemList
 from titan.api_pkg.mutation.resources import Mutation
 from titan.api_pkg.query.resources import Query
+from titan.types_pkg.item.resources import Item
+from titan.types_pkg.itemlist.resources import ItemList
+from titan.types_pkg.typeregistry.get_member_field_spec import get_member_field_spec
 
 
 @dataclass

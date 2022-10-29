@@ -14,12 +14,12 @@ from moonleap import (
 )
 from moonleap.utils.case import sn
 from moonleap.verbs import contains, has, provides
-from titan.api_pkg.item.resources import Item
-from titan.api_pkg.itemlist import ItemList
 from titan.django_pkg.djangoapp import DjangoApp
 from titan.django_pkg.djangomodule.get_map_from_item_to_django_module import (
     get_map_from_item_to_django_module,
 )
+from titan.types_pkg.item.resources import Item
+from titan.types_pkg.itemlist import ItemList
 
 from . import props
 from .resources import DjangoModule

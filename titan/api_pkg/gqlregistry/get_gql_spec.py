@@ -1,10 +1,13 @@
-from moonleap.gqlspec.gql_spec import GqlSpec
-from moonleap.typespec.field_spec import FieldSpec
-from moonleap.typespec.load_type_specs.field_spec_from_dict import field_spec_from_dict
-from moonleap.typespec.type_spec import TypeSpec
+from titan.types_pkg.typeregistry.field_spec import FieldSpec
+from titan.types_pkg.typeregistry.load_type_specs.field_spec_from_dict import (
+    field_spec_from_dict,
+)
+from titan.types_pkg.typeregistry.type_spec import TypeSpec
+
+from .gql_spec import GqlSpec
 
 
-def get_gql_spec(gql_spec_store, host, endpoint_key, endpoint_spec_dict):
+def get_gql_spec(gql_reg, host, endpoint_key, endpoint_spec_dict):
     parts = endpoint_key.split()
     if not parts:
         raise Exception("Invalid endpoint key: " + endpoint_key)
@@ -56,7 +59,7 @@ def get_gql_spec(gql_spec_store, host, endpoint_key, endpoint_spec_dict):
             )
         )
 
-    gql_spec_store.setdefault(
+    gql_reg.setdefault(
         name,
         GqlSpec(
             name=name,

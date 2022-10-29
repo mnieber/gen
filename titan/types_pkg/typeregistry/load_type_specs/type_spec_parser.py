@@ -1,17 +1,16 @@
 import typing as T
 
-from moonleap.typespec.load_type_specs.foreign_key import ForeignKey
-
 from .add_field_spec import add_field_spec
 from .apply_special_rules import apply_special_rules
 from .apply_type_updates import apply_type_updates
 from .field_spec_from_dict import field_spec_from_dict, is_pass
+from .foreign_key import ForeignKey
 from .update_or_create_type_spec import update_or_create_type_spec
 
 
 class TypeSpecParser:
-    def __init__(self, type_spec_store):
-        self.type_spec_store = type_spec_store
+    def __init__(self, type_reg):
+        self.type_reg = type_reg
 
     def parse(
         self, host, type_spec_dict, type_spec=None, related_parent_field_name=None
@@ -53,7 +52,7 @@ class TypeSpecParser:
             # Get/update the target type in a many-to-many through-bar relationship
             if fk.bar:
                 update_or_create_type_spec(
-                    self.type_spec_store,
+                    self.type_reg,
                     fk.foo.var_type,
                     fk.target_parts,
                     fk.foo.module_name,
@@ -69,7 +68,7 @@ class TypeSpecParser:
             # Get/update the specced type
             if fk.data.var_type != "+":
                 fk_type_spec = update_or_create_type_spec(
-                    self.type_spec_store,
+                    self.type_reg,
                     fk.data.var_type,
                     fk.data_parts,
                     fk.data.module_name or value.get("__module__"),

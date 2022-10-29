@@ -2,8 +2,7 @@ import typing as T
 from dataclasses import dataclass
 
 import ramda as R
-from moonleap.typespec.type_spec_store import type_spec_store
-from titan.api_pkg.typeregistry import get_type_reg
+from titan.types_pkg.typeregistry import get_type_reg
 
 
 @dataclass
@@ -38,7 +37,7 @@ def get_map_from_item_to_django_module(modules):
             lut[type_name] = Data(django_module=django_module, parents=[], item=item)
         else:
             items.append(item)
-            maybe_parents = type_spec_store().parents_by_type_name[type_name]
+            maybe_parents = get_type_reg().parents_by_type_name[type_name]
             lut[type_name] = Data(django_module=None, parents=maybe_parents, item=item)
 
     changed = True

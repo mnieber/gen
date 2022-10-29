@@ -1,7 +1,7 @@
 from moonleap import u0
-from moonleap.typespec.field_spec import FieldSpec
-from moonleap.typespec.type_spec_store import TypeSpec
-from titan.api_pkg.typeregistry import get_type_reg
+from titan.types_pkg.typeregistry import get_type_reg
+from titan.types_pkg.typeregistry.field_spec import FieldSpec
+from titan.types_pkg.typeregistry.type_spec import TypeSpec
 
 
 def tn_graphene(self: TypeSpec):

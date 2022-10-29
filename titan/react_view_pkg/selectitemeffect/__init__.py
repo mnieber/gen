@@ -4,7 +4,7 @@ import moonleap.resource.props as P
 from moonleap import create, empty_rule, extend, u0
 from moonleap.utils.case import kebab_to_camel
 from moonleap.verbs import uses
-from titan.api_pkg.itemlist.resources import ItemList
+from titan.types_pkg.itemlist.resources import ItemList
 
 from .resources import SelectItemEffect
 

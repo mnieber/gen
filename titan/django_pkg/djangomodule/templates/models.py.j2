@@ -6,7 +6,7 @@ import uuid                                                                     
 from django.db import models
 from django.utils.text import slugify
 from martor.models import MartorField
-from {{ item.django_module.module_path }}.models import {{ item.type_name }}                            {% for item in __.items_to_import %}{% endfor %}
+from {{ item.django_module.module_path }}.models import {{ item.type_name }}                            {% !! item in __.items_to_import %}
 from app.utils.validate_file import validate_image_file
 from app.models import Entity
 from app.tr import tr                                                                                   {% if _.django_app.use_translation %}
@@ -19,7 +19,7 @@ class MyModel(                                                                  
 ):
     class Meta:                                                                                         {% min_lines count=2 %}
         indexes = [                                                                                     {% if model.indexed_fields %}
-            models.Index(fields=["my_field"])                                                           {% for field in model.indexed_fields %}{% endfor %}
+            models.Index(fields=["my_field"])                                                           {% !! field in model.indexed_fields %}
         ]                                                                                               {% endif %}
         ordering = ["sort_pos"]                                                                         {% ?? model.type_spec.is_sorted %}
         verbose_name = tr("{{ model.kebab_name }}")                                                     {% if _.django_app.use_translation %}

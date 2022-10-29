@@ -1,21 +1,8 @@
-from . import (
-    extendspectypes,
-    gqlregistry,
-    item,
-    itemlist,
-    mutation,
-    pipeline,
-    query,
-    typeregistry,
-)
+from . import gqlregistry, mutation, pipeline, query
 
 modules = [
-    extendspectypes,
-    item,
-    itemlist,
+    gqlregistry,
     mutation,
     pipeline,
     query,
-    typeregistry,
-    gqlregistry,
 ]

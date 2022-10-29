@@ -1,13 +1,15 @@
 import moonleap.resource.props as P
 from moonleap import MemFun, create, create_forward, empty_rule, extend, rule
-from moonleap.gqlspec.gql_spec_store import gql_spec_store
+from moonleap.session import get_session
 from moonleap.utils.case import camel_to_kebab, l0
 from moonleap.verbs import deletes, has, provides, saves
 
-from ..gqlregistry import props
+from . import props
+from .load_gql_specs import load_gql_specs
 from .resources import GqlRegistry
 
 rules = {
+    ("project", has, ":gql-registry"): empty_rule(),
     ("gql-registry", has, "api-endpoint"): empty_rule(),
     ("gql-registry", has, "mutation"): empty_rule(),
     ("gql-registry", has, "query"): empty_rule(),
@@ -21,6 +23,8 @@ def get_gql_reg():
     global _gql_registry
     if not _gql_registry:
         _gql_registry = GqlRegistry()
+        load_gql_specs(_gql_registry, get_session().spec_dir)
+
     return _gql_registry
 
 
@@ -40,7 +44,7 @@ def created_project(project):
 @rule("gql-registry")
 def created_gql_registry(gql_reg):
     forwards = []
-    for gql_spec in gql_spec_store().gql_specs():
+    for gql_spec in get_gql_reg().gql_specs():
         tag = "mutation" if gql_spec.is_mutation else "query"
         endpoint_term = camel_to_kebab(l0(gql_spec.name)) + ":" + tag
         forwards.append(create_forward(gql_reg, has, endpoint_term))

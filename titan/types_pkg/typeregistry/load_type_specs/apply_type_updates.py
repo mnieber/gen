@@ -1,7 +1,6 @@
-from moonleap.typespec.load_type_specs.strip_generic_symbols import (
-    strip_generic_symbols,
-)
 from moonleap.utils.fp import append_uniq
+
+from .strip_generic_symbols import strip_generic_symbols
 
 
 def apply_type_updates(host, type_spec, updates):

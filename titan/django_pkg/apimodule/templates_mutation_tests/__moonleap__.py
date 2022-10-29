@@ -1,10 +1,10 @@
 import os
 
-from moonleap.typespec.type_spec_store import type_spec_store
 from moonleap.utils.case import l0, sn
 from moonleap.utils.codeblock import CodeBlock
 from moonleap.utils.fp import uniq
 from titan.django_pkg.djangoapp.define_fixture import define_fixture
+from titan.types_pkg.typeregistry import get_type_reg
 
 
 def field_spec_default_value(field_spec):
@@ -52,7 +52,7 @@ def field_spec_default_value(field_spec):
 def _get_fixture_field_specs(form_input_field_specs):
     result = []
     for input_field_spec in form_input_field_specs:
-        type_spec = type_spec_store().get(input_field_spec.target)
+        type_spec = get_type_reg().get(input_field_spec.target)
         for fk_field_spec in type_spec.get_field_specs(["fk"]):
             if fk_field_spec not in result:
                 result.append(fk_field_spec)
@@ -61,7 +61,7 @@ def _get_fixture_field_specs(form_input_field_specs):
 
 
 def fk_field_specs_for_form_field(form_field_spec):
-    data_type_spec = type_spec_store().get(form_field_spec.target)
+    data_type_spec = get_type_reg().get(form_field_spec.target)
     return data_type_spec.get_field_specs(["fk"])
 
 

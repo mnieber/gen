@@ -1,16 +1,18 @@
 import typing as T
 from collections import defaultdict
+from dataclasses import dataclass
 
-from moonleap.session import get_session
-from moonleap.typespec.default_field_specs_store import DefaultFieldSpecsStore
-from moonleap.typespec.load_type_specs import load_type_specs
-from moonleap.typespec.type_spec import TypeSpec
+from moonleap import Resource
+from titan.types_pkg.typeregistry.type_spec import TypeSpec
+
+from .default_field_specs_store import DefaultFieldSpecsStore
 
 _default_type_spec_placeholder = TypeSpec(type_name="placeholder", field_specs=[])
 
 
-class TypeSpecStore:
-    def __init__(self):
+@dataclass
+class TypeRegistry(Resource):
+    def __post_init__(self):
         self._type_spec_by_type_name = {}
         self.default_field_specs_store = DefaultFieldSpecsStore()
         self.parents_by_type_name = defaultdict(list)
@@ -47,14 +49,3 @@ class TypeSpecStore:
 
     def register_parent_child(self, parent_type_name, child_type_name):
         self.parents_by_type_name[child_type_name].append(parent_type_name)
-
-
-_type_spec_store = None
-
-
-def type_spec_store():
-    global _type_spec_store
-    if _type_spec_store is None:
-        _type_spec_store = TypeSpecStore()
-        load_type_specs(_type_spec_store, get_session().spec_dir)
-    return _type_spec_store

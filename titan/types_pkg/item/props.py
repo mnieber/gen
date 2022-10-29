@@ -1,9 +1,9 @@
 from moonleap import u0
-from moonleap.typespec.type_spec_store import type_spec_store
+from titan.types_pkg.typeregistry import get_type_reg
 
 
 def item_type_spec(item):
-    return type_spec_store().get(item.type_name)
+    return get_type_reg().get(item.type_name)
 
 
 def item_type_name(item):
@@ -11,7 +11,7 @@ def item_type_name(item):
 
 
 def item_form_type_spec(item):
-    return type_spec_store().get(item.form_type_name)
+    return get_type_reg().get(item.form_type_name)
 
 
 def item_form_type_name(item):

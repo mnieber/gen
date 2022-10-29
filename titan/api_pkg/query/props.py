@@ -1,5 +1,5 @@
-from moonleap.gqlspec.gql_spec_store import gql_spec_store
+from titan.api_pkg.gqlregistry import get_gql_reg
 
 
 def gql_spec(self):
-    return gql_spec_store().get(self.name)
+    return get_gql_reg().get(self.name)

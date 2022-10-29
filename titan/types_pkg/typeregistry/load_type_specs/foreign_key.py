@@ -1,8 +1,9 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap.typespec.load_type_specs.strip_fk_symbols import strip_fk_symbols
 from moonleap.utils.case import l0, u0
+
+from .strip_fk_symbols import strip_fk_symbols
 
 
 @dataclass

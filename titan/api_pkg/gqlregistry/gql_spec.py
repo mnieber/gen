@@ -1,7 +1,7 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap.typespec.type_spec import TypeSpec
+from titan.types_pkg.typeregistry.type_spec import TypeSpec
 
 
 @dataclass
