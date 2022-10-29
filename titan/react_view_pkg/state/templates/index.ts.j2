@@ -4,10 +4,9 @@
 {% magic_with container.item_name as myItem %}
 import { setCallbacks } from 'aspiration';
 import { makeObservable } from 'mobx';
-import { mapDataToProps } from 'skandha';
+import { mapDataToProps, pmap } from 'skandha';
 import { addCleanUpFunctionToCtr, cleanUpCtr } from 'react-default-props-context';
 import * as Skandha from 'skandha';
-import { ClassMemberT as CMT, facet, getm } from 'skandha';
 import { registerCtr } from 'skandha-mobx';
 import { getIds } from 'src/utils/ids';
 import * as Facets from 'skandha-facets';
@@ -16,6 +15,7 @@ import { Highlight, HighlightCbs } from 'skandha-facets/Highlight';             
 import { Filtering, FilteringCbs } from 'skandha-facets/Filtering';                                     {% ?? __.has_bvr("filtering") %}
 import { Deletion, DeletionCbs } from 'skandha-facets/Deletion';                                        {% ?? __.has_bvr("deletion") %}
 import { initMyContainer, MyItemsData } from './myItems';                                               {% !! container in __.containers %}
+import { MyItemT } from 'src/api/types/MyItemT';                                                        {% !! container in __.containers %}
 
 export type PropsT = {
   deleteMyItems: (ids: string[]) => Promise<any>;                                                       {% for container in __.containers %}{% ?? container.get_bvr("deletion") %}{% endfor %}
@@ -24,31 +24,36 @@ export type PropsT = {
 export class MyState {
   myContainer = {                                                                                       {% for container in __.containers %}
     data: new MyContainerData(),
-    myBvr: new MyBvr(),                                                                                 {% !! bvr in container.bvrs %}
+    myBvr: new MyBvr{% if bvr.has_param %}<MyItemT>{% endif %}(),                                       {% !! bvr in container.bvrs %}
   }                                                                                                     {% endfor %}
 
   _myContainerMapData(props: PropsT) {                                                                  {% for container in __.containers %}
-    const getMyItemById = (x?: string) =>                                                               {% if container.get_bvr("selection") or container.get_bvr("highlight") %}
-      x ? this.myContainer.data.myItemById[x] : undefined;                                              {% endif %}
+    const getMyItemById = (x: string) => this.myContainer.data.myItemById[x];                           {% ?? container.get_bvr("selection") or container.get_bvr("highlight") %}
 
     mapDataToProps(
-      [                                                                                                 {% if container.get_bvr("selection") %}
+      pmap(                                                                                             {% if container.get_bvr("selection") %}
+        //
         [this.myContainer.selection, 'selectableIds'],
         () => getIds(this.myContainer.data.myItemsDisplay),
-      ],
-      [
+      ),
+      pmap(
+        //
         [this.myContainer.selection, 'items'],
         () => this.myContainer.selection.ids.map(getMyItemById),
-      ],                                                                                                {% endif %}
-      [                                                                                                 {% if container.get_bvr("highlight") %}
+      ),                                                                                                {% endif %}
+      pmap(                                                                                             {% if container.get_bvr("highlight") %}
+        //
         [this.myContainer.highlight, 'item'],
-        () => getMyItemById(this.myContainer.highlight.id),
-      ],                                                                                                {% endif %}
-      [
+        () => this.myContainer.highlight.id
+          ? getMyItemById(this.myContainer.highlight.id)
+          : undefined,
+      ),                                                                                                {% endif %}
+      pmap(
+        //
         [this.myContainer.data, 'myItemsDisplay'],
         () => this.myContainer.data.myItems,                                                            {% ?? not container.get_bvr("filtering") %}
         () => this.myContainer.filtering.filteredItems,                                                 {% ?? container.get_bvr("filtering") %}
-      ],
+      ),
     )
   }                                                                                                     {% endfor %}
 

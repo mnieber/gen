@@ -29,12 +29,12 @@ def get_helpers(_):
         def _get_pipeline_sources(self):
             for pipeline in self.pipelines:
                 if pipeline.root_query:
-                    enpoints = (
+                    endpoints = (
                         self.queries
                         if pipeline.root_query.meta.term.tag == "query"
                         else self.mutations
                     )
-                    enpoints.append(pipeline.root_query)
+                    endpoints.append(pipeline.root_query)
                 elif pipeline.root_state_provider:
                     pipeline_elm = pipeline.elements[1]
                     if isinstance(

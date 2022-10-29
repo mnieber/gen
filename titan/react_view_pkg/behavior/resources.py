@@ -8,6 +8,7 @@ from moonleap.utils.inflect import plural
 class Behavior(Resource):
     name: str
     item_name: str
+    has_param: bool
 
     @property
     def items_name(self):
