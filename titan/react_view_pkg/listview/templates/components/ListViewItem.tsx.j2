@@ -3,8 +3,7 @@
 import React from 'react';
 import { cn } from 'src/utils/classnames';
 import { observer } from 'mobx-react-lite';
-import { FooBarT } from 'src/api/types/FooBarT';
-import { withDefaultProps } from 'src/app/defaultProps';
+import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 
 import './FooBarListViewItem.scss';
 
@@ -16,10 +15,10 @@ export type PropsT = {
   onDelete: Function;                                                                             {% ?? __.deletion_bvr %}
   onMouseDown?: any;
   onMouseUp?: any;
-  fooBar: FooBarT;
 };
 
 const DefaultProps = {
+  ...dps.fooBar,
 };
 
 export const FooBarListViewItem = observer(
@@ -39,7 +38,7 @@ export const FooBarListViewItem = observer(
         onMouseUp={props.onMouseUp}
       >
         <div>                                                                                       {% for field_spec in __.fields %}{% if field_spec.display %}
-          fieldSpecName: {props.fooBar.fieldSpecName}                                               {% ?? field_spec.field_type not in ("boolean",) %}
+          {props.fooBar.fieldSpecName}                                                              {% ?? field_spec.field_type not in ("boolean",) %}
           fieldSpecName: {props.fooBar.fieldSpecName ? 'Yes' : 'No'}                                {% ?? field_spec.field_type in ("boolean",) %}
         </div>                                                                                      {% endif %}{% endfor %}
         <button                                                                                     {% if __.deletion_bvr %}
