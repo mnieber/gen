@@ -3,9 +3,8 @@ from collections import defaultdict
 from dataclasses import dataclass
 
 from moonleap import Resource
-from titan.types_pkg.typeregistry.type_spec import TypeSpec
-
-from .default_field_specs_store import DefaultFieldSpecsStore
+from titan.types_pkg.pkg.default_field_specs_store import DefaultFieldSpecsStore
+from titan.types_pkg.pkg.type_spec import TypeSpec
 
 _default_type_spec_placeholder = TypeSpec(type_name="placeholder", field_specs=[])
 

@@ -3,8 +3,8 @@ from moonleap import create, create_forward, empty_rule, extend, rule
 from moonleap.session import get_session
 from moonleap.utils.case import camel_to_kebab, l0
 from moonleap.verbs import has
+from titan.types_pkg.pkg.load_type_specs import load_type_specs
 
-from .load_type_specs import load_type_specs
 from .resources import TypeRegistry
 
 rules = {

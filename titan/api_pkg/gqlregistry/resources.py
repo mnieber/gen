@@ -2,8 +2,7 @@ import typing as T
 from dataclasses import dataclass
 
 from moonleap import Resource
-
-from .gql_spec import GqlSpec
+from titan.api_pkg.pkg.gql_spec import GqlSpec
 
 
 @dataclass

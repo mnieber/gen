@@ -1,4 +1,4 @@
-from titan.types_pkg.typeregistry.form_type_spec_from_data_type_spec import (
+from titan.types_pkg.pkg.form_type_spec_from_data_type_spec import (
     form_type_spec_from_data_type_spec,
 )
 

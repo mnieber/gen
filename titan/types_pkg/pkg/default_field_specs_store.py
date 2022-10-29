@@ -1,4 +1,4 @@
-from titan.types_pkg.typeregistry.field_spec import FieldSpec
+from titan.types_pkg.pkg.field_spec import FieldSpec
 
 default_field_specs = [
     FieldSpec(key="id", field_type="uuid"),

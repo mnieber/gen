@@ -1,9 +1,5 @@
 from moonleap import MemFun, Prop, extend
-from titan.types_pkg.typeregistry.field_spec import (
-    FieldSpec,
-    FkFieldSpec,
-    FormFieldSpec,
-)
+from titan.types_pkg.pkg.field_spec import FieldSpec, FkFieldSpec, FormFieldSpec
 
 from . import props
 

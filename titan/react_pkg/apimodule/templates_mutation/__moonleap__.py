@@ -1,5 +1,5 @@
 from titan.react_pkg.apimodule.graphql_body import graphql_body
-from titan.types_pkg.typeregistry.has_derived_fields import has_derived_fields
+from titan.types_pkg.pkg.has_derived_fields import has_derived_fields
 
 
 def get_helpers(_):

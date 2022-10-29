@@ -1,5 +1,5 @@
+from titan.types_pkg.pkg.field_spec import FieldSpec, FkFieldSpec
 from titan.types_pkg.typeregistry import get_type_reg
-from titan.types_pkg.typeregistry.field_spec import FieldSpec, FkFieldSpec
 
 
 def fk_field_spec_target_type_spec(self: FkFieldSpec):

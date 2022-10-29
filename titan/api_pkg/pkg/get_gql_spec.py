@@ -1,8 +1,8 @@
-from titan.types_pkg.typeregistry.field_spec import FieldSpec
-from titan.types_pkg.typeregistry.load_type_specs.field_spec_from_dict import (
+from titan.types_pkg.pkg.field_spec import FieldSpec
+from titan.types_pkg.pkg.load_type_specs.field_spec_from_dict import (
     field_spec_from_dict,
 )
-from titan.types_pkg.typeregistry.type_spec import TypeSpec
+from titan.types_pkg.pkg.type_spec import TypeSpec
 
 from .gql_spec import GqlSpec
 

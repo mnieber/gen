@@ -3,9 +3,9 @@ from moonleap import MemFun, create, create_forward, empty_rule, extend, rule
 from moonleap.session import get_session
 from moonleap.utils.case import camel_to_kebab, l0
 from moonleap.verbs import deletes, has, provides, saves
+from titan.api_pkg.pkg.load_gql_specs import load_gql_specs
 
 from . import props
-from .load_gql_specs import load_gql_specs
 from .resources import GqlRegistry
 
 rules = {

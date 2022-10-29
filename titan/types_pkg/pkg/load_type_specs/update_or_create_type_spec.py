@@ -1,4 +1,4 @@
-from titan.types_pkg.typeregistry.type_spec import TypeSpec
+from titan.types_pkg.pkg.type_spec import TypeSpec
 
 
 def update_or_create_type_spec(
