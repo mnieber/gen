@@ -26,15 +26,20 @@ class Line:
 def _preprocess_words(words):
     result = []
     for word in words:
-        if word.startswith("("):
-            result.append("(")
+        prefix = []
+        postfix = []
+
+        while word.startswith("("):
+            prefix.append("(")
             word = word[1:]
 
-        if word.endswith(")"):
-            result.append(word[:-1])
-            result.append(")")
-        else:
-            result.append(word)
+        while word.endswith(")"):
+            postfix.insert(0, ")")
+            word = word[:-1]
+
+        result.extend(prefix)
+        result.append(word)
+        result.extend(postfix)
     return result
 
 
@@ -43,7 +48,7 @@ def get_create_line():
         terms = []
 
         # Repeated colons are not treated as a data/tag separator.
-        clean_text = re.sub("::+", "", text)
+        clean_text = re.sub("::+,", "", text)
         words = _preprocess_words(clean_text.split())
 
         next_it_term = None
