@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { doQuery } from 'src/api/graphqlClient';
 import { useQueryData } from 'src/api/hooks';
 import { ObjT } from 'src/utils/types';
+import { wait } from 'src/utils/wait';
 import { typeSpecNameGqlFields } from 'src/api/types/TypeSpecNameT'                     {% !! type_spec in __.type_specs_to_import %}
 
 export type ArgsT = {
@@ -30,7 +31,10 @@ export const callEndpoint = (args: ArgsT) => {
     args
   ).then(
     (response: ObjT) => {
-      return response.callEndpoint;
+      return wait(
+        process.env.NODE_ENV === 'development' ? 1000 : 0,
+        response.callEndpoint
+      );
     }
   );
 }
