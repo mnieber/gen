@@ -42,7 +42,7 @@ class ExtractItemListFromItem(PipelineElement):
 
 @dataclass
 class TakeHighlightedElmFromStateProvider(PipelineElement):
-    item_list: T.Any = None
+    pass
 
 
 def elements(self):
@@ -111,7 +111,6 @@ def elements(self):
                             result.append(
                                 TakeHighlightedElmFromStateProvider(
                                     subj=state_provider,
-                                    item_list=None,
                                     obj=named_item.typ,
                                 )
                             )
