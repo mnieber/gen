@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite';
 import * as R from 'ramda';
 import React from 'react';
 import { NestedDefaultPropsContext } from 'react-default-props-context';
-import { createMaybe } from 'src/api/loadingState';
+import { maybe } from 'src/api/loadingState';
 import { useMyQuery } from 'src/api/queries';                                                                                   {% for query in __.queries %}{% endfor %}
 import { useMyMutation } from 'src/api/mutations';                                                                              {% for mutation in __.mutations %}{% endfor %}
 import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
@@ -43,7 +43,7 @@ export const {{ _.component.name }} = observer(
           }
         },
         (inputs) => {
-          state.myContainer.data.containerItems = inputs.{{ pipeline.output_name }};                                            {% !! container, pipeline in __.pipeline_by_container %}
+          state.myContainer.data.containerItems = inputs.{{ pipeline.output_name }} ?? [];                                      {% !! container, pipeline in __.pipeline_by_container %}
           if (flags.logStateProviders) {
             log('MyState updated', state.getSummary());
           }
@@ -56,35 +56,31 @@ export const {{ _.component.name }} = observer(
         cleanUpReaction();
         state.destroy();
       };
-    });                                                                                                                         {% endif %}
+    });                                                                                                                       {% endif %}
 
     const getDefaultPropsContext = () => {
-      const result = {
-        defaultProps: {}
+      const result = { defaultProps: {} };
+
+      result.defaultProps = {                                                                                                 {% for container in __.state.containers %}
+        ...result.defaultProps,
+        {{ named_item.typ.item_name }}: () => maybe({{ __.maybe_expr(named_item) }})                                          {% for named_item in _.component.named_items %}
+          {{ __.get_pipeline(named_item).result_expression }}
+        ),                                                                                                                    {% endfor %}
+        {{ named_item_list.typ.item_name|plural }}: () => maybe({{ __.maybe_expr(named_item_list) }})(                        {% for named_item_list in _.component.named_item_lists %}
+          {{ __.get_pipeline(named_item_list).result_expression }}, []
+        ),                                                                                                                    {% endfor %}
+        myState: () => state,                                                                                                 {% if __.state %}
+        containerItems: () => maybe({{ __.maybe_expr(container.named_item_list) }}, [])(                                      {% if container.named_item_list %}
+          state.myContainer.data.containerItemsDisplay),                                                                      {% endif %}
+        containerItem: () => maybe({{ __.maybe_expr(container.named_item_list) }})(                                           {% if container.get_bvr("highlight") %}
+          state.myContainer.highlight.item),                                                                                  {% endif %}
+        containerItemsHighlight: () => state.myContainer.highlight,                                                           {% ?? container.get_bvr("highlight") %}
+        containerItemsSelection: () => state.myContainer.selection,                                                           {% ?? container.get_bvr("selection") %}
+        containerItemsFiltering: () => state.myContainer.filtering,                                                           {% ?? container.get_bvr("filtering") %}
+        containerItemsDeletion: () => state.myContainer.deletion,                                                             {% ?? container.get_bvr("deletion") %}{% endif %}
       };
 
-      {                                                                                                                         {% for container in __.state.containers %}
-        const maybe = createMaybe(
-          {{ __.input_expression(container) }}
-        );
-
-        result.defaultProps = {
-          ...result.defaultProps,
-          {{ named_item.typ.item_name }}: () => maybe(                                                                          {% for named_item in _.component.named_items %}
-            {{ __.get_pipeline(named_item).result_expression }}
-          ),                                                                                                                    {% endfor %}
-          {{ named_item_list.typ.item_name|plural }}: () => maybe(                                                              {% for named_item in _.component.named_item_lists %}
-            {{ __.get_pipeline(named_item_list).result_expression }}, []
-          ),                                                                                                                    {% endfor %}
-          myState: () => state,                                                                                                 {% if __.state %}
-          containerItems: () => maybe(state.myContainer.data.containerItemsDisplay, []),
-          containerItem: () => maybe(state.myContainer.highlight.item),                                                         {% ?? container.get_bvr("highlight") %}
-          containerItemsHighlight: () => state.myContainer.highlight,                                                           {% ?? container.get_bvr("highlight") %}
-          containerItemsSelection: () => state.myContainer.selection,                                                           {% ?? container.get_bvr("selection") %}
-          containerItemsFiltering: () => state.myContainer.filtering,                                                           {% ?? container.get_bvr("filtering") %}{% endif %}
-        };
-      }
-                                                                                                                            {% endfor %}
+                                                                                                                              {% endfor %}
       return result;
     };
 
