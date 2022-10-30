@@ -3,19 +3,18 @@
 {% magic_with mutation.name as myMutation %}
 {% magic_with container.item_name as containerItem %}
 {% magic_with container.name as myContainer %}
-import React from 'react';
-import * as R from 'ramda';
-import { observer } from 'mobx-react-lite';
-import { lookUp } from 'src/utils/ids';
 import { reaction } from 'mobx';
-import { log } from 'src/utils/logging';
-import { flags } from 'src/app/flags';
-import { MyState } from 'src/{{ __.state.state_provider.module.module_path }}/MyState';                                     {% ?? __.state %}
+import { observer } from 'mobx-react-lite';
+import * as R from 'ramda';
+import React from 'react';
+import { NestedDefaultPropsContext } from 'react-default-props-context';
+import { createMaybe } from 'src/api/loadingState';
 import { useMyQuery } from 'src/api/queries';                                                                               {% for query in __.queries %}{% endfor %}
 import { useMyMutation } from 'src/api/mutations';                                                                          {% for mutation in __.mutations %}{% endfor %}
-import {NestedDefaultPropsContext} from 'react-default-props-context';
-import {defaultProps as dps, withDefaultProps} from 'src/app/defaultProps';
-import { useStore } from 'src/app/components';
+import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
+import { flags } from 'src/app/flags';
+import { MyState } from 'src/{{ __.state.state_provider.module.module_path }}/MyState';                                     {% ?? __.state %}
+import { log } from 'src/utils/logging';
 
 type PropsT = React.PropsWithChildren<{}>;
 
@@ -58,17 +57,19 @@ export const {{ _.component.name }} = observer(
     });                                                                                                                     {% endif %}
 
     const getDefaultPropsContext = () => {
+      const maybe = createMaybe();
+
       return {
         defaultProps: {
           {{ named_item.typ.item_name }}: () => {{ __.get_pipeline(named_item).result_expression }}                         {% !! named_item in _.component.named_items %}
           {{ named_item_list.typ.item_name|plural }}: () => {{ __.get_pipeline(named_item_list).result_expression }}        {% !! named_item in _.component.named_item_lists %}
           myState: () => state,                                                                                             {% if __.state %}
-          containerItems: () => state.myContainer.data.containerItemsDisplay,                                               {% for container in __.state.containers %}
+          containerItems: () => maybe(state.myContainer.data.containerItemsDisplay, []),                                    {% for container in __.state.containers %}
+          containerItem: () => maybe(state.myContainer.highlight.item),                                                     {% ?? container.get_bvr("highlight") %}
           containerItemsHighlight: () => state.myContainer.highlight,                                                       {% ?? container.get_bvr("highlight") %}
-          containerItem: () => state.myContainer.highlight.item,                                                            {% ?? container.get_bvr("highlight") %}
           containerItemsSelection: () => state.myContainer.selection,                                                       {% ?? container.get_bvr("selection") %}
           containerItemsFiltering: () => state.myContainer.filtering,                                                       {% ?? container.get_bvr("filtering") %}
-                                                                                                            {% endfor %}{% endif %}
+                                                                                                                            {% endfor %}{% endif %}
         }
       };
     };
