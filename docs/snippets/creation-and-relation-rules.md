@@ -1,4 +1,4 @@
-# :Creation-rules and :relation-rules
+# Creation-:rules, created-:rules and relation-:rules
 
 ## Snippet (`bar_pkg/item/__init__.py`)
 
@@ -16,6 +16,10 @@ def create_item(term):
         item_name=kebab_to_camel(term.data)  # [4]
     )
 
+@rule("item")
+def created_item(item):
+    assert "-" not in item.item_name
+
 @create("project:item")
 def create_project_item(term):
     return Item(
@@ -23,17 +27,21 @@ def create_project_item(term):
     )
 ```
 
-## Fact
+## Fact: a creation-:rule creates a :resource from a :term
 
-A (Python) :Moonleap-module contains :creation-rules that convert :terms into Python :resource objects. A :creation-rule is a python function that is decorated with `@create` and returns a :resource.
+A (Python) :Moonleap-module contains creation-:rules that convert :terms into Python :resource objects. A creation-:rule is a python function that is decorated with `@create` and returns a :resource.
 
-## Fact
+## Fact: a creation-:rule is triggered using pattern matching
 
-The `@create` decorator contains a term-pattern that can be matched against a term. This pattern can include a name, data and tag pert. Here, the term-pattern is `"item"`.
+The `@create` decorator contains a term-pattern that can be matched against a term. This pattern can include a name, data and tag part. Here, the term-pattern is `"item"`.
 
-## Fact
+## Fact: a created-:rule is triggered after a resource was created
 
-The most specific :creation-rule that matches the :term is used to create the resource for that :term. For the term `project:item`, the match with `create_project_item` is more specific than the match with `create_item`.
+A created:-rule is a function - that is decorated with `@rule` - that is called after a resource has been created. Here we see a created-:rule called `created_item` whenever a resource was created that matches the "item" pattern.
+
+## Fact: the most specific creation-:rule wins
+
+The most specific creation-:rule that matches the :term is used to create the resource for that :term. For the term `project:item`, the match with `create_project_item` is more specific than the match with `create_item`.
 
 ## Snippet (`bar_pkg/item/__init__.py`)
 

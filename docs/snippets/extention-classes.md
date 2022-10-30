@@ -15,7 +15,7 @@ class ExtendItem:
 
 ## Fact
 
-An :extension-class adds member functions to an already existing class. Here, we add a `create_bar` member-function to the `Item` class. This member-function receives a `self` argument (as all member-funtions do) and returns a `Bar` instance. We also added a `baz` property that returns a `Baz` instance. Finally, we added a `foo` field that stores a boolean value, which is initialized to `False`.
+An :extension-class adds member functions to an already existing class. Here, we add a `create_bar` member-function to the `Item` class. This member-function receives a `self` argument (as all member-functions do) and returns a `Bar` instance. We also added a `baz` property that returns a `Baz` instance. Finally, we added a `foo` field that stores a boolean value, which is initialized to `False`.
 
 ## Snippet (`bar_pkg/item/__init__.py`)
 
