@@ -17,9 +17,9 @@ export function isLoaded(resource: any) {
   return !isLoading(resource);
 }
 
-export const createMaybe =
-  (parentResource: any) =>
-  (resource: any, defaultValue: any = null) =>
+export const maybe =
+  (parentResource: any, defaultValue: any = null) =>
+  (resource: any) =>
     isLoaded(parentResource) ? resource : _defaultValue(defaultValue);
 
 const _defaultValue = (value: any) => {

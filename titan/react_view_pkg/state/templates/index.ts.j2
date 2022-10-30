@@ -31,6 +31,17 @@ export class MyState {
     const getMyItemById = (x: string) => this.myContainer.data.myItemById[x];                           {% ?? container.get_bvr("selection") or container.get_bvr("highlight") %}
 
     mapDataToProps(
+      pmap(                                                                                             {% if container.get_bvr("filtering") %}
+        //
+        [this.myContainer.filtering, 'inputItems'],
+        () => this.myContainer.data.myItems,
+      ),                                                                                                {% endif %}
+      pmap(
+        //
+        [this.myContainer.data, 'myItemsDisplay'],
+        () => this.myContainer.data.myItems,                                                            {% ?? not container.get_bvr("filtering") %}
+        () => this.myContainer.filtering.filteredItems,                                                 {% ?? container.get_bvr("filtering") %}
+      ),
       pmap(                                                                                             {% if container.get_bvr("selection") %}
         //
         [this.myContainer.selection, 'selectableIds'],
@@ -48,12 +59,6 @@ export class MyState {
           ? getMyItemById(this.myContainer.highlight.id)
           : undefined,
       ),                                                                                                {% endif %}
-      pmap(
-        //
-        [this.myContainer.data, 'myItemsDisplay'],
-        () => this.myContainer.data.myItems,                                                            {% ?? not container.get_bvr("filtering") %}
-        () => this.myContainer.filtering.filteredItems,                                                 {% ?? container.get_bvr("filtering") %}
-      ),
     )
   }                                                                                                     {% endfor %}
 
