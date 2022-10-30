@@ -37,10 +37,10 @@ def field_spec_graphql_type(self: FieldSpec, host):
         return "Int" + postfix
 
     if self.field_type in ("string[]",):
-        return "String[]" + postfix
+        return "[String]" + postfix
 
     if self.field_type in ("int[]",):
-        return "Int[]" + postfix
+        return "[Int]" + postfix
 
     if self.field_type in ("float",):
         return "Float" + postfix
@@ -49,7 +49,7 @@ def field_spec_graphql_type(self: FieldSpec, host):
         return "ID" + postfix
 
     if self.field_type in ("uuid[]",):
-        return "ID[]" + postfix
+        return "[ID]" + postfix
 
     if self.field_type in ("form",):
         return f"{self.target_type_spec.type_name}T" + postfix
