@@ -11,39 +11,39 @@ import * as R from 'ramda';
 import React from 'react';
 import { NestedDefaultPropsContext } from 'react-default-props-context';
 import { createMaybe } from 'src/api/loadingState';
-import { useMyQuery } from 'src/api/queries';                                                                               {% for query in __.queries %}{% endfor %}
-import { useMyMutation } from 'src/api/mutations';                                                                          {% for mutation in __.mutations %}{% endfor %}
+import { useMyQuery } from 'src/api/queries';                                                                                   {% for query in __.queries %}{% endfor %}
+import { useMyMutation } from 'src/api/mutations';                                                                              {% for mutation in __.mutations %}{% endfor %}
 import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { flags } from 'src/app/flags';
-import { MyState } from 'src/{{ __.state.state_provider.module.module_path }}/MyState';                                     {% ?? __.state %}
+import { MyState } from 'src/{{ __.state.state_provider.module.module_path }}/MyState';                                         {% ?? __.state %}
 import { log } from 'src/utils/logging';
 
 type PropsT = React.PropsWithChildren<{}>;
 
 const DefaultProps = {
-    ...dps.{{ item.ts_var }},                                                                                               {% !! item in __.input_items %}
-    ...dps.{{ item_list.ts_var }},                                                                                          {% !! item_list in __.input_item_lists %}
+    ...dps.{{ item.ts_var }},                                                                                                   {% !! item in __.input_items %}
+    ...dps.{{ item_list.ts_var }},                                                                                              {% !! item_list in __.input_item_lists %}
 };
 
 export const {{ _.component.name }} = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
-    const myQuery = useMyQuery();                                                                                           {% !! query in __.queries %}
-    const myMutation = useMyMutation();                                                                                     {% !! mutation in __.mutations %}
+    const myQuery = useMyQuery();                                                                                               {% !! query in __.queries %}
+    const myMutation = useMyMutation();                                                                                         {% !! mutation in __.mutations %}
 
-    const [state] = React.useState(() => new MyState({                                                                      {% if __.state %}
-      deleteContainerItems: (ids: string[]) => deleteManyItems.mutateAsync(ids),                                            {% for container in __.state.containers %}{% ?? container.delete_items_mutation %}
-      deleteContainerItems: (ids: string[]) => Promise.all(R.map((x: string) => deleteSingleItem.mutateAsync(x), ids)),     {% ?? container.delete_item_mutation %}{% endfor %}
+    const [state] = React.useState(() => new MyState({                                                                          {% if __.state %}
+      deleteContainerItems: (ids: string[]) => deleteManyItems.mutateAsync(ids),                                                {% for container in __.state.containers %}{% ?? container.delete_items_mutation %}
+      deleteContainerItems: (ids: string[]) => Promise.all(R.map((x: string) => deleteSingleItem.mutateAsync(x), ids)),         {% ?? container.delete_item_mutation %}{% endfor %}
     }));
 
     (React.useEffect as any)(() => {
       const cleanUpReaction = reaction(
         () => {
           return {
-            {{ pipeline.output_name }}: {{ pipeline.result_expression }},                                                   {% !! pipeline in __.pipelines %}
+            {{ pipeline.output_name }}: {{ pipeline.result_expression }},                                                       {% !! pipeline in __.pipelines %}
           }
         },
         (inputs) => {
-          state.myContainer.data.containerItems = inputs.{{ pipeline.output_name }};                                        {% !! container, pipeline in __.pipeline_by_container %}
+          state.myContainer.data.containerItems = inputs.{{ pipeline.output_name }};                                            {% !! container, pipeline in __.pipeline_by_container %}
           if (flags.logStateProviders) {
             log('MyState updated', state.getSummary());
           }
@@ -56,24 +56,36 @@ export const {{ _.component.name }} = observer(
         cleanUpReaction();
         state.destroy();
       };
-    });                                                                                                                     {% endif %}
+    });                                                                                                                         {% endif %}
 
     const getDefaultPropsContext = () => {
-      const maybe = createMaybe();
-
-      return {
-        defaultProps: {
-          {{ named_item.typ.item_name }}: () => {{ __.get_pipeline(named_item).result_expression }}                         {% !! named_item in _.component.named_items %}
-          {{ named_item_list.typ.item_name|plural }}: () => {{ __.get_pipeline(named_item_list).result_expression }}        {% !! named_item in _.component.named_item_lists %}
-          myState: () => state,                                                                                             {% if __.state %}
-          containerItems: () => maybe(state.myContainer.data.containerItemsDisplay, []),                                    {% for container in __.state.containers %}
-          containerItem: () => maybe(state.myContainer.highlight.item),                                                     {% ?? container.get_bvr("highlight") %}
-          containerItemsHighlight: () => state.myContainer.highlight,                                                       {% ?? container.get_bvr("highlight") %}
-          containerItemsSelection: () => state.myContainer.selection,                                                       {% ?? container.get_bvr("selection") %}
-          containerItemsFiltering: () => state.myContainer.filtering,                                                       {% ?? container.get_bvr("filtering") %}
-                                                                                                                            {% endfor %}{% endif %}
-        }
+      const result = {
+        defaultProps: {}
       };
+
+      {                                                                                                                         {% for container in __.state.containers %}
+        const maybe = createMaybe(
+          {{ __.input_expression(container) }}
+        );
+
+        result.defaultProps = {
+          ...result.defaultProps,
+          {{ named_item.typ.item_name }}: () => maybe(                                                                          {% for named_item in _.component.named_items %}
+            {{ __.get_pipeline(named_item).result_expression }}
+          ),                                                                                                                    {% endfor %}
+          {{ named_item_list.typ.item_name|plural }}: () => maybe(                                                              {% for named_item in _.component.named_item_lists %}
+            {{ __.get_pipeline(named_item_list).result_expression }}, []
+          ),                                                                                                                    {% endfor %}
+          myState: () => state,                                                                                                 {% if __.state %}
+          containerItems: () => maybe(state.myContainer.data.containerItemsDisplay, []),
+          containerItem: () => maybe(state.myContainer.highlight.item),                                                         {% ?? container.get_bvr("highlight") %}
+          containerItemsHighlight: () => state.myContainer.highlight,                                                           {% ?? container.get_bvr("highlight") %}
+          containerItemsSelection: () => state.myContainer.selection,                                                           {% ?? container.get_bvr("selection") %}
+          containerItemsFiltering: () => state.myContainer.filtering,                                                           {% ?? container.get_bvr("filtering") %}{% endif %}
+        };
+      }
+                                                                                                                            {% endfor %}
+      return result;
     };
 
     return (

@@ -1,10 +1,8 @@
 from moonleap.utils.fp import append_uniq
-from titan.api_pkg.pipeline.props import (
-    ExtractItemListFromItem,
-    TakeHighlightedElmFromStateProvider,
-    TakeItemFromStateProvider,
-    TakeItemListFromStateProvider,
-)
+from titan.api_pkg.pipeline.props import (ExtractItemListFromItem,
+                                          TakeHighlightedElmFromStateProvider,
+                                          TakeItemFromStateProvider,
+                                          TakeItemListFromStateProvider)
 
 
 def get_helpers(_):
@@ -69,5 +67,8 @@ def get_helpers(_):
                     if named_output_or_container == pipeline.output:
                         return pipeline
             return None
+
+        def input_expression(self, container):
+
 
     return Helpers()
