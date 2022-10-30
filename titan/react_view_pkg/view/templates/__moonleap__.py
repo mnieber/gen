@@ -42,9 +42,7 @@ def _panel(divClassName, panel):
     for named_component in named_components:
         result.extend(
             [
-                " " * indent + "<div>",
-                " " * (indent + 2) + named_component.typ.react_tag,
-                " " * indent + "</div>",
+                " " * indent + named_component.typ.react_tag,
             ]
         )
 
