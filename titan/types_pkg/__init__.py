@@ -1,10 +1,8 @@
-from . import extendspectypes, formtype, item, itemlist, itemtype, typeregistry
+from . import extendspectypes, item, itemlist, typeregistry
 
 modules = [
     item,
     itemlist,
-    itemtype,
-    formtype,
     extendspectypes,
     typeregistry,
 ]
