@@ -5,7 +5,7 @@
 ```
 # The donations:project (block 1)
 
-The donation:project uses:
+The donation:project /uses
 - the backend:service and
 - the frontend:service.
 
