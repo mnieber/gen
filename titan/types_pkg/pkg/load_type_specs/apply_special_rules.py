@@ -29,13 +29,11 @@ def apply_special_rules(type_spec, value, fk: ForeignKey, parent_type_spec=None)
         key = l0(parent_type_spec.type_name)
         if key not in value:
             required = is_speccing_a_through_type or "is_owner" in fk.data_parts
-            value[key] = "pass.auto.related_fk" + ("" if required else ".optional")
+            value[key] = "pass.auto" + ("" if required else ".optional")
 
     # If we speccing a through type, then we also need a related fk to foo.var_type
     if is_speccing_a_through_type:
         assert fk.foo.var_type
         key = l0(fk.foo.var_type)
         if key not in value:
-            # Note that this field is not a "related_fk" because we want it
-            # to be available in the client.
             value[key] = "pass.auto"

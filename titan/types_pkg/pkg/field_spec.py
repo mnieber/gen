@@ -49,7 +49,6 @@ class FkFieldSpec(FieldSpec):
     related_name: T.Optional[str] = None
     admin_inline: T.Optional[bool] = field(default=None, repr=False)
     set_null: T.Optional[bool] = field(default=None, repr=False)
-    is_related_fk: T.Optional[bool] = None
 
 
 def get_field_spec_constructor(t):
