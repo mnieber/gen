@@ -12,9 +12,7 @@ class TypeSpecParser:
     def __init__(self, type_reg):
         self.type_reg = type_reg
 
-    def parse(
-        self, host, type_spec_dict, type_spec=None, related_parent_field_name=None
-    ):
+    def parse(self, host, type_spec_dict, type_spec=None):
         # For debugging purposes, we create a new dict that shows how the parser
         # interprets and modifies the type_spec_dict.
         trace = dict()
@@ -81,24 +79,12 @@ class TypeSpecParser:
                 #
                 # Use recursion to convert child type specs
                 #
-                fk_trace = self.parse(
-                    host,
-                    value,
-                    fk_type_spec,
-                    related_parent_field_name=(
-                        None
-                        # TODO: not sure if we can skip the related_name if fk.bar
-                        if (not type_spec or fk.bar)
-                        else (type_spec.type_name, fk.var)
-                    ),
-                )
+                fk_trace = self.parse(host, value, fk_type_spec)
 
                 # Set related name. If there is no type spec then we are in the root and in
                 # that case we never want to set a related name.
-                if type_spec and field_spec.field_type == "fk":
-                    _set_related_name(
-                        type_spec, related_parent_field_name, field_spec, fk_type_spec
-                    )
+                if field_spec.field_type == "fk" and fk.foo.related_name:
+                    field_spec.related_name = fk.foo.related_name
 
                 # Update trace
                 if fk.data_parts:
@@ -112,16 +98,6 @@ class TypeSpecParser:
             apply_type_updates(host, type_spec, type_spec_dict["__update__"])
 
         return trace
-
-
-def _set_related_name(type_spec, related_parent_field_name, field_spec, fk_type_spec):
-    if related_parent_field_name and field_spec.target == related_parent_field_name[0]:
-        field_spec.related_name = related_parent_field_name[1]
-    else:
-        # Find a matching related set in the fk type spec
-        for related_set_field in fk_type_spec.get_field_specs(["relatedSet"]):
-            if related_set_field.target == type_spec.type_name:
-                field_spec.related_name = related_set_field.name
 
 
 def _is_private_member(key):

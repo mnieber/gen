@@ -25,15 +25,20 @@ def apply_special_rules(type_spec, value, fk: ForeignKey, parent_type_spec=None)
     # If we are adding a related set, then create a related fk auto-field. Note that
     # this auto-field may be added to the type spec and then removed again if some
     # non-auto field matches it.
-    if fk.foo.field_type == "relatedSet" and parent_type_spec:
-        key = l0(parent_type_spec.type_name)
-        if key not in value:
-            required = is_speccing_a_through_type or "is_owner" in fk.data_parts
-            value[key] = "pass.auto" + ("" if required else ".optional")
+    if fk.foo.field_type == "relatedSet":
+        if parent_type_spec:
+            key = l0(parent_type_spec.type_name)
+            if not is_speccing_a_through_type:
+                key += f" for {fk.var}"
+            if key not in value:
+                required = is_speccing_a_through_type or "is_owner" in fk.data_parts
+                value[key] = "pass.auto" + ("" if required else ".optional")
 
-    # If we speccing a through type, then we also need a related fk to foo.var_type
-    if is_speccing_a_through_type:
-        assert fk.foo.var_type
-        key = l0(fk.foo.var_type)
-        if key not in value:
-            value[key] = "pass.auto"
+        # If we speccing a through type, then we also need a related fk to foo.var_type
+        if is_speccing_a_through_type:
+            assert fk.foo.var_type
+            key = l0(fk.foo.var_type)
+            if key not in value:
+                value[key] = "pass.auto"
+            if key not in value:
+                value[key] = "pass.auto"

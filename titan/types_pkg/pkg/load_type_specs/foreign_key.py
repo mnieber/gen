@@ -14,6 +14,7 @@ class Data:
     field_type: T.Optional[str] = None
     module_name: T.Optional[str] = None
     parts: T.List[str] = field(default_factory=list)
+    related_name: T.Optional[str] = None
 
     @property
     def key(self):
@@ -83,8 +84,13 @@ class ForeignKey:
 
 def _process_data(data, value, parts):
     data.parts = list(parts)
-    parts_as = value.split(" as ")
 
+    parts_for = value.split(" for ")
+    if len(parts_for) == 2:
+        data.related_name = parts_for[1]
+        value = parts_for[0]
+
+    parts_as = value.split(" as ")
     parts_as[-1], more_parts = strip_fk_symbols(parts_as[-1])
     data.parts += more_parts
     parts_module = parts_as[-1].split(".")
