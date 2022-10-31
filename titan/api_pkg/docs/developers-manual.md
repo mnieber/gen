@@ -16,7 +16,7 @@ The todos:module /provides the todo:item~list.
 Similarly, the :item resource represents a single item of some type, e.g. `todo:item`.
 An :item has a `name` that we shall refer to as the `item-name`.
 
-## Snippet (./specs/foo/spec.rst)
+## Snippet
 
 ```yaml
 # models.yaml
@@ -25,10 +25,6 @@ server:
   todolists.todolist:
     '__type__': entity.sorted
     'name': String.255.display
-
-    todos.todoSet=_@>:
-      'isCompleted': Boolean = False
-      'name': String.255.display
 ```
 
 ## Fact: :TypeSpecs are loaded from models.yaml
@@ -46,16 +42,30 @@ Module names are simply a way to place different types in the same group.
 
 ## Fact: A type spec contains key/value pairs
 
-Here, the `todolist` type has keys `name` and `todos.todoSet=_@>`. It also has `__type__` as a special key (every special key starts with a double underscore).
-
-## Fact: The `__type__` special key declares further details of a type spec
-
-Here, we see from the value for the `__type__` key that the `todolist` type is a sorted entity. Instead of using `__type__`, you can also add special symbols to the type name. Here, the "@" symbol is used to indicate that `todo` is an entity and ">"
-indicates that it is sorted.
+Here, the `todolist` type has keys `name` and `todos.todoSet=_@>`. It also has `__type__` as a special key (every special key starts with a double underscore). Here, we see from the value for the `__type__` key that the `todolist` type is a sorted entity.
 
 ## Fact: A type spec can declare scalar fields
 
 If the value for a key is not a yaml dict (or "pass", which is a special value that denotes an empty yaml dict), then it's part of a scalar field. In our example, the `todolist` type has `name` as a scalar field. The value for a scalar field starts with the (scalar) type-name, followed by some attributes. In our case, the attributes are `255` (which means that the maximum string length is 255) and `display` (which means that this field is used to display the type in - for example - a list-view).
+
+## Snippet
+
+```yaml
+# models.yaml
+
+server:
+  todolists.todolist:
+    '__type__': entity.sorted
+    'name': String.255.display
+
+    todos.todoSet=_@>:
+      'isCompleted': Boolean = False
+      'name': String.255.display
+```
+
+## Fact: Symbols can be used instead of `__type__`
+
+Instead of using `__type__`, you can also add special symbols to the type name. Here, the "@" symbol is used to indicate that `todo` is an entity and ">" indicates that it is sorted.
 
 ## Fact: A type spec can declare relational fields
 
@@ -67,31 +77,54 @@ Every key of a relational field indicates a type that is targetted by that field
 
 ## Fact: A `relatedSet` field implies a related `fk` field on the target type.
 
-In our example, we declared that `todolist` has a `todoSet` field. This is a `relatedSet` that targets `todo`. All of this implies that `todo` has an `fk` relational field that targets `todolist`. You don't need to add this related `fk`, it will be added automatically to `todo` as follows: `todolist: pass.auto.optional.related_fk`. What this says is that `todolist` is an automatic optional `fk` field that targets `todolist`.
+For technical reasons (that have to do with relational databases), when we declare that `todolist` has a `todoSet` field then we also need a related `fk` field on `todo` that targets `todolist`. This related `fk` will be added automatically to `todo` as follows: `todolist for todoSet: pass.auto.optional`. The `for` clause identifies the related field name in the parent type. The `auto` attribute indicates an automatically added field. If you also manually specify the `todolist` field in the `todo` type, then the automatically added field is ignored.
+
+## Snippet
+
+```yaml
+# models.yaml
+
+server:
+  todolists.todolist:
+    '__type__': entity.sorted
+    'name|': String.255.display
+    'description^': String
+
+client:
+  todoForm: pass
+  todolist:
+    '__update__': [name*]
+```
+
+## Fact: The client host can specify variations on types
+
+Here, we see that the "client" host uses the `todolist` type with some modifications that are specified using the `__update__` key. The "\*" symbol means that the field is not used at all in the "client" host.
+
+## Fact: A field can be marked as "model" or "api"
+
+Some fields are intended to be stored in the data model but not exposed in the api. Other fields do not exist in the model but only in the api (which means that the field needs to be derived from other data). In the above snippet, the `name` field is marked as existing only in the model, and the `description` field as existing only in the api.
+
+## Fact: A form type derives from a data type
+
+Here, we see a `todoForm` type that can be used to create a `todo` instance.
+
+## Snippet
+
+```yaml
+query getTodolists:
+  outputs:
+    todolists as todolistSet: pass
+
+mutation saveTodo:
+  inputs:
+    todoForm: pass
+  saves: [todo]
+```
 
 ## Fact: :Queries and :Mutations are loaded from qml.yaml
 
-- the `query` resource represents a graphql query, e.g. `the get-person:query`.
-- the `mutation` resource represents a graphql mutation, e.g. `the save-person:mutation`.
-
-## Field types
-
-Possible field types that can be used in a field spec are:
-
-- `string`, `date`, `boolean`, `slug`, `url`, `uuid` and other scalar types
-- `fk`: this field represents an external instance of some item.
-- `related set`: this field represents a list of external instances of some item.
-- `form`: this field is used in the inputs-type spec of a mutation.
-
-If the field spec does not have a scalar type then it has an associated `target` attribute that
-indicates the item-name that is associated with the field. For example, a `fk` with `target`
-equal to `Person` returns a `person:item`, a `relatedSet` with this target returns a `person:item~list`
-and a `form` with this target is used to create a `person:item`. A field spec of type `uuid` may also
-have a `target` attribute.
-
-# Queries
-
-Queries and mutations are loaded from the 'gql.yaml' file.
+Here we see a `getTodolists` query that provides a todolistSet.
+We also see a `saveTodo` mutation that takes a `todoForm` and saves a `todo`.
 
 # Pipelines
 
@@ -99,9 +132,10 @@ A pipeline specifies a route from an input (which can be an item, item~list, que
 
 # States and containers
 
-A state is a collection of containers.
-Every container stores one or more named items or item~lists.
+A :state is a collection of :containers.
+Every :container stores one or more named :items or :item~lists.
+A :state~provider runs a :pipeline and copies the output to its :containers.
 
-```
+# :FormViews
 
-```
+A :FormView has a :pipeline that allows it to run a mutation.
