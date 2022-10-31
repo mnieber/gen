@@ -88,4 +88,28 @@ def get_helpers(_):
             else:
                 return f"props.{plural(pipeline_source.item.item_name)}"
 
+        def delete_items_expr(self, container):
+            if container.delete_items_mutation:
+                name = container.delete_items_mutation.name
+                field_name = _get_field_name(
+                    container.delete_items_mutation, ["uuid[]"]
+                )
+                return f"{name}.mutateAsync({{{field_name}: ids}})"
+            elif container.delete_item_mutation:
+                name = container.delete_item_mutation.name
+                field_name = _get_field_name(
+                    container.delete_item_mutation, ["uuid", "string"]
+                )
+                return (
+                    "Promise.all(R.map((x: string) => "
+                    + f"{name}.mutateAsync({{{field_name}: x}}), ids))"
+                )
+
     return Helpers()
+
+
+def _get_field_name(mutation, field_types):
+    for field_type in field_types:
+        for field in mutation.gql_spec.get_inputs([field_type]):
+            return field.name
+    raise Exception("Unknown field name")

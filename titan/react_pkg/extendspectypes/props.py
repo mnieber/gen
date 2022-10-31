@@ -31,7 +31,7 @@ def item_ts_form_type(item):
 
 
 def field_spec_ts_type(field_spec):
-    if field_spec.field_type in ("fk",) and field_spec.target:
+    if field_spec.field_type in ("fk", "form") and field_spec.target:
         return f"{field_spec.target}T"
 
     if field_spec.field_type in ("relatedSet",) and field_spec.target:
@@ -63,9 +63,6 @@ def field_spec_ts_type(field_spec):
 
     if field_spec.field_type in ("date",):
         return "Date"
-
-    if field_spec.field_type in ("form",):
-        return ts_form_type_from_type_name(field_spec.target)
 
     raise Exception(f"Cannot deduce graphql type for {field_spec.field_type}")
 

@@ -53,8 +53,9 @@ def target_item(self):
     if self.target is None:
         return None
 
+    target = self.target[:-4] if self.field_type == "form" else self.target
     for item in get_type_reg().items:
-        if item.type_name == self.target:
+        if item.type_name == target:
             return item
 
     raise Exception(f"Cannot find target item for {self.target}")

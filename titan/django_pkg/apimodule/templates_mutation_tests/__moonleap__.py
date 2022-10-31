@@ -82,9 +82,8 @@ def get_helpers(_):
                     continue
 
                 import_path = f"{django_module.module_path}.tests.random_data"
-                form_type_name = form_field_spec.target + "Form"
                 result.append(
-                    f"from {import_path} import create_random_{sn(form_type_name)}"
+                    f"from {import_path} import create_random_{sn(form_field_spec.target)}"
                 )
 
                 for fk_field_spec in fk_field_specs_for_form_field(form_field_spec):
@@ -122,9 +121,9 @@ def get_helpers(_):
                         fixture = sn(fk_field_spec.name)
                         create_form_args.append(f"{arg_name}={fixture + '.id'}")
 
-                    form_type_name = l0(input_field_spec.target) + "Form"
                     root.IxI(
-                        f"{input_arg_name}=create_random_{sn(form_type_name)}",
+                        f"{input_arg_name}="
+                        + f"create_random_{sn(l0(input_field_spec.target))}",
                         create_form_args,
                         ",",
                     )

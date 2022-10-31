@@ -1,12 +1,26 @@
+from titan.types_pkg.pkg.form_type_spec_from_data_type_spec import (
+    form_type_spec_from_data_type_spec,
+)
 from titan.types_pkg.pkg.type_spec import TypeSpec
+
+from .add_host_to_type_spec import add_host_to_type_spec
 
 
 def update_or_create_type_spec(
-    type_reg, type_name, parts, module_name, parent_type_spec
+    host, type_reg, type_name, parts, module_name, parent_type_spec
 ):
     type_spec = type_reg.get(type_name, default=None)
     if not type_spec:
-        type_spec = TypeSpec(type_name=type_name, field_specs=[])
+        if type_name.endswith("Form"):
+            data_type_spec = type_reg.get(type_name[:-4])
+            if data_type_spec:
+                type_spec = form_type_spec_from_data_type_spec(
+                    data_type_spec, type_name
+                )
+                if host != "server":
+                    add_host_to_type_spec(host, type_spec)
+        if not type_spec:
+            type_spec = TypeSpec(type_name=type_name, field_specs=[])
         type_reg.setdefault(type_name, type_spec)
 
     # Update module name

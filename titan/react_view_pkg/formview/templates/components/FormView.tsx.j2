@@ -26,14 +26,14 @@ import {
 } from 'src/forms/components';
 import { createUUID } from 'src/utils/ids';
 import { cn } from 'src/utils/classnames';
-import { fieldSpecTsType } from 'src/api/types/fieldSpecTsType'                                         {% !! field_spec in __.form_field_specs %}
+import { fieldSpecTsType } from 'src/api/types/fieldSpecTsType'                                         {% for name, field_spec in __.fields %}{% ?? field_spec.field_type in ("uuid",) and field_spec.target %}{% endfor %}
 
 import './YellowTulipFormView.scss';
 
 type PropsT = {};
 
 const DefaultProps = {
-  ...dps.fieldSpecTargets,                                                                              {% !! field_spec in __.form_field_specs %}
+  ...dps.fieldSpecTargets,                                                                              {% for name, field_spec in __.fields %}{% ?? field_spec.field_type in ("uuid",) and field_spec.target %}{% endfor %}
 };
 
 export const YellowTulipFormView = observer(
@@ -46,9 +46,9 @@ export const YellowTulipFormView = observer(
     };
     const initialErrors = {};
     const handleValidate = ({values, setError} : HandleValidateArgsT) => {
-      if (R.isNil(values['{{ name }}'])) {                                                              {% for name, field_spec in __.fields %}{% if not field_spec.is_optional("client") %}
+      if (R.isNil(values['{{ name }}'])) {                                                              {% for name, field_spec in __.validated_fields %}
         setError('{{ name }}', 'This field is required');
-      }                                                                                                 {% endif %}{% endfor %}
+      }                                                                                                 {% endfor %}
     };
     const handleSubmit = ({ formState, values }: HandleSubmitArgsT) => {
       postRedRose({...unflatten(values)});

@@ -10,10 +10,7 @@ def fk_field_spec_target_type_spec(self: FkFieldSpec):
 
 
 def form_field_spec_target_type_spec(self: FkFieldSpec):
-    if not self.target:
-        return None
-
-    return get_type_reg().get(self.target + "Form")
+    return fk_field_spec_target_type_spec(self)
 
 
 def field_spec_graphql_type(self: FieldSpec, host):

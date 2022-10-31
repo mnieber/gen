@@ -102,7 +102,6 @@ def _process_data(data, value, parts):
         data.var_type = data.var_type[:-3]
         data.field_type = "relatedSet"
     elif data.var_type.endswith("Form"):
-        data.var_type = data.var_type[:-4]
         data.field_type = "form"
     else:
         data.field_type = "fk"

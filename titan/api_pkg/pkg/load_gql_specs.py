@@ -1,10 +1,8 @@
 import os
 
 import yaml
-from titan.types_pkg.typeregistry import get_type_reg
 
 from .get_gql_spec import get_gql_spec
-from .post_process_gql_specs import post_process_gql_specs
 
 
 def load_gql_specs(gql_reg, spec_dir):
@@ -13,7 +11,6 @@ def load_gql_specs(gql_reg, spec_dir):
         with open(fn) as f:
             root_gql_spec_dict = yaml.load(f, Loader=yaml.SafeLoader)
             get_all_gql_specs(gql_reg, "client", root_gql_spec_dict)
-            post_process_gql_specs(gql_reg, get_type_reg())
 
 
 def get_all_gql_specs(gql_reg, host, root_gql_spec_dict):

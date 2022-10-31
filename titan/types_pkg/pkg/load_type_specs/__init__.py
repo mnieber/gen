@@ -2,7 +2,7 @@ import os
 
 import yaml
 
-from .add_host_to_type_specs import add_host_to_type_specs
+from .add_host_to_type_spec import add_host_to_type_spec
 from .type_spec_parser import TypeSpecParser
 
 
@@ -18,6 +18,8 @@ def load_type_specs(type_reg, spec_dir):
             new_dict = parser.parse("server", type_spec_dict["server"])
             pp(new_dict)
 
-            add_host_to_type_specs("client", type_reg)
+            for type_spec in type_reg.type_specs():
+                add_host_to_type_spec("client", type_spec)
+
             new_dict = parser.parse("client", type_spec_dict["client"])
             pp(new_dict)
