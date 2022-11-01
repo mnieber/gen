@@ -24,7 +24,6 @@ import {
   UpdateSlugButton,
   ValuePickerField
 } from 'src/forms/components';
-import { createUUID } from 'src/utils/ids';
 import { cn } from 'src/utils/classnames';
 import { fieldSpecTsType } from 'src/api/types/fieldSpecTsType'                                         {% for name, field_spec in __.fields %}{% ?? field_spec.field_type in ("uuid",) and field_spec.target %}{% endfor %}
 
@@ -41,7 +40,6 @@ export const YellowTulipFormView = observer(
     const postRedRose = usePostRedRose().mutateAsync;
 
     const initialValues = {
-      id: createUUID(),
       '{{ name }}': fieldSpecTsDefaultValue,                                                           {% for name, field_spec in __.fields %}{% ?? not field_spec.field_type == "uuid" %}{% endfor %}
     };
     const initialErrors = {};
