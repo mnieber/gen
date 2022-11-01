@@ -10,6 +10,7 @@ def get_helpers(_):
             x for x in mutation.gql_spec.get_inputs() if x.field_type != "form"
         ]
         fields = []
+        uuid_fields = []
         validated_fields = []
 
         def __init__(self):
@@ -25,6 +26,9 @@ def get_helpers(_):
                         for x in self._form_fields(form_field_spec)
                     ]
                 )
+            self.uuid_fields = [
+                x for x in self.fields if x[1].field_type == "uuid" and x[1].target
+            ]
 
         def _get_validated_fields(self):
             for name, field_spec in self.fields:
@@ -52,5 +56,10 @@ def get_helpers(_):
 
         def display_field_name(self, type_spec):
             return type_spec.display_field.name if type_spec.display_field else "id"
+
+        def initial_value(self, field_spec):
+            if field_spec.field_type == "boolean":
+                return "false"
+            return "null"
 
     return Helpers()

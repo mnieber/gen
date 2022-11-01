@@ -40,7 +40,7 @@ export const YellowTulipFormView = observer(
     const postRedRose = usePostRedRose().mutateAsync;
 
     const initialValues = {
-      '{{ name }}': fieldSpecTsDefaultValue,                                                           {% for name, field_spec in __.fields %}{% ?? not field_spec.field_type == "uuid" %}{% endfor %}
+      '{{ name }}': {{ __.initial_value(field_spec) }},                                                 {% !! name, field_spec in __.fields %}
     };
     const initialErrors = {};
     const handleValidate = ({values, setError} : HandleValidateArgsT) => {
@@ -49,7 +49,12 @@ export const YellowTulipFormView = observer(
       }                                                                                                 {% endfor %}
     };
     const handleSubmit = ({ formState, values }: HandleSubmitArgsT) => {
-      postRedRose({...unflatten(values)});
+      postRedRose({
+        ...unflatten({
+          ...values,
+          '{{ name }}': values['{{ name }}'].id,                                                        {% !! name, field_spec in __.uuid_fields %}
+        })
+      });
       formState.reset(initialValues, initialErrors);
     };
 
@@ -83,6 +88,7 @@ export const YellowTulipFormView = observer(
               isCreatable={false}
               isMulti={false}
               pickableValues={props.fieldSpecTargets}
+              pickableValue={initialValues['{{ name }}']}
               labelFromValue={(x: any) => x.{{ __.display_field_name(field_spec.target_type_spec) }}}
             />                                                                                          {% endif %}
             <ControlledCheckbox />                                                                      {% ?? field_spec.field_type in ("boolean",) %}
