@@ -1,15 +1,14 @@
 @import 'src/frames/index.scss';
 
 .Field {
-  background-color: rgba(0, 0, 0, 0.05);
-  border-radius: 12px;
-  min-height: 72px;
+  @apply py-2;                                          {% ?? _.service.tailwindcss %}
 
   .Field__SmartLabel {
     @apply text-base;                                   {% ?? _.service.tailwindcss %}
   }
 
   textarea, input {
+    @apply border-b border-black;
     background-color: transparent !important;
   }
 }

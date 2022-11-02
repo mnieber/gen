@@ -17,6 +17,7 @@ export type PropsT<ValueT> = {
   labelFromValue: (value: any) => string;
   labelFromPickedValue?: (value: any) => string;
   [k: string]: any;
+  className?: any;
 };
 
 export const ValuePicker = observer(
@@ -75,6 +76,10 @@ export const ValuePicker = observer(
       <Select {...pickerProps} />
     );
 
-    return <div style={{ zIndex: others.zIndex }}>{picker}</div>;
+    return (
+      <div className={props.className} style={{ zIndex: others.zIndex }}>
+        {picker}
+      </div>
+    );
   }
 );

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useFormStateContext } from 'react-form-state-context';
 
 interface PropsT {
@@ -16,7 +15,7 @@ export const SaveButton = (props: PropsT) => {
         e.preventDefault();
         formState.submit();
       }}
-      disabled={props.disabled}
+      disabled={props.disabled || formState.getFlag('submitting')}
     >
       {props.label}
     </button>

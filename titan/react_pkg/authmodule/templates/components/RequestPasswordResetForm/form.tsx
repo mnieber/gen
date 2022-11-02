@@ -31,7 +31,7 @@ const getHandleValidate =
 const getHandleSubmit =
   (props: PropsT) =>
   ({ values }: HandleSubmitArgsT) => {
-    props.requestPasswordReset(values[ff.email]);
+    return props.requestPasswordReset(values[ff.email]);
   };
 
 export const form = {

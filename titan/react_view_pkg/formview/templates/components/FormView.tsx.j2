@@ -3,7 +3,6 @@
 {% magic_with field_spec.ts_type as fieldSpecTsType %}
 {% magic_with field_spec.ts_default_value as fieldSpecTsDefaultValue %}
 {% magic_with field_spec.target as FieldSpecTarget %}
-import React from 'react';
 import * as R from 'ramda';
 import { observer } from 'mobx-react-lite';
 import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
@@ -29,7 +28,9 @@ import { fieldSpecTsType } from 'src/api/types/fieldSpecTsType'                 
 
 import './YellowTulipFormView.scss';
 
-type PropsT = {};
+type PropsT = {
+  className?: any;
+};
 
 const DefaultProps = {
   ...dps.fieldSpecTargets,                                                                              {% for name, field_spec in __.fields %}{% ?? field_spec.field_type in ("uuid",) and field_spec.target %}{% endfor %}
@@ -49,21 +50,21 @@ export const YellowTulipFormView = observer(
       }                                                                                                 {% endfor %}
     };
     const handleSubmit = ({ formState, values }: HandleSubmitArgsT) => {
-      postRedRose({
-        ...unflatten({
+      return postRedRose(unflatten(
+        {                                                                                               {% if __.uuid_fields %}
           ...values,
           '{{ name }}': values['{{ name }}'].id,                                                        {% !! name, field_spec in __.uuid_fields %}
-        })
-      });
-      formState.reset(initialValues, initialErrors);
+        }
+        values                                                                                          {% else %}{% endif %}
+      )).then(() => formState.reset(initialValues, initialErrors));
     };
 
     return (
       <div
         className={cn(
           "YellowTulipFormView",
-          "flex flex-col items-center",
-          "w-full"
+          "flex flex-col",
+          props.className
         )}>
         <FormStateProvider
           initialValues={initialValues}
@@ -91,7 +92,7 @@ export const YellowTulipFormView = observer(
               pickableValue={initialValues['{{ name }}']}
               labelFromValue={(x: any) => x.{{ __.display_field_name(field_spec.target_type_spec) }}}
             />                                                                                          {% endif %}
-            <ControlledCheckbox />                                                                      {% ?? field_spec.field_type in ("boolean",) %}
+            <div className="flex flex-row items-begin mt-1"><ControlledCheckbox /></div>                {% ?? field_spec.field_type in ("boolean",) %}
           </Field>                                                                                      {% endfor %}
           <SaveButton
             label="Save"

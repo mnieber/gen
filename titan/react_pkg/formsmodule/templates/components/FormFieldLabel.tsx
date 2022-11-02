@@ -24,7 +24,14 @@ export const FormFieldLabel = (props: PropsT) => {
     isNil(props.buttons) || isEmpty(props.buttons)
       ? ({ children }: any) => <React.Fragment>{children}</React.Fragment>
       : ({ children }: any) => (
-          <div className="flex flex-row items-center">{children}</div>
+          <div
+            className={cn(
+              'FormFieldLabel__Children',
+              'flex flex-row items-center'
+            )}
+          >
+            {children}
+          </div>
         );
 
   return (
@@ -38,8 +45,13 @@ export const FormFieldLabel = (props: PropsT) => {
             {fieldContext.label}
           </label>
         )}
+        {props.buttons?.length && <div className="flex-grow" />}
         {props.buttons?.length && (
-          <div className="flex flex-row">{props.buttons}</div>
+          <div
+            className={cn('FormFieldLabel__Buttons', 'flex flex-row', 'ml-2')}
+          >
+            {props.buttons}
+          </div>
         )}
       </RowWrapper>
       {props.children}

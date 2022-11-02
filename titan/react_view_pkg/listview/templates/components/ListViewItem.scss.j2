@@ -3,16 +3,16 @@
   @apply cursor-pointer;                              {% if _.service.tailwindcss %}
   cursor: pointer;                                    {% else %}{% endif %}
 }
-                                                      {% for bvr in _.component.bvrs %}
-.YellowTulipListViewItem--selected {                  {% if bvr.name == "selection" %}
-  @apply bg-yellow-400 font-bold;                     {% if _.service.tailwindcss %}
-  background-color: #ffeb3b;                          {% else %}{% endif %}
-}                                                     {% endif %}
 
-.YellowTulipListViewItem--highlighted {               {% if bvr.name == "highlight" %}
-  @apply border-4 border-blue-300;                    {% if _.service.tailwindcss %}
-  border-color: #0070f3;                              {% else %}
-  border-width: 4px;                                  {% endif %}
-}                                                     {% endif %}
-                                                      {% endfor %}
+.YellowTulipListViewItem--selected {                  {% if __.has_selection %}
+  @apply bg-yellow-200;                               {% if _.service.tailwindcss %}
+  background-color: #ffeb3b;                          {% else %}{% endif %}
+}
+                                                      {% endif %}
+
+.YellowTulipListViewItem--highlighted {               {% if __.has_highlight %}
+  @apply font-bold;                                   {% if _.service.tailwindcss %}
+  font-weight: 800;                                   {% else %}{% endif %}
+}
+                                                      {% endif %}
 {% end_magic_with %}

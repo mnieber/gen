@@ -22,10 +22,18 @@ class JsFileMerger(FileMerger):
         has_footer_content = False
 
         for content in (lhs_content, rhs_content):
-            for line in content.split(os.linesep):
+            lines = content.split(os.linesep)
+            line_idx = 0
+            while line_idx < len(lines):
+                line = lines[line_idx]
+                line_idx += 1
+
                 if line == "export {};":
                     continue
                 elif line.startswith("import"):
+                    while ";" not in line and line_idx < len(lines):
+                        line += lines[line_idx]
+                        line_idx += 1
                     if line not in header:
                         header.append(line)
                 else:

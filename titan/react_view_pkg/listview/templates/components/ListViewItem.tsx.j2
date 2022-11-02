@@ -1,18 +1,19 @@
 {% magic_with _.component.item_name as fooBar %}
 {% magic_with field_spec.name as fieldSpecName %}
-import React from 'react';
 import { cn } from 'src/utils/classnames';
 import { observer } from 'mobx-react-lite';
 import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
+import { isUpdating } from 'src/app/ResourceState';
+import UIkit from 'uikit';
 
 import './FooBarListViewItem.scss';
 
 export type PropsT = {
   className?: any;
-  isSelected: boolean;                                                                            {% ?? __.selection_bvr %}
-  isHighlighted: boolean;                                                                         {% ?? __.selection_bvr %}
+  isSelected: boolean;                                                                  {% ?? __.selection_bvr %}
+  isHighlighted: boolean;                                                               {% ?? __.selection_bvr %}
   onClick?: any;
-  onDelete: Function;                                                                             {% ?? __.deletion_bvr %}
+  onDelete: Function;                                                                   {% ?? __.deletion_bvr %}
   onMouseDown?: any;
   onMouseUp?: any;
 };
@@ -23,31 +24,37 @@ const DefaultProps = {
 
 export const FooBarListViewItem = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
+    if (isUpdating(props.fooBar)) {
+      return UIkit && <div data-uk-spinner className=""></div>;                         {% ?? _.service.uikit %}
+      return null;                                                                      {% ?? not _.service.uikit %}
+    }
+
     return (
       <div
         className={cn(
-          'FooBarListViewItem', 'flex flex-col flex-1 mb-2',
-          {                                                                                         {% min_lines count=3 %}
-            'FooBarListViewItem--selected': props.isSelected,                                       {% ?? __.selection_bvr %}
-            'FooBarListViewItem--highlighted': props.isHighlighted,                                 {% ?? __.selection_bvr %}
-          },                                                                                        {% end_min_lines %}
+          'FooBarListViewItem', 'flex flex-row flex-1 mb-2',
+          {                                                                             {% min_lines count=3 %}
+            'FooBarListViewItem--selected': props.isSelected,                           {% ?? __.selection_bvr %}
+            'FooBarListViewItem--highlighted': props.isHighlighted,                     {% ?? __.selection_bvr %}
+          },                                                                            {% end_min_lines %}
           props.className
         )}
         onClick={props.onClick}
         onMouseDown={props.onMouseDown}
         onMouseUp={props.onMouseUp}
       >
-        <div>                                                                                       {% for field_spec in __.fields %}{% if field_spec.display %}
-          {props.fooBar.fieldSpecName}                                                              {% ?? field_spec.field_type not in ("boolean",) %}
-          fieldSpecName: {props.fooBar.fieldSpecName ? 'Yes' : 'No'}                                {% ?? field_spec.field_type in ("boolean",) %}
-        </div>                                                                                      {% endif %}{% endfor %}
-        <button                                                                                     {% if __.deletion_bvr %}
+        <div>                                                                           {% for field_spec in __.fields %}{% if field_spec.display %}
+          {props.fooBar.fieldSpecName}                                                  {% ?? field_spec.field_type not in ("boolean",) %}
+          fieldSpecName: {props.fooBar.fieldSpecName ? 'Yes' : 'No'}                    {% ?? field_spec.field_type in ("boolean",) %}
+        </div>                                                                          {% endif %}{% endfor %}
+        <div className="flex-grow"></div>                                               {% if __.deletion_bvr %}
+        <button
           onClick={() => {
             props.onDelete();
           }}
         >
           Delete
-        </button>                                                                                   {% endif %}
+        </button>                                                                       {% endif %}
       </div>
     );
   }, DefaultProps)

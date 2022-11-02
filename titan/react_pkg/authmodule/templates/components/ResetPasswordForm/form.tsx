@@ -43,7 +43,7 @@ const getHandleValidate =
 const getHandleSubmit =
   (props: PropsT) =>
   ({ values }: { values: FormState['values'] }) => {
-    props.resetPassword(values.password);
+    return props.resetPassword(values.password);
   };
 
 export const form = {

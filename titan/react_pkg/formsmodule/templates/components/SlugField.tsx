@@ -1,6 +1,7 @@
 import { useFormStateContext } from 'react-form-state-context';
 import { useFormFieldContext } from 'src/forms/components/FormFieldContext';
 import { TextField } from 'src/forms/components/TextField';
+import { cn } from 'src/utils/classnames';
 import { slugify } from 'src/utils/slugify';
 
 export type PropsT = {
@@ -14,7 +15,11 @@ export const UpdateSlugButton = (props: PropsT) => {
 
   return (
     <div
-      className={props.className}
+      className={cn(
+        'UpdateSlugButton',
+        'uk-button uk-button-default',
+        props.className
+      )}
       onClick={() => {
         const newSlug = slugify(formState.values[props.relatedFieldName]);
         if (newSlug) {

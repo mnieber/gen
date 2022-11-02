@@ -43,7 +43,7 @@ const getHandleValidate =
 const getHandleSubmit =
   (props: PropsT) =>
   ({ values }: { values: FormState['values'] }) => {
-    props.signUp(values[ff.email], values[ff.acceptsTerms]);
+    return props.signUp(values[ff.email], values[ff.acceptsTerms]);
   };
 
 export const form = {

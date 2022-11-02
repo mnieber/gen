@@ -1,7 +1,11 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useRequestMagicLink, useSignIn, useSignInByMagicLink } from 'src/auth/api';
+import {
+  useRequestMagicLink,
+  useSignIn,
+  useSignInByMagicLink,
+} from 'src/auth/api';
 import { States } from 'src/auth/api/states';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { SignInForm } from 'src/auth/components/SignInForm';
@@ -50,7 +54,7 @@ export const SignInPage: React.FC = observer(() => {
         errors={authState.errors}
         className="mb-4"
       />
-      <div className="flex flex-col items-center">
+      <div className="SignInPage__Footer flex flex-col items-center">
         {messages.divForgotYourPassword}
         <div className="flex flex-row">
           {messages.divDontHaveAnAccount}

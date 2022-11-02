@@ -13,7 +13,7 @@ export const TextField = (props: PropsT) => {
   });
 
   return (
-    <div className={cn('TextField', props.className)}>
+    <div className={cn('TextField', 'flex flex-col', props.className)}>
       <input {...fieldProps} />
     </div>
   );

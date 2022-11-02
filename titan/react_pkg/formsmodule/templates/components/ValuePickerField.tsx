@@ -41,6 +41,7 @@ export const ValuePickerField = observer(<ValueT,>(props: PropsT<ValueT>) => {
 
   return (
     <ValuePicker
+      className="mt-1"
       {...valuePickerProps}
       name={fieldContext.fieldName}
       placeholder={props.placeholder ?? fieldContext.label}

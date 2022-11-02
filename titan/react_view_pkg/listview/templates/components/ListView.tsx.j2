@@ -10,12 +10,11 @@ import { FooItemListViewItem } from 'src/myReactModule/components/FooItemListVie
 import { FooItemT } from 'src/api/types/FooItemT';
 import { getResourceView } from 'src/utils/components';
 import { isLoaded } from 'src/api/loadingState';
-
 import { Deletion } from 'skandha-facets/Deletion';                                             {% ?? __.deletion_bvr %}
 import { Highlight } from 'skandha-facets/Highlight';                                           {% ?? __.selection_bvr %}
 import { Selection } from 'skandha-facets/Selection';                                           {% if __.selection_bvr %}
 import { ClickToSelectItems } from 'skandha-facets/handlers';                                   {% endif %}
-
+import UIkit from 'uikit';
 import './FooItemListView.scss';
 
 type PropsT = {
@@ -32,7 +31,8 @@ const DefaultProps = {
 export const FooListView = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
     if (!isLoaded(props.fooItems)) {
-      return null;
+      return UIkit && <div data-uk-spinner className=""></div>;                                 {% ?? _.service.uikit %}
+      return null;                                                                              {% ?? not _.service.uikit %}
     }
 
     const handleClick = new ClickToSelectItems({                                                {% if __.selection_bvr %}

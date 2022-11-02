@@ -32,6 +32,7 @@ export const Field = observer((props: PropsT) => {
         className={cn(
           'Field',
           'px-6',
+          'mb-4',
           'flex flex-col justify-center',
           props.className,
           (showSmartLabel || !props.useSmartLabel) && [

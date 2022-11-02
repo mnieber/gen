@@ -9,6 +9,10 @@ def get_helpers(_):
         type_spec = _.component.item.type_spec
         selection_bvr = _find_behavior("selection")
         deletion_bvr = _find_behavior("deletion")
+        highlight_bvr = _find_behavior("deletion")
+
+        has_selection = selection_bvr
+        has_highlight = selection_bvr or highlight_bvr
 
         @property
         def fields(self):
