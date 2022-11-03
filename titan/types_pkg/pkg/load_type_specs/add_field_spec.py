@@ -1,3 +1,6 @@
+from moonleap.utils.fp import append_uniq
+
+
 def add_field_spec(type_spec, field_spec):
     # Check if matching auto fields have previously been added for this field_spec
     auto_field_specs = _get_matching_auto_field_specs(type_spec, field_spec)
@@ -32,7 +35,10 @@ def add_field_spec(type_spec, field_spec):
         type_spec.display_field = field_spec
 
     if field_spec.admin_search:
-        type_spec.admin_search_by.append(field_spec.key)
+        append_uniq(type_spec.admin_search_by, field_spec.key)
+
+    if field_spec.select:
+        append_uniq(type_spec.select_by, field_spec.key)
 
 
 def _get_matching_auto_field_specs(type_spec, field_spec):
@@ -56,8 +62,8 @@ def _remove_field_spec_by_key(type_spec, key):
     if type_spec.admin_search_by:
         type_spec.admin_search_by = [x for x in type_spec.admin_search_by if x != key]
 
-    if type_spec.select_item_by:
-        type_spec.select_item_by = [x for x in type_spec.select_item_by if x != key]
+    if type_spec.select_by:
+        type_spec.select_by = [x for x in type_spec.select_by if x != key]
 
     if type_spec.display_field and type_spec.display_field.key == key:
         type_spec.display_field = None

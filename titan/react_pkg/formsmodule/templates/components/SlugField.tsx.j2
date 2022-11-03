@@ -1,6 +1,7 @@
 import { useFormStateContext } from 'react-form-state-context';
 import { useFormFieldContext } from 'src/forms/components/FormFieldContext';
 import { TextField } from 'src/forms/components/TextField';
+import { ukButton } from 'src/frames/components/Button';                                      {% ?? _.service.uikit %}
 import { cn } from 'src/utils/classnames';
 import { slugify } from 'src/utils/slugify';
 
@@ -17,7 +18,7 @@ export const UpdateSlugButton = (props: PropsT) => {
     <div
       className={cn(
         'UpdateSlugButton',
-        'uk-button uk-button-default',
+        ukButton,                                                                             {% ?? _.service.uikit %}
         props.className
       )}
       onClick={() => {

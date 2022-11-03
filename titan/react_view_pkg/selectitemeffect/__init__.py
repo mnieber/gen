@@ -1,33 +1,35 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import create, empty_rule, extend, u0
+from moonleap import create, create_forward, empty_rule, extend, rule, u0
 from moonleap.utils.case import kebab_to_camel
-from moonleap.verbs import uses
-from titan.types_pkg.itemlist.resources import ItemList
+from moonleap.verbs import has, uses
 
 from .resources import SelectItemEffect
 
-base_tags = {"select-item-effect": ["component", "api-effect"]}
+base_tags = {"select-item-effect": ["component"]}
 
 
-rules = {("item~list", uses, "select-item-effect"): empty_rule()}
+rules = {("select-item-effect", has, "item~list"): empty_rule()}
 
 
 @create("select-item-effect")
 def create_select_item_effect(term):
     select_item_effect = SelectItemEffect(
-        name=kebab_to_camel(u0(term.data)) + "Effect",
+        item_name=kebab_to_camel(term.data),
+        name=kebab_to_camel(f"Select{u0(term.data)}Effect"),
     )
     select_item_effect.template_dir = Path(__file__).parent / "templates"
     return select_item_effect
 
 
+@rule("select-item-effect")
+def created_select_item_effect(select_item_effect):
+    return create_forward(
+        select_item_effect, has, f"{select_item_effect.item_name}:item~list"
+    )
+
+
 @extend(SelectItemEffect)
 class ExtendSelectItemEffect:
-    item_list = P.parent("item~list", uses, required=True)
-
-
-@extend(ItemList)
-class ExtendItemList:
-    react_select_effect = P.child(uses, "select-item-effect")
+    item_list = P.child(has, "item~list", required=True)

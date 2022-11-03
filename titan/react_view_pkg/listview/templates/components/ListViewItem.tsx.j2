@@ -4,6 +4,7 @@ import { cn } from 'src/utils/classnames';
 import { observer } from 'mobx-react-lite';
 import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { isUpdating } from 'src/app/ResourceState';
+import { ukButton } from 'src/frames/components/Button';                                {% ?? _.service.uikit %}
 import UIkit from 'uikit';
 
 import './FooBarListViewItem.scss';
@@ -32,7 +33,7 @@ export const FooBarListViewItem = observer(
     return (
       <div
         className={cn(
-          'FooBarListViewItem', 'flex flex-row flex-1 mb-2',
+          'FooBarListViewItem', 'flex flex-row items-center flex-1 mb-2',
           {                                                                             {% min_lines count=3 %}
             'FooBarListViewItem--selected': props.isSelected,                           {% ?? __.selection_bvr %}
             'FooBarListViewItem--highlighted': props.isHighlighted,                     {% ?? __.selection_bvr %}
@@ -49,6 +50,7 @@ export const FooBarListViewItem = observer(
         </div>                                                                          {% endif %}{% endfor %}
         <div className="flex-grow"></div>                                               {% if __.deletion_bvr %}
         <button
+          className={ukButton}                                                          {% ?? _.service.uikit %}
           onClick={() => {
             props.onDelete();
           }}

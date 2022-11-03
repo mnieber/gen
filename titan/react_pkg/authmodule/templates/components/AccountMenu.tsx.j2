@@ -6,7 +6,9 @@ import { RouterLink } from 'src/routes/components';
 import { history } from 'src/routes/components/UrlRouter';
 import { useRoutes } from 'src/routes/hooks/useRoutes';
 import { cn } from 'src/utils/classnames';
+import { ukButton } from 'src/frames/components/Button';                                        {% ?? _.service.uikit %}
 import UIkit from 'uikit';                                                                      {% ?? _.service.uikit %}
+
 import './AccountMenu.scss';
 
 type PropsT = React.PropsWithChildren<{ className?: any }>;
@@ -50,7 +52,7 @@ export const AccountMenu = observer(() => {
     <div className={cn('AccountMenu'{% if _.service.uikit %}, 'uk-inline'{% endif %})}>
       <button
         data-cy="accountMenu"
-        className="{% if _.service.uikit %}uk-button uk-button-default{% endif %}"
+        className={ukButton}                                                                   {% ?? _.service.uikit %}
         type="button"
       >
         Account

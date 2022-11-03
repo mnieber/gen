@@ -19,7 +19,7 @@ def item_ts_var(item):
 
 
 def item_list_ts_type(item_list):
-    return f"[{ts_type_from_type_name(item_list.item.type_name)}]"
+    return f"{ts_type_from_type_name(item_list.item.type_name)}[]"
 
 
 def item_list_ts_var(item_list):

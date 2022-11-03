@@ -12,7 +12,7 @@ class TypeSpec:
     admin_search_by: T.List[str] = field(default_factory=list, repr=False)
     display_field: T.Optional[FieldSpec] = field(default=None, repr=False)
     module_name: T.Optional[str] = None
-    select_item_by: T.List[str] = field(default_factory=list, repr=False)
+    select_by: T.List[str] = field(default_factory=list, repr=False)
     is_entity: T.Optional[bool] = None
     extract_gql_fields: bool = field(default=False, repr=False)
     is_sorted: bool = field(default=False, repr=False)

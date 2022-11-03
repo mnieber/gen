@@ -21,7 +21,7 @@ def _named_components(panel):
         return [panel]
 
 
-def _panel(divClassName, panel):
+def _panel(div_class_names, panel):
     if not panel:
         return []
 
@@ -33,8 +33,9 @@ def _panel(divClassName, panel):
     indent = 2
     result = []
 
+    div_class_name = ", ".join([f'"{x}"' for x in div_class_names])
     if collapses:
-        result.extend([f'{" " * indent}<div className="{divClassName}">'])
+        result.extend([f'{" " * indent}<div className={{cn({div_class_name})}}>'])
         indent += 2
         if panel.typ.wraps_children:
             result.extend([" " * indent + r"{props.children}"])
@@ -92,17 +93,20 @@ def get_helpers(_):
                     [
                         r"<div",
                         r"  className={cn(",
-                        f"    {rootClass}'flex flex-col w-full', props.className",
+                        f"    {rootClass}'flex flex-col', props.className",
                         r"  )}",
                         r">",
                     ]
                 )
-            result.extend(_panel(self.view.name + "__TopPanel", self.view.top_panel))
+            panel_cn = self.view.name + "__Panel"
+            result.extend(
+                _panel([f"{panel_cn} {panel_cn}--top", "mb-4"], self.view.top_panel)
+            )
 
             # mid section
             if self.view.left_panel or self.view.right_panel:
                 rootClass = (
-                    ""
+                    f"'{self.view.name}__MidSection', "
                     if self.view.top_panel or self.view.bottom_panel
                     else f"'{self.view.name}', "
                 )
@@ -115,12 +119,22 @@ def get_helpers(_):
                         r">",
                     ]
                 )
-            result.extend(_panel(self.view.name + "__LeftPanel", self.view.left_panel))
             result.extend(
-                _panel(self.view.name + "__MiddlePanel", self.view.middle_panel)
+                _panel(
+                    [f"{panel_cn} {panel_cn}--left", "w-1/2", "mr-4", "mb-4"],
+                    self.view.left_panel,
+                )
             )
             result.extend(
-                _panel(self.view.name + "__RightPanel", self.view.right_panel)
+                _panel(
+                    [f"{panel_cn} {panel_cn}--middle", "mb-4"], self.view.middle_panel
+                )
+            )
+            result.extend(
+                _panel(
+                    [f"{panel_cn} {panel_cn}--right", "w-1/2", "mb-4"],
+                    self.view.right_panel,
+                )
             )
 
             for named_component in self.view.child_components:
@@ -137,7 +151,9 @@ def get_helpers(_):
 
             # bottom section
             result.extend(
-                _panel(self.view.name + "__BottomPanel", self.view.bottom_panel)
+                _panel(
+                    [f"{panel_cn} {panel_cn}--bottom", "mb-4"], self.view.bottom_panel
+                )
             )
             if self.has_col:
                 result.append(r"</div>")

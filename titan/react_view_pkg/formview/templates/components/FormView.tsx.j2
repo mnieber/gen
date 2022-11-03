@@ -1,5 +1,5 @@
-{% magic_with _.component.name as YellowTulipFormView %}
-{% magic_with __.mutation.name as postRedRose %}
+{% magic_with _.component.name as MyFormView %}
+{% magic_with __.mutation.name as postMyMutation %}
 {% magic_with field_spec.ts_type as fieldSpecTsType %}
 {% magic_with field_spec.ts_default_value as fieldSpecTsDefaultValue %}
 {% magic_with field_spec.target as FieldSpecTarget %}
@@ -12,7 +12,7 @@ import {
   HandleSubmitArgsT,
   unflatten
 } from 'react-form-state-context';
-import { usePostRedRose } from 'src/api/mutations';
+import { usePostMyMutation } from 'src/api/mutations';
 import {
   ControlledCheckbox,
   Field,
@@ -26,7 +26,7 @@ import {
 import { cn } from 'src/utils/classnames';
 import { fieldSpecTsType } from 'src/api/types/fieldSpecTsType'                                         {% for name, field_spec in __.fields %}{% ?? field_spec.field_type in ("uuid",) and field_spec.target %}{% endfor %}
 
-import './YellowTulipFormView.scss';
+import './MyFormView.scss';
 
 type PropsT = {
   className?: any;
@@ -36,9 +36,9 @@ const DefaultProps = {
   ...dps.fieldSpecTargets,                                                                              {% for name, field_spec in __.fields %}{% ?? field_spec.field_type in ("uuid",) and field_spec.target %}{% endfor %}
 };
 
-export const YellowTulipFormView = observer(
+export const MyFormView = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
-    const postRedRose = usePostRedRose().mutateAsync;
+    const postMyMutation = usePostMyMutation().mutateAsync;
 
     const initialValues = {
       '{{ name }}': {{ __.initial_value(field_spec) }},                                                 {% !! name, field_spec in __.fields %}
@@ -50,7 +50,7 @@ export const YellowTulipFormView = observer(
       }                                                                                                 {% endfor %}
     };
     const handleSubmit = ({ formState, values }: HandleSubmitArgsT) => {
-      return postRedRose(unflatten(
+      return postMyMutation(unflatten(
         {                                                                                               {% if __.uuid_fields %}
           ...values,
           '{{ name }}': values['{{ name }}'].id,                                                        {% !! name, field_spec in __.uuid_fields %}
@@ -62,7 +62,7 @@ export const YellowTulipFormView = observer(
     return (
       <div
         className={cn(
-          "YellowTulipFormView",
+          "MyFormView",
           "flex flex-col",
           props.className
         )}>

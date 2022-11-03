@@ -3,18 +3,18 @@ from moonleap.utils.inflect import plural
 
 
 def get_helpers(_):
-    select_item_effect = _.component
-    _item_list = select_item_effect.item_list
-    _item_name = _item_list.item_name
-
     class Helpers:
-        item_list = _item_list
-        item_name = _item_name
+        select_item_effect = _.component
+        item_list = select_item_effect.item_list
+        item_name = item_list.item_name
         type_spec = item_list.item.type_spec
         items_name = plural(item_name)
-        route_params = [
-            _item_name + u0(param) for param in type_spec.select_item_by or []
-        ]
+        route_params = []
+
+        def __init__(self):
+            self.route_params = [
+                self.item_name + u0(param) for param in self.type_spec.select_by or []
+            ]
 
         def select_effect_args(self):
             return ", ".join(
@@ -37,7 +37,7 @@ def get_helpers(_):
                 " && ".join(
                     [
                         f"x.{param} === args.{self.item_name + u0(param)}"
-                        for param in self.type_spec.select_item_by or []
+                        for param in self.type_spec.select_by or []
                     ]
                 )
                 if self.route_params

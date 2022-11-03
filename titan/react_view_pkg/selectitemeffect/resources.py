@@ -5,4 +5,4 @@ from titan.react_pkg.component import Component
 
 @dataclass
 class SelectItemEffect(Component):
-    pass
+    item_name: str
