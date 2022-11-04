@@ -1,6 +1,6 @@
 import moonleap.resource.props as P
 from moonleap import Prop, create, empty_rule, extend, kebab_to_camel
-from moonleap.verbs import deletes, has, provides, saves
+from moonleap.verbs import deletes, has, orders, provides, saves
 
 from . import props
 from .resources import Mutation
@@ -15,6 +15,7 @@ rules = {
     ("mutation", saves, "item"): empty_rule(),
     ("mutation", deletes, "item~list"): empty_rule(),
     ("mutation", deletes, "item"): empty_rule(),
+    ("mutation", orders, "item~list"): empty_rule(),
     ("mutation", provides, "x+item"): empty_rule(),
     ("mutation", provides, "x+item~list"): empty_rule(),
 }
@@ -32,4 +33,5 @@ class ExtendMutation:
     item_lists_saved = P.children(saves, "item~list")
     items_deleted = P.children(deletes, "item")
     item_lists_deleted = P.children(deletes, "item~list")
+    item_lists_ordered = P.children(orders, "item~list")
     gql_spec = Prop(props.gql_spec)

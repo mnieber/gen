@@ -1,7 +1,6 @@
 from titan.types_pkg.pkg.field_spec import FieldSpec
-from titan.types_pkg.pkg.load_type_specs.field_spec_from_dict import (
-    field_spec_from_dict,
-)
+from titan.types_pkg.pkg.load_type_specs.field_spec_from_dict import \
+    field_spec_from_dict
 from titan.types_pkg.pkg.type_spec import TypeSpec
 from titan.types_pkg.typeregistry import get_type_reg
 
@@ -39,6 +38,10 @@ def get_gql_spec(gql_reg, host, endpoint_key, endpoint_spec_dict):
         is_list = item_name.endswith("Set")
         deletes.append((item_name.removesuffix("Set"), is_list))
 
+    orders = []
+    for item_name in endpoint_spec_dict.get("orders", []):
+        orders.append(item_name.removesuffix("Set"))
+
     saves = []
     for item_name in endpoint_spec_dict.get("saves", []):
         is_list = item_name.endswith("Set")
@@ -69,6 +72,7 @@ def get_gql_spec(gql_reg, host, endpoint_key, endpoint_spec_dict):
             name=name,
             is_mutation=is_mutation,
             deletes=deletes,
+            orders=orders,
             saves=saves,
             invalidates=invalidates,
             inputs_type_spec=TypeSpec(type_name=name + "Inputs", field_specs=inputs),

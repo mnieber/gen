@@ -12,6 +12,7 @@ class GqlSpec:
     outputs_type_spec: TypeSpec = field(repr=False)
     deletes: T.List[T.Tuple[str, bool]] = field(default_factory=list)  # bool - is_list
     saves: T.List[T.Tuple[str, bool]] = field(default_factory=list)  # bool - is_list
+    orders: T.List[str] = field(default_factory=list)
     invalidates: T.List[str] = field(default_factory=list)
 
     def get_inputs(self, field_types=None):

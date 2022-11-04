@@ -2,7 +2,7 @@ import moonleap.resource.props as P
 from moonleap import MemFun, create, create_forward, empty_rule, extend, rule
 from moonleap.session import get_session
 from moonleap.utils.case import camel_to_kebab, l0
-from moonleap.verbs import deletes, has, provides, saves
+from moonleap.verbs import deletes, has, orders, provides, saves
 from titan.api_pkg.pkg.load_gql_specs import load_gql_specs
 
 from . import props
@@ -50,29 +50,33 @@ def created_gql_registry(gql_reg):
         forwards.append(create_forward(gql_reg, has, endpoint_term))
 
         for field_spec in gql_spec.get_outputs(["fk", "relatedSet"]):
-            item_term = (
+            term = (
                 "+"
                 + camel_to_kebab(l0(field_spec.target))
                 + ":item"
                 + ("~list" if field_spec.field_type == "relatedSet" else "")
             )
-            forwards.append(create_forward(endpoint_term, provides, item_term))
+            forwards.append(create_forward(endpoint_term, provides, term))
 
         for type_name_deleted, is_list in gql_spec.deletes:
-            item_term = (
+            term = (
                 camel_to_kebab(l0(type_name_deleted))
                 + ":item"
                 + ("~list" if is_list else "")
             )
-            forwards.append(create_forward(endpoint_term, deletes, item_term))
+            forwards.append(create_forward(endpoint_term, deletes, term))
+
+        for type_name_ordered in gql_spec.orders:
+            term = camel_to_kebab(l0(type_name_ordered)) + ":item~list"
+            forwards.append(create_forward(endpoint_term, orders, term))
 
         for type_name_saved, is_list in gql_spec.saves:
-            item_term = (
+            term = (
                 camel_to_kebab(l0(type_name_saved))
                 + ":item"
                 + ("~list" if is_list else "")
             )
-            forwards.append(create_forward(endpoint_term, saves, item_term))
+            forwards.append(create_forward(endpoint_term, saves, term))
 
     return forwards
 

@@ -14,7 +14,7 @@ import { useMyMutation } from 'src/api/mutations';                              
 import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { flags } from 'src/app/flags';
 import { initRS, setToUpdating } from 'src/app/ResourceState';
-import { lookUp } from 'src/utils/ids';
+import { lookUp, getIds } from 'src/utils/ids';
 import { MyState } from 'src/{{ __.state.state_provider.module.module_path }}/MyState';                         {% ?? __.state %}
 import { log } from 'src/utils/logging';
 
@@ -31,10 +31,13 @@ export const {{ _.component.name }} = observer(
     const myMutation = useMyMutation();                                                                         {% !! mutation in __.mutations %}
 
     const [state] = React.useState(() => new MyState({                                                          {% if __.state %}
-      deleteContainerItems: (ids: string[]) => {                                                                {% for container in __.state.containers %}
+      deleteContainerItems: (ids: string[]) => {                                                                {% for container in __.state.containers %}{% if container.get_bvr("deletion") %}
         R.map(setToUpdating, lookUp(ids, state.containerItems.data.containerItemById));
         return {{ __.delete_items_expr(container) }};
-      },                                                                                                        {% endfor %}
+      },                                                                                                        {% endif %}
+      saveMyContainerItemOrdering: (containerItems: ContainerItemT[]) => {                                      {% if container.get_bvr("insertion") %}
+        return {{ __.order_items_expr(container) }};
+      },                                                                                                        {% endif %}{% endfor %}
     }));
 
     (React.useEffect as any)(() => {

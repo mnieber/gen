@@ -33,12 +33,17 @@ def create_container(term):
 
 
 @rule("container", has, "selection", priority=Priorities.LOW.value)
-def container_has_named_selection(container, selection):
+def container_has_selection(container, selection):
     use_react_packages(
         container.state.state_provider.module.react_app.get_module("utils"),
         ["mergeClickHandlers"],
     )
     return create_forward(container, has, f"{selection.meta.term.data}:highlight")
+
+
+@rule("container", has, "drag-and-drop", priority=Priorities.LOW.value)
+def container_has_drag_and_drop(container, selection):
+    return create_forward(container, has, f"{selection.meta.term.data}:insertion")
 
 
 @rule("state", has, "container")

@@ -4,11 +4,12 @@ from moonleap.verbs import has
 from .resources import Behavior
 
 base_tags = {
-    "highlight": ["behavior"],
-    "selection": ["behavior"],
-    "filtering": ["behavior"],
     "deletion": ["behavior"],
     "drag-and-drop": ["behavior"],
+    "filtering": ["behavior"],
+    "highlight": ["behavior"],
+    "insertion": ["behavior"],
+    "selection": ["behavior"],
 }
 
 rules = {

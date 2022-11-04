@@ -13,7 +13,7 @@ const dps{{ item_name|u0|plural }} = {                                          
     singleItem: {                                                               {% if data.item %}
       singleItem: stub as SingleItemT,
     },                                                                          {% endif %}
-    bvrItems{{ bvr.name|u0 }}: {                                                {% for bvr in data.bvrs %}
+    bvrItems{{ bvr.name|u0 }}: {                                                {% for bvr in data.bvrs|sort(attribute="name") %}
       bvrItems{{ bvr.name|u0 }}: stub as {{ bvr.name|u0 }},
     },                                                                          {% endfor %}
 };

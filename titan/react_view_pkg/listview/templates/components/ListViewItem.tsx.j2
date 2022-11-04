@@ -4,24 +4,24 @@ import { cn } from 'src/utils/classnames';
 import { observer } from 'mobx-react-lite';
 import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { isUpdating } from 'src/app/ResourceState';
-import { dragHandlers, type DragHandlersT } from 'skandha-facets/DragAndDrop';          {% ?? __.drag_and_drop_bvr %}
+import { dragHandlers, type DragHandlersT } from 'skandha-facets/DragAndDrop';                      {% ?? __.drag_and_drop_bvr %}
+import { clickHandlers, ClickHandlersT } from 'skandha-facets/handlers/ClickToSelectItems';         {% ?? __.selection_bvr %}
 
-import { ukButton } from 'src/frames/components/Button';                                {% ?? _.service.uikit %}
+import { ukButton } from 'src/frames/components/Button';                                            {% ?? _.service.uikit %}
 import UIkit from 'uikit';
 
 import './FooBarListViewItem.scss';
 
 export type PropsT = {
   className?: any;
-  isSelected: boolean;                                                                  {% ?? __.selection_bvr %}
-  isHighlighted: boolean;                                                               {% ?? __.selection_bvr %}
-  dragState?: string;                                                                   {% ?? __.drag_and_drop_bvr %}
-  onClick?: any;
-  onDelete: Function;                                                                   {% ?? __.deletion_bvr %}
-  onMouseDown?: any;
-  onMouseUp?: any;
-};                                                                                      {% ?? not __.drag_and_drop_bvr %}
-} & DragHandlersT;                                                                      {% ?? __.drag_and_drop_bvr %}
+  isSelected: boolean;                                                                              {% ?? __.selection_bvr %}
+  isHighlighted: boolean;                                                                           {% ?? __.selection_bvr %}
+  dragState?: string;                                                                               {% ?? __.drag_and_drop_bvr %}
+  onDelete: Function;                                                                               {% ?? __.deletion_bvr %}
+}
+& ClickHandlersT                                                                                    {% ?? __.selection_bvr %}
+& DragHandlersT                                                                                     {% ?? __.drag_and_drop_bvr %}
+;
 
 const DefaultProps = {
   ...dps.fooBar,
@@ -30,39 +30,37 @@ const DefaultProps = {
 export const FooBarListViewItem = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
     if (isUpdating(props.fooBar)) {
-      return UIkit && <div data-uk-spinner className=""></div>;                         {% ?? _.service.uikit %}
-      return null;                                                                      {% ?? not _.service.uikit %}
+      return UIkit && <div data-uk-spinner className=""></div>;                                     {% ?? _.service.uikit %}
+      return null;                                                                                  {% ?? not _.service.uikit %}
     }
 
     return (
       <div
         className={cn(
           'FooBarListViewItem', 'flex flex-row items-center flex-1 mb-2',
-          `FooBarListViewItem--drag-${props.dragState}`,                                {% ?? __.drag_and_drop_bvr %}
-          {                                                                             {% min_lines count=3 %}
-            'FooBarListViewItem--selected': props.isSelected,                           {% ?? __.selection_bvr %}
-            'FooBarListViewItem--highlighted': props.isHighlighted,                     {% ?? __.selection_bvr %}
-          },                                                                            {% end_min_lines %}
+          `FooBarListViewItem--drag-${props.dragState}`,                                            {% ?? __.drag_and_drop_bvr %}
+          {                                                                                         {% min_lines count=3 %}
+            'FooBarListViewItem--selected': props.isSelected,                                       {% ?? __.selection_bvr %}
+            'FooBarListViewItem--highlighted': props.isHighlighted,                                 {% ?? __.selection_bvr %}
+          },                                                                                        {% end_min_lines %}
           props.className
         )}
-        onClick={props.onClick}
-        onMouseDown={props.onMouseDown}
-        onMouseUp={props.onMouseUp}
-        {...dragHandlers(props)}                                                        {% ?? __.drag_and_drop_bvr %}
+        {...clickHandlers(props)}                                                                   {% ?? __.selection_bvr %}
+        {...dragHandlers(props)}                                                                    {% ?? __.drag_and_drop_bvr %}
       >
-        <div>                                                                           {% for field_spec in __.fields %}{% if field_spec.display %}
-          {props.fooBar.fieldSpecName}                                                  {% ?? field_spec.field_type not in ("boolean",) %}
-          fieldSpecName: {props.fooBar.fieldSpecName ? 'Yes' : 'No'}                    {% ?? field_spec.field_type in ("boolean",) %}
-        </div>                                                                          {% endif %}{% endfor %}
-        <div className="flex-grow"></div>                                               {% if __.deletion_bvr %}
+        <div>                                                                                       {% for field_spec in __.fields %}{% if field_spec.display %}
+          {props.fooBar.fieldSpecName}                                                              {% ?? field_spec.field_type not in ("boolean",) %}
+          fieldSpecName: {props.fooBar.fieldSpecName ? 'Yes' : 'No'}                                {% ?? field_spec.field_type in ("boolean",) %}
+        </div>                                                                                      {% endif %}{% endfor %}
+        <div className="flex-grow"></div>                                                           {% if __.deletion_bvr %}
         <button
-          className={ukButton}                                                          {% ?? _.service.uikit %}
+          className={ukButton}                                                                      {% ?? _.service.uikit %}
           onClick={() => {
             props.onDelete();
           }}
         >
           Delete
-        </button>                                                                       {% endif %}
+        </button>                                                                                   {% endif %}
       </div>
     );
   }, DefaultProps)

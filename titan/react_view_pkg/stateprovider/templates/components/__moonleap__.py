@@ -1,4 +1,5 @@
 from moonleap.utils.fp import append_uniq
+from moonleap.utils.inflect import plural
 from titan.api_pkg.pipeline.props import (
     ExtractItemListFromItem,
     TakeHighlightedElmFromStateProvider,
@@ -104,6 +105,15 @@ def get_helpers(_):
                     "Promise.all(R.map((x: string) => "
                     + f"{name}.mutateAsync({{{field_name}: x}}), ids))"
                 )
+
+        def order_items_expr(self, container):
+            if container.order_items_mutation:
+                name = container.order_items_mutation.name
+                items = plural(container.item_name)
+                field_name = _get_field_name(
+                    container.delete_items_mutation, ["uuid[]"]
+                )
+                return f"{name}.mutateAsync({{{field_name}: {items}}})"
 
     return Helpers()
 
