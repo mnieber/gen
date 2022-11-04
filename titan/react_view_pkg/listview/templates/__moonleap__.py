@@ -10,6 +10,7 @@ def get_helpers(_):
         selection_bvr = _find_behavior("selection")
         deletion_bvr = _find_behavior("deletion")
         highlight_bvr = _find_behavior("deletion")
+        drag_and_drop_bvr = _find_behavior("dragAndDrop")
 
         has_selection = selection_bvr
         has_highlight = selection_bvr or highlight_bvr

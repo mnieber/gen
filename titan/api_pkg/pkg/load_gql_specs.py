@@ -1,6 +1,6 @@
 import os
 
-import yaml
+from moonleap import load_yaml
 
 from .get_gql_spec import get_gql_spec
 
@@ -8,9 +8,7 @@ from .get_gql_spec import get_gql_spec
 def load_gql_specs(gql_reg, spec_dir):
     fn = os.path.join(spec_dir, "gql.yaml")
     if os.path.exists(fn):
-        with open(fn) as f:
-            root_gql_spec_dict = yaml.load(f, Loader=yaml.SafeLoader)
-            get_all_gql_specs(gql_reg, "client", root_gql_spec_dict)
+        get_all_gql_specs(gql_reg, "client", load_yaml(fn))
 
 
 def get_all_gql_specs(gql_reg, host, root_gql_spec_dict):

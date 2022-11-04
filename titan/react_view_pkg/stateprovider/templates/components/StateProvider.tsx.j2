@@ -80,7 +80,8 @@ export const {{ _.component.name }} = observer(
         containerItemsHighlight: () => state.myContainer.highlight,                                             {% ?? container.get_bvr("highlight") %}
         containerItemsSelection: () => state.myContainer.selection,                                             {% ?? container.get_bvr("selection") %}
         containerItemsFiltering: () => state.myContainer.filtering,                                             {% ?? container.get_bvr("filtering") %}
-        containerItemsDeletion: () => state.myContainer.deletion,                                               {% ?? container.get_bvr("deletion") %}{% endif %}
+        containerItemsDeletion: () => state.myContainer.deletion,                                               {% ?? container.get_bvr("deletion") %}
+        containerItemsDragAndDrop: () => state.myContainer.dragAndDrop,                                         {% ?? container.get_bvr("dragAndDrop") %}{% endif %}
       };
 
                                                                                                                               {% endfor %}

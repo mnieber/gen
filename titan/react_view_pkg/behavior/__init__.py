@@ -1,4 +1,4 @@
-from moonleap import create, empty_rule
+from moonleap import create, empty_rule, kebab_to_camel
 from moonleap.verbs import has
 
 from .resources import Behavior
@@ -8,6 +8,7 @@ base_tags = {
     "selection": ["behavior"],
     "filtering": ["behavior"],
     "deletion": ["behavior"],
+    "drag-and-drop": ["behavior"],
 }
 
 rules = {
@@ -19,7 +20,7 @@ rules = {
 def create_behavior(term):
     has_param = term.tag in ("selection", "filtering", "highlight")
     return Behavior(
-        item_name=term.data,
-        name=term.tag,
+        item_name=kebab_to_camel(term.data),
+        name=kebab_to_camel(term.tag),
         has_param=has_param,
     )

@@ -4,6 +4,8 @@ import { cn } from 'src/utils/classnames';
 import { observer } from 'mobx-react-lite';
 import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { isUpdating } from 'src/app/ResourceState';
+import { dragHandlers, type DragHandlersT } from 'skandha-facets/DragAndDrop';          {% ?? __.drag_and_drop_bvr %}
+
 import { ukButton } from 'src/frames/components/Button';                                {% ?? _.service.uikit %}
 import UIkit from 'uikit';
 
@@ -13,11 +15,13 @@ export type PropsT = {
   className?: any;
   isSelected: boolean;                                                                  {% ?? __.selection_bvr %}
   isHighlighted: boolean;                                                               {% ?? __.selection_bvr %}
+  dragState?: string;                                                                   {% ?? __.drag_and_drop_bvr %}
   onClick?: any;
   onDelete: Function;                                                                   {% ?? __.deletion_bvr %}
   onMouseDown?: any;
   onMouseUp?: any;
-};
+};                                                                                      {% ?? not __.drag_and_drop_bvr %}
+} & DragHandlersT;                                                                      {% ?? __.drag_and_drop_bvr %}
 
 const DefaultProps = {
   ...dps.fooBar,
@@ -34,6 +38,7 @@ export const FooBarListViewItem = observer(
       <div
         className={cn(
           'FooBarListViewItem', 'flex flex-row items-center flex-1 mb-2',
+          `FooBarListViewItem--drag-${props.dragState}`,                                {% ?? __.drag_and_drop_bvr %}
           {                                                                             {% min_lines count=3 %}
             'FooBarListViewItem--selected': props.isSelected,                           {% ?? __.selection_bvr %}
             'FooBarListViewItem--highlighted': props.isHighlighted,                     {% ?? __.selection_bvr %}
@@ -43,6 +48,7 @@ export const FooBarListViewItem = observer(
         onClick={props.onClick}
         onMouseDown={props.onMouseDown}
         onMouseUp={props.onMouseUp}
+        {...dragHandlers(props)}                                                        {% ?? __.drag_and_drop_bvr %}
       >
         <div>                                                                           {% for field_spec in __.fields %}{% if field_spec.display %}
           {props.fooBar.fieldSpecName}                                                  {% ?? field_spec.field_type not in ("boolean",) %}
