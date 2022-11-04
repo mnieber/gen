@@ -23,6 +23,10 @@ class Data:
             if self.field_type == "relatedSet"
             else "Form"
             if self.field_type == "form"
+            else "Id"
+            if self.field_type == "id"
+            else "Ids"
+            if self.field_type == "uuid[]"
             else ""
         )
         return (
@@ -109,5 +113,11 @@ def _process_data(data, value, parts):
         data.field_type = "relatedSet"
     elif data.var_type.endswith("Form"):
         data.field_type = "form"
+    elif data.var_type.endswith("Ids"):
+        data.var_type = data.var_type[:-3]
+        data.field_type = "uuid[]"
+    elif data.var_type.endswith("Id"):
+        data.var_type = data.var_type[:-2]
+        data.field_type = "uuid"
     else:
         data.field_type = "fk"

@@ -1,6 +1,7 @@
 from titan.types_pkg.pkg.field_spec import FieldSpec
-from titan.types_pkg.pkg.load_type_specs.field_spec_from_dict import \
-    field_spec_from_dict
+from titan.types_pkg.pkg.load_type_specs.field_spec_from_dict import (
+    field_spec_from_dict,
+)
 from titan.types_pkg.pkg.type_spec import TypeSpec
 from titan.types_pkg.typeregistry import get_type_reg
 
@@ -82,7 +83,7 @@ def get_gql_spec(gql_reg, host, endpoint_key, endpoint_spec_dict):
 
 
 def _check_field_spec(field_spec):
-    if field_spec.field_type in ("fk", "relatedSet", "form"):
+    if field_spec.field_type in ("fk", "relatedSet", "form", "uuid[]", "uuid"):
         if not get_type_reg().get(field_spec.target, None):
             raise Exception(
                 f"Type {field_spec.target} not found for field {field_spec.name}"
