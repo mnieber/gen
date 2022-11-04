@@ -1,11 +1,5 @@
 from moonleap.utils.fp import append_uniq
 from moonleap.utils.inflect import plural
-from titan.api_pkg.pipeline.props import (
-    ExtractItemListFromItem,
-    TakeHighlightedElmFromStateProvider,
-    TakeItemFromStateProvider,
-    TakeItemListFromStateProvider,
-)
 
 
 def get_helpers(_):
@@ -14,19 +8,21 @@ def get_helpers(_):
         pipelines = _.component.pipelines
 
         input_items = list()
-        pipeline_by_container = list()
+        data_by_container = list()
         input_item_lists = list()
         queries = list()
         mutations = list()
+        types_to_import = list()
 
         def __init__(self):
             self._get_pipeline_sources()
             if self.state:
-                self._get_pipeline_by_container()
+                self._get_data_by_container()
+            self._get_types_to_import()
 
         def _get_pipeline_sources(self):
             for pipeline in self.pipelines:
-                pipeline_source = self._get_pipeline_source(pipeline)
+                pipeline_source = pipeline.source
                 if pipeline_source.meta.term.tag == "query":
                     self.queries.append(pipeline_source)
                 elif pipeline_source.meta.term.tag == "mutation":
@@ -43,29 +39,21 @@ def get_helpers(_):
                     append_uniq(self.mutations, delete_items_mutation)
                 if delete_item_mutation := container.delete_item_mutation:
                     append_uniq(self.mutations, delete_item_mutation)
+                if order_items_mutation := container.order_items_mutation:
+                    append_uniq(self.mutations, order_items_mutation)
 
-        def _get_pipeline_source(self, pipeline):
-            if pipeline.root_query:
-                return pipeline.root_query
-            elif pipeline.root_state_provider:
-                pipeline_elm = pipeline.elements[1]
-                if isinstance(
-                    pipeline_elm,
-                    (
-                        TakeItemFromStateProvider,
-                        TakeHighlightedElmFromStateProvider,
-                        ExtractItemListFromItem,
-                        TakeItemListFromStateProvider,
-                    ),
-                ):
-                    return pipeline_elm.subj
-            raise Exception("Unknown pipeline source")
-
-        def _get_pipeline_by_container(self):
+        def _get_data_by_container(self):
             for container in self.state.containers:
                 pipeline = self.get_pipeline(container)
                 if pipeline:
-                    self.pipeline_by_container.append((container, pipeline))
+                    self.data_by_container.append((container, dict(pipeline=pipeline)))
+
+        def _get_types_to_import(self):
+            for mutation in self.mutations:
+                for field in mutation.gql_spec.get_inputs(
+                    ["fk", "relatedSet", "uuid", "uuid[]"]
+                ):
+                    append_uniq(self.types_to_import, field.target + "T")
 
         def get_pipeline(self, named_output_or_container):
             if named_output_or_container.meta.term.tag == "container":
@@ -81,7 +69,7 @@ def get_helpers(_):
 
         def maybe_expr(self, named_item_or_item_list):
             pipeline = self.get_pipeline(named_item_or_item_list)
-            pipeline_source = self._get_pipeline_source(pipeline)
+            pipeline_source = pipeline.source
             if pipeline_source.meta.term.tag in ("query", "mutation"):
                 return pipeline_source.name
             elif pipeline_source.meta.term.tag in ("item",):
@@ -95,15 +83,15 @@ def get_helpers(_):
                 field_name = _get_field_name(
                     container.delete_items_mutation, ["uuid[]"]
                 )
-                return f"{name}.mutateAsync({{{field_name}: ids}})"
+                return f"return {name}.mutateAsync({{{field_name}: ids}});"
             elif container.delete_item_mutation:
                 name = container.delete_item_mutation.name
                 field_name = _get_field_name(
                     container.delete_item_mutation, ["uuid", "string"]
                 )
                 return (
-                    "Promise.all(R.map((x: string) => "
-                    + f"{name}.mutateAsync({{{field_name}: x}}), ids))"
+                    "return Promise.all(R.map((x: string) => "
+                    + f"{name}.mutateAsync({{{field_name}: x}}), ids));"
                 )
 
         def order_items_expr(self, container):
@@ -113,7 +101,7 @@ def get_helpers(_):
                 field_name = _get_field_name(
                     container.delete_items_mutation, ["uuid[]"]
                 )
-                return f"{name}.mutateAsync({{{field_name}: {items}}})"
+                return f"return {name}.mutateAsync({{{field_name}: getIds({items})}});"
 
     return Helpers()
 

@@ -3,6 +3,8 @@
 {% magic_with mutation.name as myMutation %}
 {% magic_with container.item_name as containerItem %}
 {% magic_with container.name as myContainer %}
+{% magic_with named_item.typ.item_name as myNamedItem %}
+{% magic_with named_item_list.typ.item_name as myNamedListItem %}
 import { reaction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import * as R from 'ramda';
@@ -15,6 +17,7 @@ import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { flags } from 'src/app/flags';
 import { initRS, setToUpdating } from 'src/app/ResourceState';
 import { lookUp, getIds } from 'src/utils/ids';
+import { {{ type }} } from 'src/api/types/{{ type }}';                                                          {% !! type in __.types_to_import %}
 import { MyState } from 'src/{{ __.state.state_provider.module.module_path }}/MyState';                         {% ?? __.state %}
 import { log } from 'src/utils/logging';
 
@@ -31,12 +34,12 @@ export const {{ _.component.name }} = observer(
     const myMutation = useMyMutation();                                                                         {% !! mutation in __.mutations %}
 
     const [state] = React.useState(() => new MyState({                                                          {% if __.state %}
-      deleteContainerItems: (ids: string[]) => {                                                                {% for container in __.state.containers %}{% if container.get_bvr("deletion") %}
+      deleteContainerItems: (ids: string[]) => {                                                                {% for container, data in __.data_by_container %}{% if container.get_bvr("deletion") %}
         R.map(setToUpdating, lookUp(ids, state.containerItems.data.containerItemById));
-        return {{ __.delete_items_expr(container) }};
+        {{ __.delete_items_expr(container) }};
       },                                                                                                        {% endif %}
-      saveMyContainerItemOrdering: (containerItems: ContainerItemT[]) => {                                      {% if container.get_bvr("insertion") %}
-        return {{ __.order_items_expr(container) }};
+      saveContainerItemOrdering: (containerItems: ContainerItemT[]) => {                                        {% if container.get_bvr("insertion") %}
+        {{ __.order_items_expr(container) }}
       },                                                                                                        {% endif %}{% endfor %}
     }));
 
@@ -48,8 +51,8 @@ export const {{ _.component.name }} = observer(
           }
         },
         (inputs) => {
-          R.forEach(initRS, inputs.containerItems ?? []);                                                       {% for container, pipeline in __.pipeline_by_container %}
-          state.myContainer.data.containerItems = inputs.{{ pipeline.output_name }} ?? [];                      {% endfor %}
+          R.forEach(initRS, inputs.containerItems ?? []);                                                       {% for container, data in __.data_by_container %}
+          state.myContainer.data.containerItems = inputs.{{ data.pipeline.output_name }} ?? [];                 {% endfor %}
           if (flags.logStateProviders) {
             log('MyState updated', state.getSummary());
           }
@@ -69,10 +72,10 @@ export const {{ _.component.name }} = observer(
 
       result.defaultProps = {                                                                                   {% for container in __.state.containers %}
         ...result.defaultProps,
-        {{ named_item.typ.item_name }}: () => maybe({{ __.maybe_expr(named_item) }})                            {% for named_item in _.component.named_items %}
+        myNamedItem: () => maybe({{ __.maybe_expr(named_item) }})(                                              {% for named_item in _.component.named_items %}
           {{ __.get_pipeline(named_item).result_expression }}
         ),                                                                                                      {% endfor %}
-        {{ named_item_list.typ.item_name|plural }}: () => maybe({{ __.maybe_expr(named_item_list) }})(          {% for named_item_list in _.component.named_item_lists %}
+        myNamedListItems: () => maybe({{ __.maybe_expr(named_item_list) }})(                                    {% for named_item_list in _.component.named_item_lists %}
           {{ __.get_pipeline(named_item_list).result_expression }}, []
         ),                                                                                                      {% endfor %}
         myState: () => state,                                                                                   {% if __.state %}
@@ -80,11 +83,11 @@ export const {{ _.component.name }} = observer(
           state.myContainer.data.containerItemsDisplay),                                                        {% endif %}
         containerItem: () => maybe({{ __.maybe_expr(container.named_item_list) }})(                             {% if container.get_bvr("highlight") %}
           state.myContainer.highlight.item),                                                                    {% endif %}
-        containerItemsHighlight: () => state.myContainer.highlight,                                             {% ?? container.get_bvr("highlight") %}
-        containerItemsSelection: () => state.myContainer.selection,                                             {% ?? container.get_bvr("selection") %}
-        containerItemsFiltering: () => state.myContainer.filtering,                                             {% ?? container.get_bvr("filtering") %}
         containerItemsDeletion: () => state.myContainer.deletion,                                               {% ?? container.get_bvr("deletion") %}
         containerItemsDragAndDrop: () => state.myContainer.dragAndDrop,                                         {% ?? container.get_bvr("dragAndDrop") %}{% endif %}
+        containerItemsFiltering: () => state.myContainer.filtering,                                             {% ?? container.get_bvr("filtering") %}
+        containerItemsHighlight: () => state.myContainer.highlight,                                             {% ?? container.get_bvr("highlight") %}
+        containerItemsSelection: () => state.myContainer.selection,                                             {% ?? container.get_bvr("selection") %}
       };
 
                                                                                                                               {% endfor %}
@@ -98,6 +101,8 @@ export const {{ _.component.name }} = observer(
     );
   }, DefaultProps)
 );
+{% end_magic_with %}
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

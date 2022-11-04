@@ -41,7 +41,7 @@ def graphene_type(self: FieldSpec, args):
         return f"graphene.ID({args})"
 
     if self.field_type == "uuid[]":
-        return f"graphene.List(graphene.ID{infix}{args})"
+        return f"graphene.List(graphene.String{infix}{args})"
 
     if self.field_type in ("any", "json"):
         return f"GenericScalar({args})"

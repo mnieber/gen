@@ -10,21 +10,24 @@ import * as Skandha from 'skandha';
 import { registerCtr } from 'skandha-mobx';
 import { getIds } from 'src/utils/ids';
 import * as Facets from 'skandha-facets';
-import { Selection, SelectionCbs, handleSelectItem } from 'skandha-facets/Selection';                   {% ?? __.has_bvr("selection") %}
-import { Highlight, HighlightCbs } from 'skandha-facets/Highlight';                                     {% ?? __.has_bvr("highlight") %}
-import { Filtering, FilteringCbs } from 'skandha-facets/Filtering';                                     {% ?? __.has_bvr("filtering") %}
 import { Deletion, DeletionCbs } from 'skandha-facets/Deletion';                                        {% ?? __.has_bvr("deletion") %}
+import { DragAndDrop } from 'skandha-facets/DragAndDrop';                                               {% ?? __.has_bvr("dragAndDrop") %}
+import { Filtering, FilteringCbs } from 'skandha-facets/Filtering';                                     {% ?? __.has_bvr("filtering") %}
+import { Highlight, HighlightCbs } from 'skandha-facets/Highlight';                                     {% ?? __.has_bvr("highlight") %}
+import { Insertion } from 'skandha-facets/Insertion';                                                   {% ?? __.has_bvr("insertion") %}
+import { Selection, SelectionCbs, handleSelectItem } from 'skandha-facets/Selection';                   {% ?? __.has_bvr("selection") %}
 import { initMyContainer, MyItemsData } from './myItems';                                               {% !! container in __.containers %}
 import { MyItemT } from 'src/api/types/MyItemT';                                                        {% !! container in __.containers %}
 
 export type PropsT = {
-  deleteMyItems: (ids: string[]) => Promise<any>;                                                       {% for container in __.containers %}{% ?? container.get_bvr("deletion") %}{% endfor %}
+  deleteMyItems: (ids: string[]) => Promise<any>;                                                       {% for container in __.containers %}{% ?? container.get_bvr("deletion") %}
+  saveMyItemOrdering: (myItems: MyItemT[]) => Promise<any>;                                             {% ?? container.get_bvr("dragAndDrop") %}{% endfor %}
 };
 
 export class MyState {
   myContainer = {                                                                                       {% for container in __.containers %}
     data: new MyContainerData(),
-    myBvr: new MyBvr{% if bvr.has_param %}<MyItemT>{% endif %}(),                                       {% !! bvr in container.bvrs %}
+    myBvr: new MyBvr{% if bvr.has_param %}<MyItemT>{% endif %}(),                                       {% !! bvr in container.bvrs|sort(attribute="name") %}
   }                                                                                                     {% endfor %}
 
   _myContainerMapData(props: PropsT) {                                                                  {% for container in __.containers %}
@@ -34,6 +37,11 @@ export class MyState {
       pmap(                                                                                             {% if container.get_bvr("filtering") %}
         //
         [this.myContainer.filtering, 'inputItems'],
+        () => this.myContainer.data.myItems,
+      ),                                                                                                {% endif %}
+      pmap(                                                                                             {% if container.get_bvr("insertion") %}
+        //
+        [this.myContainer.insertion, 'inputItems'],
         () => this.myContainer.data.myItems,
       ),                                                                                                {% endif %}
       pmap(

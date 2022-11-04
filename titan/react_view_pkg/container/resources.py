@@ -21,18 +21,6 @@ class Container(Resource):
         return None
 
     @property
-    def order_items_mutation(self):
-        if not self.get_bvr("insertion"):
-            return None
-
-        for mutation in get_gql_reg().mutations:
-            for item_list_ordered in mutation.item_lists_ordered:
-                if self.item_name == item_list_ordered.item.item_name:
-                    return mutation
-
-        return None
-
-    @property
     def delete_item_mutation(self):
         if not self.get_bvr("deletion"):
             return None
@@ -40,6 +28,18 @@ class Container(Resource):
         for mutation in get_gql_reg().mutations:
             for item_deleted in mutation.items_deleted:
                 if self.item_name == item_deleted.item_name:
+                    return mutation
+
+        return None
+
+    @property
+    def order_items_mutation(self):
+        if not self.get_bvr("insertion"):
+            return None
+
+        for mutation in get_gql_reg().mutations:
+            for item_list_ordered in mutation.item_lists_ordered:
+                if self.item_name == item_list_ordered.item.item_name:
                     return mutation
 
         return None

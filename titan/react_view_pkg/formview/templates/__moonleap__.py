@@ -24,6 +24,7 @@ def get_helpers(_):
                     [
                         (f"{form_field_spec.name}.{x.name}", x)
                         for x in self._form_fields(form_field_spec)
+                        if not (x.field_type == "uuid" and not x.target)
                     ]
                 )
             self.uuid_fields = [

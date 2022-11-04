@@ -248,3 +248,21 @@ def root_pipeline(self):
             return p
 
     raise Exception("No root pipeline")
+
+
+def pipeline_source(pipeline):
+    if pipeline.root_query:
+        return pipeline.root_query
+    elif pipeline.root_state_provider:
+        pipeline_elm = pipeline.elements[1]
+        if isinstance(
+            pipeline_elm,
+            (
+                TakeItemFromStateProvider,
+                TakeHighlightedElmFromStateProvider,
+                ExtractItemListFromItem,
+                TakeItemListFromStateProvider,
+            ),
+        ):
+            return pipeline_elm.subj
+    raise Exception("Unknown pipeline source")

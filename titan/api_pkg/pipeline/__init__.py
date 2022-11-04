@@ -38,3 +38,4 @@ class ExtendNamedPipeline:
     root_state_provider = P.child(connects, "state~provider")
     status_expression = Prop(props.status_expression)
     state_provider = P.parent("state~provider", has)
+    source = Prop(props.pipeline_source)

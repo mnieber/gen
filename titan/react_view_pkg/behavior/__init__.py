@@ -19,7 +19,7 @@ rules = {
 
 @create("behavior")
 def create_behavior(term):
-    has_param = term.tag in ("selection", "filtering", "highlight")
+    has_param = term.tag in ("selection", "filtering", "highlight", "insertion")
     return Behavior(
         item_name=kebab_to_camel(term.data),
         name=kebab_to_camel(term.tag),

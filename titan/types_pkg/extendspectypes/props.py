@@ -46,7 +46,7 @@ def field_spec_graphql_type(self: FieldSpec, host):
         return "ID" + postfix
 
     if self.field_type in ("uuid[]",):
-        return "[ID]" + postfix
+        return "[String]" + postfix
 
     if self.field_type in ("form",):
         return f"{self.target_type_spec.type_name}T" + postfix

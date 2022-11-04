@@ -14,5 +14,13 @@
   @apply font-bold;                                   {% if _.service.tailwindcss %}
   font-weight: 800;                                   {% else %}{% endif %}
 }
+
+.YellowTulipListViewItem--drag-before {               {% if __.has_drag_and_drop %}
+  border-top: solid;
+}
+
+.YellowTulipListViewItem--drag-after {
+  border-bottom: solid;
+}                                                     {% endif %}
                                                       {% endif %}
 {% end_magic_with %}

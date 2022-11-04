@@ -14,6 +14,7 @@ def get_helpers(_):
 
         has_selection = selection_bvr
         has_highlight = selection_bvr or highlight_bvr
+        has_drag_and_drop = drag_and_drop_bvr
 
         @property
         def fields(self):

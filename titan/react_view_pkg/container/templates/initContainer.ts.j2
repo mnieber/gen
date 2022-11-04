@@ -5,8 +5,10 @@ import { PropsT, MyState } from 'src/{{ _.module.name }}/MyState';
 import * as FacetPolicies from 'skandha-facets/policies';
 import { SelectionCbs, handleSelectItem } from 'skandha-facets/Selection';                            {% ?? _.container.get_bvr("selection") %}
 import { HighlightCbs } from 'skandha-facets/Highlight';                                              {% ?? _.container.get_bvr("highlight") %}
+import { InsertionCbs } from 'skandha-facets/Insertion';                                              {% ?? _.container.get_bvr("insertion") %}
 import { DeletionCbs } from 'skandha-facets/Deletion';                                                {% ?? _.container.get_bvr("deletion") %}
 import { setCallbacks } from 'aspiration';
+import { MyItemT } from 'src/api/types/MyItemT';
 import {
   addCleanUpFunctionToCtr,
   cleanUpCtr,
