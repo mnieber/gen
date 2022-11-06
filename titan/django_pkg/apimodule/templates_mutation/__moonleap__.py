@@ -28,17 +28,11 @@ def get_helpers(_):
             for field_spec in self.fk_input_field_specs + self.fk_output_field_specs:
                 append_uniq(result, field_spec.target_item)
 
-            for item in _.mutation.items_saved:
+            for item in self.items_saved:
                 append_uniq(result, item)
 
-            for item_list in _.mutation.item_lists_saved:
-                append_uniq(result, item_list.item)
-
-            for item in _.mutation.items_deleted:
+            for item in self.items_deleted:
                 append_uniq(result, item)
-
-            for item_list in _.mutation.item_lists_deleted:
-                append_uniq(result, item_list.item)
 
             return result
 

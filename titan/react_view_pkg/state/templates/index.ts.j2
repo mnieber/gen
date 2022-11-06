@@ -1,7 +1,7 @@
 {% magic_with container.name as myContainer %}
 {% magic_with bvr.name as myBvr %}
 {% magic_with _.state.name as MyState %}
-{% magic_with container.item_name as myItem %}
+{% magic_with container.item.item_name as myItem %}
 import { setCallbacks } from 'aspiration';
 import { makeObservable } from 'mobx';
 import { mapDataToProps, pmap } from 'skandha';

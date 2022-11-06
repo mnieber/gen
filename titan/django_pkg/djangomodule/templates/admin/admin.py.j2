@@ -4,7 +4,7 @@
 from adminsortable2.admin import SortableAdminBase, SortableInlineAdminMixin
 {% end_clean_up_py_imports %}
 from django.contrib import admin
-from {{ django_module.module_path }}.admin import {{ model_name }}                    {% !! django_module, model_name in __.inline_models %}
+from {{ django_module.module_path }}.admin import {{ model_name }}                    {% !! django_module, model_name in __.inline_models_to_import %}
 
 from {{ _.module.name|sn }} import models
                                                                                 {% for item_list, data in __.get_data() %}

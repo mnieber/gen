@@ -39,9 +39,7 @@ def get_gql_spec(gql_reg, host, endpoint_key, endpoint_spec_dict):
         is_list = item_name.endswith("Set")
         deletes.append((item_name.removesuffix("Set"), is_list))
 
-    orders = []
-    for item_name in endpoint_spec_dict.get("orders", []):
-        orders.append(item_name.removesuffix("Set"))
+    orders = endpoint_spec_dict.get("orders", [])
 
     saves = []
     for item_name in endpoint_spec_dict.get("saves", []):

@@ -1,0 +1,13 @@
+      deleteContainerItems: (ids: string[]) => {                                                                {% for container, data in __.data_by_container %}{% with d = __.delete_items_data(container) %}{% if d.deletes_items %}
+        R.map(setToUpdating, lookUp(ids, state.containerItems.data.containerItemById));
+        return {{ d.deleteMyItems }}.mutateAsync({ {{ d.myItemIds }}: ids });                                   {% if d.get('deleteMyItems') %}
+        return Promise.all(R.map(                                                                               {% else %}
+          (x: string) => {{ d.deleteMyItem }}.mutateAsync({ {{ d.myItemId }}: x }),
+          ids));                                                                                                {% endif %}
+      },                                                                                                        {% endif %}{% endwith %}
+      saveContainerItemOrdering: (containerItems: ContainerItemT[]) => {                                        {% with d = __.order_items_data(container) %}{% if d.orders_items %}
+        return {{ d.orderMyItems }}.mutateAsync({
+          {{ d.myItemIds }}: getIds({{ d.myItems }}),
+          {{ otherKey }}: {{ otherValue }},                                                                     {% !!  otherKey, otherValue in d.otherFields %}
+        });
+      },                                                                                                        {% endif %}{% endwith %}{% endfor %}

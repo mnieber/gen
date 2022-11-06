@@ -1,0 +1,21 @@
+      const cleanUpReaction = reaction(
+        () => {
+          return {
+            {{ pipeline.output_name }}: {{ pipeline.result_expression }},                                       {% !! pipeline in __.pipelines %}
+          }
+        },
+        (inputs) => {
+          R.forEach(initRS, inputs.containerItems ?? []);                                                       {% for container, data in __.data_by_container %}
+          state.myContainer.data.containerItems = inputs.{{ data.pipeline.output_name }} ?? [];                 {% endfor %}
+          if (flags.logStateProviders) {
+            log('MyState updated', state.getSummary());
+          }
+        },
+        {
+          fireImmediately: true,
+        }
+      );
+      return () => {
+        cleanUpReaction();
+        state.destroy();
+      };

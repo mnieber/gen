@@ -1,17 +1,8 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import (
-    MemFun,
-    Priorities,
-    Prop,
-    create,
-    create_forward,
-    empty_rule,
-    extend,
-    kebab_to_camel,
-    rule,
-)
+from moonleap import (MemFun, Priorities, Prop, create, create_forward,
+                      empty_rule, extend, kebab_to_camel, rule)
 from moonleap.verbs import has
 from titan.react_pkg.packages.use_react_packages import use_react_packages
 from titan.react_view_pkg.state.resources import State
@@ -66,6 +57,6 @@ class ExtendContainer:
     state = P.parent("state", has)
     named_item_list = P.child(has, "x+item~list")
     named_item = P.child(has, "x+item")
-    item_name = Prop(props.container_item_name)
+    item = Prop(props.container_item)
     bvrs = P.children(has, "behavior")
     get_bvr = MemFun(props.get_bvr)

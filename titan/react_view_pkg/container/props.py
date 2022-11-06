@@ -5,7 +5,7 @@ def get_bvr(self, name):
     return None
 
 
-def container_item_name(self):
+def container_item(self):
     if self.named_item_list:
-        return self.named_item_list.typ.item_name
+        return self.named_item_list.typ.item
     return None

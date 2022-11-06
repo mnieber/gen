@@ -2,7 +2,7 @@ import moonleap.resource.props as P
 from moonleap import MemFun, create, create_forward, empty_rule, extend, rule
 from moonleap.session import get_session
 from moonleap.utils.case import camel_to_kebab, l0
-from moonleap.verbs import deletes, has, orders, provides, saves
+from moonleap.verbs import deletes, has, provides, saves
 from titan.api_pkg.pkg.load_gql_specs import load_gql_specs
 
 from . import props
@@ -65,10 +65,6 @@ def created_gql_registry(gql_reg):
                 + ("~list" if is_list else "")
             )
             forwards.append(create_forward(endpoint_term, deletes, term))
-
-        for type_name_ordered in gql_spec.orders:
-            term = camel_to_kebab(l0(type_name_ordered)) + ":item~list"
-            forwards.append(create_forward(endpoint_term, orders, term))
 
         for type_name_saved, is_list in gql_spec.saves:
             term = (

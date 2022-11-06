@@ -1,0 +1,16 @@
+        myNamedItem: () => maybe({{ __.maybe_expr(named_item) }})(                                              {% for named_item in _.component.named_items %}
+          {{ __.get_pipeline(named_item).result_expression }}
+        ),                                                                                                      {% endfor %}
+        myNamedListItems: () => maybe({{ __.maybe_expr(named_item_list) }})(                                    {% for named_item_list in _.component.named_item_lists %}
+          {{ __.get_pipeline(named_item_list).result_expression }}, []
+        ),                                                                                                      {% endfor %}
+        myState: () => state,                                                                                   {% if __.state %}
+        containerItems: () => maybe({{ __.maybe_expr(container.named_item_list) }}, [])(                        {% if container.named_item_list %}
+          state.myContainer.data.containerItemsDisplay),                                                        {% endif %}
+        containerItem: () => maybe({{ __.maybe_expr(container.named_item_list) }})(                             {% if container.get_bvr("highlight") %}
+          state.myContainer.highlight.item),                                                                    {% endif %}
+        containerItemsDeletion: () => state.myContainer.deletion,                                               {% ?? container.get_bvr("deletion") %}
+        containerItemsDragAndDrop: () => state.myContainer.dragAndDrop,                                         {% ?? container.get_bvr("dragAndDrop") %}{% endif %}
+        containerItemsFiltering: () => state.myContainer.filtering,                                             {% ?? container.get_bvr("filtering") %}
+        containerItemsHighlight: () => state.myContainer.highlight,                                             {% ?? container.get_bvr("highlight") %}
+        containerItemsSelection: () => state.myContainer.selection,                                             {% ?? container.get_bvr("selection") %}

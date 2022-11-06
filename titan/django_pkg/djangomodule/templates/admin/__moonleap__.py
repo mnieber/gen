@@ -57,7 +57,7 @@ def get_helpers(_):
             ]
 
         @property
-        def inline_models(self):
+        def inline_models_to_import(self):
             result = []
             item_lists = []
             for dummy, data in self.get_data():
