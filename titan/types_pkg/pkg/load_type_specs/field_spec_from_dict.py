@@ -1,7 +1,7 @@
 from .foreign_key import ForeignKey
 from .get_fk_field_spec import get_fk_field_spec
 from .get_scalar_field_spec import get_scalar_field_spec
-from .strip_generic_symbols import strip_generic_symbols
+from .split_symbols import split_symbols
 
 
 def field_spec_from_dict(host, key, value):
@@ -22,7 +22,8 @@ def field_spec_from_dict(host, key, value):
             is_pass=flag_is_pass,
         )
     else:
-        new_key, value_parts = strip_generic_symbols(key)
+        new_key, symbols, value_parts = split_symbols(key)
+
         new_value = ".".join(value.split(".") + value_parts)
         field_spec = get_scalar_field_spec(host, new_key, new_value)
         return dict(new_key=new_key, new_value=new_value, field_spec=field_spec)

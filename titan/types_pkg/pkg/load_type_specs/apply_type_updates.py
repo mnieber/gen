@@ -1,11 +1,11 @@
 from moonleap.utils.fp import append_uniq
 
-from .strip_generic_symbols import strip_generic_symbols
+from .split_symbols import split_symbols
 
 
 def apply_type_updates(host, type_spec, updates):
     for field in updates:
-        key, parts = strip_generic_symbols(field)
+        key, symbols, parts = split_symbols(field)
 
         field_spec = type_spec.get_field_spec_by_key(key)
         if not field_spec:
