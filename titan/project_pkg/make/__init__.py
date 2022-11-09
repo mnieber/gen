@@ -35,7 +35,7 @@ def create_project_makefile(term):
 
 
 @rule("project")
-def project_created(project):
+def created_project(project):
     return create_forward(project, has, "project:makefile")
 
 
@@ -50,7 +50,7 @@ def project_has_project_makefile(project, makefile):
 
 
 @rule("service")
-def service_created(service):
+def created_service(service):
     return create_forward(service, has, ":makefile")
 
 

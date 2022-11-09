@@ -1,10 +1,10 @@
 from moonleap.utils.pop import pop
 
-from .split_symbols import split_symbols
+from .split_raw_key import split_raw_key
 
 
 def strip_fk_symbols(key):
-    key, symbols, parts = split_symbols(key)
+    key, symbols, parts = split_raw_key(key)
     words = symbols.split(".")
 
     symbols, is_sorted = pop(symbols, ">")

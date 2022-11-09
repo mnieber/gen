@@ -12,7 +12,6 @@ rules = {
     ("type-registry", has, "generic-item"): empty_rule(),
     ("type-registry", has, "item"): empty_rule(),
     ("type-registry", has, "item~list"): empty_rule(),
-    ("project", has, "type-registry"): empty_rule(),
 }
 
 _type_registry = None

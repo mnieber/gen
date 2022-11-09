@@ -27,7 +27,7 @@ def create_list_view(term):
 
 
 @rule("list-view")
-def item_view_created(list_view):
+def created_list_view(list_view):
     return create_forward(list_view, uses, f"{list_view.meta.term.data}:item")
 
 

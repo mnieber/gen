@@ -16,7 +16,7 @@ def create_module(term):
 
 
 @rule("forms:module")
-def forms_module_created(forms_module):
+def created_forms_module(forms_module):
     use_react_packages(
         forms_module.react_app.get_module("utils"),
         ["useScheduledCall", "ValuePicker", "slugify"],

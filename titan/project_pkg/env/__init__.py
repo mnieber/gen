@@ -24,7 +24,7 @@ def create_env(term):
 
 
 @rule("project")
-def project_created(project):
+def created_project(project):
     return create_forward(project, has, ":env")
 
 

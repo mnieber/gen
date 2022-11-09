@@ -35,7 +35,7 @@ def create_named_item(term):
 
 
 @rule("item~list")
-def item_list_created(item_list):
+def created_item_list(item_list):
     return create_forward(item_list, uses, f"{item_list.meta.term.data}:item")
 
 

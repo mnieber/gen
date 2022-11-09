@@ -20,7 +20,7 @@ def create_react_app(term):
 
 
 @rule("react-app", priority=Priorities.HIGH.value)
-def create_react_created(react_app):
+def created_react_app(react_app):
     return [
         create_forward(react_app, has, "app:module"),
         create_forward(react_app, has, "utils:module"),

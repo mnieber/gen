@@ -20,7 +20,7 @@ def create_api_module(term):
 
 
 @rule("api:module")
-def api_module_created(api_module):
+def created_api_module(api_module):
     return create_forward(":node-package", has, "graphql-api:node-pkg")
 
 
