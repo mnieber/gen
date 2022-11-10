@@ -33,3 +33,9 @@ def create_widget_registry(term):
 @rule("project")
 def created_project(project):
     return create_forward(project, has, ":widget-registry")
+
+
+@rule("widget-registry")
+def created_widget_registry(widget_registry):
+    # lut = get_map_from_widget_to_react_module(react_app.modules)
+    pass

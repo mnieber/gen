@@ -10,7 +10,11 @@ def get_widget_attrs(key):
     widget_type = parts_as[-1]
 
     if len(parts_as) > 1:
-        attrs["widget_name"] = widget_name = parts_as[0]
+        widget_name = parts_as[0]
+        parts_module = widget_name.split(".")
+        attrs["widget_name"] = parts_module[-1]
+        if len(parts_module) > 1:
+            attrs["module_name"] = parts_module[0]
 
     attrs["widget_type"], symbols = split_symbols(widget_type)
     if attrs["widget_type"][0].isupper():
