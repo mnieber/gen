@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import MemFun, create, empty_rule, extend
+from moonleap import MemFun, create, create_forward, empty_rule, extend, rule
 from moonleap.verbs import has
 from titan.project_pkg.service import Service
 
@@ -27,6 +27,21 @@ def create_node_package(term):
 @create("node-pkg")
 def create_package(term):
     return Pkg(name=term.data)
+
+
+@rule("cypress")
+def created_cypress(cypress):
+    return create_forward(":node-package", has, "cypress:node-pkg")
+
+
+@rule("uikit")
+def created_uikit(uikit):
+    return create_forward(":node-package", has, "uikit:node-pkg")
+
+
+@rule("tailwind-css")
+def created_tailwind_css(tailwind_css):
+    return create_forward(":node-package", has, "tailwind-css:node-pkg")
 
 
 @extend(NodePackage)

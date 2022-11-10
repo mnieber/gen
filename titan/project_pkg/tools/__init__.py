@@ -1,8 +1,8 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import create, create_forward, extend, rule
-from moonleap.verbs import has, runs, uses
+from moonleap import create, extend, rule
+from moonleap.verbs import runs, uses
 from titan.project_pkg.service import Service, Tool
 
 from .resources import Vandelay
@@ -34,21 +34,6 @@ def create_tool(term):
 @create("vandelay")
 def create_vandelay(term):
     return Vandelay(name=term.tag, language=term.data)
-
-
-@rule("cypress")
-def created_cypress(cypress):
-    return create_forward(":node-package", has, "cypress:node-pkg")
-
-
-@rule("uikit")
-def created_uikit(uikit):
-    return create_forward(":node-package", has, "uikit:node-pkg")
-
-
-@rule("tailwind-css")
-def created_tailwind_css(tailwind_css):
-    return create_forward(":node-package", has, "tailwind-css:node-pkg")
 
 
 @rule("setup.cfg")
