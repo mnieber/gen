@@ -28,6 +28,11 @@ def created_project(project):
     return create_forward(project, has, ":env")
 
 
+@rule("project", has, "service")
+def project_has_service_that_has_env(project, service):
+    return create_forward(service, has, ":env")
+
+
 @rule("project", has, ":env")
 def project_has_env(project, env):
     project.renders(
@@ -35,4 +40,14 @@ def project_has_env(project, env):
         "env",
         dict(env=env),
         [Path(__file__).parent / "templates"],
+    )
+
+
+@rule("service", has, ":env")
+def service_has_env(service, env):
+    service.renders(
+        [env],
+        ".env",
+        dict(env=env),
+        [Path(__file__).parent / "templates_service"],
     )
