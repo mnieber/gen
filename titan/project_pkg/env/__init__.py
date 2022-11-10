@@ -45,9 +45,10 @@ def project_has_env(project, env):
 
 @rule("service", has, ":env")
 def service_has_env(service, env):
-    service.renders(
-        [env],
-        ".env",
-        dict(env=env),
-        [Path(__file__).parent / "templates_service"],
-    )
+    if service.django_app or service.react_app or service.name == "postgres":
+        service.renders(
+            [env],
+            ".env",
+            dict(env=env),
+            [Path(__file__).parent / "templates_service"],
+        )

@@ -44,9 +44,9 @@ const getHandleSubmit =
   (useMagicLink: boolean, props: PropsT) =>
   ({ values }: { values: FormState['values'] }) => {
     if (useMagicLink) {
-      props.requestMagicLink(values[ff.email]);
+      return props.requestMagicLink(values[ff.email]);
     } else {
-      props.signIn(values[ff.email], values[ff.password]);
+      return props.signIn(values[ff.email], values[ff.password]);
     }
   };
 

@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import moonleap.resource.props as P
 from moonleap import MemFun, create, extend, get_root_resource, kebab_to_camel, rule
 from moonleap.verbs import has
@@ -17,7 +19,7 @@ def created_project(project):
         [project],
         "src",
         dict(project=project),
-        [],
+        [Path(__file__).parent / "templates"],
     )
 
 
