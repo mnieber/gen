@@ -15,7 +15,7 @@ rules = {}
 def create_api_module(term):
     api_module = ApiModule(name=kebab_to_camel(term.data))
     api_module.template_dir = Path(__file__).parent / "templates"
-    api_module.template_context = dict(api_module=api_module)
+    api_module.template_context = dict(api_module=api_module, gql_reg=get_gql_reg())
     return api_module
 
 

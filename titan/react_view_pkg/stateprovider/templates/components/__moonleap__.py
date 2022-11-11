@@ -26,13 +26,13 @@ def get_helpers(_):
             for pipeline in self.pipelines:
                 pipeline_source = pipeline.source
                 if pipeline_source.meta.term.tag == "query":
-                    self.queries.append(pipeline_source)
+                    append_uniq(self.queries, pipeline_source)
                 elif pipeline_source.meta.term.tag == "mutation":
-                    self.mutations.append(pipeline_source)
+                    append_uniq(self.mutations, pipeline_source)
                 elif pipeline_source.meta.term.tag == "item":
-                    self.input_items.append(pipeline_source)
+                    append_uniq(self.input_items, pipeline_source)
                 elif pipeline_source.meta.term.tag == "item_list":
-                    self.input_item_lists.append(pipeline_source)
+                    append_uniq(self.input_item_lists, pipeline_source)
                 else:
                     raise Exception("Unknown pipeline source")
 
@@ -102,8 +102,10 @@ def get_helpers(_):
             )
             data = dict(orders_items=orders_items)
             if orders_items:
-                for field_ordered in container.order_items_mutation.gql_spec.orders:
-                    parent_type_name, parent_key = field_ordered.split(".")
+                for (
+                    parent_type_name,
+                    parent_key,
+                ) in container.order_items_mutation.gql_spec.orders:
                     field_spec = (
                         get_type_reg()
                         .get(u0(parent_type_name))

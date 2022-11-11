@@ -3,11 +3,11 @@
 {% magic_with _.container.state.name as MyState %}
 import { PropsT, MyState } from 'src/{{ _.module.name }}/MyState';
 import * as FacetPolicies from 'skandha-facets/policies';
-import { SelectionCbs, handleSelectItem } from 'skandha-facets/Selection';                            {% ?? _.container.get_bvr("selection") %}
-import { HighlightCbs } from 'skandha-facets/Highlight';                                              {% ?? _.container.get_bvr("highlight") %}
-import { InsertionCbs } from 'skandha-facets/Insertion';                                              {% ?? _.container.get_bvr("insertion") %}
-import { DeletionCbs } from 'skandha-facets/Deletion';                                                {% ?? _.container.get_bvr("deletion") %}
-import { setCallbacks } from 'aspiration';
+import { SelectionCbs, handleSelectItem } from 'skandha-facets/Selection';                              {% ?? _.container.get_bvr("selection") %}
+import { HighlightCbs } from 'skandha-facets/Highlight';                                                {% ?? _.container.get_bvr("highlight") %}
+import { InsertionCbs } from 'skandha-facets/Insertion';                                                {% ?? _.container.get_bvr("insertion") %}
+import { DeletionCbs } from 'skandha-facets/Deletion';                                                  {% ?? _.container.get_bvr("deletion") %}
+import { setCallbackMap } from 'aspiration';
 import { MyItemT } from 'src/api/types/MyItemT';
 import {
   addCleanUpFunctionToCtr,
@@ -18,40 +18,40 @@ export const initMyContainer = (state: MyState, props: PropsT) => {
   const ctr = state.myContainer;
   addCleanUpFunctionToCtr(state, () => cleanUpCtr(ctr));
 
-  setCallbacks(ctr.deletion, {                                                                        {% if _.container.get_bvr("deletion") %}
+  setCallbackMap(ctr.deletion, {                                                                        {% if _.container.get_bvr("deletion") %}
     delete: {
       deleteItems(this: DeletionCbs['delete']) {
         return props.deleteMyItems(this.itemIds);
       },
     },
-  } as DeletionCbs);                                                                                  {% endif %}
+  } as DeletionCbs);                                                                                    {% endif %}
 
-  setCallbacks(ctr.highlight, {                                                                       {% if _.container.get_bvr("selection") %}
-    highlightItem: {                                                                                  {% if _.container.get_bvr("addition") %}
+  setCallbackMap(ctr.highlight, {                                                                       {% if _.container.get_bvr("selection") %}
+    highlightItem: {                                                                                    {% if _.container.get_bvr("addition") %}
       enter(this: HighlightCbs['highlightItem']) {
         FacetPolicies.cancelNewItemOnHighlightChange(ctr.highlight, this.id);    # noqa: E501
       },
-    },                                                                                                {% endif %}
-  } as HighlightCbs);                                                                                 {% endif %}
+    },                                                                                                  {% endif %}
+  } as HighlightCbs);                                                                                   {% endif %}
 
-  setCallbacks(ctr.insertion, {                                                                       {% if _.container.get_bvr("insertion") %}
+  setCallbackMap(ctr.insertion, {                                                                       {% if _.container.get_bvr("insertion") %}
     insertItems: {
       insertItems(myItems: MyItemT[]) {
         props.saveMyItemOrdering(myItems);
       },
     },
-  } as InsertionCbs);                                                                                 {% endif %}
+  } as InsertionCbs);                                                                                   {% endif %}
 
-  setCallbacks(ctr.selection, {                                                                       {% if _.container.get_bvr("selection") %}
+  setCallbackMap(ctr.selection, {                                                                       {% if _.container.get_bvr("selection") %}
     selectItem: {
       selectItem(this: SelectionCbs['selectItem']) {
         handleSelectItem(ctr.selection, this.selectionParams);
-        FacetPolicies.highlightFollowsSelection(                                                      {% if _.container.get_bvr("highlight") %}
+        FacetPolicies.highlightFollowsSelection(                                                        {% if _.container.get_bvr("highlight") %}
           ctr.selection,
           this.selectionParams
-        );                                                                                            {% endif %}
+        );                                                                                              {% endif %}
       }
     },
-  } as SelectionCbs);                                                                                 {% endif %}
+  } as SelectionCbs);                                                                                   {% endif %}
 }
 {% end_magic_with %}

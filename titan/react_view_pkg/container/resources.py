@@ -39,8 +39,7 @@ class Container(Resource):
             return None
 
         for mutation in get_gql_reg().mutations:
-            for field_ordered in mutation.gql_spec.orders:
-                parent_type_name, parent_key = field_ordered.split(".")
+            for parent_type_name, parent_key in mutation.gql_spec.orders:
                 field_spec = (
                     get_type_reg()
                     .get(u0(parent_type_name))

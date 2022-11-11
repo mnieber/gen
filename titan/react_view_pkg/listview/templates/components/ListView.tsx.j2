@@ -4,6 +4,7 @@
 {% magic_with field_name as redRose %}
 import { cn } from 'src/utils/classnames';
 import * as R from 'ramda';
+import { dragState } from 'skandha-facets/DragAndDrop';                                         {% ?? __.drag_and_drop_bvr %}
 import { observer } from 'mobx-react-lite';
 import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { FooItemListViewItem } from 'src/myReactModule/components/FooItemListViewItem';
@@ -24,6 +25,7 @@ type PropsT = {
 const DefaultProps = {
   ...dps.fooItems,
   ...dps.fooItemsDeletion,                                                                      {% ?? __.deletion_bvr %}
+  ...dps.fooItemsDragAndDrop,                                                                   {% ?? __.drag_and_drop_bvr %}
   ...dps.fooItemsHighlight,                                                                     {% ?? __.selection_bvr %}
   ...dps.fooItemsSelection,                                                                     {% ?? __.selection_bvr %}
 };
@@ -48,8 +50,10 @@ export const FooListView = observer(
             fooItem={fooItem}
             isSelected={fooItem && props.fooItemsSelection.ids.includes(fooItem.id)}            {% ?? __.selection_bvr %}
             isHighlighted={fooItem && props.fooItemsHighlight.id === fooItem.id}                {% ?? __.selection_bvr %}
+            dragState={dragState(props.fooItemsDragAndDrop.hoverPosition, fooItem.id)}          {% ?? __.drag_and_drop_bvr %}
             onDelete={() => props.fooItemsDeletion.delete([fooItem.id])}                        {% ?? __.deletion_bvr %}
             {...handleClick.handle(fooItem.id)}                                                 {% ?? __.selection_bvr %}
+            {...props.fooItemsDragAndDrop.handle(fooItem.id)}                                   {% ?? __.drag_and_drop_bvr %}
           />
         );
       })

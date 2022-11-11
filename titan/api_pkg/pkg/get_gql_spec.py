@@ -1,3 +1,4 @@
+from moonleap import u0
 from titan.types_pkg.pkg.field_spec import FieldSpec
 from titan.types_pkg.pkg.load_type_specs.field_spec_from_dict import (
     field_spec_from_dict,
@@ -39,7 +40,9 @@ def get_gql_spec(gql_reg, host, endpoint_key, endpoint_spec_dict):
         is_list = item_name.endswith("Set")
         deletes.append((item_name.removesuffix("Set"), is_list))
 
-    orders = endpoint_spec_dict.get("orders", [])
+    orders = [x.split(".") for x in endpoint_spec_dict.get("orders", [])]
+    for x in orders:
+        x[0] = u0(x[0])
 
     saves = []
     for item_name in endpoint_spec_dict.get("saves", []):

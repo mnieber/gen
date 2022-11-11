@@ -1,33 +1,36 @@
-{% magic_with _.mutation.name as callEndpoint %}
-{% magic_with field_spec.name as fieldName %}
-{% magic_with field_spec.ts_type as fieldTsType %}
-{% magic_with field_spec.graphql_type("client") as fieldGqlType %}
-{% magic_with query.name as fooQueryName %}
-{% magic_with type_spec.type_name as TypeSpecName %}
+{% magic_with _.mutation.name as callMyEndpoint %}
+{% magic_with field_spec.name as myFieldName %}
+{% magic_with field_spec.ts_type as myFieldTsType %}
+{% magic_with field_spec.graphql_type("client") as myFieldGqlType %}
+{% magic_with type_spec.type_name as MyTypeSpecName %}
 import { useMutation } from '@tanstack/react-query';
-import { queryClient } from 'src/api/queryClient';                                      {% ?? _.mutation.gql_spec.invalidates %}
+import { queryClient } from 'src/api/queryClient';                                                          {% ?? _.mutation.gql_spec.invalidates %}
 import { doQuery } from 'src/api/graphqlClient';
 import { useMutationData } from 'src/api/hooks';
 import { ObjT } from 'src/utils/types';
 import { wait } from 'src/utils/wait';
-import { {{ item.ts_form_type }} } from 'src/api/types/{{ item.type_name }}T';          {% !! item in __.form_input_items %}
-import { typeSpecNameGqlFields } from 'src/api/types/TypeSpecNameT'                     {% !! type_spec in __.type_specs_to_import %}
-import { getFieldName } from 'src/api/types/{{ field_spec.target }}T';                  {% !! field_spec in __.derived_fields %}
+import { {{ item.ts_form_type }} } from 'src/api/types/{{ item.type_name }}T';                              {% !! item in __.form_input_items %}
+import { myTypeSpecNameGqlFields } from 'src/api/types/MyTypeSpecNameT'                                     {% !! type_spec in __.type_specs_to_import %}
+import { getMyFieldName } from 'src/api/types/{{ field_spec.target }}T';                                    {% !! field_spec in __.derived_fields %}
+import { queryClient } from 'src/api/queryClient';
+import { applyUpdate } from 'src/utils/applyUpdate';
+import { sortByIds } from 'src/utils/sortByIds';
+import { {{ order_parent }}T } from 'src/api/types/{{ order_parent }}T';                                     {% !! order_parent, order_child, order_ids, order_gql_specs in __.orders_data %}
 
 export type ArgsT = {
-  fieldName: fieldTsType;                                                               {% !! field_spec in __.input_field_specs %}
+  myFieldName: myFieldTsType;                                                                               {% !! field_spec in __.input_field_specs %}
 };
 
-export const callEndpoint = (args: ArgsT) => {
+export const callMyEndpoint = (args: ArgsT) => {
   return doQuery(
-    `mutation callEndpoint(                                                             {% if __.input_field_specs %}
-      $fieldName: fieldGqlType                                                          {% !! field_spec in __.input_field_specs %}
+    `mutation callMyEndpoint(                                                                               {% if __.input_field_specs %}
+      $myFieldName: myFieldGqlType                                                                          {% !! field_spec in __.input_field_specs %}
     ) {
-      callEndpoint(
-        fieldName: $fieldName                                                           {% !! field_spec in __.input_field_specs|sort(attribute="name") %}
+      callMyEndpoint(
+        myFieldName: $myFieldName                                                                           {% !! field_spec in __.input_field_specs|sort(attribute="name") %}
       ) {
-    `mutation callEndpoint {                                                            {% else %}
-      callEndpoint {                                                                    {% endif %}
+    `mutation callMyEndpoint {                                                                              {% else %}
+      callMyEndpoint {                                                                                      {% endif %}
 {{ __.graphql_body }}
       }
     }`,
@@ -36,27 +39,19 @@ export const callEndpoint = (args: ArgsT) => {
     (response: ObjT) => {
       return wait(
         process.env.NODE_ENV === 'development' ? 1000 : 0,
-        response.callEndpoint
+        response.callMyEndpoint
       );
     }
   );
 };
 
-export const useCallEndpoint = () => {
-  const mutation = useMutation(['callEndpoint'], callEndpoint, {
-    onSuccess: (response: ObjT) => {
-      // Moonleap todo: set contents for objects with (nested) derived fields           {% if __.derived_fields %}
-      response.field_name = getFieldName(response.field_name);                          {% !! field_spec in __.derived_fields %}
-                                                                                        {% endif %}
-      queryClient.invalidateQueries([                                                   {% if _.mutation.gql_spec.invalidates %}
-        '{{ queryName }}',                                                              {% !! queryName in _.mutation.gql_spec.invalidates %}
-        {% remove_trailing suffix="," %}
-      ]);                                                                               {% endif %}
-    }
+export const useCallMyEndpoint = () => {
+  const mutation = useMutation(['callMyEndpoint'], callMyEndpoint, {
+{% include_snippet "__moonleap__/onMutate.ts.j2" %}
+{% include_snippet "__moonleap__/onSuccess.ts.j2" %}
   });
   return useMutationData(mutation);
 };
-{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

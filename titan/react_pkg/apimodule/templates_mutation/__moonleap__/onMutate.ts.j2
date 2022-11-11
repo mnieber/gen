@@ -1,0 +1,19 @@
+{% magic_with order_parent as MyOrderParent %}
+{% magic_with order_child as myOrderChild %}
+{% magic_with order_ids as myOrderIds %}
+{% magic_with gql_spec.name as myEndpoint %}
+{% magic_with updatePath as myUpdatePath %}
+    onMutate: (args: ArgsT) => {                                                                            {% if _.mutation.gql_spec.orders %}
+      const updateMyOrderParent = (myOrderParent: MyOrderParentT) => {                                      {% for order_parent, order_child, order_ids, order_gql_specs in __.orders_data %}
+        myOrderParent.myOrderChild = sortByIds(myOrderParent.myOrderChild, args.myOrderIds);
+      };
+      queryClient.setQueriesData(['myEndpoint'], (data: any) => {                                           {% for gql_spec, updatePaths in order_gql_specs %}
+        applyUpdate('myUpdatePath', data, updateMyOrderParent);                                             {% !! updatePath in updatePaths %}
+        return data;
+      });                                                                                                   {% endfor %}{% endfor %}
+    },                                                                                                      {% endif %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
