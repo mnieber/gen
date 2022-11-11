@@ -14,7 +14,7 @@ import { myTypeSpecNameGqlFields } from 'src/api/types/MyTypeSpecNameT'         
 import { getMyFieldName } from 'src/api/types/{{ field_spec.target }}T';                                    {% !! field_spec in __.derived_fields %}
 import { queryClient } from 'src/api/queryClient';
 import { applyUpdate } from 'src/utils/applyUpdate';
-import { sortByIds } from 'src/utils/sortByIds';
+import { sortByIds } from 'src/utils/ids';
 import { {{ order_parent }}T } from 'src/api/types/{{ order_parent }}T';                                     {% !! order_parent, order_child, order_ids, order_gql_specs in __.orders_data %}
 
 export type ArgsT = {

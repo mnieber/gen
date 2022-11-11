@@ -21,3 +21,9 @@ export const lookUp = (keys: Array<any>, obj: any): Array<any> => {
 };
 
 export const hasId = (id: string) => (x: any) => x.id === id;
+
+export const sortByIds = (items: any[], ids: string[]) => {
+  return items.sort((a: any, b: any) => {
+    return ids.indexOf(a.id) - ids.indexOf(b.id);
+  });
+};

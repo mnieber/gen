@@ -7,7 +7,7 @@
       },                                                                                                        {% endif %}{% endwith %}
       saveContainerItemOrdering: (containerItems: ContainerItemT[]) => {                                        {% with d = __.order_items_data(container) %}{% if d.orders_items %}
         return {{ d.orderMyItems }}.mutateAsync({
+          // {{ otherKey }}: Moonleap Todo,                                                                     {% !! otherKey in d.otherKeys %}
           {{ d.myItemIds }}: getIds({{ d.myItems }}),
-          {{ otherKey }}: {{ otherValue }},                                                                     {% !!  otherKey, otherValue in d.otherFields %}
         });
       },                                                                                                        {% endif %}{% endwith %}{% endfor %}

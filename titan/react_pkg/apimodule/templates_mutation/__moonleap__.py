@@ -47,7 +47,6 @@ def get_helpers(_):
                         order_ids = input.key
 
                 gql_specs = []
-                __import__("pudb").set_trace()
                 for gql_spec in _.gql_reg.gql_specs():
                     paths = get_paths_to(
                         type_spec.type_name,

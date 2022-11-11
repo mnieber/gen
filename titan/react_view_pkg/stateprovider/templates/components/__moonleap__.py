@@ -97,15 +97,14 @@ def get_helpers(_):
             return data
 
         def order_items_data(self, container):
-            orders_items = (
-                container.get_bvr("dragAndDrop") and container.order_items_mutation
-            )
+            mutation = container.order_items_mutation
+            orders_items = container.get_bvr("dragAndDrop") and mutation
             data = dict(orders_items=orders_items)
             if orders_items:
                 for (
                     parent_type_name,
                     parent_key,
-                ) in container.order_items_mutation.gql_spec.orders:
+                ) in mutation.gql_spec.orders:
                     field_spec = (
                         get_type_reg()
                         .get(u0(parent_type_name))
@@ -113,12 +112,15 @@ def get_helpers(_):
                     )
 
                     if field_spec.target == container.item.type_spec.type_name:
-                        data["otherFields"] = []  # TODO
-                        data["orderMyItems"] = container.order_items_mutation.name
+                        ids_field_name = _get_field_name(mutation, ["uuid[]"])
+                        data["otherKeys"] = [
+                            x.key
+                            for x in mutation.gql_spec.get_inputs()
+                            if x.key != ids_field_name
+                        ]
+                        data["orderMyItems"] = mutation.name
                         data["myItems"] = plural(container.item.item_name)
-                        data["myItemIds"] = _get_field_name(
-                            container.order_items_mutation, ["uuid[]"]
-                        )
+                        data["myItemIds"] = ids_field_name
             return data
 
     return Helpers()
