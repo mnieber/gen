@@ -3,6 +3,8 @@
 {% magic_with field_spec.ts_type as myFieldTsType %}
 {% magic_with field_spec.graphql_type("client") as myFieldGqlType %}
 {% magic_with type_spec.type_name as MyTypeSpecName %}
+{% magic_with output_field_spec.target as myOutputFieldType %}
+{% magic_with output_field_spec.name as myOutputFieldName %}
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from 'src/api/queryClient';                                                          {% ?? _.mutation.gql_spec.invalidates %}
 import { doQuery } from 'src/api/graphqlClient';
@@ -12,7 +14,7 @@ import { wait } from 'src/utils/wait';
 import { {{ item.ts_form_type }} } from 'src/api/types/{{ item.type_name }}T';                              {% !! item in __.form_input_items %}
 import { myTypeSpecNameGqlFields } from 'src/api/types/MyTypeSpecNameT'                                     {% !! type_spec in __.type_specs_to_import %}
 import { {{ order_parent }}T } from 'src/api/types/{{ order_parent }}T';                                    {% !! order_parent, order_child, order_ids, order_gql_specs in __.orders_data %}
-import { getMyFieldName } from 'src/api/types/{{ field_spec.target }}T';                                    {% !! field_spec in __.derived_fields %}
+import { hydrateMyOutputFieldType } from 'src/api/types/MyOutputFieldTypeT';                                {% !! output_field_spec in __.hydrated_fields %}
 import { queryClient } from 'src/api/queryClient';
 import { applyUpdate } from 'src/utils/applyUpdate';
 import { sortByIds } from 'src/utils/ids';
@@ -52,6 +54,8 @@ export const useCallMyEndpoint = () => {
   });
   return useMutationData(mutation);
 };
+{% end_magic_with %}
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

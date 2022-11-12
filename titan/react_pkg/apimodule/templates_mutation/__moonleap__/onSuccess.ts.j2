@@ -1,7 +1,7 @@
     onSuccess: (response: ObjT) => {                                                                        {% min_lines count=3 %}
-      // Moonleap todo: set contents for objects with (nested) derived fields                               {% if __.derived_fields %}
-      response.field_name = getMyFieldName(response.field_name);                                            {% !! field_spec in __.derived_fields %}
-                                                                                                            {% endif %}
+      response.myOutputFieldName = hydrateMyOutputFieldType(response.myOutputFieldName);                    {% if __.hydrated_fields %}{% for output_field_spec in __.hydrated_fields %}{% ?? output_field_spec.field_type == "fk" %}
+      response.myOutputFieldName = R.map(hydrateMyOutputFieldType, response.myOutputFieldName);             {% ?? output_field_spec.field_type == "relatedSet" %}{% endfor %}{% endif %}
+
       queryClient.invalidateQueries([                                                                       {% if _.mutation.gql_spec.invalidates %}
         '{{ queryName }}',                                                                                  {% !! queryName in _.mutation.gql_spec.invalidates %}
         {% remove_trailing suffix="," %}

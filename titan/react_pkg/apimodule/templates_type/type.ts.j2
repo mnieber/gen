@@ -8,13 +8,15 @@ import { typeSpecNameFields } from 'src/api/types/TypeSpecNameT';               
 import { FieldSpecTargetT, getHydratedFieldSpecTarget } from 'src/api/types/FieldSpecTargetT';      {% for field_spec in __.hydrated_field_specs %}{% ?? field_spec.field_type in ("fk", "relatedSet") %}{% endfor %}
 
 export type MyTypeT = {
-  fieldSpecName{{ questionMark }}: fieldSpecTsType;                                                 {% for field_spec in __.field_specs %}{% with %}{% if field_spec.is_optional("client") %}{% set questionMark = "?" %}{% endif %}{% endwith %}{% endfor %}
+  fieldSpecName: fieldSpecTsType;                                                                   {% for field_spec in __.field_specs %}{% ?? not field_spec.is_optional("client") %}
+  fieldSpecName?: fieldSpecTsType;                                                                  {% ?? field_spec.is_optional("client") %}{% endfor %}
 };
 
 export type MyTypeByIdT = { [id: string]: MyTypeT };
 
 export type {{ _.item.ts_form_type }} = {                                                           {% if __.form_field_specs %}
-  fieldSpecName{{ questionMark }}: fieldSpecTsType;                                                 {% for field_spec in __.field_specs %}{% with %}{% if field_spec.is_optional("client") %}{% set questionMark = "?" %}{% endif %}{% endwith %}{% endfor %}
+  fieldSpecName: fieldSpecTsType;                                                                   {% for field_spec in __.form_field_specs %}{% ?? not field_spec.is_optional("client") %}
+  fieldSpecName?: fieldSpecTsType;                                                                  {% ?? field_spec.is_optional("client") %}{% endfor %}
 };                                                                                                  {% endif %}
 
 export const myTypeGqlFields = `                                                                    {% if _.item.type_spec.extract_gql_fields %}

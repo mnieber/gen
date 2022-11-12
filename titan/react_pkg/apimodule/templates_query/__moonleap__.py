@@ -7,6 +7,7 @@ def get_helpers(_):
         input_field_specs = _.query.gql_spec.get_inputs()
         output_schema_name = _.query.name + "Outputs"
         fk_output_field_specs = _.query.gql_spec.get_outputs(["relatedSet", "fk"])
+        hydrated_fields = []
 
         def __init__(self):
             self.hydrated_fields = self.get_hydrated_fields()

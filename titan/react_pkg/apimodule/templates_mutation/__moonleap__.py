@@ -10,9 +10,10 @@ def get_helpers(_):
         form_input_field_specs = _.mutation.gql_spec.get_inputs(["form"])
         fk_output_field_specs = _.mutation.gql_spec.get_outputs(["relatedSet", "fk"])
         orders_data = []
+        hydrated_fields = []
 
         def __init__(self):
-            self.derived_fields = self.get_derived_fields()
+            self.hydrated_fields = self.get_hydrated_fields()
             self.type_specs_to_import, self.graphql_body = graphql_body(
                 _.mutation.gql_spec.outputs_type_spec, indent=8
             )
@@ -25,7 +26,7 @@ def get_helpers(_):
                 result.append(field_spec.target_item)
             return result
 
-        def get_derived_fields(self):
+        def get_hydrated_fields(self):
             result = []
             for field_spec in self.fk_output_field_specs:
                 if has_hydrated_fields(field_spec.target_type_spec, "client"):
