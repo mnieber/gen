@@ -1,6 +1,6 @@
 from titan.react_pkg.apimodule.graphql_body import graphql_body
 from titan.types_pkg.pkg.get_paths_to import get_paths_to
-from titan.types_pkg.pkg.has_derived_fields import has_derived_fields
+from titan.types_pkg.pkg.has_hydrated_fields import has_hydrated_fields
 from titan.types_pkg.typeregistry import get_type_reg
 
 
@@ -28,7 +28,7 @@ def get_helpers(_):
         def get_derived_fields(self):
             result = []
             for field_spec in self.fk_output_field_specs:
-                if has_derived_fields(field_spec.target_type_spec, "client"):
+                if has_hydrated_fields(field_spec.target_type_spec, "client"):
                     result.append(field_spec)
             return result
 

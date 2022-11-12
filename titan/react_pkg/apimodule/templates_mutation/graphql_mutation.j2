@@ -11,11 +11,11 @@ import { ObjT } from 'src/utils/types';
 import { wait } from 'src/utils/wait';
 import { {{ item.ts_form_type }} } from 'src/api/types/{{ item.type_name }}T';                              {% !! item in __.form_input_items %}
 import { myTypeSpecNameGqlFields } from 'src/api/types/MyTypeSpecNameT'                                     {% !! type_spec in __.type_specs_to_import %}
+import { {{ order_parent }}T } from 'src/api/types/{{ order_parent }}T';                                    {% !! order_parent, order_child, order_ids, order_gql_specs in __.orders_data %}
 import { getMyFieldName } from 'src/api/types/{{ field_spec.target }}T';                                    {% !! field_spec in __.derived_fields %}
 import { queryClient } from 'src/api/queryClient';
 import { applyUpdate } from 'src/utils/applyUpdate';
 import { sortByIds } from 'src/utils/ids';
-import { {{ order_parent }}T } from 'src/api/types/{{ order_parent }}T';                                     {% !! order_parent, order_child, order_ids, order_gql_specs in __.orders_data %}
 
 export type ArgsT = {
   myFieldName: myFieldTsType;                                                                               {% !! field_spec in __.input_field_specs %}

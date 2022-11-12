@@ -1,24 +1,34 @@
-{% magic_with _.item.type_name as YellowTulip %}
+{% magic_with _.item.type_name as MyType %}
 {% magic_with field_spec.name as fieldSpecName %}
 {% magic_with field_spec.ts_type as fieldSpecTsType %}
 {% magic_with field_spec.target as FieldSpecTarget %}
 {% magic_with type_spec.type_name as TypeSpecName %}
 import { FieldSpecTargetT } from 'src/api/types/FieldSpecTargetT';                                  {% !! field_spec in __.fk_field_specs %}
 import { typeSpecNameFields } from 'src/api/types/TypeSpecNameT';                                   {% !! type_spec in __.dependency_type_specs %}
+import { FieldSpecTargetT, getHydratedFieldSpecTarget } from 'src/api/types/FieldSpecTargetT';      {% for field_spec in __.hydrated_field_specs %}{% ?? field_spec.field_type in ("fk", "relatedSet") %}{% endfor %}
 
-export type YellowTulipT = {
-  fieldSpecName{% if field_spec.is_optional("client") %}?{% endif %}: fieldSpecTsType;               {% !! field_spec in __.field_specs %}
+export type MyTypeT = {
+  fieldSpecName{% if field_spec.is_optional("client") %}?{% endif %}: fieldSpecTsType;              {% !! field_spec in __.field_specs %}
 };
 
-export type YellowTulipByIdT = { [id: string]: YellowTulipT };
+export type MyTypeByIdT = { [id: string]: MyTypeT };
 
 export type {{ _.item.ts_form_type }} = {                                                           {% if __.form_field_specs %}
   fieldSpecName{% if field_spec.is_optional("client") %}?{% endif %}: fieldSpecTsType;              {% !! field_spec in __.form_field_specs %}
 };                                                                                                  {% endif %}
 
-export const yellowTulipGqlFields = `                                                               {% if _.item.type_spec.extract_gql_fields %}
+export const myTypeGqlFields = `                                                                    {% if _.item.type_spec.extract_gql_fields %}
 {{ __.graphql_fields() }}
 `                                                                                                   {% endif %}
+
+export const hydrateMyType = (data: ObjT) => {                                                      {% if __.hydrated_field_specs %}
+  return {
+    ...data,
+    fieldSpecName: getHydratedFieldSpecTarget(data.fieldSpecName),                                  {% for field_spec in __.hydrated_field_specs %}{% ?? field_spec.field_type == "fk" %}
+    fieldSpecName: R.map(getHydratedFieldSpecTarget, data.fieldSpecName),                           {% ?? field_spec.field_type == "relatedSet" %}
+    // fieldSpecName: Moonleap Todo,                                                                {% ?? field_spec.field_type not in ("fk", "relatedSet") %}{% endfor %}
+  };
+}                                                                                                   {% endif %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

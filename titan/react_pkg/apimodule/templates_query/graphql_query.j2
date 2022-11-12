@@ -1,30 +1,33 @@
-{% magic_with _.query.name as callEndpoint %}
-{% magic_with input_field_spec.name as inputFieldName %}
-{% magic_with input_field_spec.graphql_type("client") as inputFieldGqlType %}
-{% magic_with input_field_spec.ts_type as inputFieldTsType %}
-{% magic_with output_field_spec.name as outputFieldName %}
-{% magic_with type_spec.type_name as TypeSpecName %}
+{% magic_with _.query.name as callMyEndpoint %}
+{% magic_with input_field_spec.name as myInputFieldName %}
+{% magic_with input_field_spec.graphql_type("client") as myInputFieldGqlType %}
+{% magic_with input_field_spec.ts_type as myInputFieldTsType %}
+{% magic_with output_field_spec.name as myOutputFieldName %}
+{% magic_with output_field_spec.target as myOutputFieldType %}
+{% magic_with type_spec.type_name as MyTypeSpecName %}
 import { useQuery } from '@tanstack/react-query';
 import { doQuery } from 'src/api/graphqlClient';
 import { useQueryData } from 'src/api/hooks';
+import * as R from 'ramda';
 import { ObjT } from 'src/utils/types';
 import { wait } from 'src/utils/wait';
-import { typeSpecNameGqlFields } from 'src/api/types/TypeSpecNameT'                     {% !! type_spec in __.type_specs_to_import %}
+import { myTypeSpecNameGqlFields } from 'src/api/types/MyTypeSpecNameT';                            {% !! type_spec in __.type_specs_to_import %}
+import { hydrateMyOutputFieldType } from 'src/api/types/MyOutputFieldTypeT';                        {% !! output_field_spec in __.hydrated_fields %}
 
 export type ArgsT = {
-  inputFieldName: inputFieldTsType;                                                     {% !! input_field_spec in __.input_field_specs %}
+  myInputFieldName: myInputFieldTsType;                                                             {% !! input_field_spec in __.input_field_specs %}
 };
 
-export const callEndpoint = (args: ArgsT) => {
+export const callMyEndpoint = (args: ArgsT) => {
   return doQuery(
-    `query callEndpoint(                                                                {% if __.input_field_specs %}
-      $inputFieldName: inputFieldGqlType                                                {% !! input_field_spec in __.input_field_specs %}
+    `query callMyEndpoint(                                                                          {% if __.input_field_specs %}
+      $myInputFieldName: myInputFieldGqlType                                                        {% !! input_field_spec in __.input_field_specs %}
     ) {
-      callEndpoint(
-        inputFieldName: $inputFieldName                                                 {% !! input_field_spec in __.input_field_specs|sort(attribute="name") %}
+      callMyEndpoint(
+        myInputFieldName: $myInputFieldName                                                         {% !! input_field_spec in __.input_field_specs|sort(attribute="name") %}
       ) {
-    `query callEndpoint {                                                               {% else %}
-      callEndpoint {                                                                    {% endif %}
+    `query callMyEndpoint {                                                                         {% else %}
+      callMyEndpoint {                                                                              {% endif %}
 {{ __.graphql_body }}
       }
     }`,
@@ -33,26 +36,27 @@ export const callEndpoint = (args: ArgsT) => {
     (response: ObjT) => {
       return wait(
         process.env.NODE_ENV === 'development' ? 1000 : 0,
-        response.callEndpoint
+        response.callMyEndpoint
       );
     }
   );
 }
 
-export const useCallEndpoint = (
-  args: ArgsT                                                                               {% ?? __.input_field_specs %}
+export const useCallMyEndpoint = (
+  args: ArgsT                                                                                       {% ?? __.input_field_specs %}
 ) => {
   const query = useQuery([
-      'callEndpoint',
-      args                                                                                  {% ?? __.input_field_specs %}
+      'callMyEndpoint',
+      args                                                                                          {% ?? __.input_field_specs %}
       {% remove_trailing suffix="," %}
-    ], () => callEndpoint(
-    args                                                                                    {% ?? __.input_field_specs %}
-    {}                                                                                      {% ?? not __.input_field_specs %}
+    ], () => callMyEndpoint(
+    args                                                                                            {% ?? __.input_field_specs %}
+    {}                                                                                              {% ?? not __.input_field_specs %}
   ))
-  .then((response: ObjT) => {                                                               {% if __.derived_fields %}
-    response.outputFieldName = getOutputFieldName(response.outputFieldName);                {% !! output_field_spec in __.derived_fields %}
-  })                                                                                        {% endif %}
+  .then((response: ObjT) => {                                                                       {% if __.hydrated_fields %}{% for output_field_spec in __.hydrated_fields %}
+    response.myOutputFieldName = hydrateMyOutputFieldType(response.myOutputFieldName);              {% ?? output_field_spec.field_type == "fk" %}
+    response.myOutputFieldName = R.map(hydrateMyOutputFieldType, response.myOutputFieldName);       {% ?? output_field_spec.field_type == "relatedSet" %}{% endfor %}
+  })                                                                                                {% endif %}
   ;
   return useQueryData(query);
 };
