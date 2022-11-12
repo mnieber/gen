@@ -12,13 +12,13 @@ def _add_target_items(q, field_specs, predicate=None):
     )
 
 
-def get_public_items(gql_reg, predicate):
+def get_public_items(api_reg, predicate):
     result = []
     q = Queue(lambda x: x.type_name, [])
 
-    for endpoint in list(gql_reg.mutations) + list(gql_reg.queries):
-        _add_target_items(q, endpoint.gql_spec.get_inputs(["fk", "relatedSet"]))
-        _add_target_items(q, endpoint.gql_spec.get_outputs(["fk", "relatedSet"]))
+    for endpoint in list(api_reg.mutations) + list(api_reg.queries):
+        _add_target_items(q, endpoint.api_spec.get_inputs(["fk", "relatedSet"]))
+        _add_target_items(q, endpoint.api_spec.get_outputs(["fk", "relatedSet"]))
 
     for item in q:
         result.append(item)
@@ -29,15 +29,15 @@ def get_public_items(gql_reg, predicate):
     return result
 
 
-def get_form_type_specs(gql_reg):
+def get_form_type_specs(api_reg):
     result = []
 
-    for mutation in gql_reg.mutations:
-        for field_spec in mutation.gql_spec.get_inputs(["form"]):
+    for mutation in api_reg.mutations:
+        for field_spec in mutation.api_spec.get_inputs(["form"]):
             append_uniq(result, field_spec.target_type_spec)
 
-    for query in gql_reg.queries:
-        for field_spec in query.gql_spec.get_inputs(["form"]):
+    for query in api_reg.queries:
+        for field_spec in query.api_spec.get_inputs(["form"]):
             append_uniq(result, field_spec.target_type_spec)
 
     return result

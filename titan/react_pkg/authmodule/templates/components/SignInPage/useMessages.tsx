@@ -1,9 +1,6 @@
 import { RouterLink } from 'src/routes/components';
-import { useRoutes } from 'src/routes/hooks/useRoutes';
 
 export const useMessages = () => {
-  const routes = useRoutes();
-
   const divForgotYourPassword = (
     <RouterLink to="/request-password-reset/">Forgot password?</RouterLink>
   );

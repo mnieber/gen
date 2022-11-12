@@ -40,11 +40,6 @@ def project_has_layer(project, layer):
     )
 
 
-@rule("project", has, "config:layer")
-def project_has_config_layer(project, layer):
-    return create_forward(project, has, f":commands-dir")
-
-
 @rule("docker-compose", configured_by, "layer")
 def docker_compose_configured_by_layer(docker_compose, layer):
     return create_forward(docker_compose.project, has, layer)

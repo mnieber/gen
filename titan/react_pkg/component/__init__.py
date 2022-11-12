@@ -1,11 +1,26 @@
 import moonleap.resource.props as P
-from moonleap import Prop, create, create_forward, extend, named, rule
+from moonleap import (
+    Priorities,
+    Prop,
+    create,
+    create_forward,
+    empty_rule,
+    extend,
+    named,
+    rule,
+)
 from moonleap.parser.term import named_term
 from moonleap.verbs import has, wraps
 from titan.react_pkg.reactmodule import ReactModule
+from titan.widgets_pkg.widgetregistry import get_widget_reg
+from titan.widgets_pkg.widgetregistry.resources import WidgetRegistry
 
 from . import props
 from .resources import Component  # noqa
+
+rules = {
+    ("widget-registry", has, "component"): empty_rule(),
+}
 
 
 @rule("module", has, "component")
@@ -35,6 +50,11 @@ def create_named_component(term):
     return named(Component)()
 
 
+@rule("component", priority=Priorities.LOW.value)
+def created_component(component):
+    return create_forward(get_widget_reg(), has, component)
+
+
 @extend(Component)
 class ExtendComponent:
     module = P.parent("react-module", has)
@@ -51,4 +71,9 @@ class ExtendNamedComponent:
 
 @extend(ReactModule)
 class ExtendReactModule:
+    components = P.children(has, "component")
+
+
+@extend(WidgetRegistry)
+class ExtendWidgetReg:
     components = P.children(has, "component")

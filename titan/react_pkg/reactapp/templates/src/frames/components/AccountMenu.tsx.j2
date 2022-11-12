@@ -1,0 +1,35 @@
+import { observer } from 'mobx-react-lite';
+import React from 'react';
+import { useLoadUserId, useSignOut } from 'src/auth/api';
+import { SignInLi } from 'src/auth/components/SignInLi';                                        {% ?? _.service.react_app.auth_module %}
+import { SignOutLi } from 'src/auth/components/SignOutLi';                                      {% ?? _.service.react_app.auth_module %}
+import { button } from 'src/frames/components';
+import { useMenuRef } from 'src/frames/hooks/useMenuRef';                                       {% ?? _.service.uikit %}
+import { cn } from 'src/utils/classnames';
+
+import './AccountMenu.scss';
+
+export const AccountMenu = observer(() => {
+  const loadUserId = useLoadUserId();
+  const menuRef = useMenuRef();                                                                 {% ?? _.service.uikit %}
+
+  return (
+    <div className={cn('AccountMenu'{% if _.service.uikit %}, 'uk-inline'{% endif %})}>
+      <button
+        data-cy="accountMenu"
+        className={button}
+        type="button"
+      >
+        Account
+      </button>
+      <div
+        ref={menuRef.ref}                                                                       {% ?? _.service.uikit %}
+      >
+        <ul className="{% if _.service.uikit %}uk-nav uk-dropdown-nav{% endif %}">
+          {!loadUserId.data?.isAuthenticated && <SignInLi menuRef={menuRef} />}                 {% ?? _.service.react_app.auth_module %}
+          {loadUserId.data?.isAuthenticated && <SignOutLi menuRef={menuRef} />}                 {% ?? _.service.react_app.auth_module %}
+        </ul>
+      </div>
+    </div>
+  );
+});

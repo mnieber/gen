@@ -20,6 +20,7 @@ from titan.django_pkg.djangomodule.get_map_from_item_to_django_module import (
 )
 from titan.types_pkg.item.resources import Item
 from titan.types_pkg.itemlist import ItemList
+from titan.types_pkg.typeregistry import get_type_reg
 
 from . import props
 from .resources import DjangoModule
@@ -68,7 +69,7 @@ def django_app_has_module(django_app, module):
 
 @rule("django-app", priority=Priorities.LOW.value)
 def django_modules_provide_item_lists(django_app):
-    lut = get_map_from_item_to_django_module(django_app.modules)
+    lut = get_map_from_item_to_django_module(get_type_reg(), django_app.modules)
     forwards = []
     for data in lut.values():
         django_model_term = f"{data.item.meta.term.data}:django-model"

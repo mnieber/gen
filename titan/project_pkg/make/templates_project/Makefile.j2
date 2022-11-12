@@ -12,6 +12,6 @@ create-opt-paths:
 	sudo mkdir -p /opt/{{ _.project.name }}/{{ service.name }}/ipython                        {% ?? service.pudb %}
 	sudo mkdir -p /opt/{{ _.project.name }}/{{ service.name }}/assets                         {% ?? service.pytest %}
 	sudo touch    /opt/{{ _.project.name }}/{{ service.name }}/pytest_report.html             {% ?? service.pytest %}
-	sudo mkdir -p /opt/{{ _.project.name }}/{{ service.name }}/media                          {% ?? service.django_app %}
-	sudo mkdir -p /opt/{{ _.project.name }}/{{ service.name }}/static                         {% ?? service.django_app %}
+	sudo mkdir -p /opt/{{ _.project.name }}/{{ service.name }}/media                          {% ?? service.has_django_app %}
+	sudo mkdir -p /opt/{{ _.project.name }}/{{ service.name }}/static                         {% ?? service.has_django_app %}
 {% endfor %}

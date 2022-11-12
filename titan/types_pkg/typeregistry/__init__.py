@@ -43,15 +43,13 @@ def created_project(project):
 @rule("type-registry")
 def created_type_registry(type_reg):
     forwards = []
-    for type_spec in get_type_reg().type_specs():
+    for type_spec in type_reg.type_specs():
         if not type_spec.is_form:
             kebab_name = camel_to_kebab(l0(type_spec.type_name))
             forwards.append(create_forward(type_reg, has, f"{kebab_name}:item"))
-            forwards.append(create_forward(type_reg, has, f"{kebab_name}:item~list"))
     return forwards
 
 
 @extend(TypeRegistry)
 class ExtendTypeReg:
     items = P.children(has, "item")
-    item_lists = P.children(has, "item~list")

@@ -67,10 +67,10 @@ def fk_field_specs_for_form_field(form_field_spec):
 
 def get_helpers(_):
     class Helpers:
-        input_field_specs = list(_.mutation.gql_spec.get_inputs())
-        form_input_field_specs = _.mutation.gql_spec.get_inputs(["form"])
-        output_field_specs = _.mutation.gql_spec.get_outputs()
-        fk_output_field_specs = _.mutation.gql_spec.get_outputs(["fk"])
+        input_field_specs = list(_.mutation.api_spec.get_inputs())
+        form_input_field_specs = _.mutation.api_spec.get_inputs(["form"])
+        output_field_specs = _.mutation.api_spec.get_outputs()
+        fk_output_field_specs = _.mutation.api_spec.get_outputs(["fk"])
         fixture_field_specs = _get_fixture_field_specs(form_input_field_specs)
 
         def mutation_fixture_imports(self):

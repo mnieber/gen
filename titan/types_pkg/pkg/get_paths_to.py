@@ -1,14 +1,14 @@
 from moonleap.utils.fp import uniq
-from titan.api_pkg.pkg.gql_spec import GqlSpec
+from titan.api_pkg.pkg.api_spec import ApiSpec
 
 
 def get_paths_to(type_name, type_spec, base_path, skip=None):
     if skip is None:
         skip = []
 
-    is_gql_spec = isinstance(type_spec, GqlSpec)
+    is_api_spec = isinstance(type_spec, ApiSpec)
     new_skip = skip
-    if not is_gql_spec:
+    if not is_api_spec:
         if type_spec.type_name in skip:
             return []
         else:
@@ -19,7 +19,7 @@ def get_paths_to(type_name, type_spec, base_path, skip=None):
 
     field_specs = (
         type_spec.get_outputs(["fk", "relatedSet"])
-        if is_gql_spec
+        if is_api_spec
         else type_spec.get_field_specs(["fk", "relatedSet"])
     )
 

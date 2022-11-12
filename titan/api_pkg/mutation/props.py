@@ -1,5 +1,5 @@
-from titan.api_pkg.gqlregistry import get_gql_reg
+from titan.api_pkg.apiregistry import get_api_reg
 
 
-def gql_spec(self):
-    return get_gql_reg().get(self.name)
+def api_spec(self):
+    return get_api_reg().get(self.name)

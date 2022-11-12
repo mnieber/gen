@@ -42,8 +42,21 @@ ROOT:
       - make                                                          {% ?? _.service %}
       - pytest                                                        {% ?? _.service|dot("pytest") %}
       - django-manage                                                 {% ?? _.service|dot("django_app") %}{% end_min_lines %}
+      - npm-link                                                      {% ?? _.service|dot("npm_source_maps") %}
+      - tsc                                                           {% ?? _.service|dot("npm_source_maps") %}
 
 SERVER:                                                               {% if _.service %}
   install_dir: {{ _.service.install_dir }}
-  src_dir: ${/SERVER/install_dir}/src                                 {% endif %}
+  src_dir: ${/SERVER/install_dir}/src
+
+TSC:                                                                  {% if _.service.npm_source_maps %}
+  src_dir_map:
+    {{ name }}: /npm/{{ name }}                                       {% !! name, dir in _.service.npm_source_maps.items() %}
+
+MENU:
+  session_id: {{ _.project.name|sn }}_tsc
+  commands:
+    stack:
+    - dodo frontend.tsc --watch {{ name }}                            {% !! name, dir in _.service.npm_source_maps.items() %}
+                                                                      {% endif %}{% endif %}
 {% end_trim_newlines %}

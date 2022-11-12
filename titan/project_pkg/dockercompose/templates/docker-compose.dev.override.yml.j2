@@ -8,5 +8,6 @@ services:
         - {{ _.project.opt_dir_fn }}/{{ service.name }}/ipython:/root/.ipython                                              {% ?? service.pudb %}
         - {{ _.project.opt_dir_fn }}/{{ service.name }}/pytest_report.html:{{ service.install_dir }}/pytest_report.html     {% ?? service.pytest %}
         - {{ _.project.opt_dir_fn }}/{{ service.name }}/assets:{{ service.install_dir }}/assets                             {% ?? service.pytest %}
-        - {{ _.project.opt_dir_fn }}/{{ service.name }}/static:{{ service.install_dir }}/static                             {% ?? service.django_app %}
-        - {{ _.project.opt_dir_fn }}/{{ service.name }}/media:{{ service.install_dir }}/media                               {% ?? service.django_app %}{% endif %}{% end_min_lines %}{% endfor %}
+        - {{ _.project.opt_dir_fn }}/{{ service.name }}/static:{{ service.install_dir }}/static                             {% ?? service.has_django_app %}
+        - {{ _.project.opt_dir_fn }}/{{ service.name }}/media:{{ service.install_dir }}/media                               {% ?? service.has_django_app %}{% endif %}{% end_min_lines %}
+        - {{ src_dir }}:/npm/{{ name }}                                                                                     {% !! name, src_dir in service.npm_source_maps.items() %}{% endfor %}

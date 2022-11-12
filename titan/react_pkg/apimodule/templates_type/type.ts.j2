@@ -6,13 +6,14 @@
 import { FieldSpecTargetT } from 'src/api/types/FieldSpecTargetT';                                  {% !! field_spec in __.fk_field_specs %}
 import { typeSpecNameFields } from 'src/api/types/TypeSpecNameT';                                   {% !! type_spec in __.dependency_type_specs %}
 import { FieldSpecTargetT, getHydratedFieldSpecTarget } from 'src/api/types/FieldSpecTargetT';      {% for field_spec in __.hydrated_field_specs %}{% ?? field_spec.field_type in ("fk", "relatedSet") %}{% endfor %}
+import * as R from 'ramda';
 
 export type MyTypeT = {
   fieldSpecName: fieldSpecTsType;                                                                   {% for field_spec in __.field_specs %}{% ?? not field_spec.is_optional("client") %}
   fieldSpecName?: fieldSpecTsType;                                                                  {% ?? field_spec.is_optional("client") %}{% endfor %}
 };
 
-export type MyTypeByIdT = { [id: string]: MyTypeT };
+export type MyTypeByIdT = { [id: string]: MyTypeT };                                                {% ?? __.has_id_field %}
 
 export type {{ _.item.ts_form_type }} = {                                                           {% if __.form_field_specs %}
   fieldSpecName: fieldSpecTsType;                                                                   {% for field_spec in __.form_field_specs %}{% ?? not field_spec.is_optional("client") %}
@@ -26,8 +27,10 @@ export const myTypeGqlFields = `                                                
 export const hydrateMyType = (data: ObjT) => {                                                      {% if __.hydrated_field_specs %}
   return {
     ...data,
-    fieldSpecName: getHydratedFieldSpecTarget(data.fieldSpecName),                                  {% for field_spec in __.hydrated_field_specs %}{% ?? field_spec.field_type == "fk" %}
-    fieldSpecName: R.map(getHydratedFieldSpecTarget, data.fieldSpecName),                           {% ?? field_spec.field_type == "relatedSet" %}
+    fieldSpecName: R.isNil(data.fieldSpecName)                                                      {% for field_spec in __.hydrated_field_specs %}{% if field_spec.field_type == "fk" %}
+      ? undefined
+      : getHydratedFieldSpecTarget(data.fieldSpecName),                                             {% endif %}
+    fieldSpecName: R.map(getHydratedFieldSpecTarget, data.fieldSpecName ?? []),                     {% ?? field_spec.field_type == "relatedSet" %}
     // fieldSpecName: Moonleap Todo,                                                                {% ?? field_spec.field_type not in ("fk", "relatedSet") %}{% endfor %}
   };
 }                                                                                                   {% endif %}

@@ -39,6 +39,11 @@ def created_item_list(item_list):
     return create_forward(item_list, uses, f"{item_list.meta.term.data}:item")
 
 
+@rule("item")
+def created_item(item):
+    return create_forward(f"{item.meta.term.data}:item~list", uses, item)
+
+
 @extend(ItemList)
 class ExtendItemList:
     item = P.child(uses, "item", required=True)

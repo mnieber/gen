@@ -30,7 +30,8 @@ def created_project(project):
 
 @rule("project", has, "service")
 def project_has_service_that_has_env(project, service):
-    return create_forward(service, has, ":env")
+    if service.has_env:
+        return create_forward(service, has, ":env")
 
 
 @rule("project", has, ":env")
@@ -45,10 +46,9 @@ def project_has_env(project, env):
 
 @rule("service", has, ":env")
 def service_has_env(service, env):
-    if service.django_app or service.react_app or service.name == "postgres":
-        service.renders(
-            [env],
-            ".env",
-            dict(env=env),
-            [Path(__file__).parent / "templates_service"],
-        )
+    service.renders(
+        [env],
+        ".env",
+        dict(env=env),
+        [Path(__file__).parent / "templates_service"],
+    )

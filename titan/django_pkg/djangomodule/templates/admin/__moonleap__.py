@@ -6,6 +6,11 @@ from titan.types_pkg.typeregistry import get_type_reg
 
 def get_helpers(_):
     class Helpers:
+        data = []
+
+        def __init__(self):
+            self.data = self.get_data()
+
         def get_data(self):
             result = []
             for django_model in sort_django_models(_.module.django_models):
@@ -60,7 +65,7 @@ def get_helpers(_):
         def inline_models_to_import(self):
             result = []
             item_lists = []
-            for dummy, data in self.get_data():
+            for dummy, data in self.data:
                 for inline_model_field in data["inline_model_fields"]:
                     item_list = inline_model_field.target_item.item_list
                     if item_list not in item_lists:

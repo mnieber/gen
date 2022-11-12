@@ -11,8 +11,8 @@ services:
     env_file:                                                                   {% min_lines count=2 %}
       - ./{{ service.name }}/.env/dev.injected.env                              {% end_min_lines %}
     environment:                                                                {% min_lines count=2 %}
-      - DJANGO_SETTINGS_MODULE=app.settings.dev                                 {% ?? service.django_app %}
-      - CHOKIDAR_USEPOLLING=true                                                {% ?? service.react_app %}{% end_min_lines %}
+      - DJANGO_SETTINGS_MODULE=app.settings.dev                                 {% ?? service.has_django_app %}
+      - CHOKIDAR_USEPOLLING=true                                                {% ?? service.has_react_app %}{% end_min_lines %}
     image: {{ __.get_image(service) }}
     ports:                                                                      {% min_lines count=2 %}
       - {{ port }}:{{ port }}                                                   {% !! port in service.ports.values() %}{% end_min_lines %}

@@ -11,7 +11,7 @@ base_tags = {
 
 
 rules = {
-    (":gql-registry", has, "mutation"): empty_rule(),
+    (":api-registry", has, "mutation"): empty_rule(),
     ("mutation", saves, "item"): empty_rule(),
     ("mutation", deletes, "item~list"): empty_rule(),
     ("mutation", deletes, "item"): empty_rule(),
@@ -32,4 +32,4 @@ class ExtendMutation:
     item_lists_saved = P.children(saves, "item~list")
     items_deleted = P.children(deletes, "item")
     item_lists_deleted = P.children(deletes, "item~list")
-    gql_spec = Prop(props.gql_spec)
+    api_spec = Prop(props.api_spec)

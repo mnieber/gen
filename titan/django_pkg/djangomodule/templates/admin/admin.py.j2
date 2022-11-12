@@ -7,7 +7,7 @@ from django.contrib import admin
 from {{ django_module.module_path }}.admin import {{ model_name }}                    {% !! django_module, model_name in __.inline_models_to_import %}
 
 from {{ _.module.name|sn }} import models
-                                                                                {% for item_list, data in __.get_data() %}
+                                                                                {% for item_list, data in __.data %}
 class MyModelInline(                                                            {% if data.create_inline_model %}
     SortableInlineAdminMixin,                                                   {% ?? data.type_spec.is_sorted %}
     admin.TabularInline
@@ -20,7 +20,7 @@ class MyModelInline(                                                            
 
                                                                                 {% endif %}{% endfor %}
 
-@admin.register(models.MyModel)                                                 {% for item_list, data in __.get_data() %}
+@admin.register(models.MyModel)                                                 {% for item_list, data in __.data %}
 class MyModelAdmin(
     SortableAdminBase,                                                          {% ?? data.has_sortable_inlines %}
     admin.ModelAdmin

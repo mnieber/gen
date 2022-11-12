@@ -11,6 +11,9 @@ class Term:
     # This field is not used in term comparisons
     is_title: T.Optional[bool] = field(default=False, compare=False)
 
+    def as_normalized_str(self):
+        return str(self).removesuffix("^")
+
     def __repr__(self):
         return (
             (self.name + "+" if self.name is not None else "")

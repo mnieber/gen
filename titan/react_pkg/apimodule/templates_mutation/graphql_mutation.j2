@@ -6,14 +6,14 @@
 {% magic_with output_field_spec.target as myOutputFieldType %}
 {% magic_with output_field_spec.name as myOutputFieldName %}
 import { useMutation } from '@tanstack/react-query';
-import { queryClient } from 'src/api/queryClient';                                                          {% ?? _.mutation.gql_spec.invalidates %}
+import { queryClient } from 'src/api/queryClient';                                                          {% ?? _.mutation.api_spec.invalidates %}
 import { doQuery } from 'src/api/graphqlClient';
 import { useMutationData } from 'src/api/hooks';
 import { ObjT } from 'src/utils/types';
 import { wait } from 'src/utils/wait';
 import { {{ item.ts_form_type }} } from 'src/api/types/{{ item.type_name }}T';                              {% !! item in __.form_input_items %}
 import { myTypeSpecNameGqlFields } from 'src/api/types/MyTypeSpecNameT'                                     {% !! type_spec in __.type_specs_to_import %}
-import { {{ order_parent }}T } from 'src/api/types/{{ order_parent }}T';                                    {% !! order_parent, order_child, order_ids, order_gql_specs in __.orders_data %}
+import { {{ order_parent }}T } from 'src/api/types/{{ order_parent }}T';                                    {% !! order_parent, order_child, order_ids, order_api_specs in __.orders_data %}
 import { hydrateMyOutputFieldType } from 'src/api/types/MyOutputFieldTypeT';                                {% !! output_field_spec in __.hydrated_fields %}
 import { queryClient } from 'src/api/queryClient';
 import { applyUpdate } from 'src/utils/applyUpdate';

@@ -31,7 +31,8 @@ class TypeSpecParser:
 
             # Add field spec to type spec
             if type_spec:
-                add_field_spec(type_spec, field_spec_data["field_spec"])
+                if not add_field_spec(type_spec, field_spec_data["field_spec"]):
+                    continue
 
         while fk_items:
             key, value = fk_items.pop(0)
@@ -45,7 +46,8 @@ class TypeSpecParser:
 
             # Add field spec to type spec
             if type_spec:
-                add_field_spec(type_spec, field_spec)
+                if not add_field_spec(type_spec, field_spec):
+                    continue
 
             # Get/update the target type in a many-to-many through-bar relationship
             if field_spec.field_type in ("fk", "relatedSet", "form"):

@@ -6,10 +6,10 @@ from titan.types_pkg.pkg.load_type_specs.field_spec_from_dict import (
 from titan.types_pkg.pkg.type_spec import TypeSpec
 from titan.types_pkg.typeregistry import get_type_reg
 
-from .gql_spec import GqlSpec
+from .api_spec import ApiSpec
 
 
-def get_gql_spec(gql_reg, host, endpoint_key, endpoint_spec_dict):
+def get_api_spec(api_reg, host, endpoint_key, endpoint_spec_dict):
     parts = endpoint_key.split()
     if not parts:
         raise Exception("Invalid endpoint key: " + endpoint_key)
@@ -68,9 +68,9 @@ def get_gql_spec(gql_reg, host, endpoint_key, endpoint_spec_dict):
             )
         )
 
-    gql_reg.setdefault(
+    api_reg.setdefault(
         name,
-        GqlSpec(
+        ApiSpec(
             name=name,
             is_mutation=is_mutation,
             deletes=deletes,

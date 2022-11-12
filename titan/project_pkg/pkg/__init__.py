@@ -3,6 +3,7 @@ import json
 import os
 
 import jinja2
+
 from moonleap import get_session
 from moonleap.parser.term import verb_to_word
 from moonleap.utils import dbg
@@ -40,10 +41,6 @@ def dot(x, path):
     return result
 
 
-def tweak(x, alt_value):
-    return get_session().get_tweak_or(x, alt_value.split("."))
-
-
 filters = {
     "bool": lambda x: bool(x),
     "dbg": dbg,
@@ -56,7 +53,6 @@ filters = {
     "to_nice_json": to_nice_json,
     "to_nice_yaml": to_nice_yaml,
     "to_str": lambda x: x if x is None else str(x),
-    "tweak": tweak,
     "u0": u0,
     "verb_to_word": verb_to_word,
 }

@@ -110,9 +110,7 @@ class Block:
         if existing_resource is resource:
             return
         elif existing_resource:
-            raise Exception(
-                f"Block {self.name} already has an resource for term {term}"
-            )
+            raise Exception(f"Block {self.name} already has a resource for term {term}")
 
         self._resource_by_term.append((term, resource, is_owner))
 

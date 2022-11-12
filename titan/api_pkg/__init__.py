@@ -1,7 +1,8 @@
-from . import gqlregistry, mutation, pipeline, query
+from . import apiregistry, extendspectypes, mutation, pipeline, query
 
 modules = [
-    gqlregistry,
+    apiregistry,
+    extendspectypes,
     mutation,
     pipeline,
     query,

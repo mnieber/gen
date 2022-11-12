@@ -1,4 +1,5 @@
 import ramda as R
+
 from moonleap.utils.case import u0
 
 
@@ -7,7 +8,7 @@ def get_helpers(_):
         form_view = _.component
         mutation = form_view.mutation
         scalar_field_specs = [
-            x for x in mutation.gql_spec.get_inputs() if x.field_type != "form"
+            x for x in mutation.api_spec.get_inputs() if x.field_type != "form"
         ]
         fields = []
         uuid_fields = []
@@ -19,7 +20,7 @@ def get_helpers(_):
 
         def _get_fields(self):
             self.fields.extend([(x.name, x) for x in self.scalar_field_specs])
-            for form_field_spec in self.mutation.gql_spec.get_inputs(["form"]):
+            for form_field_spec in self.mutation.api_spec.get_inputs(["form"]):
                 self.fields.extend(
                     [
                         (f"{form_field_spec.name}.{x.name}", x)

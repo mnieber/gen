@@ -4,40 +4,40 @@
 {% magic_with output_field_spec.target as OutputFieldTarget %}
 {% magic_with item.item_name as itemTypeName %}
 
-import graphene                                                                                         {% clean_up_py_imports %}
-from graphene.types.generic import GenericScalar                                                        {% end_clean_up_py_imports %}
+import graphene                                                                         {% clean_up_py_imports %}
+from graphene.types.generic import GenericScalar                                        {% end_clean_up_py_imports %}
 from api.types import *
-from {{ item.django_module.module_path }}.models import {{ item.type_name }}                            {% !! item in __.items_to_import %}
+from {{ item.django_module.module_path }}.models import {{ item.type_name }}            {% !! item in __.items_to_import %}
 
 class MutationName(graphene.Mutation):
-    output_field_name = {{ output_field_spec.graphene_type("") }}                                       {% for output_field_spec in __.output_field_specs %}{% endfor %}
+    output_field_name = {{ output_field_spec.graphene_type("") }}                       {% for output_field_spec in __.output_field_specs %}{% endfor %}
 
     class Arguments:
-        input_field_name = {{ __.graphene_type(input_field_spec) }}                                     {% for input_field_spec in __.input_field_specs %}
-        pass                                                                                            {% else %}{% endfor %}
+        input_field_name = {{ __.graphene_type(input_field_spec) }}                     {% for input_field_spec in __.input_field_specs %}
+        pass                                                                            {% else %}{% endfor %}
 
     def mutate(
         self,
         info,
-        input_field_name,                                                                               {% for input_field_spec in __.input_field_specs %}{% endfor %}
+        input_field_name,                                                               {% for input_field_spec in __.input_field_specs %}{% endfor %}
         {% remove_trailing suffix="," %}
     ):
         # Moonleap Todo: implement mutation
-        {{ item.item_name }}, created = ItemTypeName.objects.update_or_create()                         {% !! item in __.items_saved %}
-        ItemTypeName.objects.none().delete()                                                            {% !! item in __.items_deleted %}
+        {{ item.item_name }}, created = ItemTypeName.objects.update_or_create()         {% !! item in __.items_saved %}
+        ItemTypeName.objects.none().delete()                                            {% !! item in __.items_deleted %}
 
         return MutationName(
             success=True,
             errors={},
-                                                                                    {% for output_field_spec in __.output_field_specs %}
-                                                                                    {% if output_field_spec.name not in ("success", "errors") %}
-            output_field_name=OutputFieldTarget.objects.filter().first(),           {% ?? output_field_spec.field_type == "fk" %}
-            output_field_name=OutputFieldTarget.objects.filter(),                   {% ?? output_field_spec.field_type == "relatedSet" %}
-            output_field_name={},                                                   {% ?? output_field_spec.field_type == "json" %}
-            output_field_name=0,                                                    {% ?? output_field_spec.field_type == "int" %}
-            output_field_name="",                                                   {% ?? output_field_spec.field_type not in ("fk", "relatedSet", "json", "int") %}
-                                                                                    {% endif %}
-                                                                                    {% endfor %}
+                                                                                        {% for output_field_spec in __.output_field_specs %}{% with field_type=output_field_spec.field_type %}
+                                                                                        {% if output_field_spec.name not in ("success", "errors") %}
+            output_field_name=OutputFieldTarget.objects.filter().first(),               {% ?? field_type == "fk" %}
+            output_field_name=OutputFieldTarget.objects.filter(),                       {% ?? field_type == "relatedSet" %}
+            output_field_name={},                                                       {% ?? field_type == "json" %}
+            output_field_name=0,                                                        {% ?? field_type == "int" %}
+            output_field_name="",                                                       {% ?? field_type not in ("fk", "relatedSet", "json", "int") %}
+                                                                                        {% endif %}
+                                                                                        {% endwith %}{% endfor %}
         )
 {% end_magic_with %}
 {% end_magic_with %}

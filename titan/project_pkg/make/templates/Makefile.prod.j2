@@ -9,15 +9,15 @@
 #
 
 init-prod: \
-	create-db \            															{% ?? _.service.django_app %}
+	create-db \            															{% ?? _.service.has_django_app %}
 	install \
-	migrate \            															{% ?? _.service.django_app %}
-	collect-static \       															{% ?? _.service.django_app %}
-	create-superuser																{% ?? _.service.django_app %}
+	migrate \            															{% ?? _.service.has_django_app %}
+	collect-static \       															{% ?? _.service.has_django_app %}
+	create-superuser																{% ?? _.service.has_django_app %}
     {% remove_trailing suffix="__backslash__" %}
 
 start-prod:
-	uwsgi --http :${DJANGO_PORT} --module app.wsgi  						        {% ?? _.service.django_app %}
-	yarn global add serve                            						        {% ?? _.service.react_app %}
+	uwsgi --http :${DJANGO_PORT} --module app.wsgi  						        {% ?? _.service.has_django_app %}
+	yarn global add serve                            						        {% ?? _.service.has_react_app %}
 
 {% end_trim_newlines %}

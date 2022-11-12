@@ -1,11 +1,4 @@
-from . import (
-    apimodule,
-    appmodule,
-    djangoapp,
-    djangomodel,
-    djangomodule,
-    extendspectypes,
-)
+from . import apimodule, appmodule, djangoapp, djangomodel, djangomodule
 
 modules = [
     appmodule,
@@ -13,5 +6,4 @@ modules = [
     djangoapp,
     djangomodel,
     djangomodule,
-    extendspectypes,
 ]

@@ -6,13 +6,11 @@ def get_helpers(_):
 
         def __init__(self):
             for service in _.project.services:
-                if service.django_app:
+                if service.has_django_app:
                     self.django_service = service
-                if service.react_app:
+                if service.has_react_app:
                     self.react_service = service
-                if service.docker_image and service.docker_image.name.startswith(
-                    "postgres"
-                ):
+                if service.has_postgres:
                     self.postgres_service = service
 
     return Helpers()

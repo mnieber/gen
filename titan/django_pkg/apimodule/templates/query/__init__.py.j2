@@ -4,7 +4,7 @@
 import graphene
 from graphene.types.generic import GenericScalar
 {% end_clean_up_py_imports %}
-from .{{ query.name|lower }} import FooQuery                              {% for query in _.gql_reg.queries %}{% endfor %}
+from .{{ query.name|lower }} import FooQuery                              {% for query in _.api_reg.queries %}{% endfor %}
 import foo_module.schema                                                  {% for module in __.modules %}{% endfor %}
 
 
@@ -17,7 +17,7 @@ class GrapheneNonEmptyQuery(graphene.ObjectType):
 
 class Query(
     foo_module.schema.Query,                                              {% for module in __.modules %}{% endfor %}
-    FooQuery,                                                             {% for query in _.gql_reg.queries %}{% endfor %}
+    FooQuery,                                                             {% for query in _.api_reg.queries %}{% endfor %}
     GrapheneNonEmptyQuery
 ):
     pass

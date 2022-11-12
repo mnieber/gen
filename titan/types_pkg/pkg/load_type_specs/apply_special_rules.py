@@ -29,7 +29,7 @@ def apply_special_rules(type_spec, value, fk: ForeignKey, parent_type_spec=None)
         if parent_type_spec:
             key = l0(parent_type_spec.type_name)
             if not is_speccing_a_through_type:
-                key += f" for {fk.var}"
+                key += f" with {fk.var}"
             if key not in value:
                 required = is_speccing_a_through_type or "is_owner" in fk.data_parts
                 value[key] = "pass.auto" + ("" if required else ".optional")

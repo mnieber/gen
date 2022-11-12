@@ -11,7 +11,7 @@ base_tags = {
 }
 
 rules = {
-    (":gql-registry", has, "query"): empty_rule(),
+    (":api-registry", has, "query"): empty_rule(),
     ("query", provides, "item"): empty_rule(),
     ("query", provides, "item~list"): empty_rule(),
 }
@@ -41,4 +41,4 @@ def query_provides_named_item(query, named_item):
 
 @extend(Query)
 class ExtendQuery:
-    gql_spec = Prop(props.gql_spec)
+    api_spec = Prop(props.api_spec)

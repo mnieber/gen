@@ -2,7 +2,6 @@ import typing as T
 from dataclasses import dataclass
 
 import ramda as R
-from titan.types_pkg.typeregistry import get_type_reg
 
 
 @dataclass
@@ -12,12 +11,11 @@ class Data:
     item: T.Any
 
 
-def get_map_from_item_to_django_module(modules):
+def get_map_from_item_to_django_module(type_reg, modules):
     items = []
     lut = {}
 
-    for item_list in get_type_reg().item_lists:
-        item = item_list.item
+    for item in type_reg.items:
         type_name = item.type_spec.type_name
 
         module_name = item.type_spec.module_name
@@ -37,7 +35,7 @@ def get_map_from_item_to_django_module(modules):
             lut[type_name] = Data(django_module=django_module, parents=[], item=item)
         else:
             items.append(item)
-            maybe_parents = get_type_reg().parents_by_type_name[type_name]
+            maybe_parents = type_reg.parents_by_type_name[type_name]
             lut[type_name] = Data(django_module=None, parents=maybe_parents, item=item)
 
     changed = True

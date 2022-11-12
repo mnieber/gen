@@ -10,13 +10,13 @@
 #
 
 init-dev: \
-	create-db \            															{% ?? _.service.django_app %}
+	create-db \            															{% ?? _.service.has_django_app %}
 	pip-compile \																	{% ?? _.service.pip %}
 	install \
-	make-migrations-users \                         								{% ?? _.service.django_app and _.service.django_app.get_module_by_name("users") %}
-	migrate \            															{% ?? _.service.django_app %}
-	collect-static \       															{% ?? _.service.django_app %}
-	create-superuser \  															{% ?? _.service.django_app %}
+	make-migrations-users \                         								{% ?? _.service.has_django_app and _.service.django_app.get_module_by_name("users") %}
+	migrate \            															{% ?? _.service.has_django_app %}
+	collect-static \       															{% ?? _.service.has_django_app %}
+	create-superuser \  															{% ?? _.service.has_django_app %}
 	{% remove_trailing suffix="__backslash__" %}
 
 {% end_trim_newlines %}

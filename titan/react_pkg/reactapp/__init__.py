@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import MemFun, Priorities, create, create_forward, extend, rule
+from moonleap import Priorities, create, create_forward, extend, rule
 from moonleap.verbs import has, runs
 from titan.project_pkg.service import Service
 from titan.react_pkg.packages.use_react_packages import use_react_packages

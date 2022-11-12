@@ -44,12 +44,11 @@ export const {{ _.component.name }} = observer(
     const getDefaultPropsContext = () => {
       const result = { defaultProps: {} };
 
-      result.defaultProps = {                                                                   {% for container in __.state.containers %}
+      result.defaultProps = {
         ...result.defaultProps,
 {% include_snippet "__moonleap__/stateProviderReturnValues.tsx.j2" %}
       };
 
-                                                                                                {% endfor %}
       return result;
     };
 

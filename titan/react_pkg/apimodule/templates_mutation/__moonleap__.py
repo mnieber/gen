@@ -6,16 +6,16 @@ from titan.types_pkg.typeregistry import get_type_reg
 
 def get_helpers(_):
     class Helpers:
-        input_field_specs = _.mutation.gql_spec.get_inputs()
-        form_input_field_specs = _.mutation.gql_spec.get_inputs(["form"])
-        fk_output_field_specs = _.mutation.gql_spec.get_outputs(["relatedSet", "fk"])
+        input_field_specs = _.mutation.api_spec.get_inputs()
+        form_input_field_specs = _.mutation.api_spec.get_inputs(["form"])
+        fk_output_field_specs = _.mutation.api_spec.get_outputs(["relatedSet", "fk"])
         orders_data = []
         hydrated_fields = []
 
         def __init__(self):
             self.hydrated_fields = self.get_hydrated_fields()
             self.type_specs_to_import, self.graphql_body = graphql_body(
-                _.mutation.gql_spec.outputs_type_spec, indent=8
+                _.mutation.api_spec.outputs_type_spec, indent=8
             )
             self.set_orders_data()
 
@@ -35,7 +35,7 @@ def get_helpers(_):
 
         def set_orders_data(self):
             self.orders_data = []
-            for order_parent, order_child in _.mutation.gql_spec.orders:
+            for order_parent, order_child in _.mutation.api_spec.orders:
                 type_spec = get_type_reg().get(order_parent)
                 assert type_spec
 
@@ -43,22 +43,22 @@ def get_helpers(_):
                 assert field_spec
 
                 order_ids = None
-                for input in _.mutation.gql_spec.get_inputs(["uuid[]"]):
+                for input in _.mutation.api_spec.get_inputs(["uuid[]"]):
                     if input.target == field_spec.target:
                         order_ids = input.key
 
-                gql_specs = []
-                for gql_spec in _.gql_reg.gql_specs():
+                api_specs = []
+                for api_spec in _.api_reg.api_specs():
                     paths = get_paths_to(
                         type_spec.type_name,
-                        gql_spec,
+                        api_spec,
                         base_path="",
                     )
                     if paths:
-                        gql_specs.append((gql_spec, paths))
+                        api_specs.append((api_spec, paths))
 
                 self.orders_data.append(
-                    (order_parent, order_child, order_ids, gql_specs)
+                    (order_parent, order_child, order_ids, api_specs)
                 )
 
     return Helpers()

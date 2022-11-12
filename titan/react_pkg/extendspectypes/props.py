@@ -1,5 +1,6 @@
 from moonleap.utils.case import u0
 from moonleap.utils.inflect import plural
+from titan.widgets_pkg.widgetregistry import get_widget_reg
 
 
 def ts_type_from_type_name(x):
@@ -78,3 +79,25 @@ def field_spec_ts_default_value(field_spec):
         return "0"
 
     raise Exception(f"Cannot deduce ts default value for {field_spec.field_type}")
+
+
+def widget_spec_component(widget_spec):
+    if not widget_spec.is_component:
+        return None
+
+    for component in get_widget_reg().components:
+        if component.meta.term.as_normalized_str() == widget_spec.widget_type:
+            return component
+
+    raise Exception(f"Cannot find target item for {widget_spec.target}")
+
+
+def component_widget_spec(component):
+    for widget_spec in get_widget_reg().widget_specs():
+        if (
+            widget_spec.is_component
+            and component.meta.term.as_normalized_str() == widget_spec.widget_type
+        ):
+            return widget_spec
+
+    return None

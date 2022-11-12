@@ -36,23 +36,27 @@ def get_helpers(_):
                 else:
                     raise Exception("Unknown pipeline source")
 
-            for container in self.state.containers:
-                if delete_items_mutation := container.delete_items_mutation:
-                    append_uniq(self.mutations, delete_items_mutation)
-                if delete_item_mutation := container.delete_item_mutation:
-                    append_uniq(self.mutations, delete_item_mutation)
-                if order_items_mutation := container.order_items_mutation:
-                    append_uniq(self.mutations, order_items_mutation)
+            if self.state:
+                for container in self.state.containers:
+                    if delete_items_mutation := container.delete_items_mutation:
+                        append_uniq(self.mutations, delete_items_mutation)
+                    if delete_item_mutation := container.delete_item_mutation:
+                        append_uniq(self.mutations, delete_item_mutation)
+                    if order_items_mutation := container.order_items_mutation:
+                        append_uniq(self.mutations, order_items_mutation)
 
         def _get_data_by_container(self):
-            for container in self.state.containers:
-                pipeline = self.get_pipeline(container)
-                if pipeline:
-                    self.data_by_container.append((container, dict(pipeline=pipeline)))
+            if self.state:
+                for container in self.state.containers:
+                    pipeline = self.get_pipeline(container)
+                    if pipeline:
+                        self.data_by_container.append(
+                            (container, dict(pipeline=pipeline))
+                        )
 
         def _get_types_to_import(self):
             for mutation in self.mutations:
-                for field in mutation.gql_spec.get_inputs(
+                for field in mutation.api_spec.get_inputs(
                     ["fk", "relatedSet", "uuid", "uuid[]"]
                 ):
                     append_uniq(self.types_to_import, field.target + "T")
@@ -71,6 +75,9 @@ def get_helpers(_):
 
         def maybe_expr(self, named_item_or_item_list):
             pipeline = self.get_pipeline(named_item_or_item_list)
+            if not pipeline:
+                return "'Moonleap Todo'"
+
             pipeline_source = pipeline.source
             if pipeline_source.meta.term.tag in ("query", "mutation"):
                 return pipeline_source.name
@@ -104,7 +111,7 @@ def get_helpers(_):
                 for (
                     parent_type_name,
                     parent_key,
-                ) in mutation.gql_spec.orders:
+                ) in mutation.api_spec.orders:
                     field_spec = (
                         get_type_reg()
                         .get(u0(parent_type_name))
@@ -115,7 +122,7 @@ def get_helpers(_):
                         ids_field_name = _get_field_name(mutation, ["uuid[]"])
                         data["otherKeys"] = [
                             x.key
-                            for x in mutation.gql_spec.get_inputs()
+                            for x in mutation.api_spec.get_inputs()
                             if x.key != ids_field_name
                         ]
                         data["orderMyItems"] = mutation.name
@@ -128,6 +135,6 @@ def get_helpers(_):
 
 def _get_field_name(mutation, field_types):
     for field_type in field_types:
-        for field in mutation.gql_spec.get_inputs([field_type]):
+        for field in mutation.api_spec.get_inputs([field_type]):
             return field.name
     raise Exception("Unknown field name")

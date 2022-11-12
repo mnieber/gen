@@ -89,10 +89,10 @@ class ForeignKey:
 def _process_data(data, value, parts):
     data.parts = list(parts)
 
-    parts_for = value.split(" for ")
-    if len(parts_for) == 2:
-        data.related_name = parts_for[1]
-        value = parts_for[0]
+    parts_with = value.split(" with ")
+    if len(parts_with) == 2:
+        data.related_name = parts_with[1]
+        value = parts_with[0]
 
     parts_as = value.split(" as ")
     parts_as[-1], more_parts = strip_fk_symbols(parts_as[-1])

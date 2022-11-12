@@ -10,12 +10,12 @@ def add_field_spec(type_spec, field_spec):
         # This is only okay if it matches exactly.
         for auto_field_spec in auto_field_specs:
             if auto_field_spec == field_spec:
-                return
+                return False
 
         # Check if a normal field spec already exists for this key. In that case,
         # ignore this auto field spec.
         if type_spec.get_field_spec_by_key(field_spec.key):
-            return
+            return False
 
         if auto_field_specs:
             raise Exception(
@@ -39,6 +39,8 @@ def add_field_spec(type_spec, field_spec):
 
     if field_spec.select:
         append_uniq(type_spec.select_by, field_spec.key)
+
+    return True
 
 
 def _get_matching_auto_field_specs(type_spec, field_spec):

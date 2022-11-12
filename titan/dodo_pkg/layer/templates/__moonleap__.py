@@ -14,7 +14,7 @@ def get_helpers(_):
         @property
         def vscode_project_fn(self):
             return (
-                f"{self.vscode_project.code_workspaces_dir}/{_.project.name}.code-workspace"
+                f"{self.vscode_project.code_workspaces_dir}/{_.project.kebab_name}.code-workspace"
                 if self.vscode_project
                 else ""
             )

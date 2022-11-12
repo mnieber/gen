@@ -8,9 +8,9 @@ from titan.django_pkg.djangoapp.define_fixture import define_fixture
 
 def get_helpers(_):
     class Helpers:
-        input_field_specs = list(_.query.gql_spec.get_inputs())
-        output_field_specs = list(_.query.gql_spec.get_outputs())
-        fk_output_field_specs = list(_.query.gql_spec.get_outputs(["fk", "relatedSet"]))
+        input_field_specs = list(_.query.api_spec.get_inputs())
+        output_field_specs = list(_.query.api_spec.get_outputs())
+        fk_output_field_specs = list(_.query.api_spec.get_outputs(["fk", "relatedSet"]))
 
         def query_fixture_imports(self):
             result = []

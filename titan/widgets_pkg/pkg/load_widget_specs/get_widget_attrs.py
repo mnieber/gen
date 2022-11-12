@@ -1,30 +1,45 @@
 import re
 
+from moonleap.utils.quote import quote
 from titan.types_pkg.pkg.load_type_specs.split_raw_key import split_symbols
 
 
 def get_widget_attrs(key):
-    attrs = dict(styles=[], values=[])
+    attrs = dict(styles=[], values=[], widget_base_type=None)
 
-    parts_as = key.split(" as ")
-    widget_type = parts_as[-1]
+    parts_with = key.split(" with ")
+    if len(parts_with) == 2:
+        attrs["place"] = parts_with[0]
+        key = parts_with[1]
 
-    if len(parts_as) > 1:
-        widget_name = parts_as[0]
-        parts_module = widget_name.split(".")
-        attrs["widget_name"] = parts_module[-1]
-        if len(parts_module) > 1:
-            attrs["module_name"] = parts_module[0]
+    if key == "children":
+        widget_base_type = "Children"
+        widget_type = "Children"
+    else:
+        parts_as = key.split(" as ")
+        widget_base_type = parts_as[-1]
+        widget_type = parts_as[0] if len(parts_as) == 2 else None
 
-    attrs["widget_type"], symbols = split_symbols(widget_type)
-    if attrs["widget_type"][0].isupper():
-        raise Exception("Widget type must be lowercase: " + widget_type)
+        if ":" in widget_base_type and not widget_type:
+            widget_type, widget_base_type = widget_base_type, widget_type
 
-    for symbol in symbols.split("."):
-        if _is_style(symbol):
-            attrs["styles"].append(symbol)
-        else:
-            attrs["values"].append(symbol)
+        if widget_type:
+            parts_module = widget_type.split(".")
+            if len(parts_module) > 1:
+                widget_type = parts_module[-1]
+                if len(parts_module) > 1:
+                    attrs["module_name"] = parts_module[0]
+
+            attrs["widget_type"] = widget_type
+
+    if widget_base_type:
+        attrs["widget_base_type"], symbols = split_symbols(widget_base_type)
+
+        for symbol in symbols.split("."):
+            if _is_style(symbol):
+                attrs["styles"].append(quote(symbol))
+            else:
+                attrs["values"].append(symbol)
 
     return attrs
 

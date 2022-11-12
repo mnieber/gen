@@ -1,5 +1,5 @@
 import { useFormStateContext } from 'react-form-state-context';
-import { ukButton } from 'src/frames/components/Button';                                      {% ?? _.service.uikit %}
+import { primaryButton } from 'src/frames/components';
 
 interface PropsT {
   label: string;
@@ -11,7 +11,7 @@ export const SaveButton = (props: PropsT) => {
   const formState = useFormStateContext();
   return (
     <button
-      className={props.className ?? `{% if _.service.uikit %}${ukButton} {%endif %}ml-2`}
+      className={props.className ?? `${primaryButton} self-end`}
       onClick={(e) => {
         e.preventDefault();
         formState.submit();

@@ -23,11 +23,7 @@ const applyUpdateImp = (
       applyUpdateImp(paths, pathIdx + 1, item, update);
     };
 
-    if (Array.isArray(data)) {
-      R.forEach(updateItem, data);
-    } else {
-      R.forEachObjIndexed((item: any, key: string) => updateItem(item), data);
-    }
+    R.forEach(updateItem, Array.isArray(data) ? data : R.values(data));
   } else if (path) {
     applyUpdateImp(paths, pathIdx + 1, data[path], update);
   }

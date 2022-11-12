@@ -5,7 +5,7 @@ from titan.types_pkg.pkg.type_spec import TypeSpec
 
 
 @dataclass
-class GqlSpec:
+class ApiSpec:
     name: str
     is_mutation: bool
     inputs_type_spec: TypeSpec = field(repr=False)

@@ -53,8 +53,8 @@ export const useCallMyEndpoint = (
     args                                                                                            {% ?? __.input_field_specs %}
     {}                                                                                              {% ?? not __.input_field_specs %}
   ))
-  .then((response: ObjT) => {                                                                       {% if __.hydrated_fields %}{% for output_field_spec in __.hydrated_fields %}
-    response.myOutputFieldName = hydrateMyOutputFieldType(response.myOutputFieldName);              {% ?? output_field_spec.field_type == "fk" %}
+  .then((response: ObjT) => {                                                                       {% if __.hydrated_fields %}
+    response.myOutputFieldName = hydrateMyOutputFieldType(response.myOutputFieldName);              {% for output_field_spec in __.hydrated_fields %}{% ?? output_field_spec.field_type == "fk" %}
     response.myOutputFieldName = R.map(hydrateMyOutputFieldType, response.myOutputFieldName);       {% ?? output_field_spec.field_type == "relatedSet" %}{% endfor %}
   })                                                                                                {% endif %}
   ;

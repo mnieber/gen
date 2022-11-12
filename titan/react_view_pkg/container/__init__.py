@@ -1,8 +1,16 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import (MemFun, Priorities, Prop, create, create_forward,
-                      empty_rule, extend, kebab_to_camel, rule)
+from moonleap import (
+    MemFun,
+    Prop,
+    create,
+    create_forward,
+    empty_rule,
+    extend,
+    kebab_to_camel,
+    rule,
+)
 from moonleap.verbs import has
 from titan.react_pkg.packages.use_react_packages import use_react_packages
 from titan.react_view_pkg.state.resources import State
@@ -23,7 +31,7 @@ def create_container(term):
     return container
 
 
-@rule("container", has, "selection", priority=Priorities.LOW.value)
+@rule("container", has, "selection")
 def container_has_selection(container, selection):
     use_react_packages(
         container.state.state_provider.module.react_app.get_module("utils"),
@@ -32,7 +40,7 @@ def container_has_selection(container, selection):
     return create_forward(container, has, f"{selection.meta.term.data}:highlight")
 
 
-@rule("container", has, "drag-and-drop", priority=Priorities.LOW.value)
+@rule("container", has, "drag-and-drop")
 def container_has_drag_and_drop(container, selection):
     return create_forward(container, has, f"{selection.meta.term.data}:insertion")
 

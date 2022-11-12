@@ -1,4 +1,4 @@
 {% magic_with form_type_spec.type_name as MyFormType %}
-from api.types.{{ item.type_name | lower }}_t import {{ item.type_name}}T  # noqa               {% for item in __.items %}{% ?? item in __.public_items %}{% endfor %}
+from api.types.{{ item.type_name | lower }}_t import {{ item.type_name}}T  # noqa               {% !! item in __.public_items_provided_by_django %}
 from api.types.my_form_type_t import MyFormTypeT  # noqa                                        {% !! form_type_spec in __.form_type_specs %}
 {% end_magic_with %}

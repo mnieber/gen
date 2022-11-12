@@ -25,6 +25,8 @@ def get_helpers(_):
             if "client" in x.has_model
         ]
 
+        has_id_field = bool([x for x in field_specs if x.key == "id"])
+
         def __init__(self):
             self.get_hydrated_fields()
 

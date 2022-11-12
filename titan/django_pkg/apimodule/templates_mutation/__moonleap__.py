@@ -3,10 +3,10 @@ from moonleap.utils.fp import append_uniq, uniq
 
 def get_helpers(_):
     class Helpers:
-        input_field_specs = _.mutation.gql_spec.get_inputs()
-        fk_input_field_specs = _.mutation.gql_spec.get_inputs(["fk", "relatedSet"])
-        output_field_specs = _.mutation.gql_spec.get_outputs()
-        fk_output_field_specs = _.mutation.gql_spec.get_outputs(["fk", "relatedSet"])
+        input_field_specs = _.mutation.api_spec.get_inputs()
+        fk_input_field_specs = _.mutation.api_spec.get_inputs(["fk", "relatedSet"])
+        output_field_specs = _.mutation.api_spec.get_outputs()
+        fk_output_field_specs = _.mutation.api_spec.get_outputs(["fk", "relatedSet"])
 
         @property
         def items_deleted(self):

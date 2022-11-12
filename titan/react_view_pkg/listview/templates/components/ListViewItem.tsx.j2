@@ -7,7 +7,7 @@ import { isUpdating } from 'src/app/ResourceState';
 import { dragHandlers, type DragHandlersT } from 'skandha-facets/DragAndDrop';                      {% ?? __.drag_and_drop_bvr %}
 import { clickHandlers, ClickHandlersT } from 'skandha-facets/handlers/ClickToSelectItems';         {% ?? __.selection_bvr %}
 
-import { ukButton } from 'src/frames/components/Button';                                            {% ?? _.service.uikit %}
+import { button } from 'src/frames/components';
 import UIkit from 'uikit';
 
 import './FooBarListViewItem.scss';
@@ -54,7 +54,7 @@ export const FooBarListViewItem = observer(
         </div>                                                                                      {% endif %}{% endfor %}
         <div className="flex-grow"></div>                                                           {% if __.deletion_bvr %}
         <button
-          className={ukButton}                                                                      {% ?? _.service.uikit %}
+          className={button}
           onClick={() => {
             props.onDelete();
           }}

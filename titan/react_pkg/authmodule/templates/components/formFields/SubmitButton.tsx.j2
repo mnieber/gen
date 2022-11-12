@@ -1,8 +1,6 @@
 import { FormState, useFormStateContext } from 'react-form-state-context';
-import { ukBigButton } from 'src/frames/components/BigButton';                        {% ?? _.service.uikit %}
+import { primaryBigButton } from 'src/frames/components';
 import { cn } from 'src/utils/classnames';
-
-import './SubmitButton.scss';
 
 type PropsT = {
   label: string;
@@ -11,7 +9,7 @@ type PropsT = {
   className?: any;
 };
 
-export const ukSubmitButton = ukBigButton;                                            {% ?? _.service.uikit %}
+export const submitButton = primaryBigButton;
 
 export const SubmitButton = (props: PropsT) => {
   const formState = useFormStateContext();
@@ -28,7 +26,7 @@ export const SubmitButton = (props: PropsT) => {
       data-cy={props.dataCy}
       className={cn(
         'SubmitButton',
-        ukSubmitButton,                                                               {% ?? _.service.uikit %}
+        submitButton,
         props.className
       )}
       onClick={onClick}

@@ -27,19 +27,41 @@ class Service(RenderMixin, Resource):
         )
 
     @property
+    def has_django_app(self):
+        return getattr(self, "django_app", None)
+
+    @property
+    def has_react_app(self):
+        return getattr(self, "react_app", None)
+
+    @property
+    def has_postgres(self):
+        return self.docker_image and self.docker_image.name.startswith("postgres")
+
+    @property
     def ports(self):
         result = {}
-        if getattr(self, "django_app", None):
+        if self.has_django_app:
             result["django_app"] = "8000"
-        if getattr(self, "react_app", None):
+        if self.has_react_app:
             result["react_app"] = "3000"
-        if getattr(self, "postgres", None):
+        if self.has_postgres:
             result["postgres"] = "5432"
         return result
 
     @property
+    def has_env(self):
+        if self.has_django_app:
+            return True
+        if self.has_react_app:
+            return True
+        if self.has_postgres:
+            return True
+        return False
+
+    @property
     def serve_command_dev(self):
-        if getattr(self, "django_app", None) or getattr(self, "react_app", None):
+        if self.has_django_app or self.has_react_app:
             return "make run-server"
         return None
 
@@ -48,6 +70,10 @@ class Service(RenderMixin, Resource):
         if getattr(self, "fish", None):
             return "fish"
         return "sh"
+
+    @property
+    def npm_source_maps(self):
+        return self.get_tweak_or({}, ["npm_source_maps"])
 
 
 @dataclass

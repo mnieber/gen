@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from 'src/utils/classnames';
+import { button } from 'src/frames/components';
 
 interface PropsT {
   onCancel: Function;
@@ -8,7 +8,7 @@ interface PropsT {
 
 export const CancelButton = (props: PropsT) => (
   <button
-    className={cn(props.className ?? 'button button--wide', 'ml-2')}
+    className={props.className ?? `${button} ml-2`}
     onClick={(e) => {
       e.preventDefault();
       props.onCancel();
