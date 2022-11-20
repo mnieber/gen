@@ -1,11 +1,13 @@
 import re
 
+from moonleap.utils.fp import append_uniq
 from moonleap.utils.quote import quote
+from moonleap.utils.split_non_empty import split_non_empty
 from titan.types_pkg.pkg.load_type_specs.split_raw_key import split_symbols
 
 
-def get_widget_attrs(key):
-    attrs = dict(styles=[], values=[], widget_base_type=None)
+def get_widget_attrs(key, parts):
+    attrs = dict(styles=[], values={}, widget_base_type=None)
 
     parts_with = key.split(" with ")
     if len(parts_with) == 2:
@@ -35,11 +37,15 @@ def get_widget_attrs(key):
     if widget_base_type:
         attrs["widget_base_type"], symbols = split_symbols(widget_base_type)
 
-        for symbol in symbols.split("."):
+        for symbol in split_non_empty(symbols, ".") + parts:
             if _is_style(symbol):
-                attrs["styles"].append(quote(symbol))
+                append_uniq(attrs["styles"], quote(symbol))
             else:
-                attrs["values"].append(symbol)
+                parts_eq = symbol.split("=")
+                if len(parts_eq) == 2:
+                    attrs["values"][parts_eq[0]] = parts_eq[1]
+                else:
+                    raise Exception(f"Invalid symbol: {symbol}")
 
     return attrs
 

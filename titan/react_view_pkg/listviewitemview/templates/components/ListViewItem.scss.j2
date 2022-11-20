@@ -1,25 +1,25 @@
-{% magic_with _.component.item_name as yellowTulip %}
-.YellowTulipListViewItem {
+{% magic_with _.component.item_name as myItemName %}
+.MyItemNameListViewItem {
   @apply cursor-pointer;                              {% if _.service.tailwindcss %}
   cursor: pointer;                                    {% else %}{% endif %}
 }
 
-.YellowTulipListViewItem--selected {                  {% if __.has_selection %}
+.MyItemNameListViewItem--selected {                   {% if __.has_selection %}
   @apply bg-blue-200;                                 {% if _.service.tailwindcss %}
   background-color: #ffeb3b;                          {% else %}{% endif %}
 }
                                                       {% endif %}
 
-.YellowTulipListViewItem--highlighted {               {% if __.has_highlight %}
+.MyItemNameListViewItem--highlighted {                {% if __.has_highlight %}
   @apply font-bold;                                   {% if _.service.tailwindcss %}
   font-weight: 800;                                   {% else %}{% endif %}
 }
 
-.YellowTulipListViewItem--drag-before {               {% if __.has_drag_and_drop %}
+.MyItemNameListViewItem--drag-before {                {% if __.has_drag_and_drop %}
   border-top: solid;
 }
 
-.YellowTulipListViewItem--drag-after {
+.MyItemNameListViewItem--drag-after {
   border-bottom: solid;
 }                                                     {% endif %}
                                                       {% endif %}

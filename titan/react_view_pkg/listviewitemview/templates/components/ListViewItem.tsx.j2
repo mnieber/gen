@@ -1,4 +1,4 @@
-{% magic_with _.component.item_name as fooBar %}
+{% magic_with _.component.item_name as myItemName %}
 {% magic_with field_spec.name as fieldSpecName %}
 import { cn } from 'src/utils/classnames';
 import { observer } from 'mobx-react-lite';
@@ -7,10 +7,10 @@ import { isUpdating } from 'src/app/ResourceState';
 import { dragHandlers, type DragHandlersT } from 'skandha-facets/DragAndDrop';                      {% ?? __.drag_and_drop_bvr %}
 import { clickHandlers, ClickHandlersT } from 'skandha-facets/handlers/ClickToSelectItems';         {% ?? __.selection_bvr %}
 
-import { button } from 'src/frames/components';
+import { smallButton } from 'src/frames/components';
 import UIkit from 'uikit';
 
-import './FooBarListViewItem.scss';
+import './MyItemNameListViewItem.scss';
 
 export type PropsT = {
   className?: any;
@@ -24,12 +24,12 @@ export type PropsT = {
 ;
 
 const DefaultProps = {
-  ...dps.fooBar,
+  ...dps.myItemName,
 };
 
-export const FooBarListViewItem = observer(
+export const MyItemNameListViewItem = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
-    if (isUpdating(props.fooBar)) {
+    if (isUpdating(props.myItemName)) {
       return UIkit && <div data-uk-spinner className=""></div>;                                     {% ?? _.service.uikit %}
       return null;                                                                                  {% ?? not _.service.uikit %}
     }
@@ -37,11 +37,11 @@ export const FooBarListViewItem = observer(
     return (
       <div
         className={cn(
-          'FooBarListViewItem', 'flex flex-row items-center flex-1 mb-2',
-          `FooBarListViewItem--drag-${props.dragState}`,                                            {% ?? __.drag_and_drop_bvr %}
+          'MyItemNameListViewItem', 'flex flex-row items-center flex-1 mb-2',
+          `MyItemNameListViewItem--drag-${props.dragState}`,                                        {% ?? __.drag_and_drop_bvr %}
           {                                                                                         {% min_lines count=3 %}
-            'FooBarListViewItem--selected': props.isSelected,                                       {% ?? __.selection_bvr %}
-            'FooBarListViewItem--highlighted': props.isHighlighted,                                 {% ?? __.selection_bvr %}
+            'MyItemNameListViewItem--selected': props.isSelected,                                   {% ?? __.selection_bvr %}
+            'MyItemNameListViewItem--highlighted': props.isHighlighted,                             {% ?? __.selection_bvr %}
           },                                                                                        {% end_min_lines %}
           props.className
         )}
@@ -49,12 +49,12 @@ export const FooBarListViewItem = observer(
         {...dragHandlers(props)}                                                                    {% ?? __.drag_and_drop_bvr %}
       >
         <div>                                                                                       {% for field_spec in __.fields %}{% if field_spec.display %}
-          {props.fooBar.fieldSpecName}                                                              {% ?? field_spec.field_type not in ("boolean",) %}
-          fieldSpecName: {props.fooBar.fieldSpecName ? 'Yes' : 'No'}                                {% ?? field_spec.field_type in ("boolean",) %}
+          {props.myItemName.fieldSpecName}                                                          {% ?? field_spec.field_type not in ("boolean",) %}
+          fieldSpecName: {props.myItemName.fieldSpecName ? 'Yes' : 'No'}                            {% ?? field_spec.field_type in ("boolean",) %}
         </div>                                                                                      {% endif %}{% endfor %}
         <div className="flex-grow"></div>                                                           {% if __.deletion_bvr %}
         <button
-          className={button}
+          className={smallButton}
           onClick={() => {
             props.onDelete();
           }}

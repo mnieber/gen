@@ -2,8 +2,9 @@ import os
 import re
 
 import ramda as R
-from moonleap.utils.fp import uniq
 from parsimonious import Grammar, NodeVisitor
+
+from moonleap.utils.fp import uniq
 
 clean_up_py_imports_tag = "{% clean_up_py_imports %}"
 end_clean_up_py_imports_tag = "{% end_clean_up_py_imports %}"

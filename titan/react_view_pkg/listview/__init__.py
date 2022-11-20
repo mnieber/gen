@@ -5,6 +5,7 @@ from moonleap import create, create_forward, empty_rule, extend, kebab_to_camel,
 from moonleap.utils.case import u0
 from moonleap.utils.inflect import plural
 from moonleap.verbs import has, uses
+from titan.react_view_pkg.listviewitemview.resources import ListViewItemView
 
 from .resources import ListView
 
@@ -12,6 +13,7 @@ base_tags = {"list-view": ["component"]}
 
 rules = {
     ("list-view", uses, "item"): empty_rule(),
+    ("list-view", uses, "lvi-view"): empty_rule(),
     ("list-view", has, "behavior"): empty_rule(),
 }
 
@@ -28,10 +30,19 @@ def create_list_view(term):
 
 @rule("list-view")
 def created_list_view(list_view):
-    return create_forward(list_view, uses, f"{list_view.meta.term.data}:item")
+    return [
+        create_forward(list_view, uses, f"{list_view.meta.term.data}:item"),
+        create_forward(list_view, uses, f"{list_view.meta.term.data}:lvi-view"),
+    ]
 
 
 @extend(ListView)
 class ExtendListView:
     bvrs = P.children(has, "behavior")
     item = P.child(uses, "item", required=True)
+    lvi_view = P.child(uses, "lvi-view", required=True)
+
+
+@extend(ListViewItemView)
+class ExtendListViewItemView:
+    list_view = P.parent("list-view", uses, required=True)
