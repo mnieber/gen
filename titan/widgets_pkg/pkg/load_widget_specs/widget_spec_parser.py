@@ -19,10 +19,7 @@ class WidgetSpecParser:
                     raise Exception(
                         f"The root widget spec can only contain widget specs"
                     )
-
                 widget_spec = get_widget_spec(key, {})
-                values = value if isinstance(spec, list) else spec.split(".")
-                widget_spec.values.extend(values)
 
             if widget_spec.is_component:
                 if self.widget_reg.get(widget_spec.widget_type, None) is not None:

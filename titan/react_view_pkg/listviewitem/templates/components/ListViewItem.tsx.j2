@@ -37,7 +37,8 @@ export const MyItemNameListViewItem = observer(
     return (
       <div
         className={cn(
-          'MyItemNameListViewItem', 'flex flex-row items-center flex-1 mb-2',
+          'MyItemNameListViewItem',
+          'flex flex-row items-center flex-1 mb-2',
           `MyItemNameListViewItem--drag-${props.dragState}`,                                        {% ?? __.drag_and_drop_bvr %}
           {                                                                                         {% min_lines count=3 %}
             'MyItemNameListViewItem--selected': props.isSelected,                                   {% ?? __.selection_bvr %}
