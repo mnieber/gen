@@ -4,7 +4,6 @@ import os
 
 import jinja2
 
-from moonleap import get_session
 from moonleap.parser.term import verb_to_word
 from moonleap.utils import dbg
 from moonleap.utils.case import l0, sn, u0

@@ -13,15 +13,23 @@ def get_helpers(_):
         has_default_props = True
 
         def __init__(self):
-            self.div, self.components, self.css_classes = self._get_div(
-                self.widget_spec
-            )
+            (
+                self.div,
+                self.components,
+                self.css_classes,
+                self.has_children,
+            ) = self._get_div(self.widget_spec)
             self.has_children = self._has_children()
 
         def _get_div(self, widget_spec, level=0):
             builder = get_builder(widget_spec, None, level)
-            div, components, css_classes = builder.get_div()
-            return div, components, css_classes
+            builder.build()
+            return (
+                builder.output.div,
+                builder.output.components,
+                builder.output.css_classes,
+                builder.output.has_children,
+            )
 
         def _has_children(self):
             q = Queue(lambda x: x, [self.widget_spec])

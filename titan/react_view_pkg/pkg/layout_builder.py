@@ -2,7 +2,7 @@ from titan.react_view_pkg.pkg.builder import Builder
 
 
 class LayoutBuilder(Builder):
-    def get_div(self, classes=None):
+    def build(self, classes=None):
         places = []
         for child_widget_spec in self.widget_spec.child_widget_specs:
             if not child_widget_spec.place:
@@ -14,7 +14,7 @@ class LayoutBuilder(Builder):
 
         self._add_div_open(classes)
         self._add_child_widgets()
-        return self._add_div_close()
+        self._add_div_close()
 
     def _get_classes(self, places):
         places = sorted(places)

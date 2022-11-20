@@ -29,7 +29,7 @@ def get_helpers(_):
         div = view_div.replace("MyItemListView", _.component.name).replace(
             "myItemDivs", item_name + "Divs"
         )
-        components = [dbg(_.component.lvi)]
+        components = [_.component.lvi]
         css_classes = []
         has_children = False
         has_default_props = True
