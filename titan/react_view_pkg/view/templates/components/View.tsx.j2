@@ -1,11 +1,14 @@
 {% magic_with _.component.name as myComponent %}
 {% magic_with component.module.module_path as myChildComponentPath %}
 {% magic_with component.name as myChildComponent %}
-import { withDefaultProps } from 'src/app/defaultProps';
+import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { cn } from 'src/utils/classnames';
-import React from 'react';
 import { observer } from 'mobx-react-lite';
+import { isLoaded } from 'src/api/loadingState';
+import UIkit from 'uikit';                                                                {% ?? _.service.uikit %}
 import './MyComponent.scss';
+{% include_snippet "__moonleap__/imports.tsx.j2" %}
+
 import { myChildComponent } from 'src/myChildComponentPath/components';                   {% for component in __.components %}{% ?? component.module != _.component.module %}
 import { myChildComponent } from 'src/myChildComponentPath/components/myChildComponent';  {% ?? component.module == _.component.module %}{% endfor %}
 import {                                                                                  {% min_lines count=3 %}
@@ -18,15 +21,27 @@ type PropsT = React.PropsWithChildren<{                                         
 };                                                                                        {% ?? not __.has_children %}
 }>;                                                                                       {% ?? __.has_children %}
 
-const DefaultProps = {};
+const DefaultProps = {                                                                    {% if __.has_default_props %}
+{% include_snippet "__moonleap__/default_props.tsx.j2" %}
+};
 
 export const MyComponent = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
+{% include_snippet "__moonleap__/view_body.tsx.j2" %}
     return (
 {{ __.div }}
     );
   }, DefaultProps)
-);
+);                                                                                        {% endif %}
+
+export const MyComponent = observer(                                                      {% if not __.has_default_props %}
+  (props: PropsT) => {
+{% include_snippet "__moonleap__/view_body.tsx.j2" %}
+    return (
+{{ __.div }}
+    );
+  }
+);                                                                                        {% endif %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

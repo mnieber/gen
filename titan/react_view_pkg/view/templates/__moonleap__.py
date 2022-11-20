@@ -10,6 +10,7 @@ def get_helpers(_):
         css_classes = []
         div = None
         has_children = False
+        has_default_props = True
 
         def __init__(self):
             self.div, self.components, self.css_classes = self._get_div(

@@ -2,7 +2,6 @@
 {% magic_with field_spec.name as fieldSpecName %}
 import { observer } from 'mobx-react-lite';
 import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
-import { getResourceView } from 'src/utils/components';
 import { cn } from 'src/utils/classnames';
 import { isLoaded } from 'src/api/loadingState';
 import './{{ _.component.name }}.scss';

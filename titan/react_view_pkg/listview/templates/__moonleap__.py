@@ -1,5 +1,19 @@
 import ramda as R
 
+from moonleap.utils import dbg
+
+view_div = """
+      <div
+        className={cn(
+          'MyItemListView', 'flex flex-col',
+          props.className
+        )}
+      >
+        {myItemDivs.length > 0 && myItemDivs}
+        {myItemDivs.length === 0 && noItems}
+      </div>
+"""
+
 
 def get_helpers(_):
     def _find_behavior(name):
@@ -7,10 +21,18 @@ def get_helpers(_):
 
     class Helpers:
         widget_spec = _.component.widget_spec
+        item_name = _.component.item.item_name
         selection_bvr = _find_behavior("selection")
         deletion_bvr = _find_behavior("deletion")
         highlight_bvr = _find_behavior("highlight")
         drag_and_drop_bvr = _find_behavior("dragAndDrop")
+        div = view_div.replace("MyItemListView", _.component.name).replace(
+            "myItemDivs", item_name + "Divs"
+        )
+        components = [dbg(_.component.lvi)]
+        css_classes = []
+        has_children = False
+        has_default_props = True
 
         has_selection = selection_bvr
         has_highlight = selection_bvr or highlight_bvr
