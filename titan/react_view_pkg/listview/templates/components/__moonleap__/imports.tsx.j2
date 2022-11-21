@@ -1,9 +1,0 @@
-{% magic_with _.component.item_name as myItem %}
-import * as R from 'ramda';
-import { dragState } from 'skandha-facets/DragAndDrop';                                         {% ?? __.drag_and_drop_bvr %}
-import { MyItemT } from 'src/api/types/MyItemT';
-import { Deletion } from 'skandha-facets/Deletion';                                             {% ?? __.deletion_bvr %}
-import { Highlight } from 'skandha-facets/Highlight';                                           {% ?? __.selection_bvr %}
-import { Selection } from 'skandha-facets/Selection';                                           {% if __.selection_bvr %}
-import { ClickToSelectItems } from 'skandha-facets/handlers';                                   {% endif %}
-{% end_magic_with %}
