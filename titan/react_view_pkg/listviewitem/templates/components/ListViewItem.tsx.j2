@@ -1,68 +1,49 @@
+{% magic_with _.component.name as myComponent %}
 {% magic_with _.component.item_name as myItemName %}
-{% magic_with field_spec.name as fieldSpecName %}
+import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { cn } from 'src/utils/classnames';
 import { observer } from 'mobx-react-lite';
-import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
-import { isUpdating } from 'src/app/ResourceState';
+import { isLoaded, isUpdating } from 'src/api/ResourceState';
+import UIkit from 'uikit';
+import './MyComponent.scss';
+{# Start: view imports here #}
 import { dragHandlers, type DragHandlersT } from 'skandha-facets/DragAndDrop';                      {% ?? __.drag_and_drop_bvr %}
 import { clickHandlers, ClickHandlersT } from 'skandha-facets/handlers/ClickToSelectItems';         {% ?? __.selection_bvr %}
-
 import { smallButton } from 'src/frames/components';
-import UIkit from 'uikit';
-
-import './MyItemNameListViewItem.scss';
+{# End: view imports here #}
 
 export type PropsT = {
-  className?: any;
+{# Start: view props here #}
   isSelected: boolean;                                                                              {% ?? __.selection_bvr %}
   isHighlighted: boolean;                                                                           {% ?? __.selection_bvr %}
   dragState?: string;                                                                               {% ?? __.drag_and_drop_bvr %}
   onDelete: Function;                                                                               {% ?? __.deletion_bvr %}
+{# End: view props here #}
+  className?: any;
 }
+{# Start: additional props here #}
 & ClickHandlersT                                                                                    {% ?? __.selection_bvr %}
 & DragHandlersT                                                                                     {% ?? __.drag_and_drop_bvr %}
+{# End: additional props here #}
 ;
 
 const DefaultProps = {
+{# Start: default view props here #}
   ...dps.myItemName,
+{# End: default view props here #}
 };
 
-export const MyItemNameListViewItem = observer(
+export const MyComponent = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
+{# Start: view body here #}
     if (isUpdating(props.myItemName)) {
       return UIkit && <div data-uk-spinner className=""></div>;                                     {% ?? _.service.uikit %}
       return null;                                                                                  {% ?? not _.service.uikit %}
     }
+{# End: view body here #}
 
     return (
-      <div
-        className={cn(
-          'MyItemNameListViewItem',
-          'flex flex-row items-center flex-1 mb-2',
-          `MyItemNameListViewItem--drag-${props.dragState}`,                                        {% ?? __.drag_and_drop_bvr %}
-          {                                                                                         {% min_lines count=3 %}
-            'MyItemNameListViewItem--selected': props.isSelected,                                   {% ?? __.selection_bvr %}
-            'MyItemNameListViewItem--highlighted': props.isHighlighted,                             {% ?? __.selection_bvr %}
-          },                                                                                        {% end_min_lines %}
-          props.className
-        )}
-        {...clickHandlers(props)}                                                                   {% ?? __.selection_bvr %}
-        {...dragHandlers(props)}                                                                    {% ?? __.drag_and_drop_bvr %}
-      >
-        <div>                                                                                       {% for field_spec in __.fields %}{% if field_spec.display %}
-          {props.myItemName.fieldSpecName}                                                          {% ?? field_spec.field_type not in ("boolean",) %}
-          fieldSpecName: {props.myItemName.fieldSpecName ? 'Yes' : 'No'}                            {% ?? field_spec.field_type in ("boolean",) %}
-        </div>                                                                                      {% endif %}{% endfor %}
-        <div className="flex-grow"></div>                                                           {% if __.deletion_bvr %}
-        <button
-          className={smallButton}
-          onClick={() => {
-            props.onDelete();
-          }}
-        >
-          Delete
-        </button>                                                                                   {% endif %}
-      </div>
+{{ __.build.div }}
     );
   }, DefaultProps)
 );

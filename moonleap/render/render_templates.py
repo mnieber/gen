@@ -1,25 +1,30 @@
-import importlib
-import sys
 from argparse import Namespace
 from pathlib import Path
 
 from jinja2 import Template
-from moonleap.render.template_env import get_template
-from moonleap.session import get_session
+
+from moonleap.render.create_render_helpers import create_render_helpers
 from moonleap.utils.ruamel_yaml import ruamel_yaml
 
 
 def render_templates(
     templates_dir, write_file, render_template, output_path, context, helpers
 ):
-    if not Path(templates_dir).is_dir():
-        raise Exception(f"{templates_dir} is not a directory")
+    # Get next render helpers. Note that the existing helpers are continued to be
+    # used in case the new __moonleap__.py file does not define get_helpers.
+    helpers, render_in_context = create_render_helpers(
+        templates_dir, context, render_template, prev_helpers=helpers
+    )
 
-    next_helpers, meta_data_by_fn, skip = _load_moonleap_data(templates_dir, context)
-    if skip:
+    # Get template meta data
+    meta_data_by_fn = _load_moonleap_data(
+        templates_dir / "__moonleap__.j2", render_in_context
+    )
+
+    # Check if we must skip the current template directory
+    current_dir_meta_data = meta_data_by_fn.get(".", {})
+    if not current_dir_meta_data.get("include", True):
         return
-
-    helpers = next_helpers or helpers
 
     # create output directory
     write_file(output_path, content="", is_dir=True)
@@ -49,12 +54,7 @@ def render_templates(
         else:
             write_file(
                 output_fn,
-                content=render_template(
-                    template_fn,
-                    settings=get_session().settings,
-                    _=context,
-                    __=helpers,
-                ),
+                content=render_in_context(template_fn),
                 is_dir=False,
             )
 
@@ -72,32 +72,17 @@ def _get_output_fn(output_path, template_fn, meta_data, context):
     return Path(output_path) / name
 
 
-def _load_moonleap_data(dir_fn, context):
-    helpers = None
+def _load_moonleap_data(meta_filename, render_in_context):
+    content = render_in_context(meta_filename, prefix=False, default=None)
+    if not content:
+        return {}
 
-    if (dir_fn / "__moonleap__.py").exists():
-        sys.path.insert(0, str(dir_fn))
-        m = importlib.import_module("__moonleap__")
-        # TODO: if the new __moonleap__ file does not define get_helpers then
-        # the one from the previously loaded __moonleap__ file will be used,
-        # potentially crashing the code.
-        importlib.reload(m)
-        sys.path.pop(0)
+    meta_data_by_fn = ruamel_yaml.load(content)
+    for fn, meta_data in meta_data_by_fn.items():
+        if not isinstance(meta_data.get("include", False), bool):
+            raise Exception(
+                f"Invalid include value: "
+                + f"{meta_data.get('include')} for filename {fn} in {meta_filename}"
+            )
 
-        if hasattr(m, "get_helpers"):
-            helpers = m.get_helpers(_=Namespace(**context))
-
-    meta_data_by_fn = dict()
-    meta_filename = dir_fn / "__moonleap__.j2"
-    if meta_filename.exists():
-        content = get_template(meta_filename).render(_=Namespace(**context), __=helpers)
-        meta_data_by_fn = ruamel_yaml.load(content)
-        for fn, meta_data in meta_data_by_fn.items():
-            if not isinstance(meta_data.get("include", False), bool):
-                raise Exception(
-                    f"Invalid include value: "
-                    + f"{meta_data.get('include')} for filename {fn} in {meta_filename}"
-                )
-
-    skip = not meta_data_by_fn.get(".", {}).get("include", True)
-    return helpers, meta_data_by_fn, skip
+    return meta_data_by_fn

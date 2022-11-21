@@ -1,0 +1,8 @@
+        <button                                                                                     {% if __.deletion_bvr %}
+          className={smallButton}
+          onClick={() => {
+            props.onDelete();
+          }}
+        >
+          Delete
+        </button>                                                                                   {% endif %}

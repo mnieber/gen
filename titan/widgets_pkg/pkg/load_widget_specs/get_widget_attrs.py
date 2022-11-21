@@ -6,7 +6,7 @@ from moonleap.utils.split_non_empty import split_non_empty
 from titan.types_pkg.pkg.load_type_specs.split_raw_key import split_symbols
 
 
-def get_widget_attrs(key, parts):
+def get_widget_attrs(key, value_parts):
     attrs = dict(styles=[], values={}, widget_base_type=None)
 
     parts_with = key.split(" with ")
@@ -37,7 +37,7 @@ def get_widget_attrs(key, parts):
     if widget_base_type:
         attrs["widget_base_type"], symbols = split_symbols(widget_base_type)
 
-        for symbol in split_non_empty(symbols, ".") + parts:
+        for symbol in split_non_empty(symbols, ".") + value_parts:
             if _is_style(symbol):
                 append_uniq(attrs["styles"], quote(symbol))
             else:

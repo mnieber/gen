@@ -1,16 +1,6 @@
 import ramda as R
 
-view_div = """
-      <div
-        className={cn(
-          'MyItemListView', 'flex flex-col',
-          props.className
-        )}
-      >
-        {myItemDivs.length > 0 && myItemDivs}
-        {myItemDivs.length === 0 && noItems}
-      </div>
-"""
+from titan.react_view_pkg.pkg.list_view_builder import ListViewBuilder
 
 
 def get_helpers(_):
@@ -24,16 +14,18 @@ def get_helpers(_):
         deletion_bvr = _find_behavior("deletion")
         highlight_bvr = _find_behavior("highlight")
         drag_and_drop_bvr = _find_behavior("dragAndDrop")
-        div = view_div.replace("MyItemListView", _.component.name).replace(
-            "myItemDivs", item_name + "Divs"
-        )
-        components = [_.component.lvi]
-        css_classes = []
-        has_children = False
-        has_default_props = True
+        build = None
 
         has_selection = selection_bvr
         has_highlight = selection_bvr or highlight_bvr
         has_drag_and_drop = drag_and_drop_bvr
+
+        def __init__(self):
+            self.build = self._get_div(self.widget_spec)
+
+        def _get_div(self, widget_spec, level=0):
+            builder = ListViewBuilder(widget_spec, None, level, list_view=_.component)
+            builder.build()
+            return builder.output
 
     return Helpers()

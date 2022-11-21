@@ -1,3 +1,5 @@
+from moonleap.utils.split_non_empty import split_non_empty
+
 from .get_widget_spec import get_widget_spec
 
 
@@ -12,14 +14,12 @@ class WidgetSpecParser:
             spec = {} if value == "pass" else value
             is_dict = isinstance(spec, dict)
 
-            if is_dict:
-                widget_spec = get_widget_spec(key, spec)
-            else:
-                if not parent_widget_spec:
-                    raise Exception(
-                        f"The root widget spec can only contain widget specs"
-                    )
-                widget_spec = get_widget_spec(key, {})
+            widget_spec = get_widget_spec(
+                key,
+                value_parts=split_non_empty(
+                    spec.get("__type__", "") if is_dict else value, "."
+                ),
+            )
 
             if widget_spec.is_component:
                 if self.widget_reg.get(widget_spec.widget_type, None) is not None:

@@ -4,30 +4,30 @@
 import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { cn } from 'src/utils/classnames';
 import { observer } from 'mobx-react-lite';
-import { isLoaded } from 'src/api/loadingState';
+import { isLoaded, isUpdating } from 'src/api/ResourceState';
 import UIkit from 'uikit';                                                                          {% ?? _.service.uikit %}
 import './MyComponent.scss';
 {# Start: view imports here #}
 {# End: view imports here #}
 
-import { myChildComponent } from 'src/myChildComponentPath/components';                             {% for component in __.components %}{% ?? component.module != _.component.module %}
+import { myChildComponent } from 'src/myChildComponentPath/components';                             {% for component in __.build.components %}{% ?? component.module != _.component.module %}
 import { myChildComponent } from 'src/myChildComponentPath/components/myChildComponent';            {% ?? component.module == _.component.module %}{% endfor %}
 import {                                                                                            {% min_lines count=3 %}
-  {{ css_class }}                                                                                   {% !! css_class in __.css_classes %}
+  {{ css_class }}                                                                                   {% !! css_class in __.build.external_css_classes %}
 } from 'src/frames/components';                                                                     {% end_min_lines %}
 
-type PropsT = {                                                                                     {% ?? not __.has_children %}
-type PropsT = React.PropsWithChildren<{                                                             {% ?? __.has_children %}
+type PropsT = {                                                                                     {% ?? not __.build.has_children %}
+type PropsT = React.PropsWithChildren<{                                                             {% ?? __.build.has_children %}
 {# Start: view props here #}
 {# End: view props here #}
   className?: any;
-}                                                                                                   {% ?? not __.has_children %}
-}>                                                                                                  {% ?? __.has_children %}
+}                                                                                                   {% ?? not __.build.has_children %}
+}>                                                                                                  {% ?? __.build.has_children %}
 {# Start: additional props here #}
 {# End: additional props here #}
 ;
 
-const DefaultProps = {                                                                              {% if __.has_default_props %}
+const DefaultProps = {
 {# Start: default view props here #}
 {# End: default view props here #}
 };
@@ -37,20 +37,10 @@ export const MyComponent = observer(
 {# Start: view body here #}
 {# End: view body here #}
     return (
-{{ __.div }}
+{{ __.build.div }}
     );
   }, DefaultProps)
-);                                                                                                  {% endif %}
-
-export const MyComponent = observer(                                                                {% if not __.has_default_props %}
-  (props: PropsT) => {
-{# Start: view body here #}
-{# End: view body here #}
-    return (
-{{ __.div }}
-    );
-  }
-);                                                                                                  {% endif %}
+);
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

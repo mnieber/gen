@@ -1,27 +1,55 @@
 from titan.react_view_pkg.pkg.builder import Builder
+from titan.widgets_pkg.pkg.widget_spec import WidgetSpec
 
 
 class LayoutBuilder(Builder):
-    def build(self, classes=None):
-        places = []
-        for child_widget_spec in self.widget_spec.child_widget_specs:
-            if not child_widget_spec.place:
-                raise Exception(
-                    f"Child widget spec {child_widget_spec} does not have a place"
-                )
-            places.append(child_widget_spec.place)
-        classes = self._get_classes(places)
+    def build(self, classes=None, handlers=None):
+        places, more_classes = _get_places_and_classes_from_widget_specs(
+            self.widget_spec.child_widget_specs
+        )
 
-        self._add_div_open(classes)
-        self._add_child_widgets()
+        self._add_div_open(more_classes + (classes or []), handlers)
+        self._add_child_widgets(
+            _filtered_child_widget_specs(places, self.widget_spec.child_widget_specs)
+        )
         self._add_div_close()
 
-    def _get_classes(self, places):
-        places = sorted(places)
-        if places == ["LeftSidebar", "RightMain"]:
-            return ['"grid grid-cols-[400px,1fr]"']
-        if places == ["BottomMain", "TopBar"]:
-            return ['"grid grid-rows-[60px,1fr]"']
-        if places == ["BottomPanel", "MiddlePanel", "TopPanel"]:
-            return ['"grid grid-rows-3"']
-        raise Exception(f"Unknown places: {places}")
+
+def _filtered_child_widget_specs(places, child_widget_specs):
+    result = []
+    for place in places:
+        found = False
+        for child_widget_spec in child_widget_specs:
+            if child_widget_spec.place == place:
+                result.append(child_widget_spec)
+                found = True
+                break
+        if not found:
+            result.append(WidgetSpec(widget_base_type="Empty"))
+    return result
+
+
+def _get_ordered_places(places, ordered_places):
+    if set(places) == set(ordered_places):
+        return ordered_places
+    return None
+
+
+def _get_places_and_classes_from_widget_specs(widget_specs):
+    places = []
+    for child_widget_spec in widget_specs:
+        if not child_widget_spec.place:
+            raise Exception(
+                f"Child widget spec {child_widget_spec} does not have a place"
+            )
+        places.append(child_widget_spec.place)
+
+    if ordered_places := _get_ordered_places(places, ["LeftSidebar", "RightMain"]):
+        return ordered_places, ['"grid grid-cols-[400px,1fr]"']
+    if ordered_places := _get_ordered_places(places, ["TopBar", "BottomMain"]):
+        return ordered_places, ['"grid grid-rows-[60px,1fr]"']
+    if ordered_places := _get_ordered_places(
+        places, ["BottomPanel", "MiddlePanel", "TopPanel"]
+    ):
+        return ordered_places, ['"grid grid-rows-3"']
+    raise Exception(f"Unknown places: {places}")
