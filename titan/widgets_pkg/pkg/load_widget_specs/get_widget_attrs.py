@@ -33,6 +33,16 @@ def get_widget_attrs(key, value_parts):
         if ":" in widget_base_type and not widget_type:
             widget_type, widget_base_type = widget_base_type, widget_type
 
+        for label in ("array", "capture"):
+            prefix = f"{label} of"
+            if widget_type and widget_type.startswith(prefix):
+                widget_type = widget_type[len(prefix) :].strip()
+                symbol_parts.append(f"{label}=true")
+
+            if widget_base_type and widget_base_type.startswith(prefix):
+                widget_base_type = widget_base_type[len(prefix) :].strip()
+                symbol_parts.append(f"{label}=true")
+
         if widget_type:
             parts_module = widget_type.split(".")
             if len(parts_module) > 1:
