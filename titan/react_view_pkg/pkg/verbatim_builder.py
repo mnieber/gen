@@ -8,4 +8,4 @@ class VerbatimBuilder(Builder):
         self.div = indent(level)(div)
 
     def build(self, classes=None, handlers=None):
-        self += [self.div]
+        self.add_lines([self.div])

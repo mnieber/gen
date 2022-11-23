@@ -19,9 +19,10 @@ class Builder:
     def register_builder_type(self, widget_type, builder_type):
         self.builder_lut[widget_type] = builder_type
 
-    def __add__(self, lines):
-        self.output.lines += [" " * self.level + x for x in lines]
-        return self
+    def add_lines(self, lines, preamble=False):
+        (self.output.preamble_lines if preamble else self.output.lines).extend(
+            [" " * self.level + x for x in lines]
+        )
 
     def _get_components(self):
         if self.widget_spec.is_component and self.level > 0:
@@ -57,9 +58,11 @@ class Builder:
             if external_css_class in (classes or []):
                 append_uniq(self.output.external_css_classes, external_css_class)
 
-        self += [
-            f'<div className={{cn({", ".join(class_names)})}} {os.linesep.join(handlers or [])}>'
-        ]
+        self.add_lines(
+            [
+                +f'<div className={{cn({", ".join(class_names)})}} {os.linesep.join(handlers or [])}>'
+            ]
+        )
 
     def _add_child_widgets(self, child_widget_specs=None):
         if child_widget_specs is None:
@@ -95,7 +98,7 @@ class Builder:
         return get_builder(child_widget_spec, self, level)
 
     def _add_div_close(self):
-        self += [f"</div>"]
+        self.add_lines([f"</div>"])
 
     def build(self, classes=None, handlers=None):
         pass
