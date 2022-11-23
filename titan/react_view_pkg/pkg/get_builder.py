@@ -10,7 +10,7 @@ from titan.react_view_pkg.pkg.text_builder import TextBuilder
 
 
 def get_builder(widget_spec, parent_builder, level) -> Builder:
-    if widget_spec.is_component and level > 0:
+    if widget_spec.is_component and (level > 0 or not widget_spec.is_component_def):
         return ComponentBuilder(widget_spec, parent_builder, level)
 
     if widget_spec.widget_base_type == "Layout":

@@ -21,7 +21,7 @@ class WidgetSpecParser:
                 ),
             )
 
-            if widget_spec.is_component:
+            if widget_spec.is_component_def:
                 if self.widget_reg.get(widget_spec.widget_type, None) is not None:
                     raise Exception(
                         f"Duplicate widget component spec: {widget_spec.widget_type}"

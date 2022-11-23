@@ -89,13 +89,13 @@ def widget_spec_component(widget_spec):
         if component.meta.term.as_normalized_str() == widget_spec.widget_type:
             return component
 
-    raise Exception(f"Cannot find target item for {widget_spec.target}")
+    raise Exception(f"Cannot find component for {widget_spec}")
 
 
 def component_widget_spec(component):
     for widget_spec in get_widget_reg().widget_specs():
         if (
-            widget_spec.is_component
+            widget_spec.is_component_def
             and component.meta.term.as_normalized_str() == widget_spec.widget_type
         ):
             return widget_spec

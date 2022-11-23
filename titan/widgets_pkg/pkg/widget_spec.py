@@ -18,6 +18,14 @@ class WidgetSpec:
     def is_component(self):
         return self.widget_type and ":" in self.widget_type
 
+    @property
+    def is_component_def(self):
+        return (
+            self.is_component
+            and self.widget_base_type
+            and self.widget_base_type != self.widget_type
+        )
+
     def find_child_with_place(self, place):
         return R.head(x for x in self.child_widget_specs if x.place == place)
 

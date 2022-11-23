@@ -33,14 +33,14 @@ def get_map_from_widget_spec_to_react_module(widget_reg, react_modules):
                         f"React module not found: {widget_spec.module_name}"
                     )
 
-                if widget_spec.is_component:
+                if widget_spec.is_component_def:
                     lut[widget_spec.widget_type] = react_module
 
                 for child_widget_spec in widget_spec.child_widget_specs:
                     if not child_widget_spec.module_name:
                         child_widget_spec.module_name = widget_spec.module_name
 
-    if len([x for x in widget_specs if x.is_component]):
+    if len([x for x in widget_specs if x.is_component_def]):
         raise Exception(f"Could not determine module for widgets: {widget_specs}")
 
     return lut

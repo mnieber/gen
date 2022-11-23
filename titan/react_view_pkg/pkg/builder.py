@@ -63,7 +63,7 @@ class Builder:
             [f'"{self.output.widget_class_name}"']
             + (classes or [])
             + (self.widget_spec.styles)
-            + (["props.className"] if self.widget_spec.is_component else [])
+            + (["props.className"] if self.widget_spec.is_component_def else [])
         )
 
         for external_css_class in ("card",):

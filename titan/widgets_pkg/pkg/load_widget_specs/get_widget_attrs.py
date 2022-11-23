@@ -8,6 +8,7 @@ from titan.types_pkg.pkg.load_type_specs.split_raw_key import split_symbols
 
 def get_widget_attrs(key, value_parts):
     attrs = dict(styles=[], values={}, widget_base_type=None)
+    symbol_parts = []
 
     parts_with = key.split(" with ")
     if len(parts_with) == 2:
@@ -19,8 +20,15 @@ def get_widget_attrs(key, value_parts):
         widget_type = "Children"
     else:
         parts_as = key.split(" as ")
+
         widget_base_type = parts_as[-1]
+        widget_base_type, symbols = split_symbols(widget_base_type)
+        symbol_parts.extend(split_non_empty(symbols, "."))
+
         widget_type = parts_as[0] if len(parts_as) == 2 else None
+        if widget_type:
+            widget_type, symbols = split_symbols(widget_type)
+            symbol_parts.extend(split_non_empty(symbols, "."))
 
         if ":" in widget_base_type and not widget_type:
             widget_type, widget_base_type = widget_base_type, widget_type
@@ -32,20 +40,21 @@ def get_widget_attrs(key, value_parts):
                 if len(parts_module) > 1:
                     attrs["module_name"] = parts_module[0]
 
+        if widget_type:
             attrs["widget_type"] = widget_type
 
-    if widget_base_type:
-        attrs["widget_base_type"], symbols = split_symbols(widget_base_type)
+        if widget_base_type:
+            attrs["widget_base_type"] = widget_base_type
 
-        for symbol in split_non_empty(symbols, ".") + value_parts:
-            if _is_style(symbol):
-                append_uniq(attrs["styles"], quote(symbol))
+    for part in symbol_parts + value_parts:
+        if _is_style(part):
+            append_uniq(attrs["styles"], quote(part))
+        else:
+            parts_eq = part.split("=")
+            if len(parts_eq) == 2:
+                attrs["values"][parts_eq[0]] = parts_eq[1]
             else:
-                parts_eq = symbol.split("=")
-                if len(parts_eq) == 2:
-                    attrs["values"][parts_eq[0]] = parts_eq[1]
-                else:
-                    raise Exception(f"Invalid symbol: {symbol}")
+                raise Exception(f"Invalid part: {part}")
 
     return attrs
 
@@ -64,8 +73,8 @@ style_patterns = [
 ]
 
 
-def _is_style(symbol):
+def _is_style(part):
     for style_pattern in style_patterns:
-        if re.fullmatch(style_pattern, symbol):
+        if re.fullmatch(style_pattern, part):
             return True
     return False
