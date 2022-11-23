@@ -1,5 +1,4 @@
-import typing as T
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from moonleap import RenderMixin, Resource, TemplateDirMixin, get_session
 
@@ -22,9 +21,7 @@ class Service(RenderMixin, Resource):
 
     @property
     def copy_source_to_prod_image(self):
-        return get_session().get_tweak_or(
-            True, ["services", self.name, "copy_source_to_prod_image"]
-        )
+        return self.get_tweak_or(True, ["copy_source_to_prod_image"])
 
     @property
     def has_django_app(self):
