@@ -12,7 +12,7 @@ class WidgetSpec:
     widget_type: T.Optional[str] = None
     module_name: T.Optional[str] = None
     place: T.Optional[str] = None
-    values: T.Dict[str, str] = field(repr=False, default_factory=dict)
+    values: T.Dict[str, str] = field(default_factory=dict)
 
     @property
     def is_component(self):

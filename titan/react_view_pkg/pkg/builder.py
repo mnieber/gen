@@ -1,7 +1,9 @@
 import os
 
+from moonleap import u0
 from moonleap.utils.fp import append_uniq
 from titan.react_view_pkg.pkg.builder_output import BuilderOutput
+from titan.react_view_pkg.pkg.get_capture_elements import get_capture_elements
 from titan.react_view_pkg.pkg.get_margins import get_margins
 
 
@@ -16,13 +18,23 @@ class Builder:
         )
         self._get_components()
 
+        self.is_captured, const_name, prefix, suffix = get_capture_elements(self)
+        if self.is_captured and self.is_captured is self:
+            if prefix:
+                self.output.preamble_lines.append(prefix)
+                self.output.lines.append(f"{{{const_name}}}")
+            if suffix:
+                self.output.postamble_lines.append(suffix)
+
     def register_builder_type(self, widget_type, builder_type):
         self.builder_lut[widget_type] = builder_type
 
-    def add_lines(self, lines, preamble=False):
-        (self.output.preamble_lines if preamble else self.output.lines).extend(
-            [" " * self.level + x for x in lines]
-        )
+    def add_lines(self, lines):
+        indented_lines = [" " * self.level + x for x in lines]
+        if self.is_captured:
+            self.output.preamble_lines.extend(indented_lines)
+        else:
+            self.output.lines.extend(indented_lines)
 
     def _get_components(self):
         if self.widget_spec.is_component and self.level > 0:
@@ -60,7 +72,7 @@ class Builder:
 
         self.add_lines(
             [
-                +f'<div className={{cn({", ".join(class_names)})}} {os.linesep.join(handlers or [])}>'
+                f'<div className={{cn({", ".join(class_names)})}} {os.linesep.join(handlers or [])}>'
             ]
         )
 
@@ -106,5 +118,5 @@ class Builder:
 
 def _to_widget_class_name(widget_spec):
     if not widget_spec.is_component:
-        return widget_spec.widget_type
+        return u0(widget_spec.widget_type)
     return widget_spec.component.name

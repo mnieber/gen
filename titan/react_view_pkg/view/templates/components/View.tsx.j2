@@ -36,6 +36,8 @@ export const MyComponent = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
 {# Start: view body here #}
 {# End: view body here #}
+{{ __.build.preamble }}
+
     return (
 {{ __.build.div }}
     );

@@ -7,6 +7,7 @@ from moonleap.utils.fp import append_uniq
 @dataclass
 class BuilderOutput:
     preamble_lines: list = field(default_factory=list)
+    postamble_lines: list = field(default_factory=list)
     lines: list = field(default_factory=list)
     widget_class_name: str = ""
     components: list = field(default_factory=list)
@@ -18,9 +19,14 @@ class BuilderOutput:
         for css_class in rhs.external_css_classes:
             append_uniq(self.external_css_classes, css_class)
         self.preamble_lines.extend(rhs.preamble_lines)
+        self.postamble_lines.extend(rhs.postamble_lines)
         self.lines.extend(rhs.lines)
         if rhs.has_children:
             self.has_children = True
+
+    @property
+    def preamble(self):
+        return os.linesep.join(self.preamble_lines + self.postamble_lines)
 
     @property
     def div(self):
