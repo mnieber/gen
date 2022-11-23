@@ -1,6 +1,9 @@
 import ramda as R
 
+from moonleap.utils import yaml2dict
 from titan.react_view_pkg.pkg.list_view_item_builder import ListViewItemBuilder
+from titan.widgets_pkg.pkg.load_widget_specs.widget_spec_parser import WidgetSpecParser
+from titan.widgets_pkg.widgetregistry import get_widget_reg
 
 
 def get_helpers(_):
@@ -9,6 +12,7 @@ def get_helpers(_):
 
     class Helpers:
         component_name = _.component.name
+        item_name = _.component.list_view.item.item_name
         widget_spec = _.component.widget_spec
         type_spec = _.component.list_view.item.type_spec
         selection_bvr = _find_behavior("selection")
@@ -25,6 +29,14 @@ def get_helpers(_):
         @property
         def build(self):
             if self._build is None:
+                if not self.widget_spec:
+                    default_lvi_spec = yaml2dict(
+                        _.render("__moonleap__/DefaultListViewItemSpec.yaml.j2")
+                    )
+                    parser = WidgetSpecParser(get_widget_reg())
+                    parser.parse(default_lvi_spec)
+                    self.widget_spec = _.component.widget_spec
+
                 builder = ListViewItemBuilder(
                     self.widget_spec, None, level=0, helpers=self, render=_.render
                 )

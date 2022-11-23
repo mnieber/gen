@@ -18,9 +18,10 @@ class WidgetSpec:
     def is_component(self):
         return self.widget_type and ":" in self.widget_type
 
+    def find_child_with_place(self, place):
+        return R.head(x for x in self.child_widget_specs if x.place == place)
+
     def remove_child_with_place(self, place):
-        widget_spec = R.head(
-            x for x in self.child_widget_specs if x.place == "ListViewItem"
-        )
+        widget_spec = self.find_child_with_place(place)
         if widget_spec:
             self.child_widget_specs.remove(widget_spec)

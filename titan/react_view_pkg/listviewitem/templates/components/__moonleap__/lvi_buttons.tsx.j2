@@ -1,8 +1,15 @@
-        <button                                                                                     {% if __.deletion_bvr %}
-          className={smallButton}
-          onClick={() => {
-            props.onDelete();
-          }}
+        <div                                                                                          {% if __.deletion_bvr %}
+          className={cn(
+            'TodoListViewItem__Buttons',
+            'flex flex-row justify-end items-center'
+          )}
         >
-          Delete
-        </button>                                                                                   {% endif %}
+          <button
+            className={smallButton}
+            onClick={() => {
+              props.onDelete();
+            }}
+          >
+            Delete
+          </button>
+        </div>                                                                                        {% endif %}
