@@ -1,4 +1,5 @@
 import typing as T
+import uuid
 from dataclasses import dataclass, field
 
 import ramda as R
@@ -13,6 +14,7 @@ class WidgetSpec:
     module_name: T.Optional[str] = None
     place: T.Optional[str] = None
     values: T.Dict[str, str] = field(default_factory=dict)
+    id: str = field(default_factory=lambda: uuid.uuid4().hex)
 
     @property
     def is_component(self):

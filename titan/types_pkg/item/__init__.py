@@ -11,7 +11,7 @@ base_tags = {
 @create("item")
 def create_item(term):
     item_name = kebab_to_camel(term.data)
-    item = Item(item_name=item_name)
+    item = Item(item_name=item_name, kebab_name=term.data)
     return item
 
 

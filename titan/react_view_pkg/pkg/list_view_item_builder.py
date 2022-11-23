@@ -22,7 +22,7 @@ class ListViewItemBuilder(Builder):
         return VerbatimBuilder(*args, **kwargs, div=div)
 
     def build(self, classes=None, handlers=None):
-        inner_builder = self._get_builder(self.widget_spec, self.level)
+        inner_builder = self._get_child_widget_builder(self.widget_spec, self.level)
 
         classes = list(classes or [])
         handlers = list(handlers or [])

@@ -36,6 +36,11 @@ def created_list_view(list_view):
     ]
 
 
+@rule("react-module", has, "list-view")
+def react_module_has_list_view(react_module, list_view):
+    return (create_forward(react_module, has, list_view.lvi),)
+
+
 @extend(ListView)
 class ExtendListView:
     bvrs = P.children(has, "behavior")

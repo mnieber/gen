@@ -12,7 +12,7 @@ def get_helpers(_):
 
     class Helpers:
         component_name = _.component.name
-        item_name = _.component.list_view.item.item_name
+        item_kebab_name = _.component.list_view.item.kebab_name
         widget_spec = _.component.widget_spec
         type_spec = _.component.list_view.item.type_spec
         selection_bvr = _find_behavior("selection")

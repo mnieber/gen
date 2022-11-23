@@ -25,7 +25,7 @@ class ListViewBuilder(Builder):
 
     def build(self, classes=None, handlers=None):
         self.widget_spec.remove_child_with_place("ListViewItem")
-        inner_builder = self._get_builder(self.widget_spec, self.level)
+        inner_builder = self._get_child_widget_builder(self.widget_spec, self.level)
 
         inner_builder.build(classes, handlers)
         self.output.add(inner_builder.output)
