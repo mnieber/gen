@@ -5,7 +5,6 @@ stores = ("stores",)
 has = contains + uses
 is_created_as = "is-created-as"
 runs = ("run", "runs", "running")
-wraps = ("wraps",)
 connects = ("connects",)
 loads = ("loads",)
 saves = ("saves",)
