@@ -43,6 +43,7 @@ ROOT:
       - pytest                                                        {% ?? _.service|dot("pytest") %}
       - django-manage                                                 {% ?? _.service|dot("django_app") %}{% end_min_lines %}
       - npm-link                                                      {% ?? _.service|dot("npm_source_maps") %}
+      - npm-publish                                                   {% ?? _.service|dot("npm_source_maps") %}
       - tsc                                                           {% ?? _.service|dot("npm_source_maps") %}
 
 SERVER:                                                               {% if _.service %}
