@@ -1,20 +1,16 @@
-import { QueryClientProvider } from '@tanstack/react-query';                {% ?? _.react_app.api_module %}
 import { cn } from 'src/utils/classnames';
-import { queryClient } from 'src/api/queryClient';                          {% ?? _.react_app.api_module %}
 import { UrlRouter } from 'src/routes/components';                          {% ?? _.react_app.routes_module %}
 import './App.scss';
 
 export const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>                              {% ?? _.react_app.api_module %}
-      <div
-        className={cn(
-          'App',
-          'flex flex-col',
-          'mx-auto xl:w-4/5',                                               {% ?? _.service.tailwindcss %}
-        )}>
-        <UrlRouter />                                                       {% ?? _.react_app.routes_module %}
-      </div>
-    </QueryClientProvider>                                                  {% ?? _.react_app.api_module %}
+    <div
+      className={cn(
+        'App',
+        'flex flex-col',
+        'mx-auto xl:w-4/5',                                               {% ?? _.service.tailwindcss %}
+    )}>
+      <UrlRouter />                                                       {% ?? _.react_app.routes_module %}
+    </div>
   );
 }

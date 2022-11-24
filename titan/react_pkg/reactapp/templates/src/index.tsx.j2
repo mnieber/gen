@@ -7,6 +7,8 @@ import { setOptions } from 'skandha';                                           
 import { flags } from 'src/app/flags';
 import { applyFormatters } from 'mobx-log';
 import { RoutesProvider } from 'src/routes/components/RoutesProvider';                {% ?? _.react_app.routes_module %}
+import { QueryClientProvider } from '@tanstack/react-query';                          {% ?? _.react_app.api_module %}
+import { queryClient } from 'src/api/queryClient';                                    {% ?? _.react_app.api_module %}
 import 'src/frames/styles/index.scss';                                                {% ?? _.react_app.frames_module %}
 
 const strict = false;
@@ -20,9 +22,11 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const body = (
-  <RoutesProvider>                                                                    {% ?? _.react_app.routes_module %}
-    <App />
-  </RoutesProvider>                                                                   {% ?? _.react_app.routes_module %}
+  <QueryClientProvider client={queryClient}>                                          {% ?? _.react_app.api_module %}
+    <RoutesProvider>                                                                  {% ?? _.react_app.routes_module %}
+      <App />
+    </RoutesProvider>                                                                 {% ?? _.react_app.routes_module %}
+  </QueryClientProvider>                                                              {% ?? _.react_app.api_module %}
 );
 
 root.render(strict ? <React.StrictMode>{body}</React.StrictMode> : body);

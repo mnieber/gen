@@ -29,11 +29,15 @@ def created_react_app(react_app):
 
 
 @rule("react-app")
-def use_webvitals(react_app):
-    if react_app.service.get_tweak_or(True, ["react_app", "reportWebVitals"]):
+def add_react_app_features(react_app):
+    forwards = []
+    if react_app.service.get_tweak_or(False, ["react_app", "reportWebVitals"]):
         react_app.use_webvitals = True
         use_react_packages(react_app, ["reportWebVitals"])
-        return create_forward(":node-package", has, "web-vitals:node-pkg")
+        forwards += [create_forward(":node-package", has, "web-vitals:node-pkg")]
+
+    if react_app.service.get_tweak_or(False, ["react_app", "createBundle"]):
+        react_app.create_bundle = True
 
 
 @rule("service", runs, "react-app")

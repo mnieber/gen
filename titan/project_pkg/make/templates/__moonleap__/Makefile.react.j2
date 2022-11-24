@@ -8,4 +8,9 @@ install:
 run-server:
 	yarn start
 
+create-bundle:																	    {% if _.service.react_app.create_bundle %}
+	rm -rf /app/bundle/*
+	yarn build
+	cp -rf ./build/* /app/bundle													{% endif %}
+
 																					{% endif %}
