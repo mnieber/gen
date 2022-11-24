@@ -9,31 +9,31 @@ from titan.widgets_pkg.pkg.widget_spec import WidgetSpec
 @dataclass
 class WidgetRegistry(Resource):
     def __post_init__(self):
-        self._widget_spec_by_widget_type = {}
+        self._widget_spec_by_widget_name = {}
 
-    def setdefault(self, widget_type, default_value):
-        if not self.has(widget_type):
-            self._widget_spec_by_widget_type[widget_type] = default_value
+    def setdefault(self, widget_name, default_value):
+        if not self.has(widget_name):
+            self._widget_spec_by_widget_name[widget_name] = default_value
 
-    def has(self, widget_type):
-        return widget_type in self._widget_spec_by_widget_type
+    def has(self, widget_name):
+        return widget_name in self._widget_spec_by_widget_name
 
-    def get(self, widget_type, default="__not_set__") -> WidgetSpec:
-        widget_spec = self._widget_spec_by_widget_type.get(widget_type, None)
+    def get(self, widget_name, default="__not_set__") -> WidgetSpec:
+        widget_spec = self._widget_spec_by_widget_name.get(widget_name, None)
         if widget_spec is not None:
             return widget_spec
 
         if default == "__not_set__":
-            raise Exception(f"Widget {widget_type} not found")
+            raise Exception(f"Widget {widget_name} not found")
 
         return default
 
     def widget_specs(self) -> T.List[WidgetSpec]:
-        return self._widget_spec_by_widget_type.values()
+        return self._widget_spec_by_widget_name.values()
 
     def pprint(self):
         def convert(widget_spec):
-            prefix = widget_spec.widget_type if widget_spec.widget_type else ""
+            prefix = widget_spec.widget_name if widget_spec.widget_name else ""
             suffix = (
                 widget_spec.widget_base_type if widget_spec.widget_base_type else ""
             )
@@ -51,7 +51,7 @@ class WidgetRegistry(Resource):
             return key, value
 
         root = WidgetSpec(
-            widget_type="Root",
+            widget_name="Root",
             widget_base_type="Root",
             child_widget_specs=self.widget_specs(),
         )

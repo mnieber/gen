@@ -34,7 +34,7 @@ def get_map_from_widget_spec_to_react_module(widget_reg, react_modules):
                     )
 
                 if widget_spec.is_component_def:
-                    lut[widget_spec.widget_type] = react_module
+                    lut[widget_spec.widget_name] = react_module
 
                 for child_widget_spec in widget_spec.child_widget_specs:
                     if not child_widget_spec.module_name:

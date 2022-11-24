@@ -17,7 +17,7 @@ def get_widget_attrs(key, value_parts):
 
     if key == "children":
         widget_base_type = "Children"
-        widget_type = "Children"
+        widget_name = "Children"
     else:
         parts_as = key.split(" as ")
 
@@ -25,33 +25,33 @@ def get_widget_attrs(key, value_parts):
         widget_base_type, symbols = split_symbols(widget_base_type)
         symbol_parts.extend(split_non_empty(symbols, "."))
 
-        widget_type = parts_as[0] if len(parts_as) == 2 else None
-        if widget_type:
-            widget_type, symbols = split_symbols(widget_type)
+        widget_name = parts_as[0] if len(parts_as) == 2 else None
+        if widget_name:
+            widget_name, symbols = split_symbols(widget_name)
             symbol_parts.extend(split_non_empty(symbols, "."))
 
-        if ":" in widget_base_type and not widget_type:
-            widget_type, widget_base_type = widget_base_type, widget_type
+        if ":" in widget_base_type and not widget_name:
+            widget_name, widget_base_type = widget_base_type, widget_name
 
         for label in ("array", "capture"):
             prefix = f"{label} of"
-            if widget_type and widget_type.startswith(prefix):
-                widget_type = widget_type[len(prefix) :].strip()
+            if widget_name and widget_name.startswith(prefix):
+                widget_name = widget_name[len(prefix) :].strip()
                 symbol_parts.append(f"{label}=true")
 
             if widget_base_type and widget_base_type.startswith(prefix):
                 widget_base_type = widget_base_type[len(prefix) :].strip()
                 symbol_parts.append(f"{label}=true")
 
-        if widget_type:
-            parts_module = widget_type.split(".")
+        if widget_name:
+            parts_module = widget_name.split(".")
             if len(parts_module) > 1:
-                widget_type = parts_module[-1]
+                widget_name = parts_module[-1]
                 if len(parts_module) > 1:
                     attrs["module_name"] = parts_module[0]
 
-        if widget_type:
-            attrs["widget_type"] = widget_type
+        if widget_name:
+            attrs["widget_name"] = widget_name
 
         if widget_base_type:
             attrs["widget_base_type"] = widget_base_type

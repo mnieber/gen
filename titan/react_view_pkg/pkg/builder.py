@@ -19,8 +19,8 @@ class Builder:
         self._get_components()
         self.captured_builder = update_captured_builder(self)
 
-    def register_builder_type(self, widget_type, builder_type):
-        self.builder_type_lut[widget_type] = builder_type
+    def register_builder_type(self, widget_base_type, builder_type):
+        self.builder_type_lut[widget_base_type] = builder_type
 
     def add_lines(self, lines):
         indented_lines = [" " * self.level + x for x in lines]

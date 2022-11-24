@@ -22,11 +22,11 @@ class WidgetSpecParser:
             )
 
             if widget_spec.is_component_def:
-                if self.widget_reg.get(widget_spec.widget_type, None) is not None:
+                if self.widget_reg.get(widget_spec.widget_name, None) is not None:
                     raise Exception(
-                        f"Duplicate widget component spec: {widget_spec.widget_type}"
+                        f"Duplicate widget component spec: {widget_spec.widget_name}"
                     )
-                self.widget_reg.setdefault(widget_spec.widget_type, widget_spec)
+                self.widget_reg.setdefault(widget_spec.widget_name, widget_spec)
 
             if parent_widget_spec:
                 parent_widget_spec.child_widget_specs.append(widget_spec)

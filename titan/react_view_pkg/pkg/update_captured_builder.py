@@ -1,5 +1,4 @@
 from moonleap.utils.case import kebab_to_camel, l0
-from moonleap.utils.inflect import plural
 
 
 def update_captured_builder(builder):
@@ -14,17 +13,15 @@ def update_captured_builder(builder):
     const_name = l0(
         kebab_to_camel(
             (
-                builder.widget_spec.widget_type or builder.widget_spec.widget_base_type
+                builder.widget_spec.widget_name or builder.widget_spec.widget_base_type
             ).replace(":", "-")
         )
     )
-    if captured_array:
-        const_name = plural(const_name)
 
     prefix, suffix = None, None
     if captured_array and builder is captured_array:
-        prefix = f"const {const_name} = R.map(x => ("
-        suffix = "), ['Moonleap Todo']);"
+        prefix = f"const {const_name} = " + "['Moonleap Todo'].map(x => { return ("
+        suffix = "); });"
     elif captured_field and builder is captured_field:
         prefix = f"const {const_name} = ("
         suffix = ");"

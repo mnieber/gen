@@ -86,7 +86,7 @@ def widget_spec_component(widget_spec):
         return None
 
     for component in get_widget_reg().components:
-        if component.meta.term.as_normalized_str() == widget_spec.widget_type:
+        if component.meta.term.as_normalized_str() == widget_spec.widget_name:
             return component
 
     raise Exception(f"Cannot find component for {widget_spec}")
@@ -96,7 +96,7 @@ def component_widget_spec(component):
     for widget_spec in get_widget_reg().widget_specs():
         if (
             widget_spec.is_component_def
-            and component.meta.term.as_normalized_str() == widget_spec.widget_type
+            and component.meta.term.as_normalized_str() == widget_spec.widget_name
         ):
             return widget_spec
 
