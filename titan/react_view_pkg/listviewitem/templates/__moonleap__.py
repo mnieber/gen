@@ -1,7 +1,7 @@
 import ramda as R
 
 from moonleap.utils import yaml2dict
-from titan.react_view_pkg.pkg.list_view_item_builder import ListViewItemBuilder
+from titan.react_view_pkg.pkg.builders.list_view_item_builder import ListViewItemBuilder
 from titan.widgets_pkg.pkg.load_widget_specs.widget_spec_parser import WidgetSpecParser
 from titan.widgets_pkg.widgetregistry import get_widget_reg
 

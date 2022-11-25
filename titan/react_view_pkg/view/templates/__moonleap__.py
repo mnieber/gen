@@ -12,6 +12,7 @@ def get_helpers(_):
             self.build = self._get_div(self.widget_spec)
 
         def _get_div(self, widget_spec, level=0):
+            __import__("pudb").set_trace()
             builder = get_builder(widget_spec, None, level)
             builder.build()
             return builder.output

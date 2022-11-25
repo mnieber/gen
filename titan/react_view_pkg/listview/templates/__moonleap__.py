@@ -1,6 +1,6 @@
 import ramda as R
 
-from titan.react_view_pkg.pkg.list_view_builder import ListViewBuilder
+from titan.react_view_pkg.pkg.builders.list_view_builder import ListViewBuilder
 
 
 def get_helpers(_):

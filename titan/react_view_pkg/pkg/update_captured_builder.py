@@ -1,41 +1,50 @@
 from moonleap.utils.case import kebab_to_camel, l0
+from titan.react_view_pkg.pkg.builder_output import BuilderOutput
+from titan.react_view_pkg.pkg.create_widget_class_name import create_widget_class_name
 
 
-def update_captured_builder(builder):
-    b = builder
-    captured_array = None
-    captured_field = None
-    while not (captured_array or captured_field) and b:
-        captured_array = b if b.widget_spec.values.get("array", False) else None
-        captured_field = b if b.widget_spec.values.get("capture", False) else None
+def get_root_builder(builder):
+    b = builder.parent_builder
+    while b:
+        if b.is_captured or not b.parent_builder:
+            return b
         b = b.parent_builder
+    return None
 
-    const_name = l0(
-        kebab_to_camel(
-            (
-                builder.widget_spec.widget_name or builder.widget_spec.widget_base_type
-            ).replace(":", "-")
+
+def create_preamble(builder, output):
+    output.preamble_lines = []
+    output.postamble_lines = []
+    if builder.is_captured:
+        const_name = l0(
+            kebab_to_camel(
+                (
+                    builder.widget_spec.widget_name
+                    or builder.widget_spec.widget_base_type
+                ).replace(":", "-")
+            )
         )
-    )
 
-    prefix, suffix = None, None
-    if captured_array and builder is captured_array:
-        prefix = f"const {const_name} = " + "['Moonleap Todo'].map(x => { return ("
-        suffix = "); });"
-    elif captured_field and builder is captured_field:
-        prefix = f"const {const_name} = ("
-        suffix = ");"
+        prefix, suffix = None, None
+        if builder.is_captured == "array":
+            prefix = f"const {const_name} = " + "['Moonleap Todo'].map(x => { return ("
+            suffix = "); });"
+        else:
+            prefix = f"const {const_name} = ("
+            suffix = ");"
 
-    captured_builder = captured_array or captured_field
-    if captured_builder and captured_builder is builder:
-        id = captured_builder.widget_spec.id
-        preamble_lines = builder.output.preamble_lines_by_id.setdefault(id, [])
-        postamble_lines = builder.output.postamble_lines_by_id.setdefault(id, [])
+        output.preamble_lines.append(prefix)
+        output.lines.append(f"{{{const_name}}}")
+        output.postamble_lines.append(suffix)
 
-        if prefix:
-            preamble_lines.append(prefix)
-            builder.output.lines.append(f"{{{const_name}}}")
-        if suffix:
-            postamble_lines.append(suffix)
 
-    return captured_builder
+def create_builder_output(builder):
+    output = BuilderOutput(widget_class_name=create_widget_class_name(builder))
+    _register_components(builder, output)
+    create_preamble(builder, output)
+    return output
+
+
+def _register_components(builder, output):
+    if builder.widget_spec.is_component and builder.level > 0:
+        output.components.append(builder.widget_spec.component)
