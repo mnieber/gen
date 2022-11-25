@@ -27,19 +27,22 @@ def create_preamble(builder, output):
 
         prefix, suffix = None, None
         if builder.is_captured == "array":
-            prefix = f"const {const_name} = " + "['Moonleap Todo'].map(x => { return ("
-            suffix = "); });"
+            prefix = [f"const {const_name} = " + "['Moonleap Todo'].map(x => {"]
+            suffix = ["});"]
         else:
-            prefix = f"const {const_name} = ("
-            suffix = ");"
+            prefix = [f"const {const_name} = " + "(x => {"]
+            suffix = ["})('Moonleap Todo');"]
 
-        output.preamble_lines.append(prefix)
-        output.lines.append(f"{{{const_name}}}")
-        output.postamble_lines.append(suffix)
+        output.preamble_lines.extend(prefix)
+        output.const_name = const_name
+        output.postamble_lines.extend(suffix)
 
 
 def create_builder_output(builder):
-    output = BuilderOutput(widget_class_name=create_widget_class_name(builder))
+    output = BuilderOutput(
+        widget_class_name=create_widget_class_name(builder),
+        is_captured=builder.is_captured,
+    )
     _register_components(builder, output)
     create_preamble(builder, output)
     return output

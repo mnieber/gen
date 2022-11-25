@@ -29,11 +29,8 @@ class Builder:
         self.builder_type_lut[widget_base_type] = builder_type
 
     def add_lines(self, lines):
-        indented_lines = [" " * self.level + x for x in lines]
-        if self.is_captured:
-            self.output.preamble_lines.extend(indented_lines)
-        else:
-            self.output.lines.extend(indented_lines)
+        indented_lines = ["  " * self.level + x for x in lines]
+        self.output.lines.extend(indented_lines)
 
     def _add_div_open(self, classes=None, handlers=None):
         add_div_open(self, classes, handlers)

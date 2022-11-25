@@ -12,10 +12,6 @@ def _args():
     args = Dodo.parse_args(parser, config_args=[])
     args.cwd = Dodo.get("/ROOT/src_dir")
 
-    # Raise an error if something is not right
-    if False:
-        raise CommandError("Oops")
-
     return args
 
 
