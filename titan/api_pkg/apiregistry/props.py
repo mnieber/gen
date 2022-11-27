@@ -1,5 +1,6 @@
 from moonleap.utils.fp import append_uniq
 from moonleap.utils.queue import Queue
+from titan.types_pkg.typeregistry import get_type_reg
 
 
 def _add_target_type_specs(q, field_specs, predicate=None):
@@ -13,6 +14,7 @@ def _add_target_type_specs(q, field_specs, predicate=None):
 
 
 def get_public_type_specs(api_reg, predicate):
+    type_reg = get_type_reg()
     result = []
     q = Queue(lambda x: x.type_name, [])
 
@@ -22,6 +24,8 @@ def get_public_type_specs(api_reg, predicate):
 
     for type_spec in q:
         append_uniq(result, type_spec)
+        if type_spec.base_type_name:
+            append_uniq(result, type_reg.get(type_spec.base_type_name))
         _add_target_type_specs(
             q, type_spec.get_field_specs(["fk", "relatedSet"]), predicate
         )
