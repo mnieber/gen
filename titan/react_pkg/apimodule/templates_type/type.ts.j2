@@ -11,7 +11,7 @@ import { FieldSpecTargetT, getHydratedFieldSpecTarget } from 'src/api/types/Fiel
 import * as R from 'ramda';
 
 export type MyTypeT = {                                                                             {% ?? not _.type_spec.base_type_name %}
-export type MyTypeT = {{ _.type_spec.base_type_name}}T & {                                     {% ?? _.type_spec.base_type_name %}
+export type MyTypeT = {{ _.type_spec.base_type_name}}T & {                                          {% ?? _.type_spec.base_type_name %}
   fieldSpecName: fieldSpecTsType;                                                                   {% for field_spec in __.field_specs %}{% ?? not field_spec.is_optional("client") %}
   fieldSpecName?: fieldSpecTsType;                                                                  {% ?? field_spec.is_optional("client") %}{% endfor %}
 };

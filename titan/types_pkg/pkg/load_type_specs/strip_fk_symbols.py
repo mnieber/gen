@@ -19,8 +19,8 @@ def strip_fk_symbols(key):
     if is_entity or "entity" in words:
         parts.append("entity")
 
-    symbols, is_entity = pop(symbols, "$")
-    if is_entity or "owner" in words:
+    symbols, is_owner = pop(symbols, "$")
+    if is_owner or "owner" in words:
         parts.append("is_owner")
 
     return key, parts
