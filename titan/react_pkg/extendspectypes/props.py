@@ -38,6 +38,9 @@ def field_spec_ts_type(field_spec):
     if field_spec.field_type in ("relatedSet",) and field_spec.target:
         return f"{field_spec.target}T[]"
 
+    if field_spec.choices:
+        return " | ".join([f"'{label}'" for choice, label in field_spec.choices])
+
     if field_spec.field_type in (
         "string",
         "text",
