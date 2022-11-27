@@ -1,5 +1,4 @@
 from moonleap import u0
-from moonleap.utils.inflect import singular
 
 
 def create_widget_class_name(builder):
@@ -24,8 +23,6 @@ def create_widget_class_name(builder):
 def _to_widget_class_name(widget_spec):
     if not widget_spec.is_component:
         default_class_name = widget_spec.widget_name
-        if widget_spec.values.get("array", False):
-            default_class_name = singular(default_class_name)
         class_name = widget_spec.values.get("cn", default_class_name)
 
         # The name "__" is a shorthand

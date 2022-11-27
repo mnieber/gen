@@ -1,4 +1,6 @@
-from moonleap.utils.case import kebab_to_camel, l0
+from moonleap.parser.term import word_to_term
+from moonleap.utils.case import l0
+from moonleap.utils.inflect import plural
 from titan.react_view_pkg.pkg.builder_output import BuilderOutput
 from titan.react_view_pkg.pkg.create_widget_class_name import create_widget_class_name
 
@@ -16,17 +18,17 @@ def create_preamble(builder, output):
     output.preamble_lines = []
     output.postamble_lines = []
     if builder.is_captured:
-        const_name = l0(
-            kebab_to_camel(
-                (
-                    builder.widget_spec.widget_name
-                    or builder.widget_spec.widget_base_type
-                ).replace(":", "-")
-            )
+        is_array = builder.is_captured == "array"
+        name = l0(
+            builder.widget_spec.widget_name or builder.widget_spec.widget_base_type
         )
+        term = word_to_term(name)
+        const_name = term.to_camel() if term else name
+        if is_array:
+            const_name = plural(const_name)
 
         prefix, suffix = None, None
-        if builder.is_captured == "array":
+        if is_array:
             prefix = [f"const {const_name} = " + "['Moonleap Todo'].map(x => {"]
             suffix = ["});"]
         else:

@@ -2,6 +2,8 @@ import typing as T
 from dataclasses import dataclass, field
 from fnmatch import fnmatch
 
+from moonleap.utils.case import kebab_to_camel
+
 
 @dataclass(frozen=True)
 class Term:
@@ -13,6 +15,9 @@ class Term:
 
     def as_normalized_str(self):
         return str(self).removesuffix("^")
+
+    def to_camel(self):
+        return kebab_to_camel(self.data + (self.tag if self.data.endswith("-") else ""))
 
     def __repr__(self):
         return (
