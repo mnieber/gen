@@ -40,7 +40,7 @@ def create_module(term):
     return module
 
 
-@create("accounts:module")
+@create("user-accounts:module")
 def create_accounts_module(term):
     module = DjangoModule(name=kebab_to_camel(term.data), kebab_name=term.data)
     module.template_dir = Path(__file__).parent / "templates_accounts"
@@ -106,5 +106,5 @@ class ExtendDjangoApp:
     modules = P.children(
         has, "module", lambda modules: sorted(modules, key=lambda x: x.name)
     )
-    accounts_module = P.child(has, "accounts:module")
+    accounts_module = P.child(has, "user-accounts:module")
     get_module_by_name = MemFun(props.get_module_by_name)

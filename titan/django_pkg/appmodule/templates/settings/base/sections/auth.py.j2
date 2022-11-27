@@ -10,10 +10,10 @@ DJANGO_RTK = {                                                               {% 
     "BACKEND": "django_rtk_green.backends.Backend",
     "VALIDATOR": "django_rtk.validators.Validator",
     "EMAIL_TEMPLATES": {
-        "RegisterAccount": "accounts/activation_email.html",
-        "RegisteredAgain": "accounts/registered_again_email.html",
-        "RequestPasswordReset": "accounts/password_reset_email.html",
-        "RequestMagicLink": "accounts/magic_link_email.html",
+        "RegisterAccount": "user_accounts/activation_email.html",
+        "RegisteredAgain": "user_accounts/registered_again_email.html",
+        "RequestPasswordReset": "user_accounts/password_reset_email.html",
+        "RequestMagicLink": "user_accounts/magic_link_email.html",
     },
     "EMAIL_CONTEXT": {
         "domain": "www.{{ _.project.name }}.org",
