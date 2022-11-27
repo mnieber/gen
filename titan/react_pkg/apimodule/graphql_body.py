@@ -1,6 +1,7 @@
 import os
 
 from moonleap.utils.case import l0
+from moonleap.utils.fp import append_uniq
 
 
 def graphql_body(
@@ -72,11 +73,10 @@ def get_dependency_type_specs(type_spec, skip=None, recurse=True):
                     if target_type_spec not in result:
                         result.append(target_type_spec)
                 else:
-                    result.extend(
-                        get_dependency_type_specs(
-                            target_type_spec,
-                            skip + [target_type_spec.type_name],
-                            recurse=recurse,
-                        )
-                    )
+                    for dependency_type_spec in get_dependency_type_specs(
+                        target_type_spec,
+                        skip + [target_type_spec.type_name],
+                        recurse=recurse,
+                    ):
+                        append_uniq(result, dependency_type_spec)
     return result
