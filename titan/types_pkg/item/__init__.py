@@ -24,8 +24,6 @@ def create_named_item(term):
 class ExtendItem:
     type_name = Prop(props.item_type_name)
     type_spec = Prop(props.item_type_spec)
-    form_type_name = Prop(props.item_form_type_name)
-    form_type_spec = Prop(props.item_form_type_spec)
 
 
 @extend(named(Item))

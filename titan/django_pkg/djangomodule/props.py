@@ -1,4 +1,6 @@
+from moonleap import u0
 from moonleap.utils.case import sn
+from titan.types_pkg.typeregistry import get_type_reg
 
 
 def module_path(self):
@@ -18,3 +20,10 @@ def get_module_by_name(django_app, module_name, default="__notset__"):
 
 def item_django_module(item):
     return item.item_list.django_module if item.item_list else None
+
+
+def type_spec_django_module(type_spec):
+    for item in get_type_reg().items:
+        if u0(item.type_name) == type_spec.type_name:
+            return item_django_module(item)
+    return None

@@ -4,41 +4,41 @@
 from adminsortable2.admin import SortableAdminBase, SortableInlineAdminMixin
 {% end_clean_up_py_imports %}
 from django.contrib import admin
-from {{ django_module.module_path }}.admin import {{ model_name }}                    {% !! django_module, model_name in __.inline_models_to_import %}
+from {{ type_spec.django_module.module_path }}.admin import {{ type_spec.type_name }}Inline         {% !! type_spec in __.type_specs_to_import %}
 
 from {{ _.module.name|sn }} import models
-                                                                                {% for item_list, data in __.data %}
-class MyModelInline(                                                            {% if data.create_inline_model %}
-    SortableInlineAdminMixin,                                                   {% ?? data.type_spec.is_sorted %}
+                                                                                                    {% for item_list, data in __.data %}
+class MyModelInline(                                                                                {% if data.create_inline_model %}
+    SortableInlineAdminMixin,                                                                       {% ?? data.type_spec.is_sorted %}
     admin.TabularInline
 ):
     model = models.MyModel
     extra = 3
-    autocomplete_fields = (                                                     {% min_lines count=3 %}
-        "{{ autocomplete_field }}",                                             {% !! autocomplete_field in __.get_autocomplete_fields(data.type_spec) %}
-    )                                                                           {% end_min_lines %}
+    autocomplete_fields = (                                                                         {% min_lines count=3 %}
+        "{{ autocomplete_field }}",                                                                 {% !! autocomplete_field in __.get_autocomplete_fields(data.type_spec) %}
+    )                                                                                               {% end_min_lines %}
 
-                                                                                {% endif %}{% endfor %}
+                                                                                                    {% endif %}{% endfor %}
 
-@admin.register(models.MyModel)                                                 {% for item_list, data in __.data %}
+@admin.register(models.MyModel)                                                                     {% for item_list, data in __.data %}
 class MyModelAdmin(
-    SortableAdminBase,                                                          {% ?? data.has_sortable_inlines %}
+    SortableAdminBase,                                                                              {% ?? data.has_sortable_inlines %}
     admin.ModelAdmin
 ):
-    exclude = (                                                                 {% min_lines count=3 %}
-        "modelFieldName",                                                       {% !! model_field in data.excluded_model_fields %}
-    )                                                                           {% end_min_lines %}
-    inlines = (                                                                 {% min_lines count=3 %}
-        {{ inline_model_field.target }}Inline,                                  {% !! inline_model_field in data.inline_model_fields %}
+    exclude = (                                                                                     {% min_lines count=3 %}
+        "modelFieldName",                                                                           {% !! model_field in data.excluded_model_fields %}
+    )                                                                                               {% end_min_lines %}
+    inlines = (                                                                                     {% min_lines count=3 %}
+        {{ inline_model_field.target }}Inline,                                                      {% !! inline_model_field in data.inline_model_fields %}
         {% remove_trailing suffix="," tuple=True %}
-    )                                                                           {% end_min_lines %}
-    search_fields = (                                                           {% min_lines count=3 %}
-        "{{ search_field }}",                                                   {% !! search_field in data.search_by %}
-    )                                                                           {% end_min_lines %}
-    autocomplete_fields = (                                                     {% min_lines count=3 %}
-        "{{ autocomplete_field }}",                                             {% !! autocomplete_field in data.autocomplete_fields %}
-    )                                                                           {% end_min_lines %}
-    pass                                                                        {% ?? not (data.inline_model_fields or data.autocomplete_fields or data.search_by or data.excluded_model_fields) %}
-                                                                                {% endfor %}
+    )                                                                                               {% end_min_lines %}
+    search_fields = (                                                                               {% min_lines count=3 %}
+        "{{ search_field }}",                                                                       {% !! search_field in data.search_by %}
+    )                                                                                               {% end_min_lines %}
+    autocomplete_fields = (                                                                         {% min_lines count=3 %}
+        "{{ autocomplete_field }}",                                                                 {% !! autocomplete_field in data.autocomplete_fields %}
+    )                                                                                               {% end_min_lines %}
+    pass                                                                                            {% ?? not (data.inline_model_fields or data.autocomplete_fields or data.search_by or data.excluded_model_fields) %}
+                                                                                                    {% endfor %}
 {% end_magic_with %}
 {% end_magic_with %}

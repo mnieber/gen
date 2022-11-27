@@ -13,5 +13,4 @@ class ExtendTypeSpec:
 @extend(FieldSpec)
 class ExtendFieldSpec:
     graphene_type = MemFun(props.graphene_type)
-    target_item = Prop(props.target_item)
     graphql_type = MemFun(props.field_spec_graphql_type)

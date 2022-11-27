@@ -7,10 +7,6 @@ def ts_type_from_type_name(x):
     return f"{u0(x)}T"
 
 
-def ts_form_type_from_type_name(x):
-    return f"{x}FormT"
-
-
 def item_ts_type(item):
     return ts_type_from_type_name(item.type_name)
 
@@ -25,10 +21,6 @@ def item_list_ts_type(item_list):
 
 def item_list_ts_var(item_list):
     return plural(item_list.item_name)
-
-
-def item_ts_form_type(item):
-    return ts_form_type_from_type_name(item.type_name)
 
 
 def field_spec_ts_type(field_spec):

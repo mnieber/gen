@@ -77,7 +77,7 @@ def get_helpers(_):
             result = []
 
             for form_field_spec in self.form_input_field_specs:
-                django_module = form_field_spec.target_item.django_module
+                django_module = form_field_spec.target_type_spec.django_module
                 if not django_module:
                     continue
 
@@ -87,7 +87,7 @@ def get_helpers(_):
                 )
 
                 for fk_field_spec in fk_field_specs_for_form_field(form_field_spec):
-                    django_module = fk_field_spec.target_item.django_module
+                    django_module = fk_field_spec.target_type_spec.django_module
                     if not django_module:
                         continue
 

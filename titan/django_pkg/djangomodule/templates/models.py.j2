@@ -6,7 +6,7 @@ import uuid                                                                     
 from django.db import models
 from django.utils.text import slugify
 from martor.models import MartorField
-from {{ item.django_module.module_path }}.models import {{ item.type_name }}                            {% !! item in __.items_to_import %}
+from {{ type_spec.django_module.module_path }}.models import {{ type_spec.type_name }}                  {% !! type_spec in __.type_specs_to_import %}
 from app.utils.validate_file import validate_image_file
 from app.models import Entity
 from app.tr import tr                                                                                   {% if _.django_app.use_translation %}

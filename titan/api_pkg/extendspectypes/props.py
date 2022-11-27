@@ -1,7 +1,6 @@
 from moonleap import u0
 from titan.types_pkg.pkg.field_spec import FieldSpec
 from titan.types_pkg.pkg.type_spec import TypeSpec
-from titan.types_pkg.typeregistry import get_type_reg
 
 
 def tn_graphene(self: TypeSpec):
@@ -47,18 +46,6 @@ def graphene_type(self: FieldSpec, args):
         return f"GenericScalar({args})"
 
     raise Exception(f"Cannot deduce arg type for {self.field_type}")
-
-
-def target_item(self):
-    if self.target is None:
-        return None
-
-    target = self.target[:-4] if self.field_type == "form" else self.target
-    for item in get_type_reg().items:
-        if item.type_name == target:
-            return item
-
-    raise Exception(f"Cannot find target item for {self.target}")
 
 
 def field_spec_graphql_type(self: FieldSpec, host):

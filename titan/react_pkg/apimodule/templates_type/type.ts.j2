@@ -1,29 +1,29 @@
-{% magic_with _.item.type_name as MyType %}
+{% magic_with _.type_spec.type_name as MyType %}
 {% magic_with field_spec.name as fieldSpecName %}
 {% magic_with field_spec.ts_type as fieldSpecTsType %}
 {% magic_with field_spec.target as FieldSpecTarget %}
 {% magic_with type_spec.type_name as TypeSpecName %}
-{% magic_with _.item.type_spec.base_type_name as MyBaseName %}
+{% magic_with _.type_spec.base_type_name as MyBaseName %}
 import { FieldSpecTargetT } from 'src/api/types/FieldSpecTargetT';                                  {% !! field_spec in __.fk_field_specs %}
 import { typeSpecNameFields } from 'src/api/types/TypeSpecNameT';                                   {% !! type_spec in __.dependency_type_specs %}
-import { MyBaseNameT } from 'src/api/types/MyBaseNameT';                                            {% ?? _.item.type_spec.base_type_name %}
+import { MyBaseNameT } from 'src/api/types/MyBaseNameT';                                            {% ?? _.type_spec.base_type_name %}
 import { FieldSpecTargetT, getHydratedFieldSpecTarget } from 'src/api/types/FieldSpecTargetT';      {% for field_spec in __.hydrated_field_specs %}{% ?? field_spec.field_type in ("fk", "relatedSet") %}{% endfor %}
 import * as R from 'ramda';
 
-export type MyTypeT = {                                                                             {% ?? not _.item.type_spec.base_type_name %}
-export type MyTypeT = {{ _.item.type_spec.base_type_name}}T & {                                     {% ?? _.item.type_spec.base_type_name %}
+export type MyTypeT = {                                                                             {% ?? not _.type_spec.base_type_name %}
+export type MyTypeT = {{ _.type_spec.base_type_name}}T & {                                     {% ?? _.type_spec.base_type_name %}
   fieldSpecName: fieldSpecTsType;                                                                   {% for field_spec in __.field_specs %}{% ?? not field_spec.is_optional("client") %}
   fieldSpecName?: fieldSpecTsType;                                                                  {% ?? field_spec.is_optional("client") %}{% endfor %}
 };
 
 export type MyTypeByIdT = { [id: string]: MyTypeT };                                                {% ?? __.has_id_field %}
 
-export type {{ _.item.ts_form_type }} = {                                                           {% if __.form_field_specs %}
+export type {{ _.type_spec.type_name }}FormT = {                                                    {% if __.form_field_specs %}
   fieldSpecName: fieldSpecTsType;                                                                   {% for field_spec in __.form_field_specs %}{% ?? not field_spec.is_optional("client") %}
   fieldSpecName?: fieldSpecTsType;                                                                  {% ?? field_spec.is_optional("client") %}{% endfor %}
 };                                                                                                  {% endif %}
 
-export const myTypeGqlFields = `                                                                    {% if _.item.type_spec.extract_gql_fields %}
+export const myTypeGqlFields = `                                                                    {% if _.type_spec.extract_gql_fields %}
 {{ __.graphql_fields() }}
 `                                                                                                   {% endif %}
 

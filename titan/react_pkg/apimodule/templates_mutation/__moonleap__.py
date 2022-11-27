@@ -20,10 +20,10 @@ def get_helpers(_):
             self.set_orders_data()
 
         @property
-        def form_input_items(self):
+        def form_input_type_specs(self):
             result = []
             for field_spec in self.form_input_field_specs:
-                result.append(field_spec.target_item)
+                result.append(field_spec.target_type_spec)
             return result
 
         def get_hydrated_fields(self):

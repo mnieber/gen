@@ -7,7 +7,7 @@
 import graphene                                                                         {% clean_up_py_imports %}
 from graphene.types.generic import GenericScalar                                        {% end_clean_up_py_imports %}
 from api.types import *
-from {{ item.django_module.module_path }}.models import {{ item.type_name }}            {% !! item in __.items_to_import %}
+from {{ type_spec.django_module.module_path }}.models import {{ type_spec.type_name }}  {% !! type_spec in __.type_specs_to_import %}
 
 class MutationName(graphene.Mutation):
     output_field_name = {{ output_field_spec.graphene_type("") }}                       {% for output_field_spec in __.output_field_specs %}{% endfor %}

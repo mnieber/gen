@@ -5,6 +5,7 @@ from moonleap import create, create_forward, extend, kebab_to_camel, rule
 from moonleap.verbs import has
 from titan.api_pkg.apiregistry import get_api_reg
 from titan.react_pkg.reactapp import ReactApp
+from titan.types_pkg.typeregistry import get_type_reg
 
 from .resources import ApiModule  # noqa
 
@@ -26,6 +27,8 @@ def created_api_module(api_module):
 
 @rule("react-app", has, "api:module")
 def add_api_render_tasks(react_app, api_module):
+    type_reg = get_type_reg()
+
     api_module.renders(
         lambda: get_api_reg().queries,
         "queries",
@@ -41,11 +44,14 @@ def add_api_render_tasks(react_app, api_module):
     )
 
     api_module.renders(
-        lambda: get_api_reg().get_public_items(
+        lambda: get_api_reg().get_public_type_specs(
             lambda field_spec: "client" in field_spec.has_model
         ),
         "types",
-        lambda item: dict(item=item),
+        lambda type_spec: dict(
+            type_spec=type_spec,
+            form_type_spec=type_reg.get(type_spec.type_name + "Form", None),
+        ),
         [Path(__file__).parent / "templates_type"],
     )
 

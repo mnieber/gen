@@ -35,15 +35,15 @@ def get_helpers(_):
             self.translations = sorted(self.translations)
 
         @property
-        def items_to_import(self):
+        def type_specs_to_import(self):
             result = []
             for django_model in self.django_models:
                 for field_spec in django_model.type_spec.get_field_specs(
                     ["fk", "relatedSet"]
                 ):
-                    item = field_spec.target_item
-                    if item.django_module is not _.module:
-                        append_uniq(result, item)
+                    type_spec = field_spec.target_type_spec
+                    if type_spec.django_module is not _.module:
+                        append_uniq(result, type_spec)
             return result
 
         def display_field_expr(self, django_model):

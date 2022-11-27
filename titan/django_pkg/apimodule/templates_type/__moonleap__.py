@@ -1,18 +1,13 @@
-from titan.types_pkg.typeregistry import get_type_reg
-
-
 def get_helpers(_):
     class Helpers:
-        type_reg = get_type_reg()
-        item_list = _.item.item_list
-        django_module = item_list.django_module
-        type_spec = _.item.type_spec
+        type_spec = _.type_spec
+        django_module = type_spec.django_module
         model_field_specs = [
-            x for x in _.item.type_spec.get_field_specs() if "server" in x.has_model
+            x for x in type_spec.get_field_specs() if "server" in x.has_model
         ]
         derived_field_specs = [
             x
-            for x in _.item.type_spec.get_field_specs()
+            for x in type_spec.get_field_specs()
             if ("server" in x.has_api and "server" not in x.has_model)
         ]
 

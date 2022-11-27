@@ -16,7 +16,7 @@ def get_helpers(_):
             result = []
 
             for output_field_spec in self.fk_output_field_specs:
-                django_module = output_field_spec.target_item.django_module
+                django_module = output_field_spec.target_type_spec.django_module
                 result.append(
                     f"from {django_module.module_path}.tests.random_data "
                     f"import create_random_{sn(l0(output_field_spec.target))}"

@@ -62,21 +62,14 @@ def get_helpers(_):
             ]
 
         @property
-        def inline_models_to_import(self):
+        def type_specs_to_import(self):
             result = []
-            item_lists = []
             for dummy, data in self.data:
                 for inline_model_field in data["inline_model_fields"]:
-                    item_list = inline_model_field.target_item.item_list
-                    if item_list not in item_lists:
-                        if not (item_list.django_module is _.module):
-                            item_lists.append(item_list)
-                            result.append(
-                                (
-                                    item_list.django_module,
-                                    u0(item_list.item_name) + "Inline",
-                                )
-                            )
+                    type_spec = inline_model_field.target_type_spec
+                    if type_spec not in result:
+                        if not (type_spec.django_module is _.module):
+                            result.append(type_spec)
             return result
 
     return Helpers()

@@ -20,6 +20,7 @@ from titan.django_pkg.djangomodule.get_map_from_item_to_django_module import (
 )
 from titan.types_pkg.item.resources import Item
 from titan.types_pkg.itemlist import ItemList
+from titan.types_pkg.pkg.type_spec import TypeSpec
 from titan.types_pkg.typeregistry import get_type_reg
 
 from . import props
@@ -99,6 +100,11 @@ class ExtendItemList:
 @extend(Item)
 class ExtendItem:
     django_module = Prop(props.item_django_module)
+
+
+@extend(TypeSpec)
+class ExtendTypeSpec:
+    django_module = Prop(props.type_spec_django_module)
 
 
 @extend(DjangoApp)

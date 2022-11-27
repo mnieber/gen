@@ -51,11 +51,11 @@ def add_query_render_tasks(django_app, api_module):
     )
 
     api_module.renders(
-        lambda: get_api_reg().get_public_items(
+        lambda: get_api_reg().get_public_type_specs(
             lambda field_spec: "server" in field_spec.has_api
         ),
         "types",
-        lambda item: dict(item=item),
+        lambda type_spec: dict(type_spec=type_spec),
         [Path(__file__).parent / "templates_type"],
     )
 

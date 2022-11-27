@@ -5,36 +5,36 @@
 {% clean_up_py_imports %}
 import graphene
 from graphene.types.generic import GenericScalar
-from {{ item.django_module.module_path }}.models import {{ item.type_name }}        {% !! item in __.items_to_import %}
+from {{ type_spec.django_module.module_path }}.models import {{ type_spec.type_name }}                      {% !! type_spec in __.type_specs_to_import %}
 {% end_clean_up_py_imports %}
 from api.types import *
 
 class QueryNameOutputs(graphene.ObjectType):
-    output_field_name = {{ output_field_spec.graphene_type("") }}                   {% for output_field_spec in __.output_field_specs %}
-    pass                                                                            {% else %}{% endfor %}
+    output_field_name = {{ output_field_spec.graphene_type("") }}                                           {% for output_field_spec in __.output_field_specs %}
+    pass                                                                                                    {% else %}{% endfor %}
 
 class QueryName:
     query_name = graphene.Field(
         QueryNameOutputs,
-        input_field_name={{ input_field_spec.graphene_type("") }},                  {% !! input_field_spec in __.input_field_specs %}
+        input_field_name={{ input_field_spec.graphene_type("") }},                                          {% !! input_field_spec in __.input_field_specs %}
         {% remove_trailing suffix="," %}
     )
 
     def resolve_query_name(
         self,
         info,
-        input_field_name,                                                           {% !! input_field_spec in __.input_field_specs %}
+        input_field_name,                                                                                   {% !! input_field_spec in __.input_field_specs %}
         {% remove_trailing suffix="," %}
     ):
         # Moonleap Todo: implement query
         return QueryNameOutputs(
-                                                                                    {% for output_field_spec in __.output_field_specs %}
-            output_field_name=OutputFieldTarget.objects.filter().first(),           {% ?? output_field_spec.field_type == "fk" %}
-            output_field_name=OutputFieldTarget.objects.filter(),                   {% ?? output_field_spec.field_type == "relatedSet" %}
-            output_field_name={},                                                   {% ?? output_field_spec.field_type == "json" %}
-            output_field_name=0,                                                    {% ?? output_field_spec.field_type == "int" %}
-            output_field_name="",                                                   {% ?? output_field_spec.field_type not in ("fk", "relatedSet", "json", "int") %}
-                                                                                    {% endfor %}
+                                                                                                            {% for output_field_spec in __.output_field_specs %}
+            output_field_name=OutputFieldTarget.objects.filter().first(),                                   {% ?? output_field_spec.field_type == "fk" %}
+            output_field_name=OutputFieldTarget.objects.filter(),                                           {% ?? output_field_spec.field_type == "relatedSet" %}
+            output_field_name={},                                                                           {% ?? output_field_spec.field_type == "json" %}
+            output_field_name=0,                                                                            {% ?? output_field_spec.field_type == "int" %}
+            output_field_name="",                                                                           {% ?? output_field_spec.field_type not in ("fk", "relatedSet", "json", "int") %}
+                                                                                                            {% endfor %}
             {% remove_trailing suffix="," %}
         )
 {% end_magic_with %}

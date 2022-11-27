@@ -23,16 +23,16 @@ def get_helpers(_):
             )
 
         @property
-        def items_to_import(self):
+        def type_specs_to_import(self):
             result = []
             for field_spec in self.fk_input_field_specs + self.fk_output_field_specs:
-                append_uniq(result, field_spec.target_item)
+                append_uniq(result, field_spec.target_type_spec)
 
             for item in self.items_saved:
-                append_uniq(result, item)
+                append_uniq(result, item.type_spec)
 
             for item in self.items_deleted:
-                append_uniq(result, item)
+                append_uniq(result, item.type_spec)
 
             return result
 

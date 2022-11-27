@@ -12,7 +12,6 @@ from . import props
 class ExtendItem:
     ts_type = Prop(props.item_ts_type)
     ts_var = Prop(props.item_ts_var)
-    ts_form_type = Prop(props.item_ts_form_type)
 
 
 @extend(ItemList)
