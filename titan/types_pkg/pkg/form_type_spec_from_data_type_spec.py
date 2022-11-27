@@ -22,6 +22,7 @@ def form_type_spec_from_data_type_spec(data_type_spec, form_type_name):
 
     form_type_spec = TypeSpec(
         type_name=form_type_name,
+        base_type_name=None,
         is_form=True,
         is_entity=False,
         is_sorted=False,

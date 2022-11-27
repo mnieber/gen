@@ -1,5 +1,7 @@
 import typing as T
 
+from moonleap import u0
+
 from .add_field_spec import add_field_spec
 from .apply_special_rules import apply_special_rules
 from .apply_type_updates import apply_type_updates
@@ -43,7 +45,7 @@ class TypeSpecParser:
 
             # Get field spec and related data from key/value pair
             field_spec_data = field_spec_from_dict(host, key, value)
-            org_value, value = value, field_spec_data["new_value"]
+            org_value, value = value, T.cast(T.Dict, field_spec_data["new_value"])
             is_pass = field_spec_data["is_pass"]
             fk = T.cast(ForeignKey, field_spec_data["fk"])
             field_spec = field_spec_data["field_spec"]
@@ -60,7 +62,11 @@ class TypeSpecParser:
                         host,
                         self.type_reg,
                         fk.foo.var_type,
-                        fk.foo.var_base_type,
+                        (
+                            u0(value["__target_base_type_name__"])
+                            if "__target_base_type_name__" in value
+                            else None
+                        ),
                         fk.target_parts,
                         fk.foo.module_name,
                         parent_type_spec=type_spec,
@@ -78,7 +84,11 @@ class TypeSpecParser:
                         host,
                         self.type_reg,
                         fk.data.var_type,
-                        fk.data.var_base_type,
+                        (
+                            u0(value["__base_type_name__"])
+                            if "__base_type_name__" in value
+                            else None
+                        ),
                         fk.data_parts,
                         fk.data.module_name or value.get("__module__"),
                         parent_type_spec=type_spec,

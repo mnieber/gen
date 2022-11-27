@@ -7,7 +7,7 @@ from .add_host_to_type_spec import add_host_to_type_spec
 
 
 def update_or_create_type_spec(
-    host, type_reg, type_name, parts, module_name, parent_type_spec
+    host, type_reg, type_name, base_type_name, parts, module_name, parent_type_spec
 ):
     type_spec = type_reg.get(type_name, default=None)
     if not type_spec:
@@ -21,6 +21,8 @@ def update_or_create_type_spec(
                     add_host_to_type_spec(host, type_spec)
         if not type_spec:
             type_spec = TypeSpec(type_name=type_name, field_specs=[])
+        if base_type_name:
+            type_spec.base_type_name = base_type_name
         type_reg.setdefault(type_name, type_spec)
 
     # Update module name

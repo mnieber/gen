@@ -3,12 +3,15 @@
 {% magic_with field_spec.ts_type as fieldSpecTsType %}
 {% magic_with field_spec.target as FieldSpecTarget %}
 {% magic_with type_spec.type_name as TypeSpecName %}
+{% magic_with _.item.type_spec.base_type_name as MyBaseName %}
 import { FieldSpecTargetT } from 'src/api/types/FieldSpecTargetT';                                  {% !! field_spec in __.fk_field_specs %}
 import { typeSpecNameFields } from 'src/api/types/TypeSpecNameT';                                   {% !! type_spec in __.dependency_type_specs %}
+import { MyBaseNameT } from 'src/api/types/MyBaseNameT';                                            {% ?? _.item.type_spec.base_type_name %}
 import { FieldSpecTargetT, getHydratedFieldSpecTarget } from 'src/api/types/FieldSpecTargetT';      {% for field_spec in __.hydrated_field_specs %}{% ?? field_spec.field_type in ("fk", "relatedSet") %}{% endfor %}
 import * as R from 'ramda';
 
-export type MyTypeT = {
+export type MyTypeT = {                                                                             {% ?? not _.item.type_spec.base_type_name %}
+export type MyTypeT = {{ _.item.type_spec.base_type_name}}T & {                                     {% ?? _.item.type_spec.base_type_name %}
   fieldSpecName: fieldSpecTsType;                                                                   {% for field_spec in __.field_specs %}{% ?? not field_spec.is_optional("client") %}
   fieldSpecName?: fieldSpecTsType;                                                                  {% ?? field_spec.is_optional("client") %}{% endfor %}
 };
@@ -34,6 +37,8 @@ export const hydrateMyType = (data: ObjT) => {                                  
     // fieldSpecName: Moonleap Todo,                                                                {% ?? field_spec.field_type not in ("fk", "relatedSet") %}{% endfor %}
   };
 }                                                                                                   {% endif %}
+{% end_magic_with %}
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
