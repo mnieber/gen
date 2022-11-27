@@ -8,7 +8,11 @@ class WidgetSpecParser:
         self.widget_reg = widget_reg
 
     def parse(self, widget_spec_dict, parent_widget_spec=None):
-        items = [x for x in widget_spec_dict.items() if not _is_private_member(x[0])]
+        items = [
+            (key.strip(), value)
+            for key, value in widget_spec_dict.items()
+            if not _is_private_member(key)
+        ]
 
         for key, value in items:
             spec = {} if value == "pass" else value
@@ -17,7 +21,7 @@ class WidgetSpecParser:
             widget_spec = get_widget_spec(
                 key,
                 value_parts=split_non_empty(
-                    spec.get("__type__", "") if is_dict else value, "."
+                    _get_type_value(spec) if is_dict else value, "."
                 ),
             )
 
@@ -36,6 +40,21 @@ class WidgetSpecParser:
             #
             if is_dict and spec:
                 self.parse(spec, parent_widget_spec=widget_spec)
+
+
+# Find all keys in spec of type "__type__~ " (with k tildes and k spaces)
+# and return the concatenated values of these keys
+def _get_type_value(spec):
+    parts = []
+    for key, value in spec.items():
+        clean_key = key.strip()
+        while clean_key.endswith("~"):
+            clean_key = clean_key[:-1].strip()
+
+        if clean_key == "__type__":
+            parts.append(value)
+
+    return ".".join(parts)
 
 
 def _is_private_member(key):

@@ -17,7 +17,11 @@ class TypeSpecParser:
         # interprets and modifies the type_spec_dict.
         trace = dict()
 
-        items = [x for x in type_spec_dict.items() if not _is_private_member(x[0])]
+        items = [
+            (key.strip(), value)
+            for key, value in type_spec_dict.items()
+            if not _is_private_member(key)
+        ]
         scalar_items = [item for item in items if not _is_fk_item(item)]
         fk_items = [item for item in items if _is_fk_item(item)]
 
@@ -56,6 +60,7 @@ class TypeSpecParser:
                         host,
                         self.type_reg,
                         fk.foo.var_type,
+                        fk.foo.var_base_type,
                         fk.target_parts,
                         fk.foo.module_name,
                         parent_type_spec=type_spec,
@@ -73,6 +78,7 @@ class TypeSpecParser:
                         host,
                         self.type_reg,
                         fk.data.var_type,
+                        fk.data.var_base_type,
                         fk.data_parts,
                         fk.data.module_name or value.get("__module__"),
                         parent_type_spec=type_spec,
