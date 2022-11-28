@@ -1,4 +1,4 @@
-{% magic_with _.item.type_name as myItem %}
+{% magic_with _.type_spec.type_name as myItem %}
 {% magic_with field_spec.name as fieldSpecName %}
 import graphene                                                                 {% clean_up_py_imports %}
 from graphene_django.types import DjangoObjectType
