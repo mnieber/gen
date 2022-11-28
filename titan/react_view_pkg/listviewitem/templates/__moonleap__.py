@@ -1,6 +1,7 @@
 import ramda as R
 
 from moonleap.utils import yaml2dict
+from moonleap.utils.case import camel_to_kebab
 from titan.react_view_pkg.pkg.builders.list_view_item_builder import ListViewItemBuilder
 from titan.widgets_pkg.pkg.load_widget_specs.widget_spec_parser import WidgetSpecParser
 from titan.widgets_pkg.widgetregistry import get_widget_reg
@@ -12,7 +13,7 @@ def get_helpers(_):
 
     class Helpers:
         component_name = _.component.name
-        item_kebab_name = _.component.list_view.item.kebab_name
+        item_kebab_name = camel_to_kebab(_.component.list_view.item.item_name)
         widget_spec = _.component.widget_spec
         type_spec = _.component.list_view.item.type_spec
         selection_bvr = _find_behavior("selection")
