@@ -12,7 +12,11 @@ from moonleap.render.post_process_output_files import post_process_output_files
 from moonleap.render.render_template import render_template
 from moonleap.render.storetemplatedirs import get_root_resource, render_resource
 from moonleap.report.create_expected_dir import create_expected_dir
-from moonleap.report.diff import create_symlinks, diff
+from moonleap.report.diff import (
+    create_symlinks_for_identical_files,
+    create_symlinks_for_skip_patterns,
+    diff,
+)
 from moonleap.session import Session, set_session
 
 
@@ -27,6 +31,14 @@ def create_parser():
         + "and - on subsequent runs - output files are not written if "
         + "they have the same CRC. Moreover, output files are replaced with "
         + " a symlink if they have the same timestamp as the reference file.",
+    )
+    parser.add_argument(
+        "--smart-with-skip",
+        required=False,
+        action="store_true",
+        help="Same as --smart, but also use the settings/diff/skip patterns "
+        + "to create symlinks (in the output) to expected files that must be "
+        + "skipped in the diff.",
     )
     parser.add_argument(
         "--restore-missing",
@@ -53,7 +65,7 @@ def create_parser():
 def _create_file_writer(args):
     file_writer = FileWriter(
         session.snapshot_fn,
-        check_crc_before_write=args.smart,
+        check_crc_before_write=args.smart or args.smart_with_skip,
         restore_missing_files=args.restore_missing_files,
     )
     return file_writer
@@ -107,11 +119,12 @@ def report(x):
 if __name__ == "__main__":
     parser = create_parser()
     args = parser.parse_args()
+    smart = args.smart or args.smart_with_skip
 
-    if args.smart and args.action != "gen":
+    if smart and args.action != "gen":
         raise Exception("You can only use --smart with the 'gen' action")
 
-    if args.restore_missing_files and not args.smart:
+    if args.restore_missing_files and not smart:
         raise Exception("You can only use --restore-missing together with --smart")
 
     if args.sudo and args.action != "diff":
@@ -136,8 +149,11 @@ if __name__ == "__main__":
 
     if args.action == "gen":
         try:
-            if args.smart:
-                create_symlinks(session)
+            if smart:
+                create_symlinks_for_identical_files(session)
+            if args.smart_with_skip:
+                create_symlinks_for_skip_patterns(session)
+
             create_expected_dir(session.expected_dir, session.settings["references"])
             generate_code(
                 spec_fn, session, _create_file_writer(args), args.post_process_all_files
