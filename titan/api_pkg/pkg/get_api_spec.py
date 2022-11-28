@@ -50,7 +50,7 @@ def get_api_spec(api_reg, host, endpoint_key, endpoint_spec_dict):
         saves.append((item_name.removesuffix("Set"), is_list))
 
     invalidates = endpoint_spec_dict.get("invalidates", [])
-    is_stub = endpoint_spec_dict.get("is_stub", False)
+    is_stub = endpoint_spec_dict.get("isStub", False)
 
     if is_mutation:
         outputs.append(

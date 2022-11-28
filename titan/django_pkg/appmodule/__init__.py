@@ -1,12 +1,10 @@
 from pathlib import Path
 
 import moonleap.resource.props as P
-from moonleap import create, empty_rule, extend
+from moonleap import create, extend
 from moonleap.verbs import has
 from titan.django_pkg.djangoapp import DjangoApp
 from titan.django_pkg.djangomodule import DjangoModule
-
-rules = {("app:module", has, "graphql:app"): empty_rule()}
 
 
 @create("app:module")

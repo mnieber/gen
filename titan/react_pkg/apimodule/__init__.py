@@ -20,8 +20,18 @@ def create_api_module(term):
     return api_module
 
 
-@rule("api:module")
-def created_api_module(api_module):
+@rule("react-app", has, "api:module")
+def react_app_uses_graphql(react_app, api_module):
+    use_graphql = False
+    for endpoint in get_api_reg().queries + get_api_reg().mutations:
+        if not endpoint.api_spec.is_stub:
+            use_graphql = True
+    if use_graphql:
+        return create_forward(":react-app", has, ":graphql")
+
+
+@rule("react-app", has, ":graphql")
+def react_app_uses_graphql_node_pkg(react_app, graphql):
     return create_forward(":node-package", has, "graphql-api:node-pkg")
 
 
@@ -45,7 +55,8 @@ def add_api_render_tasks(react_app, api_module):
 
     api_module.renders(
         lambda: get_api_reg().get_public_type_specs(
-            lambda field_spec: "client" in field_spec.has_model
+            include_stubs=True,
+            predicate=lambda field_spec: "client" in field_spec.has_model,
         ),
         "types",
         lambda type_spec: dict(

@@ -50,3 +50,4 @@ class ExtendService:
 @extend(ReactApp)
 class ExtendReactApp:
     frames_module = P.child(has, "frames:module")
+    use_graphql = P.child(has, ":graphql")

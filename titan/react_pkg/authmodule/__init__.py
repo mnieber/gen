@@ -20,6 +20,7 @@ def react_app_has_auth_module(react_app, auth_module):
     use_react_packages(react_app.get_module("utils"), ["useNextUrl"])
     return [
         create_forward(auth_module.react_app, has, "forms:module"),
+        create_forward(auth_module.react_app, has, ":graphql"),
     ]
 
 
