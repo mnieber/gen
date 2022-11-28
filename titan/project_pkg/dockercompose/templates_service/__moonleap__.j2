@@ -1,2 +1,5 @@
 '.':
     include: {{ _.project.docker_compose|bool and _.service.dockerfile|bool }}
+
+Dockerfile.prod.j2:
+    include: {{ _.project.has_prod_config|bool }}

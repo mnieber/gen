@@ -1,4 +1,5 @@
 from . import (
+    config,
     dockercompose,
     dockerfile,
     env,
@@ -11,6 +12,7 @@ from . import (
 )
 
 modules = [
+    config,
     dockercompose,
     dockerfile,
     env,
