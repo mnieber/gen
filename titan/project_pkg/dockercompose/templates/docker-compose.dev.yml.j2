@@ -20,8 +20,10 @@ services:
       - ./{{ service.name }}:{{ service.install_dir }}/src                      {% ?? service.dockerfile %}
       - postgres_data:/var/lib/postgresql/data                                  {% ?? service.name == "postgres" %}
       - {{ service.name }}_venv:{{ service.install_dir }}/env                   {% ?? service.pip %}
+      - bundle:/app/bundle                                                      {% ?? service.use_create_bundle %}
                                                                               {% endfor %}
 volumes:                                                                      {% min_lines count=2 %}
   postgres_data: {}                                                           {% ?? _.project.get_service_by_name("postgres", None) %}
   {{ service.name }}_venv: {}                                                 {% for service in _.project.services %}{% ?? service.pip %}{% endfor %}
+  bundle: {}                                                                  {% ?? __.add_bundle_volume %}
                                                                               {% end_min_lines %}

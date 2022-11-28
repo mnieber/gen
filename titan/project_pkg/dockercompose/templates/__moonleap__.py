@@ -17,6 +17,8 @@ def make_abs(service, p):
 
 def get_helpers(_):
     class Helpers:
+        add_bundle_volume = [x for x in _.project.services if x.use_create_bundle]
+
         def get_image(self, service):
             if service.dockerfile:
                 return sn(_.project.name) + "_" + sn(service.name) + "_dev"

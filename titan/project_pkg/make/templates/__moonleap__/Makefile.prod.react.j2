@@ -5,8 +5,8 @@
 create-bundle:																		{% if _.service.use_create_bundle %}
 	rm -rf {{ _.service.install_dir }}/bundle/*
 	yarn build
-	cp -rf ./build/* {{ _.service.install_dir }}/bundle
-																					{% endif %}
+	cp -rf ./build/* {{ _.service.install_dir }}/bundle								{% endif %}
+
 install:
 	yarn install
 
