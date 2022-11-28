@@ -19,6 +19,8 @@ class Builder:
 
     @property
     def is_captured(self):
+        if self.level == 0:
+            return False
         if self.widget_spec.values.get("array", False):
             return "array"
         if self.widget_spec.values.get("capture", False):
