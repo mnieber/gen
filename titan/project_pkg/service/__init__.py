@@ -19,6 +19,7 @@ rules = {
     ("service", has, "docker-image"): empty_rule(),
     ("service", has + runs, "tool"): empty_rule(),
     ("service", uses, "service"): empty_rule(),
+    ("service", has, "create-bundle:makefile-command"): empty_rule(),
 }
 
 
@@ -61,6 +62,7 @@ class ExtendService:
     is_dependent_on = MemFun(props.is_dependent_on)
     tools = P.children(uses + runs + has, "tool")
     project = P.parent("project", has)
+    use_create_bundle = P.child(has, "create-bundle:makefile-command")
 
 
 @extend(Tool)

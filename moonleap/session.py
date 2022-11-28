@@ -42,13 +42,10 @@ class Session:
     def report(self, x, end=os.linesep):
         print(x, end=end)
 
-    def get_tweaks(self):
+    def get_setting_or(self, default_value, path):
         if not self.settings:
             raise Exception("No settings loaded")
-        return self.settings.get("tweaks", {})
-
-    def get_tweak_or(self, default_value, path):
-        return R.path_or(default_value, path)(self.get_tweaks())
+        return R.path_or(default_value, path)(self.settings)
 
 
 def set_session(session):

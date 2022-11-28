@@ -9,4 +9,3 @@ from titan.project_pkg.service import Tool
 class ReactApp(Tool):
     use_web_vitals: boolean = False
     use_states: boolean = True
-    create_bundle: boolean = False

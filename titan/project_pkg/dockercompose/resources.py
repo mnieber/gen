@@ -8,7 +8,7 @@ from moonleap import RenderMixin, Resource, get_session
 class DockerCompose(RenderMixin, Resource):
     @property
     def override_fn(self):
-        return get_session().get_tweak_or(
+        return get_session().get_setting_or(
             "docker-compose.dev.override.yml", ["project", "docker_compose_override_fn"]
         )
 

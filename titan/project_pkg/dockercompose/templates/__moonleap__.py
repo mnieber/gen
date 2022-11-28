@@ -24,6 +24,6 @@ def get_helpers(_):
 
         @property
         def pudb_path(self):
-            return R.path_or("pudb", ["pudb_opt_path"])(get_session().get_tweaks())
+            return R.path_or("pudb", ["pudb_opt_path"])(get_session().settings)
 
     return Helpers()

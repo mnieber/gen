@@ -13,9 +13,3 @@ class Component(TemplateDirMixin, RenderMixin, Resource):
 
     def get_title(self):
         return self.name
-
-
-def get_component_base_url(component, default_value):
-    return component.module.react_app.service.get_tweak_or(
-        default_value, ["react_app", "components", component.name, "base_url"]
-    )

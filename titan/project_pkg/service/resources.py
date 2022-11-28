@@ -8,8 +8,8 @@ class Service(RenderMixin, Resource):
     name: str
     install_dir: str = "/app"
 
-    def get_tweak_or(self, default_value, rel_path):
-        return get_session().get_tweak_or(
+    def get_setting_or(self, default_value, rel_path):
+        return get_session().get_setting_or(
             default_value, ["services", self.name, *rel_path]
         )
 
@@ -21,7 +21,7 @@ class Service(RenderMixin, Resource):
 
     @property
     def copy_source_to_prod_image(self):
-        return self.get_tweak_or(True, ["copy_source_to_prod_image"])
+        return self.get_setting_or(True, ["copy_source_to_prod_image"])
 
     @property
     def has_django_app(self):
@@ -70,7 +70,7 @@ class Service(RenderMixin, Resource):
 
     @property
     def npm_source_maps(self):
-        return self.get_tweak_or({}, ["npm_source_maps"])
+        return self.get_setting_or({}, ["npm_source_maps"])
 
 
 @dataclass
