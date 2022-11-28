@@ -23,8 +23,8 @@ import { log } from 'src/utils/logging';
 type PropsT = React.PropsWithChildren<{}>;
 
 const DefaultProps = {
-    ...dps.{{ item.ts_var }},                                                                   {% !! item in __.input_items %}
-    ...dps.{{ item_list.ts_var }},                                                              {% !! item_list in __.input_item_lists %}
+    ...dps.{{ item.ts_var }},                                                                   {% !! item in __.default_prop_items %}
+    ...dps.{{ item_list.ts_var }},                                                              {% !! item_list in __.default_prop_item_lists %}
 };
 
 export const {{ _.component.name }} = observer(

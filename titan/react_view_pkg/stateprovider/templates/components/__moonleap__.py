@@ -9,9 +9,9 @@ def get_helpers(_):
         state = _.component.state
         pipelines = _.component.pipelines
 
-        input_items = list()
+        default_prop_items = list()
         data_by_container = list()
-        input_item_lists = list()
+        default_prop_item_lists = list()
         queries = list()
         mutations = list()
         types_to_import = list()
@@ -30,9 +30,9 @@ def get_helpers(_):
                 elif pipeline_source.meta.term.tag == "mutation":
                     append_uniq(self.mutations, pipeline_source)
                 elif pipeline_source.meta.term.tag == "item":
-                    append_uniq(self.input_items, pipeline_source)
+                    append_uniq(self.default_prop_items, pipeline_source)
                 elif pipeline_source.meta.term.tag == "item_list":
-                    append_uniq(self.input_item_lists, pipeline_source)
+                    append_uniq(self.default_prop_item_lists, pipeline_source)
                 else:
                     raise Exception("Unknown pipeline source")
 
