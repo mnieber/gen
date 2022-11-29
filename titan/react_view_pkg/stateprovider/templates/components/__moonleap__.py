@@ -1,65 +1,45 @@
 from moonleap import u0
 from moonleap.utils.fp import append_uniq
 from moonleap.utils.inflect import plural
+from titan.api_pkg.pipeline.resources import PipelineData
 from titan.types_pkg.typeregistry import get_type_reg
 
 
 def get_helpers(_):
     class Helpers:
         state = _.component.state
+        containers = state.containers if state else []
         pipelines = _.component.pipelines
 
-        default_prop_items = list()
-        data_by_container = list()
-        default_prop_item_lists = list()
-        queries = list()
-        mutations = list()
-        types_to_import = list()
+        data = PipelineData()
+        type_specs_to_import = list()
 
         def __init__(self):
-            self._get_pipeline_sources()
-            if self.state:
-                self._get_data_by_container()
+            self.data.update(self.pipelines)
+            self._get_mutations_from_containers()
             self._get_types_to_import()
 
-        def _get_pipeline_sources(self):
-            for pipeline in self.pipelines:
-                pipeline_source = pipeline.source
-                if pipeline_source.meta.term.tag == "query":
-                    append_uniq(self.queries, pipeline_source)
-                elif pipeline_source.meta.term.tag == "mutation":
-                    append_uniq(self.mutations, pipeline_source)
-                elif pipeline_source.meta.term.tag == "item":
-                    append_uniq(self.default_prop_items, pipeline_source)
-                elif pipeline_source.meta.term.tag == "item_list":
-                    append_uniq(self.default_prop_item_lists, pipeline_source)
-                else:
-                    raise Exception("Unknown pipeline source")
-
-            if self.state:
-                for container in self.state.containers:
-                    if delete_items_mutation := container.delete_items_mutation:
-                        append_uniq(self.mutations, delete_items_mutation)
-                    if delete_item_mutation := container.delete_item_mutation:
-                        append_uniq(self.mutations, delete_item_mutation)
-                    if order_items_mutation := container.order_items_mutation:
-                        append_uniq(self.mutations, order_items_mutation)
-
-        def _get_data_by_container(self):
-            if self.state:
-                for container in self.state.containers:
-                    pipeline = self.get_pipeline(container)
-                    if pipeline:
-                        self.data_by_container.append(
-                            (container, dict(pipeline=pipeline))
-                        )
+        def _get_mutations_from_containers(self):
+            for container in self.containers:
+                if delete_items_mutation := container.delete_items_mutation:
+                    append_uniq(self.data.mutations, delete_items_mutation)
+                if delete_item_mutation := container.delete_item_mutation:
+                    append_uniq(self.data.mutations, delete_item_mutation)
+                if order_items_mutation := container.order_items_mutation:
+                    append_uniq(self.data.mutations, order_items_mutation)
 
         def _get_types_to_import(self):
-            for mutation in self.mutations:
+            for mutation in self.data.mutations:
                 for field in mutation.api_spec.get_inputs(
                     ["fk", "relatedSet", "uuid", "uuid[]"]
                 ):
-                    append_uniq(self.types_to_import, field.target + "T")
+                    append_uniq(self.type_specs_to_import, field.target_type_spec)
+
+            for prop_item in self.data.prop_items:
+                append_uniq(self.type_specs_to_import, prop_item.type_spec)
+
+            for prop_item_list in self.data.prop_item_lists:
+                append_uniq(self.type_specs_to_import, prop_item_list.item.type_spec)
 
         def get_pipeline(self, named_output_or_container):
             if named_output_or_container.meta.term.tag == "container":
@@ -83,6 +63,8 @@ def get_helpers(_):
                 return pipeline_source.name
             elif pipeline_source.meta.term.tag in ("item",):
                 return f"props.{pipeline_source.item_name}"
+            elif pipeline_source.meta.term.tag in ("props",):
+                return None
             else:
                 return f"props.{plural(pipeline_source.item.item_name)}"
 
@@ -129,6 +111,45 @@ def get_helpers(_):
                         data["myItems"] = plural(container.item.item_name)
                         data["myItemIds"] = ids_field_name
             return data
+
+        def return_value(self, data, hint=None):
+            result_expr = self.get_pipeline(data).result_expression
+            if data in _.component.named_items:
+                maybe_expr = self.maybe_expr(data)
+                return (
+                    f"maybe({maybe_expr})({result_expr})" if maybe_expr else result_expr
+                )
+
+            if data in _.component.named_item_lists:
+                maybe_expr = self.maybe_expr(data)
+                return (
+                    f"maybe({maybe_expr})({result_expr}, [])"
+                    if maybe_expr
+                    else result_expr
+                )
+
+            if data in self.containers and hint == "items":
+                container = data
+                named_item_list = data.named_item_list
+                items_name = plural(container.item.item_name)
+                assert named_item_list
+                maybe_expr = self.maybe_expr(named_item_list)
+                result_expr = f"state.{container.name}.data.{items_name}Display"
+                return (
+                    f"maybe({maybe_expr}, [])({result_expr})"
+                    if maybe_expr
+                    else result_expr
+                )
+
+            if data in self.containers and hint == "highlighted_item":
+                container = data
+                named_item_list = data.named_item_list
+                assert named_item_list
+                maybe_expr = self.maybe_expr(named_item_list)
+                result_expr = f"state.{container.name}.highlight.item"
+                return (
+                    f"maybe({maybe_expr})({result_expr})" if maybe_expr else result_expr
+                )
 
     return Helpers()
 

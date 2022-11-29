@@ -4,10 +4,13 @@ import { observer } from 'mobx-react-lite';
 import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { cn } from 'src/utils/classnames';
 import { isLoaded } from 'src/api/ResourceState';
+import { {{ type_spec.type_name }}T } from 'src/api/types/{{ type_spec.type_name }}T';          {% !! type_spec in __.type_specs_to_import %}
 import './{{ _.component.name }}.scss';
 import UIkit from 'uikit';
 
 type PropsT = {
+  {{ item.ts_var }}: {{ item.ts_type }}                                                         {% !! item in __.data.prop_items %}
+  {{ item_list.ts_var }}: {{ item_list.ts_type }}                                               {% !! item_list in __.data.prop_item_lists %}
   className?: any;
 };
 

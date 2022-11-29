@@ -1,4 +1,4 @@
-      deleteContainerItems: (ids: string[]) => {                                                                {% for container, data in __.data_by_container %}{% with d = __.delete_items_data(container) %}{% if d.deletes_items %}
+      deleteContainerItems: (ids: string[]) => {                                                                {% for container in __.containers %}{% with d = __.delete_items_data(container) %}{% if d.deletes_items %}
         R.map(setToUpdating, lookUp(ids, state.containerItems.data.containerItemById));
         return {{ d.deleteMyItems }}.mutateAsync({ {{ d.myItemIds }}: ids });                                   {% if d.get('deleteMyItems') %}
         return Promise.all(R.map(                                                                               {% else %}

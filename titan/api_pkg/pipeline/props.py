@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from moonleap import Resource, named
 from moonleap.utils.fp import aperture
 from titan.api_pkg.mutation.resources import Mutation
+from titan.api_pkg.pipeline.resources import PropsSource
 from titan.api_pkg.query.resources import Query
 from titan.types_pkg.item.resources import Item
 from titan.types_pkg.itemlist.resources import ItemList
@@ -21,6 +22,14 @@ class TakeItemListFromStateProvider(PipelineElement):
 
 
 class TakeItemFromStateProvider(PipelineElement):
+    pass
+
+
+class TakeItemListFromProps(PipelineElement):
+    pass
+
+
+class TakeItemFromProps(PipelineElement):
     pass
 
 
@@ -58,6 +67,8 @@ def elements(self):
         resources.insert(0, self.root_query)
     elif self.root_state_provider:
         resources.insert(0, self.root_state_provider)
+    elif self.root_props:
+        resources.insert(0, self.root_props)
     else:
         raise Exception("No query or state")
 
@@ -151,6 +162,23 @@ def elements(self):
                 raise Exception(f"Unexpected resource sequence: {res}, {next_res}")
         elif isinstance(res, named(ItemList)):
             raise NotImplementedError(f"{res}")
+        elif isinstance(res, PropsSource):
+            if isinstance(next_res, named(Item)):
+                result.append(
+                    TakeItemFromProps(
+                        subj=res,
+                        obj=next_res.typ,
+                    )
+                )
+            elif isinstance(next_res, named(ItemList)):
+                result.append(
+                    TakeItemListFromProps(
+                        subj=res,
+                        obj=next_res.typ,
+                    )
+                )
+            else:
+                raise Exception(f"Unexpected resource sequence: {res}, {next_res}")
         else:
             raise Exception(f"Unexpected resource {res}")
 
@@ -202,11 +230,15 @@ def result_expression(self):
         elif isinstance(elm, (TakeItemFromQuery, TakeItemListFromQuery)):
             query = elm.subj
             result = f"{query.name}.data?.{elm.obj.ts_var}"
+        elif isinstance(elm, (TakeItemFromProps, TakeItemListFromProps)):
+            result = f"props.{elm.obj.ts_var}"
         elif isinstance(elm, (ExtractItemFromItem, ExtractItemListFromItem)):
             member = get_member_field_spec(
                 parent_item=elm.subj, member_item=elm.obj
             ).name
             result = f"{result}.{member}"
+        else:
+            raise Exception(f"Unexpected element {elm}")
     return result
 
 
@@ -242,6 +274,8 @@ def root_pipeline(self):
 def pipeline_source(pipeline):
     if pipeline.root_query:
         return pipeline.root_query
+    if pipeline.root_props:
+        return pipeline.root_props
     elif pipeline.root_state_provider:
         pipeline_elm = pipeline.elements[1]
         if isinstance(

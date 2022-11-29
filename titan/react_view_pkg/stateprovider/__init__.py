@@ -3,7 +3,6 @@ from pathlib import Path
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
-    Prop,
     create,
     create_forward,
     empty_rule,

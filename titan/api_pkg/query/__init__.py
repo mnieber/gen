@@ -1,4 +1,3 @@
-import moonleap.resource.props as P
 from moonleap import Prop, Term, create, empty_rule, extend, kebab_to_camel, rule
 from moonleap.resource.forward import create_forward
 from moonleap.verbs import has, provides

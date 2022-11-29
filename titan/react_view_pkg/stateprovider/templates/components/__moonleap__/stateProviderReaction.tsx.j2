@@ -5,8 +5,8 @@
           }
         },
         (inputs) => {
-          R.forEach(initRS, inputs.containerItems ?? []);                                                       {% for container, data in __.data_by_container %}
-          state.myContainer.data.containerItems = inputs.{{ data.pipeline.output_name }} ?? [];                 {% endfor %}
+          R.forEach(initRS, inputs.containerItems ?? []);                                                       {% for container in __.containers %}
+          state.myContainer.data.containerItems = inputs.{{ __.get_pipeline(container).output_name }} ?? [];    {% endfor %}
           if (flags.logStateProviders) {
             log('MyState updated', state.getSummary());
           }
