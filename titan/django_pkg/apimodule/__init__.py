@@ -31,20 +31,20 @@ def add_query_render_tasks(django_app, api_module):
         [Path(__file__).parent / "templates_query"],
     )
     api_module.renders(
-        lambda: [x for x in get_api_reg().queries if not x.is_stub],
+        lambda: [x for x in get_api_reg().queries if not x.api_spec.is_stub],
         "tests",
         lambda query: dict(query=query),
         [Path(__file__).parent / "templates_query_tests"],
     )
 
     api_module.renders(
-        lambda: [x for x in get_api_reg().mutations if not x.is_stub],
+        lambda: [x for x in get_api_reg().mutations if not x.api_spec.is_stub],
         "mutation",
         lambda mutation: dict(mutation=mutation),
         [Path(__file__).parent / "templates_mutation"],
     )
     api_module.renders(
-        lambda: [x for x in get_api_reg().mutations if not x.is_stub],
+        lambda: [x for x in get_api_reg().mutations if not x.api_spec.is_stub],
         "tests",
         lambda mutation: dict(mutation=mutation),
         [Path(__file__).parent / "templates_mutation_tests"],
@@ -61,7 +61,7 @@ def add_query_render_tasks(django_app, api_module):
     )
 
     api_module.renders(
-        lambda: get_api_reg().get_form_type_specs(include_stubs=False),
+        lambda: get_api_reg().get_form_type_specs(),
         "types",
         lambda form_type_spec: dict(form_type_spec=form_type_spec),
         [Path(__file__).parent / "templates_form_type"],
