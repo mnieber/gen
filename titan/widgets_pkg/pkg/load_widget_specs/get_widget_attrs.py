@@ -46,11 +46,11 @@ def get_widget_attrs(key, value_parts):
                 if len(parts_module) > 1:
                     attrs["module_name"] = parts_module[0]
 
-        if widget_name:
-            attrs["widget_name"] = widget_name
+    if widget_name:
+        attrs["widget_name"] = widget_name
 
-        if widget_base_type:
-            attrs["widget_base_type"] = widget_base_type
+    if widget_base_type:
+        attrs["widget_base_type"] = widget_base_type
 
     for part in symbol_parts + value_parts:
         if _is_style(part):
