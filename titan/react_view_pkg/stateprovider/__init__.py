@@ -53,6 +53,5 @@ class ExtendStateProvider:
     module = P.parent("module", has)
     named_items = P.children(provides, "x+item")
     named_item_lists = P.children(provides, "x+item~list")
-    pipelines = P.children(has, "x+pipeline")
     state = P.child(provides, "react-state")
     load = MemFun(props.state_provider_load)

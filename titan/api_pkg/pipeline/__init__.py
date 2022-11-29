@@ -25,8 +25,6 @@ def create_named_pipeline(term):
 
 @extend(named(Pipeline))
 class ExtendNamedPipeline:
-    bvrs = Prop(props.bvrs)
-    get_bvr = MemFun(props.get_bvr)
     deleter_mutation = Prop(props.deleter_mutation)
     elements = Prop(props.elements)
     result_expression = Prop(props.result_expression)

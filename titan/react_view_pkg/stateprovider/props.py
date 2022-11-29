@@ -1,20 +1,11 @@
-import os
-
-from moonleap import create_forward, get_session, load_yaml
-from moonleap.verbs import connects, has, provides
+from moonleap import create_forward
+from moonleap.verbs import has, provides
+from titan.react_pkg.component.props import get_pipelines
 
 
 def state_provider_load(state_provider):
-    spec_dir = get_session().spec_dir
-    fn = os.path.join(spec_dir, "pipelines.yaml")
-    if os.path.exists(fn):
-        component_datas = load_yaml(fn).get("components", {})
-        return _get_forwards(state_provider, component_datas)
-
-
-def _get_forwards(state_provider, component_datas):
     forwards = []
-    for component_term, component_data in component_datas.items():
+    for component_term, component_data in get_pipelines().get("components", {}).items():
         _check_name(component_term)
         if component_term == state_provider.meta.term.as_normalized_str():
             _get_state_provider(component_term, component_data, forwards)
@@ -22,12 +13,6 @@ def _get_forwards(state_provider, component_datas):
 
 
 def _get_state_provider(component_term, component_data, forwards):
-    pipeline_datas = component_data.get("pipelines", {})
-    for pipeline_term, pipeline_data in pipeline_datas.items():
-        _check_name(pipeline_term)
-        forwards.append(create_forward(component_term, has, pipeline_term))
-        _get_pipeline(pipeline_term, pipeline_data, forwards)
-
     state_datas = component_data.get("states", {})
     for state_term, state_data in state_datas.items():
         _check_name(state_term)
@@ -38,11 +23,6 @@ def _get_state_provider(component_term, component_data, forwards):
     for item_term in items:
         _check_name(item_term)
         forwards.append(create_forward(component_term, provides, item_term))
-
-
-def _get_pipeline(pipeline_term, pipeline_data, forwards):
-    for term in pipeline_data:
-        forwards.append(create_forward(pipeline_term, connects, term))
 
 
 def _get_state(state_term, state_data, forwards):

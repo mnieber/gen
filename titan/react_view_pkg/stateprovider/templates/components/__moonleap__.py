@@ -69,7 +69,7 @@ def get_helpers(_):
                     return self.get_pipeline(named_item)
             else:
                 for pipeline in self.pipelines:
-                    if named_output_or_container == pipeline.output:
+                    if named_output_or_container.typ == pipeline.output.typ:
                         return pipeline
             return None
 

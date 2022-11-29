@@ -183,17 +183,6 @@ def deleter_mutation(self):
     return None
 
 
-def bvrs(self):
-    return []
-
-
-def get_bvr(self, name):
-    for bvr in self.bvrs:
-        if bvr.name == name:
-            return bvr
-    return None
-
-
 def result_expression(self):
     result = ""
     nr_elms = len(self.elements)
