@@ -8,7 +8,7 @@ def field_spec_from_dict(host, key, value):
     flag_is_pass = is_pass(value)
     if flag_is_pass:
         parts = value.split(".")
-        value = {"__type__": ".".join(parts[1:])}
+        value = {"__attrs__": ".".join(parts[1:])}
     is_fk = isinstance(value, dict)
 
     if is_fk:

@@ -63,8 +63,8 @@ class TypeSpecParser:
                         self.type_reg,
                         fk.foo.var_type,
                         (
-                            u0(value["__target_base_type_name__"])
-                            if "__target_base_type_name__" in value
+                            u0(value["__target_base_type__"])
+                            if "__target_base_type__" in value
                             else None
                         ),
                         fk.target_parts,
@@ -85,8 +85,8 @@ class TypeSpecParser:
                         self.type_reg,
                         fk.data.var_type,
                         (
-                            u0(value["__base_type_name__"])
-                            if "__base_type_name__" in value
+                            u0(value["__base_type__"])
+                            if "__base_type__" in value
                             else None
                         ),
                         fk.data_parts,
@@ -109,7 +109,7 @@ class TypeSpecParser:
 
                     # Update trace
                     if fk.data_parts:
-                        fk_trace["__type__"] = ".".join(fk.data_parts)
+                        fk_trace["__attrs__"] = ".".join(fk.data_parts)
                     if fk.target_parts:
                         fk_trace["__target_type__"] = ".".join(fk.target_parts)
                     trace[fk.clean_key] = org_value if is_pass else fk_trace

@@ -40,9 +40,9 @@ class Data:
 # type spec dict.
 class ForeignKey:
     def __init__(self, key, value):
-        _init_parts = value["__type__"].split(".") if "__type__" in value else []
+        _init_parts = value["__attrs__"].split(".") if "__attrs__" in value else []
         _init_target_parts = (
-            value["__target_type__"].split(".") if "__target_type__" in value else []
+            value["__target_attrs__"].split(".") if "__target_attrs__" in value else []
         )
         parts_through = key.split(" through ")
         if len(parts_through) == 2:

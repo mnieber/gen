@@ -42,7 +42,7 @@ class WidgetSpecParser:
                 self.parse(spec, parent_widget_spec=widget_spec)
 
 
-# Find all keys in spec of type "__type__~ " (with k tildes and k spaces)
+# Find all keys in spec of type "__attrs__~ " (with k tildes and k spaces)
 # and return the concatenated values of these keys
 def _get_type_value(spec):
     parts = []
@@ -51,7 +51,7 @@ def _get_type_value(spec):
         while clean_key.endswith("~"):
             clean_key = clean_key[:-1].strip()
 
-        if clean_key == "__type__":
+        if clean_key == "__attrs__":
             parts.append(value)
 
     return ".".join(parts)
