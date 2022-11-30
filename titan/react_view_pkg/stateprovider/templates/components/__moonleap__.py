@@ -45,9 +45,8 @@ def get_helpers(_):
         def get_pipeline(self, named_output_or_container):
             if named_output_or_container.meta.term.tag == "container":
                 container = named_output_or_container
-                named_item = container.named_item_list or container.named_item
-                if named_item:
-                    return self.get_pipeline(named_item)
+                if container.named_item_list:
+                    return self.get_pipeline(container.named_item_list)
             else:
                 for pipeline in self.pipelines:
                     if named_output_or_container.typ == pipeline.output.typ:
