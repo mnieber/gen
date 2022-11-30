@@ -62,7 +62,6 @@ def elements(self):
 
     resources = list(self.resources)
 
-    result = []
     if self.root_query:
         resources.insert(0, self.root_query)
     elif self.root_state_provider:
@@ -74,6 +73,7 @@ def elements(self):
 
     _source_pipeline = None
 
+    result = []
     for res, next_res in aperture(2, resources):
         if isinstance(res, (Query, Mutation)):
             query = res
@@ -82,7 +82,7 @@ def elements(self):
                 result.append(
                     TakeItemFromQuery(
                         subj=query,
-                        obj=named_item.typ,
+                        obj=named_item,
                     )
                 )
             elif isinstance(next_res, named(ItemList)):
@@ -90,7 +90,7 @@ def elements(self):
                 result.append(
                     TakeItemListFromQuery(
                         subj=query,
-                        obj=named_item_list.typ,
+                        obj=named_item_list,
                     )
                 )
             else:
@@ -107,7 +107,7 @@ def elements(self):
                         result.append(
                             TakeItemFromStateProvider(
                                 subj=state_provider,
-                                obj=named_item.typ,
+                                obj=named_item,
                             )
                         )
 
@@ -122,7 +122,7 @@ def elements(self):
                             result.append(
                                 TakeHighlightedElmFromStateProvider(
                                     subj=state_provider,
-                                    obj=named_item.typ,
+                                    obj=named_item,
                                 )
                             )
 
@@ -132,11 +132,11 @@ def elements(self):
                     )
 
             elif isinstance(next_res, named(ItemList)):
-                item_list = next_res.typ
+                named_item_list = next_res
                 result.append(
                     TakeItemListFromState(
                         subj=state_provider.state,
-                        obj=item_list,
+                        obj=named_item_list,
                     )
                 )
             else:
@@ -145,17 +145,19 @@ def elements(self):
         elif isinstance(res, named(Item)):
             item = res.typ
             if isinstance(next_res, named(Item)):
+                named_item = next_res
                 result.append(
                     ExtractItemFromItem(
                         subj=item,
-                        obj=next_res.typ,
+                        obj=named_item,
                     )
                 )
             elif isinstance(next_res, named(ItemList)):
+                named_item_list = next_res
                 result.append(
                     ExtractItemListFromItem(
                         subj=item,
-                        obj=next_res.typ,
+                        obj=named_item_list,
                     )
                 )
             else:
@@ -164,17 +166,19 @@ def elements(self):
             raise NotImplementedError(f"{res}")
         elif isinstance(res, PropsSource):
             if isinstance(next_res, named(Item)):
+                named_item = next_res
                 result.append(
                     TakeItemFromProps(
                         subj=res,
-                        obj=next_res.typ,
+                        obj=named_item,
                     )
                 )
             elif isinstance(next_res, named(ItemList)):
+                named_item_list = next_res
                 result.append(
                     TakeItemListFromProps(
                         subj=res,
-                        obj=next_res.typ,
+                        obj=named_item_list,
                     )
                 )
             else:
@@ -226,20 +230,24 @@ def result_expression(self, obj=None):
             ),
         ):
             postfix = "?" if elm_idx < nr_elms - 1 else ""
-            result = f"props.{elm.obj.ts_var}{postfix}" + result
+            result = f"props.{elm.obj.typ.ts_var}{postfix}" + result
         elif isinstance(elm, (TakeItemFromQuery, TakeItemListFromQuery)):
             query = elm.subj
-            result = f"{query.name}.data?.{elm.obj.ts_var}"
+            result = f"{query.name}.data?.{elm.obj.typ.ts_var}"
         elif isinstance(elm, (TakeItemFromProps, TakeItemListFromProps)):
-            result = f"props.{elm.obj.ts_var}"
+            result = f"props.{elm.obj.typ.ts_var}"
         elif isinstance(elm, (ExtractItemFromItem, ExtractItemListFromItem)):
             member = get_member_field_spec(
-                parent_item=elm.subj, member_item=elm.obj
+                parent_item=elm.subj, member_item=elm.obj.typ
             ).name
             result = f"{result}.{member}"
         else:
             raise Exception(f"Unexpected element {elm}")
-    return result
+
+        if obj and elm.obj.typ is obj.typ:
+            return result.removesuffix("?")
+
+    return None if obj else result
 
 
 def status_expression(self):
@@ -252,7 +260,7 @@ def status_expression(self):
             TakeHighlightedElmFromStateProvider,
         ),
     ):
-        return f"props.{elm.obj.ts_var}RS"
+        return f"props.{elm.obj.typ.ts_var}RS"
     elif isinstance(elm, (TakeItemFromQuery, TakeItemListFromQuery)):
         query = elm.subj
         return f"{query.name}.status"

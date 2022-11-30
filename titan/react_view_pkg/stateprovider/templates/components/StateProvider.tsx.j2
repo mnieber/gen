@@ -1,8 +1,6 @@
 {% magic_with __.state.name as MyState %}
 {% magic_with query.name as myQuery %}
 {% magic_with mutation.name as myMutation %}
-{% magic_with container.item.item_name as containerItem %}
-{% magic_with container.name as myContainer %}
 {% magic_with named_item.typ.item_name as myNamedItem %}
 import { reaction } from 'mobx';
 import { observer } from 'mobx-react-lite';
@@ -60,8 +58,6 @@ export const {{ _.component.name }} = observer(
     );
   }, DefaultProps)
 );
-{% end_magic_with %}
-{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

@@ -1,4 +1,6 @@
+{% magic_with container.item.item_name as containerItem %}
 {% magic_with named_item_list.typ.item_name as myNamedListItem %}
+{% magic_with container.name as myContainer %}
         myNamedItem: () => {{ __.return_value(named_item) }},                                                   {% !! named_item in __.state_provider.named_items_provided %}
         myNamedListItems: () => {{ __.return_value(named_item_list) }},                                         {% !! named_item_list in __.state_provider.named_item_lists_provided %}
         myState: () => state,                                                                                   {% if __.state %}
@@ -9,4 +11,6 @@
         containerItemsFiltering: () => state.myContainer.filtering,                                             {% ?? container.get_bvr("filtering") %}
         containerItemsHighlight: () => state.myContainer.highlight,                                             {% ?? container.get_bvr("highlight") %}
         containerItemsSelection: () => state.myContainer.selection,                                             {% ?? container.get_bvr("selection") %}{% endfor %}{% endif %}
+{% end_magic_with %}
+{% end_magic_with %}
 {% end_magic_with %}

@@ -1,3 +1,4 @@
+{% magic_with container.item.item_name as containerItem %}
       deleteContainerItems: (ids: string[]) => {                                                                {% for container in __.containers %}{% with d = __.delete_items_data(container) %}{% if d.deletes_items %}
         R.map(setToUpdating, lookUp(ids, state.containerItems.data.containerItemById));
         return {{ d.deleteMyItems }}.mutateAsync({ {{ d.myItemIds }}: ids });                                   {% if d.get('deleteMyItems') %}
@@ -11,3 +12,4 @@
           {{ d.myItemIds }}: getIds({{ d.myItems }}),
         });
       },                                                                                                        {% endif %}{% endwith %}{% endfor %}
+{% end_magic_with %}

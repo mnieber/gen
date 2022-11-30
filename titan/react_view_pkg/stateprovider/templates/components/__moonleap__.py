@@ -29,6 +29,26 @@ def get_helpers(_):
                 if order_items_mutation := container.order_items_mutation:
                     append_uniq(self.data.mutations, order_items_mutation)
 
+        def container_inputs(
+            self, container=None, named_items=True, named_item_lists=True
+        ):
+            result = []
+            for container in [container] if container else self.containers:
+                if named_items:
+                    for named_item in container.named_items:
+                        result.append(named_item)
+                if named_item_lists:
+                    if container.named_item_list:
+                        result.append(container.named_item_list)
+            return result
+
+        def get_expression(self, named_item_or_item_list):
+            for pipeline in self.pipelines:
+                result = pipeline.result_expression(named_item_or_item_list)
+                if result:
+                    return result
+            return None
+
         def _get_types_to_import(self):
             for mutation in self.data.mutations:
                 for field in mutation.api_spec.get_inputs(
@@ -64,7 +84,9 @@ def get_helpers(_):
             elif pipeline_source.meta.term.tag in ("item",):
                 return f"props.{pipeline_source.item_name}"
             elif pipeline_source.meta.term.tag in ("props",):
-                return None
+                __import__("pudb").set_trace()
+                named_item = pipeline.elements[0].obj
+                return f"props.{named_item.typ.item_name}"
             else:
                 return f"props.{plural(pipeline_source.item.item_name)}"
 
