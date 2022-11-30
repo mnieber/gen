@@ -1,7 +1,7 @@
 {% magic_with data.item_list.item_name as listItem %}
 {% magic_with data.item.item_name as singleItem %}
 {% magic_with bvr.item_name as bvrItem %}
-import { stub } from 'aspiration';
+import { stub } from 'react-default-props-context';
 import { {{ bvr_name|u0 }} } from 'skandha-facets/{{ bvr_name|u0 }}';           {% !! bvr_name in __.bvr_names %}
 import { {{ item_name|u0 }}T } from 'src/api/types/{{ item_name|u0 }}T';        {% !! item_name in __.item_names %}
 export { stub, withDefaultProps } from 'react-default-props-context';
