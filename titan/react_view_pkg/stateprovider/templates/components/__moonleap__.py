@@ -120,7 +120,7 @@ def get_helpers(_):
                     f"maybe({maybe_expr})({result_expr})" if maybe_expr else result_expr
                 )
 
-            if data in self.state_provider.named_item_lists:
+            if data in self.state_provider.named_item_lists_provided:
                 maybe_expr = self.maybe_expr(data)
                 return (
                     f"maybe({maybe_expr})({result_expr}, [])"

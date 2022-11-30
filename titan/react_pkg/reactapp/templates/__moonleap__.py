@@ -37,7 +37,7 @@ def get_helpers(_):
                         if state_provider.state:
                             for container in state_provider.state.containers:
                                 for named_item in container.named_items:
-                                    self._add_provided_item(container.named_item)
+                                    self._add_provided_item(named_item)
                                 self._add_provided_item_list(container.named_item_list)
                                 for bvr in container.bvrs:
                                     self._add_provided_bvr(bvr)

@@ -19,6 +19,7 @@ from . import props
 from .resources import Container
 
 rules = {
+    ("container", has, "x+item"): empty_rule(),
     ("container", has, "x+item~list"): empty_rule(),
     ("container", has, "behavior"): empty_rule(),
 }
