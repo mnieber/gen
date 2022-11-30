@@ -42,13 +42,6 @@ def get_helpers(_):
                         result.append(container.named_item_list)
             return result
 
-        def get_expression(self, named_item_or_item_list):
-            for pipeline in self.pipelines:
-                result = pipeline.result_expression(named_item_or_item_list)
-                if result:
-                    return result
-            return None
-
         def _get_types_to_import(self):
             for mutation in self.data.mutations:
                 for field in mutation.api_spec.get_inputs(
@@ -61,34 +54,6 @@ def get_helpers(_):
 
             for prop_item_list in self.data.prop_item_lists:
                 append_uniq(self.type_specs_to_import, prop_item_list.item.type_spec)
-
-        def get_pipeline(self, named_output_or_container):
-            if named_output_or_container.meta.term.tag == "container":
-                container = named_output_or_container
-                if container.named_item_list:
-                    return self.get_pipeline(container.named_item_list)
-            else:
-                for pipeline in self.pipelines:
-                    if named_output_or_container.typ == pipeline.output.typ:
-                        return pipeline
-            return None
-
-        def maybe_expr(self, named_item_or_item_list):
-            pipeline = self.get_pipeline(named_item_or_item_list)
-            if not pipeline:
-                return "'Moonleap Todo'"
-
-            pipeline_source = pipeline.source
-            if pipeline_source.meta.term.tag in ("query", "mutation"):
-                return pipeline_source.name
-            elif pipeline_source.meta.term.tag in ("item",):
-                return f"props.{pipeline_source.item_name}"
-            elif pipeline_source.meta.term.tag in ("props",):
-                __import__("pudb").set_trace()
-                named_item = pipeline.elements[0].obj
-                return f"props.{named_item.typ.item_name}"
-            else:
-                return f"props.{plural(pipeline_source.item.item_name)}"
 
         def delete_items_data(self, container):
             deletes_items = container.get_bvr("deletion")
@@ -135,15 +100,20 @@ def get_helpers(_):
             return data
 
         def return_value(self, data, hint=None):
-            result_expr = self.get_pipeline(data).result_expression()
             if data in self.state_provider.named_items_provided:
-                maybe_expr = self.maybe_expr(data)
+                result_expr = self.state_provider.get_pipeline(data).result_expression(
+                    data
+                )
+                maybe_expr = self.state_provider.maybe_expression(data)
                 return (
                     f"maybe({maybe_expr})({result_expr})" if maybe_expr else result_expr
                 )
 
             if data in self.state_provider.named_item_lists_provided:
-                maybe_expr = self.maybe_expr(data)
+                result_expr = self.state_provider.get_pipeline(data).result_expression(
+                    data
+                )
+                maybe_expr = self.state_provider.maybe_expression(data)
                 return (
                     f"maybe({maybe_expr})({result_expr}, [])"
                     if maybe_expr
@@ -155,7 +125,7 @@ def get_helpers(_):
                 named_item_list = data.named_item_list
                 items_name = plural(container.item.item_name)
                 assert named_item_list
-                maybe_expr = self.maybe_expr(named_item_list)
+                maybe_expr = self.state_provider.maybe_expression(named_item_list)
                 result_expr = f"state.{container.name}.data.{items_name}Display"
                 return (
                     f"maybe({maybe_expr}, [])({result_expr})"
@@ -167,7 +137,7 @@ def get_helpers(_):
                 container = data
                 named_item_list = data.named_item_list
                 assert named_item_list
-                maybe_expr = self.maybe_expr(named_item_list)
+                maybe_expr = self.state_provider.maybe_expression(named_item_list)
                 result_expr = f"state.{container.name}.highlight.item"
                 return (
                     f"maybe({maybe_expr})({result_expr})" if maybe_expr else result_expr

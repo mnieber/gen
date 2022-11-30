@@ -53,6 +53,9 @@ class ExtendComponent:
     module = P.parent("react-module", has)
     load_pipelines = MemFun(props.load_pipelines)
     pipelines = P.children(has, "x+pipeline")
+    get_pipeline = MemFun(props.component_get_pipeline)
+    get_expression = MemFun(props.component_get_expression)
+    maybe_expression = MemFun(props.component_maybe_expression)
 
 
 @extend(ReactModule)

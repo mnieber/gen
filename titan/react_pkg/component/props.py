@@ -40,6 +40,40 @@ def load_pipelines(component):
     return forwards
 
 
+def component_get_pipeline(component, named_output):
+    for pipeline in component.pipelines:
+        if pipeline.result_expression(named_output):
+            return pipeline
+    return None
+
+
+def component_get_expression(component, named_item_or_item_list):
+    for pipeline in component.pipelines:
+        result = pipeline.result_expression(named_item_or_item_list)
+        if result:
+            return result
+    return None
+
+
+def component_maybe_expression(component, named_item_or_item_list):
+    pipeline = component.get_pipeline(named_item_or_item_list)
+    if not pipeline:
+        return "'Moonleap Todo'"
+
+    pipeline_source = pipeline.source
+    if pipeline_source.meta.term.tag in ("query", "mutation"):
+        return pipeline_source.name
+    elif pipeline_source.meta.term.tag in ("props",):
+        named_item = pipeline.elements[0].obj
+        return f"props.{named_item.typ.item_name}"
+    elif pipeline_source.meta.term.tag in ("item",):
+        return f"props.{pipeline_source.item_name}"
+    elif pipeline_source.meta.term.tag in ("item~list",):
+        return f"props.{plural(pipeline_source.item.item_name)}"
+    else:
+        raise Exception(f"Unknown pipeline source: {pipeline_source}")
+
+
 def _check_name(name):
     if "_" in name or name != name.lower():
         raise Exception(f"Name should be in kebab-case: {name}")
