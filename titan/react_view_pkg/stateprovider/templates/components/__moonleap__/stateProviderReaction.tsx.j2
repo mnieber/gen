@@ -1,7 +1,7 @@
       const cleanUpReaction = reaction(
         () => {
           return {
-            {{ pipeline.output_name }}: {{ pipeline.result_expression }},                                       {% !! pipeline in __.pipelines %}
+            {{ pipeline.output_name }}: {{ pipeline.result_expression() }},                                     {% !! pipeline in __.pipelines %}
           }
         },
         (inputs) => {
@@ -11,9 +11,7 @@
             log('MyState updated', state.getSummary());
           }
         },
-        {
-          fireImmediately: true,
-        }
+        {fireImmediately: true}
       );
       return () => {
         cleanUpReaction();

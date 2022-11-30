@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import Prop, create, empty_rule, extend, named
+from moonleap import MemFun, Prop, create, empty_rule, extend, named
 from moonleap.verbs import connects, has
 
 from . import props
@@ -33,7 +33,7 @@ def create_named_pipeline(term):
 class ExtendNamedPipeline:
     deleter_mutation = Prop(props.deleter_mutation)
     elements = Prop(props.elements)
-    result_expression = Prop(props.result_expression)
+    result_expression = MemFun(props.result_expression)
     output = Prop(props.output)
     output_name = Prop(props.output_name)
     resources = P.children(connects, "x+pipeline-elm")

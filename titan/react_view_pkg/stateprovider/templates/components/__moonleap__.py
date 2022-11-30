@@ -113,7 +113,7 @@ def get_helpers(_):
             return data
 
         def return_value(self, data, hint=None):
-            result_expr = self.get_pipeline(data).result_expression
+            result_expr = self.get_pipeline(data).result_expression()
             if data in _.component.named_items:
                 maybe_expr = self.maybe_expr(data)
                 return (

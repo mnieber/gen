@@ -211,7 +211,7 @@ def deleter_mutation(self):
     return None
 
 
-def result_expression(self):
+def result_expression(self, obj=None):
     result = ""
     nr_elms = len(self.elements)
 
