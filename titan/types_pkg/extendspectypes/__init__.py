@@ -1,10 +1,10 @@
 from moonleap import Prop, extend
-from titan.types_pkg.pkg.field_spec import FkFieldSpec, FormFieldSpec
+from titan.types_pkg.pkg.field_spec import FieldSpec, FormFieldSpec
 
 from . import props
 
 
-@extend(FkFieldSpec)
+@extend(FieldSpec)
 class ExtendFkFieldSpec:
     target_type_spec = Prop(props.fk_field_spec_target_type_spec)
 

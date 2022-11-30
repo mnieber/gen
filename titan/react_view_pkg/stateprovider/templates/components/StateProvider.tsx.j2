@@ -39,7 +39,7 @@ export const {{ _.component.name }} = observer(
 {% include_snippet "__moonleap__/stateConstructor.tsx.j2" %}
     }));                                                                                        {% endif %}
 
-    (React.useEffect as any)(() => {                                                            {% if __.state %}
+    React.useEffect(() => {                                                                     {% if __.state %}
 {% include_snippet "__moonleap__/stateProviderReaction.tsx.j2" %}
     });                                                                                         {% endif %}
 

@@ -12,7 +12,7 @@ def _to_term(x: T.Union[Term, str]) -> Term:
 
     term = word_to_term(x)
     if term is None:
-        raise Exception("Cannot perform _to_term on {x}")
+        raise Exception(f"Cannot perform _to_term on {x}")
     return term
 
 

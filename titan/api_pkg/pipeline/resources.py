@@ -15,12 +15,13 @@ class PropsSource(Resource):
 
 
 class PipelineData:
-    default_prop_items = list()
-    default_prop_item_lists = list()
-    prop_items = list()
-    prop_item_lists = list()
-    queries = list()
-    mutations = list()
+    def __init__(self):
+        self.default_prop_items = list()
+        self.default_prop_item_lists = list()
+        self.prop_items = list()
+        self.prop_item_lists = list()
+        self.queries = list()
+        self.mutations = list()
 
     def update(self, pipelines):
         for pipeline in pipelines:
