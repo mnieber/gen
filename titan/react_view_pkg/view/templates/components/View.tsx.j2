@@ -5,6 +5,7 @@ import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { cn } from 'src/utils/classnames';
 import { observer } from 'mobx-react-lite';
 import { isLoaded, isUpdating } from 'src/api/ResourceState';
+import { {{ type_spec.type_name }}T } from 'src/api/types/{{ type_spec.type_name }}T';              {% !! type_spec in __.type_specs_to_import %}
 import UIkit from 'uikit';                                                                          {% ?? _.service.uikit %}
 import './MyComponent.scss';
 {# Start: view imports here #}
@@ -20,6 +21,8 @@ type PropsT = {                                                                 
 type PropsT = React.PropsWithChildren<{                                                             {% ?? __.build.has_children %}
 {# Start: view props here #}
 {# End: view props here #}
+  {{ item.ts_var }}: {{ item.ts_type }}                                                             {% !! item in __.data.prop_items %}
+  {{ item_list.ts_var }}: {{ item_list.ts_type }}                                                   {% !! item_list in __.data.prop_item_lists %}
   className?: any;
 }                                                                                                   {% ?? not __.build.has_children %}
 }>                                                                                                  {% ?? __.build.has_children %}
@@ -28,6 +31,8 @@ type PropsT = React.PropsWithChildren<{                                         
 ;
 
 const DefaultProps = {
+  ...dps.{{ item.ts_var }},                                                                         {% !! item in __.data.default_prop_items %}
+  ...dps.{{ item_list.ts_var }},                                                                    {% !! item_list in __.data.default_prop_item_lists %}
 {# Start: default view props here #}
 {# End: default view props here #}
 };

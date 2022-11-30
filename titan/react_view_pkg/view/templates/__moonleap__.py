@@ -1,3 +1,4 @@
+from moonleap.utils.fp import uniq
 from titan.api_pkg.pipeline.resources import PipelineData
 from titan.react_view_pkg.pkg.get_builder import get_builder
 
@@ -18,5 +19,12 @@ def get_helpers(_):
             builder = get_builder(widget_spec, None, level)
             builder.build()
             return builder.output
+
+        @property
+        def type_specs_to_import(self):
+            return uniq(
+                [x.type_spec for x in self.data.prop_items]
+                + [x.item.type_spec for x in self.data.prop_item_lists]
+            )
 
     return Helpers()

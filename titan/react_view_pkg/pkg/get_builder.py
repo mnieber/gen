@@ -1,4 +1,5 @@
 from titan.react_view_pkg.pkg.builder import Builder
+from titan.react_view_pkg.pkg.builders.array_builder import ArrayBuilder
 from titan.react_view_pkg.pkg.builders.bar_builder import BarBuilder
 from titan.react_view_pkg.pkg.builders.card_builder import CardBuilder
 from titan.react_view_pkg.pkg.builders.children_builder import ChildrenBuilder
@@ -33,5 +34,8 @@ def get_builder(widget_spec, parent_builder, level) -> Builder:
 
     if widget_spec.widget_base_type == "Children":
         return ChildrenBuilder(widget_spec, parent_builder, level)
+
+    if widget_spec.widget_base_type == "Array":
+        return ArrayBuilder(widget_spec, parent_builder, level)
 
     raise Exception(f"Unknown widget base type: {widget_spec.widget_base_type}")

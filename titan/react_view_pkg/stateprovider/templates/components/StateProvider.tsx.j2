@@ -4,7 +4,6 @@
 {% magic_with container.item.item_name as containerItem %}
 {% magic_with container.name as myContainer %}
 {% magic_with named_item.typ.item_name as myNamedItem %}
-{% magic_with named_item_list.typ.item_name as myNamedListItem %}
 import { reaction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import * as R from 'ramda';
@@ -61,7 +60,6 @@ export const {{ _.component.name }} = observer(
     );
   }, DefaultProps)
 );
-{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
