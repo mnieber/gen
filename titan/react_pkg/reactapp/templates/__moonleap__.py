@@ -29,13 +29,15 @@ def get_helpers(_):
             for module in _.react_app.modules:
                 for component in module.components:
                     if component.meta.term.tag == "state~provider":
-                        for named_item in component.named_items:
+                        state_provider = component
+                        for named_item in state_provider.named_items_provided:
                             self._add_provided_item(named_item)
-                        for named_item_list in component.named_items:
+                        for named_item_list in state_provider.named_item_lists_provided:
                             self._add_provided_item(named_item_list)
-                        if component.state:
-                            for container in component.state.containers:
-                                self._add_provided_item(container.named_item)
+                        if state_provider.state:
+                            for container in state_provider.state.containers:
+                                for named_item in container.named_items:
+                                    self._add_provided_item(container.named_item)
                                 self._add_provided_item_list(container.named_item_list)
                                 for bvr in container.bvrs:
                                     self._add_provided_bvr(bvr)

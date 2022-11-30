@@ -7,9 +7,10 @@ from titan.types_pkg.typeregistry import get_type_reg
 
 def get_helpers(_):
     class Helpers:
-        state = _.component.state
+        state_provider = _.component
+        state = state_provider.state
         containers = state.containers if state else []
-        pipelines = _.component.pipelines
+        pipelines = state_provider.pipelines
 
         data = PipelineData()
         type_specs_to_import = list()
@@ -114,13 +115,13 @@ def get_helpers(_):
 
         def return_value(self, data, hint=None):
             result_expr = self.get_pipeline(data).result_expression()
-            if data in _.component.named_items:
+            if data in self.state_provider.named_items_provided:
                 maybe_expr = self.maybe_expr(data)
                 return (
                     f"maybe({maybe_expr})({result_expr})" if maybe_expr else result_expr
                 )
 
-            if data in _.component.named_item_lists:
+            if data in self.state_provider.named_item_lists:
                 maybe_expr = self.maybe_expr(data)
                 return (
                     f"maybe({maybe_expr})({result_expr}, [])"

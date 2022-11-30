@@ -101,7 +101,7 @@ def elements(self):
             if isinstance(next_res, named(Item)):
                 found = False
                 named_item = next_res
-                for provided_named_item in state_provider.named_items:
+                for provided_named_item in state_provider.named_items_provided:
                     if _match_named_item(named_item, provided_named_item):
                         found = True
                         result.append(

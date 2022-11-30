@@ -1,6 +1,6 @@
 {% magic_with named_item_list.typ.item_name as myNamedListItem %}
-        myNamedItem: () => {{ __.return_value(named_item) }},                                                   {% !! named_item in _.component.named_items %}
-        myNamedListItems: () => {{ __.return_value(named_item_list) }},                                         {% !! named_item_list in _.component.named_item_lists %}
+        myNamedItem: () => {{ __.return_value(named_item) }},                                                   {% !! named_item in __.state_provider.named_items_provided %}
+        myNamedListItems: () => {{ __.return_value(named_item_list) }},                                         {% !! named_item_list in __.state_provider.named_item_lists_provided %}
         myState: () => state,                                                                                   {% if __.state %}
         containerItems: () => {{ __.return_value(container, "items") }},                                        {% for container in __.state.containers %}{% ?? container.named_item_list %}
         containerItem: () => {{ __.return_value(container, "highlighted_item") }},                              {% ?? container.get_bvr("highlight") %}
