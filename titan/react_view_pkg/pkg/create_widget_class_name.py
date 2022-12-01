@@ -13,7 +13,7 @@ def create_widget_class_name(builder):
     if widget_class_name:
         shorten = widget_class_name.startswith("__")
         root = builder.root_builder if shorten else builder.parent_builder
-        if root:
+        if root and root is not builder:
             infix = "__" if root.widget_spec.is_component and not shorten else ""
             return root.output.widget_class_name + infix + widget_class_name
 

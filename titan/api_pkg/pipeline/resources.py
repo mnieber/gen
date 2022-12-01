@@ -36,8 +36,16 @@ class PipelineData:
                 append_uniq(self.queries, pipeline_source)
             elif pipeline_source.meta.term.tag == "mutation":
                 append_uniq(self.mutations, pipeline_source)
-            elif pipeline_source.meta.term.tag == "item":
-                append_uniq(self.default_prop_items, pipeline_source)
+            elif pipeline_source.meta.term.tag == "state~provider":
+                named_item_or_item_list = pipeline.elements[0].obj
+                if named_item_or_item_list.typ.meta.term.tag == "item":
+                    append_uniq(self.default_prop_items, named_item_or_item_list.typ)
+                elif named_item_or_item_list.typ.meta.term.tag == "item~list":
+                    append_uniq(
+                        self.default_prop_item_lists, named_item_or_item_list.typ
+                    )
+                else:
+                    raise Exception("Unknown pipeline source")
             elif pipeline_source.meta.term.tag == "item_list":
                 append_uniq(self.default_prop_item_lists, pipeline_source)
             else:

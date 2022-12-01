@@ -13,6 +13,7 @@ class Term:
     # This field is not used in term comparisons
     is_title: T.Optional[bool] = field(default=False, compare=False)
 
+    @property
     def as_normalized_str(self):
         return str(self).removesuffix("^")
 

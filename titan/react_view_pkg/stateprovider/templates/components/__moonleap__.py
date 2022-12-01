@@ -101,18 +101,14 @@ def get_helpers(_):
 
         def return_value(self, data, hint=None):
             if data in self.state_provider.named_items_provided:
-                result_expr = self.state_provider.get_pipeline(data).result_expression(
-                    data
-                )
+                pipeline, result_expr = self.state_provider.get_pipeline_and_expr(data)
                 maybe_expr = self.state_provider.maybe_expression(data)
                 return (
                     f"maybe({maybe_expr})({result_expr})" if maybe_expr else result_expr
                 )
 
             if data in self.state_provider.named_item_lists_provided:
-                result_expr = self.state_provider.get_pipeline(data).result_expression(
-                    data
-                )
+                pipeline, result_expr = self.state_provider.get_pipeline_and_expr(data)
                 maybe_expr = self.state_provider.maybe_expression(data)
                 return (
                     f"maybe({maybe_expr})({result_expr}, [])"
@@ -142,6 +138,10 @@ def get_helpers(_):
                 return (
                     f"maybe({maybe_expr})({result_expr})" if maybe_expr else result_expr
                 )
+
+        def get_expression(self, named_output):
+            pipeline, expr = self.state_provider.get_pipeline_and_expr(named_output)
+            return expr
 
     return Helpers()
 

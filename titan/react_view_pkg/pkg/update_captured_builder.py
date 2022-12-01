@@ -7,11 +7,15 @@ from titan.react_view_pkg.pkg.create_widget_class_name import create_widget_clas
 
 def get_root_builder(builder):
     b = builder.parent_builder
+    if not b:
+        return builder
+
     while b:
         if b.is_captured or not b.parent_builder:
             return b
         b = b.parent_builder
-    return None
+
+    raise Exception("Logical error: could not find root builder")
 
 
 def create_preamble(builder, output):

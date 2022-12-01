@@ -134,7 +134,7 @@ def elements(self):
             elif isinstance(next_res, named(ItemList)):
                 named_item_list = next_res
                 result.append(
-                    TakeItemListFromState(
+                    TakeItemListFromStateProvider(
                         subj=state_provider.state,
                         obj=named_item_list,
                     )
@@ -215,7 +215,7 @@ def deleter_mutation(self):
     return None
 
 
-def result_expression(self, obj=None):
+def result_expression(self, obj=None, obj_term=None):
     result = ""
     nr_elms = len(self.elements)
 
@@ -244,10 +244,13 @@ def result_expression(self, obj=None):
         else:
             raise Exception(f"Unexpected element {elm}")
 
-        if obj and elm.obj.typ is obj.typ:
+        if (obj and elm.obj.typ is obj.typ) or (
+            obj_term
+            and elm.obj.meta.term.as_normalized_str == obj_term.as_normalized_str
+        ):
             return result.removesuffix("?")
 
-    return None if obj else result
+    return None if (obj or obj_term) else result
 
 
 def status_expression(self):
@@ -285,15 +288,5 @@ def pipeline_source(pipeline):
     if pipeline.root_props:
         return pipeline.root_props
     elif pipeline.root_state_provider:
-        pipeline_elm = pipeline.elements[1]
-        if isinstance(
-            pipeline_elm,
-            (
-                TakeItemFromStateProvider,
-                TakeHighlightedElmFromStateProvider,
-                ExtractItemListFromItem,
-                TakeItemListFromStateProvider,
-            ),
-        ):
-            return pipeline_elm.subj
+        return pipeline.root_state_provider
     raise Exception("Unknown pipeline source")

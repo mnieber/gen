@@ -7,7 +7,7 @@ def state_provider_load(state_provider):
     forwards = []
     for component_term, component_data in get_pipelines().get("components", {}).items():
         _check_name(component_term)
-        if component_term == state_provider.meta.term.as_normalized_str():
+        if component_term == state_provider.meta.term.as_normalized_str:
             _get_state_provider(component_term, component_data, forwards)
     return forwards
 
