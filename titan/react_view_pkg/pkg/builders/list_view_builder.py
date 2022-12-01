@@ -24,9 +24,9 @@ class ListViewBuilder(Builder):
         div = view_div.replace("myItem", self.list_view.item_name)
         return VerbatimBuilder(*args, **kwargs, div=div)
 
-    def build(self, classes=None, handlers=None):
+    def build(self, div_attrs=None):
         self.widget_spec.remove_child_with_place("ListViewItem")
         inner_builder = get_child_widget_builder(self, self.widget_spec, self.level)
 
-        inner_builder.build(classes, handlers)
+        inner_builder.build(div_attrs)
         self.output.add(inner_builder.output)

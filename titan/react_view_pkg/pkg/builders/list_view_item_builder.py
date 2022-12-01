@@ -1,6 +1,7 @@
 from titan.react_view_pkg.pkg.add_child_widgets import get_child_widget_builder
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.verbatim_builder import VerbatimBuilder
+from titan.react_view_pkg.pkg.div_attrs import update_div_attrs
 
 
 class ListViewItemBuilder(Builder):
@@ -22,22 +23,28 @@ class ListViewItemBuilder(Builder):
         div = self.render("components/__moonleap__/lvi_buttons.tsx.j2")
         return VerbatimBuilder(*args, **kwargs, div=div)
 
-    def build(self, classes=None, handlers=None):
+    def build(self, div_attrs=None):
         inner_builder = get_child_widget_builder(self, self.widget_spec, self.level)
 
-        classes = list(classes or [])
-        handlers = list(handlers or [])
+        more_classes = []
+        more_handlers = []
 
         if self.helpers.has_selection:
-            classes += [
+            more_classes += [
                 f"{{'{self.helpers.component_name}--selected': props.isSelected",
                 f"'{self.helpers.component_name}--highlighted': props.isHighlighted}}",
             ]
-            handlers += ["{...clickHandlers(props)}"]
+            more_handlers += ["{...clickHandlers(props)}"]
 
         if self.helpers.has_drag_and_drop:
-            classes += [f"`{self.helpers.component_name}--drag-${{props.dragState}}`"]
-            handlers += ["{...dragHandlers(props)}"]
+            more_classes += [
+                f"`{self.helpers.component_name}--drag-${{props.dragState}}`"
+            ]
+            more_handlers += ["{...dragHandlers(props)}"]
 
-        inner_builder.build(classes, handlers)
+        inner_builder.build(
+            update_div_attrs(
+                div_attrs, prefix_classes=more_classes, handlers=more_handlers
+            )
+        )
         self.output = inner_builder.output

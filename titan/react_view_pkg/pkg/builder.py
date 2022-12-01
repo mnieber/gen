@@ -20,8 +20,8 @@ class Builder:
         indented_lines = ["  " * self.level + x for x in lines]
         self.output.lines.extend(indented_lines)
 
-    def _add_div_open(self, classes=None, handlers=None):
-        add_div_open(self, classes, handlers)
+    def _add_div_open(self, div_attrs=None):
+        add_div_open(self, div_attrs)
 
     def _add_child_widgets(self, child_widget_specs=None):
         add_child_widgets(
@@ -34,8 +34,30 @@ class Builder:
     def get_provided_prop_name(self, named_input):
         return None
 
-    def build(self, classes=None, handlers=None):
+    def build(self, div_attrs=None):
         pass
+
+    def get_pipeline_expr(self, named_output=None, term=None):
+        from titan.react_view_pkg.pkg.builders.array_builder import ArrayBuilder
+
+        b = self
+        while b:
+            component = b.widget_spec.component
+            if component:
+                pipeline, expr = component.get_pipeline_and_expr(
+                    named_output=named_output, term=term
+                )
+                if pipeline:
+                    return expr
+            if isinstance(b, ArrayBuilder):
+                if (named_output and named_output.typ is b.item_list.item) or (
+                    term
+                    and term.as_normalized_str
+                    == b.item_list.item.meta.term.as_normalized_str
+                ):
+                    return named_output.typ.ts_var
+            b = b.parent_builder
+        return None
 
 
 def get_root_builder(builder):
