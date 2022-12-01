@@ -1,11 +1,7 @@
-import os
-
 from titan.react_view_pkg.pkg.add_child_widgets import add_child_widgets
 from titan.react_view_pkg.pkg.add_div import add_div_close, add_div_open
-from titan.react_view_pkg.pkg.update_captured_builder import (
-    create_builder_output,
-    get_root_builder,
-)
+from titan.react_view_pkg.pkg.builder_output import BuilderOutput
+from titan.react_view_pkg.pkg.create_widget_class_name import create_widget_class_name
 
 
 class Builder:
@@ -16,16 +12,6 @@ class Builder:
         self.level = level
         self.root_builder = get_root_builder(self)
         self.output = create_builder_output(self)
-
-    @property
-    def is_captured(self):
-        if self.level == 0:
-            return False
-        if self.widget_spec.values.get("array", False):
-            return "array"
-        if self.widget_spec.values.get("capture", False):
-            return "capture"
-        return False
 
     def register_builder_type(self, widget_base_type, builder_type):
         self.builder_type_lut[widget_base_type] = builder_type
@@ -50,3 +36,19 @@ class Builder:
 
     def build(self, classes=None, handlers=None):
         pass
+
+
+def get_root_builder(builder):
+    b = builder
+
+    while b.parent_builder:
+        b = b.parent_builder
+
+    return b
+
+
+def create_builder_output(builder):
+    output = BuilderOutput(widget_class_name=create_widget_class_name(builder))
+    if builder.widget_spec.is_component and builder.level > 0:
+        output.components.append(builder.widget_spec.component)
+    return output
