@@ -45,5 +45,8 @@ class Builder:
     def _add_div_close(self):
         add_div_close(self)
 
+    def get_provided_prop_name(self, named_input):
+        return None
+
     def build(self, classes=None, handlers=None):
         pass
