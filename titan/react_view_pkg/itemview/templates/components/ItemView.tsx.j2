@@ -22,7 +22,7 @@ export const FooItemView = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
     if (!props.fooItem) {
       return !isLoaded(props.fooItem)                                                       {% if _.service.uikit %}
-        ? UIkit && <div data-uk-spinner className=""></div>
+        ? UIkit && <div data-uk-spinner className="" />
         : null;                                                                             {% endif %}
       return null;                                                                          {% ?? not _.service.uikit %}
     }
