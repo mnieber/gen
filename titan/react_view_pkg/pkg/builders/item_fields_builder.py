@@ -14,9 +14,14 @@ class ItemFieldsBuilder(BuilderItemsMixin, Builder):
         item_expr = self.item_expr()
 
         for field_spec in self.item.type_spec.get_field_specs():
-            if "client" in field_spec.has_model and not field_spec.field_type in (
-                "fk",
-                "relatedSet",
+            if (
+                "client" in field_spec.has_model
+                and not field_spec.field_type
+                in (
+                    "slug" "fk",
+                    "relatedSet",
+                )
+                and not (field_spec.name in ("id",))
             ):
                 child_widget_spec = copy.deepcopy(field_widget_spec)
                 child_widget_spec.values[
