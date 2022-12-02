@@ -16,12 +16,18 @@ class ListViewItemBuilder(Builder):
         self.register_builder_type("LviButtons", self._get_lvi_buttons)
 
     def _get_lvi_fields(self, *args, **kwargs):
-        div = self.render("components/__moonleap__/lvi_fields.tsx.j2")
-        return VerbatimBuilder(*args, **kwargs, div=div)
+        return VerbatimBuilder(
+            *args,
+            **kwargs,
+            div=self.render("components/__moonleap__/lvi_fields.tsx.j2"),
+        )
 
     def _get_lvi_buttons(self, *args, **kwargs):
-        div = self.render("components/__moonleap__/lvi_buttons.tsx.j2")
-        return VerbatimBuilder(*args, **kwargs, div=div)
+        return VerbatimBuilder(
+            *args,
+            **kwargs,
+            div=self.render("components/__moonleap__/lvi_buttons.tsx.j2"),
+        )
 
     def build(self, div_attrs=None):
         inner_builder = get_child_widget_builder(self, self.widget_spec, self.level)

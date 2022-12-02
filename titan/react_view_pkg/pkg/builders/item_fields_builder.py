@@ -2,6 +2,11 @@ import copy
 
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builder_items_mixin import BuilderItemsMixin
+from titan.widgets_pkg.pkg.load_widget_specs.widget_spec_parser import WidgetSpecParser
+from titan.widgets_pkg.pkg.widget_spec import WidgetSpec
+from titan.widgets_pkg.widgetregistry.resources import WidgetRegistry
+
+default_widget_spec = {"Field with Card": {"ItemField": "pass"}}
 
 
 class ItemFieldsBuilder(BuilderItemsMixin, Builder):
@@ -10,6 +15,11 @@ class ItemFieldsBuilder(BuilderItemsMixin, Builder):
 
     def build(self, div_attrs=None):
         field_widget_spec = self.widget_spec.find_child_with_place("Field")
+        if not field_widget_spec:
+            widget_reg = WidgetRegistry()
+            parser = WidgetSpecParser(widget_reg)
+            field_widget_spec = parser.parse(default_widget_spec)[0]
+
         child_widget_specs = []
         item_expr = self.item_expr()
 

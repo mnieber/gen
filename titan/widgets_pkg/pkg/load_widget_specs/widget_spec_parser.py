@@ -13,6 +13,7 @@ class WidgetSpecParser:
             for key, value in widget_spec_dict.items()
             if not _is_private_member(key)
         ]
+        widget_specs = []
 
         for key, value in items:
             spec = {} if value == "pass" else value
@@ -24,6 +25,7 @@ class WidgetSpecParser:
                     _get_type_value(spec) if is_dict else value, "."
                 ),
             )
+            widget_specs.append(widget_spec)
 
             if widget_spec.is_component_def:
                 if self.widget_reg.get(widget_spec.widget_name, None) is not None:
@@ -40,6 +42,8 @@ class WidgetSpecParser:
             #
             if is_dict and spec:
                 self.parse(spec, parent_widget_spec=widget_spec)
+
+        return widget_specs
 
 
 # Find all keys in spec of type "__attrs__~ " (with k tildes and k spaces)
