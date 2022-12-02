@@ -1,6 +1,7 @@
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.array_builder import ArrayBuilder
 from titan.react_view_pkg.pkg.builders.bar_builder import BarBuilder
+from titan.react_view_pkg.pkg.builders.button_builder import ButtonBuilder
 from titan.react_view_pkg.pkg.builders.card_builder import CardBuilder
 from titan.react_view_pkg.pkg.builders.children_builder import ChildrenBuilder
 from titan.react_view_pkg.pkg.builders.component_builder import ComponentBuilder
@@ -45,6 +46,9 @@ def get_builder(widget_spec, parent_builder, level) -> Builder:
 
     if widget_spec.widget_base_type == "Spinner":
         return SpinnerBuilder(widget_spec, parent_builder, level)
+
+    if widget_spec.widget_base_type == "Button":
+        return ButtonBuilder(widget_spec, parent_builder, level)
 
     if widget_spec.widget_base_type == "ItemFields":
         return ItemFieldsBuilder(widget_spec, parent_builder, level)

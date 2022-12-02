@@ -21,6 +21,10 @@ class Builder(BuilderPipelineMixin):
         indented_lines = ["  " * self.level + x for x in lines]
         self.output.lines.extend(indented_lines)
 
+    def add_preamble(self, lines):
+        indented_lines = ["  " * self.level + x for x in lines]
+        self.output.preamble_lines.extend(indented_lines)
+
     def _add_div_open(self, div_attrs=None):
         add_div_open(self, div_attrs)
 
