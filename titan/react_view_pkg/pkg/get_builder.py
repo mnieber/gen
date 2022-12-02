@@ -12,6 +12,7 @@ from titan.react_view_pkg.pkg.builders.item_fields_builder import (
     ItemFieldsBuilder,
 )
 from titan.react_view_pkg.pkg.builders.layout_builder import LayoutBuilder
+from titan.react_view_pkg.pkg.builders.picker_builder import PickerBuilder
 from titan.react_view_pkg.pkg.builders.spinner_builder import SpinnerBuilder
 from titan.react_view_pkg.pkg.builders.text_builder import TextBuilder
 
@@ -46,6 +47,9 @@ def get_builder(widget_spec, parent_builder, level) -> Builder:
 
     if widget_spec.widget_base_type == "Spinner":
         return SpinnerBuilder(widget_spec, parent_builder, level)
+
+    if widget_spec.widget_base_type == "Picker":
+        return PickerBuilder(widget_spec, parent_builder, level)
 
     if widget_spec.widget_base_type == "Button":
         return ButtonBuilder(widget_spec, parent_builder, level)

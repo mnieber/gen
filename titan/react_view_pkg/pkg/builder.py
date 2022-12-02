@@ -1,11 +1,12 @@
 from titan.react_view_pkg.pkg.add_child_widgets import add_child_widgets
 from titan.react_view_pkg.pkg.add_div import add_div_close, add_div_open
+from titan.react_view_pkg.pkg.builder_items_mixin import BuilderItemsMixin
 from titan.react_view_pkg.pkg.builder_output import BuilderOutput
 from titan.react_view_pkg.pkg.builder_pipeline_mixin import BuilderPipelineMixin
 from titan.react_view_pkg.pkg.create_widget_class_name import create_widget_class_name
 
 
-class Builder(BuilderPipelineMixin):
+class Builder(BuilderPipelineMixin, BuilderItemsMixin):
     def __init__(self, widget_spec, parent_builder, level):
         self.builder_type_lut = dict()
         self.widget_spec = widget_spec

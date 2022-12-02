@@ -1,7 +1,6 @@
 from moonleap.render.template_env import get_template_from_str
 from moonleap.utils import chop0
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.react_view_pkg.pkg.builder_items_mixin import BuilderItemsMixin
 from titan.react_view_pkg.pkg.div_attrs import update_div_attrs
 
 template_str = chop0(
@@ -13,7 +12,7 @@ const {{ const_name }} = {{ items_expr }}.map(({{ item }}: {{ item|u0 }}T) => {
 )
 
 
-class ArrayBuilder(BuilderItemsMixin, Builder):
+class ArrayBuilder(Builder):
     def build(self, div_attrs=None):
         const_name = self.widget_spec.widget_name
         item_name = self.item_list.item.item_name

@@ -22,7 +22,7 @@ const DefaultProps = {
 export const YellowTulipPicker = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
     if (!isLoaded(props.yellowTulips)) {
-      return UIkit && <div data-uk-spinner className=""></div>;                           {% ?? _.service.uikit %}
+      return UIkit && <div data-uk-spinner className="" />;                               {% ?? _.service.uikit %}
       return null;                                                                        {% ?? not _.service.uikit %}
     }
 
