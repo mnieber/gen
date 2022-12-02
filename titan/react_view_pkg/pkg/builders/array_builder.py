@@ -20,7 +20,7 @@ class ArrayBuilder(BuilderItemsMixin, Builder):
         code = get_template_from_str(template_str).render(
             {
                 "const_name": const_name,
-                "items_expr": self.get_item_list_expr(),
+                "items_expr": self.item_list_expr(),
                 "item": item_name,
                 "child_widget_div": self._get_child_widget_div(
                     update_div_attrs(div_attrs, key=f"{item_name}.id")

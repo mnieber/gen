@@ -27,7 +27,7 @@ class SpinnerBuilder(BuilderItemsMixin, Builder):
         use_ui_kit = True  # TODO
         template_str = uikit_template_str if use_ui_kit else no_uikit_template_str
         res = self.item or self.item_list
-        get_res_expr = self.get_item_list_expr() or self.get_item_expr()
+        get_res_expr = self.item_list_expr() or self.item_expr()
 
         code = get_template_from_str(template_str).render(
             {

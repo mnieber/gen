@@ -38,6 +38,9 @@ class Builder(BuilderPipelineMixin):
     def build(self, div_attrs=None):
         pass
 
+    def create_widget_class_name(self):
+        return create_widget_class_name(self)
+
     @property
     def use_ui_kit(self):
         component = self.widget_spec.component
@@ -54,7 +57,7 @@ def get_root_builder(builder):
 
 
 def create_builder_output(builder):
-    output = BuilderOutput(widget_class_name=create_widget_class_name(builder))
+    output = BuilderOutput(widget_class_name=builder.create_widget_class_name())
     if builder.widget_spec.is_component and builder.level > 0:
         output.components.append(builder.widget_spec.component)
     return output

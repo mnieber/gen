@@ -40,9 +40,7 @@ def _get_places_and_classes_from_widget_specs(widget_specs):
     places = []
     for child_widget_spec in widget_specs:
         if not child_widget_spec.place:
-            raise Exception(
-                f"Child widget spec {child_widget_spec} does not have a place"
-            )
+            raise Exception(f"Layout does not have a place for {child_widget_spec}")
         places.append(child_widget_spec.place)
 
     if ordered_places := _get_ordered_places(places, ["LeftSidebar", "RightMain"]):

@@ -35,3 +35,4 @@ class WidgetSpec:
         widget_spec = self.find_child_with_place(place)
         if widget_spec:
             self.child_widget_specs.remove(widget_spec)
+            return widget_spec

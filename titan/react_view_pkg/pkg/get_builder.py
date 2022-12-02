@@ -6,6 +6,10 @@ from titan.react_view_pkg.pkg.builders.children_builder import ChildrenBuilder
 from titan.react_view_pkg.pkg.builders.component_builder import ComponentBuilder
 from titan.react_view_pkg.pkg.builders.div_builder import DivBuilder
 from titan.react_view_pkg.pkg.builders.empty_builder import EmptyBuilder
+from titan.react_view_pkg.pkg.builders.item_fields_builder import (
+    ItemFieldBuilder,
+    ItemFieldsBuilder,
+)
 from titan.react_view_pkg.pkg.builders.layout_builder import LayoutBuilder
 from titan.react_view_pkg.pkg.builders.spinner_builder import SpinnerBuilder
 from titan.react_view_pkg.pkg.builders.text_builder import TextBuilder
@@ -41,5 +45,11 @@ def get_builder(widget_spec, parent_builder, level) -> Builder:
 
     if widget_spec.widget_base_type == "Spinner":
         return SpinnerBuilder(widget_spec, parent_builder, level)
+
+    if widget_spec.widget_base_type == "ItemFields":
+        return ItemFieldsBuilder(widget_spec, parent_builder, level)
+
+    if widget_spec.widget_base_type == "ItemField":
+        return ItemFieldBuilder(widget_spec, parent_builder, level)
 
     raise Exception(f"Unknown widget base type: {widget_spec.widget_base_type}")

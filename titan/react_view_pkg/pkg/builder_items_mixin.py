@@ -47,7 +47,7 @@ class BuilderItemsMixin:
             if x.meta.term.as_normalized_str == item_term.as_normalized_str
         )
 
-    def get_item_list_expr(self):
+    def item_list_expr(self):
         named_items_term = self.named_items_term
         if not named_items_term:
             return None
@@ -57,7 +57,7 @@ class BuilderItemsMixin:
             raise Exception(f"Could not find pipeline for: {named_items_term}")
         return item_list_expr
 
-    def get_item_expr(self):
+    def item_expr(self):
         named_item_term = self.named_item_term
         if not named_item_term:
             return None
