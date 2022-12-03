@@ -8,8 +8,8 @@ import * as R from 'ramda';
 import React from 'react';
 import { NestedDefaultPropsContext } from 'react-default-props-context';
 import { maybe, initRS, setToUpdating } from 'src/api/ResourceState';
-import { useMyQuery } from 'src/api/queries';                                                   {% for query in __.data.queries %}{% endfor %}
-import { useMyMutation } from 'src/api/mutations';                                              {% for mutation in __.data.mutations %}{% endfor %}
+import { useMyQuery } from 'src/api/queries';                                                   {% for query in __.queries %}{% endfor %}
+import { useMyMutation } from 'src/api/mutations';                                              {% for mutation in __.mutations %}{% endfor %}
 import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { flags } from 'src/app/flags';
 import { lookUp, getIds } from 'src/utils/ids';
@@ -18,19 +18,17 @@ import { MyState } from 'src/{{ __.state.state_provider.module.module_path }}/My
 import { log } from 'src/utils/logging';
 
 type PropsT = React.PropsWithChildren<{
-  {{ item.ts_var }}: {{ item.ts_type }}                                                         {% !! item in __.data.prop_items %}
-  {{ item_list.ts_var }}: {{ item_list.ts_type }}                                               {% !! item_list in __.data.prop_item_lists %}
+  {{ res.ts_var }}: {{ res.ts_type }}                                                           {% !! res in _.component.props %}
 }>;
 
 const DefaultProps = {
-    ...dps.{{ item.ts_var }},                                                                   {% !! item in __.data.default_prop_items %}
-    ...dps.{{ item_list.ts_var }},                                                              {% !! item_list in __.data.default_prop_item_lists %}
+  ...dps.{{ res.ts_var }},                                                                      {% !! res in _.component.default_props %}
 };
 
 export const {{ _.component.name }} = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
-    const myQuery = useMyQuery();                                                               {% !! query in __.data.queries %}
-    const myMutation = useMyMutation();                                                         {% !! mutation in __.data.mutations %}
+    const myQuery = useMyQuery();                                                               {% !! query in __.queries %}
+    const myMutation = useMyMutation();                                                         {% !! mutation in __.mutations %}
 
     const [state] = React.useState(() => new MyState({                                          {% if __.state %}
 {% include_snippet "__moonleap__/stateConstructor.tsx.j2" %}

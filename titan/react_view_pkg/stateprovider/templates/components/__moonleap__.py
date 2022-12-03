@@ -1,7 +1,6 @@
 from moonleap import u0
 from moonleap.utils.fp import append_uniq
 from moonleap.utils.inflect import plural
-from titan.api_pkg.pipeline.resources import PipelineData
 from titan.types_pkg.typeregistry import get_type_reg
 
 
@@ -12,22 +11,31 @@ def get_helpers(_):
         containers = state.containers if state else []
         pipelines = state_provider.pipelines
 
-        data = PipelineData()
+        queries = list()
+        mutations = list()
         type_specs_to_import = list()
 
         def __init__(self):
-            self.data.update(self.pipelines)
+            self._get_queries_from_pipelines()
             self._get_mutations_from_containers()
             self._get_types_to_import()
+
+        def _get_queries_from_pipelines(self):
+            for pipeline in self.pipelines:
+                pipeline_source = pipeline.source
+                if pipeline_source.meta.term.tag == "query":
+                    append_uniq(self.queries, pipeline_source)
+                if pipeline_source.meta.term.tag == "mutation":
+                    append_uniq(self.mutations, pipeline_source)
 
         def _get_mutations_from_containers(self):
             for container in self.containers:
                 if delete_items_mutation := container.delete_items_mutation:
-                    append_uniq(self.data.mutations, delete_items_mutation)
+                    append_uniq(self.mutations, delete_items_mutation)
                 if delete_item_mutation := container.delete_item_mutation:
-                    append_uniq(self.data.mutations, delete_item_mutation)
+                    append_uniq(self.mutations, delete_item_mutation)
                 if order_items_mutation := container.order_items_mutation:
-                    append_uniq(self.data.mutations, order_items_mutation)
+                    append_uniq(self.mutations, order_items_mutation)
 
         def container_inputs(
             self, container=None, named_items=True, named_item_lists=True
@@ -43,17 +51,15 @@ def get_helpers(_):
             return result
 
         def _get_types_to_import(self):
-            for mutation in self.data.mutations:
+            for mutation in self.mutations:
                 for field in mutation.api_spec.get_inputs(
                     ["fk", "relatedSet", "uuid", "uuid[]"]
                 ):
                     append_uniq(self.type_specs_to_import, field.target_type_spec)
 
-            for prop_item in self.data.prop_items:
-                append_uniq(self.type_specs_to_import, prop_item.type_spec)
-
-            for prop_item_list in self.data.prop_item_lists:
-                append_uniq(self.type_specs_to_import, prop_item_list.item.type_spec)
+            for prop in self.state_provider.props:
+                item = prop.item if prop.meta.term.tag == "item~list" else prop
+                append_uniq(self.type_specs_to_import, item.type_spec)
 
         def delete_items_data(self, container):
             deletes_items = container.get_bvr("deletion")

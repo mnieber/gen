@@ -1,15 +1,26 @@
 from moonleap import create_forward
 from moonleap.verbs import has, provides
-from titan.react_pkg.component.props import get_pipelines
+from titan.react_pkg.component.pipelines import get_pipelines
 
 
 def state_provider_load(state_provider):
     forwards = []
-    for component_term, component_data in get_pipelines().get("components", {}).items():
+    component_datas = get_pipelines().get("components", {})
+    state_datas = get_pipelines().get("states", {})
+    _add_states_to_components(component_datas, state_datas)
+
+    for component_term, component_data in component_datas.items():
         _check_name(component_term)
         if component_term == state_provider.meta.term.as_normalized_str:
             _get_state_provider(component_term, component_data, forwards)
     return forwards
+
+
+def _add_states_to_components(component_datas, state_datas):
+    for component_data in component_datas.values():
+        component_data["states"] = [
+            component_data["states"][x] for x in component_data["states"]
+        ]
 
 
 def _get_state_provider(component_term, component_data, forwards):

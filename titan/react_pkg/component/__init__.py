@@ -9,17 +9,20 @@ from moonleap import (
     named,
     rule,
 )
-from moonleap.verbs import has
+from moonleap.verbs import has, has_default_prop, has_prop
 from titan.react_pkg.reactmodule import ReactModule
 from titan.widgets_pkg.widgetregistry import get_widget_reg
 from titan.widgets_pkg.widgetregistry.resources import WidgetRegistry
 
 from . import props
+from .pipelines import component_load_pipelines
 from .resources import Component  # noqa
 
 rules = {
     ("widget-registry", has, "component"): empty_rule(),
     ("component", has, "x+pipeline"): empty_rule(),
+    ("component", has_prop, "x+:pipeline-elm"): empty_rule(),
+    ("component", has_default_prop, "x+:pipeline-elm"): empty_rule(),
 }
 
 
@@ -51,10 +54,12 @@ def created_component(component):
 @extend(Component)
 class ExtendComponent:
     module = P.parent("react-module", has)
-    load_pipelines = MemFun(props.load_pipelines)
+    load_pipelines = MemFun(component_load_pipelines)
     pipelines = P.children(has, "x+pipeline")
     get_pipeline_and_expr = MemFun(props.component_get_pipeline_and_expr)
     maybe_expression = MemFun(props.component_maybe_expression)
+    props = P.children(has_prop, "x+:pipeline-elm")
+    default_props = P.children(has_default_prop, "x+:pipeline-elm")
 
 
 @extend(ReactModule)
