@@ -20,7 +20,7 @@ class ItemFieldsBuilder(Builder):
             field_widget_spec = parser.parse(default_widget_spec)[0]
 
         child_widget_specs = []
-        item_expr = self.item_expr()
+        item_data_path = self.item_data_path()
 
         for field_spec in self.item.type_spec.get_field_specs():
             if (
@@ -35,7 +35,7 @@ class ItemFieldsBuilder(Builder):
                 child_widget_spec = copy.deepcopy(field_widget_spec)
                 child_widget_spec.values[
                     "field_expr"
-                ] = f"{item_expr}.{field_spec.name}"
+                ] = f"{data_path}.{field_spec.name}"
                 child_widget_specs.append(child_widget_spec)
 
         self._add_child_widgets(child_widget_specs)

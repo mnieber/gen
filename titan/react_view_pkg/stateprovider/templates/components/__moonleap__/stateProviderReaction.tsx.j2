@@ -4,7 +4,7 @@
       const cleanUpReaction = reaction(
         () => {
           return {
-            {{ container_input.typ.ts_var }}: {{ __.get_expression(container_input) }},                         {% !! container_input in __.container_inputs() %}
+            {{ container_input.typ.ts_var }}: {{ __.get_data_path(container_input) }},                          {% !! container_input in __.container_inputs() %}
           }
         },
         (inputs) => {

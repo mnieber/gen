@@ -21,8 +21,8 @@ from .resources import Component  # noqa
 rules = {
     ("widget-registry", has, "component"): empty_rule(),
     ("component", has, "x+pipeline"): empty_rule(),
-    ("component", has_prop, "x+:pipeline-elm"): empty_rule(),
-    ("component", has_default_prop, "x+:pipeline-elm"): empty_rule(),
+    ("component", has_prop, "x+pipeline-elm"): empty_rule(),
+    ("component", has_default_prop, "x+pipeline-elm"): empty_rule(),
 }
 
 
@@ -56,7 +56,7 @@ class ExtendComponent:
     module = P.parent("react-module", has)
     load_pipelines = MemFun(component_load_pipelines)
     pipelines = P.children(has, "x+pipeline")
-    get_pipeline_and_expr = MemFun(props.component_get_pipeline_and_expr)
+    get_pipeline_and_data_path = MemFun(props.component_get_pipeline_and_data_path)
     maybe_expression = MemFun(props.component_maybe_expression)
     props = P.children(has_prop, "x+:pipeline-elm")
     default_props = P.children(has_default_prop, "x+:pipeline-elm")

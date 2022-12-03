@@ -107,19 +107,19 @@ def get_helpers(_):
 
         def return_value(self, data, hint=None):
             if data in self.state_provider.named_items_provided:
-                pipeline, result_expr = self.state_provider.get_pipeline_and_expr(data)
-                maybe_expr = self.state_provider.maybe_expression(data)
-                return (
-                    f"maybe({maybe_expr})({result_expr})" if maybe_expr else result_expr
+                pipeline, data_path = self.state_provider.get_pipeline_and_data_path(
+                    data
                 )
+                maybe_expr = self.state_provider.maybe_expression(data)
+                return f"maybe({maybe_expr})({data_path})" if maybe_expr else data_path
 
             if data in self.state_provider.named_item_lists_provided:
-                pipeline, result_expr = self.state_provider.get_pipeline_and_expr(data)
+                pipeline, data_path = self.state_provider.get_pipeline_and_data_path(
+                    data
+                )
                 maybe_expr = self.state_provider.maybe_expression(data)
                 return (
-                    f"maybe({maybe_expr})({result_expr}, [])"
-                    if maybe_expr
-                    else result_expr
+                    f"maybe({maybe_expr})({data_path}, [])" if maybe_expr else data_path
                 )
 
             if data in self.containers and hint == "items":
@@ -128,11 +128,9 @@ def get_helpers(_):
                 items_name = plural(container.item.item_name)
                 assert named_item_list
                 maybe_expr = self.state_provider.maybe_expression(named_item_list)
-                result_expr = f"state.{container.name}.data.{items_name}Display"
+                data_path = f"state.{container.name}.data.{items_name}Display"
                 return (
-                    f"maybe({maybe_expr}, [])({result_expr})"
-                    if maybe_expr
-                    else result_expr
+                    f"maybe({maybe_expr}, [])({data_path})" if maybe_expr else data_path
                 )
 
             if data in self.containers and hint == "highlighted_item":
@@ -140,14 +138,14 @@ def get_helpers(_):
                 named_item_list = data.named_item_list
                 assert named_item_list
                 maybe_expr = self.state_provider.maybe_expression(named_item_list)
-                result_expr = f"state.{container.name}.highlight.item"
-                return (
-                    f"maybe({maybe_expr})({result_expr})" if maybe_expr else result_expr
-                )
+                data_path = f"state.{container.name}.highlight.item"
+                return f"maybe({maybe_expr})({data_path})" if maybe_expr else data_path
 
-        def get_expression(self, named_output):
-            pipeline, expr = self.state_provider.get_pipeline_and_expr(named_output)
-            return expr
+        def get_data_path(self, named_output):
+            pipeline, data_path = self.state_provider.get_pipeline_and_data_path(
+                named_output
+            )
+            return data_path
 
     return Helpers()
 

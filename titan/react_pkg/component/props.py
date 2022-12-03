@@ -1,13 +1,13 @@
-def component_get_pipeline_and_expr(component, named_output=None, term=None):
+def component_get_pipeline_and_data_path(component, named_output=None, term=None):
     for pipeline in component.pipelines:
-        result_expr = pipeline.result_expression(named_output, term)
-        if result_expr:
-            return pipeline, result_expr
+        data_path = pipeline.data_path(named_output, term)
+        if data_path:
+            return pipeline, data_path
     return None, None
 
 
 def component_maybe_expression(component, named_item_or_item_list):
-    pipeline, expr = component.get_pipeline_and_expr(named_item_or_item_list)
+    pipeline, data_path = component.get_pipeline_and_data_path(named_item_or_item_list)
     if not pipeline:
         return "'Moonleap Todo'"
 

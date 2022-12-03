@@ -54,17 +54,17 @@ class BuilderItemsMixin:
             if x.meta.term.as_normalized_str == item_term.as_normalized_str
         )
 
-    def _get_expr(self, term):
+    def _get_data_path(self, term):
         if not term:
             return None
 
-        expr = self.parent_builder.get_pipeline_expr(term=term)
-        if not expr:
-            raise Exception(f"Could not find pipeline for: {term}")
-        return expr
+        data_path = self.parent_builder.get_data_path(term=term)
+        if not data_path:
+            raise Exception(f"Could not find data path for: {term}")
+        return data_path
 
-    def item_list_expr(self):
-        return self._get_expr(self.named_items_term)
+    def item_list_data_path(self):
+        return self._get_data_path(self.named_items_term)
 
-    def item_expr(self):
-        return self._get_expr(self.named_item_term)
+    def item_data_path(self):
+        return self._get_data_path(self.named_item_term)

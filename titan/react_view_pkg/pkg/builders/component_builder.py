@@ -11,9 +11,8 @@ class ComponentBuilder(Builder):
                 named_input = pipeline.elements[0].obj
                 required_prop_name = named_input.name or named_input.typ.ts_var
                 # The required prop must be supplied by some parent component
-                expr = self.parent_builder.get_pipeline_expr(named_input)
-                provided_prop_name = expr
-                attrs += [f"{required_prop_name}={{{provided_prop_name}}}"]
+                data_path = self.parent_builder.get_data_path(named_input)
+                attrs += [f"{required_prop_name}={{{data_path}}}"]
 
         attrs_str = " ".join(attrs)
         key = div_attrs.get("key")

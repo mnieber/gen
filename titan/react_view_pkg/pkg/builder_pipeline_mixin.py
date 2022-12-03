@@ -1,16 +1,16 @@
 class BuilderPipelineMixin:
-    def get_pipeline_expr(self, named_output=None, term=None):
+    def get_data_path(self, named_output=None, term=None):
         from titan.react_view_pkg.pkg.builders.array_builder import ArrayBuilder
 
         b = self
         while b:
             component = b.widget_spec.component
             if component:
-                pipeline, expr = component.get_pipeline_and_expr(
+                pipeline, data_path = component.get_pipeline_and_data_path(
                     named_output=named_output, term=term
                 )
                 if pipeline:
-                    return expr
+                    return data_path
             if isinstance(b, ArrayBuilder):
                 if (named_output and named_output.typ is b.item_list.item) or (
                     term

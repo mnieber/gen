@@ -18,9 +18,9 @@ def state_provider_load(state_provider):
 
 def _add_states_to_components(component_datas, state_datas):
     for component_data in component_datas.values():
-        component_data["states"] = [
-            component_data["states"][x] for x in component_data["states"]
-        ]
+        component_data["states"] = {
+            x: state_datas[x] for x in component_data.get("states", [])
+        }
 
 
 def _get_state_provider(component_term, component_data, forwards):

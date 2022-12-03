@@ -28,12 +28,12 @@ class SpinnerBuilder(Builder):
         use_ui_kit = True  # TODO
         template_str = uikit_template_str if use_ui_kit else no_uikit_template_str
         res = self.item or self.item_list
-        get_res_expr = self.item_list_expr() or self.item_expr()
+        data_path = self.item_list_data_path() or self.item_data_path()
 
         code = get_template_from_str(template_str).render(
             {
                 "test": f"!props.{res.ts_var}",
-                "get_res_expr": get_res_expr,
+                "get_res_expr": data_path,
             }
         )
         self.output.preamble_lines.extend([code])
