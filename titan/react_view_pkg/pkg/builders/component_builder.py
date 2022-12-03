@@ -17,4 +17,6 @@ class ComponentBuilder(Builder):
         attrs_str = " ".join(attrs)
         key = div_attrs.get("key")
         key_attr = f"key={{{key}}}" if key else ""
-        self.add_lines([f"<{self.output.widget_class_name} {key_attr} {attrs_str}/>"])
+        self.add_lines(
+            [f"<{self.widget_spec.widget_class_name} {key_attr} {attrs_str}/>"]
+        )

@@ -23,6 +23,7 @@ rules = {
     ("component", has, "x+pipeline"): empty_rule(),
     ("component", has_prop, "x+pipeline-elm"): empty_rule(),
     ("component", has_default_prop, "x+pipeline-elm"): empty_rule(),
+    ("component", has_default_prop, "behavior"): empty_rule(),
 }
 
 
@@ -60,6 +61,23 @@ class ExtendComponent:
     maybe_expression = MemFun(props.component_maybe_expression)
     named_props = P.children(has_prop, "x+pipeline-elm")
     named_default_props = P.children(has_default_prop, "x+pipeline-elm")
+
+
+@rule("widget-registry", has, "component", priority=Priorities.LOW.value)
+def component_builder(widget_reg, component):
+    from titan.react_view_pkg.pkg.get_builder import get_builder
+    from titan.react_view_pkg.pkg.prepare_builder import prepare_builder
+
+    if widget_spec := component.widget_spec:
+        builder = get_builder(widget_spec, parent_builder=None)
+        component.builder = builder
+        prepare_builder(builder)
+        forwards = []
+
+        for default_prop in builder.output.default_props:
+            forwards.append(create_forward(component, has_default_prop, default_prop))
+
+        return forwards
 
 
 @extend(ReactModule)

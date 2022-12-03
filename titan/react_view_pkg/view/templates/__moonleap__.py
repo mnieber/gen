@@ -1,19 +1,21 @@
 from moonleap.utils.fp import append_uniq, uniq
-from titan.react_view_pkg.pkg.get_builder import get_builder
 
 
 def get_helpers(_):
     class Helpers:
         view = _.component
         widget_spec = _.component.widget_spec
+        builder = view.builder
         queries = list()
         mutations = list()
         pipelines = _.component.pipelines
+        child_components = builder.output.child_components
+        has_children = builder.output.has_children
         build = None
 
         def __init__(self):
             self._get_queries_from_pipelines()
-            self.build = self._get_div(self.widget_spec)
+            self.build = self._get_div()
 
         def _get_queries_from_pipelines(self):
             for pipeline in self.pipelines:
@@ -23,10 +25,10 @@ def get_helpers(_):
                 if pipeline_source.meta.term.tag == "mutation":
                     append_uniq(self.mutations, pipeline_source)
 
-        def _get_div(self, widget_spec, level=0):
-            builder = get_builder(widget_spec, None, level)
-            builder.build()
-            return builder.output
+        def _get_div(self):
+            x = self.widget_spec
+            self.builder.build()
+            return self.builder.output
 
         @property
         def type_specs_to_import(self):

@@ -30,10 +30,6 @@ class ArrayBuilder(Builder):
         self.add_lines([f"{{{const_name}}}"])
 
     def _get_child_widget_div(self, div_attrs):
-        from titan.react_view_pkg.pkg.get_builder import get_builder
-
         child_widget_spec = self.widget_spec.find_child_with_place("Child")
-        child_builder = get_builder(child_widget_spec, self, self.level + 1)
-        child_builder.build(div_attrs)
-        child_widget_div = child_builder.output.div
-        return child_widget_div
+        child_widget_spec.builder.build(div_attrs)
+        return child_widget_spec.builder.output.div

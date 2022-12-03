@@ -35,6 +35,11 @@ def append_uniq(l, new_element):
         l.append(new_element)
 
 
+def extend_uniq(l, new_elements):
+    for new_element in new_elements:
+        append_uniq(l, new_element)
+
+
 def count(condition, items):
     result = 0
     for item in items:

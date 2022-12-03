@@ -2,27 +2,24 @@ import copy
 
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.widgets_pkg.pkg.load_widget_specs.widget_spec_parser import WidgetSpecParser
-from titan.widgets_pkg.pkg.widget_spec import WidgetSpec
-from titan.widgets_pkg.widgetregistry.resources import WidgetRegistry
 
 default_widget_spec = {"Field with Card": {"ItemField": "pass"}}
 
 
 class ItemFieldsBuilder(Builder):
-    def create_widget_class_name(self):
-        return self.parent_builder.create_widget_class_name()
-
-    def build(self, div_attrs=None):
+    def prepare(self):
         field_widget_spec = self.widget_spec.find_child_with_place("Field")
         if not field_widget_spec:
-            widget_reg = WidgetRegistry()
-            parser = WidgetSpecParser(widget_reg)
+            parser = WidgetSpecParser()
             field_widget_spec = parser.parse(default_widget_spec)[0]
+            field_widget_spec.place = "Field"
+            self.widget_spec.child_widget_specs.append(field_widget_spec)
 
-        child_widget_specs = []
-        item_data_path = self.item_data_path()
-
-        for field_spec in self.item.type_spec.get_field_specs():
+    def get_field_specs(self):
+        type_spec = self.widget_spec.item.type_spec
+        return [
+            field_spec
+            for field_spec in type_spec.get_field_specs()
             if (
                 "client" in field_spec.has_model
                 and not field_spec.field_type
@@ -31,14 +28,16 @@ class ItemFieldsBuilder(Builder):
                     "relatedSet",
                 )
                 and not (field_spec.name in ("id",))
-            ):
-                child_widget_spec = copy.deepcopy(field_widget_spec)
-                child_widget_spec.values[
-                    "field_expr"
-                ] = f"{item_data_path}.{field_spec.name}"
-                child_widget_specs.append(child_widget_spec)
+            )
+        ]
 
-        self._add_child_widgets(child_widget_specs)
+    def build(self, div_attrs=None):
+        field_widget_spec = self.widget_spec.find_child_with_place("Field")
+        item_data_path = self.item_data_path()
+        for field_spec in self.get_field_specs():
+            field_expr = f"{item_data_path}.{field_spec.name}"
+            field_widget_spec.values["field_expr"] = field_expr
+            self._add_child_widgets([field_widget_spec])
 
 
 class ItemFieldBuilder(Builder):

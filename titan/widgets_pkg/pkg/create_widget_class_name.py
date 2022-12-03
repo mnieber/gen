@@ -1,21 +1,21 @@
 from moonleap import u0
 
 
-def create_widget_class_name(builder):
+def create_widget_class_name(widget_spec):
     widget_class_name = (
-        _to_widget_class_name(builder.widget_spec)
-        or builder.widget_spec.place
-        or builder.widget_spec.widget_base_type
+        _to_widget_class_name(widget_spec)
+        or widget_spec.place
+        or widget_spec.widget_base_type
     )
-    if builder.widget_spec.is_component:
+    if widget_spec.is_component:
         return widget_class_name
 
     if widget_class_name:
         shorten = widget_class_name.startswith("__")
-        root = builder.root_builder if shorten else builder.parent_builder
-        if root and root is not builder:
-            infix = "__" if root.widget_spec.is_component and not shorten else ""
-            return root.output.widget_class_name + infix + widget_class_name
+        root = widget_spec.root if shorten else widget_spec.parent
+        if root and root is not widget_spec:
+            infix = "__" if root.is_component and not shorten else ""
+            return root.widget_class_name + infix + widget_class_name
 
     return widget_class_name
 

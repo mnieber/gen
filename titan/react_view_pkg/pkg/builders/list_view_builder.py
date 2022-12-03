@@ -1,5 +1,4 @@
 from moonleap.utils import chop0
-from titan.react_view_pkg.pkg.add_child_widgets import get_child_widget_builder
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.verbatim_builder import VerbatimBuilder
 
@@ -14,7 +13,6 @@ class ListViewBuilder(Builder):
     def __init__(self, widget_spec, parent_builder, level, list_view):
         super().__init__(widget_spec, parent_builder, level)
         self.list_view = list_view
-        self.output.components += [list_view.lvi]
         self._register_builders()
 
     def _register_builders(self):

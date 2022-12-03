@@ -9,6 +9,9 @@ def get_helpers(_):
 
     class Helpers:
         widget_spec = _.component.widget_spec
+        builder = _.component.builder
+        child_components = builder.output.child_components
+        has_children = builder.output.has_children
         item_name = _.component.item.item_name
         selection_bvr = _find_behavior("selection")
         deletion_bvr = _find_behavior("deletion")
@@ -24,8 +27,7 @@ def get_helpers(_):
             self.build = self._get_div(self.widget_spec)
 
         def _get_div(self, widget_spec, level=0):
-            builder = ListViewBuilder(widget_spec, None, level, list_view=_.component)
-            builder.build()
-            return builder.output
+            self.builder.build()
+            return self.builder.output
 
     return Helpers()

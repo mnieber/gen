@@ -4,9 +4,12 @@ from dataclasses import dataclass, field
 
 import ramda as R
 
+from titan.widgets_pkg.pkg.create_widget_class_name import create_widget_class_name
+from titan.widgets_pkg.pkg.widget_spec_items_mixin import WidgetSpecItemsMixin
+
 
 @dataclass
-class WidgetSpec:
+class WidgetSpec(WidgetSpecItemsMixin):
     widget_base_type: str
     child_widget_specs: T.List["WidgetSpec"] = field(repr=False, default_factory=list)
     styles: T.List[str] = field(repr=False, default_factory=list)
@@ -15,10 +18,19 @@ class WidgetSpec:
     place: T.Optional[str] = None
     values: T.Dict[str, str] = field(default_factory=dict)
     id: str = field(default_factory=lambda: uuid.uuid4().hex)
+    parent: T.Optional["WidgetSpec"] = field(default=None, repr=False)
 
     @property
     def is_component(self):
         return self.widget_name and ":" in self.widget_name
+
+    @property
+    def widget_class_name(self):
+        return create_widget_class_name(self)
+
+    @property
+    def root(self):
+        return self.parent or self
 
     @property
     def is_component_def(self):

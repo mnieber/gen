@@ -3,20 +3,20 @@ from titan.react_view_pkg.pkg.add_div import add_div_close, add_div_open
 from titan.react_view_pkg.pkg.builder_items_mixin import BuilderItemsMixin
 from titan.react_view_pkg.pkg.builder_output import BuilderOutput
 from titan.react_view_pkg.pkg.builder_pipeline_mixin import BuilderPipelineMixin
-from titan.react_view_pkg.pkg.create_widget_class_name import create_widget_class_name
+from titan.react_view_pkg.pkg.prepare_builder import prepare_builder
 
 
 class Builder(BuilderPipelineMixin, BuilderItemsMixin):
     def __init__(self, widget_spec, parent_builder, level):
-        self.builder_type_lut = dict()
         self.widget_spec = widget_spec
         self.parent_builder = parent_builder
         self.level = level
         self.root_builder = get_root_builder(self)
-        self.output = create_builder_output(self)
+        self.output = BuilderOutput()
+        self.__post_init__()
 
-    def register_builder_type(self, widget_base_type, builder_type):
-        self.builder_type_lut[widget_base_type] = builder_type
+    def __post_init__(self):
+        pass
 
     def add_lines(self, lines):
         indented_lines = ["  " * self.level + x for x in lines]
@@ -37,14 +37,11 @@ class Builder(BuilderPipelineMixin, BuilderItemsMixin):
     def _add_div_close(self):
         add_div_close(self)
 
-    def get_provided_prop_name(self, named_input):
-        return None
-
     def build(self, div_attrs=None):
         pass
 
-    def create_widget_class_name(self):
-        return create_widget_class_name(self)
+    def prepare(self):
+        pass
 
     def __repr__(self):
         return f"{self.__class__.__name__}({self.widget_spec})"
@@ -62,10 +59,3 @@ def get_root_builder(builder):
         b = b.parent_builder
 
     return b
-
-
-def create_builder_output(builder):
-    output = BuilderOutput(widget_class_name=builder.create_widget_class_name())
-    if builder.widget_spec.is_component and builder.level > 0:
-        output.components.append(builder.widget_spec.component)
-    return output

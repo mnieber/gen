@@ -1,15 +1,12 @@
+import typing as T
 from dataclasses import dataclass
 
-from moonleap import RenderMixin, Resource, TemplateDirMixin, u0
+from moonleap import RenderMixin, Resource, TemplateDirMixin
 
 
 @dataclass
 class Component(TemplateDirMixin, RenderMixin, Resource):
     name: str
 
-    @property
-    def react_tag(self):
-        return f"<{u0(self.name)}/>"
-
-    def get_title(self):
-        return self.name
+    def __post_init__(self):
+        self.builder = None

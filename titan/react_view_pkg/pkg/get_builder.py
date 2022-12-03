@@ -17,8 +17,12 @@ from titan.react_view_pkg.pkg.builders.spinner_builder import SpinnerBuilder
 from titan.react_view_pkg.pkg.builders.text_builder import TextBuilder
 
 
-def get_builder(widget_spec, parent_builder, level) -> Builder:
-    if widget_spec.is_component and (level > 0 or not widget_spec.is_component_def):
+def get_builder(widget_spec, parent_builder) -> Builder:
+    level = parent_builder.level + 1 if parent_builder else 0
+
+    if widget_spec.is_component and parent_builder:
+        # This builder is used if the parent builder uses an instance
+        # of a component.
         return ComponentBuilder(widget_spec, parent_builder, level)
 
     if widget_spec.widget_base_type == "Layout":

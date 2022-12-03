@@ -1,4 +1,3 @@
-from titan.react_view_pkg.pkg.add_child_widgets import get_child_widget_builder
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.verbatim_builder import VerbatimBuilder
 from titan.react_view_pkg.pkg.div_attrs import update_div_attrs
@@ -30,8 +29,6 @@ class ListViewItemBuilder(Builder):
         )
 
     def build(self, div_attrs=None):
-        inner_builder = get_child_widget_builder(self, self.widget_spec, self.level)
-
         more_classes = []
         more_handlers = []
 

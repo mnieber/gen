@@ -6,7 +6,7 @@ from moonleap.utils.fp import append_uniq
 def add_div_open(builder, div_attrs=None):
     div_attrs = div_attrs or {}
     class_names = (
-        [f'"{builder.output.widget_class_name}"']
+        [f'"{builder.widget_spec.widget_class_name}"']
         + div_attrs.get("classes", [])
         + builder.widget_spec.styles
         + (["props.className"] if builder.widget_spec.is_component_def else [])

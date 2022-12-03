@@ -4,10 +4,10 @@ from .get_widget_spec import get_widget_spec
 
 
 class WidgetSpecParser:
-    def __init__(self, widget_reg):
+    def __init__(self, widget_reg=None):
         self.widget_reg = widget_reg
 
-    def parse(self, widget_spec_dict, parent_widget_spec=None):
+    def parse(self, widget_spec_dict, parent_widget_spec=None, level=0):
         items = [
             (key.strip(), value)
             for key, value in widget_spec_dict.items()
@@ -27,7 +27,7 @@ class WidgetSpecParser:
             )
             widget_specs.append(widget_spec)
 
-            if widget_spec.is_component_def:
+            if self.widget_reg and widget_spec.is_component_def:
                 if self.widget_reg.get(widget_spec.widget_name, None) is not None:
                     raise Exception(
                         f"Duplicate widget component spec: {widget_spec.widget_name}"
@@ -36,12 +36,13 @@ class WidgetSpecParser:
 
             if parent_widget_spec:
                 parent_widget_spec.child_widget_specs.append(widget_spec)
+                widget_spec.parent = parent_widget_spec
 
             #
             # Use recursion to convert child widget specs
             #
             if is_dict and spec:
-                self.parse(spec, parent_widget_spec=widget_spec)
+                self.parse(spec, parent_widget_spec=widget_spec, level=level + 1)
 
         return widget_specs
 
