@@ -30,11 +30,12 @@ def get_helpers(_):
 
         @property
         def type_specs_to_import(self):
-            return uniq(
+            result = uniq(
                 [
                     res.item.type_spec if res.meta.term.tag == "item~list" else res
-                    for res in _.component.props
+                    for res in [x.typ for x in _.component.named_props]
                 ]
             )
+            return result
 
     return Helpers()

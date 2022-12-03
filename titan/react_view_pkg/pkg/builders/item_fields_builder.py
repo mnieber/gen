@@ -35,7 +35,7 @@ class ItemFieldsBuilder(Builder):
                 child_widget_spec = copy.deepcopy(field_widget_spec)
                 child_widget_spec.values[
                     "field_expr"
-                ] = f"{data_path}.{field_spec.name}"
+                ] = f"{item_data_path}.{field_spec.name}"
                 child_widget_specs.append(child_widget_spec)
 
         self._add_child_widgets(child_widget_specs)

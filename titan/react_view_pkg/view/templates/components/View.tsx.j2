@@ -21,7 +21,7 @@ type PropsT = {                                                                 
 type PropsT = React.PropsWithChildren<{                                                             {% ?? __.build.has_children %}
 {# Start: view props here #}
 {# End: view props here #}
-  {{ res.ts_var }}: {{ res.ts_type }}                                                               {% !! res in _.component.props %}
+  {{ res.typ.ts_var }}: {{ res.typ.ts_type }}                                                       {% !! res in _.component.named_props %}
   className?: any;
 }                                                                                                   {% ?? not __.build.has_children %}
 }>                                                                                                  {% ?? __.build.has_children %}
@@ -30,7 +30,7 @@ type PropsT = React.PropsWithChildren<{                                         
 ;
 
 const DefaultProps = {
-  ...dps.{{ res.ts_var }},                                                                          {% !! res in _.component.default_props %}
+  ...dps.{{ res.typ.ts_var }},                                                                      {% !! res in _.component.named_default_props %}
 {# Start: default view props here #}
 {# End: default view props here #}
 };

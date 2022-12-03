@@ -57,8 +57,9 @@ def get_helpers(_):
                 ):
                     append_uniq(self.type_specs_to_import, field.target_type_spec)
 
-            for prop in self.state_provider.props:
-                item = prop.item if prop.meta.term.tag == "item~list" else prop
+            for named_prop in self.state_provider.named_props:
+                res = named_prop.typ
+                item = res.item if res.meta.term.tag == "item~list" else res
                 append_uniq(self.type_specs_to_import, item.type_spec)
 
         def delete_items_data(self, container):

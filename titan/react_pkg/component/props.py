@@ -1,9 +1,14 @@
 def component_get_pipeline_and_data_path(component, named_output=None, term=None):
+    results = []
     for pipeline in component.pipelines:
-        data_path = pipeline.data_path(named_output, term)
-        if data_path:
-            return pipeline, data_path
-    return None, None
+        if data_path := pipeline.data_path(named_output, term):
+            results.append((pipeline, data_path))
+
+    if len(results) > 1:
+        raise Exception(
+            f"More than one data path found for {named_output} in {component}: {results}"
+        )
+    return results[0] if results else (None, None)
 
 
 def component_maybe_expression(component, named_item_or_item_list):

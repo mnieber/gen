@@ -18,11 +18,11 @@ import { MyState } from 'src/{{ __.state.state_provider.module.module_path }}/My
 import { log } from 'src/utils/logging';
 
 type PropsT = React.PropsWithChildren<{
-  {{ res.ts_var }}: {{ res.ts_type }}                                                           {% !! res in _.component.props %}
+  {{ res.typ.ts_var }}: {{ res.typ.ts_type }}                                                   {% !! res in _.component.named_props %}
 }>;
 
 const DefaultProps = {
-  ...dps.{{ res.ts_var }},                                                                      {% !! res in _.component.default_props %}
+  ...dps.{{ res.typ.ts_var }},                                                                  {% !! res in _.component.named_default_props %}
 };
 
 export const {{ _.component.name }} = observer(

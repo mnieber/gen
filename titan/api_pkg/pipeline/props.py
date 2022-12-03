@@ -2,6 +2,7 @@ import typing as T
 from dataclasses import dataclass
 
 from moonleap import Resource, named
+from moonleap.parser.term import match_term_to_pattern
 from moonleap.utils.fp import aperture
 from titan.api_pkg.mutation.resources import Mutation
 from titan.api_pkg.pipeline.resources import PropsSource
@@ -215,7 +216,7 @@ def deleter_mutation(self):
     return None
 
 
-def result_data_path(self, obj=None, obj_term=None):
+def data_path(self, obj=None, obj_term=None):
     result = ""
     nr_elms = len(self.elements)
 
@@ -245,8 +246,7 @@ def result_data_path(self, obj=None, obj_term=None):
             raise Exception(f"Unexpected element {elm}")
 
         if (obj and elm.obj.typ is obj.typ) or (
-            obj_term
-            and elm.obj.meta.term.as_normalized_str == obj_term.as_normalized_str
+            obj_term and match_term_to_pattern(elm.obj.meta.term, obj_term)
         ):
             return result.removesuffix("?")
 

@@ -58,8 +58,8 @@ class ExtendComponent:
     pipelines = P.children(has, "x+pipeline")
     get_pipeline_and_data_path = MemFun(props.component_get_pipeline_and_data_path)
     maybe_expression = MemFun(props.component_maybe_expression)
-    props = P.children(has_prop, "x+:pipeline-elm")
-    default_props = P.children(has_default_prop, "x+:pipeline-elm")
+    named_props = P.children(has_prop, "x+pipeline-elm")
+    named_default_props = P.children(has_default_prop, "x+pipeline-elm")
 
 
 @extend(ReactModule)

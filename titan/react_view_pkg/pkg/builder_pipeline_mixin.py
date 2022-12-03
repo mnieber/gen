@@ -9,7 +9,7 @@ class BuilderPipelineMixin:
                 pipeline, data_path = component.get_pipeline_and_data_path(
                     named_output=named_output, term=term
                 )
-                if pipeline:
+                if data_path:
                     return data_path
             if isinstance(b, ArrayBuilder):
                 if (named_output and named_output.typ is b.item_list.item) or (

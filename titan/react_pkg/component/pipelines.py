@@ -1,8 +1,11 @@
 import os
 
+import ramda as R
+
 from moonleap import create_forward, get_session, load_yaml
 from moonleap.builder.add_meta_data_to_blocks import add_meta_data_to_blocks
 from moonleap.parser.block_collector import create_block
+from moonleap.parser.term import word_to_term
 from moonleap.verbs import connects, has, has_default_prop, has_prop
 
 _pipelines = None
@@ -18,8 +21,8 @@ def get_pipelines():
 
 
 def component_load_pipelines(component):
-    __import__("pudb").set_trace()
     pipelines = get_pipelines()
+    pipeline_terms = []
     forwards = []
 
     for component_term, component_data in pipelines.get("components", {}).items():
@@ -28,31 +31,52 @@ def component_load_pipelines(component):
             # Create a special block inside the component block for the pipelines.
             block = _create_pipelines_block(component)
 
-            for pipeline_data in component_data.get("pipelines", []):
-                name = _get_pipeline_name(pipeline_data[-1])
-                pipeline_term_str = f"{name}+:pipeline"
-                # Create forwards to construct the pipeline.
-                forwards.append(
-                    create_forward(component, has, pipeline_term_str, block=block)
+            def _connect(pipeline_term_str, elm_term_str):
+                return create_forward(
+                    pipeline_term_str, connects, elm_term_str, block=block
                 )
-                for term in pipeline_data:
-                    forwards.append(
-                        create_forward(pipeline_term_str, connects, term, block=block)
-                    )
 
-            for prop_term in component_data.get("props", []):
-                forwards += [create_forward(component_term, has_prop, prop_term)]
+            def _add_pipeline(pipeline_term_str):
+                if pipeline_term_str in pipeline_terms:
+                    raise Exception(f"Duplicate pipeline term: {pipeline_term_str}")
+                pipeline_terms.append(pipeline_term_str)
+                return create_forward(component, has, pipeline_term_str, block=block)
 
-            for prop_term in component_data.get("defaultProps", []):
-                forwards += [
-                    create_forward(component_term, has_default_prop, prop_term)
-                ]
+            for pipeline_data in component_data.get("pipelines", []):
+                pipeline_term_str = _get_pipeline_term_str(pipeline_data[-1])
+                forwards += [_add_pipeline(pipeline_term_str)]
+
+                # Maybe insert a "props" pipeline source
+                head_term = word_to_term(R.head(pipeline_data))
+                if head_term and head_term.tag in ("item", "item~list"):
+                    forwards += [_connect(pipeline_term_str, ":props")]
+
+                # Add terms to the pipeline
+                for term_str in pipeline_data:
+                    forwards += [_connect(pipeline_term_str, term_str)]
+
+            for propsKey, verb in (
+                ("props", has_prop),
+                ("defaultProps", has_default_prop),
+            ):
+                for prop_term_str in component_data.get(propsKey, []):
+                    # Add prop to the component
+                    forwards += [create_forward(component_term, verb, prop_term_str)]
+
+                    # Also add a pipeline that produces the prop value
+                    pipeline_term_str = _get_pipeline_term_str(prop_term_str)
+                    forwards += [_add_pipeline(pipeline_term_str)]
+                    forwards += [
+                        _connect(pipeline_term_str, ":props"),
+                        _connect(pipeline_term_str, prop_term_str),
+                    ]
 
     return forwards
 
 
-def _get_pipeline_name(data_name):
-    return data_name.replace("+", "-").replace(":", "-").replace("~", "-")
+def _get_pipeline_term_str(data_name):
+    name = data_name.replace("+", "-").replace(":", "-").replace("~", "-")
+    return f"{name}+:pipeline"
 
 
 def _check_name(name):

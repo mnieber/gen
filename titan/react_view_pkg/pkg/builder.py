@@ -46,6 +46,9 @@ class Builder(BuilderPipelineMixin, BuilderItemsMixin):
     def create_widget_class_name(self):
         return create_widget_class_name(self)
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.widget_spec})"
+
     @property
     def use_ui_kit(self):
         component = self.widget_spec.component

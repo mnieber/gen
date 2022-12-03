@@ -33,7 +33,7 @@ def create_named_pipeline(term):
 class ExtendNamedPipeline:
     deleter_mutation = Prop(props.deleter_mutation)
     elements = Prop(props.elements)
-    result_data_path = MemFun(props.result_data_path)
+    data_path = MemFun(props.data_path)
     output = Prop(props.output)
     output_name = Prop(props.output_name)
     resources = P.children(connects, "x+pipeline-elm")
