@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from moonleap import create, u0
+from moonleap.parser.term import term_to_camel
 
 from .resources import View
 
@@ -11,7 +12,7 @@ base_tags = {
 
 @create("view")
 def create_view(term):
-    name = u0(term.to_camel())
+    name = u0(term_to_camel(term))
     view = View(name=f"{name}")
     view.template_dir = Path(__file__).parent / "templates"
 

@@ -5,7 +5,7 @@ import ramda as R
 from moonleap import create_forward, get_session, load_yaml
 from moonleap.builder.add_meta_data_to_blocks import add_meta_data_to_blocks
 from moonleap.parser.block_collector import create_block
-from moonleap.parser.term import word_to_term
+from moonleap.parser.term import match_term_to_pattern, word_to_term
 from moonleap.verbs import connects, has, has_default_prop, has_prop
 
 _pipelines = None
@@ -25,9 +25,10 @@ def component_load_pipelines(component):
     pipeline_terms = []
     forwards = []
 
-    for component_term, component_data in pipelines.get("components", {}).items():
-        _check_name(component_term)
-        if component_term == component.meta.term.as_normalized_str:
+    for component_term_str, component_data in pipelines.get("components", {}).items():
+        _check_name(component_term_str)
+        component_term = word_to_term(component_term_str)
+        if match_term_to_pattern(component.meta.term, component_term):
             # Create a special block inside the component block for the pipelines.
             block = _create_pipelines_block(component)
 
@@ -61,7 +62,9 @@ def component_load_pipelines(component):
             ):
                 for prop_term_str in component_data.get(propsKey, []):
                     # Add prop to the component
-                    forwards += [create_forward(component_term, verb, prop_term_str)]
+                    forwards += [
+                        create_forward(component_term_str, verb, prop_term_str)
+                    ]
 
                     # Also add a pipeline that produces the prop value
                     pipeline_term_str = _get_pipeline_term_str(prop_term_str)

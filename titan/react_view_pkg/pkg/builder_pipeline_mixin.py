@@ -1,3 +1,6 @@
+from moonleap.parser.term import match_term_to_pattern
+
+
 class BuilderPipelineMixin:
     def get_data_path(self, named_output=None, term=None):
         from titan.react_view_pkg.pkg.builders.array_builder import ArrayBuilder
@@ -13,9 +16,7 @@ class BuilderPipelineMixin:
                     return data_path
             if isinstance(b, ArrayBuilder):
                 if (named_output and named_output.typ is b.item_list.item) or (
-                    term
-                    and term.as_normalized_str
-                    == b.item_list.item.meta.term.as_normalized_str
+                    term and match_term_to_pattern(b.item_list.item.meta.term, term)
                 ):
                     return named_output.typ.ts_var
             b = b.parent_builder

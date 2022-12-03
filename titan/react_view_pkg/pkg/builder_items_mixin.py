@@ -1,6 +1,6 @@
 import ramda as R
 
-from moonleap.parser.term import Term, word_to_term
+from moonleap.parser.term import Term, match_term_to_pattern, word_to_term
 from titan.types_pkg.typeregistry import get_type_reg
 
 
@@ -36,9 +36,9 @@ class BuilderItemsMixin:
 
         items_term = Term(data=named_items_term.data, tag=named_items_term.tag)
         return R.head(
-            x.item_list
-            for x in get_type_reg().items
-            if x.item_list.meta.term.as_normalized_str == items_term.as_normalized_str
+            item.item_list
+            for item in get_type_reg().items
+            if match_term_to_pattern(item.item_list.meta.term, items_term)
         )
 
     @property
@@ -49,9 +49,9 @@ class BuilderItemsMixin:
 
         item_term = Term(data=named_item_term.data, tag=named_item_term.tag)
         return R.head(
-            x
-            for x in get_type_reg().items
-            if x.meta.term.as_normalized_str == item_term.as_normalized_str
+            item
+            for item in get_type_reg().items
+            if match_term_to_pattern(item.meta.term, item_term)
         )
 
     def _get_data_path(self, term):

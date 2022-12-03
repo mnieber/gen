@@ -1,4 +1,5 @@
 from moonleap import create_forward
+from moonleap.parser.term import match_term_to_pattern, word_to_term
 from moonleap.verbs import has, provides
 from titan.react_pkg.component.pipelines import get_pipelines
 
@@ -9,10 +10,11 @@ def state_provider_load(state_provider):
     state_datas = get_pipelines().get("states", {})
     _add_states_to_components(component_datas, state_datas)
 
-    for component_term, component_data in component_datas.items():
-        _check_name(component_term)
-        if component_term == state_provider.meta.term.as_normalized_str:
-            _get_state_provider(component_term, component_data, forwards)
+    for component_term_str, component_data in component_datas.items():
+        _check_name(component_term_str)
+        if component_term := word_to_term(component_term_str):
+            if match_term_to_pattern(state_provider.meta.term, component_term):
+                _get_state_provider(component_term, component_data, forwards)
     return forwards
 
 

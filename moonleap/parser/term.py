@@ -13,13 +13,6 @@ class Term:
     # This field is not used in term comparisons
     is_title: T.Optional[bool] = field(default=False, compare=False)
 
-    @property
-    def as_normalized_str(self):
-        return str(self).removesuffix("^")
-
-    def to_camel(self):
-        return kebab_to_camel(self.data + (self.tag if self.data.endswith("-") else ""))
-
     def __repr__(self):
         return (
             (self.name + "+" if self.name is not None else "")
@@ -102,3 +95,7 @@ def patch_tag(term, tag):
         if tag is None
         else Term(data="generic", tag=tag, name=term.name if term else None)
     )
+
+
+def term_to_camel(term):
+    return kebab_to_camel(term.data + (term.tag if term.data.endswith("-") else ""))

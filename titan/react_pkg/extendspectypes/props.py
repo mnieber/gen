@@ -1,3 +1,4 @@
+from moonleap.parser.term import match_term_to_pattern, word_to_term
 from moonleap.utils.case import u0
 from moonleap.utils.inflect import plural
 from titan.widgets_pkg.widgetregistry import get_widget_reg
@@ -81,18 +82,17 @@ def widget_spec_component(widget_spec):
         return None
 
     for component in get_widget_reg().components:
-        if component.meta.term.as_normalized_str == widget_spec.widget_name:
-            return component
+        if widget_term := word_to_term(widget_spec.widget_name):
+            if match_term_to_pattern(component.meta.term, widget_term):
+                return component
 
     raise Exception(f"Cannot find component for {widget_spec}")
 
 
 def component_widget_spec(component):
     for widget_spec in get_widget_reg().widget_specs():
-        if (
-            widget_spec.is_component_def
-            and component.meta.term.as_normalized_str == widget_spec.widget_name
-        ):
-            return widget_spec
+        if widget_term := word_to_term(widget_spec.widget_name):
+            if match_term_to_pattern(component.meta.term, widget_term):
+                return widget_spec
 
     return None
