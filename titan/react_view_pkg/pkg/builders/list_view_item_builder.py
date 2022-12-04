@@ -1,6 +1,5 @@
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.verbatim_builder import VerbatimBuilder
-from titan.react_view_pkg.pkg.div_attrs import update_div_attrs
 
 
 class ListViewItemBuilder(Builder):
@@ -28,7 +27,7 @@ class ListViewItemBuilder(Builder):
             div=self.render("components/__moonleap__/lvi_buttons.tsx.j2"),
         )
 
-    def build(self, div_attrs=None):
+    def build(self):
         more_classes = []
         more_handlers = []
 
@@ -45,9 +44,8 @@ class ListViewItemBuilder(Builder):
             ]
             more_handlers += ["{...dragHandlers(props)}"]
 
-        inner_builder.build(
-            update_div_attrs(
-                div_attrs, prefix_classes=more_classes, handlers=more_handlers
-            )
-        )
+        self.widget_spec.div_styles = more_classes + self.widget_spec.div_styles
+        self.widget_spec.div_handlers = self.widget_spec.div_handlers + more_handlers
+
+        inner_builder.build()
         self.output = inner_builder.output

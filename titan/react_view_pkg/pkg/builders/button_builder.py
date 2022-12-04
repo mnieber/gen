@@ -24,7 +24,7 @@ button_template_str = chop0(
 
 
 class ButtonBuilder(Builder):
-    def build(self, div_attrs):
+    def build(self):
         title = self.widget_spec.values["title"]
         handler = self.widget_spec.values.get("handler", None)
         self.output.external_css_classes += ["button"]

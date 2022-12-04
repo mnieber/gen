@@ -7,7 +7,7 @@ from titan.types_pkg.pkg.load_type_specs.split_raw_key import split_symbols
 
 
 def get_widget_attrs(key, value_parts):
-    attrs = dict(styles=[], values={}, widget_base_type=None)
+    attrs = dict(div_styles=[], values={}, widget_base_type=None)
     symbol_parts = []
 
     parts_with = key.split(" with ")
@@ -54,7 +54,7 @@ def get_widget_attrs(key, value_parts):
 
     for part in symbol_parts + value_parts:
         if _is_style(part):
-            append_uniq(attrs["styles"], quote(part))
+            append_uniq(attrs["div_styles"], quote(part))
         else:
             parts_eq = part.split("=")
             if len(parts_eq) == 2:

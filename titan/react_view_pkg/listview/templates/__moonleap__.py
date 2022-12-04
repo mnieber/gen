@@ -1,7 +1,5 @@
 import ramda as R
 
-from titan.react_view_pkg.pkg.builders.list_view_builder import ListViewBuilder
-
 
 def get_helpers(_):
     def _find_behavior(name):

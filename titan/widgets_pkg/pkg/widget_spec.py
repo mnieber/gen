@@ -9,7 +9,9 @@ import ramda as R
 class WidgetSpec:
     widget_base_type: str
     child_widget_specs: T.List["WidgetSpec"] = field(repr=False, default_factory=list)
-    styles: T.List[str] = field(repr=False, default_factory=list)
+    div_styles: T.List[str] = field(repr=False, default_factory=list)
+    div_handlers: T.List[str] = field(repr=False, default_factory=list)
+    div_key: T.Optional[str] = None
     widget_name: T.Optional[str] = None
     module_name: T.Optional[str] = None
     place: T.Optional[str] = None

@@ -1,15 +1,15 @@
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.react_view_pkg.pkg.div_attrs import update_div_attrs
 from titan.widgets_pkg.pkg.widget_spec import WidgetSpec
 
 
 class LayoutBuilder(Builder):
-    def build(self, div_attrs=None):
+    def build(self):
         places, more_classes = _get_places_and_classes_from_widget_specs(
             self.widget_spec.child_widget_specs
         )
 
-        self._add_div_open(update_div_attrs(div_attrs, prefix_classes=more_classes))
+        self.widget_spec.div_styles = more_classes + self.widget_spec.div_styles
+        self._add_div_open()
         self._add_child_widgets(
             _filtered_child_widget_specs(places, self.widget_spec.child_widget_specs)
         )

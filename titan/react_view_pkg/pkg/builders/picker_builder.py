@@ -40,7 +40,7 @@ import { PickerValueT, ValuePicker } from 'src/utils/components/ValuePicker';
 
 
 class PickerBuilder(Builder):
-    def build(self, div_attrs):
+    def build(self):
         item_name = self.item_list.item.item_name
         items_name = plural(item_name)
 

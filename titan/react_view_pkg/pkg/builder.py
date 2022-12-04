@@ -34,8 +34,8 @@ class Builder(BuilderPipelineMixin, BuilderItemsMixin):
         indented_lines = ["  " * self.level + x for x in lines]
         self.output.preamble_lines.extend(indented_lines)
 
-    def _add_div_open(self, div_attrs=None):
-        add_div_open(self, div_attrs)
+    def _add_div_open(self):
+        add_div_open(self)
 
     def _add_child_widgets(self, child_widget_specs=None):
         add_child_widgets(
@@ -45,7 +45,7 @@ class Builder(BuilderPipelineMixin, BuilderItemsMixin):
     def _add_div_close(self):
         add_div_close(self)
 
-    def build(self, div_attrs=None):
+    def build(self):
         pass
 
     def __repr__(self):

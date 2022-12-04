@@ -20,14 +20,12 @@ class ItemFieldsBuilder(Builder):
             )
         ]
 
-    def build(self, div_attrs=None):
+    def build(self):
         field_widget_spec = self.widget_spec.find_child_with_place("Field")
         if not field_widget_spec:
-            parser = WidgetSpecParser()
-            field_widget_spec = parser.parse(
+            field_widget_spec = WidgetSpecParser().parse(
                 default_widget_spec, parent_widget_spec=self.widget_spec
             )[0]
-            field_widget_spec.place = "Field"
 
         item_data_path = self.item_data_path()
         for field_spec in self.get_field_specs():
@@ -46,5 +44,5 @@ class ItemFieldBuilder(Builder):
             b = b.parent_builder
         raise Exception("field_expr not found")
 
-    def build(self, div_attrs=None):
+    def build(self):
         self.add_lines([f"{{{self.field_expr}}}"])

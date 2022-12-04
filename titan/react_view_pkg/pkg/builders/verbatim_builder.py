@@ -7,5 +7,5 @@ class VerbatimBuilder(Builder):
         super().__init__(widget_spec, parent_builder, level)
         self.div = indent(level)(div)
 
-    def build(self, div_attrs=None):
+    def build(self):
         self.add_lines([self.div])
