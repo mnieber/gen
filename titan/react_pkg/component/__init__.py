@@ -66,12 +66,11 @@ class ExtendComponent:
 @rule("widget-registry", has, "component", priority=Priorities.LOW.value)
 def component_builder(widget_reg, component):
     from titan.react_view_pkg.pkg.get_builder import get_builder
-    from titan.react_view_pkg.pkg.prepare_builder import prepare_builder
 
     if widget_spec := component.widget_spec:
         builder = get_builder(widget_spec, parent_builder=None)
         component.builder = builder
-        prepare_builder(builder)
+        builder.build()
         forwards = []
 
         for default_prop in builder.output.default_props:

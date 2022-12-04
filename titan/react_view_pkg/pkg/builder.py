@@ -12,7 +12,11 @@ class Builder(BuilderPipelineMixin, BuilderItemsMixin):
         self.parent_builder = parent_builder
         self.level = level
         self.root_builder = get_root_builder(self)
+
         self.output = BuilderOutput(widget_class_name=create_widget_class_name(self))
+        if widget_spec.widget_base_type == "Children":
+            self.output.has_children = True
+
         self.__post_init__()
 
     def __post_init__(self):
@@ -38,9 +42,6 @@ class Builder(BuilderPipelineMixin, BuilderItemsMixin):
         add_div_close(self)
 
     def build(self, div_attrs=None):
-        pass
-
-    def prepare(self):
         pass
 
     def __repr__(self):

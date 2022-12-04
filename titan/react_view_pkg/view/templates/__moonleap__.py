@@ -15,7 +15,7 @@ def get_helpers(_):
 
         def __init__(self):
             self._get_queries_from_pipelines()
-            self.build = self._get_div()
+            self.build = self.builder.output
 
         def _get_queries_from_pipelines(self):
             for pipeline in self.pipelines:
@@ -24,11 +24,6 @@ def get_helpers(_):
                     append_uniq(self.queries, pipeline_source)
                 if pipeline_source.meta.term.tag == "mutation":
                     append_uniq(self.mutations, pipeline_source)
-
-        def _get_div(self):
-            x = self.widget_spec
-            self.builder.build()
-            return self.builder.output
 
         @property
         def type_specs_to_import(self):

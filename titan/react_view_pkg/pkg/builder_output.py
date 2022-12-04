@@ -17,7 +17,7 @@ class BuilderOutput:
     external_css_classes: list = field(default_factory=list)
     # True if the widget spec or any of its child widget specs has a Children type
     has_children: bool = False
-    # All child components needed to build the widget spec
+    # All child components needed to render the widget spec
     child_components: T.List["Component"] = field(repr=False, default_factory=list)
     # Additional default properties that are needed for the widget spec
     default_props: T.List[str] = field(repr=False, default_factory=list)

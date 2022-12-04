@@ -24,10 +24,6 @@ def get_helpers(_):
         has_drag_and_drop = drag_and_drop_bvr
 
         def __init__(self):
-            self.build = self._get_div(self.widget_spec)
-
-        def _get_div(self, widget_spec, level=0):
-            self.builder.build()
-            return self.builder.output
+            self.build = self.builder.output
 
     return Helpers()

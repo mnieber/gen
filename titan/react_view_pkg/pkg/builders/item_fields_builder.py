@@ -7,16 +7,6 @@ default_widget_spec = {"Field with Card[cn=__]": {"ItemField": "pass"}}
 
 
 class ItemFieldsBuilder(Builder):
-    def prepare(self):
-        field_widget_spec = self.widget_spec.find_child_with_place("Field")
-        if not field_widget_spec:
-            parser = WidgetSpecParser()
-            field_widget_spec = parser.parse(
-                default_widget_spec, parent_widget_spec=self.widget_spec
-            )[0]
-            field_widget_spec.place = "Field"
-            self.widget_spec.child_widget_specs.append(field_widget_spec)
-
     def get_field_specs(self):
         type_spec = self.item.type_spec
         skip_list = ("slug", "fk", "relatedSet")
@@ -32,6 +22,13 @@ class ItemFieldsBuilder(Builder):
 
     def build(self, div_attrs=None):
         field_widget_spec = self.widget_spec.find_child_with_place("Field")
+        if not field_widget_spec:
+            parser = WidgetSpecParser()
+            field_widget_spec = parser.parse(
+                default_widget_spec, parent_widget_spec=self.widget_spec
+            )[0]
+            field_widget_spec.place = "Field"
+
         item_data_path = self.item_data_path()
         for field_spec in self.get_field_specs():
             field_expr = f"{item_data_path}.{field_spec.name}"
