@@ -26,7 +26,11 @@ class Builder(BuilderPipelineMixin, BuilderItemsMixin):
         indented_lines = ["  " * self.level + x for x in lines]
         self.output.lines.extend(indented_lines)
 
-    def add_preamble(self, lines):
+    def add_import_lines(self, lines):
+        indented_lines = ["  " * self.level + x for x in lines]
+        self.output.import_lines.extend(indented_lines)
+
+    def add_preamble_lines(self, lines):
         indented_lines = ["  " * self.level + x for x in lines]
         self.output.preamble_lines.extend(indented_lines)
 
@@ -48,9 +52,9 @@ class Builder(BuilderPipelineMixin, BuilderItemsMixin):
         return f"{self.__class__.__name__}({self.widget_spec})"
 
     @property
-    def use_ui_kit(self):
-        component = self.widget_spec.component
-        return component and component.react_app.service.uikit
+    def use_uikit(self):
+        component = self.root_builder.widget_spec.component
+        return component and component.module.react_app.service.uikit
 
 
 def get_root_builder(builder):

@@ -23,6 +23,7 @@ type PropsT = React.PropsWithChildren<{
 
 const DefaultProps = {
   ...dps.{{ res.typ.ts_var }},                                                                  {% !! res in _.component.named_default_props %}
+  ...dps.{{ res.ts_var }},                                                                      {% !! res in _.component.bvr_default_props %}
 };
 
 export const {{ _.component.name }} = observer(

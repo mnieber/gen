@@ -61,6 +61,7 @@ class ExtendComponent:
     maybe_expression = MemFun(props.component_maybe_expression)
     named_props = P.children(has_prop, "x+pipeline-elm")
     named_default_props = P.children(has_default_prop, "x+pipeline-elm")
+    bvr_default_props = P.children(has_default_prop, "behavior")
 
 
 @rule("widget-registry", has, "component", priority=Priorities.LOW.value)

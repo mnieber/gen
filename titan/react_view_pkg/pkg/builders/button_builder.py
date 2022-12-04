@@ -35,7 +35,7 @@ class ButtonBuilder(Builder):
                     "handler": handler,
                 }
             )
-            self.add_preamble([code])
+            self.add_preamble_lines([code])
 
         code = get_template_from_str(button_template_str).render(
             {

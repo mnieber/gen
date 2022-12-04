@@ -7,6 +7,7 @@ import { observer } from 'mobx-react-lite';
 import { isLoaded, isUpdating } from 'src/api/ResourceState';
 import { {{ type_spec.type_name }}T } from 'src/api/types/{{ type_spec.type_name }}T';              {% !! type_spec in __.type_specs_to_import %}
 import UIkit from 'uikit';                                                                          {% ?? _.service.uikit %}
+{{ line }}                                                                                          {% !! line in __.build.import_lines %}
 import './MyComponent.scss';
 {# Start: view imports here #}
 {# End: view imports here #}
@@ -31,6 +32,7 @@ type PropsT = React.PropsWithChildren<{                                         
 
 const DefaultProps = {
   ...dps.{{ res.typ.ts_var }},                                                                      {% !! res in _.component.named_default_props %}
+  ...dps.{{ res.ts_var }},                                                                          {% !! res in _.component.bvr_default_props|sort(attribute="name") %}
 {# Start: default view props here #}
 {# End: default view props here #}
 };

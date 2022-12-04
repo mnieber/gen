@@ -1,6 +1,7 @@
 from moonleap.render.template_env import get_template_from_str
 from moonleap.utils import chop0
 from moonleap.utils.fp import append_uniq
+from moonleap.utils.inflect import plural
 from titan.react_view_pkg.pkg.builder import Builder
 
 on_change_template_str = chop0(
@@ -31,17 +32,25 @@ div_template_str = chop0(
 """
 )
 
+div_imports_str = chop0(
+    """
+import { PickerValueT, ValuePicker } from 'src/utils/components/ValuePicker';
+    """
+)
+
 
 class PickerBuilder(Builder):
     def build(self, div_attrs):
         item_name = self.item_list.item.item_name
+        items_name = plural(item_name)
 
-        append_uniq(self.output.default_props, f"{item_name}:selection")
-        append_uniq(self.output.default_props, f"{item_name}:highlight")
+        append_uniq(self.output.default_props, f"{items_name}:selection")
+        append_uniq(self.output.default_props, f"{items_name}:highlight")
         handler_code = get_template_from_str(on_change_template_str).render(
             {"item": item_name}
         )
-        self.add_preamble([handler_code])
+        self.add_preamble_lines([handler_code])
+        self.add_import_lines([div_imports_str])
 
         div = get_template_from_str(div_template_str).render({"item": item_name})
         self.add_lines([div])

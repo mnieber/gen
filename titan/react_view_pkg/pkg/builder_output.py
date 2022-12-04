@@ -12,6 +12,7 @@ if T.TYPE_CHECKING:
 class BuilderOutput:
     widget_class_name: str = ""
     lines: list = field(default_factory=list)
+    import_lines: list = field(default_factory=list)
     preamble_lines: list = field(default_factory=list)
     postamble_lines: list = field(default_factory=list)
     external_css_classes: list = field(default_factory=list)
@@ -24,6 +25,7 @@ class BuilderOutput:
 
     def add(self, rhs: "BuilderOutput"):
         self.preamble_lines += rhs.preamble_lines
+        self.import_lines += rhs.import_lines
         self.lines += rhs.lines
         self.has_children = self.has_children or rhs.has_children
         extend_uniq(self.external_css_classes, rhs.external_css_classes)
