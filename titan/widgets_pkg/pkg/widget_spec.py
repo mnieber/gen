@@ -30,7 +30,10 @@ class WidgetSpec(WidgetSpecItemsMixin):
 
     @property
     def root(self):
-        return self.parent or self
+        result = self
+        while result.parent:
+            result = result.parent
+        return result
 
     @property
     def is_component_def(self):

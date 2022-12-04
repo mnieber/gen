@@ -22,7 +22,9 @@ def create_widget_class_name(widget_spec):
 
 def _to_widget_class_name(widget_spec):
     if not widget_spec.is_component:
-        default_class_name = widget_spec.widget_name
+        default_class_name = (
+            widget_spec.widget_name or widget_spec.place or widget_spec.widget_base_type
+        )
         class_name = widget_spec.values.get("cn", default_class_name)
 
         # The name "__" is a shorthand

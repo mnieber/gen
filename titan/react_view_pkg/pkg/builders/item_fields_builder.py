@@ -3,7 +3,7 @@ import copy
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.widgets_pkg.pkg.load_widget_specs.widget_spec_parser import WidgetSpecParser
 
-default_widget_spec = {"Field with Card": {"ItemField": "pass"}}
+default_widget_spec = {"Field with Card[cn=__]": {"ItemField": "pass"}}
 
 
 class ItemFieldsBuilder(Builder):
@@ -11,22 +11,21 @@ class ItemFieldsBuilder(Builder):
         field_widget_spec = self.widget_spec.find_child_with_place("Field")
         if not field_widget_spec:
             parser = WidgetSpecParser()
-            field_widget_spec = parser.parse(default_widget_spec)[0]
+            field_widget_spec = parser.parse(
+                default_widget_spec, parent_widget_spec=self.widget_spec
+            )[0]
             field_widget_spec.place = "Field"
             self.widget_spec.child_widget_specs.append(field_widget_spec)
 
     def get_field_specs(self):
         type_spec = self.widget_spec.item.type_spec
+        skip_list = ("slug", "fk", "relatedSet")
         return [
             field_spec
             for field_spec in type_spec.get_field_specs()
             if (
                 "client" in field_spec.has_model
-                and not field_spec.field_type
-                in (
-                    "slug" "fk",
-                    "relatedSet",
-                )
+                and not field_spec.field_type in skip_list
                 and not (field_spec.name in ("id",))
             )
         ]
