@@ -18,7 +18,7 @@ class ItemFieldsBuilder(Builder):
             self.widget_spec.child_widget_specs.append(field_widget_spec)
 
     def get_field_specs(self):
-        type_spec = self.widget_spec.item.type_spec
+        type_spec = self.item.type_spec
         skip_list = ("slug", "fk", "relatedSet")
         return [
             field_spec

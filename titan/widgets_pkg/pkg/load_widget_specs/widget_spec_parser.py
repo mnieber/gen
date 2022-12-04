@@ -36,7 +36,6 @@ class WidgetSpecParser:
 
             if parent_widget_spec:
                 parent_widget_spec.child_widget_specs.append(widget_spec)
-                widget_spec.parent = parent_widget_spec
 
             #
             # Use recursion to convert child widget specs

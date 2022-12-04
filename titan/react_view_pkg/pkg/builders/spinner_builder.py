@@ -25,9 +25,8 @@ no_uikit_template_str = chop0(
 
 class SpinnerBuilder(Builder):
     def build(self, div_attrs=None):
-        use_ui_kit = True  # TODO
-        template_str = uikit_template_str if use_ui_kit else no_uikit_template_str
-        res = self.widget_spec.item or self.widget_spec.item_list
+        template_str = uikit_template_str if self.use_ui_kit else no_uikit_template_str
+        res = self.item or self.item_list
         data_path = self.item_list_data_path() or self.item_data_path()
 
         code = get_template_from_str(template_str).render(

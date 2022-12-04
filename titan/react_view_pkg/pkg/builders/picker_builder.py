@@ -37,7 +37,7 @@ class PickerBuilder(Builder):
         self.item_name = None
 
     def prepare(self):
-        self.item_name = self.widget_spec.item_list.item.item_name
+        self.item_name = self.item_list.item.item_name
         append_uniq(self.output.default_props, f"{self.item_name}:selection")
         append_uniq(self.output.default_props, f"{self.item_name}:highlight")
 
