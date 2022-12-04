@@ -1,6 +1,6 @@
 from moonleap.render.template_env import get_template_from_str
 from moonleap.utils import chop0
-from moonleap.utils.fp import append_uniq
+from moonleap.utils.fp import append_uniq, extend_uniq
 from moonleap.utils.inflect import plural
 from titan.react_view_pkg.pkg.builder import Builder
 
@@ -43,6 +43,9 @@ class PickerBuilder(Builder):
     def build(self, div_attrs):
         item_name = self.item_list.item.item_name
         items_name = plural(item_name)
+
+        packages = self.output.react_packages_by_module_name.setdefault("utils", [])
+        extend_uniq(packages, ["ValuePicker"])
 
         append_uniq(self.output.default_props, f"{items_name}:selection")
         append_uniq(self.output.default_props, f"{items_name}:highlight")

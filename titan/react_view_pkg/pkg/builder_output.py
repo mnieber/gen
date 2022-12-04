@@ -3,6 +3,7 @@ import typing as T
 from dataclasses import dataclass, field
 
 from moonleap.utils.fp import extend_uniq
+from moonleap.utils.merge_into_config import merge_into_config
 
 if T.TYPE_CHECKING:
     from titan.react_pkg.component import Component
@@ -16,6 +17,7 @@ class BuilderOutput:
     preamble_lines: list = field(default_factory=list)
     postamble_lines: list = field(default_factory=list)
     external_css_classes: list = field(default_factory=list)
+    react_packages_by_module_name: dict = field(default_factory=dict)
     # True if the widget spec or any of its child widget specs has a Children type
     has_children: bool = False
     # All child components needed to render the widget spec
@@ -31,6 +33,9 @@ class BuilderOutput:
         extend_uniq(self.external_css_classes, rhs.external_css_classes)
         extend_uniq(self.child_components, rhs.child_components)
         extend_uniq(self.default_props, rhs.default_props)
+        merge_into_config(
+            self.react_packages_by_module_name, rhs.react_packages_by_module_name
+        )
 
     @property
     def debug(self):

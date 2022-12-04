@@ -10,6 +10,7 @@ from moonleap import (
     rule,
 )
 from moonleap.verbs import has, has_default_prop, has_prop
+from titan.react_pkg.packages.use_react_packages import use_react_packages
 from titan.react_pkg.reactmodule import ReactModule
 from titan.widgets_pkg.widgetregistry import get_widget_reg
 from titan.widgets_pkg.widgetregistry.resources import WidgetRegistry
@@ -69,6 +70,7 @@ def component_builder(widget_reg, component):
     from titan.react_view_pkg.pkg.get_builder import get_builder
 
     if widget_spec := component.widget_spec:
+        react_app = component.module.react_app
         builder = get_builder(widget_spec, parent_builder=None)
         component.builder = builder
         builder.build()
@@ -76,6 +78,12 @@ def component_builder(widget_reg, component):
 
         for default_prop in builder.output.default_props:
             forwards.append(create_forward(component, has_default_prop, default_prop))
+
+        for (
+            module_name,
+            packages,
+        ) in builder.output.react_packages_by_module_name.items():
+            use_react_packages(react_app.get_module(module_name), packages)
 
         return forwards
 
