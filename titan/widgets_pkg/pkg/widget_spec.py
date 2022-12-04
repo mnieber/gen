@@ -4,7 +4,6 @@ from dataclasses import dataclass, field
 
 import ramda as R
 
-from titan.widgets_pkg.pkg.create_widget_class_name import create_widget_class_name
 from titan.widgets_pkg.pkg.widget_spec_items_mixin import WidgetSpecItemsMixin
 
 
@@ -23,10 +22,6 @@ class WidgetSpec(WidgetSpecItemsMixin):
     @property
     def is_component(self):
         return self.widget_name and ":" in self.widget_name
-
-    @property
-    def widget_class_name(self):
-        return create_widget_class_name(self)
 
     @property
     def root(self):
