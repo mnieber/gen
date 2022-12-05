@@ -39,17 +39,18 @@ import { PickerValueT, ValuePicker } from 'src/utils/components/ValuePicker';
 
 
 class PickerBuilder(Builder):
-    def build(self):
-        item_name = self.item_list.item.item_name
-        items_name = plural(item_name)
+    def __post_init__(self):
+        self.item_name = self.named_item_list_term.data
+        self.items_name = plural(self.item_name)
 
+    def build(self):
         packages = self.output.react_packages_by_module_name.setdefault("utils", [])
         extend_uniq(packages, ["ValuePicker"])
 
-        append_uniq(self.output.default_props, f"{items_name}:selection")
-        append_uniq(self.output.default_props, f"{items_name}:highlight")
+        append_uniq(self.output.default_props, f"{self.items_name}:selection")
+        append_uniq(self.output.default_props, f"{self.items_name}:highlight")
 
-        context = {"item": item_name}
+        context = {"item": self.item_name}
 
         if True:
             handler_code = self.render_str(

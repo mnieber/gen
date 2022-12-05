@@ -216,7 +216,7 @@ def deleter_mutation(self):
     return None
 
 
-def data_path(self, obj=None, obj_term=None):
+def pipeline_data_path(self, obj=None, obj_term=None):
     result = ""
     nr_elms = len(self.elements)
 

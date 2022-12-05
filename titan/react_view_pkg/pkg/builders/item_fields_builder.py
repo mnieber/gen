@@ -1,18 +1,22 @@
-import copy
-
+from moonleap import u0
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.widgets_pkg.pkg.load_widget_specs.widget_spec_parser import WidgetSpecParser
-
-default_widget_spec = {"Field with Card[cn=__]": {"ItemField": "pass"}}
+from titan.types_pkg.typeregistry import get_type_reg
 
 
 class ItemFieldsBuilder(Builder):
+    def __post_init__(self):
+        self.item_name = self.named_item_term.data
+        self.type_spec = get_type_reg().get(u0(self.item_name))
+
+    def get_spec_extension(self, places):
+        if "Field" not in places:
+            return {"Field with Card[cn=__]": {"ItemField": "pass"}}
+
     def get_field_specs(self):
-        type_spec = self.item.type_spec
         skip_list = ("slug", "fk", "relatedSet")
         return [
             field_spec
-            for field_spec in type_spec.get_field_specs()
+            for field_spec in self.type_spec.get_field_specs()
             if (
                 "client" in field_spec.has_model
                 and not field_spec.field_type in skip_list
@@ -22,11 +26,6 @@ class ItemFieldsBuilder(Builder):
 
     def build(self):
         field_widget_spec = self.widget_spec.find_child_with_place("Field")
-        if not field_widget_spec:
-            field_widget_spec = WidgetSpecParser().parse(
-                default_widget_spec, parent_widget_spec=self.widget_spec
-            )[0]
-
         item_data_path = self.item_data_path()
         for field_spec in self.get_field_specs():
             field_expr = f"{item_data_path}.{field_spec.name}"
@@ -37,12 +36,7 @@ class ItemFieldsBuilder(Builder):
 class ItemFieldBuilder(Builder):
     @property
     def field_expr(self):
-        b = self
-        while b:
-            if "field_expr" in b.widget_spec.values:
-                return b.widget_spec.values["field_expr"]
-            b = b.parent_builder
-        raise Exception("field_expr not found")
+        return self.get_value_by_name("field_expr")
 
     def build(self):
         self.add_lines([f"{{{self.field_expr}}}"])

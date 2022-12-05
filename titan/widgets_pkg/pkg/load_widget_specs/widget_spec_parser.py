@@ -8,6 +8,11 @@ class WidgetSpecParser:
         self.widget_reg = widget_reg
 
     def parse(self, widget_spec_dict, parent_widget_spec=None, level=0):
+        from titan.react_view_pkg.pkg.get_builder import get_builder
+
+        if level > 1000:
+            raise Exception("Infinite loop detected")
+
         items = [
             (key.strip(), value)
             for key, value in widget_spec_dict.items()
@@ -25,7 +30,14 @@ class WidgetSpecParser:
                     _get_type_value(spec) if is_dict else value, "."
                 ),
             )
+            widget_spec.parent = parent_widget_spec
             widget_specs.append(widget_spec)
+
+            # Extend spec using the builder for this widget spec
+            if widget_spec.widget_base_type:
+                spec.update(
+                    get_builder(widget_spec).get_spec_extension(_get_places(spec))
+                )
 
             if self.widget_reg and widget_spec.is_component_def:
                 if self.widget_reg.get(widget_spec.widget_name, None) is not None:
@@ -63,3 +75,13 @@ def _get_type_value(spec):
 
 def _is_private_member(key):
     return key.startswith("__")
+
+
+def _get_places(spec):
+    places = []
+    for key in spec.keys():
+        parts = key.split(" with ")
+        if len(parts) == 2 and key.startswith(parts[0] + " with "):
+            places.append(parts[0])
+
+    return places

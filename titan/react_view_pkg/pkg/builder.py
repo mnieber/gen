@@ -2,40 +2,30 @@ from titan.react_view_pkg.pkg.add_child_widgets import add_child_widgets
 from titan.react_view_pkg.pkg.add_div import add_div_close, add_div_open
 from titan.react_view_pkg.pkg.builder_items_mixin import BuilderItemsMixin
 from titan.react_view_pkg.pkg.builder_output import BuilderOutput
-from titan.react_view_pkg.pkg.builder_pipeline_mixin import BuilderPipelineMixin
-from titan.react_view_pkg.pkg.builder_place_mixin import BuilderPlaceMixin
 from titan.react_view_pkg.pkg.builder_render_mixin import BuilderRenderMixin
-from titan.widgets_pkg.pkg.create_widget_class_name import create_widget_class_name
 
 
-class Builder(
-    BuilderRenderMixin, BuilderPlaceMixin, BuilderPipelineMixin, BuilderItemsMixin
-):
-    def __init__(self, widget_spec, parent_builder, level):
+class Builder(BuilderRenderMixin, BuilderItemsMixin):
+    def __init__(self, widget_spec):
         self.widget_spec = widget_spec
-        self.parent_builder = parent_builder
-        self.level = level
-        self.root_builder = get_root_builder(self)
-
-        self.output = BuilderOutput(widget_class_name=create_widget_class_name(self))
+        self.output = BuilderOutput()
         if widget_spec.widget_base_type == "Children":
             self.output.has_children = True
-
         self.__post_init__()
 
     def __post_init__(self):
         pass
 
     def add_lines(self, lines):
-        indented_lines = ["  " * self.level + x for x in lines]
+        indented_lines = ["  " * self.widget_spec.level + x for x in lines]
         self.output.lines.extend(indented_lines)
 
     def add_import_lines(self, lines):
-        indented_lines = ["  " * self.level + x for x in lines]
+        indented_lines = ["  " * self.widget_spec.level + x for x in lines]
         self.output.import_lines.extend(indented_lines)
 
     def add_preamble_lines(self, lines):
-        indented_lines = ["  " * self.level + x for x in lines]
+        indented_lines = ["  " * self.widget_spec.level + x for x in lines]
         self.output.preamble_lines.extend(indented_lines)
 
     def _add_div_open(self):
@@ -52,19 +42,13 @@ class Builder(
     def build(self):
         pass
 
+    def get_spec_extension(self, places):
+        return {}
+
     def __repr__(self):
         return f"{self.__class__.__name__}({self.widget_spec})"
 
     @property
     def use_uikit(self):
-        component = self.root_builder.widget_spec.component
+        component = self.widget_spec.root.component
         return component and component.module.react_app.service.uikit
-
-
-def get_root_builder(builder):
-    b = builder
-
-    while b.parent_builder:
-        b = b.parent_builder
-
-    return b

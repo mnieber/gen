@@ -1,73 +1,35 @@
-from moonleap.utils import chop0
 from moonleap.utils.fp import extend_uniq
 from moonleap.utils.inflect import plural
 from titan.react_view_pkg.pkg.builder import Builder
 
-
-def default_spec(item_name):
-    lvi_name = f"{ item_name }-list-view-item:view"
-    # TODO: use lvi_name
-    return {f"ListViewItem with Card": {"ItemFields[cn=__]": "pass"}}
+from .list_view_builder_tpl import imports_tpl, instance_tpl, preamble_tpl, props_tpl
 
 
-imports_tpl = chop0(
-    """
-{% magic_with item_name as myItem %}
-import { MyItemT } from 'src/api/types/MyItemT';
-import { ClickToSelectItems } from 'skandha-facets/handlers';                                 {% ?? selection_bvr %}
-import { dragState } from 'skandha-facets/DragAndDrop';                                       {% ?? drag_and_drop_bvr %}
-{% end_magic_with %}
-"""
-)
-
-preamble_tpl = chop0(
-    """
-{% magic_with item_name as myItem %}
-const handleClick = new ClickToSelectItems({                                                  {% if selection_bvr %}
-    selection: props.myItemsSelection
-});
-                                                                                              {% endif %}
-const noItems = <h2>There are no myItems</h2>;
-
-const myItemDivs = {{ items_expr }}.map(({{ item_name }}: {{ item_name|u0 }}T) => {
-  {{ child_widget_div }}
-});
-
-{% end_magic_with %}
-"""
-)
-
-props_tpl = chop0(
-    """
-{% magic_with item_name as myItem %}
-myItem={myItem}
-isSelected={myItem && props.myItemsSelection.ids.includes(myItem.id)}                         {% ?? selection_bvr %}
-isHighlighted={myItem && props.myItemsHighlight.id === myItem.id}                             {% ?? highlight_bvr %}
-dragState={dragState(props.myItemsDragAndDrop.hoverPosition, myItem.id)}                      {% ?? drag_and_drop_bvr %}
-onDelete={() => props.myItemsDeletion.delete([myItem.id])}                                    {% ?? deletion_bvr %}
-{...handleClick.handle(myItem.id)}                                                            {% ?? selection_bvr %}
-{...props.myItemsDragAndDrop.handle(myItem.id)}                                               {% ?? drag_and_drop_bvr %}
-{% end_magic_with %}
-"""
-)
-
-instance_tpl = chop0(
-    """
-{% magic_with item_name as myItem %}
-{myItemDivs.length > 0 && myItemDivs}
-{myItemDivs.length === 0 && noItems}
-{% end_magic_with %}
-"""
-)
+def default_spec(lvi_name, item_term_str):
+    return {
+        f"ListViewItem with {lvi_name} as Bar[p-2]": {
+            "__attrs__": f"item={item_term_str}",
+            "LviBody": "pass",
+            "LeftSlot with LviFields": "pass",
+            "RightSlot with LviButtons": "pass",
+        }
+    }
 
 
 class ListViewBuilder(Builder):
-    def build(self):
-        __import__("pudb").set_trace()
-        item_name = self.item_list.item.item_name
-        items_name = plural(item_name)
-        bvrs = self.widget_spec.values.get("bvrs", []).split(",")
+    def __post_init__(self):
+        self.item_name = self.named_item_list_term.data
+        self.items_name = plural(self.item_name)
 
+    def get_spec_extension(self, places):
+        if "ListViewItem" not in places:
+            return default_spec(
+                lvi_name=f"{ self.item_name }-list-view-item:view",
+                item_term_str=f"+{self.item_name}:item",
+            )
+
+    def build(self):
+        bvrs = self.widget_spec.values.get("bvrs", []).split(",")
         has_selection = "selection" in bvrs
         has_highlight = "highlight" in bvrs
         has_drag_and_drop = "dragAndDrop" in bvrs
@@ -76,14 +38,14 @@ class ListViewBuilder(Builder):
         extend_uniq(
             self.output.default_props,
             []
-            + ([f"{items_name}:selection"] if has_selection else [])
-            + ([f"{items_name}:highlight"] if has_highlight else [])
-            + ([f"{items_name}:drag-and-drop"] if has_drag_and_drop else [])
-            + ([f"{items_name}:deletion"] if has_deletion else []),
+            + ([f"{self.items_name}:selection"] if has_selection else [])
+            + ([f"{self.items_name}:highlight"] if has_highlight else [])
+            + ([f"{self.items_name}:drag-and-drop"] if has_drag_and_drop else [])
+            + ([f"{self.items_name}:deletion"] if has_deletion else []),
         )
 
         context = {
-            "item_name": item_name,
+            "item_name": self.item_name,
             "items_expr": self.item_list_data_path(),
             "selection_bvr": has_selection,
             "highlight_bvr": has_highlight,
@@ -91,36 +53,42 @@ class ListViewBuilder(Builder):
             "deletion_bvr": has_deletion,
         }
 
-        if True:
-            code = self.render_str(imports_tpl, context, "list_view_builder_imports.j2")
-            self.add_import_lines([code])
+        self.add_import_lines(
+            [self.render_str(imports_tpl, context, "list_view_builder_imports.j2")]
+        )
 
+        # Add preamble
         if True:
-            code = self.render_str(
-                instance_tpl, context, "list_view_builder_instance.j2"
+            builder_output = self._get_child_widget_div(context)
+            context["child_widget_div"] = builder_output.div
+            self.add_preamble_lines(
+                [
+                    self.render_str(
+                        preamble_tpl, context, "list_view_builder_preamble.j2"
+                    )
+                ]
             )
-            self.add_lines([code])
+            # Add the rest of the builder_output that we haven't used so far
+            builder_output.clear_lines()
+            self.output.add(builder_output)
 
-        if True:
-            props = self.render_str(props_tpl, context, "list_view_builder_props.j2")
-            context["child_widget_div"] = self._get_child_widget_div(props, item_name)
-            code = self.render_str(
-                preamble_tpl, context, "list_view_builder_preamble.j2"
-            )
-            self.add_preamble_lines([code])
+        self.add_lines(
+            [self.render_str(instance_tpl, context, "list_view_builder_instance.j2")]
+        )
 
-    def _get_child_widget_div(self, props, item_name):
+    def _get_child_widget_div(self, context):
         from titan.react_view_pkg.pkg.get_builder import get_builder
 
-        child_widget_spec = self.get_or_create_place_widget_spec(
-            "ListViewItem", default_spec(item_name)
-        )
+        child_widget_spec = self.widget_spec.find_child_with_place("ListViewItem")
         memo = child_widget_spec.create_memo()
-        # TODO: this is a bit weird. How to tell the generator to use the right item?
-        child_widget_spec.values["item"] = f"+{item_name}:item"
-        child_widget_spec.div_key = f"{item_name}.id"
+
+        child_widget_spec.div_key = f"{self.item_name}.id"
+        props = self.render_str(props_tpl, context, "list_view_builder_props.j2")
         child_widget_spec.div_props += [props]
-        builder = get_builder(child_widget_spec, parent_builder=self)
+
+        builder = get_builder(child_widget_spec, is_instance=True)
         builder.build()
+
         child_widget_spec.restore_memo(memo)
-        return builder.output.div
+
+        return builder.output

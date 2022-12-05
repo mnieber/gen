@@ -5,10 +5,13 @@ from dataclasses import dataclass, field
 
 import ramda as R
 
+from .create_widget_class_name import create_widget_class_name
+
 
 @dataclass
 class WidgetSpec:
     widget_base_type: str
+    level: int = 0
     child_widget_specs: T.List["WidgetSpec"] = field(repr=False, default_factory=list)
     div_styles: T.List[str] = field(repr=False, default_factory=list)
     div_props: T.List[str] = field(repr=False, default_factory=list)
@@ -18,10 +21,15 @@ class WidgetSpec:
     place: T.Optional[str] = None
     values: T.Dict[str, str] = field(default_factory=dict)
     id: str = field(default_factory=lambda: uuid.uuid4().hex)
+    parent: T.Optional["WidgetSpec"] = None
 
     @property
     def is_component(self):
         return self.widget_name and ":" in self.widget_name
+
+    @property
+    def widget_class_name(self):
+        return create_widget_class_name(self)
 
     @property
     def is_component_def(self):
@@ -34,12 +42,6 @@ class WidgetSpec:
     def find_child_with_place(self, place):
         return R.head(x for x in self.child_widget_specs if x.place == place)
 
-    def remove_child_with_place(self, place):
-        widget_spec = self.find_child_with_place(place)
-        if widget_spec:
-            self.child_widget_specs.remove(widget_spec)
-            return widget_spec
-
     def create_memo(self, fields=None):
         fields = fields or ["div_styles", "div_props", "div_key", "place", "values"]
         memo = {}
@@ -50,3 +52,12 @@ class WidgetSpec:
     def restore_memo(self, memo):
         for field, value in memo.items():
             setattr(self, field, value)
+
+    @property
+    def root(self):
+        ws = self
+
+        while ws.parent and not ws.is_component_def:
+            ws = ws.parent
+
+        return ws

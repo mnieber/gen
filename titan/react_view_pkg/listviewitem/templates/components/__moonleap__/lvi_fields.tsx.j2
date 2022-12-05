@@ -1,8 +1,0 @@
-{% magic_with _.component.item_name as myItemName %}
-{% magic_with field_spec.name as fieldSpecName %}
-        <div>                                                                                       {% for field_spec in __.fields %}{% if field_spec.display %}
-          {props.myItemName.fieldSpecName}                                                          {% ?? field_spec.field_type not in ("boolean",) %}
-          fieldSpecName: {props.myItemName.fieldSpecName ? 'Yes' : 'No'}                            {% ?? field_spec.field_type in ("boolean",) %}
-        </div>                                                                                      {% endif %}{% endfor %}
-{% end_magic_with %}
-{% end_magic_with %}

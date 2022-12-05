@@ -13,59 +13,71 @@ from titan.react_view_pkg.pkg.builders.item_fields_builder import (
 )
 from titan.react_view_pkg.pkg.builders.layout_builder import LayoutBuilder
 from titan.react_view_pkg.pkg.builders.list_view_builder import ListViewBuilder
+from titan.react_view_pkg.pkg.builders.lvi_builder import (
+    LviBodyBuilder,
+    LviButtonsBuilder,
+    LviFieldsBuilder,
+)
 from titan.react_view_pkg.pkg.builders.picker_builder import PickerBuilder
 from titan.react_view_pkg.pkg.builders.spinner_builder import SpinnerBuilder
 from titan.react_view_pkg.pkg.builders.text_builder import TextBuilder
 
 
-def get_builder(widget_spec, parent_builder) -> Builder:
-    level = parent_builder.level + 1 if parent_builder else 0
-
-    if widget_spec.is_component and parent_builder:
+def get_builder(widget_spec, is_instance=False) -> Builder:
+    if widget_spec.is_component and is_instance:
         # This builder is used if the parent builder uses an instance
         # of a component.
-        return ComponentBuilder(widget_spec, parent_builder, level)
+        return ComponentBuilder(widget_spec)
 
     if widget_spec.widget_base_type == "Layout":
-        return LayoutBuilder(widget_spec, parent_builder, level)
+        return LayoutBuilder(widget_spec)
 
     if widget_spec.widget_base_type == "Card":
-        return CardBuilder(widget_spec, parent_builder, level)
+        return CardBuilder(widget_spec)
 
     if widget_spec.widget_base_type == "Text":
-        return TextBuilder(widget_spec, parent_builder, level)
+        return TextBuilder(widget_spec)
 
     if widget_spec.widget_base_type == "Bar":
-        return BarBuilder(widget_spec, parent_builder, level)
+        return BarBuilder(widget_spec)
 
     if widget_spec.widget_base_type == "Div":
-        return DivBuilder(widget_spec, parent_builder, level)
+        return DivBuilder(widget_spec)
 
     if widget_spec.widget_base_type == "Empty":
-        return EmptyBuilder(widget_spec, parent_builder, level)
+        return EmptyBuilder(widget_spec)
 
     if widget_spec.widget_base_type == "Children":
-        return ChildrenBuilder(widget_spec, parent_builder, level)
+        return ChildrenBuilder(widget_spec)
 
     if widget_spec.widget_base_type == "Array":
-        return ArrayBuilder(widget_spec, parent_builder, level)
+        return ArrayBuilder(widget_spec)
 
     if widget_spec.widget_base_type == "Spinner":
-        return SpinnerBuilder(widget_spec, parent_builder, level)
+        return SpinnerBuilder(widget_spec)
 
     if widget_spec.widget_base_type == "Picker":
-        return PickerBuilder(widget_spec, parent_builder, level)
+        return PickerBuilder(widget_spec)
 
     if widget_spec.widget_base_type == "Button":
-        return ButtonBuilder(widget_spec, parent_builder, level)
+        return ButtonBuilder(widget_spec)
 
     if widget_spec.widget_base_type == "ItemFields":
-        return ItemFieldsBuilder(widget_spec, parent_builder, level)
+        return ItemFieldsBuilder(widget_spec)
 
     if widget_spec.widget_base_type == "ItemField":
-        return ItemFieldBuilder(widget_spec, parent_builder, level)
+        return ItemFieldBuilder(widget_spec)
 
     if widget_spec.widget_base_type == "ListView":
-        return ListViewBuilder(widget_spec, parent_builder, level)
+        return ListViewBuilder(widget_spec)
+
+    if widget_spec.widget_base_type == "LviBody":
+        return LviBodyBuilder(widget_spec)
+
+    if widget_spec.widget_base_type == "LviFields":
+        return LviFieldsBuilder(widget_spec)
+
+    if widget_spec.widget_base_type == "LviButtons":
+        return LviButtonsBuilder(widget_spec)
 
     raise Exception(f"Unknown widget base type: {widget_spec.widget_base_type}")

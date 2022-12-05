@@ -71,7 +71,7 @@ def component_builder(widget_reg, component):
 
     if widget_spec := component.widget_spec:
         react_app = component.module.react_app
-        builder = get_builder(widget_spec, parent_builder=None)
+        builder = get_builder(widget_spec)
         component.builder = builder
         builder.build()
         forwards = []

@@ -42,7 +42,7 @@ class ArrayBuilder(Builder):
         memo = child_widget_spec.create_memo()
         child_widget_spec.values["item"] = item_name
         child_widget_spec.div_key = f"{item_name}.id"
-        builder = get_builder(child_widget_spec, parent_builder=self)
+        builder = get_builder(child_widget_spec)
         builder.build()
         child_widget_spec.restore_memo(memo)
         return builder.output.div

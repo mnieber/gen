@@ -11,7 +11,6 @@ if T.TYPE_CHECKING:
 
 @dataclass
 class BuilderOutput:
-    widget_class_name: str = ""
     lines: list = field(default_factory=list)
     import_lines: list = field(default_factory=list)
     preamble_lines: list = field(default_factory=list)
@@ -55,3 +54,8 @@ class BuilderOutput:
             + [");"]
             + self.postamble_lines
         )
+
+    def clear_lines(self):
+        self.lines = []
+        self.preable_lines = []
+        self.postamble_lines = []
