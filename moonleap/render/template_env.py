@@ -48,9 +48,11 @@ def get_template(fn):
     return template_env.get_template(str(fn))
 
 
-def get_template_from_str(template_str):
+def get_template_from_str(template_str, template_id=None):
     with io.StringIO(template_str) as ifs:
-        return template_env.from_string(get_template_from_stream(ifs))
+        return template_env.from_string(
+            get_template_from_stream(ifs, template_fn=template_id)
+        )
 
 
 def add_filter(name, f):

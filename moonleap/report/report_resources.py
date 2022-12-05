@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 import markdown
+
 from moonleap.render.render_template import render_template
 from moonleap.session import get_session
 
@@ -34,13 +35,15 @@ def create_report(resource, term, index_fn):
     default_template_fn = Path(__file__).parent / "templates" / "resource.md.j2"
     body = render_template(
         default_template_fn,
-        term=term,
-        settings=get_session().settings,
-        props={},
-        child_relations=resource.get_relations(),
-        parent_relations=resource.get_inv_relations(),
-        index_fn=index_fn,
-        res=resource,
+        dict(
+            term=term,
+            settings=get_session().settings,
+            props={},
+            child_relations=resource.get_relations(),
+            parent_relations=resource.get_inv_relations(),
+            index_fn=index_fn,
+            res=resource,
+        ),
     )
     return (
         "<html><body>"
@@ -61,9 +64,11 @@ def create_index(blocks):
 
     body = render_template(
         template_fn,
-        settings=get_session().settings,
-        resource_by_term_str=sorted(
-            list(resource_by_term_str.items()), key=lambda x: x[0]
+        dict(
+            settings=get_session().settings,
+            resource_by_term_str=sorted(
+                list(resource_by_term_str.items()), key=lambda x: x[0]
+            ),
         ),
     )
     return (

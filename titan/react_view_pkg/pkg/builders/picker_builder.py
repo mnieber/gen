@@ -1,10 +1,9 @@
-from moonleap.render.template_env import get_template_from_str
 from moonleap.utils import chop0
 from moonleap.utils.fp import append_uniq, extend_uniq
 from moonleap.utils.inflect import plural
 from titan.react_view_pkg.pkg.builder import Builder
 
-on_change_template_str = chop0(
+handler_tpl = chop0(
     """
     const onChange = (value: PickerValueT) => {
       if (value.__isNew__) {
@@ -19,7 +18,7 @@ on_change_template_str = chop0(
 """
 )
 
-div_template_str = chop0(
+div_tpl = chop0(
     """
     <ValuePicker
         isMulti={false}
@@ -49,11 +48,18 @@ class PickerBuilder(Builder):
 
         append_uniq(self.output.default_props, f"{items_name}:selection")
         append_uniq(self.output.default_props, f"{items_name}:highlight")
-        handler_code = get_template_from_str(on_change_template_str).render(
-            {"item": item_name}
-        )
-        self.add_preamble_lines([handler_code])
-        self.add_import_lines([div_imports_str])
 
-        div = get_template_from_str(div_template_str).render({"item": item_name})
-        self.add_lines([div])
+        context = {"item": item_name}
+
+        if True:
+            handler_code = self.render_str(
+                handler_tpl, context, "picker_builder_handler.j2"
+            )
+            self.add_preamble_lines([handler_code])
+
+        if True:
+            self.add_import_lines([div_imports_str])
+
+        if True:
+            div = self.render_str(div_tpl, context, "picker_builder_div.j2")
+            self.add_lines([div])

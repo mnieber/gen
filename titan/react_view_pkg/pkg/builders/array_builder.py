@@ -1,36 +1,48 @@
-from moonleap.render.template_env import get_template_from_str
 from moonleap.utils import chop0
 from titan.react_view_pkg.pkg.builder import Builder
 
-template_str = chop0(
+preamble_tpl = chop0(
     """
-const {{ const_name }} = {{ items_expr }}.map(({{ item }}: {{ item|u0 }}T) => {
+const {{ const_name }} = {{ items_expr }}.map(({{ item_name }}: {{ item_name|u0 }}T) => {
   {{ child_widget_div }}
 });
 """
 )
 
+instance_tpl = chop0(
+    """
+{ {{ const_name }} }
+"""
+)
+
 
 class ArrayBuilder(Builder):
-    def __post_init__(self):
-        self.const_name = self.widget_spec.widget_name
-        self.item_name = self.item_list.item.item_name
-        self.div = f"{{{self.const_name}}}"
-
     def build(self):
-        code = get_template_from_str(template_str).render(
-            {
-                "const_name": self.const_name,
-                "items_expr": self.item_list_data_path(),
-                "item": self.item_name,
-                "child_widget_div": self._get_child_widget_div(),
-            }
-        )
-        self.output.preamble_lines.extend([code])
-        self.add_lines([self.div])
+        item_name = self.item_list.item.item_name
 
-    def _get_child_widget_div(self):
+        context = {
+            "const_name": self.widget_spec.widget_name,
+            "items_expr": self.item_list_data_path(),
+            "item_name": item_name,
+            "child_widget_div": self._get_child_widget_div(item_name),
+        }
+
+        if True:
+            code = self.render_str(preamble_tpl, context, "array_builder_preamble.j2")
+            self.add_preamble_lines([code])
+
+        if True:
+            code = self.render_str(instance_tpl, context, "array_builder_instance.j2")
+            self.add_lines([code])
+
+    def _get_child_widget_div(self, item_name):
+        from titan.react_view_pkg.pkg.get_builder import get_builder
+
         child_widget_spec = self.widget_spec.find_child_with_place("Child")
-        child_widget_spec.div_key = f"{self.item_name}.id"
-        child_widget_spec.builder.build()
-        return child_widget_spec.builder.output.div
+        memo = child_widget_spec.create_memo()
+        child_widget_spec.values["item"] = item_name
+        child_widget_spec.div_key = f"{item_name}.id"
+        builder = get_builder(child_widget_spec, parent_builder=self)
+        builder.build()
+        child_widget_spec.restore_memo(memo)
+        return builder.output.div

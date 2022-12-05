@@ -1,3 +1,4 @@
+import copy
 import typing as T
 import uuid
 from dataclasses import dataclass, field
@@ -10,7 +11,7 @@ class WidgetSpec:
     widget_base_type: str
     child_widget_specs: T.List["WidgetSpec"] = field(repr=False, default_factory=list)
     div_styles: T.List[str] = field(repr=False, default_factory=list)
-    div_handlers: T.List[str] = field(repr=False, default_factory=list)
+    div_props: T.List[str] = field(repr=False, default_factory=list)
     div_key: T.Optional[str] = None
     widget_name: T.Optional[str] = None
     module_name: T.Optional[str] = None
@@ -38,3 +39,14 @@ class WidgetSpec:
         if widget_spec:
             self.child_widget_specs.remove(widget_spec)
             return widget_spec
+
+    def create_memo(self, fields=None):
+        fields = fields or ["div_styles", "div_props", "div_key", "place", "values"]
+        memo = {}
+        for field in fields:
+            memo[field] = getattr(self, field)
+        return copy.deepcopy(memo)
+
+    def restore_memo(self, memo):
+        for field, value in memo.items():
+            setattr(self, field, value)

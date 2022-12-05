@@ -3,10 +3,14 @@ from titan.react_view_pkg.pkg.add_div import add_div_close, add_div_open
 from titan.react_view_pkg.pkg.builder_items_mixin import BuilderItemsMixin
 from titan.react_view_pkg.pkg.builder_output import BuilderOutput
 from titan.react_view_pkg.pkg.builder_pipeline_mixin import BuilderPipelineMixin
+from titan.react_view_pkg.pkg.builder_place_mixin import BuilderPlaceMixin
+from titan.react_view_pkg.pkg.builder_render_mixin import BuilderRenderMixin
 from titan.widgets_pkg.pkg.create_widget_class_name import create_widget_class_name
 
 
-class Builder(BuilderPipelineMixin, BuilderItemsMixin):
+class Builder(
+    BuilderRenderMixin, BuilderPlaceMixin, BuilderPipelineMixin, BuilderItemsMixin
+):
     def __init__(self, widget_spec, parent_builder, level):
         self.widget_spec = widget_spec
         self.parent_builder = parent_builder

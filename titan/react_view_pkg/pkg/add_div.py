@@ -15,13 +15,11 @@ def add_div_open(builder):
             append_uniq(builder.output.external_css_classes, external_css_class)
 
     class_name = ", ".join(class_names)
-    handlers_attr = os.linesep.join(builder.widget_spec.div_handlers)
+    props_attr = os.linesep.join(builder.widget_spec.div_props)
 
     key = builder.widget_spec.div_key
     key_attr = f"key={{{key}}}" if key else ""
-    builder.add_lines(
-        [f"<div {key_attr} className={{cn({class_name})}} {handlers_attr}>"]
-    )
+    builder.add_lines([f"<div {key_attr} className={{cn({class_name})}} {props_attr}>"])
 
 
 def add_div_close(builder):

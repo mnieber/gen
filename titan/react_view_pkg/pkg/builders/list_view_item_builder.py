@@ -28,24 +28,22 @@ class ListViewItemBuilder(Builder):
         )
 
     def build(self):
-        more_classes = []
-        more_handlers = []
+        styles = []
+        props = []
 
         if self.helpers.has_selection:
-            more_classes += [
+            styles += [
                 f"{{'{self.helpers.component_name}--selected': props.isSelected",
                 f"'{self.helpers.component_name}--highlighted': props.isHighlighted}}",
             ]
-            more_handlers += ["{...clickHandlers(props)}"]
+            props += ["{...clickHandlers(props)}"]
 
         if self.helpers.has_drag_and_drop:
-            more_classes += [
-                f"`{self.helpers.component_name}--drag-${{props.dragState}}`"
-            ]
-            more_handlers += ["{...dragHandlers(props)}"]
+            styles += [f"`{self.helpers.component_name}--drag-${{props.dragState}}`"]
+            props += ["{...dragHandlers(props)}"]
 
-        self.widget_spec.div_styles = more_classes + self.widget_spec.div_styles
-        self.widget_spec.div_handlers = self.widget_spec.div_handlers + more_handlers
+        self.widget_spec.div_styles = styles + self.widget_spec.div_styles
+        self.widget_spec.div_props = self.widget_spec.div_props + props
 
         inner_builder.build()
         self.output = inner_builder.output

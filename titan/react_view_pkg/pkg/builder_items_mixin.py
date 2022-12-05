@@ -60,7 +60,10 @@ class BuilderItemsMixin:
 
         data_path = self.get_data_path(term=term)
         if not data_path:
-            raise Exception(f"Could not find data path for: {term}")
+            # TODO: this is too hacky. If we cannot find a path to the term, we
+            # are simply assuming that a local variable exists that is named after
+            # the term.
+            return term.name or term.data
         return data_path
 
     def item_list_data_path(self):

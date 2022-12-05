@@ -1,13 +1,23 @@
 import os
+from pathlib import Path
 
-from moonleap.render.template_env import get_template, print_last_template
+from moonleap.render.template_env import (
+    get_template,
+    get_template_from_str,
+    print_last_template,
+)
 from moonleap.render.transforms import get_post_transforms
 
 
-def render_template(template_fn, **kwargs):
-    if template_fn.suffix == ".j2":
+def render_template(template_fn, context, template_str=None):
+    if Path(template_fn).suffix == ".j2":
         try:
-            content = get_template(template_fn).render(**kwargs)
+            tpl = (
+                get_template_from_str(template_str, template_fn)
+                if template_str
+                else get_template(template_fn)
+            )
+            content = tpl.render(context)
         except Exception:
             print_last_template(template_fn)
             raise
@@ -17,11 +27,14 @@ def render_template(template_fn, **kwargs):
             lines = post_transform(lines, template_fn)
         content = os.linesep.join(lines)
     else:
-        try:
-            with open(template_fn) as ifs:
-                content = ifs.read()
-        except UnicodeDecodeError:
-            with open(template_fn, "rb") as ifs:
-                content = ifs.read()
+        if template_str:
+            content = template_str
+        else:
+            try:
+                with open(template_fn) as ifs:
+                    content = ifs.read()
+            except UnicodeDecodeError:
+                with open(template_fn, "rb") as ifs:
+                    content = ifs.read()
 
     return content

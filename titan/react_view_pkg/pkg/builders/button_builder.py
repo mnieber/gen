@@ -1,8 +1,7 @@
-from moonleap.render.template_env import get_template_from_str
 from moonleap.utils import chop0
 from titan.react_view_pkg.pkg.builder import Builder
 
-handler_template_str = chop0(
+handler_tpl = chop0(
     """
     const {{ handler }} = () => {
         console.log("Moonleap Todo");
@@ -11,7 +10,7 @@ handler_template_str = chop0(
 """
 )
 
-button_template_str = chop0(
+button_tpl = chop0(
     """
     <div
       className={cn("{{ class_name }}", "button")}
@@ -30,18 +29,17 @@ class ButtonBuilder(Builder):
         self.output.external_css_classes += ["button"]
 
         if handler:
-            code = get_template_from_str(handler_template_str).render(
-                {
-                    "handler": handler,
-                }
-            )
+            context = {
+                "handler": handler,
+            }
+            code = self.render_str(handler_tpl, context, "button_builder_handler.j2")
             self.add_preamble_lines([code])
 
-        code = get_template_from_str(button_template_str).render(
-            {
+        if True:
+            context = {
                 "title": title,
                 "class_name": self.widget_spec.widget_name,
                 "handler": handler or "() => { console.log('Moonleap Todo'); }",
             }
-        )
-        self.add_lines([code])
+            code = self.render_str(button_tpl, context, "button_builder_button.j2")
+            self.add_lines([code])

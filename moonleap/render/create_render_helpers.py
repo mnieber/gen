@@ -35,9 +35,7 @@ def create_render_helpers(templates_dir, context, render_template, prev_helpers)
 
         return render_template(
             full_template_fn,
-            settings=get_session().settings,
-            _=context_ns,
-            __=helpers,
+            dict(settings=get_session().settings, _=context_ns, __=helpers),
         )
 
     context_ns.render = render_in_context
