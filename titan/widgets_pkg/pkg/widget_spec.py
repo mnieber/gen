@@ -23,13 +23,17 @@ class WidgetSpec:
     id: str = field(default_factory=lambda: uuid.uuid4().hex)
     parent: T.Optional["WidgetSpec"] = None
 
+    _widget_class_name: str = ""
+
     @property
     def is_component(self):
         return self.widget_name and ":" in self.widget_name
 
     @property
     def widget_class_name(self):
-        return create_widget_class_name(self)
+        if not self._widget_class_name:
+            self._widget_class_name = create_widget_class_name(self)
+        return self._widget_class_name
 
     @property
     def is_component_def(self):

@@ -8,19 +8,22 @@ def create_widget_class_name(widget_spec):
             name += tag
         widget_kebab_name = name.replace("-:", "-").replace(":", "-")
         return u0(kebab_to_camel(widget_kebab_name))
+    else:
+        assert widget_spec.parent
 
     default_class_name = u0(
         widget_spec.widget_name or widget_spec.place or widget_spec.widget_base_type
     )
     widget_class_name = widget_spec.values.get("cn", default_class_name)
-    if widget_class_name == "__":
-        # The name "__" is a shorthand for __ + default_class_name
-        widget_class_name += default_class_name
 
     shorten = widget_class_name.startswith("__")
-    root = widget_spec.root if shorten else widget_spec
-    if root and root is not widget_spec:
-        infix = "__" if root.is_component and not shorten else ""
+    if shorten:
+        root = widget_spec.root
+        # The name "__" is a shorthand for __ + default_class_name
+        suffix = default_class_name if widget_class_name == "__" else ""
+        prefix = "" if root is widget_spec else root.widget_class_name
+        return prefix + widget_class_name + suffix
+    else:
+        root = widget_spec.parent
+        infix = "__" if root.is_component else ""
         return root.widget_class_name + infix + widget_class_name
-
-    return widget_class_name
