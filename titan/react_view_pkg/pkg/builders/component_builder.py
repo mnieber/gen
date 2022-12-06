@@ -11,15 +11,18 @@ class ComponentBuilder(Builder):
         self._add_component_import_path()
 
         attrs = list(self.widget_spec.div_props)
-        for pipeline in self.component.pipelines:
-            if pipeline.root_props:
-                named_input = pipeline.elements[0].obj
-                required_prop_name = named_input.name or named_input.typ.ts_var
-                # The required prop must be supplied by some parent component
-                data_path = get_data_path(
-                    self.widget_spec.parent, term=named_input.meta.term
+        for named_prop in self.component.named_props:
+            required_prop_name = named_prop.name or named_prop.typ.ts_var
+            # The required prop must be supplied by some parent component
+            data_path = get_data_path(
+                self.widget_spec.parent, term=named_prop.meta.term
+            )
+            if not data_path:
+                raise Exception(
+                    f"Could not find data path for {named_prop} "
+                    + f"in {self.widget_spec.widget_class_name}"
                 )
-                attrs += [f"{required_prop_name}={{{data_path}}}"]
+            attrs += [f"{required_prop_name}={{{data_path}}}"]
         attrs_str = " ".join(attrs)
 
         key = self.widget_spec.div_key
