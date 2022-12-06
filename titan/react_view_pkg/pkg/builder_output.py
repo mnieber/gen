@@ -55,7 +55,7 @@ class BuilderOutput:
             + self.postamble_lines
         )
 
-    def clear_lines(self):
+    def clear_div_lines(self):
         self.lines = []
         self.preable_lines = []
         self.postamble_lines = []

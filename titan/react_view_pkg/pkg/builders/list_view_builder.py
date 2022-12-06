@@ -69,7 +69,8 @@ class ListViewBuilder(Builder):
                 ]
             )
             # Add the rest of the builder_output that we haven't used so far
-            builder_output.clear_lines()
+            # (especially child_components)
+            builder_output.clear_div_lines()
             self.output.add(builder_output)
 
         self.add_lines(
