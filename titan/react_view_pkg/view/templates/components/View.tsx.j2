@@ -1,6 +1,4 @@
 {% magic_with _.component.name as myComponent %}
-{% magic_with component.module.module_path as myChildComponentPath %}
-{% magic_with component.name as myChildComponent %}
 import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { cn } from 'src/utils/classnames';
 import { observer } from 'mobx-react-lite';
@@ -12,8 +10,6 @@ import './MyComponent.scss';
 {# Start: view imports here #}
 {# End: view imports here #}
 
-import { myChildComponent } from 'src/myChildComponentPath/components';                             {% for component in __.child_components %}{% ?? component.module != _.component.module %}
-import { myChildComponent } from 'src/myChildComponentPath/components/myChildComponent';            {% ?? component.module == _.component.module %}{% endfor %}
 import {                                                                                            {% min_lines count=3 %}
   {{ css_class }}                                                                                   {% !! css_class in __.build.external_css_classes %}
 } from 'src/frames/components';                                                                     {% end_min_lines %}
@@ -44,6 +40,4 @@ export const MyComponent = observer(
 {{ __.build.div }}
   }, DefaultProps)
 );
-{% end_magic_with %}
-{% end_magic_with %}
 {% end_magic_with %}

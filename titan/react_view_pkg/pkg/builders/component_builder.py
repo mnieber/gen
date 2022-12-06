@@ -4,12 +4,14 @@ from titan.react_view_pkg.pkg.get_data_path import get_data_path
 
 
 class ComponentBuilder(Builder):
+    def __post_init__(self):
+        self.component = self.widget_spec.component
+
     def build(self):
-        component = self.widget_spec.component
-        append_uniq(self.output.child_components, component)
+        self._add_component_import_path()
 
         attrs = list(self.widget_spec.div_props)
-        for pipeline in component.pipelines:
+        for pipeline in self.component.pipelines:
             if pipeline.root_props:
                 named_input = pipeline.elements[0].obj
                 required_prop_name = named_input.name or named_input.typ.ts_var
@@ -24,4 +26,15 @@ class ComponentBuilder(Builder):
         key_attr = f"key={{{key}}}" if key else ""
         self.add_lines(
             [f"<{self.widget_spec.widget_class_name} {key_attr} {attrs_str}/>"]
+        )
+
+    def _add_component_import_path(self):
+        is_same_module = (
+            self.widget_spec.module_name == self.widget_spec.parent.module_name
+        )
+        suffix = f"/{self.component.name}" if is_same_module else ""
+        append_uniq(
+            self.output.import_lines,
+            f"import {{ {self.component.name} }} from "
+            + f"'src/{self.component.module.module_path}/components{suffix}';",
         )

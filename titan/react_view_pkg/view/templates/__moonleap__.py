@@ -9,7 +9,6 @@ def get_helpers(_):
         queries = list()
         mutations = list()
         pipelines = _.component.pipelines
-        child_components = builder.output.child_components
         has_children = builder.output.has_children
         build = None
 
