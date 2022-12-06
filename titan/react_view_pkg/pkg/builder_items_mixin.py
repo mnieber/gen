@@ -3,16 +3,16 @@ from titan.react_view_pkg.pkg.get_data_path import get_data_path
 
 
 class BuilderItemsMixin:
-    def get_value_by_name(self, name):
-        ws = self.widget_spec
+    def get_value_by_name(self, name, default=None, ws=None):
+        ws = ws or self.widget_spec
         while ws:
             value = ws.values.get(name)
             if value:
                 return value
             elif ws.is_component_def:
-                return None
+                return default
             ws = ws.parent
-        return None
+        return default
 
     def get_named_data_term(self, name):
         value = self.get_value_by_name(name)

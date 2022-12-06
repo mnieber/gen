@@ -1,15 +1,15 @@
-from moonleap.utils.fp import extend_uniq
+from moonleap.utils.fp import append_uniq, extend_uniq
 from moonleap.utils.inflect import plural
 from titan.react_view_pkg.pkg.builder import Builder
 
 from .list_view_builder_tpl import imports_tpl, instance_tpl, preamble_tpl, props_tpl
+from .lvi_builder_tpl import lvi_props_tpl
 
 
 def default_spec(lvi_name, item_term_str):
     return {
         f"ListViewItem with {lvi_name} as Bar[p-2]": {
             "__attrs__": f"item={item_term_str}",
-            "LviBody": "pass",
             "LeftSlot with LviFields": "pass",
             "RightSlot with LviButtons": "pass",
         }
@@ -20,6 +20,11 @@ class ListViewBuilder(Builder):
     def __post_init__(self):
         self.item_name = self.named_item_list_term.data
         self.items_name = plural(self.item_name)
+        self.bvrs = self.get_value_by_name("bvrs", "").split(",")
+        self.has_selection = "selection" in self.bvrs
+        self.has_highlight = "highlight" in self.bvrs
+        self.has_drag_and_drop = "dragAndDrop" in self.bvrs
+        self.has_deletion = "deletion" in self.bvrs
 
     def get_spec_extension(self, places):
         if "ListViewItem" not in places:
@@ -29,28 +34,23 @@ class ListViewBuilder(Builder):
             )
 
     def build(self):
-        bvrs = self.widget_spec.values.get("bvrs", []).split(",")
-        has_selection = "selection" in bvrs
-        has_highlight = "highlight" in bvrs
-        has_drag_and_drop = "dragAndDrop" in bvrs
-        has_deletion = "deletion" in bvrs
 
         extend_uniq(
             self.output.default_props,
             []
-            + ([f"{self.items_name}:selection"] if has_selection else [])
-            + ([f"{self.items_name}:highlight"] if has_highlight else [])
-            + ([f"{self.items_name}:drag-and-drop"] if has_drag_and_drop else [])
-            + ([f"{self.items_name}:deletion"] if has_deletion else []),
+            + ([f"{self.items_name}:selection"] if self.has_selection else [])
+            + ([f"{self.items_name}:highlight"] if self.has_highlight else [])
+            + ([f"{self.items_name}:drag-and-drop"] if self.has_drag_and_drop else [])
+            + ([f"{self.items_name}:deletion"] if self.has_deletion else []),
         )
 
         context = {
             "item_name": self.item_name,
             "items_expr": self.item_list_data_path(),
-            "selection_bvr": has_selection,
-            "highlight_bvr": has_highlight,
-            "drag_and_drop_bvr": has_drag_and_drop,
-            "deletion_bvr": has_deletion,
+            "selection_bvr": self.has_selection,
+            "highlight_bvr": self.has_highlight,
+            "drag_and_drop_bvr": self.has_drag_and_drop,
+            "deletion_bvr": self.has_deletion,
         }
 
         self.add_import_lines(
@@ -92,3 +92,17 @@ class ListViewBuilder(Builder):
         child_widget_spec.restore_memo(memo)
 
         return builder.output
+
+    def update_place(self, widget_spec):
+        if widget_spec.place == "ListViewItem":
+            context = {
+                "selection_bvr": self.has_selection,
+                "highlight_bvr": self.has_highlight,
+                "drag_and_drop_bvr": self.has_drag_and_drop,
+                "deletion_bvr": self.has_deletion,
+            }
+
+            append_uniq(
+                widget_spec.div_props,
+                self.render_str(lvi_props_tpl, context, "lvi_body_builder_props.j2"),
+            )
