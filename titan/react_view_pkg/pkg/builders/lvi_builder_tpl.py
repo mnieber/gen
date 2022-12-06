@@ -45,7 +45,7 @@ lvi_styles_tpl = chop0(
   """
 )
 
-lvi_props_tpl = chop0(
+lvi_handler_props_tpl = chop0(
     """
 {...clickHandlers(props)}                                                               {% ?? selection_bvr %}
 {...dragHandlers(props)}                                                                {% ?? drag_and_drop_bvr %}

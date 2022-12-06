@@ -4,40 +4,52 @@ from titan.react_view_pkg.pkg.get_data_path import get_data_path
 
 
 class ComponentBuilder(Builder):
-    def __post_init__(self):
-        self.component = self.widget_spec.component
-
     def build(self):
         self._add_component_import_path()
+        self._add_lines_for_component_instance()
 
-        attrs = list(self.widget_spec.div_props)
-        for named_prop in self.component.named_props:
-            required_prop_name = named_prop.name or named_prop.typ.ts_var
-            # The required prop must be supplied by some parent component
-            data_path = get_data_path(
-                self.widget_spec.parent, term=named_prop.meta.term
-            )
-            if not data_path:
-                raise Exception(
-                    f"Could not find data path for {named_prop} "
-                    + f"in {self.widget_spec.widget_class_name}"
-                )
-            attrs += [f"{required_prop_name}={{{data_path}}}"]
-        attrs_str = " ".join(attrs)
+    def _add_component_import_path(self):
+        import_path = _get_component_import_path(self.widget_spec)
+        append_uniq(self.output.import_lines, import_path)
 
-        key = self.widget_spec.div_key
-        key_attr = f"key={{{key}}}" if key else ""
+    def _add_lines_for_component_instance(self):
+        attrs_str = _get_attrs_str(self.widget_spec)
+        key_attr = _get_key_attr(self.widget_spec)
         self.add_lines(
             [f"<{self.widget_spec.widget_class_name} {key_attr} {attrs_str}/>"]
         )
 
-    def _add_component_import_path(self):
-        is_same_module = (
-            self.widget_spec.module_name == self.widget_spec.parent.module_name
+
+def _get_component_import_path(widget_spec):
+    is_same_module = widget_spec.module_name == widget_spec.parent_ws.module_name
+    suffix = f"/{widget_spec.widget_class_name}" if is_same_module else ""
+    return (
+        f"import {{ {widget_spec.widget_class_name} }} from "
+        + f"'src/{widget_spec.module_name}/components{suffix}';"
+    )
+
+
+def _get_attrs_str(widget_spec):
+    attrs = list(widget_spec.div_attrs)
+    for named_prop in widget_spec.component.named_props:
+        required_prop_name = named_prop.name or named_prop.typ.ts_var
+        data_path = _get_prop_data_path(widget_spec, named_prop)
+        attrs += [f"{required_prop_name}={{{data_path}}}"]
+    attrs_str = " ".join(attrs)
+    return attrs_str
+
+
+def _get_key_attr(widget_spec):
+    key = widget_spec.div_key
+    return f"key={{{key}}}" if key else ""
+
+
+def _get_prop_data_path(widget_spec, named_prop):
+    # The required prop must be supplied by some parent component
+    data_path = get_data_path(widget_spec.parent_ws, term=named_prop.meta.term)
+    if not data_path:
+        raise Exception(
+            f"Could not find data path for {named_prop} "
+            + f"in {widget_spec.widget_class_name}"
         )
-        suffix = f"/{self.component.name}" if is_same_module else ""
-        append_uniq(
-            self.output.import_lines,
-            f"import {{ {self.component.name} }} from "
-            + f"'src/{self.component.module.module_path}/components{suffix}';",
-        )
+    return data_path

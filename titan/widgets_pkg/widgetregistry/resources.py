@@ -10,6 +10,7 @@ from titan.widgets_pkg.pkg.widget_spec import WidgetSpec
 class WidgetRegistry(Resource):
     def __post_init__(self):
         self._widget_spec_by_widget_name = {}
+        self.states_by_module_name = {}
 
     def setdefault(self, widget_name, default_value):
         if not self.has(widget_name):

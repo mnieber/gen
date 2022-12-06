@@ -44,6 +44,11 @@ def created_state(state):
     ]
 
 
+@rule("widget-registry")
+def load_states(widget_reg):
+    props.load_states(widget_reg)
+
+
 @extend(ReactModule)
 class ExtendModule:
     states = P.children(has, "state")

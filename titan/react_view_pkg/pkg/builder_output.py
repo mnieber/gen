@@ -5,17 +5,14 @@ from dataclasses import dataclass, field
 from moonleap.utils.fp import extend_uniq
 from moonleap.utils.merge_into_config import merge_into_config
 
-if T.TYPE_CHECKING:
-    from titan.react_pkg.component import Component
-
 
 @dataclass
 class BuilderOutput:
     lines: list = field(default_factory=list)
+    props_lines: list = field(default_factory=list)
     import_lines: list = field(default_factory=list)
     preamble_lines: list = field(default_factory=list)
     postamble_lines: list = field(default_factory=list)
-    external_css_classes: list = field(default_factory=list)
     react_packages_by_module_name: dict = field(default_factory=dict)
     # True if the widget spec or any of its child widget specs has a Children type
     has_children: bool = False
@@ -26,8 +23,8 @@ class BuilderOutput:
         self.preamble_lines += rhs.preamble_lines
         self.import_lines += rhs.import_lines
         self.lines += rhs.lines
+        self.props_lines += rhs.props_lines
         self.has_children = self.has_children or rhs.has_children
-        extend_uniq(self.external_css_classes, rhs.external_css_classes)
         extend_uniq(self.default_props, rhs.default_props)
         merge_into_config(
             self.react_packages_by_module_name, rhs.react_packages_by_module_name

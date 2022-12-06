@@ -57,11 +57,6 @@ def get_helpers(_):
                 ):
                     append_uniq(self.type_specs_to_import, field.target_type_spec)
 
-            for named_prop in self.state_provider.named_props:
-                res = named_prop.typ
-                item = res.item if res.meta.term.tag == "item~list" else res
-                append_uniq(self.type_specs_to_import, item.type_spec)
-
         def delete_items_data(self, container):
             deletes_items = container.get_bvr("deletion")
             data = dict(deletes_items=deletes_items)
@@ -108,16 +103,12 @@ def get_helpers(_):
 
         def return_value(self, data, hint=None):
             if data in self.state_provider.named_items_provided:
-                pipeline, data_path = self.state_provider.get_pipeline_and_data_path(
-                    data
-                )
+                data_path = self.state_provider.get_data_path(data)
                 maybe_expr = self.state_provider.maybe_expression(data)
                 return f"maybe({maybe_expr})({data_path})" if maybe_expr else data_path
 
             if data in self.state_provider.named_item_lists_provided:
-                pipeline, data_path = self.state_provider.get_pipeline_and_data_path(
-                    data
-                )
+                data_path = self.state_provider.get_data_path(data)
                 maybe_expr = self.state_provider.maybe_expression(data)
                 return (
                     f"maybe({maybe_expr})({data_path}, [])" if maybe_expr else data_path
@@ -143,10 +134,7 @@ def get_helpers(_):
                 return f"maybe({maybe_expr})({data_path})" if maybe_expr else data_path
 
         def get_data_path(self, named_output):
-            pipeline, data_path = self.state_provider.get_pipeline_and_data_path(
-                named_output
-            )
-            return data_path
+            return self.state_provider.get_data_path(named_output)
 
     return Helpers()
 

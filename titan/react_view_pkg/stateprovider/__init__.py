@@ -2,7 +2,6 @@ from pathlib import Path
 
 import moonleap.resource.props as P
 from moonleap import (
-    MemFun,
     create,
     create_forward,
     empty_rule,
@@ -37,7 +36,7 @@ def create_state_provider(term):
 
 @rule("state~provider")
 def created_state_provider(state_provider):
-    return state_provider.load()
+    return props.state_provider_load(state_provider)
 
 
 @rule("state~provider", provides, "react-state")
@@ -53,4 +52,3 @@ class ExtendStateProvider:
     named_items_provided = P.children(provides, "x+item")
     named_item_lists_provided = P.children(provides, "x+item~list")
     state = P.child(provides, "react-state")
-    load = MemFun(props.state_provider_load)

@@ -39,13 +39,6 @@ def get_widget_attrs(key, value_parts):
                 widget_name = widget_name[len(prefix) :].strip()
                 symbol_parts.append(f"{label}=true")
 
-        if widget_name:
-            parts_module = widget_name.split(".")
-            if len(parts_module) > 1:
-                widget_name = parts_module[-1]
-                if len(parts_module) > 1:
-                    attrs["module_name"] = parts_module[0]
-
     if widget_name:
         attrs["widget_name"] = widget_name
 

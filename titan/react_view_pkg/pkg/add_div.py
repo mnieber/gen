@@ -1,7 +1,5 @@
 import os
 
-from moonleap.utils.fp import append_uniq
-
 
 def add_div_open(builder):
     class_names = (
@@ -10,12 +8,8 @@ def add_div_open(builder):
         + (["props.className"] if builder.widget_spec.is_component_def else [])
     )
 
-    for external_css_class in ("card",):
-        if external_css_class in builder.widget_spec.div_styles:
-            append_uniq(builder.output.external_css_classes, external_css_class)
-
     class_name = ", ".join(class_names)
-    props_attr = os.linesep.join(builder.widget_spec.div_props)
+    props_attr = os.linesep.join(builder.widget_spec.div_attrs)
 
     key = builder.widget_spec.div_key
     key_attr = f"key={{{key}}}" if key else ""

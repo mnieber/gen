@@ -13,9 +13,6 @@ from moonleap import (
 )
 from moonleap.verbs import has
 from titan.react_pkg.reactapp import ReactApp
-from titan.react_pkg.reactmodule.get_map_from_widget_spec_to_react_module import (
-    get_map_from_widget_spec_to_react_module,
-)
 from titan.widgets_pkg.widgetregistry import get_widget_reg
 
 from . import props
@@ -50,12 +47,13 @@ def react_app_has_module(react_app, module):
 @rule("react-app")
 def react_modules_provide_widgets(react_app):
     widget_reg = get_widget_reg()
-    lut = get_map_from_widget_spec_to_react_module(widget_reg, react_app.modules)
     forwards = []
-    for widget_type_name, react_module in lut.items():
-        widget_spec = widget_reg.get(widget_type_name)
-        if widget_spec:
-            forwards.append(create_forward(react_module, has, widget_type_name))
+    for widget_spec in widget_reg.widget_specs():
+        react_module_term_str = f"{widget_spec.module_name}:module"
+        forwards += [
+            create_forward(react_app, has, react_module_term_str),
+            create_forward(react_module_term_str, has, widget_spec.widget_name),
+        ]
 
     return forwards
 

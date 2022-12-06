@@ -43,7 +43,7 @@ class Builder(BuilderRenderMixin, BuilderItemsMixin):
         pass
 
     def get_spec_extension(self, places):
-        return {}
+        return None
 
     def update_place(self, widget_spec):
         return []

@@ -9,7 +9,7 @@ def create_widget_class_name(widget_spec):
         widget_kebab_name = name.replace("-:", "-").replace(":", "-")
         return u0(kebab_to_camel(widget_kebab_name))
     else:
-        assert widget_spec.parent
+        assert widget_spec.parent_ws
 
     default_class_name = u0(
         widget_spec.widget_name or widget_spec.place or widget_spec.widget_base_type
@@ -24,6 +24,6 @@ def create_widget_class_name(widget_spec):
         prefix = "" if root is widget_spec else root.widget_class_name
         return prefix + widget_class_name + suffix
     else:
-        root = widget_spec.parent
+        root = widget_spec.parent_ws
         infix = "__" if root.is_component else ""
         return root.widget_class_name + infix + widget_class_name

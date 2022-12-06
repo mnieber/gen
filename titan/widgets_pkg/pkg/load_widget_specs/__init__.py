@@ -6,10 +6,17 @@ from .widget_spec_parser import WidgetSpecParser
 
 
 def load_widget_specs(widget_reg, spec_dir):
-    fn = os.path.join(spec_dir, "ui.yaml")
-    if os.path.exists(fn):
-        with open(fn) as f:
-            widget_spec_dict = yaml.load(f, Loader=yaml.SafeLoader)
-            parser = WidgetSpecParser(widget_reg)
-            parser.parse(widget_spec_dict)
-            widget_reg.pprint()
+    spec_dir = os.path.join(spec_dir, "ui")
+    if os.path.exists(spec_dir):
+        for module_spec_fn in os.listdir(spec_dir):
+            fn = os.path.join(spec_dir, module_spec_fn)
+
+            module_name = os.path.splitext(module_spec_fn)[0]
+            with open(fn) as f:
+                widget_spec_dict = yaml.load(f, Loader=yaml.SafeLoader)
+                parser = WidgetSpecParser(widget_spec_dict, module_name, widget_reg)
+                try:
+                    parser.parse(widget_spec_dict)
+                except Exception as e:
+                    raise Exception(f"Error parsing {fn}: {e}")
+                widget_reg.pprint()

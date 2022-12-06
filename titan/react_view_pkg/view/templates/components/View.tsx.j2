@@ -10,15 +10,11 @@ import './MyComponent.scss';
 {# Start: view imports here #}
 {# End: view imports here #}
 
-import {                                                                                            {% min_lines count=3 %}
-  {{ css_class }}                                                                                   {% !! css_class in __.build.external_css_classes %}
-} from 'src/frames/components';                                                                     {% end_min_lines %}
-
 type PropsT = {                                                                                     {% ?? not __.has_children %}
 type PropsT = React.PropsWithChildren<{                                                             {% ?? __.has_children %}
 {# Start: view props here #}
 {# End: view props here #}
-  {{ res.typ.ts_var }}: {{ res.typ.ts_type }}                                                       {% !! res in _.component.named_props %}
+  {{ line }}                                                                                        {% !! line in __.build.props_lines %}
   className?: any;
 }                                                                                                   {% ?? not __.has_children %}
 }>                                                                                                  {% ?? __.has_children %}
@@ -27,8 +23,6 @@ type PropsT = React.PropsWithChildren<{                                         
 ;
 
 const DefaultProps = {
-  ...dps.{{ res.typ.ts_var }},                                                                      {% !! res in _.component.named_default_props %}
-  ...dps.{{ res.ts_var }},                                                                          {% !! res in _.component.bvr_default_props|sort(attribute="name") %}
 {# Start: default view props here #}
 {# End: default view props here #}
 };

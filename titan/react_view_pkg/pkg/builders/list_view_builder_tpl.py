@@ -1,6 +1,6 @@
 from moonleap.utils import chop0
 
-imports_tpl = chop0(
+lvi_imports_tpl = chop0(
     """
 {% magic_with item_name as myItem %}
 import { MyItemT } from 'src/api/types/MyItemT';
@@ -10,7 +10,7 @@ import { dragState } from 'skandha-facets/DragAndDrop';                         
 """
 )
 
-preamble_tpl = chop0(
+lvi_preamble_tpl = chop0(
     """
 {% magic_with item_name as myItem %}
 const handleClick = new ClickToSelectItems({                                                  {% if selection_bvr %}
@@ -27,7 +27,7 @@ const myItemDivs = {{ items_expr }}.map(({{ item_name }}: {{ item_name|u0 }}T) =
 """
 )
 
-props_tpl = chop0(
+lvi_instance_props_tpl = chop0(
     """
 {% magic_with item_name as myItem %}
 myItem={myItem}
@@ -41,7 +41,7 @@ onDelete={() => props.myItemsDeletion.delete([myItem.id])}                      
 """
 )
 
-instance_tpl = chop0(
+lvi_instance_tpl = chop0(
     """
 {% magic_with item_name as myItem %}
 {myItemDivs.length > 0 && myItemDivs}

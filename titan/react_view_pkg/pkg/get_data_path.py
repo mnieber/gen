@@ -4,9 +4,8 @@ from moonleap.parser.term import match_term_to_pattern
 def get_data_path(widget_spec, term):
     ws = widget_spec
     while ws:
-        component = ws.component
-        if component:
-            pipeline, data_path = component.get_pipeline_and_data_path(term=term)
+        if component := ws.component:
+            data_path = component.get_data_path(term=term)
             if data_path:
                 return data_path
 
@@ -18,5 +17,5 @@ def get_data_path(widget_spec, term):
             if term and match_term_to_pattern(b.named_item_list_term, term):
                 return term.data
 
-        ws = ws.parent
+        ws = ws.parent_ws
     return None

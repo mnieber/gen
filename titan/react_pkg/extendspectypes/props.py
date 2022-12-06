@@ -86,13 +86,14 @@ def widget_spec_component(widget_spec):
             if match_term_to_pattern(component.meta.term, widget_term):
                 return component
 
-    raise Exception(f"Cannot find component for {widget_spec}")
+    raise Exception(f"Cannot find component for {widget_spec.widget_name}")
 
 
 def component_widget_spec(component):
     for widget_spec in get_widget_reg().widget_specs():
-        if widget_term := word_to_term(widget_spec.widget_name):
-            if match_term_to_pattern(component.meta.term, widget_term):
-                return widget_spec
+        if widget_spec.is_component_def:
+            if widget_term := word_to_term(widget_spec.widget_name):
+                if match_term_to_pattern(component.meta.term, widget_term):
+                    return widget_spec
 
     return None

@@ -14,15 +14,20 @@ class WidgetSpec:
     level: int = 0
     child_widget_specs: T.List["WidgetSpec"] = field(repr=False, default_factory=list)
     div_styles: T.List[str] = field(repr=False, default_factory=list)
-    div_props: T.List[str] = field(repr=False, default_factory=list)
+    div_attrs: T.List[str] = field(repr=False, default_factory=list)
     div_key: T.Optional[str] = None
+    props: T.List[str] = field(repr=False, default_factory=list)
+    default_props: T.List[str] = field(repr=False, default_factory=list)
     widget_name: T.Optional[str] = None
     module_name: T.Optional[str] = None
     place: T.Optional[str] = None
     values: T.Dict[str, str] = field(default_factory=dict)
     id: str = field(default_factory=lambda: uuid.uuid4().hex)
-    parent: T.Optional["WidgetSpec"] = None
+    parent_ws: T.Optional["WidgetSpec"] = None
+    # This is the dict from which the widget_spec was created
+    src_dict: T.Dict[str, str] = field(default_factory=dict)
 
+    # Private
     _widget_class_name: str = ""
 
     @property
@@ -47,7 +52,7 @@ class WidgetSpec:
         return R.head(x for x in self.child_widget_specs if x.place == place)
 
     def create_memo(self, fields=None):
-        fields = fields or ["div_styles", "div_props", "div_key", "place", "values"]
+        fields = fields or ["div_styles", "div_attrs", "div_key", "place", "values"]
         memo = {}
         for field in fields:
             memo[field] = getattr(self, field)
@@ -61,7 +66,7 @@ class WidgetSpec:
     def root(self):
         ws = self
 
-        while ws.parent and not ws.is_component_def:
-            ws = ws.parent
+        while ws.parent_ws and not ws.is_component_def:
+            ws = ws.parent_ws
 
         return ws

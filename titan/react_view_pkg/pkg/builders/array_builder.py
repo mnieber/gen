@@ -24,7 +24,7 @@ class ArrayBuilder(Builder):
             "const_name": self.widget_spec.widget_name,
             "items_expr": self.item_list_data_path(),
             "item_name": item_name,
-            "child_widget_div": self._get_child_widget_div(item_name),
+            "child_widget_div": _get_child_widget_div(self.widget_spec, item_name),
         }
 
         if True:
@@ -35,14 +35,15 @@ class ArrayBuilder(Builder):
             code = self.render_str(instance_tpl, context, "array_builder_instance.j2")
             self.add_lines([code])
 
-    def _get_child_widget_div(self, item_name):
-        from titan.react_view_pkg.pkg.get_builder import get_builder
 
-        child_widget_spec = self.widget_spec.find_child_with_place("Child")
-        memo = child_widget_spec.create_memo()
-        child_widget_spec.values["item"] = item_name
-        child_widget_spec.div_key = f"{item_name}.id"
-        builder = get_builder(child_widget_spec)
-        builder.build()
-        child_widget_spec.restore_memo(memo)
-        return builder.output.div
+def _get_child_widget_div(widget_spec, item_name):
+    from titan.react_view_pkg.pkg.get_builder import get_builder
+
+    child_widget_spec = widget_spec.find_child_with_place("Child")
+    memo = child_widget_spec.create_memo()
+    child_widget_spec.values["item"] = item_name
+    child_widget_spec.div_key = f"{item_name}.id"
+    builder = get_builder(child_widget_spec)
+    builder.build()
+    child_widget_spec.restore_memo(memo)
+    return builder.output.div

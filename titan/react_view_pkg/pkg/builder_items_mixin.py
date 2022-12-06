@@ -11,7 +11,7 @@ class BuilderItemsMixin:
                 return value
             elif ws.is_component_def:
                 return default
-            ws = ws.parent
+            ws = ws.parent_ws
         return default
 
     def get_named_data_term(self, name):

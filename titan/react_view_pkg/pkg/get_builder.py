@@ -80,4 +80,7 @@ def get_builder(widget_spec, is_instance=False) -> Builder:
     if widget_spec.widget_base_type == "LviButtons":
         return LviButtonsBuilder(widget_spec)
 
+    if widget_spec.widget_base_type == "StateProvider":
+        return DivBuilder(widget_spec)
+
     raise Exception(f"Unknown widget base type: {widget_spec.widget_base_type}")

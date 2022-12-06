@@ -1,4 +1,18 @@
-def component_get_pipeline_and_data_path(component, named_output=None, term=None):
+from moonleap.parser.term import match_term_to_pattern
+
+
+def component_get_data_path(component, named_output=None, term=None):
+    pipeline, data_path = _get_pipeline(component, named_output, term)
+    if not data_path:
+        for named_res_set in (component.named_props, component.named_default_props):
+            for named_prop in named_res_set:
+                t = named_output.meta.term if named_output else term
+                if match_term_to_pattern(named_prop.meta.term, t):
+                    return f"props.{named_prop.typ.ts_var}"
+    return data_path
+
+
+def _get_pipeline(component, named_output=None, term=None):
     results = []
     for pipeline in component.pipelines:
         if data_path := pipeline.data_path(named_output, term):
@@ -12,7 +26,7 @@ def component_get_pipeline_and_data_path(component, named_output=None, term=None
 
 
 def component_maybe_expression(component, named_item_or_item_list):
-    pipeline, data_path = component.get_pipeline_and_data_path(named_item_or_item_list)
+    pipeline, data_path = _get_pipeline(component, named_item_or_item_list)
     if not pipeline:
         return "'Moonleap Todo'"
 
@@ -28,3 +42,19 @@ def component_maybe_expression(component, named_item_or_item_list):
             return f"state.{item_or_item_list.typ.ts_var}"
     else:
         raise Exception(f"Unknown pipeline source: {pipeline_source}")
+
+
+def load_component(component):
+    from titan.react_pkg.packages.use_react_packages import use_react_packages
+    from titan.react_view_pkg.pkg.get_builder import get_builder
+
+    if widget_spec := component.widget_spec:
+        react_app = component.module.react_app
+        component.builder = get_builder(widget_spec)
+        component.builder.build()
+
+        for (
+            module_name,
+            packages,
+        ) in component.builder.output.react_packages_by_module_name.items():
+            use_react_packages(react_app.get_module(module_name), packages)
