@@ -1,5 +1,5 @@
 {% magic_with django_module.name as djangoModuleName %}
-from django_rtk_green import django_rtk_green_apps                      {% ?? _.django_app.accounts_module %}
+from django_rtk_green import django_rtk_green_apps                      {% ?? _.django_app.user_accounts_module %}
 
 DJANGO_APPS = [
     "django.contrib.auth",
@@ -16,9 +16,9 @@ THIRD_PARTY_APPS = [
     "adminsortable2",
     "corsheaders",
     "django_extensions",
-    *django_rtk_green_apps,                                             {% ?? _.django_app.accounts_module %}
+    *django_rtk_green_apps,                                             {% ?? _.django_app.user_accounts_module %}
     "graphene_django",                                                  {% ?? _.django_app.api_module %}
-    "graphql_jwt.refresh_token.apps.RefreshTokenConfig",                {% ?? _.django_app.accounts_module %}
+    "graphql_jwt.refresh_token.apps.RefreshTokenConfig",                {% ?? _.django_app.user_accounts_module %}
 ]
 
 LOCAL_APPS = [

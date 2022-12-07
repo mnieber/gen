@@ -2,11 +2,11 @@
 import datetime
 
 AUTHENTICATION_BACKENDS = [
-    "graphql_jwt.backends.JSONWebTokenBackend",                              {% ?? _.django_app.accounts_module %}
+    "graphql_jwt.backends.JSONWebTokenBackend",                              {% ?? _.django_app.user_accounts_module %}
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-DJANGO_RTK = {                                                               {% if _.django_app.accounts_module %}
+DJANGO_RTK = {                                                               {% if _.django_app.user_accounts_module %}
     "BACKEND": "django_rtk_green.backends.Backend",
     "VALIDATOR": "django_rtk.validators.Validator",
     "EMAIL_TEMPLATES": {
