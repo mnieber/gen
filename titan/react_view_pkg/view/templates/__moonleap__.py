@@ -1,20 +1,18 @@
-from moonleap.utils.fp import append_uniq, uniq
+from moonleap.utils.fp import append_uniq
 
 
 def get_helpers(_):
     class Helpers:
         view = _.component
         widget_spec = _.component.widget_spec
-        builder = view.builder
+        build = view.build_output
         queries = list()
         mutations = list()
         pipelines = _.component.pipelines
-        has_children = builder.output.has_children
-        build = None
+        has_children = build.has_children
 
         def __init__(self):
             self._get_queries_from_pipelines()
-            self.build = self.builder.output
 
         def _get_queries_from_pipelines(self):
             for pipeline in self.pipelines:

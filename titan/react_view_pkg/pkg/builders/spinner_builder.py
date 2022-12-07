@@ -36,4 +36,4 @@ class SpinnerBuilder(Builder):
         }
 
         code = self.render_str(tpl, context, "spinner_builder.j2")
-        self.output.preamble_lines.extend([code])
+        self.add_preamble_lines([code])

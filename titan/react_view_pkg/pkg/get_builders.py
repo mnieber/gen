@@ -11,7 +11,9 @@ from titan.react_view_pkg.pkg.builders.item_fields_builder import (
     ItemFieldsBuilder,
 )
 from titan.react_view_pkg.pkg.builders.layout_builder import LayoutBuilder
+from titan.react_view_pkg.pkg.builders.list_view_body_builder import ListViewBodyBuilder
 from titan.react_view_pkg.pkg.builders.list_view_builder import ListViewBuilder
+from titan.react_view_pkg.pkg.builders.list_view_item_builder import ListViewItemBuilder
 from titan.react_view_pkg.pkg.builders.lvi_builder import (
     LviButtonsBuilder,
     LviFieldsBuilder,
@@ -23,16 +25,15 @@ from titan.react_view_pkg.pkg.builders.text_builder import TextBuilder
 
 def get_builders(widget_spec):
     result = []
+    if not widget_spec.widget_base_types and widget_spec.is_component:
+        # This builder is used if the parent builder uses an instance
+        # of a component.
+        result.append(ComponentBuilder(widget_spec))
 
     for widget_base_type in widget_spec.widget_base_types:
         builder = None
 
-        if widget_spec.widget_name and widget_spec.widget_name == widget_base_type:
-            # This builder is used if the parent builder uses an instance
-            # of a component.
-            builder = ComponentBuilder(widget_spec)
-
-        elif widget_base_type == "Layout":
+        if widget_base_type == "Layout":
             builder = LayoutBuilder(widget_spec)
 
         elif widget_base_type == "Card":
@@ -74,13 +75,11 @@ def get_builders(widget_spec):
         elif widget_base_type == "ListView":
             builder = ListViewBuilder(widget_spec)
 
-        elif widget_base_type == "ListViewContents":
-            # HACK
-            builder = DivBuilder(widget_spec)
+        elif widget_base_type == "ListViewBody":
+            builder = ListViewBodyBuilder(widget_spec)
 
         elif widget_base_type == "ListViewItem":
-            # HACK
-            builder = DivBuilder(widget_spec)
+            builder = ListViewItemBuilder(widget_spec)
 
         elif widget_base_type == "LviFields":
             builder = LviFieldsBuilder(widget_spec)

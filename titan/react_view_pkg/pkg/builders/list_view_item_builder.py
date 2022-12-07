@@ -1,0 +1,33 @@
+from moonleap.utils.fp import append_uniq, extend_uniq
+from titan.react_view_pkg.pkg.builder import Builder
+from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
+
+from .list_view_builder_tpl import lvi_body_div_attrs_tpl, lvi_body_div_styles_tpl
+
+
+class ListViewItemBuilder(Builder, BvrsBuilderMixin):
+    def __init__(self, widget_spec):
+        Builder.__init__(self, widget_spec)
+        BvrsBuilderMixin.__init__(self)
+
+    def build(self):
+        pass
+
+    def update_widget_spec(self):
+        context = {
+            **self.bvrs_context(),
+            "item_name": self.bvrs_item_name,
+            "component_name": self.widget_spec.widget_class_name,
+        }
+
+        # HACK: enforce that item is derived from self.bvrs_item_name
+        self.widget_spec.values["item"] = f"+{self.bvrs_item_name}:item"
+
+        append_uniq(
+            self.widget_spec.div_styles,
+            self.render_str(lvi_body_div_styles_tpl, context, "lvi_body_div_styles.j2"),
+        )
+        append_uniq(
+            self.widget_spec.div_attrs,
+            self.render_str(lvi_body_div_attrs_tpl, context, "lvi_body_div_attrs.j2"),
+        )

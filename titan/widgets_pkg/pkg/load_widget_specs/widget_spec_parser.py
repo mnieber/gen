@@ -3,7 +3,6 @@ from .get_widget_spec import get_widget_spec
 
 class WidgetSpecParser:
     def __init__(self, widget_spec_dict, module_name, widget_reg=None):
-        __import__("pudb").set_trace()  # qq
         self.widget_spec_dict = widget_spec_dict
         self.module_name = module_name
         self.widget_reg = widget_reg
@@ -28,6 +27,7 @@ class WidgetSpecParser:
             widget_spec, spec = get_widget_spec(
                 key, value, module_name=self.module_name
             )
+            is_dict = isinstance(spec, dict)
 
             # Update parent/child relationships
             if parent_widget_spec:
@@ -39,13 +39,14 @@ class WidgetSpecParser:
 
             # Every builder has the option to update the created widget-spec.
             for builder in builders:
-                builder.update_widget_spec(widget_spec)
+                builder.update_widget_spec()
 
             # Every builder has the option to extend the spec before we continue
             # to process it.
-            for builder in builders:
-                extension = builder.get_spec_extension(_get_places(spec))
-                spec.update(extension or {})
+            if is_dict:
+                for builder in builders:
+                    extension = builder.get_spec_extension(_get_places(spec))
+                    spec.update(extension or {})
 
             self._check_top_level_constraints(level, widget_spec)
 
@@ -59,7 +60,7 @@ class WidgetSpecParser:
             #
             # Use recursion to convert child widget specs
             #
-            if isinstance(spec, dict):
+            if is_dict:
                 self.parse(
                     spec,
                     parent_widget_spec=widget_spec,

@@ -20,6 +20,7 @@ class BuilderOutput:
 
     def add(self, rhs: "BuilderOutput"):
         self.preamble_lines += rhs.preamble_lines
+        self.postamble_lines += rhs.postamble_lines
         self.lines += rhs.lines
         self.has_children = self.has_children or rhs.has_children
         extend_uniq(self.import_lines, rhs.import_lines)

@@ -16,7 +16,7 @@ def get_widget_attrs(key, value_parts):
         key = parts_with[1]
 
     if key == "children":
-        widget_base_types = ["Children"]
+        widget_base_types_str = "Children"
         widget_name = "Children"
     else:
         parts_as = key.split(" as ")

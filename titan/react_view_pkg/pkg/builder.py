@@ -45,7 +45,7 @@ class Builder(BuilderRenderMixin, BuilderItemsMixin):
     def get_spec_extension(self, places):
         return None
 
-    def update_widget_spec(self, child_widget_spec):
+    def update_widget_spec(self):
         pass
 
     def __repr__(self):
