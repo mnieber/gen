@@ -26,6 +26,12 @@ def get_helpers(_):
 
         @property
         def type_specs_to_import(self):
-            return []
+            result = []
+            for named_prop in self.view.named_props:
+                if named_prop.meta.term.tag in ("item",):
+                    append_uniq(result, named_prop.typ.type_spec)
+                if named_prop.meta.term.tag in ("item~list",):
+                    append_uniq(result, named_prop.typ.item.type_spec)
+            return result
 
     return Helpers()

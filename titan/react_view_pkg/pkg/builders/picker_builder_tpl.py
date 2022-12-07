@@ -6,9 +6,10 @@ picker_handler_tpl = chop0(
       if (value.__isNew__) {
         // Moonleap Todo: add {{ item }}
       } else if (value.value) {
-        props.{{ item|plural }}Selection.selectItem({
+        props.{{ item|plural }}Selection.selectItem({                           {% if bvrs_has_selection %}
           itemId: value.value.id
         });
+        props.{{ item|plural }}Highlight.id = value.value.id;                   {% elif bvrs_has_highlight %}{% endif %}
       }
     };
     {{ "" }}

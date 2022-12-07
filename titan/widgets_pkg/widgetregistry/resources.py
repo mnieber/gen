@@ -35,9 +35,7 @@ class WidgetRegistry(Resource):
     def pprint(self):
         def convert(widget_spec):
             prefix = widget_spec.widget_name if widget_spec.widget_name else ""
-            suffix = (
-                widget_spec.widget_base_type if widget_spec.widget_base_type else ""
-            )
+            suffix = ", ".join(widget_spec.widget_base_types)
             infix = " as " if prefix and suffix else ""
             key = prefix + infix + suffix
 
@@ -53,7 +51,7 @@ class WidgetRegistry(Resource):
 
         root = WidgetSpec(
             widget_name="Root",
-            widget_base_type="Root",
+            widget_base_types=["Root"],
             child_widget_specs=self.widget_specs(),
         )
         data = convert(root)

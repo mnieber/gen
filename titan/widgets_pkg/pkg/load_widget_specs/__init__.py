@@ -15,8 +15,9 @@ def load_widget_specs(widget_reg, spec_dir):
             with open(fn) as f:
                 widget_spec_dict = yaml.load(f, Loader=yaml.SafeLoader)
                 parser = WidgetSpecParser(widget_spec_dict, module_name, widget_reg)
+                parser.parse(widget_spec_dict)
                 try:
-                    parser.parse(widget_spec_dict)
+                    pass
                 except Exception as e:
                     raise Exception(f"Error parsing {fn}: {e}")
                 widget_reg.pprint()

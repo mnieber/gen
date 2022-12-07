@@ -26,7 +26,7 @@ def _filtered_child_widget_specs(places, child_widget_specs):
                 found = True
                 break
         if not found:
-            result.append(WidgetSpec(widget_base_type="Empty"))
+            result.append(WidgetSpec(widget_base_types=["Empty"]))
     return result
 
 

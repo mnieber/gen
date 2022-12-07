@@ -9,7 +9,7 @@ class Builder(BuilderRenderMixin, BuilderItemsMixin):
     def __init__(self, widget_spec):
         self.widget_spec = widget_spec
         self.output = BuilderOutput()
-        if widget_spec.widget_base_type == "Children":
+        if "Children" in widget_spec.widget_base_types:
             self.output.has_children = True
         self.__post_init__()
 
@@ -45,8 +45,8 @@ class Builder(BuilderRenderMixin, BuilderItemsMixin):
     def get_spec_extension(self, places):
         return None
 
-    def update_place(self, widget_spec):
-        return []
+    def update_widget_spec(self, child_widget_spec):
+        pass
 
     def __repr__(self):
         return f"{self.__class__.__name__}({self.widget_spec})"

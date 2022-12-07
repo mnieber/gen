@@ -10,12 +10,13 @@ def get_data_path(widget_spec, term):
                 return data_path
 
         # HACK: use widget_base_type to determine data path
-        if ws != widget_spec and ws.widget_base_type in ("Array", "ListView"):
-            from titan.react_view_pkg.pkg.get_builder import get_builder
+        for widget_base_type in ws.widget_base_types:
+            if ws != widget_spec and widget_base_type in ("Array", "ListView"):
+                from titan.react_view_pkg.pkg.get_builders import get_builder
 
-            b = get_builder(ws)
-            if term and match_term_to_pattern(b.named_item_list_term, term):
-                return term.data
+                b = get_builder(ws)
+                if term and match_term_to_pattern(b.named_item_list_term, term):
+                    return term.data
 
         ws = ws.parent_ws
     return None

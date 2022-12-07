@@ -15,7 +15,7 @@ lvi_fields_tpl = chop0(
 
 lvi_buttons_tpl = chop0(
     """
-        <div                                                                            {% if deletion_bvr %}
+        <div                                                                            {% if bvrs_has_deletion %}
           className={cn(
             'TodoListViewItem__Buttons',
             'flex flex-row justify-end items-center'
@@ -33,25 +33,6 @@ lvi_buttons_tpl = chop0(
     """
 )
 
-lvi_styles_tpl = chop0(
-    """
-{% magic_with component_name as MyComponent %}
-{                                                                                       {% min_lines count=3 %}
-  'MyComponent--selected': props.isSelected,                                            {% ?? selection_bvr %}
-  'MyComponent--highlighted': props.isHighlighted,                                      {% ?? highlight_bvr %}
-},                                                                                      {% end_min_lines %}
-`MyComponent--drag-${props.dragState}`                                                  {% ?? drag_and_drop_bvr %}
-{% end_magic_with %}
-  """
-)
-
-lvi_handler_props_tpl = chop0(
-    """
-{...clickHandlers(props)}                                                               {% ?? selection_bvr %}
-{...dragHandlers(props)}                                                                {% ?? drag_and_drop_bvr %}
-  """
-)
-
 lvi_buttons_imports_tpl = chop0(
     """
 import { smallButton } from 'src/frames/components';
@@ -60,29 +41,29 @@ import { smallButton } from 'src/frames/components';
 
 lvi_body_imports_tpl = chop0(
     """
-import { dragHandlers, type DragHandlersT } from 'skandha-facets/DragAndDrop';                      {% ?? drag_and_drop_bvr %}
-import { clickHandlers, ClickHandlersT } from 'skandha-facets/handlers/ClickToSelectItems';         {% ?? selection_bvr %}
+import { dragHandlers, type DragHandlersT } from 'skandha-facets/DragAndDrop';                      {% ?? bvrs_has_drag_and_drop %}
+import { clickHandlers, ClickHandlersT } from 'skandha-facets/handlers/ClickToSelectItems';         {% ?? bvrs_has_selection %}
   """
 )
 
 lvi_buttons_props_tpl = chop0(
     """
-onDelete: Function;                                                                     {% ?? deletion_bvr %}
+onDelete: Function;                                                                     {% ?? bvrs_has_deletion %}
   """
 )
 
 lvi_body_props_tpl = chop0(
     """
-isSelected: boolean;                                                                    {% ?? selection_bvr %}
-isHighlighted: boolean;                                                                 {% ?? selection_bvr %}
-dragState?: string;                                                                     {% ?? drag_and_drop_bvr %}
+isSelected: boolean;                                                                    {% ?? bvrs_has_selection %}
+isHighlighted: boolean;                                                                 {% ?? bvrs_has_selection %}
+dragState?: string;                                                                     {% ?? bvrs_has_drag_and_drop %}
   """
 )
 
 lvi_body_additional_props_tpl = chop0(
     """
-& ClickHandlersT                                                                        {% ?? selection_bvr %}
-& DragHandlersT                                                                         {% ?? drag_and_drop_bvr %}
+& ClickHandlersT                                                                        {% ?? bvrs_has_selection %}
+& DragHandlersT                                                                         {% ?? bvrs_has_drag_and_drop %}
   """
 )
 

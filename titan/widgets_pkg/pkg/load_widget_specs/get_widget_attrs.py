@@ -7,7 +7,7 @@ from titan.types_pkg.pkg.load_type_specs.split_raw_key import split_symbols
 
 
 def get_widget_attrs(key, value_parts):
-    attrs = dict(div_styles=[], values={}, widget_base_type=None)
+    attrs = dict(div_styles=[], values={}, widget_base_types=[])
     symbol_parts = []
 
     parts_with = key.split(" with ")
@@ -16,13 +16,13 @@ def get_widget_attrs(key, value_parts):
         key = parts_with[1]
 
     if key == "children":
-        widget_base_type = "Children"
+        widget_base_types = ["Children"]
         widget_name = "Children"
     else:
         parts_as = key.split(" as ")
 
-        widget_base_type = parts_as[-1]
-        widget_base_type, symbols = split_symbols(widget_base_type)
+        widget_base_types_str = parts_as[-1]
+        widget_base_types_str, symbols = split_symbols(widget_base_types_str)
         symbol_parts.extend(split_non_empty(symbols, "."))
 
         widget_name = parts_as[0] if len(parts_as) == 2 else None
@@ -30,8 +30,8 @@ def get_widget_attrs(key, value_parts):
             widget_name, symbols = split_symbols(widget_name)
             symbol_parts.extend(split_non_empty(symbols, "."))
 
-        if ":" in widget_base_type and not widget_name:
-            widget_name, widget_base_type = widget_base_type, widget_name
+        if ":" in widget_base_types_str and not widget_name:
+            widget_name, widget_base_types_str = widget_base_types_str, widget_name
 
         for label in ("array", "capture"):
             prefix = f"{label} of"
@@ -42,8 +42,8 @@ def get_widget_attrs(key, value_parts):
     if widget_name:
         attrs["widget_name"] = widget_name
 
-    if widget_base_type:
-        attrs["widget_base_type"] = widget_base_type
+    if widget_base_types_str:
+        attrs["widget_base_types"] = widget_base_types_str.split(", ")
 
     for part in symbol_parts + value_parts:
         if _is_style(part):

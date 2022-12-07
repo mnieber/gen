@@ -1,3 +1,5 @@
+import ramda as R
+
 from moonleap import kebab_to_camel, u0
 
 
@@ -12,7 +14,9 @@ def create_widget_class_name(widget_spec):
         assert widget_spec.parent_ws
 
     default_class_name = u0(
-        widget_spec.widget_name or widget_spec.place or widget_spec.widget_base_type
+        widget_spec.widget_name
+        or widget_spec.place
+        or R.last(widget_spec.widget_base_types)
     )
     widget_class_name = widget_spec.values.get("cn", default_class_name)
 

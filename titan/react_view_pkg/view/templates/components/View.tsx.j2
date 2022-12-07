@@ -14,6 +14,7 @@ type PropsT = {                                                                 
 type PropsT = React.PropsWithChildren<{                                                             {% ?? __.has_children %}
 {# Start: view props here #}
 {# End: view props here #}
+  {{ res.typ.ts_var }}: {{ res.typ.ts_type }}                                                       {% !! res in _.component.named_props %}
   {{ line }}                                                                                        {% !! line in __.build.props_lines %}
   className?: any;
 }                                                                                                   {% ?? not __.has_children %}
@@ -25,6 +26,8 @@ type PropsT = React.PropsWithChildren<{                                         
 const DefaultProps = {
 {# Start: default view props here #}
 {# End: default view props here #}
+  ...dps.{{ res.typ.ts_var }},                                                                      {% !! res in _.component.named_default_props %}
+  ...dps.{{ default_prop }},                                                                        {% !! default_prop in __.build.default_props|sort %}
 };
 
 export const MyComponent = observer(

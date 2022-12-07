@@ -1,14 +1,18 @@
-from moonleap.utils.fp import append_uniq, extend_uniq
-from moonleap.utils.inflect import plural
+from moonleap.utils.fp import extend_uniq
 from titan.react_view_pkg.pkg.builder import Builder
+from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
 
 from .picker_builder_tpl import picker_div_tpl, picker_handler_tpl, picker_imports_tpl
 
 
-class PickerBuilder(Builder):
-    def __post_init__(self):
-        self.item_name = self.named_item_list_term.data
-        self.items_name = plural(self.item_name)
+class PickerBuilder(BvrsBuilderMixin, Builder):
+    def __init__(self, widget_spec):
+        Builder.__init__(self, widget_spec)
+        BvrsBuilderMixin.__init__(self)
+        if self.bvrs_has_selection and not self.bvrs_has_highlight:
+            raise Exception("Picker with selection must also have highlight")
+        if not self.bvrs_has_highlight:
+            raise Exception("Picker requires highlight")
 
     def build(self):
         self._add_packages()
@@ -16,7 +20,7 @@ class PickerBuilder(Builder):
         self._add_lines()
 
     def _add_lines(self):
-        context = {"item": self.item_name}
+        context = {**self.bvrs_context(), "item": self.bvrs_item_name}
 
         # Add preamble
         handler_code = self.render_str(
@@ -32,8 +36,7 @@ class PickerBuilder(Builder):
         self.add_lines([div])
 
     def _add_default_props(self):
-        append_uniq(self.output.default_props, f"{self.items_name}:selection")
-        append_uniq(self.output.default_props, f"{self.items_name}:highlight")
+        extend_uniq(self.output.default_props, self.bvrs_default_props())
 
     def _add_packages(self):
         packages = self.output.react_packages_by_module_name.setdefault("utils", [])

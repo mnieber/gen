@@ -4,8 +4,8 @@ lvi_imports_tpl = chop0(
     """
 {% magic_with item_name as myItem %}
 import { MyItemT } from 'src/api/types/MyItemT';
-import { ClickToSelectItems } from 'skandha-facets/handlers';                                 {% ?? selection_bvr %}
-import { dragState } from 'skandha-facets/DragAndDrop';                                       {% ?? drag_and_drop_bvr %}
+import { ClickToSelectItems } from 'skandha-facets/handlers';                                 {% ?? bvrs_has_selection %}
+import { dragState } from 'skandha-facets/DragAndDrop';                                       {% ?? bvrs_has_drag_and_drop %}
 {% end_magic_with %}
 """
 )
@@ -13,7 +13,7 @@ import { dragState } from 'skandha-facets/DragAndDrop';                         
 lvi_preamble_tpl = chop0(
     """
 {% magic_with item_name as myItem %}
-const handleClick = new ClickToSelectItems({                                                  {% if selection_bvr %}
+const handleClick = new ClickToSelectItems({                                                  {% if bvrs_has_selection %}
     selection: props.myItemsSelection
 });
 {{ "" }}                                                                                      {% endif %}
@@ -31,12 +31,12 @@ lvi_instance_props_tpl = chop0(
     """
 {% magic_with item_name as myItem %}
 myItem={myItem}
-isSelected={myItem && props.myItemsSelection.ids.includes(myItem.id)}                         {% ?? selection_bvr %}
-isHighlighted={myItem && props.myItemsHighlight.id === myItem.id}                             {% ?? highlight_bvr %}
-dragState={dragState(props.myItemsDragAndDrop.hoverPosition, myItem.id)}                      {% ?? drag_and_drop_bvr %}
-onDelete={() => props.myItemsDeletion.delete([myItem.id])}                                    {% ?? deletion_bvr %}
-{...handleClick.handle(myItem.id)}                                                            {% ?? selection_bvr %}
-{...props.myItemsDragAndDrop.handle(myItem.id)}                                               {% ?? drag_and_drop_bvr %}
+isSelected={myItem && props.myItemsSelection.ids.includes(myItem.id)}                         {% ?? bvrs_has_selection %}
+isHighlighted={myItem && props.myItemsHighlight.id === myItem.id}                             {% ?? bvrs_has_highlight %}
+dragState={dragState(props.myItemsDragAndDrop.hoverPosition, myItem.id)}                      {% ?? bvrs_has_drag_and_drop %}
+onDelete={() => props.myItemsDeletion.delete([myItem.id])}                                    {% ?? bvrs_has_deletion %}
+{...handleClick.handle(myItem.id)}                                                            {% ?? bvrs_has_selection %}
+{...props.myItemsDragAndDrop.handle(myItem.id)}                                               {% ?? bvrs_has_drag_and_drop %}
 {% end_magic_with %}
 """
 )
@@ -48,4 +48,23 @@ lvi_instance_tpl = chop0(
 {myItemDivs.length === 0 && noItems}
 {% end_magic_with %}
 """
+)
+
+lvi_body_div_styles_tpl = chop0(
+    """
+{% magic_with component_name as MyComponent %}
+{                                                                                       {% min_lines count=3 %}
+  'MyComponent--selected': props.isSelected,                                            {% ?? bvrs_has_selection %}
+  'MyComponent--highlighted': props.isHighlighted,                                      {% ?? bvrs_has_highlight %}
+},                                                                                      {% end_min_lines %}
+`MyComponent--drag-${props.dragState}`                                                  {% ?? bvrs_has_drag_and_drop %}
+{% end_magic_with %}
+  """
+)
+
+lvi_body_div_attrs_tpl = chop0(
+    """
+{...clickHandlers(props)}                                                               {% ?? bvrs_has_selection %}
+{...dragHandlers(props)}                                                                {% ?? bvrs_has_drag_and_drop %}
+  """
 )

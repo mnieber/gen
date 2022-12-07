@@ -10,7 +10,7 @@ from .create_widget_class_name import create_widget_class_name
 
 @dataclass
 class WidgetSpec:
-    widget_base_type: str
+    widget_base_types: T.List[str] = field(default_factory=list)
     level: int = 0
     child_widget_specs: T.List["WidgetSpec"] = field(repr=False, default_factory=list)
     div_styles: T.List[str] = field(repr=False, default_factory=list)
@@ -44,8 +44,8 @@ class WidgetSpec:
     def is_component_def(self):
         return (
             self.is_component
-            and self.widget_base_type
-            and self.widget_base_type != self.widget_name
+            and self.widget_base_types
+            and self.widget_name not in self.widget_base_types
         )
 
     def find_child_with_place(self, place):

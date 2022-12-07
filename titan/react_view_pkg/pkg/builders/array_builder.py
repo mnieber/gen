@@ -37,7 +37,7 @@ class ArrayBuilder(Builder):
 
 
 def _get_child_widget_div(widget_spec, item_name):
-    from titan.react_view_pkg.pkg.get_builder import get_builder
+    from titan.react_view_pkg.pkg.get_builders import get_builder
 
     child_widget_spec = widget_spec.find_child_with_place("Child")
     memo = child_widget_spec.create_memo()
