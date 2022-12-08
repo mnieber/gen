@@ -39,4 +39,4 @@ class ItemFieldBuilder(Builder):
         return self.get_value_by_name("field_expr")
 
     def build(self):
-        self.add_lines([f"{{{self.field_expr}}}"])
+        self.add(lines=[f"{{{self.field_expr}}}"])

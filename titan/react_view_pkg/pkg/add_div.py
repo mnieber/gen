@@ -13,8 +13,8 @@ def add_div_open(builder):
 
     key = builder.widget_spec.div_key
     key_attr = f"key={{{key}}}" if key else ""
-    builder.add_lines([f"<div {key_attr} className={{cn({class_name})}} {props_attr}>"])
+    builder.add(lines=[f"<div {key_attr} className={{cn({class_name})}} {props_attr}>"])
 
 
 def add_div_close(builder):
-    builder.add_lines([f"</div>"])
+    builder.add(lines=[f"</div>"])

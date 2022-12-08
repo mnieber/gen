@@ -11,13 +11,10 @@ from titan.react_view_pkg.pkg.builders.item_fields_builder import (
     ItemFieldsBuilder,
 )
 from titan.react_view_pkg.pkg.builders.layout_builder import LayoutBuilder
-from titan.react_view_pkg.pkg.builders.list_view_body_builder import ListViewBodyBuilder
 from titan.react_view_pkg.pkg.builders.list_view_builder import ListViewBuilder
 from titan.react_view_pkg.pkg.builders.list_view_item_builder import ListViewItemBuilder
-from titan.react_view_pkg.pkg.builders.lvi_builder import (
-    LviButtonsBuilder,
-    LviFieldsBuilder,
-)
+from titan.react_view_pkg.pkg.builders.lvi_builder import LviFieldsBuilder
+from titan.react_view_pkg.pkg.builders.lvi_buttons_builder import LviButtonsBuilder
 from titan.react_view_pkg.pkg.builders.picker_builder import PickerBuilder
 from titan.react_view_pkg.pkg.builders.spinner_builder import SpinnerBuilder
 from titan.react_view_pkg.pkg.builders.text_builder import TextBuilder
@@ -74,9 +71,6 @@ def get_builders(widget_spec):
 
         elif widget_base_type == "ListView":
             builder = ListViewBuilder(widget_spec)
-
-        elif widget_base_type == "ListViewBody":
-            builder = ListViewBodyBuilder(widget_spec)
 
         elif widget_base_type == "ListViewItem":
             builder = ListViewItemBuilder(widget_spec)

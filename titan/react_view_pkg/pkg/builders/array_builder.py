@@ -29,11 +29,11 @@ class ArrayBuilder(Builder):
 
         if True:
             code = self.render_str(preamble_tpl, context, "array_builder_preamble.j2")
-            self.add_preamble_lines([code])
+            self.add(preamble_lines=[code])
 
         if True:
             code = self.render_str(instance_tpl, context, "array_builder_instance.j2")
-            self.add_lines([code])
+            self.add(lines=[code])
 
 
 def _get_child_widget_div(widget_spec, item_name):

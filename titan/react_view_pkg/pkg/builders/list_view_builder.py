@@ -19,6 +19,7 @@ def lvi_spec(lvi_name):
 def lvi_component_spec(lvi_name):
     return {
         f"LviComponent with {lvi_name} as ListViewItem, Bar[p-2]": {
+            "__default_props__": ["+todo:item"],
             "LeftSlot with LviFields": "pass",
             "RightSlot with LviButtons": "pass",
         },
@@ -61,8 +62,8 @@ class ListViewBuilder(Builder, BvrsBuilderMixin):
         context = self._get_context()
 
         # Add imports
-        self.add_import_lines(
-            [self.render_str(lvi_imports_tpl, context, "liv__imports.j2")]
+        self.add(
+            import_lines=[self.render_str(lvi_imports_tpl, context, "lvi__imports.j2")]
         )
 
         # Add preamble
@@ -75,8 +76,11 @@ class ListViewBuilder(Builder, BvrsBuilderMixin):
                 key=f"{self.bvrs_item_name}.id",
             )
             context["child_widget_div"] = builder_output.div
-            preamble_str = self.render_str(lvi_preamble_tpl, context, "lvi_preamble.j2")
-            self.add_preamble_lines([preamble_str])
+            self.add(
+                preamble_lines=[
+                    self.render_str(lvi_preamble_tpl, context, "lvi_preamble.j2")
+                ]
+            )
 
             # Add the rest of the builder_output that we haven't used so far
             # (especially the import_lines)
@@ -85,7 +89,7 @@ class ListViewBuilder(Builder, BvrsBuilderMixin):
 
         # Add instance
         instance_str = self.render_str(lvi_instance_tpl, context, "lvi_instance.j2")
-        self.add_lines([instance_str])
+        self.add(lines=[instance_str])
 
     def _get_context(self):
         return {

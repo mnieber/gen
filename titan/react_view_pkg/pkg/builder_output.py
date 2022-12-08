@@ -11,6 +11,7 @@ class BuilderOutput:
     lines: list = field(default_factory=list)
     default_props: T.List[str] = field(repr=False, default_factory=list)
     props_lines: list = field(default_factory=list)
+    add_props_lines: list = field(default_factory=list)
     import_lines: list = field(default_factory=list)
     preamble_lines: list = field(default_factory=list)
     postamble_lines: list = field(default_factory=list)
@@ -25,6 +26,7 @@ class BuilderOutput:
         self.has_children = self.has_children or rhs.has_children
         extend_uniq(self.import_lines, rhs.import_lines)
         extend_uniq(self.props_lines, rhs.props_lines)
+        extend_uniq(self.add_props_lines, rhs.add_props_lines)
         extend_uniq(self.default_props, rhs.default_props)
         merge_into_config(
             self.react_packages_by_module_name, rhs.react_packages_by_module_name

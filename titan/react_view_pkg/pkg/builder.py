@@ -16,17 +16,26 @@ class Builder(BuilderRenderMixin, BuilderItemsMixin):
     def __post_init__(self):
         pass
 
-    def add_lines(self, lines):
-        indented_lines = ["  " * self.widget_spec.level + x for x in lines]
-        self.output.lines.extend(indented_lines)
-
-    def add_import_lines(self, lines):
-        indented_lines = ["  " * self.widget_spec.level + x for x in lines]
-        self.output.import_lines.extend(indented_lines)
-
-    def add_preamble_lines(self, lines):
-        indented_lines = ["  " * self.widget_spec.level + x for x in lines]
-        self.output.preamble_lines.extend(indented_lines)
+    def add(
+        self,
+        lines=None,
+        props_lines=None,
+        add_props_lines=None,
+        import_lines=None,
+        preamble_lines=None,
+    ):
+        if lines:
+            indented_lines = ["  " * self.widget_spec.level + x for x in lines]
+            self.output.lines.extend(indented_lines)
+        if props_lines:
+            self.output.props_lines.extend(_trim(props_lines))
+        if add_props_lines:
+            self.output.add_props_lines.extend(_trim(add_props_lines))
+        if import_lines:
+            self.output.import_lines.extend(import_lines)
+        if preamble_lines:
+            indented_lines = ["  " * self.widget_spec.level + x for x in preamble_lines]
+            self.output.preamble_lines.extend(indented_lines)
 
     def _add_div_open(self):
         add_div_open(self)
@@ -55,3 +64,7 @@ class Builder(BuilderRenderMixin, BuilderItemsMixin):
     def use_uikit(self):
         component = self.widget_spec.root.component
         return component and component.module.react_app.service.uikit
+
+
+def _trim(lines):
+    return [x if x == "\n" else x.removesuffix("\n") for x in lines]

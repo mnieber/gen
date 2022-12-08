@@ -15,8 +15,8 @@ class ComponentBuilder(Builder):
     def _add_lines_for_component_instance(self):
         attrs_str = _get_attrs_str(self.widget_spec)
         key_attr = _get_key_attr(self.widget_spec)
-        self.add_lines(
-            [f"<{self.widget_spec.widget_class_name} {key_attr} {attrs_str}/>"]
+        self.add(
+            lines=[f"<{self.widget_spec.widget_class_name} {key_attr} {attrs_str}/>"]
         )
 
 

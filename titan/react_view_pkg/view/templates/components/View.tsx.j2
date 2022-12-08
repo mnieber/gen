@@ -10,8 +10,8 @@ import './MyComponent.scss';
 {# Start: view imports here #}
 {# End: view imports here #}
 
-type PropsT = {                                                                                     {% ?? not __.has_children %}
-type PropsT = React.PropsWithChildren<{                                                             {% ?? __.has_children %}
+export type PropsT = {                                                                              {% ?? not __.has_children %}
+export type PropsT = React.PropsWithChildren<{                                                      {% ?? __.has_children %}
 {# Start: view props here #}
 {# End: view props here #}
   {{ res.typ.ts_var }}: {{ res.typ.ts_type }}                                                       {% !! res in _.component.named_props %}
@@ -19,8 +19,7 @@ type PropsT = React.PropsWithChildren<{                                         
   className?: any;
 }                                                                                                   {% ?? not __.has_children %}
 }>                                                                                                  {% ?? __.has_children %}
-{# Start: additional props here #}
-{# End: additional props here #}
+{{ line }}                                                                                          {% !! line in __.build.add_props_lines %}
 ;
 
 const DefaultProps = {

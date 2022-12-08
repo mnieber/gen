@@ -13,10 +13,13 @@ class ButtonBuilder(Builder):
             context = {
                 "handler": handler,
             }
-            code = self.render_str(
-                button_handler_tpl, context, "button_builder_handler.j2"
+            self.add(
+                preamble_lines=[
+                    self.render_str(
+                        button_handler_tpl, context, "button_builder_handler.j2"
+                    )
+                ]
             )
-            self.add_preamble_lines([code])
 
         # Div
         if True:
@@ -25,5 +28,8 @@ class ButtonBuilder(Builder):
                 "class_name": self.widget_spec.widget_name,
                 "handler": handler or "() => { console.log('Moonleap Todo'); }",
             }
-            code = self.render_str(button_div_tpl, context, "button_builder_button.j2")
-            self.add_lines([code])
+            self.add(
+                lines=[
+                    self.render_str(button_div_tpl, context, "button_builder_button.j2")
+                ]
+            )

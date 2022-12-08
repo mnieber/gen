@@ -35,5 +35,4 @@ class SpinnerBuilder(Builder):
             "get_res_expr": data_path,
         }
 
-        code = self.render_str(tpl, context, "spinner_builder.j2")
-        self.add_preamble_lines([code])
+        self.add(preamble_lines=[self.render_str(tpl, context, "spinner_builder.j2")])

@@ -49,22 +49,3 @@ lvi_instance_tpl = chop0(
 {% end_magic_with %}
 """
 )
-
-lvi_body_div_styles_tpl = chop0(
-    """
-{% magic_with component_name as MyComponent %}
-{                                                                                       {% min_lines count=3 %}
-  'MyComponent--selected': props.isSelected,                                            {% ?? bvrs_has_selection %}
-  'MyComponent--highlighted': props.isHighlighted,                                      {% ?? bvrs_has_highlight %}
-},                                                                                      {% end_min_lines %}
-`MyComponent--drag-${props.dragState}`                                                  {% ?? bvrs_has_drag_and_drop %}
-{% end_magic_with %}
-  """
-)
-
-lvi_body_div_attrs_tpl = chop0(
-    """
-{...clickHandlers(props)}                                                               {% ?? bvrs_has_selection %}
-{...dragHandlers(props)}                                                                {% ?? bvrs_has_drag_and_drop %}
-  """
-)

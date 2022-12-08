@@ -22,18 +22,15 @@ class PickerBuilder(BvrsBuilderMixin, Builder):
     def _add_lines(self):
         context = {**self.bvrs_context(), "item": self.bvrs_item_name}
 
-        # Add preamble
-        handler_code = self.render_str(
-            picker_handler_tpl, context, "picker_builder_handler.j2"
+        self.add(
+            preamble_lines=[
+                self.render_str(
+                    picker_handler_tpl, context, "picker_builder_handler.j2"
+                )
+            ],
+            lines=[self.render_str(picker_div_tpl, context, "picker_builder_div.j2")],
+            import_lines=[picker_imports_tpl],
         )
-        self.add_preamble_lines([handler_code])
-
-        # Add imports
-        self.add_import_lines([picker_imports_tpl])
-
-        # Add div
-        div = self.render_str(picker_div_tpl, context, "picker_builder_div.j2")
-        self.add_lines([div])
 
     def _add_default_props(self):
         extend_uniq(self.output.default_props, self.bvrs_default_props())
