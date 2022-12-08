@@ -60,36 +60,26 @@ class ListViewBuilder(Builder, BvrsBuilderMixin):
 
     def _add_lines(self):
         context = self._get_context()
-
-        # Add imports
-        self.add(
-            import_lines=[self.render_str(lvi_imports_tpl, context, "lvi__imports.j2")]
+        builder_output = _get_lvi_instance_div(
+            self.widget_spec,
+            div_attrs=self.render_str(
+                lvi_instance_props_tpl, context, "lvi_instance_props.j2"
+            ),
+            key=f"{self.bvrs_item_name}.id",
         )
+        context["child_widget_div"] = builder_output.div
 
-        # Add preamble
-        if True:
-            builder_output = _get_lvi_instance_div(
-                self.widget_spec,
-                div_attrs=self.render_str(
-                    lvi_instance_props_tpl, context, "lvi_instance_props.j2"
-                ),
-                key=f"{self.bvrs_item_name}.id",
-            )
-            context["child_widget_div"] = builder_output.div
-            self.add(
-                preamble_lines=[
-                    self.render_str(lvi_preamble_tpl, context, "lvi_preamble.j2")
-                ]
-            )
+        # Add the rest of the builder_output (especially the import_lines)
+        builder_output.clear_div_lines()
+        self.output.add(builder_output)
 
-            # Add the rest of the builder_output that we haven't used so far
-            # (especially the import_lines)
-            builder_output.clear_div_lines()
-            self.output.add(builder_output)
-
-        # Add instance
-        instance_str = self.render_str(lvi_instance_tpl, context, "lvi_instance.j2")
-        self.add(lines=[instance_str])
+        self.add(
+            import_lines=[self.render_str(lvi_imports_tpl, context, "lvi__imports.j2")],
+            preamble_lines=[
+                self.render_str(lvi_preamble_tpl, context, "lvi_preamble.j2")
+            ],
+            lines=[self.render_str(lvi_instance_tpl, context, "lvi_instance.j2")],
+        )
 
     def _get_context(self):
         return {
