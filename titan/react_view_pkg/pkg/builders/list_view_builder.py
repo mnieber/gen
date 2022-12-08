@@ -6,6 +6,7 @@ from .list_view_builder_tpl import (
     lvi_imports_tpl,
     lvi_instance_props_tpl,
     lvi_instance_tpl,
+    lvi_preamble_hooks_tpl,
     lvi_preamble_tpl,
 )
 
@@ -75,6 +76,11 @@ class ListViewBuilder(Builder, BvrsBuilderMixin):
 
         self.add(
             import_lines=[self.render_str(lvi_imports_tpl, context, "lvi__imports.j2")],
+            preamble_hooks_lines=[
+                self.render_str(
+                    lvi_preamble_hooks_tpl, context, "lvi_preamble_hooks.j2"
+                )
+            ],
             preamble_lines=[
                 self.render_str(lvi_preamble_tpl, context, "lvi_preamble.j2")
             ],

@@ -27,13 +27,12 @@ class ArrayBuilder(Builder):
             "child_widget_div": _get_child_widget_div(self.widget_spec, item_name),
         }
 
-        if True:
-            code = self.render_str(preamble_tpl, context, "array_builder_preamble.j2")
-            self.add(preamble_lines=[code])
-
-        if True:
-            code = self.render_str(instance_tpl, context, "array_builder_instance.j2")
-            self.add(lines=[code])
+        self.add(
+            preamble_lines=[
+                self.render_str(preamble_tpl, context, "array_builder_preamble.j2")
+            ],
+            lines=[self.render_str(instance_tpl, context, "array_builder_instance.j2")],
+        )
 
 
 def _get_child_widget_div(widget_spec, item_name):

@@ -4,19 +4,27 @@ lvi_imports_tpl = chop0(
     """
 {% magic_with item_name as myItem %}
 import { MyItemT } from 'src/api/types/MyItemT';
-import { ClickToSelectItems } from 'skandha-facets/handlers';                                 {% ?? bvrs_has_selection %}
-import { dragState } from 'skandha-facets/DragAndDrop';                                       {% ?? bvrs_has_drag_and_drop %}
+import {
+    useSelectionUIConnector,                                                                  {% ?? bvrs_has_selection %}
+    useDragAndDropUIConnector,                                                                {% ?? bvrs_has_drag_and_drop %}
+} from 'skandha-mobx/hooks';
 {% end_magic_with %}
+"""
+)
+
+lvi_preamble_hooks_tpl = chop0(
+    """
+const dragAndDropUIConnector = useDragAndDropUIConnector(                                     {% if bvrs_has_drag_and_drop %}
+    props.todosDragAndDrop
+);                                                                                            {% endif %}
+const selectionUIConnector = useSelectionUIConnector(props.todosSelection);                   {% ?? bvrs_has_selection %}
+{{ "" }}
 """
 )
 
 lvi_preamble_tpl = chop0(
     """
 {% magic_with item_name as myItem %}
-const handleClick = new ClickToSelectItems({                                                  {% if bvrs_has_selection %}
-    selection: props.myItemsSelection
-});
-{{ "" }}                                                                                      {% endif %}
 const noItems = <h2>There are no myItems</h2>;
 
 const myItemDivs = {{ items_expr }}.map(({{ item_name }}: {{ item_name|u0 }}T) => {
@@ -31,12 +39,10 @@ lvi_instance_props_tpl = chop0(
     """
 {% magic_with item_name as myItem %}
 myItem={myItem}
-isSelected={myItem && props.myItemsSelection.ids.includes(myItem.id)}                         {% ?? bvrs_has_selection %}
 isHighlighted={myItem && props.myItemsHighlight.id === myItem.id}                             {% ?? bvrs_has_highlight %}
-dragState={dragState(props.myItemsDragAndDrop.hoverPosition, myItem.id)}                      {% ?? bvrs_has_drag_and_drop %}
 onDelete={() => props.myItemsDeletion.delete([myItem.id])}                                    {% ?? bvrs_has_deletion %}
-{...handleClick.handle(myItem.id)}                                                            {% ?? bvrs_has_selection %}
-{...props.myItemsDragAndDrop.handle(myItem.id)}                                               {% ?? bvrs_has_drag_and_drop %}
+selectionUIProps={selectionUIConnector.handle(myItem.id)}                                     {% ?? bvrs_has_selection %}
+dragAndDropUIProps={dragAndDropUIConnector.handle(myItem.id)}                                 {% ?? bvrs_has_drag_and_drop %}
 {% end_magic_with %}
 """
 )

@@ -26,13 +26,6 @@ onDelete: Function;                                                             
   """
 )
 
-lvi_buttons_add_props_tpl = chop0(
-    """
-& ClickHandlersT                                                                        {% ?? bvrs_has_selection %}
-& DragHandlersT                                                                         {% ?? bvrs_has_drag_and_drop %}
-  """
-)
-
 lvi_buttons_preamble_tpl = chop0(
     """
 {% magic_with item_name as myItemName %}

@@ -2,7 +2,6 @@ from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
 
 from .lvi_buttons_builder_tpl import (
-    lvi_buttons_add_props_tpl,
     lvi_buttons_imports_tpl,
     lvi_buttons_preamble_tpl,
     lvi_buttons_props_tpl,
@@ -32,11 +31,6 @@ class LviButtonsBuilder(Builder, BvrsBuilderMixin):
             ],
             props_lines=[
                 self.render_str(lvi_buttons_props_tpl, context, "lvi_buttons_tpl.j2")
-            ],
-            add_props_lines=[
-                self.render_str(
-                    lvi_buttons_add_props_tpl, context, "lvi_buttons_add_props_tpl.j2"
-                )
             ],
         )
 

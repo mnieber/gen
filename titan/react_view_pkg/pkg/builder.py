@@ -23,6 +23,7 @@ class Builder(BuilderRenderMixin, BuilderItemsMixin):
         add_props_lines=None,
         import_lines=None,
         preamble_lines=None,
+        preamble_hooks_lines=None,
     ):
         if lines:
             indented_lines = ["  " * self.widget_spec.level + x for x in lines]
@@ -36,6 +37,11 @@ class Builder(BuilderRenderMixin, BuilderItemsMixin):
         if preamble_lines:
             indented_lines = ["  " * self.widget_spec.level + x for x in preamble_lines]
             self.output.preamble_lines.extend(indented_lines)
+        if preamble_hooks_lines:
+            indented_lines = [
+                "  " * self.widget_spec.level + x for x in preamble_hooks_lines
+            ]
+            self.output.preamble_hooks_lines.extend(indented_lines)
 
     def _add_div_open(self):
         add_div_open(self)
