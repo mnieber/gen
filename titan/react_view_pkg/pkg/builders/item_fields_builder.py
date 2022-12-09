@@ -7,6 +7,7 @@ class ItemFieldsBuilder(Builder):
     def __post_init__(self):
         self.item_name = self.named_item_term.data
         self.type_spec = get_type_reg().get(u0(self.item_name))
+        self.display_only = self.get_value_by_name("display")
 
     def get_spec_extension(self, places):
         if "Field" not in places:
@@ -14,6 +15,8 @@ class ItemFieldsBuilder(Builder):
 
     def get_field_specs(self):
         skip_list = ("slug", "fk", "relatedSet")
+        if self.display_only and self.type_spec.display_field:
+            return [self.type_spec.display_field]
         return [
             field_spec
             for field_spec in self.type_spec.get_field_specs()

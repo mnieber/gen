@@ -51,7 +51,10 @@ class BuilderOutput:
             + [");"]
         )
 
-    def clear_div_lines(self):
-        self.lines = []
-        self.preable_lines = []
-        self.preable_hooks_lines = []
+    def graft(self, rhs):
+        div = rhs.div
+        rhs.lines = []
+        rhs.preable_lines = []
+        rhs.preable_hooks_lines = []
+        self.add(rhs)
+        return div

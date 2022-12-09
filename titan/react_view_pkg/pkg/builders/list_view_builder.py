@@ -21,7 +21,7 @@ def lvi_component_spec(lvi_name):
     return {
         f"LviComponent with {lvi_name} as ListViewItem, Bar[p-2]": {
             "__default_props__": ["+todo:item"],
-            "LeftSlot with LviFields": "pass",
+            "LeftSlot with ItemFields": "display=1",
             "RightSlot with LviButtons": "pass",
         },
     }
@@ -61,18 +61,15 @@ class ListViewBuilder(Builder, BvrsBuilderMixin):
 
     def _add_lines(self):
         context = self._get_context()
-        builder_output = _get_lvi_instance_div(
-            self.widget_spec,
-            div_attrs=self.render_str(
-                lvi_instance_props_tpl, context, "lvi_instance_props.j2"
-            ),
-            key=f"{self.bvrs_item_name}.id",
+        context["child_widget_div"] = self.output.graft(
+            _get_lvi_instance_output(
+                self.widget_spec,
+                div_attrs=self.render_str(
+                    lvi_instance_props_tpl, context, "lvi_instance_props.j2"
+                ),
+                key=f"{self.bvrs_item_name}.id",
+            )
         )
-        context["child_widget_div"] = builder_output.div
-
-        # Add the rest of the builder_output (especially the import_lines)
-        builder_output.clear_div_lines()
-        self.output.add(builder_output)
 
         self.add(
             import_lines=[self.render_str(lvi_imports_tpl, context, "lvi__imports.j2")],
@@ -96,7 +93,7 @@ class ListViewBuilder(Builder, BvrsBuilderMixin):
         }
 
 
-def _get_lvi_instance_div(widget_spec, div_attrs, key):
+def _get_lvi_instance_output(widget_spec, div_attrs, key):
     # This returns the div that is used in the ListView.
     # Don't confuse this with the div that is used in the ListViewItem.
     from titan.react_view_pkg.pkg.build import build

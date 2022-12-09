@@ -5,10 +5,11 @@ from .get_widget_attrs import get_widget_attrs
 
 
 def get_widget_spec(key, value, module_name):
-    spec = {} if value == "pass" else value
+    is_dict = isinstance(value, dict)
     value_parts = split_non_empty(
-        _get_type_value(spec) if isinstance(spec, dict) else spec, "."
+        _get_type_value(value) if is_dict else "" if value == "pass" else value, "."
     )
+    spec = value if is_dict else {}
     widget_values = get_widget_attrs(key, value_parts)
     widget_spec = WidgetSpec(**widget_values)
     widget_spec.module_name = module_name
