@@ -7,6 +7,7 @@ from .list_view_item_builder_tpl import (
     lvi_div_styles_tpl,
     lvi_imports_tpl,
     lvi_props_tpl,
+    lvi_scss_tpl,
 )
 
 
@@ -23,6 +24,7 @@ class ListViewItemBuilder(Builder, BvrsBuilderMixin):
                 self.render_str(lvi_imports_tpl, context, "lvi_imports_tpl.j2")
             ],
             props_lines=[self.render_str(lvi_props_tpl, context, "lvi_div_attrs.j2")],
+            scss_lines=[self.render_str(lvi_scss_tpl, context, "lvi_scss.j2")],
         )
 
     def update_widget_spec(self):
@@ -45,4 +47,5 @@ class ListViewItemBuilder(Builder, BvrsBuilderMixin):
             **self.bvrs_context(),
             "item_name": self.bvrs_item_name,
             "component_name": self.widget_spec.widget_class_name,
+            "uikit": True or self.use_uikit,
         }

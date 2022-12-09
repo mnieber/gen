@@ -11,7 +11,8 @@ class ItemFieldsBuilder(Builder):
 
     def get_spec_extension(self, places):
         if "Field" not in places:
-            return {"Field with Card[cn=__]": {"ItemField": "pass"}}
+            layout = "Card" if self.get_value_by_name("card") else "Div"
+            return {f"Field with {layout}[cn=__]": {"ItemField": "pass"}}
 
     def get_field_specs(self):
         skip_list = ("slug", "fk", "relatedSet")
@@ -29,17 +30,22 @@ class ItemFieldsBuilder(Builder):
 
     def build(self):
         field_widget_spec = self.widget_spec.find_child_with_place("Field")
-        item_data_path = self.item_data_path()
         for field_spec in self.get_field_specs():
-            field_expr = f"{item_data_path}.{field_spec.name}"
-            field_widget_spec.values["field_expr"] = field_expr
+            field_widget_spec.values["field_key"] = field_spec.key
             self._add_child_widgets([field_widget_spec])
 
 
 class ItemFieldBuilder(Builder):
-    @property
-    def field_expr(self):
-        return self.get_value_by_name("field_expr")
+    def __post_init__(self):
+        self.item_name = self.named_item_term.data
+        self.type_spec = get_type_reg().get(u0(self.item_name))
 
     def build(self):
-        self.add(lines=[f"{{{self.field_expr}}}"])
+        item_data_path = self.item_data_path()
+        field_key = self.get_value_by_name("field_key")
+        field_spec = self.type_spec.get_field_spec_by_key(field_key)
+        assert field_spec
+        label = f"{field_spec.name}: " if field_spec.field_type in ("boolean",) else ""
+        postfix = " ? 'Yes' : 'No'" if field_spec.field_type in ("boolean",) else ""
+        field_expr = f"{item_data_path}.{field_spec.name}"
+        self.add(lines=[f"{label}{{{field_expr}{postfix}}}"])

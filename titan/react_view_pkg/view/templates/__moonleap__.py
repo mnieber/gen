@@ -10,6 +10,7 @@ def get_helpers(_):
         mutations = list()
         pipelines = _.component.pipelines
         has_children = build.has_children
+        has_scss = not build.no_scss
 
         def __init__(self):
             self._get_queries_from_pipelines()

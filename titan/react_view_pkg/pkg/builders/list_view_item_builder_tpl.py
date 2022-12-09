@@ -52,3 +52,32 @@ lvi_div_styles_tpl = chop0(
 {% end_magic_with %}
   """
 )
+
+lvi_scss_tpl = chop0(
+    """
+{% magic_with component_name as myComponent %}
+.MyComponent {
+  @apply cursor-pointer;                                                {% ?? uikit %}
+  cursor: pointer;                                                      {% ?? not uikit %}
+}
+
+.MyComponent--selected {                                                {% if bvrs_has_selection %}
+  @apply bg-blue-200;                                                   {% ?? uikit %}
+  background-color: #2222dd;                                            {% ?? not uikit %}
+}                                                                       {% endif %}
+
+.MyComponent--highlighted {                                             {% if bvrs_has_highlight %}
+  @apply font-bold;                                                     {% ?? uikit %}
+  font-weight: bold;                                                    {% ?? not uikit %}
+}                                                                       {% endif %}
+
+.MyComponent--drag-before {                                             {% if bvrs_has_drag_and_drop %}
+  border-top: solid;
+}
+
+.MyComponent--drag-after {
+  border-bottom: solid;
+}                                                                       {% endif %}
+{% end_magic_with %}
+    """
+)

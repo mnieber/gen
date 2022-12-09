@@ -222,6 +222,8 @@ def pipeline_data_path(self, obj=None, obj_term=None):
 
     for elm_idx in range(nr_elms):
         elm = self.elements[elm_idx]
+        postfix = "?" if elm_idx < nr_elms - 1 else ""
+
         if isinstance(
             elm,
             (
@@ -230,13 +232,12 @@ def pipeline_data_path(self, obj=None, obj_term=None):
                 TakeHighlightedElmFromStateProvider,
             ),
         ):
-            postfix = "?" if elm_idx < nr_elms - 1 else ""
             result = f"props.{elm.obj.typ.ts_var}{postfix}" + result
         elif isinstance(elm, (TakeItemFromQuery, TakeItemListFromQuery)):
             query = elm.subj
             result = f"{query.name}.data?.{elm.obj.typ.ts_var}"
         elif isinstance(elm, (TakeItemFromProps, TakeItemListFromProps)):
-            result = f"props.{elm.obj.typ.ts_var}"
+            result = f"props.{elm.obj.typ.ts_var}{postfix}"
         elif isinstance(elm, (ExtractItemFromItem, ExtractItemListFromItem)):
             member = get_member_field_spec(
                 parent_item=elm.subj, member_item=elm.obj.typ

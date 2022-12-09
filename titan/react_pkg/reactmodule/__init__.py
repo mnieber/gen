@@ -45,7 +45,7 @@ def react_app_has_module(react_app, module):
 
 
 @rule("react-app")
-def react_modules_provide_widgets(react_app):
+def react_modules_have_components(react_app):
     widget_reg = get_widget_reg()
     forwards = []
     for widget_spec in widget_reg.widget_specs():

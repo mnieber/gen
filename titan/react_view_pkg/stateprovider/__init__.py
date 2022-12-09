@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import moonleap.resource.props as P
 from moonleap import (
     create,
@@ -11,6 +9,7 @@ from moonleap import (
     u0,
 )
 from moonleap.verbs import has, provides
+from titan.react_view_pkg.view import default_view_templates_dir
 
 from . import props
 from .resources import StateProvider
@@ -30,7 +29,7 @@ def create_state_provider(term):
     state_provider = StateProvider(
         base_name=base_name, name=f"{u0(base_name)}StateProvider"
     )
-    state_provider.template_dir = Path(__file__).parent / "templates"
+    state_provider.template_dir = default_view_templates_dir
     return state_provider
 
 

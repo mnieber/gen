@@ -16,6 +16,9 @@ from titan.react_view_pkg.pkg.builders.list_view_item_builder import ListViewIte
 from titan.react_view_pkg.pkg.builders.lvi_buttons_builder import LviButtonsBuilder
 from titan.react_view_pkg.pkg.builders.picker_builder import PickerBuilder
 from titan.react_view_pkg.pkg.builders.spinner_builder import SpinnerBuilder
+from titan.react_view_pkg.pkg.builders.state_provider_builder import (
+    StateProviderBuilder,
+)
 from titan.react_view_pkg.pkg.builders.text_builder import TextBuilder
 
 
@@ -78,7 +81,7 @@ def get_builders(widget_spec):
             builder = LviButtonsBuilder(widget_spec)
 
         elif widget_base_type == "StateProvider":
-            builder = DivBuilder(widget_spec)
+            builder = StateProviderBuilder(widget_spec)
 
         if builder:
             result.append(builder)

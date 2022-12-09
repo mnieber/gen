@@ -6,7 +6,7 @@ import { isLoaded, isUpdating } from 'src/api/ResourceState';
 import { {{ type_spec.type_name }}T } from 'src/api/types/{{ type_spec.type_name }}T';              {% !! type_spec in __.type_specs_to_import %}
 import UIkit from 'uikit';                                                                          {% ?? _.service.uikit %}
 {{ line }}                                                                                          {% !! line in __.build.import_lines %}
-import './MyComponent.scss';
+import './MyComponent.scss';                                                                        {% ?? __.has_scss %}
 {# Start: view imports here #}
 {# End: view imports here #}
 
@@ -16,7 +16,7 @@ export type PropsT = React.PropsWithChildren<{                                  
 {# End: view props here #}
   {{ res.typ.ts_var }}: {{ res.typ.ts_type }}                                                       {% !! res in _.component.named_props %}
   {{ line }}                                                                                        {% !! line in __.build.props_lines %}
-  className?: any;
+  className?: any;                                                                                  {% ?? __.has_scss %}
 }                                                                                                   {% ?? not __.has_children %}
 }>                                                                                                  {% ?? __.has_children %}
 {{ line }}                                                                                          {% !! line in __.build.add_props_lines %}

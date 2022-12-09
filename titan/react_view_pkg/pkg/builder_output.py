@@ -13,17 +13,22 @@ class BuilderOutput:
     props_lines: list = field(default_factory=list)
     add_props_lines: list = field(default_factory=list)
     import_lines: list = field(default_factory=list)
+    scss_lines: list = field(default_factory=list)
     preamble_lines: list = field(default_factory=list)
     preamble_hooks_lines: list = field(default_factory=list)
     react_packages_by_module_name: dict = field(default_factory=dict)
     # True if the widget spec or any of its child widget specs has a Children type
     has_children: bool = False
+    # True if the widget has no scss file
+    no_scss: bool = False
 
     def add(self, rhs: "BuilderOutput"):
         self.preamble_hooks_lines += rhs.preamble_hooks_lines
         self.preamble_lines += rhs.preamble_lines
         self.lines += rhs.lines
+        self.scss_lines += rhs.scss_lines
         self.has_children = self.has_children or rhs.has_children
+        self.no_scss = self.no_scss or rhs.no_scss
         extend_uniq(self.import_lines, rhs.import_lines)
         extend_uniq(self.props_lines, rhs.props_lines)
         extend_uniq(self.add_props_lines, rhs.add_props_lines)

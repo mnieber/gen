@@ -12,7 +12,7 @@ All :widget-specs are loaded when the :widget-reg is created.
 
 # Components
 
-## The `react_modules_provide_widgets` function creates :components from :widget-specs
+## The `react_modules_have_components` function creates :components from :widget-specs
 
 ## The component.load_pipelines creates the pipelines for that component
 

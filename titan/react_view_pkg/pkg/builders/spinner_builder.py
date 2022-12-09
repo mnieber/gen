@@ -3,22 +3,20 @@ from titan.react_view_pkg.pkg.builder import Builder
 
 uikit_tpl = chop0(
     """
-    if ({{ data_path }} == undefined) return null;                          {% ?? guard %}
     if (!isLoaded({{ data_path }})) {
         return UIkit && <div data-uk-spinner className="" />;
     }
+    else if ({{ test }}) return null;                                             {% ?? guard %}
     {{ "" }}
 """
 )
 
 no_uikit_tpl = chop0(
     """
-    if (
-        {{ data_path }} == undefined ||                                     {% ?? guard %}
-        !isLoaded({{ data_path }})
-    ) {
+    if (!isLoaded({{ data_path }})) {
         return null;
     }
+    else if ({{ test }}) return null;                                             {% ?? guard %}
     {{ "" }}
 """
 )

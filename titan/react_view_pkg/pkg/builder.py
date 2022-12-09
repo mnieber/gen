@@ -22,6 +22,7 @@ class Builder(BuilderRenderMixin, BuilderItemsMixin):
         props_lines=None,
         add_props_lines=None,
         import_lines=None,
+        scss_lines=None,
         preamble_lines=None,
         preamble_hooks_lines=None,
     ):
@@ -34,6 +35,8 @@ class Builder(BuilderRenderMixin, BuilderItemsMixin):
             self.output.add_props_lines.extend(_trim(add_props_lines))
         if import_lines:
             self.output.import_lines.extend(import_lines)
+        if scss_lines:
+            self.output.scss_lines.extend(scss_lines)
         if preamble_lines:
             indented_lines = ["  " * self.widget_spec.level + x for x in preamble_lines]
             self.output.preamble_lines.extend(indented_lines)
