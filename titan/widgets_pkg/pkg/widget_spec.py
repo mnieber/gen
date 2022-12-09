@@ -40,6 +40,9 @@ class WidgetSpec:
             self._widget_class_name = create_widget_class_name(self)
         return self._widget_class_name
 
+    def set_widget_class_name(self, value):
+        self._widget_class_name = value
+
     @property
     def is_component_def(self):
         return (
@@ -52,7 +55,14 @@ class WidgetSpec:
         return R.head(x for x in self.child_widget_specs if x.place == place)
 
     def create_memo(self, fields=None):
-        fields = fields or ["div_styles", "div_attrs", "div_key", "place", "values"]
+        fields = fields or [
+            "div_styles",
+            "div_attrs",
+            "div_key",
+            "place",
+            "values",
+            "_widget_class_name",
+        ]
         memo = {}
         for field in fields:
             memo[field] = getattr(self, field)
