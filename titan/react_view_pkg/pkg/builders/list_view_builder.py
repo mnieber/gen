@@ -99,10 +99,7 @@ def _get_lvi_instance_output(widget_spec, div_attrs, key):
     from titan.react_view_pkg.pkg.build import build
 
     child_widget_spec = widget_spec.find_child_with_place("ListViewItem")
-    memo = child_widget_spec.create_memo()
-    child_widget_spec.div_key = key
-    append_uniq(child_widget_spec.div_attrs, div_attrs)
-    builder_output = build(child_widget_spec)
-    child_widget_spec.restore_memo(memo)
-
-    return builder_output
+    with child_widget_spec.memo():
+        child_widget_spec.div_key = key
+        append_uniq(child_widget_spec.div_attrs, div_attrs)
+        return build(child_widget_spec)

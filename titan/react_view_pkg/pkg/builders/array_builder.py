@@ -50,10 +50,8 @@ def _get_child_widget_output(widget_spec, item_name, class_name):
     from titan.react_view_pkg.pkg.build import build
 
     child_widget_spec = widget_spec.find_child_with_place("Child")
-    memo = child_widget_spec.create_memo()
-    child_widget_spec.set_widget_class_name(class_name)
-    child_widget_spec.values["item"] = item_name
-    child_widget_spec.div_key = f"{item_name}.id"
-    build_output = build(child_widget_spec)
-    child_widget_spec.restore_memo(memo)
-    return build_output
+    with child_widget_spec.memo():
+        child_widget_spec.set_widget_class_name(class_name)
+        child_widget_spec.values["item"] = item_name
+        child_widget_spec.div_key = f"{item_name}.id"
+        return build(child_widget_spec)

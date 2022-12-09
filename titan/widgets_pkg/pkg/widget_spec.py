@@ -72,6 +72,9 @@ class WidgetSpec:
         for field, value in memo.items():
             setattr(self, field, value)
 
+    def memo(self, fields=None):
+        return WidgetSpecMemoContext(self, fields)
+
     @property
     def root(self):
         ws = self
@@ -80,3 +83,18 @@ class WidgetSpec:
             ws = ws.parent_ws
 
         return ws
+
+
+# A Context class that calls create_memo and restore_memo on the widget_spec
+# when entering and exiting a context.
+class WidgetSpecMemoContext:
+    def __init__(self, widget_spec, fields=None):
+        self.widget_spec = widget_spec
+        self.fields = fields
+
+    def __enter__(self):
+        self.memo = self.widget_spec.create_memo(self.fields)
+        return self.widget_spec
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.widget_spec.restore_memo(self.memo)
