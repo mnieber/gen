@@ -6,8 +6,8 @@ def state_provider_load(state_provider):
     forwards = []
     widget_spec = state_provider.widget_spec
 
-    for state_term in widget_spec.src_dict.get("__states__", []):
-        forwards.append(create_forward(state_provider, provides, state_term))
+    for state_term_str in widget_spec.src_dict.get("__states__", []):
+        forwards.append(create_forward(state_provider, provides, state_term_str))
 
     for pipeline in state_provider.pipelines:
         for res in pipeline.resources:

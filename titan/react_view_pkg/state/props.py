@@ -16,7 +16,7 @@ def load_states(widget_reg):
         ]
         for state_term_str, state_data in state_datas.items():
             forwards += [
-                create_forward(module_term_str, has, module_term_str),
+                create_forward(module_term_str, has, state_term_str),
             ]
             _get_state(state_term_str, state_data, forwards)
     return forwards
