@@ -24,6 +24,11 @@ def item_django_module(item):
 
 def type_spec_django_module(type_spec):
     for item in get_type_reg().items:
-        if u0(item.type_name) == type_spec.type_name:
+        type_name = (
+            type_spec.type_name.removesuffix("Form")
+            if type_spec.is_form
+            else type_spec.type_name
+        )
+        if u0(item.type_name) == type_name:
             return item_django_module(item)
     return None
