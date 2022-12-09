@@ -16,8 +16,6 @@ class WidgetSpec:
     div_styles: T.List[str] = field(repr=False, default_factory=list)
     div_attrs: T.List[str] = field(repr=False, default_factory=list)
     div_key: T.Optional[str] = None
-    props: T.List[str] = field(repr=False, default_factory=list)
-    default_props: T.List[str] = field(repr=False, default_factory=list)
     widget_name: T.Optional[str] = None
     module_name: T.Optional[str] = None
     place: T.Optional[str] = None
@@ -33,6 +31,14 @@ class WidgetSpec:
     @property
     def is_component(self):
         return self.widget_name and ":" in self.widget_name
+
+    @property
+    def props(self):
+        return self.src_dict.get("__props__", [])
+
+    @property
+    def default_props(self):
+        return self.src_dict.get("__default_props__", [])
 
     @property
     def widget_class_name(self):

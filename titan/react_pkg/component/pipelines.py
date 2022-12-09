@@ -68,10 +68,10 @@ def get_props_forwards(component):
     if not widget_spec:
         return forwards
 
-    for prop_term_str in widget_spec.src_dict.get("__props__", []):
+    for prop_term_str in widget_spec.props:
         forwards += [create_forward(component, has_prop, prop_term_str)]
 
-    for default_prop_term_str in widget_spec.src_dict.get("__default_props__", []):
+    for default_prop_term_str in widget_spec.default_props:
         forwards += [create_forward(component, has_default_prop, default_prop_term_str)]
 
     return forwards
