@@ -20,12 +20,19 @@ class PickerBuilder(BvrsBuilderMixin, Builder):
         self._add_lines()
 
     def _add_lines(self):
-        context = {**self.bvrs_context(), "item": self.bvrs_item_name}
+        context = {
+            "__": {
+                **self.bvrs_context(),
+                "update_url": self.get_value_by_name("updateUrl"),
+                "item": self.bvrs_item_name,
+            },
+        }
 
         self.add(
             preamble_lines=[tpls.render("picker_handler_tpl", context)],
             lines=[tpls.render("picker_div_tpl", context)],
             imports_lines=[tpls.render("picker_imports_tpl", context)],
+            props_lines=[tpls.render("picker_props_tpl", context)],
         )
 
     def _add_default_props(self):

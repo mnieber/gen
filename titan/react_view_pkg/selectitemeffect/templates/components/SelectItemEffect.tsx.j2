@@ -11,39 +11,39 @@ import {
 
 type ArgsT = {
   myItemsSelection: Selection;
-  myItems: {{ _.component.item_list.ts_type }};                             {% ?? __.get_item_id() %}
+  myItems: {{ _.component.item_list.ts_type }};                                       {% ?? __.get_item_id() %}
 {{ __.select_effect_args() }}
-};
-
-const f = (args: ArgsT) => {
-  {{ __.get_item_id() }};                                                   {% if __.get_item_id() %}
-  if (myItemId) {
-    args.myItemsSelection.selectItem({ itemId: myItemId});
-  }
-  if (args.myItemId) {                                                      {% else %}
-    args.myItemsSelection.selectItem({ itemId: args.myItemId});
-  }                                                                         {% endif %}
 };
 
 type PropsT = {};
 
 const DefaultProps = {
   ...dps.myItemsSelection,
-  ...dps.myItems,                                                           {% ?? __.get_item_id() %}
+  ...dps.myItems,                                                                     {% ?? __.get_item_id() %}
 };
 
 export const MyComponent = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
     return (
       <Effect
-        f={f}
         getArgs={(params) => {
           return {
             myItemsSelection: props.myItemsSelection,
-            myItems: props.myItems,                                         {% ?? __.get_item_id() %}
+            myItems: props.myItems,                                                   {% ?? __.get_item_id() %}
             {{ __.extract_params() }}
           }
         }}
+        f={
+          (args: ArgsT) => {
+            {{ __.get_item_id() }};                                                   {% if __.get_item_id() %}
+            if (myItemId) {
+              args.myItemsSelection.selectItem({ itemId: myItemId});
+            }
+            if (args.myItemId) {                                                      {% else %}
+              args.myItemsSelection.selectItem({ itemId: args.myItemId});
+            }                                                                         {% endif %}
+          }
+        }
       />
     );
   }, DefaultProps)
