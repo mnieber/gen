@@ -23,7 +23,7 @@ def load_states(widget_reg):
 
 
 def _get_state(state_term_str, state_data, forwards):
-    container_datas = state_data.get("containers", {})
+    container_datas = state_data.get("__containers__", {})
     for container_term, container_data in container_datas.items():
         _check_name(container_term)
         forwards.append(create_forward(state_term_str, has, container_term))
@@ -31,9 +31,9 @@ def _get_state(state_term_str, state_data, forwards):
 
 
 def _get_container(container_term, container_data, forwards):
-    for data_term in container_data.get("data", []):
+    for data_term in container_data.get("__data__", []):
         forwards.append(create_forward(container_term, has, data_term))
-    for bvr_term in container_data.get("bvrs", []):
+    for bvr_term in container_data.get("__bvrs__", []):
         forwards.append(create_forward(container_term, has, bvr_term))
 
 
