@@ -6,6 +6,10 @@ from titan.react_view_pkg.pkg.builders.children_builder import ChildrenBuilder
 from titan.react_view_pkg.pkg.builders.component_builder import ComponentBuilder
 from titan.react_view_pkg.pkg.builders.div_builder import DivBuilder
 from titan.react_view_pkg.pkg.builders.empty_builder import EmptyBuilder
+from titan.react_view_pkg.pkg.builders.form_fields_builder import (
+    FormFieldBuilder,
+    FormFieldsBuilder,
+)
 from titan.react_view_pkg.pkg.builders.item_fields_builder import (
     ItemFieldBuilder,
     ItemFieldsBuilder,
@@ -67,6 +71,12 @@ def get_builders(widget_spec):
 
         elif widget_base_type == "ItemFields":
             builder = ItemFieldsBuilder(widget_spec)
+
+        elif widget_base_type == "FormFields":
+            builder = FormFieldsBuilder(widget_spec)
+
+        elif widget_base_type == "FormField":
+            builder = FormFieldBuilder(widget_spec)
 
         elif widget_base_type == "ItemField":
             builder = ItemFieldBuilder(widget_spec)

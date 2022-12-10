@@ -31,19 +31,14 @@ class ItemFieldsBuilder(Builder):
     def build(self):
         field_widget_spec = self.widget_spec.find_child_with_place("Field")
         for field_spec in self.get_field_specs():
-            field_widget_spec.values["field_key"] = field_spec.key
+            field_widget_spec.values["field_spec"] = field_spec
             self._add_child_widgets([field_widget_spec])
 
 
 class ItemFieldBuilder(Builder):
-    def __post_init__(self):
-        self.item_name = self.named_item_term.data
-        self.type_spec = get_type_reg().get(u0(self.item_name))
-
     def build(self):
         item_data_path = self.item_data_path()
-        field_key = self.get_value_by_name("field_key")
-        field_spec = self.type_spec.get_field_spec_by_key(field_key)
+        field_spec = self.get_value_by_name("field_spec")
         assert field_spec
         label = f"{field_spec.name}: " if field_spec.field_type in ("boolean",) else ""
         postfix = " ? 'Yes' : 'No'" if field_spec.field_type in ("boolean",) else ""
