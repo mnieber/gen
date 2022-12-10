@@ -2,10 +2,9 @@ from titan.react_view_pkg.pkg.add_child_widgets import add_child_widgets
 from titan.react_view_pkg.pkg.add_div import add_div_close, add_div_open
 from titan.react_view_pkg.pkg.builder_items_mixin import BuilderItemsMixin
 from titan.react_view_pkg.pkg.builder_output import BuilderOutput
-from titan.react_view_pkg.pkg.builder_render_mixin import BuilderRenderMixin
 
 
-class Builder(BuilderRenderMixin, BuilderItemsMixin):
+class Builder(BuilderItemsMixin):
     def __init__(self, widget_spec):
         self.widget_spec = widget_spec
         self.output = BuilderOutput()

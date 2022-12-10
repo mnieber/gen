@@ -1,4 +1,4 @@
-from moonleap import u0
+from moonleap import Tpls, u0
 from moonleap.utils import chop0
 from moonleap.utils.inflect import singular
 from titan.react_view_pkg.pkg.builder import Builder
@@ -16,6 +16,8 @@ instance_tpl = chop0(
 { {{ const_name }} }
 """
 )
+
+tpls = Tpls("array_builder", preamble_tpl=preamble_tpl, instance_tpl=instance_tpl)
 
 
 class ArrayBuilder(Builder):
@@ -39,10 +41,8 @@ class ArrayBuilder(Builder):
         }
 
         self.add(
-            preamble_lines=[
-                self.render_str(preamble_tpl, context, "array_builder_preamble.j2")
-            ],
-            lines=[self.render_str(instance_tpl, context, "array_builder_instance.j2")],
+            preamble_lines=[tpls.render("preamble_tpl", context)],
+            lines=[tpls.render("instance_tpl", context)],
         )
 
 

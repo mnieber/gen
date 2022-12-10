@@ -1,4 +1,4 @@
-from moonleap.utils import chop0
+from moonleap import Tpls, chop0
 
 lvi_buttons_tpl = chop0(
     """
@@ -42,4 +42,12 @@ lvi_buttons_imports_tpl = chop0(
     """
 import { smallButton } from 'src/frames/components';
   """
+)
+
+tpls = Tpls(
+    "lvi_buttons_builder",
+    lvi_buttons_tpl=lvi_buttons_tpl,
+    lvi_buttons_props_tpl=lvi_buttons_props_tpl,
+    lvi_buttons_preamble_tpl=lvi_buttons_preamble_tpl,
+    lvi_buttons_imports_tpl=lvi_buttons_imports_tpl,
 )

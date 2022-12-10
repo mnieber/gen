@@ -2,7 +2,7 @@ from moonleap.utils.fp import extend_uniq
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
 
-from .picker_builder_tpl import picker_div_tpl, picker_handler_tpl, picker_imports_tpl
+from .picker_builder_tpl import tpls
 
 
 class PickerBuilder(BvrsBuilderMixin, Builder):
@@ -23,13 +23,9 @@ class PickerBuilder(BvrsBuilderMixin, Builder):
         context = {**self.bvrs_context(), "item": self.bvrs_item_name}
 
         self.add(
-            preamble_lines=[
-                self.render_str(
-                    picker_handler_tpl, context, "picker_builder_handler.j2"
-                )
-            ],
-            lines=[self.render_str(picker_div_tpl, context, "picker_builder_div.j2")],
-            import_lines=[picker_imports_tpl],
+            preamble_lines=[tpls.render("picker_handler_tpl", context)],
+            lines=[tpls.render("picker_div_tpl", context)],
+            import_lines=[tpls.render("picker_imports_tpl", context)],
         )
 
     def _add_default_props(self):

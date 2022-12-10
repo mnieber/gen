@@ -1,4 +1,4 @@
-from moonleap.utils import chop0
+from moonleap import Tpls, chop0
 
 button_handler_tpl = chop0(
     """
@@ -18,4 +18,10 @@ button_div_tpl = chop0(
       {{ title }}
     </div>
 """
+)
+
+tpls = Tpls(
+    "button_builder",
+    button_div_tpl=button_div_tpl,
+    button_handler_tpl=button_handler_tpl,
 )

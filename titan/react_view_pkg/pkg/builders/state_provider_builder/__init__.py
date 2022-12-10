@@ -1,10 +1,20 @@
-from moonleap.utils.fp import append_uniq
+from moonleap import Tpls, append_uniq
 from titan.react_view_pkg.pkg.builder import Builder
 
+from .sp_body_tpl import sp_imports_tpl, sp_preamble_hooks_tpl, sp_return_value_tpl
 from .sp_preamble import return_value, sp_preamble_tpl
 from .sp_reaction_effect_hook import sp_reaction_effect_hook_tpl
 from .sp_state_hook import delete_items_data, order_items_data, sp_state_hook_tpl
-from .tpl import sp_imports_tpl, sp_preamble_hooks_tpl, sp_return_value_tpl
+
+tpls = Tpls(
+    "state_provider_builder",
+    sp_imports_tpl=sp_imports_tpl,
+    sp_preamble_tpl=sp_preamble_tpl,
+    sp_preamble_hooks_tpl=sp_preamble_hooks_tpl,
+    sp_state_hook_tpl=sp_state_hook_tpl,
+    sp_reaction_effect_hook_tpl=sp_reaction_effect_hook_tpl,
+    sp_return_value_tpl=sp_return_value_tpl,
+)
 
 
 class StateProviderBuilder(Builder):
@@ -42,24 +52,14 @@ class StateProviderBuilder(Builder):
         )
 
         self.add(
-            import_lines=[
-                self.render_str(sp_imports_tpl, context, "sp_imports_tpl.j2")
-            ],
+            import_lines=[tpls.render("sp_imports_tpl", context)],
             preamble_hooks_lines=[
-                self.render_str(
-                    sp_preamble_hooks_tpl, context, "sp_preamble_hooks_tpl.j2"
-                ),
-                self.render_str(sp_state_hook_tpl, context, "sp_state_hook_tpl.j2"),
-                self.render_str(
-                    sp_reaction_effect_hook_tpl,
-                    context,
-                    "sp_reaction_effect_hook_tpl.j2",
-                ),
+                tpls.render("sp_preamble_hooks_tpl", context),
+                tpls.render("sp_state_hook_tpl", context),
+                tpls.render("sp_reaction_effect_hook_tpl", context),
             ],
-            preamble_lines=[
-                self.render_str(sp_preamble_tpl, context, "sp_preamble.j2")
-            ],
-            lines=[self.render_str(sp_return_value_tpl, context, "sp_return_value.j2")],
+            preamble_lines=[tpls.render("sp_preamble_tpl", context)],
+            lines=[tpls.render("sp_return_value_tpl", context)],
         )
 
 

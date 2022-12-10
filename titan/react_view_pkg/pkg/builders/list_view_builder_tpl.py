@@ -1,4 +1,4 @@
-from moonleap.utils import chop0
+from moonleap import Tpls, chop0
 
 lvi_imports_tpl = chop0(
     """
@@ -54,4 +54,13 @@ lvi_instance_tpl = chop0(
 {myItemDivs.length === 0 && noItems}
 {% end_magic_with %}
 """
+)
+
+tpls = Tpls(
+    "list_view_builder",
+    lvi_imports_tpl=lvi_imports_tpl,
+    lvi_preamble_hooks_tpl=lvi_preamble_hooks_tpl,
+    lvi_preamble_tpl=lvi_preamble_tpl,
+    lvi_instance_props_tpl=lvi_instance_props_tpl,
+    lvi_instance_tpl=lvi_instance_tpl,
 )

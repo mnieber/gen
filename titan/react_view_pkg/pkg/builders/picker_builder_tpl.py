@@ -1,4 +1,4 @@
-from moonleap.utils import chop0
+from moonleap import Tpls, chop0
 
 picker_handler_tpl = chop0(
     """
@@ -33,4 +33,11 @@ picker_imports_tpl = chop0(
     """
 import { PickerValueT, ValuePicker } from 'src/utils/components/ValuePicker';
     """
+)
+
+tpls = Tpls(
+    "picker_builder",
+    picker_div_tpl=picker_div_tpl,
+    picker_handler_tpl=picker_handler_tpl,
+    picker_imports_tpl=picker_imports_tpl,
 )

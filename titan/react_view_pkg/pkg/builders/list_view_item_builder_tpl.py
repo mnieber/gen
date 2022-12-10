@@ -1,4 +1,4 @@
-from moonleap.utils import chop0
+from moonleap import Tpls, chop0
 
 lvi_imports_tpl = chop0(
     """
@@ -80,4 +80,14 @@ lvi_scss_tpl = chop0(
 }                                                                       {% endif %}
 {% end_magic_with %}
     """
+)
+
+tpls = Tpls(
+    "list_view_item_builder",
+    lvi_imports_tpl=lvi_imports_tpl,
+    lvi_fields_tpl=lvi_fields_tpl,
+    lvi_props_tpl=lvi_props_tpl,
+    lvi_div_attrs_tpl=lvi_div_attrs_tpl,
+    lvi_div_styles_tpl=lvi_div_styles_tpl,
+    lvi_scss_tpl=lvi_scss_tpl,
 )

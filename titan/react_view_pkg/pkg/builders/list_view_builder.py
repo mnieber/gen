@@ -2,13 +2,7 @@ from moonleap.utils.fp import append_uniq, extend_uniq
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
 
-from .list_view_builder_tpl import (
-    lvi_imports_tpl,
-    lvi_instance_props_tpl,
-    lvi_instance_tpl,
-    lvi_preamble_hooks_tpl,
-    lvi_preamble_tpl,
-)
+from .list_view_builder_tpl import tpls
 
 
 def lvi_spec(lvi_name):
@@ -64,24 +58,16 @@ class ListViewBuilder(Builder, BvrsBuilderMixin):
         context["child_widget_div"] = self.output.graft(
             _get_lvi_instance_output(
                 self.widget_spec,
-                div_attrs=self.render_str(
-                    lvi_instance_props_tpl, context, "lvi_instance_props.j2"
-                ),
+                div_attrs=tpls.render("lvi_instance_props_tpl", context),
                 key=f"{self.bvrs_item_name}.id",
             )
         )
 
         self.add(
-            import_lines=[self.render_str(lvi_imports_tpl, context, "lvi__imports.j2")],
-            preamble_hooks_lines=[
-                self.render_str(
-                    lvi_preamble_hooks_tpl, context, "lvi_preamble_hooks.j2"
-                )
-            ],
-            preamble_lines=[
-                self.render_str(lvi_preamble_tpl, context, "lvi_preamble.j2")
-            ],
-            lines=[self.render_str(lvi_instance_tpl, context, "lvi_instance.j2")],
+            import_lines=[tpls.render("lvi_imports_tpl", context)],
+            preamble_hooks_lines=[tpls.render("lvi_preamble_hooks_tpl", context)],
+            preamble_lines=[tpls.render("lvi_preamble_tpl", context)],
+            lines=[tpls.render("lvi_instance_tpl", context)],
         )
 
     def _get_context(self):

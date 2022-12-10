@@ -1,12 +1,7 @@
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
 
-from .lvi_buttons_builder_tpl import (
-    lvi_buttons_imports_tpl,
-    lvi_buttons_preamble_tpl,
-    lvi_buttons_props_tpl,
-    lvi_buttons_tpl,
-)
+from .lvi_buttons_builder_tpl import tpls
 
 
 class LviButtonsBuilder(Builder, BvrsBuilderMixin):
@@ -18,20 +13,10 @@ class LviButtonsBuilder(Builder, BvrsBuilderMixin):
         context = self._get_context()
 
         self.add(
-            lines=[self.render_str(lvi_buttons_tpl, context, "lvi_buttons_tpl.j2")],
-            import_lines=[
-                self.render_str(
-                    lvi_buttons_imports_tpl, context, "lvi_buttons_imports_tpl.j2"
-                )
-            ],
-            preamble_lines=[
-                self.render_str(
-                    lvi_buttons_preamble_tpl, context, "lvi_buttons_preamble_tpl.j2"
-                )
-            ],
-            props_lines=[
-                self.render_str(lvi_buttons_props_tpl, context, "lvi_buttons_tpl.j2")
-            ],
+            lines=[tpls.render("lvi_buttons_tpl", context)],
+            import_lines=[tpls.render("lvi_buttons_imports_tpl", context)],
+            preamble_lines=[tpls.render("lvi_buttons_preamble_tpl", context)],
+            props_lines=[tpls.render("lvi_buttons_props_tpl", context)],
         )
 
     def update_widget_spec(self):

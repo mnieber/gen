@@ -2,13 +2,7 @@ from moonleap.utils.fp import append_uniq
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
 
-from .list_view_item_builder_tpl import (
-    lvi_div_attrs_tpl,
-    lvi_div_styles_tpl,
-    lvi_imports_tpl,
-    lvi_props_tpl,
-    lvi_scss_tpl,
-)
+from .list_view_item_builder_tpl import tpls
 
 
 class ListViewItemBuilder(Builder, BvrsBuilderMixin):
@@ -20,11 +14,9 @@ class ListViewItemBuilder(Builder, BvrsBuilderMixin):
         context = self._get_context()
 
         self.add(
-            import_lines=[
-                self.render_str(lvi_imports_tpl, context, "lvi_imports_tpl.j2")
-            ],
-            props_lines=[self.render_str(lvi_props_tpl, context, "lvi_div_attrs.j2")],
-            scss_lines=[self.render_str(lvi_scss_tpl, context, "lvi_scss.j2")],
+            import_lines=[tpls.render("lvi_imports_tpl", context)],
+            props_lines=[tpls.render("lvi_props_tpl", context)],
+            scss_lines=[tpls.render("lvi_scss_tpl", context)],
         )
 
     def update_widget_spec(self):
@@ -35,11 +27,11 @@ class ListViewItemBuilder(Builder, BvrsBuilderMixin):
 
         append_uniq(
             self.widget_spec.div_styles,
-            self.render_str(lvi_div_styles_tpl, context, "lvi_div_styles.j2"),
+            tpls.render("lvi_div_styles_tpl", context),
         )
         append_uniq(
             self.widget_spec.div_attrs,
-            self.render_str(lvi_div_attrs_tpl, context, "lvi_div_attrs.j2"),
+            tpls.render("lvi_div_attrs_tpl", context),
         )
 
     def _get_context(self):
