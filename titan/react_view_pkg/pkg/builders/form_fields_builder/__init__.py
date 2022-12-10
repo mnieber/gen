@@ -28,8 +28,6 @@ class FormFieldsBuilder(Builder):
         context = dict(__=__, form_fields_block=os.linesep.join(lines))
         self.add(
             imports_lines=[tpls.render("form_fields_imports_tpl", context)],
-            preamble_lines=[tpls.render("form_fields_preamble_tpl", context)],
-            preamble_hooks_lines=[tpls.render("form_fields_hooks_tpl", context)],
             lines=[tpls.render("form_fields_tpl", context)],
         )
 
