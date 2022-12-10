@@ -20,7 +20,7 @@ class Builder(BuilderItemsMixin):
         lines=None,
         props_lines=None,
         add_props_lines=None,
-        import_lines=None,
+        imports_lines=None,
         scss_lines=None,
         preamble_lines=None,
         preamble_hooks_lines=None,
@@ -32,8 +32,8 @@ class Builder(BuilderItemsMixin):
             self.output.props_lines.extend(_trim(props_lines))
         if add_props_lines:
             self.output.add_props_lines.extend(_trim(add_props_lines))
-        if import_lines:
-            self.output.import_lines.extend(import_lines)
+        if imports_lines:
+            self.output.imports_lines.extend(imports_lines)
         if scss_lines:
             self.output.scss_lines.extend(scss_lines)
         if preamble_lines:

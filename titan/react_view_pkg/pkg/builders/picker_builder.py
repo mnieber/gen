@@ -25,7 +25,7 @@ class PickerBuilder(BvrsBuilderMixin, Builder):
         self.add(
             preamble_lines=[tpls.render("picker_handler_tpl", context)],
             lines=[tpls.render("picker_div_tpl", context)],
-            import_lines=[tpls.render("picker_imports_tpl", context)],
+            imports_lines=[tpls.render("picker_imports_tpl", context)],
         )
 
     def _add_default_props(self):

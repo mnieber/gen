@@ -52,7 +52,7 @@ class StateProviderBuilder(Builder):
         )
 
         self.add(
-            import_lines=[tpls.render("sp_imports_tpl", context)],
+            imports_lines=[tpls.render("sp_imports_tpl", context)],
             preamble_hooks_lines=[
                 tpls.render("sp_preamble_hooks_tpl", context),
                 tpls.render("sp_state_hook_tpl", context),

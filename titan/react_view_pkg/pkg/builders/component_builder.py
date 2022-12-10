@@ -10,7 +10,7 @@ class ComponentBuilder(Builder):
 
     def _add_component_import_path(self):
         import_path = _get_component_import_path(self.widget_spec)
-        append_uniq(self.output.import_lines, import_path)
+        append_uniq(self.output.imports_lines, import_path)
 
     def _add_lines_for_component_instance(self):
         attrs_str = _get_attrs_str(self.widget_spec)

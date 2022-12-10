@@ -64,7 +64,7 @@ class ListViewBuilder(Builder, BvrsBuilderMixin):
         )
 
         self.add(
-            import_lines=[tpls.render("lvi_imports_tpl", context)],
+            imports_lines=[tpls.render("lvi_imports_tpl", context)],
             preamble_hooks_lines=[tpls.render("lvi_preamble_hooks_tpl", context)],
             preamble_lines=[tpls.render("lvi_preamble_tpl", context)],
             lines=[tpls.render("lvi_instance_tpl", context)],

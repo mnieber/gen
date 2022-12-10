@@ -14,7 +14,7 @@ class LviButtonsBuilder(Builder, BvrsBuilderMixin):
 
         self.add(
             lines=[tpls.render("lvi_buttons_tpl", context)],
-            import_lines=[tpls.render("lvi_buttons_imports_tpl", context)],
+            imports_lines=[tpls.render("lvi_buttons_imports_tpl", context)],
             preamble_lines=[tpls.render("lvi_buttons_preamble_tpl", context)],
             props_lines=[tpls.render("lvi_buttons_props_tpl", context)],
         )

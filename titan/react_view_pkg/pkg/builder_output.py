@@ -12,7 +12,7 @@ class BuilderOutput:
     default_props: T.List[str] = field(repr=False, default_factory=list)
     props_lines: list = field(default_factory=list)
     add_props_lines: list = field(default_factory=list)
-    import_lines: list = field(default_factory=list)
+    imports_lines: list = field(default_factory=list)
     scss_lines: list = field(default_factory=list)
     preamble_lines: list = field(default_factory=list)
     preamble_hooks_lines: list = field(default_factory=list)
@@ -29,7 +29,7 @@ class BuilderOutput:
         self.scss_lines += rhs.scss_lines
         self.has_children = self.has_children or rhs.has_children
         self.no_scss = self.no_scss or rhs.no_scss
-        extend_uniq(self.import_lines, rhs.import_lines)
+        extend_uniq(self.imports_lines, rhs.imports_lines)
         extend_uniq(self.props_lines, rhs.props_lines)
         extend_uniq(self.add_props_lines, rhs.add_props_lines)
         extend_uniq(self.default_props, rhs.default_props)

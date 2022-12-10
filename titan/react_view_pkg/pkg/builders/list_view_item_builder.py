@@ -14,7 +14,7 @@ class ListViewItemBuilder(Builder, BvrsBuilderMixin):
         context = self._get_context()
 
         self.add(
-            import_lines=[tpls.render("lvi_imports_tpl", context)],
+            imports_lines=[tpls.render("lvi_imports_tpl", context)],
             props_lines=[tpls.render("lvi_props_tpl", context)],
             scss_lines=[tpls.render("lvi_scss_tpl", context)],
         )
