@@ -6,6 +6,7 @@ sp_preamble_tpl = chop0(
 {% magic_with state.name as MyState %}
 {% magic_with container.item.item_name as containerItem %}
 {% magic_with named_item_list.typ.item_name as myNamedListItem %}
+{% magic_with named_item.typ.item_name as myNamedItem %}
 {% magic_with container.name as myContainer %}
     const getDefaultPropsContext = () => {
       const result = { defaultProps: {} };
@@ -27,6 +28,7 @@ sp_preamble_tpl = chop0(
       return result;
     };
     {{ "" }}
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

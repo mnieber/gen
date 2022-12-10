@@ -35,6 +35,11 @@ def component_maybe_expression(component, named_item_or_item_list):
         return pipeline_source.name
     elif pipeline_source.meta.term.tag in ("props",):
         named_item = pipeline.elements[0].obj
+        if (
+            named_item.name == named_item_or_item_list.name
+            and named_item.typ == named_item_or_item_list.typ
+        ):
+            return None
         return f"props.{named_item.typ.item_name}"
     elif pipeline_source.meta.term.tag in ("state~provider",):
         item_or_item_list = pipeline.elements[0].obj
