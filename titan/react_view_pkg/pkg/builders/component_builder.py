@@ -1,23 +1,30 @@
-from moonleap.utils.fp import append_uniq
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.get_data_path import get_data_path
 
 
 class ComponentBuilder(Builder):
     def build(self):
-        self._add_component_import_path()
-        self._add_lines_for_component_instance()
+        self.add(imports_lines=[_get_component_import_path(self.widget_spec)])
 
-    def _add_component_import_path(self):
-        import_path = _get_component_import_path(self.widget_spec)
-        append_uniq(self.output.imports_lines, import_path)
-
-    def _add_lines_for_component_instance(self):
         attrs_str = _get_attrs_str(self.widget_spec)
         key_attr = _get_key_attr(self.widget_spec)
-        self.add(
-            lines=[f"<{self.widget_spec.widget_class_name} {key_attr} {attrs_str}/>"]
-        )
+        has_children = bool(self.widget_spec.child_widget_specs)
+        if has_children:
+            self.add(
+                lines=[
+                    f"<{self.widget_spec.widget_class_name} {key_attr} {attrs_str}>"
+                ],
+            )
+            self._add_child_widgets()
+            self.add(
+                lines=[f"</ {self.widget_spec.widget_class_name}>"],
+            )
+        else:
+            self.add(
+                lines=[
+                    f"<{self.widget_spec.widget_class_name} {key_attr} {attrs_str}/>"
+                ],
+            )
 
 
 def _get_component_import_path(widget_spec):
