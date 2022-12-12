@@ -1,4 +1,5 @@
 from moonleap.parser.term import match_term_to_pattern
+from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_list_term
 
 
 def get_data_path(widget_spec, term):
@@ -11,12 +12,10 @@ def get_data_path(widget_spec, term):
 
         # HACK: use widget_base_type to determine data path
         for widget_base_type in ws.widget_base_types:
-            if ws != widget_spec and widget_base_type in ("Array", "ListView"):
-                from titan.react_view_pkg.pkg.get_builders import get_builder
-
-                b = get_builder(ws)
-                if term and match_term_to_pattern(b.named_item_list_term, term):
-                    return term.data
+            if widget_base_type in ("Array", "ListView"):
+                item_name = get_named_item_list_term(ws).data
+                if term and term.data == item_name and term.tag == "item":
+                    return item_name
 
         ws = ws.parent_ws
     return None
