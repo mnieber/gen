@@ -7,6 +7,10 @@ def build(widget_spec) -> BuilderOutput:
     builders = get_builders(widget_spec)
     assert builders
     for builder in builders:
-        builder.build()
+        try:
+            builder.build()
+        except Exception as e:
+            print(f"\nError building {widget_spec}")
+            raise e
         result.add(builder.output)
     return result

@@ -74,7 +74,9 @@ class TypeRegistry(Resource):
         return self._item_list_by_item_name[item_name]
 
     def _create_item_and_item_list(self, item_name):
-        type_spec = self.get(u0(item_name))
+        type_spec = self.get(u0(item_name), default=None)
+        if not type_spec:
+            raise Exception(f"Cannot create item. Unknown type-spec {u0(item_name)}")
         item = Item(item_name=item_name, type_spec=type_spec, item_list=None)  # type: ignore
         item.meta = _get_meta(f"{item_name}:item")
         item_list = ItemList(item_name=item_name, type_spec=type_spec, item=item)

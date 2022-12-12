@@ -51,7 +51,7 @@ class WidgetSpec:
 
     @property
     def is_component_def(self):
-        return (
+        return bool(
             self.is_component
             and self.widget_base_types
             and self.widget_name not in self.widget_base_types

@@ -1,6 +1,8 @@
+from moonleap import kebab_to_camel
 from moonleap.utils.fp import append_uniq, extend_uniq
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
+from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_list_term
 
 from .list_view_builder_tpl import tpls
 
@@ -11,10 +13,10 @@ def lvi_spec(lvi_name):
     }
 
 
-def lvi_component_spec(lvi_name):
+def lvi_component_spec(lvi_name, named_item_term_str):
     return {
         f"LviComponent with {lvi_name} as ListViewItem, Bar[p-2]": {
-            "__default_props__": ["+todo:item"],
+            "__default_props__": [named_item_term_str],  # HACK hard-coded todo
             "LeftSlot with ItemFields": "display=1",
             "RightSlot with LviButtons": "pass",
         },
@@ -27,15 +29,19 @@ class ListViewBuilder(Builder, BvrsBuilderMixin):
         BvrsBuilderMixin.__init__(self)
 
     def get_spec_extension(self, places):
+        named_item_term_str = self.widget_spec.get_value_by_name("items").removesuffix(
+            "~list"
+        )
         lvi_name = lvi_name = (
             self.widget_spec.get_value_by_name("lvi-name")
             or self._get_default_lvi_name()
         )
+
         result = {}
         if "ListViewItem" not in places:
             result.update(lvi_spec(lvi_name))
         if "LviComponent" not in places:
-            result.update(lvi_component_spec(lvi_name))
+            result.update(lvi_component_spec(lvi_name, named_item_term_str))
         return result
 
     def _get_default_lvi_name(self):

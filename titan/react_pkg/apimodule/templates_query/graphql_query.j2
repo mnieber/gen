@@ -1,4 +1,4 @@
-{% magic_with _.query.name as callMyEndpoint %}
+{% magic_with _.query.name as myEndpoint %}
 {% magic_with input_field_spec.name as myInputFieldName %}
 {% magic_with input_field_spec.graphql_type("client") as myInputFieldGqlType %}
 {% magic_with input_field_spec.ts_type as myInputFieldTsType %}
@@ -10,6 +10,7 @@ import { doQuery } from 'src/api/graphqlClient';                                
 import { useQueryData } from 'src/api/hooks';
 import * as R from 'ramda';
 import { ObjT } from 'src/utils/types';
+import myEndpointStub from 'src/api/stubs/myEndpointStub.json';                                     {% ?? _.query.api_spec.is_stub %}
 import { wait } from 'src/utils/wait';
 import { myTypeSpecNameGqlFields } from 'src/api/types/MyTypeSpecNameT';                            {% !! type_spec in __.type_specs_to_import %}
 import { hydrateMyOutputFieldType } from 'src/api/types/MyOutputFieldTypeT';                        {% !! output_field_spec in __.hydrated_fields %}
@@ -18,39 +19,41 @@ export type ArgsT = {
   myInputFieldName: myInputFieldTsType;                                                             {% !! input_field_spec in __.input_field_specs %}
 };
 
-export const callMyEndpoint = (args: ArgsT) => {
-  return doQuery(                                                                                   {% if _.react_app.use_graphql %}
-    `query callMyEndpoint(                                                                          {% if __.input_field_specs %}
+export const myEndpoint = (args: ArgsT) => {
+  return Promise.resolve({myEndpoint: myEndpointStub})                                              {% if _.query.api_spec.is_stub %}
+  return doQuery(                                                                                   {% elif _.react_app.use_graphql %}
+    `query myEndpoint(                                                                              {% if __.input_field_specs %}
       $myInputFieldName: myInputFieldGqlType                                                        {% !! input_field_spec in __.input_field_specs %}
     ) {
-      callMyEndpoint(
+      myEndpoint(
         myInputFieldName: $myInputFieldName                                                         {% !! input_field_spec in __.input_field_specs|sort(attribute="name") %}
       ) {
-    `query callMyEndpoint {                                                                         {% else %}
-      callMyEndpoint {                                                                              {% endif %}
+    `query myEndpoint {                                                                             {% else %}
+      myEndpoint {                                                                                  {% endif %}
 {{ __.graphql_body }}
       }
     }`,
     args
-  ).then(
+  )
+  return Promise.resolve({myEndpoint: "Moonleap Todo"});                                            {% else %}{% endif %}
+  .then(
     (response: ObjT) => {
       return wait(
         process.env.NODE_ENV === 'development' ? 1000 : 0,
-        response.callMyEndpoint
+        response.myEndpoint
       );
     }
   );
-  return Promise.resolve("Moonleap Todo");                                                          {% else %}{% endif %}
-}
+};
 
-export const useCallMyEndpoint = (
+export const useMyEndpoint = (
   args: ArgsT                                                                                       {% ?? __.input_field_specs %}
 ) => {
   const query = useQuery([
-      'callMyEndpoint',
+      'myEndpoint',
       args                                                                                          {% ?? __.input_field_specs %}
       {% remove_trailing suffix="," %}
-    ], () => callMyEndpoint(
+    ], () => myEndpoint(
     args                                                                                            {% ?? __.input_field_specs %}
     {}                                                                                              {% ?? not __.input_field_specs %}
   ))

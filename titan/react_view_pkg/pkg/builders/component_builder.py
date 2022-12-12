@@ -1,5 +1,6 @@
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.get_data_path import get_data_path
+from titan.widgets_pkg.pkg.create_widget_class_name import get_component_name
 
 
 class ComponentBuilder(Builder):
@@ -29,9 +30,10 @@ class ComponentBuilder(Builder):
 
 def _get_component_import_path(widget_spec):
     is_same_module = widget_spec.module_name == widget_spec.parent_ws.module_name
-    suffix = f"/{widget_spec.widget_class_name}" if is_same_module else ""
+    component_name = get_component_name(widget_spec)
+    suffix = f"/{component_name}" if is_same_module else ""
     return (
-        f"import {{ {widget_spec.widget_class_name} }} from "
+        f"import {{ {component_name} }} from "
         + f"'src/{widget_spec.module_name}/components{suffix}';"
     )
 

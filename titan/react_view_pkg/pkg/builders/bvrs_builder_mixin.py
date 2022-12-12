@@ -1,10 +1,13 @@
+from moonleap import kebab_to_camel
 from moonleap.utils.inflect import plural
 from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_list_term
 
 
 class BvrsBuilderMixin:
     def __init__(self):
-        self.bvrs_item_name = get_named_item_list_term(self.widget_spec).data
+        self.bvrs_item_name = kebab_to_camel(
+            get_named_item_list_term(self.widget_spec).data
+        )
         self.bvrs_items_name = plural(self.bvrs_item_name)
 
         self.bvrs = self.widget_spec.get_value_by_name("bvrs", default="").split(",")

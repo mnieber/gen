@@ -62,6 +62,6 @@ def create_symlinks_for_skip_patterns(session):
             for skip_pattern in skip:
                 if p.match(skip_pattern):
                     out_fn = out_dir / ref_subdir.name / fn.relative_to(ref_subdir)
+                    out_fn.parent.mkdir(parents=True, exist_ok=True)
                     if not out_fn.exists():
-                        out_fn.parent.mkdir(parents=True, exist_ok=True)
                         out_fn.symlink_to(fn)

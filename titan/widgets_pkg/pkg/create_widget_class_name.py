@@ -5,11 +5,7 @@ from moonleap import kebab_to_camel, u0
 
 def create_widget_class_name(widget_spec):
     if widget_spec.is_component:
-        name, tag = widget_spec.widget_name.split(":")
-        if name.endswith("-"):
-            name += tag
-        widget_kebab_name = name.replace("-:", "-").replace(":", "-")
-        return u0(kebab_to_camel(widget_kebab_name))
+        return get_component_name(widget_spec)
     else:
         assert widget_spec.parent_ws
 
@@ -31,3 +27,12 @@ def create_widget_class_name(widget_spec):
         root = widget_spec.parent_ws
         infix = "__" if root.is_component else ""
         return root.widget_class_name + infix + widget_class_name
+
+
+def get_component_name(widget_spec):
+    name, tag = widget_spec.widget_name.split(":")
+    if name.endswith("-"):
+        name += tag
+    widget_kebab_name = name.replace("-:", "-").replace(":", "-")
+    result = u0(kebab_to_camel(widget_kebab_name))
+    return result

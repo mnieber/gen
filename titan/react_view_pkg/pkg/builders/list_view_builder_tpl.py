@@ -15,9 +15,9 @@ import {
 lvi_preamble_hooks_tpl = chop0(
     """
 const dragAndDropUIConnector = useDragAndDropUIConnector(                                     {% if bvrs_has_drag_and_drop %}
-    props.todosDragAndDrop
+    props.myItemsDragAndDrop
 );                                                                                            {% endif %}
-const selectionUIConnector = useSelectionUIConnector(props.todosSelection);                   {% ?? bvrs_has_selection %}
+const selectionUIConnector = useSelectionUIConnector(props.myItemsSelection);                 {% ?? bvrs_has_selection %}
 {{ "" }}
 """
 )
