@@ -2,7 +2,7 @@ from moonleap.utils.fp import extend_uniq
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
 
-from .picker_builder_tpl import tpls
+from .tpl import tpls
 
 
 class PickerBuilder(BvrsBuilderMixin, Builder):

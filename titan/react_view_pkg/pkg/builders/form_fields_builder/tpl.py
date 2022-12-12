@@ -28,6 +28,7 @@ form_fields_tpl = chop0(
 
 form_field_tpl = chop0(
     """
+{% magic_with field_spec.target as FieldSpecTarget %}
     <Field
       fieldName="{{ name }}"
       label="{{ __.label(name) }}"
@@ -49,6 +50,7 @@ form_field_tpl = chop0(
       />                                                                                          {% endif %}
       <div className="flex flex-row items-begin mt-1"><ControlledCheckbox /></div>                {% ?? field_spec.field_type in ("boolean",) %}
     </Field>
+{% end_magic_with %}
   """
 )
 

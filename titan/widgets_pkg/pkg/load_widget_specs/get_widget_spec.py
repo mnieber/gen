@@ -27,6 +27,8 @@ def _get_type_value(spec):
             clean_key = clean_key[:-1].strip()
 
         if clean_key == "__attrs__":
+            if not isinstance(value, str):
+                raise Exception(f"__attrs__ must be a string: {value}")
             parts.append(value)
 
     return ".".join(parts)

@@ -20,4 +20,4 @@ def load_widget_specs(widget_reg, spec_dir):
                     pass
                 except Exception as e:
                     raise Exception(f"Error parsing {fn}: {e}")
-                widget_reg.pprint()
+            widget_reg.pprint()

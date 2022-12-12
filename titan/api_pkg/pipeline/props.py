@@ -70,7 +70,10 @@ def elements(self):
     elif self.root_props:
         resources.insert(0, self.root_props)
     else:
-        raise Exception("No query or state")
+        raise Exception(
+            f"No query or state in pipeline of component {self.component}."
+            + " Did you forget to add :props?"
+        )
 
     _source_pipeline = None
 
