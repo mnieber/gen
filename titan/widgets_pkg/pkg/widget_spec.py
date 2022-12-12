@@ -81,6 +81,15 @@ class WidgetSpec:
     def memo(self, fields=None):
         return WidgetSpecMemoContext(self, fields)
 
+    def get_value_by_name(self, name, default=None):
+        ws = self
+        while ws:
+            value = ws.values.get(name)
+            if value:
+                return value
+            ws = ws.parent_ws
+        return default
+
     @property
     def root(self):
         ws = self

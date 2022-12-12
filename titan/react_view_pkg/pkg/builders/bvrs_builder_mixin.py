@@ -3,10 +3,10 @@ from moonleap.utils.inflect import plural
 
 class BvrsBuilderMixin:
     def __init__(self):
-        self.bvrs_item_name = self.named_item_list_term.data
+        self.bvrs_item_name = get_named_item_list_term(self.widget_spec).data
         self.bvrs_items_name = plural(self.bvrs_item_name)
 
-        self.bvrs = self.get_value_by_name("bvrs", default="").split(",")
+        self.bvrs = self.widget_spec.get_value_by_name("bvrs", default="").split(",")
         self.bvrs_has_selection = "selection" in self.bvrs
         self.bvrs_has_highlight = "highlight" in self.bvrs
         self.bvrs_has_drag_and_drop = "dragAndDrop" in self.bvrs

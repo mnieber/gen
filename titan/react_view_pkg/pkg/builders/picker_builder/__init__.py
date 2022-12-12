@@ -23,7 +23,7 @@ class PickerBuilder(BvrsBuilderMixin, Builder):
         context = {
             "__": {
                 **self.bvrs_context(),
-                "update_url": self.get_value_by_name("updateUrl"),
+                "update_url": self.widget_spec.get_value_by_name("updateUrl"),
                 "item": self.bvrs_item_name,
             },
         }

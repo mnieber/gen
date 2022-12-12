@@ -28,7 +28,8 @@ class ListViewBuilder(Builder, BvrsBuilderMixin):
 
     def get_spec_extension(self, places):
         lvi_name = lvi_name = (
-            self.get_value_by_name("lvi-name") or self._get_default_lvi_name()
+            self.widget_spec.get_value_by_name("lvi-name")
+            or self._get_default_lvi_name()
         )
         result = {}
         if "ListViewItem" not in places:

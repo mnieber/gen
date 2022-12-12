@@ -1,6 +1,7 @@
 from moonleap.utils.fp import append_uniq
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
+from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_term
 
 from .list_view_item_builder_tpl import tpls
 
@@ -22,7 +23,7 @@ class ListViewItemBuilder(Builder, BvrsBuilderMixin):
     def update_widget_spec(self):
         context = self._get_context()
 
-        if not self.named_item_term:
+        if not get_named_item_term(self.widget_spec):
             self.widget_spec.values["item"] = f"+{self.bvrs_item_name}:item"
 
         append_uniq(

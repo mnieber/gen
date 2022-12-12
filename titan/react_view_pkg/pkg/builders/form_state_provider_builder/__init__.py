@@ -1,4 +1,5 @@
 from titan.react_view_pkg.pkg.builder import Builder
+from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_term
 
 from .helper import Helper
 from .tpl import tpls
@@ -13,8 +14,8 @@ class FormStateProviderBuilder(Builder):
         from titan.react_view_pkg.pkg.build import build
 
         __ = self.__ = Helper(
-            item_name=self.named_item_term.data,
-            mutation_name=self.get_value_by_name("mutation"),
+            item_name=get_named_item_term(self.widget_spec).data,
+            mutation_name=self.widget_spec.get_value_by_name("mutation"),
         )
 
         children_ws = self.widget_spec.find_child_with_place("Children")

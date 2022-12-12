@@ -1,6 +1,7 @@
 import os
 
 from titan.react_view_pkg.pkg.builder import Builder
+from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_term
 
 from .helper import Helper
 from .tpl import tpls
@@ -13,8 +14,8 @@ class FormFieldsBuilder(Builder):
 
     def build(self):
         __ = self.__ = Helper(
-            item_name=self.named_item_term.data,
-            mutation_name=self.get_value_by_name("mutation"),
+            item_name=get_named_item_term(self.wiget_spec).data,
+            mutation_name=self.widget_spec.get_value_by_name("mutation"),
         )
         field_widget_spec = self.widget_spec.find_child_with_place("Field")
         lines = []
@@ -43,10 +44,10 @@ class FormFieldsBuilder(Builder):
 
 class FormFieldBuilder(Builder):
     def build(self):
-        field_spec = self.get_value_by_name("field_spec")
+        field_spec = self.widget_spec.get_value_by_name("field_spec")
         context = dict(
             field_spec=field_spec,
-            name=self.get_value_by_name("form_field_name"),
-            __=self.get_value_by_name("helper"),
+            name=self.widget_spec.get_value_by_name("form_field_name"),
+            __=self.widget_spec.get_value_by_name("helper"),
         )
         self.add(lines=[tpls.render("form_field_tpl", context)])

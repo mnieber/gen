@@ -2,6 +2,7 @@ from moonleap import Tpls, u0
 from moonleap.utils import chop0
 from moonleap.utils.inflect import singular
 from titan.react_view_pkg.pkg.builder import Builder
+from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_list_term
 
 preamble_tpl = chop0(
     """
@@ -22,7 +23,7 @@ tpls = Tpls("array_builder", preamble_tpl=preamble_tpl, instance_tpl=instance_tp
 
 class ArrayBuilder(Builder):
     def build(self):
-        item_name = self.named_item_list_term.data
+        item_name = get_named_item_list_term(self.widget_spec).data
 
         const_name = self.widget_spec.widget_name
         child_widget_div = self.output.graft(
