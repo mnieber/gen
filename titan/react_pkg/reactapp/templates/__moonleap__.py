@@ -5,6 +5,7 @@ from moonleap.utils.fp import append_uniq
 from titan.react_view_pkg.behavior import Behavior
 from titan.types_pkg.item import Item
 from titan.types_pkg.itemlist import ItemList
+from titan.types_pkg.typeregistry import get_type_reg
 
 
 @dataclass
@@ -66,7 +67,7 @@ def get_helpers(_):
             append_uniq(self.bvr_names, bvr.name)
 
             if bvr.name == "highlight":
-                provided_data.item = Item(item_name=bvr.item_name)
+                provided_data.item = get_type_reg().get_item(bvr.item_name)
                 append_uniq(self.item_names, bvr.item_name)
 
         @property

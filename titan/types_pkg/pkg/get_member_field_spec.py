@@ -1,5 +1,5 @@
-from titan.types_pkg.item.resources import Item
-from titan.types_pkg.itemlist.resources import ItemList
+from titan.types_pkg.item import Item
+from titan.types_pkg.itemlist import ItemList
 
 
 def get_member_field_spec(parent_item, member_item):

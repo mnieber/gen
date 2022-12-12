@@ -1,7 +1,7 @@
 from moonleap import Prop, extend
 from titan.react_pkg.component import Component
-from titan.types_pkg.item.resources import Item
-from titan.types_pkg.itemlist.resources import ItemList
+from titan.types_pkg.item import Item
+from titan.types_pkg.itemlist import ItemList
 from titan.types_pkg.pkg.field_spec import FieldSpec
 from titan.widgets_pkg.pkg.widget_spec import WidgetSpec
 

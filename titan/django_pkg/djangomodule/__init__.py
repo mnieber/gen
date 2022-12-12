@@ -18,7 +18,7 @@ from titan.django_pkg.djangoapp import DjangoApp
 from titan.django_pkg.djangomodule.get_map_from_item_to_django_module import (
     get_map_from_item_to_django_module,
 )
-from titan.types_pkg.item.resources import Item
+from titan.types_pkg.item import Item
 from titan.types_pkg.itemlist import ItemList
 from titan.types_pkg.pkg.type_spec import TypeSpec
 from titan.types_pkg.typeregistry import get_type_reg
