@@ -44,7 +44,7 @@ def create_module(term):
 @create("user-accounts:module")
 def create_accounts_module(term):
     module = DjangoModule(name=kebab_to_camel(term.data), kebab_name=term.data)
-    module.template_dir = Path(__file__).parent / "templates_accounts"
+    module.template_dir = Path(__file__).parent / "templates_user_accounts"
     module.template_context = dict(module=module)
     module.has_graphql_schema = True
     return module
