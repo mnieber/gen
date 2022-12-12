@@ -23,9 +23,15 @@ tpls = Tpls("array_builder", preamble_tpl=preamble_tpl, instance_tpl=instance_tp
 
 class ArrayBuilder(Builder):
     def build(self):
-        item_name = get_named_item_list_term(self.widget_spec).data
+        term = get_named_item_list_term(self.widget_spec)
+        if not term:
+            raise Exception("ArrayBuilder requires a named item list term")
+        item_name = term.data
 
         const_name = self.widget_spec.widget_name
+        if not const_name:
+            raise Exception("ArrayBuilder requires a widget name")
+
         child_widget_div = self.output.graft(
             _get_child_widget_output(
                 self.widget_spec,
