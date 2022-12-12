@@ -4,6 +4,8 @@ import moonleap.resource.props as P
 from moonleap import create, extend, rule
 from moonleap.verbs import has
 from titan.api_pkg.apiregistry import get_api_reg
+from titan.api_pkg.apiregistry.get_form_type_specs import get_form_type_specs
+from titan.api_pkg.apiregistry.get_public_type_specs import get_public_type_specs
 from titan.django_pkg.djangoapp import DjangoApp
 from titan.types_pkg.typeregistry import get_type_reg
 
@@ -51,7 +53,8 @@ def add_query_render_tasks(django_app, api_module):
     )
 
     api_module.renders(
-        lambda: get_api_reg().get_public_type_specs(
+        lambda: get_public_type_specs(
+            get_api_reg(),
             include_stubs=False,
             predicate=lambda field_spec: "server" in field_spec.has_api,
         ),
@@ -61,7 +64,7 @@ def add_query_render_tasks(django_app, api_module):
     )
 
     api_module.renders(
-        lambda: get_api_reg().get_form_type_specs(),
+        lambda: get_form_type_specs(get_api_reg()),
         "types",
         lambda form_type_spec: dict(form_type_spec=form_type_spec),
         [Path(__file__).parent / "templates_form_type"],

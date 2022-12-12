@@ -1,43 +1,14 @@
-from moonleap import Prop, Term, create, empty_rule, extend, kebab_to_camel, rule
-from moonleap.resource.forward import create_forward
-from moonleap.verbs import has, provides
-
-from . import props
-from .resources import Query
+from moonleap import create, kebab_to_camel
+from titan.api_pkg.apiregistry.resources import Query  # noqa
 
 base_tags = {
     "query": ["api-endpoint"],
 }
 
-rules = {
-    (":api-registry", has, "query"): empty_rule(),
-    ("query", provides, "item"): empty_rule(),
-    ("query", provides, "item~list"): empty_rule(),
-}
-
 
 @create("query")
 def create_query(term):
-    query = Query(name=kebab_to_camel(term.data))
-    return query
+    from titan.api_pkg.apiregistry import get_api_reg
 
-
-@rule("query", provides, "x+item~list")
-def query_provides_named_item_list(query, named_item_list):
-    item_list_term = Term(named_item_list.meta.term.data, named_item_list.meta.term.tag)
-    return [
-        create_forward(query, provides, item_list_term),
-    ]
-
-
-@rule("query", provides, "x+item")
-def query_provides_named_item(query, named_item):
-    item_term = Term(named_item.meta.term.data, named_item.meta.term.tag)
-    return [
-        create_forward(query, provides, item_term),
-    ]
-
-
-@extend(Query)
-class ExtendQuery:
-    api_spec = Prop(props.api_spec)
+    query_name = kebab_to_camel(term.data)
+    return get_api_reg().get_query(query_name)

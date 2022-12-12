@@ -4,6 +4,7 @@ import moonleap.resource.props as P
 from moonleap import create, create_forward, extend, kebab_to_camel, rule
 from moonleap.verbs import has
 from titan.api_pkg.apiregistry import get_api_reg
+from titan.api_pkg.apiregistry.get_public_type_specs import get_public_type_specs
 from titan.react_pkg.reactapp import ReactApp
 from titan.types_pkg.typeregistry import get_type_reg
 
@@ -54,7 +55,8 @@ def add_api_render_tasks(react_app, api_module):
     )
 
     api_module.renders(
-        lambda: get_api_reg().get_public_type_specs(
+        lambda: get_public_type_specs(
+            get_api_reg(),
             include_stubs=True,
             predicate=lambda field_spec: "client" in field_spec.has_model,
         ),

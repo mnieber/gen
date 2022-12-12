@@ -4,9 +4,9 @@ from dataclasses import dataclass
 from moonleap import Resource, named
 from moonleap.parser.term import match_term_to_pattern
 from moonleap.utils.fp import aperture
-from titan.api_pkg.mutation.resources import Mutation
+from titan.api_pkg.mutation import Mutation
 from titan.api_pkg.pipeline.resources import PropsSource
-from titan.api_pkg.query.resources import Query
+from titan.api_pkg.query import Query
 from titan.types_pkg.item import Item
 from titan.types_pkg.itemlist import ItemList
 from titan.types_pkg.pkg.get_member_field_spec import get_member_field_spec
