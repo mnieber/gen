@@ -1,2 +1,1 @@
-export { Effect, EffectWithoutArgs } from "./Effect";
-
+export { Effect } from './Effect';
