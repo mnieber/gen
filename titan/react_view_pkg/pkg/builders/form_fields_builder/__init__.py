@@ -14,7 +14,7 @@ class FormFieldsBuilder(Builder):
 
     def build(self):
         __ = self.__ = Helper(
-            item_name=get_named_item_term(self.wiget_spec).data,
+            item_name=get_named_item_term(self.widget_spec).data,
             mutation_name=self.widget_spec.get_value_by_name("mutation"),
         )
         field_widget_spec = self.widget_spec.find_child_with_place("Field")
