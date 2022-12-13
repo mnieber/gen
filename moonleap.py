@@ -149,12 +149,13 @@ if __name__ == "__main__":
 
     if args.action == "gen":
         try:
+            create_expected_dir(session.expected_dir, session.settings["references"])
+
             if smart:
                 create_symlinks_for_identical_files(session)
             if args.smart_with_skip:
                 create_symlinks_for_skip_patterns(session)
 
-            create_expected_dir(session.expected_dir, session.settings["references"])
             generate_code(
                 spec_fn, session, _create_file_writer(args), args.post_process_all_files
             )
