@@ -5,7 +5,6 @@ sp_imports_tpl = chop0(
 {% magic_with query.name as myQuery %}
 {% magic_with mutation.name as myMutation %}
 {% magic_with state.name as MyState %}
-import { reaction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import * as R from 'ramda';
 import React from 'react';
@@ -17,6 +16,7 @@ import { useMyQuery } from 'src/api/queries';                                   
 import { useMyMutation } from 'src/api/mutations';                                              {% !! mutation in mutations %}
 import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { flags } from 'src/app/flags';
+import { useUpdateStateReaction } from 'src/frames/hooks/useUpdateStateReaction';
 import { lookUp, getIds } from 'src/utils/ids';
 import { log } from 'src/utils/logging';
 {% end_magic_with %}
