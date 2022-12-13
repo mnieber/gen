@@ -2,21 +2,14 @@ from moonleap import Tpls, chop0
 
 lvi_buttons_tpl = chop0(
     """
-        <div                                                                            {% if bvrs_has_deletion %}
-          className={cn(
-            'TodoListViewItem__Buttons',
-            'flex flex-row justify-end items-center'
-          )}
-        >
-          <button
-            className={smallButton}
-            onClick={() => {
-              props.onDelete();
-            }}
-          >
-            Delete
-          </button>
-        </div>                                                                          {% endif %}
+    <button
+      className={smallButton}
+      onClick={() => {
+        props.onDelete();
+      }}
+    >
+      Delete
+    </button>
     """
 )
 

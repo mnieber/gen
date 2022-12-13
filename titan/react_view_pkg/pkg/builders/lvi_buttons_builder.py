@@ -12,12 +12,14 @@ class LviButtonsBuilder(Builder, BvrsBuilderMixin):
     def build(self):
         context = self._get_context()
 
+        self._add_div_open()
         self.add(
             lines=[tpls.render("lvi_buttons_tpl", context)],
             imports_lines=[tpls.render("lvi_buttons_imports_tpl", context)],
             preamble_lines=[tpls.render("lvi_buttons_preamble_tpl", context)],
             props_lines=[tpls.render("lvi_buttons_props_tpl", context)],
         )
+        self._add_div_close()
 
     def update_widget_spec(self):
         pass

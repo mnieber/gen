@@ -67,6 +67,8 @@ style_patterns = [
     r"m-([0-9]+)",
     r"mx-([0-9]+)",
     r"my-([0-9]+)",
+    r"mt-([0-9]+)",
+    r"mb-([0-9]+)",
     r"rounded",
     r"rounded-(.+)",
 ]

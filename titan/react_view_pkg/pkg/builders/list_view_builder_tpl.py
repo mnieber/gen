@@ -1,6 +1,6 @@
 from moonleap import Tpls, chop0
 
-lvi_imports_tpl = chop0(
+list_view_imports_tpl = chop0(
     """
 {% magic_with item_name as myItem %}
 import { MyItemT } from 'src/api/types/MyItemT';
@@ -12,7 +12,7 @@ import {
 """
 )
 
-lvi_preamble_hooks_tpl = chop0(
+list_view_preamble_hooks_tpl = chop0(
     """
 const dragAndDropUIConnector = useDragAndDropUIConnector(                                     {% if bvrs_has_drag_and_drop %}
     props.myItemsDragAndDrop
@@ -22,7 +22,7 @@ const selectionUIConnector = useSelectionUIConnector(props.myItemsSelection);   
 """
 )
 
-lvi_preamble_tpl = chop0(
+list_view_preamble_tpl = chop0(
     """
 {% magic_with item_name as myItem %}
 const noItems = <h2>There are no myItems</h2>;
@@ -35,7 +35,7 @@ const myItemDivs = {{ items_expr }}.map(({{ item_name }}: {{ item_name|u0 }}T) =
 """
 )
 
-lvi_instance_props_tpl = chop0(
+list_view_lvi_props_tpl = chop0(
     """
 {% magic_with item_name as myItem %}
 myItem={myItem}
@@ -47,7 +47,7 @@ dragAndDropUIProps={dragAndDropUIConnector.handle(myItem.id)}                   
 """
 )
 
-lvi_instance_tpl = chop0(
+list_view_lvi_instance_tpl = chop0(
     """
 {% magic_with item_name as myItem %}
 {myItemDivs.length > 0 && myItemDivs}
@@ -58,9 +58,9 @@ lvi_instance_tpl = chop0(
 
 tpls = Tpls(
     "list_view_builder",
-    lvi_imports_tpl=lvi_imports_tpl,
-    lvi_preamble_hooks_tpl=lvi_preamble_hooks_tpl,
-    lvi_preamble_tpl=lvi_preamble_tpl,
-    lvi_instance_props_tpl=lvi_instance_props_tpl,
-    lvi_instance_tpl=lvi_instance_tpl,
+    list_view_imports_tpl=list_view_imports_tpl,
+    list_view_preamble_hooks_tpl=list_view_preamble_hooks_tpl,
+    list_view_preamble_tpl=list_view_preamble_tpl,
+    list_view_lvi_props_tpl=list_view_lvi_props_tpl,
+    list_view_lvi_instance_tpl=list_view_lvi_instance_tpl,
 )

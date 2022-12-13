@@ -1,8 +1,6 @@
-from moonleap import kebab_to_camel
 from moonleap.utils.fp import append_uniq, extend_uniq
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
-from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_list_term
 
 from .list_view_builder_tpl import tpls
 
@@ -16,9 +14,9 @@ def lvi_spec(lvi_name):
 def lvi_component_spec(lvi_name, named_item_term_str):
     return {
         f"LviComponent with {lvi_name} as ListViewItem, Bar[p-2]": {
-            "__default_props__": [named_item_term_str],  # HACK hard-coded todo
+            "__default_props__": [named_item_term_str],
             "LeftSlot with ItemFields": "display=1",
-            "RightSlot with LviButtons": "pass",
+            "RightSlot with Buttons as LviButtons": "pass",
         },
     }
 
@@ -65,16 +63,16 @@ class ListViewBuilder(Builder, BvrsBuilderMixin):
         context["child_widget_div"] = self.output.graft(
             _get_lvi_instance_output(
                 self.widget_spec,
-                div_attrs=tpls.render("lvi_instance_props_tpl", context),
+                div_attrs=tpls.render("list_view_lvi_props_tpl", context),
                 key=f"{self.bvrs_item_name}.id",
             )
         )
 
         self.add(
-            imports_lines=[tpls.render("lvi_imports_tpl", context)],
-            preamble_hooks_lines=[tpls.render("lvi_preamble_hooks_tpl", context)],
-            preamble_lines=[tpls.render("lvi_preamble_tpl", context)],
-            lines=[tpls.render("lvi_instance_tpl", context)],
+            imports_lines=[tpls.render("list_view_imports_tpl", context)],
+            preamble_hooks_lines=[tpls.render("list_view_preamble_hooks_tpl", context)],
+            preamble_lines=[tpls.render("list_view_preamble_tpl", context)],
+            lines=[tpls.render("list_view_lvi_instance_tpl", context)],
         )
 
     def _get_context(self):
@@ -94,5 +92,6 @@ def _get_lvi_instance_output(widget_spec, div_attrs, key):
     child_widget_spec = widget_spec.find_child_with_place("ListViewItem")
     with child_widget_spec.memo():
         child_widget_spec.div_key = key
-        append_uniq(child_widget_spec.div_attrs, div_attrs)
+        if div_attrs:
+            append_uniq(child_widget_spec.div_attrs, div_attrs)
         return build(child_widget_spec)

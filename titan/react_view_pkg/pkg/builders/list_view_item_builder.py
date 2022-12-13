@@ -26,14 +26,11 @@ class ListViewItemBuilder(Builder, BvrsBuilderMixin):
         if not get_named_item_term(self.widget_spec):
             self.widget_spec.values["item"] = f"+{self.bvrs_item_name}:item"
 
-        append_uniq(
-            self.widget_spec.div_styles,
-            tpls.render("lvi_div_styles_tpl", context),
-        )
-        append_uniq(
-            self.widget_spec.div_attrs,
-            tpls.render("lvi_div_attrs_tpl", context),
-        )
+        if div_styles := tpls.render("lvi_div_styles_tpl", context):
+            append_uniq(self.widget_spec.div_styles, div_styles)
+
+        if div_attrs := tpls.render("lvi_div_attrs_tpl", context):
+            append_uniq(self.widget_spec.div_attrs, div_attrs)
 
     def _get_context(self):
         return {

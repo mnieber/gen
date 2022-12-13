@@ -26,6 +26,7 @@ from titan.react_view_pkg.pkg.builders.spinner_builder import SpinnerBuilder
 from titan.react_view_pkg.pkg.builders.state_provider_builder import (
     StateProviderBuilder,
 )
+from titan.react_view_pkg.pkg.builders.tabs_builder import TabsBuilder
 from titan.react_view_pkg.pkg.builders.text_builder import TextBuilder
 
 
@@ -39,17 +40,20 @@ def get_builders(widget_spec):
     for widget_base_type in widget_spec.widget_base_types:
         builder = None
 
-        if widget_base_type == "Layout":
-            builder = LayoutBuilder(widget_spec)
+        if widget_base_type == "Array":
+            builder = ArrayBuilder(widget_spec)
+
+        elif widget_base_type == "Bar":
+            builder = BarBuilder(widget_spec)
+
+        elif widget_base_type == "Button":
+            builder = ButtonBuilder(widget_spec)
 
         elif widget_base_type == "Card":
             builder = CardBuilder(widget_spec)
 
-        elif widget_base_type == "Text":
-            builder = TextBuilder(widget_spec)
-
-        elif widget_base_type == "Bar":
-            builder = BarBuilder(widget_spec)
+        elif widget_base_type == "Children":
+            builder = ChildrenBuilder(widget_spec)
 
         elif widget_base_type == "Div":
             builder = DivBuilder(widget_spec)
@@ -57,23 +61,8 @@ def get_builders(widget_spec):
         elif widget_base_type == "Empty":
             builder = EmptyBuilder(widget_spec)
 
-        elif widget_base_type == "Children":
-            builder = ChildrenBuilder(widget_spec)
-
-        elif widget_base_type == "Array":
-            builder = ArrayBuilder(widget_spec)
-
-        elif widget_base_type == "Spinner":
-            builder = SpinnerBuilder(widget_spec)
-
-        elif widget_base_type == "Picker":
-            builder = PickerBuilder(widget_spec)
-
-        elif widget_base_type == "Button":
-            builder = ButtonBuilder(widget_spec)
-
-        elif widget_base_type == "ItemFields":
-            builder = ItemFieldsBuilder(widget_spec)
+        elif widget_base_type == "FormField":
+            builder = FormFieldBuilder(widget_spec)
 
         elif widget_base_type == "FormFields":
             builder = FormFieldsBuilder(widget_spec)
@@ -81,11 +70,14 @@ def get_builders(widget_spec):
         elif widget_base_type == "FormStateProvider":
             builder = FormStateProviderBuilder(widget_spec)
 
-        elif widget_base_type == "FormField":
-            builder = FormFieldBuilder(widget_spec)
-
         elif widget_base_type == "ItemField":
             builder = ItemFieldBuilder(widget_spec)
+
+        elif widget_base_type == "ItemFields":
+            builder = ItemFieldsBuilder(widget_spec)
+
+        elif widget_base_type == "Layout":
+            builder = LayoutBuilder(widget_spec)
 
         elif widget_base_type == "ListView":
             builder = ListViewBuilder(widget_spec)
@@ -96,8 +88,20 @@ def get_builders(widget_spec):
         elif widget_base_type == "LviButtons":
             builder = LviButtonsBuilder(widget_spec)
 
+        elif widget_base_type == "Picker":
+            builder = PickerBuilder(widget_spec)
+
+        elif widget_base_type == "Spinner":
+            builder = SpinnerBuilder(widget_spec)
+
         elif widget_base_type == "StateProvider":
             builder = StateProviderBuilder(widget_spec)
+
+        elif widget_base_type == "Tabs":
+            builder = TabsBuilder(widget_spec)
+
+        elif widget_base_type == "Text":
+            builder = TextBuilder(widget_spec)
 
         if builder:
             result.append(builder)
