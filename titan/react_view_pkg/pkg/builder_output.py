@@ -59,7 +59,7 @@ class BuilderOutput:
     def graft(self, rhs):
         div = rhs.div
         rhs.lines = []
-        rhs.preable_lines = []
-        rhs.preable_hooks_lines = []
+        rhs.preamble_lines = []
+        rhs.preamble_hooks_lines = []
         self.add(rhs)
         return div
