@@ -1,16 +1,12 @@
+from moonleap import Tpls
 from titan.react_view_pkg.pkg.builder import Builder
-
-from .button_builder_tpl import tpls
 
 
 class ButtonBuilder(Builder):
-    def build(self):
-        title = self.widget_spec.values["title"]
-        handler = self.widget_spec.values.get("handler", None)
+    def update_widget_spec(self):
+        self.widget_spec.div_attrs += ['onClick={() => console.log("Moonleap Todo")}']
 
-        context = {
-            "title": title,
-            "class_name": self.widget_spec.widget_class_name,
-            "handler": handler or "() => { console.log('Moonleap Todo'); }",
-        }
-        self.add(lines=[tpls.render("button_div_tpl", context)])
+
+tpls = Tpls(
+    "button_builder",
+)

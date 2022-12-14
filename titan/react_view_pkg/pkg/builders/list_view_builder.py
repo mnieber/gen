@@ -1,24 +1,7 @@
+from moonleap import Tpls, chop0
 from moonleap.utils.fp import append_uniq, extend_uniq
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
-
-from .list_view_builder_tpl import tpls
-
-
-def lvi_spec(lvi_name):
-    return {
-        f"ListViewItem with {lvi_name}": "pass",
-    }
-
-
-def lvi_component_spec(lvi_name, named_item_term_str):
-    return {
-        f"LviComponent with {lvi_name} as ListViewItem, Bar[p-2]": {
-            "__default_props__": [named_item_term_str],
-            "LeftSlot with ItemFields": "display=1",
-            "RightSlot with Buttons as LviButtons": "pass",
-        },
-    }
 
 
 class ListViewBuilder(Builder, BvrsBuilderMixin):
@@ -58,6 +41,14 @@ class ListViewBuilder(Builder, BvrsBuilderMixin):
     def _add_default_props(self):
         extend_uniq(self.output.default_props, self.bvrs_default_props())
 
+    def _get_context(self):
+        return {
+            **self.bvrs_context(),
+            "item_name": self.bvrs_item_name,
+            "items_expr": self.item_list_data_path(),
+            "component_name": self.widget_spec.widget_class_name,
+        }
+
     def _add_lines(self):
         context = self._get_context()
         context["child_widget_div"] = self.output.graft(
@@ -75,13 +66,21 @@ class ListViewBuilder(Builder, BvrsBuilderMixin):
             lines=[tpls.render("list_view_lvi_instance_tpl", context)],
         )
 
-    def _get_context(self):
-        return {
-            **self.bvrs_context(),
-            "item_name": self.bvrs_item_name,
-            "items_expr": self.item_list_data_path(),
-            "component_name": self.widget_spec.widget_class_name,
-        }
+
+def lvi_spec(lvi_name):
+    return {
+        f"ListViewItem with {lvi_name}": "pass",
+    }
+
+
+def lvi_component_spec(lvi_name, named_item_term_str):
+    return {
+        f"LviComponent with {lvi_name} as ListViewItem, Bar[p-2]": {
+            "__default_props__": [named_item_term_str],
+            "LeftSlot with ItemFields": "display=1",
+            "RightSlot with Buttons as LviButtons": "pass",
+        },
+    }
 
 
 def _get_lvi_instance_output(widget_spec, div_attrs, key):
@@ -95,3 +94,69 @@ def _get_lvi_instance_output(widget_spec, div_attrs, key):
         if div_attrs:
             append_uniq(child_widget_spec.div_attrs, div_attrs)
         return build(child_widget_spec)
+
+
+list_view_imports_tpl = chop0(
+    """
+{% magic_with item_name as myItem %}
+import { MyItemT } from 'src/api/types/MyItemT';
+import {
+    useSelectionUIConnector,                                                                  {% ?? bvrs_has_selection %}
+    useDragAndDropUIConnector,                                                                {% ?? bvrs_has_drag_and_drop %}
+} from 'skandha-mobx/hooks';
+{% end_magic_with %}
+"""
+)
+
+list_view_preamble_hooks_tpl = chop0(
+    """
+const dragAndDropUIConnector = useDragAndDropUIConnector(                                     {% if bvrs_has_drag_and_drop %}
+    props.myItemsDragAndDrop
+);                                                                                            {% endif %}
+const selectionUIConnector = useSelectionUIConnector(props.myItemsSelection);                 {% ?? bvrs_has_selection %}
+{{ "" }}
+"""
+)
+
+list_view_preamble_tpl = chop0(
+    """
+{% magic_with item_name as myItem %}
+const noItems = <h2>There are no myItems</h2>;
+
+const myItemDivs = {{ items_expr }}.map(({{ item_name }}: {{ item_name|u0 }}T) => {
+  {{ child_widget_div }}
+});
+{{ "" }}
+{% end_magic_with %}
+"""
+)
+
+list_view_lvi_props_tpl = chop0(
+    """
+{% magic_with item_name as myItem %}
+myItem={myItem}
+isHighlighted={myItem && props.myItemsHighlight.id === myItem.id}                             {% ?? bvrs_has_highlight %}
+onDelete={() => props.myItemsDeletion.delete([myItem.id])}                                    {% ?? bvrs_has_deletion %}
+selectionUIProps={selectionUIConnector.handle(myItem.id)}                                     {% ?? bvrs_has_selection %}
+dragAndDropUIProps={dragAndDropUIConnector.handle(myItem.id)}                                 {% ?? bvrs_has_drag_and_drop %}
+{% end_magic_with %}
+"""
+)
+
+list_view_lvi_instance_tpl = chop0(
+    """
+{% magic_with item_name as myItem %}
+{myItemDivs.length > 0 && myItemDivs}
+{myItemDivs.length === 0 && noItems}
+{% end_magic_with %}
+"""
+)
+
+tpls = Tpls(
+    "list_view_builder",
+    list_view_imports_tpl=list_view_imports_tpl,
+    list_view_preamble_hooks_tpl=list_view_preamble_hooks_tpl,
+    list_view_preamble_tpl=list_view_preamble_tpl,
+    list_view_lvi_props_tpl=list_view_lvi_props_tpl,
+    list_view_lvi_instance_tpl=list_view_lvi_instance_tpl,
+)
