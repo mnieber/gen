@@ -14,7 +14,8 @@ sp_reaction_effect_hook_tpl = chop0(
       },
       updateState: (inputs) => {
         R.forEach(initRS, inputs.myListItems ?? []);                                                          {% for container in containers %}{% for named_item_list in __.container_inputs([container], named_items=False) %}
-        state.myContainer.data.myListItems = inputs.myListItems ?? [];                                        {% endfor %}
+        state.myContainer.data.myListItems = inputs.myListItems ?? [];
+        {{ "" }}                                                                                              {% endfor %}
         state.myContainer.data.myItem = inputs.myItem;                                                        {% !! named_item in __.container_inputs([container], named_item_lists=False) %}{% endfor %}
         if (flags.logStateProviders) {
           log('MyState updated', state.getSummary());

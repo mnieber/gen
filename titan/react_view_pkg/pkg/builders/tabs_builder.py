@@ -20,12 +20,19 @@ class TabsBuilder(Builder, BvrsBuilderMixin):
         extend_uniq(self.output.default_props, self.bvrs_default_props())
 
     def _add_lines(self):
-        context = dict(__=self._get_context())
+        has_uniform_height = bool(self.widget_spec.get_value_by_name("uniformHeight"))
+        item_name = self.bvrs_item_name
+        context = dict(__=self._get_context(has_uniform_height))
         context["__"]["tab_instance_div"] = self.output.graft(
             _get_tab_instance_output(
                 self.widget_spec,
                 div_attrs=None,
-                key=f"{self.bvrs_item_name}.id",
+                div_styles=(
+                    [f"{item_name}.id === {item_name}Id ? 'visible' : 'invisible'"]
+                    if has_uniform_height
+                    else []
+                ),
+                key=f"{item_name}.id",
             )
         )
 
@@ -35,7 +42,7 @@ class TabsBuilder(Builder, BvrsBuilderMixin):
             lines=[tpls.render("tab_view_div_tpl", context)],
         )
 
-    def _get_context(self):
+    def _get_context(self, has_uniform_height):
         type_spec = get_type_reg().get(u0(self.bvrs_item_name))
 
         return {
@@ -46,13 +53,11 @@ class TabsBuilder(Builder, BvrsBuilderMixin):
             "display_field_name": (
                 type_spec.display_field.name if type_spec.display_field else None
             ),
-            "uniform_tab_height": bool(
-                self.widget_spec.get_value_by_name("uniformHeight")
-            ),
+            "uniform_tab_height": has_uniform_height,
         }
 
 
-def _get_tab_instance_output(widget_spec, div_attrs, key):
+def _get_tab_instance_output(widget_spec, div_attrs, div_styles, key):
     # This returns the div that is used in the Tabs.
     # Don't confuse this with the div that is used in the TabsItem.
     from titan.react_view_pkg.pkg.build import build
@@ -60,6 +65,8 @@ def _get_tab_instance_output(widget_spec, div_attrs, key):
     child_widget_spec = widget_spec.find_child_with_place("Tab")
     with child_widget_spec.memo():
         child_widget_spec.div_key = key
+
+        child_widget_spec.div_styles += div_styles
         if div_attrs:
             append_uniq(child_widget_spec.div_attrs, div_attrs)
         return build(child_widget_spec)

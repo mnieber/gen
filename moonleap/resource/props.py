@@ -46,7 +46,7 @@ def child(verb, term, required=False):
     return Prop(get_value=get_child)
 
 
-def children(verb, term, rdcr=None):
+def children(verb, term, rdcr=None, sort_attr: T.Optional[str] = None):
     rel = Rel(
         verb=verb,
         obj=term if isinstance(term, Term) else word_to_term(term, default_to_tag=True),
@@ -55,6 +55,8 @@ def children(verb, term, rdcr=None):
 
     def get_children(self):
         children = slctr.select_from(self)
+        if sort_attr:
+            children = sorted(children, key=lambda x: getattr(x, sort_attr))
         return rdcr(children) if rdcr else children
 
     return Prop(get_value=get_children)

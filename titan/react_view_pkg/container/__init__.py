@@ -58,7 +58,7 @@ def state_renders_container(state, container):
 
 @extend(State)
 class ExtendState:
-    containers = P.children(has, "container")
+    containers = P.children(has, "container", sort_attr="name")
 
 
 @extend(Container)

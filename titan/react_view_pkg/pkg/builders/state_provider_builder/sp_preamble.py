@@ -9,22 +9,23 @@ sp_preamble_tpl = chop0(
 {% magic_with named_item.typ.item_name as myNamedItem %}
 {% magic_with container.name as myContainer %}
     const getDefaultPropsContext = () => {
-      const result = { defaultProps: {} };
+      const result: any = { defaultProps: {
+        myState: () => state,                                                                                   {% ?? state %}
+        myNamedItem: () => {{ __.return_value(named_item) }},                                                   {% !! named_item in state_provider.named_items_provided %}
+        myNamedListItems: () => {{ __.return_value(named_item_list) }},                                         {% !! named_item_list in state_provider.named_item_lists_provided %}
+      } };
 
-      result.defaultProps = {
+      result.defaultProps = {                                                                                   {% for container in state.containers %}
         ...result.defaultProps,
-        myNamedItem: () => {{ __.return_value(named_item) }},                                                      {% !! named_item in state_provider.named_items_provided %}
-        myNamedListItems: () => {{ __.return_value(named_item_list) }},                                            {% !! named_item_list in state_provider.named_item_lists_provided %}
-        myState: () => state,                                                                                   {% if state %}
-        containerItems: () => {{ __.return_value(container, "items") }},                                           {% for container in state.containers %}{% ?? container.named_item_list %}
-        containerItem: () => {{ __.return_value(container, "highlighted_item") }},                                 {% ?? container.get_bvr("highlight") %}
+        containerItems: () => {{ __.return_value(container, "items") }},                                        {% ?? container.named_item_list %}
+        containerItem: () => {{ __.return_value(container, "highlighted_item") }},                              {% ?? container.get_bvr("highlight") %}
         containerItemsDeletion: () => state.myContainer.deletion,                                               {% ?? container.get_bvr("deletion") %}
         containerItemsDragAndDrop: () => state.myContainer.dragAndDrop,                                         {% ?? container.get_bvr("dragAndDrop") %}
         containerItemsFiltering: () => state.myContainer.filtering,                                             {% ?? container.get_bvr("filtering") %}
         containerItemsHighlight: () => state.myContainer.highlight,                                             {% ?? container.get_bvr("highlight") %}
-        containerItemsSelection: () => state.myContainer.selection,                                             {% ?? container.get_bvr("selection") %}{% endfor %}{% endif %}
+        containerItemsSelection: () => state.myContainer.selection,                                             {% ?? container.get_bvr("selection") %}
       };
-
+      {{ "" }}                                                                                                  {% endfor %}
       return result;
     };
     {{ "" }}
@@ -37,7 +38,7 @@ sp_preamble_tpl = chop0(
 )
 
 
-def return_value(state_provider, containers, data, hint=None):
+def return_value(state_provider, container, data, hint=None):
     if data in state_provider.named_items_provided:
         data_path = state_provider.get_data_path(data)
         maybe_expr = state_provider.maybe_expression(data)
@@ -48,16 +49,18 @@ def return_value(state_provider, containers, data, hint=None):
         maybe_expr = state_provider.maybe_expression(data)
         return f"maybe({maybe_expr})({data_path}, [])" if maybe_expr else data_path
 
-    if data in containers and hint == "items":
+    if data in container and hint == "items":
         container = data
         named_item_list = data.named_item_list
         items_name = plural(container.item.item_name)
         assert named_item_list
         maybe_expr = state_provider.maybe_expression(named_item_list)
-        data_path = f"state.{container.name}.data.{items_name}Display"
+        data_path = f"state.{container.name}.data.{items_name}" + (
+            "Display" if container.get_bvr("filtering") else ""
+        )
         return f"maybe({maybe_expr}, [])({data_path})" if maybe_expr else data_path
 
-    if data in containers and hint == "highlighted_item":
+    if data in container and hint == "highlighted_item":
         container = data
         named_item_list = data.named_item_list
         assert named_item_list

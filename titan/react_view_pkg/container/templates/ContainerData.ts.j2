@@ -8,10 +8,11 @@ export class MyContainerData {
   static className = () => 'MyContainerData';
 
   @input myItems: Array<MyItemT> = [];
-  @output myItemsDisplay: Array<MyItemT> = [];
+  @output myItemsDisplay: Array<MyItemT> = [];                          {% ?? _.container.get_bvr("filtering") %}
 
   @output get myItemById(): MyItemByIdT {
-    return listToItemById(this.myItemsDisplay);
+    return listToItemById(this.myItems);                                {% ?? not _.container.get_bvr("filtering") %}
+    return listToItemById(this.myItemsDisplay);                         {% ?? _.container.get_bvr("filtering") %}
   }
 }
 {% end_magic_with %}

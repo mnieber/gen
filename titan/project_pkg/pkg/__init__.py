@@ -6,7 +6,7 @@ import jinja2
 
 from moonleap.parser.term import verb_to_word
 from moonleap.utils import dbg
-from moonleap.utils.case import l0, sn, u0
+from moonleap.utils.case import camel_to_kebab, l0, sn, u0
 from moonleap.utils.inflect import plural
 from moonleap.utils.ruamel_yaml import ruamel_yaml
 
@@ -54,4 +54,5 @@ filters = {
     "to_str": lambda x: x if x is None else str(x),
     "u0": u0,
     "verb_to_word": verb_to_word,
+    "camel_to_kebab": camel_to_kebab,
 }
