@@ -38,7 +38,7 @@ def _get_child_widget_output(widget_spec, item_name):
     child_widget_spec = widget_spec.find_child_with_place("Child")
     with child_widget_spec.memo():
         child_widget_spec.values["item"] = item_name
-        child_widget_spec.div_key = f"{item_name}.id"
+        child_widget_spec.div.key = f"{item_name}.id"
         return build(child_widget_spec)
 
 

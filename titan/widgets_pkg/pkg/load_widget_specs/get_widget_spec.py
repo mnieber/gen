@@ -1,5 +1,5 @@
 from moonleap.utils.split_non_empty import split_non_empty
-from titan.widgets_pkg.pkg.widget_spec import WidgetSpec
+from titan.widgets_pkg.pkg.widget_spec import Div, WidgetSpec
 
 from .get_widget_attrs import get_widget_attrs
 
@@ -10,8 +10,9 @@ def get_widget_spec(key, value, module_name):
         _get_type_value(value) if is_dict else "" if value == "pass" else value, "."
     )
     spec = value if is_dict else {}
-    widget_values = get_widget_attrs(key, value_parts)
+    widget_values, div_attrs = get_widget_attrs(key, value_parts)
     widget_spec = WidgetSpec(**widget_values)
+    widget_spec.div = Div(**div_attrs)
     widget_spec.module_name = module_name
     widget_spec.src_dict = spec
     return widget_spec, spec

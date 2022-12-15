@@ -21,13 +21,9 @@ class BarBuilder(Builder):
         if right_slot:
             widgets.append(right_slot)
             styles += ["0fr"] if (left_slot and not middle_slot) else ["1fr"]
-            right_slot.div_styles = [
-                '"flex flex-row justify-end items-center"'
-            ] + right_slot.div_styles
+            right_slot.div.prepend_styles(['"flex flex-row justify-end items-center"'])
 
-        self.widget_spec.div_styles = [
-            f'"grid grid-cols-[{",".join(styles)}]"'
-        ] + self.widget_spec.div_styles
+        self.widget_spec.div.prepend_styles([f'"grid grid-cols-[{",".join(styles)}]"'])
         self._add_div_open()
         self._add_child_widgets(child_widget_specs=widgets)
         self._add_div_close()

@@ -48,13 +48,13 @@ export class MyState {
       pmap(                                                                                             {% if container.get_bvr("filtering") %}
         //
         [this.myContainer.data, 'myItemsDisplay'],
-        () => this.myContainer.data.myItems,
         () => this.myContainer.filtering.filteredItems,
       ),                                                                                                {% endif %}
       pmap(                                                                                             {% if container.get_bvr("selection") %}
         //
         [this.myContainer.selection, 'selectableIds'],
-        () => getIds(this.myContainer.data.myItemsDisplay),
+        () => getIds(this.myContainer.data.myItems),                                                    {% ?? not container.get_bvr("filtering") %}
+        () => getIds(this.myContainer.data.myItemsDisplay),                                             {% ?? container.get_bvr("filtering") %}
       ),
       pmap(
         //

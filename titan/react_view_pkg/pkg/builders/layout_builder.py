@@ -8,7 +8,7 @@ class LayoutBuilder(Builder):
             self.widget_spec.child_widget_specs
         )
 
-        self.widget_spec.div_styles = more_classes + self.widget_spec.div_styles
+        self.widget_spec.div.prepend_styles(more_classes)
         self._add_div_open()
         self._add_child_widgets(
             _filtered_child_widget_specs(places, self.widget_spec.child_widget_specs)

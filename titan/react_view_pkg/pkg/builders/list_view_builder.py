@@ -90,9 +90,9 @@ def _get_lvi_instance_output(widget_spec, div_attrs, key):
 
     child_widget_spec = widget_spec.find_child_with_place("ListViewItem")
     with child_widget_spec.memo():
-        child_widget_spec.div_key = key
+        child_widget_spec.div.key = key
         if div_attrs:
-            append_uniq(child_widget_spec.div_attrs, div_attrs)
+            append_uniq(child_widget_spec.div.attrs, div_attrs)
         return build(child_widget_spec)
 
 
@@ -110,11 +110,13 @@ import {
 
 list_view_preamble_hooks_tpl = chop0(
     """
+{% magic_with item_name as myItem %}
 const dragAndDropUIConnector = useDragAndDropUIConnector(                                     {% if bvrs_has_drag_and_drop %}
     props.myItemsDragAndDrop
 );                                                                                            {% endif %}
 const selectionUIConnector = useSelectionUIConnector(props.myItemsSelection);                 {% ?? bvrs_has_selection %}
 {{ "" }}
+{% end_magic_with %}
 """
 )
 

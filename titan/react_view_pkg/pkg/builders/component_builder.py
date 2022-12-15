@@ -8,10 +8,7 @@ class ComponentBuilder(Builder):
         self.add(imports_lines=[_get_component_import_path(self.widget_spec)])
 
         attrs_str = _get_attrs_str(self.widget_spec)
-        class_name = ""
-        if self.widget_spec.div_styles:
-            styles_str = " ".join(self.widget_spec.div_styles)
-            class_name = f"className={{ cn({styles_str}) }}"
+        class_name = self.widget_spec.div.class_name_attr or ""
         key_attr = _get_key_attr(self.widget_spec)
         has_children = bool(self.widget_spec.child_widget_specs)
         if has_children:
@@ -45,7 +42,7 @@ def _get_component_import_path(widget_spec):
 
 
 def _get_attrs_str(widget_spec):
-    attrs = list(widget_spec.div_attrs)
+    attrs = list(widget_spec.div.attrs)
     for named_prop in widget_spec.component.named_props:
         required_prop_name = named_prop.name or named_prop.typ.ts_var
         data_path = _get_prop_data_path(widget_spec, named_prop)
@@ -55,7 +52,7 @@ def _get_attrs_str(widget_spec):
 
 
 def _get_key_attr(widget_spec):
-    key = widget_spec.div_key
+    key = widget_spec.div.key
     return f"key={{{key}}}" if key else ""
 
 

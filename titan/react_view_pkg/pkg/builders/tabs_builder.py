@@ -62,11 +62,11 @@ def _get_tab_instance_output(widget_spec, div_attrs, div_styles, key):
 
     child_widget_spec = widget_spec.find_child_with_place("Tab")
     with child_widget_spec.memo():
-        child_widget_spec.div_key = key
+        child_widget_spec.div.key = key
 
-        child_widget_spec.div_styles += div_styles
+        extend_uniq(child_widget_spec.div.styles, div_styles)
         if div_attrs:
-            append_uniq(child_widget_spec.div_attrs, div_attrs)
+            append_uniq(child_widget_spec.div.attrs, div_attrs)
         return build(child_widget_spec)
 
 

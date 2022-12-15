@@ -4,14 +4,14 @@ import os
 def add_div_open(builder):
     class_names = (
         [f'"{builder.widget_spec.widget_class_name}"']
-        + builder.widget_spec.div_styles
+        + builder.widget_spec.div.styles
         + (["props.className"] if builder.widget_spec.is_component_def else [])
     )
 
     class_name = ", ".join(class_names)
-    props_attr = os.linesep.join(builder.widget_spec.div_attrs)
+    props_attr = os.linesep.join(builder.widget_spec.div.attrs)
 
-    key = builder.widget_spec.div_key
+    key = builder.widget_spec.div.key
     key_attr = f"key={{{key}}}" if key else ""
     builder.add(lines=[f"<div {key_attr} className={{cn({class_name})}} {props_attr}>"])
 

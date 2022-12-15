@@ -25,8 +25,9 @@ class Builder(BuilderItemsMixin):
         preamble_lines=None,
         preamble_hooks_lines=None,
     ):
+        level = self.widget_spec.level
         if lines:
-            indented_lines = ["  " * self.widget_spec.level + x for x in lines]
+            indented_lines = ["  " * level + x for x in lines]
             self.output.lines.extend(indented_lines)
         if props_lines:
             self.output.props_lines.extend(_trim(props_lines))
@@ -37,12 +38,10 @@ class Builder(BuilderItemsMixin):
         if scss_lines:
             self.output.scss_lines.extend(scss_lines)
         if preamble_lines:
-            indented_lines = ["  " * self.widget_spec.level + x for x in preamble_lines]
+            indented_lines = ["  " * level + x for x in preamble_lines]
             self.output.preamble_lines.extend(indented_lines)
         if preamble_hooks_lines:
-            indented_lines = [
-                "  " * self.widget_spec.level + x for x in preamble_hooks_lines
-            ]
+            indented_lines = ["  " * level + x for x in preamble_hooks_lines]
             self.output.preamble_hooks_lines.extend(indented_lines)
 
     def _add_div_open(self):

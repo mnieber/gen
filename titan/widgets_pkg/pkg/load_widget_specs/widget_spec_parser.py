@@ -7,13 +7,14 @@ class WidgetSpecParser:
         self.module_name = module_name
         self.widget_reg = widget_reg
 
-    def parse(self, spec_dict=None, parent_widget_spec=None, level=0):
+    def parse(self, spec_dict=None, parent_widget_spec=None):
         from titan.react_view_pkg.pkg.get_builders import get_builders
 
-        assert spec_dict is not None or level == 0
+        is_top_level = parent_widget_spec is None
+        assert spec_dict is not None or is_top_level
         spec_dict = self.widget_spec_dict if spec_dict is None else spec_dict
 
-        if level == 0 and self.widget_reg:
+        if is_top_level and self.widget_reg:
             if states := spec_dict.get("__states__"):
                 self.widget_reg.states_by_module_name[self.module_name] = states
 
@@ -46,7 +47,7 @@ class WidgetSpecParser:
                 extension = builder.get_spec_extension(_get_places(spec))
                 spec.update(extension or {})
 
-            self._check_top_level_constraints(level, widget_spec)
+            self._check_top_level_constraints(is_top_level, widget_spec)
 
             if widget_spec.is_component_def and self.widget_reg:
                 if self.widget_reg.get(widget_spec.widget_name, None) is not None:
@@ -59,14 +60,10 @@ class WidgetSpecParser:
             # Use recursion to convert child widget specs
             #
             if spec:
-                self.parse(
-                    spec,
-                    parent_widget_spec=widget_spec,
-                    level=level + 1,
-                )
+                self.parse(spec, parent_widget_spec=widget_spec)
 
-    def _check_top_level_constraints(self, level, widget_spec):
-        if level == 0 and not widget_spec.is_component_def:
+    def _check_top_level_constraints(self, is_top_level, widget_spec):
+        if is_top_level and not widget_spec.is_component_def:
             raise Exception(
                 "The top-level can only have component definitions: "
                 + (widget_spec.widget_name or "")

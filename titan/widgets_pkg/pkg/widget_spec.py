@@ -5,17 +5,16 @@ from dataclasses import dataclass, field
 
 import ramda as R
 
+from titan.widgets_pkg.pkg.div import Div
+
 from .create_widget_class_name import create_widget_class_name
 
 
 @dataclass
 class WidgetSpec:
     widget_base_types: T.List[str] = field(default_factory=list)
-    level: int = 0
     child_widget_specs: T.List["WidgetSpec"] = field(repr=False, default_factory=list)
-    div_styles: T.List[str] = field(repr=False, default_factory=list)
-    div_attrs: T.List[str] = field(repr=False, default_factory=list)
-    div_key: T.Optional[str] = None
+    div: Div = field(default_factory=Div)
     widget_name: T.Optional[str] = None
     module_name: T.Optional[str] = None
     place: T.Optional[str] = None
@@ -62,9 +61,7 @@ class WidgetSpec:
 
     def create_memo(self, fields=None):
         fields = fields or [
-            "div_styles",
-            "div_attrs",
-            "div_key",
+            "div",
             "place",
             "values",
             "_widget_class_name",
@@ -98,6 +95,17 @@ class WidgetSpec:
             ws = ws.parent_ws
 
         return ws
+
+    @property
+    def level(self):
+        ws = self
+        level = 0
+
+        while ws.parent_ws and not ws.is_component_def:
+            ws = ws.parent_ws
+            level += 1
+
+        return level
 
 
 # A Context class that calls create_memo and restore_memo on the widget_spec
