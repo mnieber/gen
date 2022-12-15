@@ -1,62 +1,31 @@
 from moonleap import Tpls, chop0
-from moonleap.parser.term import word_to_term
 from moonleap.utils.fp import append_uniq, extend_uniq
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
-from titan.widgets_pkg.pkg.widget_spec_pipeline import WsPipeline
+from titan.react_view_pkg.pkg.builders.bvrs_helper import BvrsHelper
+
+from .get_spec_extension import get_spec_extension
 
 
-class ListViewBuilder(Builder, BvrsBuilderMixin):
+class ListViewBuilder(Builder):
     def __init__(self, widget_spec):
         Builder.__init__(self, widget_spec)
-        BvrsBuilderMixin.__init__(self)
-
-    def update_widget_spec(self):
-        term_str = f"+{self.bvrs_item_name}:item"
-        term = word_to_term(term_str)
-        self.widget_spec.values["item"] = term_str
-        self.widget_spec.pipelines.append(
-            WsPipeline(term=term, term_data_path=self.bvrs_item_name)
-        )
+        self.bvrs_helper = BvrsHelper(widget_spec, self.ilh.array_item_name)
 
     def get_spec_extension(self, places):
-        named_item_term_str = self.widget_spec.get_value_by_name("items").removesuffix(
-            "~list"
-        )
-        lvi_name = lvi_name = (
-            self.widget_spec.get_value_by_name("lvi-name")
-            or self._get_default_lvi_name()
-        )
-
-        result = {}
-        if "ListViewItem" not in places:
-            result.update(lvi_spec(lvi_name))
-        if "LviComponent" not in places:
-            result.update(lvi_component_spec(lvi_name, named_item_term_str))
-        return result
-
-    def _get_default_lvi_name(self):
-        default_lvi_name = self.widget_spec.root.widget_name
-        if "-:" in default_lvi_name:
-            default_lvi_name = default_lvi_name.replace("-:", "-") + "-item:view"
-        else:
-            pos = default_lvi_name.find(":")
-            default_lvi_name = default_lvi_name[:pos] + "-item:view"
-        return default_lvi_name
+        return get_spec_extension(self.widget_spec, places)
 
     def build(self):
         self._add_default_props()
         self._add_lines()
 
     def _add_default_props(self):
-        extend_uniq(self.output.default_props, self.bvrs_default_props())
+        extend_uniq(self.output.default_props, self.bvrs_helper.bvrs_default_props())
 
     def _get_context(self):
         return {
-            **self.bvrs_context(),
-            "item_name": self.bvrs_item_name,
-            "items_expr": self.item_list_data_path(),
-            "component_name": self.widget_spec.widget_class_name,
+            **self.bvrs_helper.bvrs_context(),
+            "__item_name": self.ilh.array_item_name,
+            "__items_expr": self.ilh.item_list_data_path(),
         }
 
     def _add_lines(self):
@@ -65,7 +34,7 @@ class ListViewBuilder(Builder, BvrsBuilderMixin):
             _get_lvi_instance_output(
                 self.widget_spec,
                 div_attrs=tpls.render("list_view_lvi_props_tpl", context),
-                key=f"{self.bvrs_item_name}.id",
+                key=f"{self.ilh.array_item_name}.id",
             )
         )
 
@@ -76,21 +45,8 @@ class ListViewBuilder(Builder, BvrsBuilderMixin):
             lines=[tpls.render("list_view_lvi_instance_tpl", context)],
         )
 
-
-def lvi_spec(lvi_name):
-    return {
-        f"ListViewItem with {lvi_name}": "pass",
-    }
-
-
-def lvi_component_spec(lvi_name, named_item_term_str):
-    return {
-        f"LviComponent with {lvi_name} as ListViewItem, Bar[p-2]": {
-            "__default_props__": [named_item_term_str],
-            "LeftSlot with ItemFields": "display=1",
-            "RightSlot with Buttons as LviButtons": "pass",
-        },
-    }
+    def update_widget_spec(self):
+        self.ilh.update_widget_spec()
 
 
 def _get_lvi_instance_output(widget_spec, div_attrs, key):
@@ -108,7 +64,7 @@ def _get_lvi_instance_output(widget_spec, div_attrs, key):
 
 list_view_imports_tpl = chop0(
     """
-{% magic_with item_name as myItem %}
+{% magic_with __item_name as myItem %}
 import { MyItemT } from 'src/api/types/MyItemT';
 import {
     useSelectionUIConnector,                                                                  {% ?? bvrs_has_selection %}
@@ -120,7 +76,7 @@ import {
 
 list_view_preamble_hooks_tpl = chop0(
     """
-{% magic_with item_name as myItem %}
+{% magic_with __item_name as myItem %}
 const dragAndDropUIConnector = useDragAndDropUIConnector(                                     {% if bvrs_has_drag_and_drop %}
     props.myItemsDragAndDrop
 );                                                                                            {% endif %}
@@ -132,10 +88,10 @@ const selectionUIConnector = useSelectionUIConnector(props.myItemsSelection);   
 
 list_view_preamble_tpl = chop0(
     """
-{% magic_with item_name as myItem %}
+{% magic_with __item_name as myItem %}
 const noItems = <h2>There are no myItems</h2>;
 
-const myItemDivs = {{ items_expr }}.map(({{ item_name }}) => {
+const myItemDivs = {{ __items_expr }}.map((myItem) => {
   {{ child_widget_div }}
 });
 {{ "" }}
@@ -145,7 +101,7 @@ const myItemDivs = {{ items_expr }}.map(({{ item_name }}) => {
 
 list_view_lvi_props_tpl = chop0(
     """
-{% magic_with item_name as myItem %}
+{% magic_with __item_name as myItem %}
 myItem={myItem}
 isHighlighted={myItem && props.myItemsHighlight.id === myItem.id}                             {% ?? bvrs_has_highlight %}
 onDelete={() => props.myItemsDeletion.delete([myItem.id])}                                    {% ?? bvrs_has_deletion %}
@@ -157,7 +113,7 @@ dragAndDropUIProps={dragAndDropUIConnector.handle(myItem.id)}                   
 
 list_view_lvi_instance_tpl = chop0(
     """
-{% magic_with item_name as myItem %}
+{% magic_with __item_name as myItem %}
 {myItemDivs.length > 0 && myItemDivs}
 {myItemDivs.length === 0 && noItems}
 {% end_magic_with %}

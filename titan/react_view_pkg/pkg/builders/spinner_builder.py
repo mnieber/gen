@@ -27,8 +27,8 @@ tpls = Tpls("spinner_builder", uikit_tpl=uikit_tpl, no_uikit_tpl=no_uikit_tpl)
 class SpinnerBuilder(Builder):
     def build(self):
         tpl = "uikit_tpl" if self.use_uikit else "no_uikit_tpl"
-        item_list_data_path = self.item_list_data_path()
-        item_data_path = self.item_data_path()
+        item_list_data_path = self.ilh.item_list_data_path()
+        item_data_path = self.ih.item_data_path()
 
         context = {
             "test": (

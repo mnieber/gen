@@ -1,25 +1,13 @@
 from moonleap import Tpls, chop0, u0
 from moonleap.utils.fp import append_uniq, extend_uniq
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
 from titan.types_pkg.typeregistry import get_type_reg
 
 
-class TabsBuilder(Builder, BvrsBuilderMixin):
-    def __init__(self, widget_spec):
-        Builder.__init__(self, widget_spec)
-        BvrsBuilderMixin.__init__(self)
-
+class TabsBuilder(Builder):
     def build(self):
-        self._add_default_props()
-        self._add_lines()
-
-    def _add_default_props(self):
-        extend_uniq(self.output.default_props, self.bvrs_default_props())
-
-    def _add_lines(self):
         has_uniform_height = bool(self.widget_spec.get_value_by_name("uniformHeight"))
-        item_name = self.bvrs_item_name
+        item_name = self.ilh.array_item_name
         context = dict(__=self._get_context(has_uniform_height))
         context["__"]["tab_instance_div"] = self.output.graft(
             _get_tab_instance_output(
@@ -41,18 +29,20 @@ class TabsBuilder(Builder, BvrsBuilderMixin):
         )
 
     def _get_context(self, has_uniform_height):
-        type_spec = get_type_reg().get(u0(self.bvrs_item_name))
+        type_spec = get_type_reg().get(u0(self.ilh.array_item_name))
 
         return {
-            **self.bvrs_context(),
-            "item_name": self.bvrs_item_name,
-            "items_expr": self.item_list_data_path(),
+            "item_name": self.ilh.array_item_name,
+            "items_expr": self.ilh.item_list_data_path(),
             "component_name": self.widget_spec.widget_class_name,
             "display_field_name": (
                 type_spec.display_field.name if type_spec.display_field else None
             ),
             "uniform_tab_height": has_uniform_height,
         }
+
+    def update_widget_spec(self):
+        self.ilh.update_widget_spec()
 
 
 def _get_tab_instance_output(widget_spec, div_attrs, div_styles, key):

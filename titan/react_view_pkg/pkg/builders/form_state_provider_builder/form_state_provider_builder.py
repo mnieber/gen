@@ -1,6 +1,5 @@
 from moonleap import Tpls, chop0
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_term
 
 from .helper import Helper
 
@@ -12,6 +11,7 @@ class FormStateProviderBuilder(Builder):
 
     def build(self):
         from titan.react_view_pkg.pkg.build import build
+        from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_term
 
         __ = self.__ = Helper(
             item_name=get_named_item_term(self.widget_spec).data,

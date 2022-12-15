@@ -2,7 +2,6 @@ import os
 
 from moonleap import Tpls, chop0
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_term
 
 from .helper import Helper
 
@@ -13,6 +12,8 @@ class FormFieldsBuilder(Builder):
             return {f"Field with FormField": "pass"}
 
     def build(self):
+        from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_term
+
         __ = self.__ = Helper(
             item_name=get_named_item_term(self.widget_spec).data,
             mutation_name=self.widget_spec.get_value_by_name("mutation"),
@@ -26,7 +27,7 @@ class FormFieldsBuilder(Builder):
             lines.extend(build_output.lines)
             self.output.graft(build_output)
 
-        context = dict(__=__, form_fields_block=os.linesep.join(lines))
+        context = dict(__=__, __form_fields_block=os.linesep.join(lines))
         self.add(
             imports_lines=[tpls.render("form_fields_imports_tpl", context)],
             lines=[tpls.render("form_fields_tpl", context)],
@@ -71,7 +72,7 @@ import {
 form_fields_tpl = chop0(
     """
     <GlobalError />
-    {{ form_fields_block }}
+    {{ __form_fields_block }}
     <SaveButton
       label="Save"
       disabled={false}

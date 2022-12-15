@@ -1,14 +1,8 @@
 from moonleap import Tpls, chop0
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import \
-    BvrsBuilderMixin
 
 
-class LviButtonsBuilder(Builder, BvrsBuilderMixin):
-    def __init__(self, widget_spec):
-        Builder.__init__(self, widget_spec)
-        BvrsBuilderMixin.__init__(self)
-
+class LviButtonsBuilder(Builder):
     def build(self):
         context = self._get_context()
 
@@ -21,16 +15,13 @@ class LviButtonsBuilder(Builder, BvrsBuilderMixin):
         )
         self._add_div_close()
 
-    def update_widget_spec(self):
-        pass
-
     def _get_context(self):
         return {
-            **self.bvrs_context(),
-            "item_name": self.bvrs_item_name,
+            "item_name": self.ih.array_item_name,
             "component_name": self.widget_spec.widget_class_name,
             "uikit": self.use_uikit,
         }
+
 
 lvi_buttons_tpl = chop0(
     """

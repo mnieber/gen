@@ -10,8 +10,8 @@ class WsPipeline:
     term_data_path: str
 
     def data_path(self, obj=None, obj_term=None):
-        if obj:
-            raise NotImplementedError()
+        if obj and match_term_to_pattern(self.term, obj.meta.term):
+            return self.term_data_path
 
         if obj_term and match_term_to_pattern(self.term, obj_term):
             return self.term_data_path

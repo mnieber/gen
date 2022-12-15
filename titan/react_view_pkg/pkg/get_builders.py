@@ -18,7 +18,9 @@ from titan.react_view_pkg.pkg.builders.item_fields_builder import (
     ItemFieldsBuilder,
 )
 from titan.react_view_pkg.pkg.builders.layout_builder import LayoutBuilder
-from titan.react_view_pkg.pkg.builders.list_view_builder import ListViewBuilder
+from titan.react_view_pkg.pkg.builders.list_view_builder.list_view_builder import (
+    ListViewBuilder,
+)
 from titan.react_view_pkg.pkg.builders.list_view_item_builder import ListViewItemBuilder
 from titan.react_view_pkg.pkg.builders.lvi_buttons_builder import LviButtonsBuilder
 from titan.react_view_pkg.pkg.builders.picker_builder.picker_builder import (

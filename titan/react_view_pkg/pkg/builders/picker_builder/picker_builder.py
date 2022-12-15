@@ -1,16 +1,19 @@
 from moonleap import Tpls, chop0
 from moonleap.utils.fp import extend_uniq
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
+from titan.react_view_pkg.pkg.builders.bvrs_helper import BvrsHelper
 
 
-class PickerBuilder(BvrsBuilderMixin, Builder):
+class PickerBuilder(Builder):
     def __init__(self, widget_spec):
         Builder.__init__(self, widget_spec)
-        BvrsBuilderMixin.__init__(self)
-        if self.bvrs_has_selection and not self.bvrs_has_highlight:
+        self.bvrs_helper = BvrsHelper(widget_spec, self.ilh.array_item_name)
+        if (
+            self.bvrs_helper.bvrs_has_selection
+            and not self.bvrs_helper.bvrs_has_highlight
+        ):
             raise Exception("Picker with selection must also have highlight")
-        if not self.bvrs_has_highlight:
+        if not self.bvrs_helper.bvrs_has_highlight:
             raise Exception("Picker requires highlight")
 
     def build(self):
@@ -21,9 +24,9 @@ class PickerBuilder(BvrsBuilderMixin, Builder):
     def _add_lines(self):
         context = {
             "__": {
-                **self.bvrs_context(),
+                **self.bvrs_helper.bvrs_context(),
                 "update_url": self.widget_spec.get_value_by_name("updateUrl"),
-                "item": self.bvrs_item_name,
+                "item_name": self.ilh.array_item_name,
             },
         }
 
@@ -35,11 +38,14 @@ class PickerBuilder(BvrsBuilderMixin, Builder):
         )
 
     def _add_default_props(self):
-        extend_uniq(self.output.default_props, self.bvrs_default_props())
+        extend_uniq(self.output.default_props, self.bvrs_helper.bvrs_default_props())
 
     def _add_packages(self):
         packages = self.output.react_packages_by_module_name.setdefault("utils", [])
         extend_uniq(packages, ["ValuePicker"])
+
+    def update_widget_spec(self):
+        self.ilh.update_widget_spec()
 
 
 picker_handler_tpl = chop0(

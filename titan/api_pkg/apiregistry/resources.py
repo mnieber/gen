@@ -2,9 +2,7 @@ import typing as T
 from dataclasses import dataclass, field
 
 from moonleap import RenderMixin, Resource
-from moonleap.parser.get_global_block import get_global_block
-from moonleap.parser.term import word_to_term
-from moonleap.resource import ResourceMetaData
+from moonleap.parser.get_global_block import get_meta
 from moonleap.utils.case import l0
 from titan.api_pkg.pkg.api_spec import ApiSpec
 from titan.types_pkg.typeregistry import get_type_reg
@@ -56,7 +54,7 @@ class ApiRegistry(Resource):
             api_spec = self.get(query_name)
             if not api_spec.is_mutation:
                 query = Query(name=query_name, api_spec=api_spec)
-                query.meta = _get_meta(f"{query_name}:query")
+                query.meta = get_meta(f"{query_name}:query")
             else:
                 query = None
             self._query_by_query_name[query_name] = query
@@ -67,7 +65,7 @@ class ApiRegistry(Resource):
             api_spec = self.get(mutation_name)
             if api_spec.is_mutation:
                 mutation = Mutation(name=mutation_name, api_spec=api_spec)
-                mutation.meta = _get_meta(f"{mutation_name}:mutation")
+                mutation.meta = get_meta(f"{mutation_name}:mutation")
 
                 for type_name_saved, is_list in api_spec.saves:
                     data = _data(type_name_saved, is_list)
@@ -102,14 +100,6 @@ class ApiRegistry(Resource):
             for api_spec in self.api_specs()
             if api_spec.is_mutation
         ]
-
-
-def _get_meta(word):
-    return ResourceMetaData(
-        term=word_to_term(word),
-        block=get_global_block(),
-        base_tags=[],
-    )
 
 
 def _data(type_name, is_list):

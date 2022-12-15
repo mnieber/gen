@@ -1,14 +1,13 @@
 from moonleap import Tpls, chop0
 from moonleap.utils.fp import append_uniq
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
-from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_term
+from titan.react_view_pkg.pkg.builders.bvrs_helper import BvrsHelper
 
 
-class ListViewItemBuilder(Builder, BvrsBuilderMixin):
+class ListViewItemBuilder(Builder):
     def __init__(self, widget_spec):
         Builder.__init__(self, widget_spec)
-        BvrsBuilderMixin.__init__(self)
+        self.bvrs_helper = BvrsHelper(widget_spec, self.ih.array_item_name)
 
     def build(self):
         context = self._get_context()
@@ -22,9 +21,6 @@ class ListViewItemBuilder(Builder, BvrsBuilderMixin):
     def update_widget_spec(self):
         context = self._get_context()
 
-        if not get_named_item_term(self.widget_spec):
-            self.widget_spec.values["item"] = f"+{self.bvrs_item_name}:item"
-
         if div_styles := tpls.render("lvi_div_styles_tpl", context):
             append_uniq(self.widget_spec.div.styles, div_styles)
 
@@ -33,8 +29,8 @@ class ListViewItemBuilder(Builder, BvrsBuilderMixin):
 
     def _get_context(self):
         return {
-            **self.bvrs_context(),
-            "item_name": self.bvrs_item_name,
+            **self.bvrs_helper.bvrs_context(),
+            "item_name": self.ih.array_item_name,
             "component_name": self.widget_spec.widget_class_name,
             "uikit": True or self.use_uikit,
         }

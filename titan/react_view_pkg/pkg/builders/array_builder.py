@@ -1,27 +1,11 @@
 from moonleap import Tpls
-from moonleap.parser.term import word_to_term
 from moonleap.utils import chop0
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
-from titan.widgets_pkg.pkg.widget_spec_pipeline import WsPipeline
 
 
-class ArrayBuilder(Builder, BvrsBuilderMixin):
-    def __init__(self, widget_spec):
-        Builder.__init__(self, widget_spec)
-        BvrsBuilderMixin.__init__(self)
-
-    def update_widget_spec(self):
-        term_str = f"+{self.bvrs_item_name}:item"
-        term = word_to_term(term_str)
-        self.widget_spec.values["item"] = term_str
-        self.widget_spec.pipelines.append(
-            WsPipeline(term=term, term_data_path=self.bvrs_item_name)
-        )
-
+class ArrayBuilder(Builder):
     def build(self):
-        term = self.named_item_list_term
-        item_name = term.data
+        item_name = self.ilh.array_item_name
         const_name = self._get_const_name()
 
         child_widget_div = self.output.graft(
@@ -29,7 +13,7 @@ class ArrayBuilder(Builder, BvrsBuilderMixin):
         )
         context = {
             "const_name": const_name,
-            "items_expr": self.item_list_data_path(),
+            "items_expr": self.ilh.item_list_data_path(),
             "item_name": item_name,
             "child_widget_div": child_widget_div,
         }
@@ -45,13 +29,15 @@ class ArrayBuilder(Builder, BvrsBuilderMixin):
             raise Exception("ArrayBuilder requires a widget name")
         return const_name
 
+    def update_widget_spec(self):
+        self.ilh.update_widget_spec()
+
 
 def _get_child_widget_output(widget_spec, item_name):
     from titan.react_view_pkg.pkg.build import build
 
     child_widget_spec = widget_spec.find_child_with_place("Child")
     with child_widget_spec.memo():
-        child_widget_spec.values["item"] = item_name
         child_widget_spec.div.key = f"{item_name}.id"
         return build(child_widget_spec)
 

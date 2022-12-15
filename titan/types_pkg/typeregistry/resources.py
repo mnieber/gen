@@ -3,9 +3,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 
 from moonleap import Resource, u0
-from moonleap.parser.get_global_block import get_global_block
-from moonleap.parser.term import word_to_term
-from moonleap.resource import ResourceMetaData
+from moonleap.parser.get_global_block import get_meta
 from moonleap.utils.case import l0
 from titan.types_pkg.pkg.default_field_specs_store import DefaultFieldSpecsStore
 from titan.types_pkg.pkg.type_spec import TypeSpec
@@ -78,9 +76,9 @@ class TypeRegistry(Resource):
         if not type_spec:
             raise Exception(f"Cannot create item. Unknown type-spec {u0(item_name)}")
         item = Item(item_name=item_name, type_spec=type_spec, item_list=None)  # type: ignore
-        item.meta = _get_meta(f"{item_name}:item")
+        item.meta = get_meta(f"{item_name}:item")
         item_list = ItemList(item_name=item_name, type_spec=type_spec, item=item)
-        item_list.meta = _get_meta(f"{item_name}:item~list")
+        item_list.meta = get_meta(f"{item_name}:item~list")
         item.item_list = item_list
         self._item_list_by_item_name[item_name] = item_list
         self._item_by_item_name[item_name] = item
@@ -98,11 +96,3 @@ class TypeRegistry(Resource):
 
     def register_parent_child(self, parent_type_name, child_type_name):
         self.parents_by_type_name[child_type_name].append(parent_type_name)
-
-
-def _get_meta(word):
-    return ResourceMetaData(
-        term=word_to_term(word),
-        block=get_global_block(),
-        base_tags=[],
-    )
