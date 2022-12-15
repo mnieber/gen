@@ -1,13 +1,23 @@
 from moonleap import Tpls, chop0
+from moonleap.parser.term import word_to_term
 from moonleap.utils.fp import append_uniq, extend_uniq
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
+from titan.widgets_pkg.pkg.widget_spec_pipeline import WsPipeline
 
 
 class ListViewBuilder(Builder, BvrsBuilderMixin):
     def __init__(self, widget_spec):
         Builder.__init__(self, widget_spec)
         BvrsBuilderMixin.__init__(self)
+
+    def update_widget_spec(self):
+        term_str = f"+{self.bvrs_item_name}:item"
+        term = word_to_term(term_str)
+        self.widget_spec.values["item"] = term_str
+        self.widget_spec.pipelines.append(
+            WsPipeline(term=term, term_data_path=self.bvrs_item_name)
+        )
 
     def get_spec_extension(self, places):
         named_item_term_str = self.widget_spec.get_value_by_name("items").removesuffix(
@@ -125,7 +135,7 @@ list_view_preamble_tpl = chop0(
 {% magic_with item_name as myItem %}
 const noItems = <h2>There are no myItems</h2>;
 
-const myItemDivs = {{ items_expr }}.map(({{ item_name }}: {{ item_name|u0 }}T) => {
+const myItemDivs = {{ items_expr }}.map(({{ item_name }}) => {
   {{ child_widget_div }}
 });
 {{ "" }}

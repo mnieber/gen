@@ -1,4 +1,3 @@
-import copy
 import typing as T
 import uuid
 from dataclasses import dataclass, field
@@ -6,6 +5,7 @@ from dataclasses import dataclass, field
 import ramda as R
 
 from titan.widgets_pkg.pkg.div import Div
+from titan.widgets_pkg.pkg.widget_spec_memo import WidgetSpecMemoContext
 
 from .create_widget_class_name import create_widget_class_name
 
@@ -13,6 +13,7 @@ from .create_widget_class_name import create_widget_class_name
 @dataclass
 class WidgetSpec:
     widget_base_types: T.List[str] = field(default_factory=list)
+    pipelines: T.List = field(default_factory=list)
     child_widget_specs: T.List["WidgetSpec"] = field(repr=False, default_factory=list)
     div: Div = field(default_factory=Div)
     widget_name: T.Optional[str] = None
@@ -20,7 +21,7 @@ class WidgetSpec:
     place: T.Optional[str] = None
     values: T.Dict[str, str] = field(default_factory=dict)
     id: str = field(default_factory=lambda: uuid.uuid4().hex)
-    parent_ws: T.Optional["WidgetSpec"] = None
+    parent_ws: T.Optional["WidgetSpec"] = field(repr=False, default=None)
     # This is the dict from which the widget_spec was created
     src_dict: T.Dict[str, str] = field(default_factory=dict)
 
@@ -32,12 +33,12 @@ class WidgetSpec:
         return self.widget_name and ":" in self.widget_name
 
     @property
-    def props(self):
-        return self.src_dict.get("__props__", [])
-
-    @property
-    def default_props(self):
-        return self.src_dict.get("__default_props__", [])
+    def is_component_def(self):
+        return bool(
+            self.is_component
+            and self.widget_base_types
+            and self.widget_name not in self.widget_base_types
+        )
 
     @property
     def widget_class_name(self):
@@ -48,32 +49,8 @@ class WidgetSpec:
     def set_widget_class_name(self, value):
         self._widget_class_name = value
 
-    @property
-    def is_component_def(self):
-        return bool(
-            self.is_component
-            and self.widget_base_types
-            and self.widget_name not in self.widget_base_types
-        )
-
     def find_child_with_place(self, place):
         return R.head(x for x in self.child_widget_specs if x.place == place)
-
-    def create_memo(self, fields=None):
-        fields = fields or [
-            "div",
-            "place",
-            "values",
-            "_widget_class_name",
-        ]
-        memo = {}
-        for field in fields:
-            memo[field] = getattr(self, field)
-        return copy.deepcopy(memo)
-
-    def restore_memo(self, memo):
-        for field, value in memo.items():
-            setattr(self, field, value)
 
     def memo(self, fields=None):
         return WidgetSpecMemoContext(self, fields)
@@ -89,35 +66,21 @@ class WidgetSpec:
 
     @property
     def root(self):
-        ws = self
-
-        while ws.parent_ws and not ws.is_component_def:
-            ws = ws.parent_ws
-
-        return ws
+        root, level = _root(self)
+        return root
 
     @property
     def level(self):
-        ws = self
-        level = 0
-
-        while ws.parent_ws and not ws.is_component_def:
-            ws = ws.parent_ws
-            level += 1
-
+        root, level = _root(self)
         return level
 
 
-# A Context class that calls create_memo and restore_memo on the widget_spec
-# when entering and exiting a context.
-class WidgetSpecMemoContext:
-    def __init__(self, widget_spec, fields=None):
-        self.widget_spec = widget_spec
-        self.fields = fields
+def _root(widget_spec):
+    ws = widget_spec
+    level = 0
 
-    def __enter__(self):
-        self.memo = self.widget_spec.create_memo(self.fields)
-        return self.widget_spec
+    while ws.parent_ws and not ws.is_component_def:
+        ws = ws.parent_ws
+        level += 1
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.widget_spec.restore_memo(self.memo)
+    return ws, level

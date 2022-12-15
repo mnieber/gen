@@ -1,13 +1,23 @@
 from moonleap import Tpls, chop0
-from moonleap.utils.fp import append_uniq, extend_uniq
+from moonleap.parser.term import word_to_term
+from moonleap.utils.fp import extend_uniq
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
+from titan.widgets_pkg.pkg.widget_spec_pipeline import WsPipeline
 
 
 class StepperBuilder(Builder, BvrsBuilderMixin):
     def __init__(self, widget_spec):
         Builder.__init__(self, widget_spec)
         BvrsBuilderMixin.__init__(self)
+
+    def update_widget_spec(self):
+        term_str = f"+{self.bvrs_item_name}:item"
+        term = word_to_term(term_str)
+        self.widget_spec.values["item"] = term_str
+        self.widget_spec.pipelines.append(
+            WsPipeline(term=term, term_data_path=self.bvrs_item_name)
+        )
 
     def build(self):
         self._add_default_props()

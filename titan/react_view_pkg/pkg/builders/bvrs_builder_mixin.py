@@ -5,9 +5,11 @@ from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_list_ter
 
 class BvrsBuilderMixin:
     def __init__(self):
-        self.bvrs_item_name = kebab_to_camel(
-            get_named_item_list_term(self.widget_spec).data
-        )
+        self.named_item_list_term = get_named_item_list_term(self.widget_spec)
+        if not self.named_item_list_term:
+            raise Exception("BvrsBuilderMixin requires a named item list term")
+
+        self.bvrs_item_name = kebab_to_camel(self.named_item_list_term.data)
         self.bvrs_items_name = plural(self.bvrs_item_name)
 
         self.bvrs = self.widget_spec.get_value_by_name("bvrs", default="").split(",")

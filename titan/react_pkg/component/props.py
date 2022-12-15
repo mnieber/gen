@@ -2,7 +2,7 @@ from moonleap.parser.term import match_term_to_pattern
 
 
 def component_get_data_path(component, named_output=None, term=None):
-    pipeline, data_path = _get_pipeline(component, named_output, term)
+    pipeline, data_path = _get_component_pipeline(component, named_output, term)
     if not data_path:
         for named_res_set in (component.named_props, component.named_default_props):
             for named_prop in named_res_set:
@@ -12,21 +12,29 @@ def component_get_data_path(component, named_output=None, term=None):
     return data_path
 
 
-def _get_pipeline(component, named_output=None, term=None):
+def _get_component_pipeline(component, named_output=None, term=None):
+    try:
+        return get_pipeline_and_data_path(component.pipelines, named_output, term)
+    except Exception as e:
+        print(f"\nIn component {component}")
+        raise
+
+
+def get_pipeline_and_data_path(pipelines, named_output=None, term=None):
     results = []
-    for pipeline in component.pipelines:
+    for pipeline in pipelines:
         if data_path := pipeline.data_path(named_output, term):
             results.append((pipeline, data_path))
 
     if len(results) > 1:
         raise Exception(
-            f"More than one data path found for {named_output} in {component}: {results}"
+            "More than one data path found for " + f"{named_output}: {results}"
         )
     return results[0] if results else (None, None)
 
 
 def component_maybe_expression(component, named_item_or_item_list):
-    pipeline, data_path = _get_pipeline(component, named_item_or_item_list)
+    pipeline, data_path = _get_component_pipeline(component, named_item_or_item_list)
     if not pipeline:
         return "'Moonleap Todo'"
     return pipeline.maybe_expression(named_item_or_item_list)

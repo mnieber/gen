@@ -1,20 +1,28 @@
-from moonleap import Tpls, u0
+from moonleap import Tpls
+from moonleap.parser.term import word_to_term
 from moonleap.utils import chop0
-from moonleap.utils.inflect import singular
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_list_term
+from titan.react_view_pkg.pkg.builders.bvrs_builder_mixin import BvrsBuilderMixin
+from titan.widgets_pkg.pkg.widget_spec_pipeline import WsPipeline
 
 
-class ArrayBuilder(Builder):
+class ArrayBuilder(Builder, BvrsBuilderMixin):
+    def __init__(self, widget_spec):
+        Builder.__init__(self, widget_spec)
+        BvrsBuilderMixin.__init__(self)
+
+    def update_widget_spec(self):
+        term_str = f"+{self.bvrs_item_name}:item"
+        term = word_to_term(term_str)
+        self.widget_spec.values["item"] = term_str
+        self.widget_spec.pipelines.append(
+            WsPipeline(term=term, term_data_path=self.bvrs_item_name)
+        )
+
     def build(self):
-        term = get_named_item_list_term(self.widget_spec)
-        if not term:
-            raise Exception("ArrayBuilder requires a named item list term")
+        term = self.named_item_list_term
         item_name = term.data
-
-        const_name = self.widget_spec.widget_name
-        if not const_name:
-            raise Exception("ArrayBuilder requires a widget name")
+        const_name = self._get_const_name()
 
         child_widget_div = self.output.graft(
             _get_child_widget_output(self.widget_spec, item_name)
@@ -30,6 +38,12 @@ class ArrayBuilder(Builder):
             preamble_lines=[tpls.render("preamble_tpl", context)],
             lines=[tpls.render("instance_tpl", context)],
         )
+
+    def _get_const_name(self):
+        const_name = self.widget_spec.widget_name
+        if not const_name:
+            raise Exception("ArrayBuilder requires a widget name")
+        return const_name
 
 
 def _get_child_widget_output(widget_spec, item_name):

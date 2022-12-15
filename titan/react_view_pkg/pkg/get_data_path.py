@@ -1,21 +1,18 @@
-from moonleap import kebab_to_camel
-from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_list_term
+from titan.react_pkg.component.props import get_pipeline_and_data_path
 
 
 def get_data_path(widget_spec, term):
     ws = widget_spec
     while ws:
+        # Search first in the component
         if component := ws.component:
             data_path = component.get_data_path(term=term)
             if data_path:
                 return data_path
 
-        # HACK: use widget_base_type to determine data path
-        for widget_base_type in ws.widget_base_types:
-            if widget_base_type in ("Array", "ListView", "Tabs", "Stepper"):
-                item_name_kebab = get_named_item_list_term(ws).data
-                if term and term.data == item_name_kebab and term.tag == "item":
-                    return kebab_to_camel(item_name_kebab)
-
+        # Search in the pipelines for this widget_spec
+        pipeline, data_path = get_pipeline_and_data_path(ws.pipelines, term=term)
+        if data_path:
+            return data_path
         ws = ws.parent_ws
     return None

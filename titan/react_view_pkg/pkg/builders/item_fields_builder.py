@@ -5,11 +5,6 @@ from titan.types_pkg.typeregistry import get_type_reg
 
 
 class ItemFieldsBuilder(Builder):
-    def __post_init__(self):
-        self.item_name = get_named_item_term(self.widget_spec).data
-        self.type_spec = get_type_reg().get(u0(self.item_name))
-        self.display_only = self.widget_spec.get_value_by_name("display")
-
     def get_spec_extension(self, places):
         if "Field" not in places:
             layout = "Card" if self.widget_spec.get_value_by_name("card") else "Div"
@@ -30,6 +25,10 @@ class ItemFieldsBuilder(Builder):
         ]
 
     def build(self):
+        self.item_name = get_named_item_term(self.widget_spec).data
+        self.type_spec = get_type_reg().get(u0(self.item_name))
+        self.display_only = self.widget_spec.get_value_by_name("display")
+
         field_widget_spec = self.widget_spec.find_child_with_place("Field")
         for field_spec in self.get_field_specs():
             field_widget_spec.values["field_spec"] = field_spec

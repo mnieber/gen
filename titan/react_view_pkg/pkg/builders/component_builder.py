@@ -57,7 +57,10 @@ def _get_key_attr(widget_spec):
 
 
 def _get_prop_data_path(widget_spec, named_prop):
-    # The required prop must be supplied by some parent component
+    # The required prop must be supplied by some parent component.
+    # Note that we really need "widget_spec.parent_ws" here and not
+    # "widget_spec", because the widget_spec can resolve the data path from
+    # the widget props, but the component builder should not do that.
     data_path = get_data_path(widget_spec.parent_ws, term=named_prop.meta.term)
     if not data_path:
         raise Exception(
