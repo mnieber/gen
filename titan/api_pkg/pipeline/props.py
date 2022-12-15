@@ -55,29 +55,14 @@ class TakeHighlightedElmFromStateProvider(PipelineElement):
     pass
 
 
-def elements(self):
+def _get_elements(self):
     from titan.react_view_pkg.stateprovider.resources import StateProvider
 
     if hasattr(self, "_elements"):
         return self._elements
 
-    resources = list(self.resources)
-
-    if self.root_query:
-        resources.insert(0, self.root_query)
-    elif self.root_state_provider:
-        resources.insert(0, self.root_state_provider)
-    elif self.root_props:
-        resources.insert(0, self.root_props)
-    else:
-        raise Exception(
-            f"No query or state in pipeline of component {self.component}."
-            + " Did you forget to add :props?"
-        )
-
-    _source_pipeline = None
-
     result = []
+    resources = [self.source] + list(self.resources)
     for res, next_res in aperture(2, resources):
         if isinstance(res, (Query, Mutation)):
             query = res
@@ -191,7 +176,6 @@ def elements(self):
             raise Exception(f"Unexpected resource {res}")
 
     setattr(self, "_elements", result)
-    setattr(self, "_source_pipeline", _source_pipeline)
     return result
 
 
@@ -202,29 +186,13 @@ def _match_named_item(named_item, provided_named_item):
     )
 
 
-def output(self):
-    named_res = self.resources[-1]
-    assert isinstance(named_res, (named(Item), named(ItemList)))
-    return named_res
-
-
-def output_name(self):
-    return self.output.name or self.output.typ.ts_var
-
-
-def deleter_mutation(self):
-    for bvr in self.bvrs:
-        if bvr.name == "delete":
-            return bvr
-    return None
-
-
 def pipeline_data_path(self, obj=None, obj_term=None):
     result = ""
-    nr_elms = len(self.elements)
+    elements = _get_elements(self)
+    nr_elms = len(elements)
 
     for elm_idx in range(nr_elms):
-        elm = self.elements[elm_idx]
+        elm = elements[elm_idx]
         postfix = "?" if elm_idx < nr_elms - 1 else ""
 
         if isinstance(
@@ -257,40 +225,35 @@ def pipeline_data_path(self, obj=None, obj_term=None):
     return None if (obj or obj_term) else result
 
 
-def status_expression(self):
-    elm = self.elements[0]
-    if isinstance(
-        elm,
-        (
-            TakeItemListFromStateProvider,
-            TakeItemFromStateProvider,
-            TakeHighlightedElmFromStateProvider,
-        ),
-    ):
-        return f"props.{elm.obj.typ.ts_var}RS"
-    elif isinstance(elm, (TakeItemFromQuery, TakeItemListFromQuery)):
-        query = elm.subj
-        return f"{query.name}.status"
-
-    assert False
-
-
-def root_pipeline(self):
-    if not self.root_state_provider:
-        return self
-
-    for p in self.root_state_provider.pipelines:
-        if p.output == self.resources[-1].typ:
-            return p
-
-    raise Exception("No root pipeline")
-
-
 def pipeline_source(pipeline):
-    if pipeline.root_query:
-        return pipeline.root_query
-    if pipeline.root_props:
-        return pipeline.root_props
-    elif pipeline.root_state_provider:
-        return pipeline.root_state_provider
-    raise Exception("Unknown pipeline source")
+    if pipeline._root_query:
+        return pipeline._root_query
+    if pipeline._root_props:
+        return pipeline._root_props
+    elif pipeline._root_state_provider:
+        return pipeline._root_state_provider
+    raise Exception(
+        f"No query or state in pipeline of component {pipeline.component}."
+        + " Did you forget to add :props?"
+    )
+
+
+def pipeline_maybe_expression(pipeline, named_item_or_item_list):
+    pipeline_source = pipeline.source
+    elements = _get_elements(pipeline)
+    if pipeline_source.meta.term.tag in ("query", "mutation"):
+        return pipeline_source.name
+    elif pipeline_source.meta.term.tag in ("props",):
+        named_item = elements[0].obj
+        if (
+            named_item.name == named_item_or_item_list.name
+            and named_item.typ == named_item_or_item_list.typ
+        ):
+            return None
+        return f"props.{named_item.typ.item_name}"
+    elif pipeline_source.meta.term.tag in ("state~provider",):
+        item_or_item_list = elements[0].obj
+        if item_or_item_list.meta.term.tag in ("item", "item-list"):
+            return f"state.{item_or_item_list.typ.ts_var}"
+    else:
+        raise Exception(f"Unknown pipeline source: {pipeline_source}")
