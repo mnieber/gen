@@ -30,11 +30,7 @@ from titan.react_view_pkg.pkg.builders.spinner_builder import SpinnerBuilder
 from titan.react_view_pkg.pkg.builders.state_provider_builder.state_provider_builder import (
     StateProviderBuilder,
 )
-from titan.react_view_pkg.pkg.builders.stepper_builder import (
-    StepperBackButtonBuilder,
-    StepperBuilder,
-    StepperForwardButtonBuilder,
-)
+from titan.react_view_pkg.pkg.builders.stepper_builder import StepperBuilder
 from titan.react_view_pkg.pkg.builders.tabs_builder import TabsBuilder
 from titan.react_view_pkg.pkg.builders.text_builder import TextBuilder
 
@@ -108,12 +104,6 @@ def get_builders(widget_spec):
 
         elif widget_base_type == "Stepper":
             builder = StepperBuilder(widget_spec)
-
-        elif widget_base_type == "StepperBackButton":
-            builder = StepperBackButtonBuilder(widget_spec)
-
-        elif widget_base_type == "StepperForwardButton":
-            builder = StepperForwardButtonBuilder(widget_spec)
 
         elif widget_base_type == "Tabs":
             builder = TabsBuilder(widget_spec)

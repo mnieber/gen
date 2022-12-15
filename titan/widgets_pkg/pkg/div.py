@@ -13,6 +13,11 @@ class Div:
             if style not in self.styles:
                 self.styles.insert(0, style)
 
+    def append_styles(self, styles):
+        for style in reversed(styles):
+            if style not in self.styles:
+                self.styles.append(style)
+
     @property
     def class_name_attr(self):
         if self.styles:

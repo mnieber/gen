@@ -72,6 +72,9 @@ style_patterns = [
     r"mb-([0-9]+)",
     r"rounded",
     r"rounded-(.+)",
+    r"flex",
+    r"flex-col",
+    r"flex-row",
 ]
 
 
