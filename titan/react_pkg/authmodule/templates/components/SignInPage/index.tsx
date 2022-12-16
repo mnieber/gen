@@ -10,7 +10,7 @@ import { States } from 'src/auth/api/states';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { SignInForm } from 'src/auth/components/SignInForm';
 import { useAuthStateContext } from 'src/auth/hooks';
-import { useRoutes } from 'src/routes/hooks/useRoutes';
+import { getHomeRoute } from 'src/routes';
 import { ObjT } from 'src/utils/types';
 import { getNextUrl, useNextUrl } from 'src/utils/useNextUrl';
 import { useMessages } from './useMessages';
@@ -18,7 +18,6 @@ import { useMessages } from './useMessages';
 export const SignInPage: React.FC = observer(() => {
   const { messages } = useMessages();
 
-  const routes = useRoutes();
   const params = useParams() as ObjT;
   const authState = useAuthStateContext(true);
   const requestMagicLink = useRequestMagicLink(authState).mutateAsync;
@@ -29,7 +28,7 @@ export const SignInPage: React.FC = observer(() => {
   useNextUrl(
     authState.state === States.SIGN_IN_SUCCEEDED ||
       authState.state === States.SIGN_IN_BY_MAGIC_LINK_SUCCEEDED
-      ? getNextUrl(routes.home())
+      ? getNextUrl(getHomeRoute())
       : undefined
   );
 

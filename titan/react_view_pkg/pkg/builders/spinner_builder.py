@@ -37,7 +37,7 @@ class SpinnerBuilder(Builder):
                 else f"!{item_data_path}"
             ),
             "data_path": item_list_data_path or item_data_path,
-            "guard": self.widget_spec.get_value_by_name("guard"),
+            "guard": self.widget_spec.values.get("guard"),
         }
 
         self.add(preamble=[tpls.render(tpl, context)])

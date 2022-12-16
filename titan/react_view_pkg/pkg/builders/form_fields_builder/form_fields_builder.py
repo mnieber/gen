@@ -43,11 +43,11 @@ class FormFieldsBuilder(Builder):
 
 class FormFieldBuilder(Builder):
     def build(self):
-        field_spec = self.widget_spec.get_value_by_name("field_spec")
+        field_spec = self.widget_spec.values.get("field_spec")
         context = dict(
             field_spec=field_spec,
-            name=self.widget_spec.get_value_by_name("form_field_name"),
-            __=self.widget_spec.get_value_by_name("helper"),
+            name=self.widget_spec.values.get("form_field_name"),
+            __=self.widget_spec.values.get("helper"),
         )
         self.add(lines=[tpls.render("form_field_tpl", context)])
 

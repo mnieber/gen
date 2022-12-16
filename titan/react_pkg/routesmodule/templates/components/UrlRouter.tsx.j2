@@ -2,7 +2,6 @@
 import { Router, Switch } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { createBrowserHistory } from 'history';
-import { Route } from 'src/routes/components';
 import { ModuleNameSwitch } from 'src/moduleName/components';                {% !! module in __.modules_with_routes %}
 
 type PropsT = {};
@@ -16,4 +15,5 @@ export const UrlRouter = observer((props: PropsT) => {
     </Router>
   );
 });
+
 {% end_magic_with %}

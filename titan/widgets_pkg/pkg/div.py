@@ -27,5 +27,7 @@ class Div:
             suffix += ["props.className"]
             infix.remove("props.className")
 
-        styles_str = ", ".join(prefix + infix + suffix)
-        return f"className={{ cn({styles_str}) }}"
+        if styles := prefix + infix + suffix:
+            styles_str = ", ".join(styles)
+            return f"className={{ cn({styles_str}) }}"
+        return ""

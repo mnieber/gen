@@ -6,7 +6,7 @@ from titan.types_pkg.typeregistry import get_type_reg
 
 class TabsBuilder(Builder):
     def build(self):
-        has_uniform_height = bool(self.widget_spec.get_value_by_name("uniformHeight"))
+        has_uniform_height = bool(self.widget_spec.values.get("uniformHeight"))
         item_name = self.ilh.array_item_name
         context = dict(__=self._get_context(has_uniform_height))
         context["__"]["tab_instance_div"] = self.output.graft(

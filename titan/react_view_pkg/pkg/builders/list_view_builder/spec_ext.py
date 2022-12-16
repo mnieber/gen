@@ -1,8 +1,6 @@
 def spec_ext(widget_spec, places):
     named_item_term_str = widget_spec.get_value_by_name("item")
-    lvi_name = widget_spec.get_value_by_name("lvi-name") or _get_default_lvi_name(
-        widget_spec
-    )
+    lvi_name = widget_spec.values.get("lvi-name") or _get_default_lvi_name(widget_spec)
 
     result = {}
     if "ListViewItem" not in places:

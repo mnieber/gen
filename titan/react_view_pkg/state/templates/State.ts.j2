@@ -59,7 +59,7 @@ export class MyState {
       pmap(
         //
         [this.myContainer.selection, 'items'],
-        () => this.myContainer.selection.ids.map(getMyItemById),
+        () => this.myContainer.selection.ids.map(getMyItemById as any),
       ),                                                                                                {% endif %}
       pmap(                                                                                             {% if container.get_bvr("highlight") %}
         //

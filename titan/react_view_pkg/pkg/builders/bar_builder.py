@@ -26,6 +26,9 @@ class BarBuilder(Builder):
             self.rhs_slot = rhs_slot
             self._widgets.append(rhs_slot)
 
+        if not self._widgets:
+            raise Exception("Bar must have at least one used slot")
+
     def patch_widget_spec(self):
         self._get_widgets()
         styles = []
@@ -45,7 +48,7 @@ class BarBuilder(Builder):
         self.patch_widget_spec()
         self._get_widgets()
 
-        self.add(imports=["import { skewerRow } from 'src/frames/components';"])
+        self.add(imports=["import { rowSkewer } from 'src/frames/components';"])
         self._add_div_open()
         self._add_child_widgets(self._widgets)
         self._add_div_close()

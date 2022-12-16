@@ -4,7 +4,7 @@ from titan.react_view_pkg.pkg.builder import Builder
 
 class StepperBuilder(Builder):
     def build(self):
-        use_uniform_height = self.widget_spec.get_value_by_name("uniformHeight")
+        use_uniform_height = self.widget_spec.values.get("uniformHeight")
         item_name = self.ilh.array_item_name
         const_name = self._get_const_name()
 

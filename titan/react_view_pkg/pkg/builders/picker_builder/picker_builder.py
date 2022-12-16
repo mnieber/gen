@@ -25,7 +25,7 @@ class PickerBuilder(Builder):
         context = {
             "__": {
                 **self.bvrs_helper.bvrs_context(),
-                "update_url": self.widget_spec.get_value_by_name("updateUrl"),
+                "update_url": self.widget_spec.values.get("updateUrl"),
                 "item_name": self.ilh.array_item_name,
             },
         }
