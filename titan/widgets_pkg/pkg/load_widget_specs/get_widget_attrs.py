@@ -8,23 +8,27 @@ from titan.types_pkg.pkg.load_type_specs.split_raw_key import split_symbols
 
 def get_widget_attrs(key, value_parts):
     div_attrs = dict(styles=[])
-    attrs = dict(values={}, widget_base_types=[])
-    symbol_parts = []
+    attrs = dict(values={}, place_values={}, widget_base_types=[])
 
     parts_with = key.split(" with ")
     if len(parts_with) == 2:
+        place = parts_with[0]
+        place, place_symbols = split_symbols(place)
         attrs["place"] = parts_with[0]
+        attrs["place_values"] = split_non_empty(place_symbols, ".")
+
         key = parts_with[1]
 
     if key == "children":
         widget_base_types_str = "Children"
         widget_name = "Children"
+        symbol_parts = []
     else:
         parts_as = key.split(" as ")
 
         widget_base_types_str = parts_as[-1]
         widget_base_types_str, symbols = split_symbols(widget_base_types_str)
-        symbol_parts.extend(split_non_empty(symbols, "."))
+        symbol_parts = split_non_empty(symbols, ".")
 
         widget_name = parts_as[0] if len(parts_as) == 2 else None
         if widget_name:

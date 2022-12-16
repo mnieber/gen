@@ -19,6 +19,7 @@ class WidgetSpec:
     widget_name: T.Optional[str] = None
     module_name: T.Optional[str] = None
     place: T.Optional[str] = None
+    place_values: T.Dict[str, str] = field(default_factory=dict)
     values: T.Dict[str, str] = field(default_factory=dict)
     id: str = field(default_factory=lambda: uuid.uuid4().hex)
     parent_ws: T.Optional["WidgetSpec"] = field(repr=False, default=None)
