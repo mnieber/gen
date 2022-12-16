@@ -1,6 +1,8 @@
 import os
+from pathlib import Path
 
-from moonleap import Tpls, chop0
+from moonleap import get_tpl
+from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
 
 from .helper import Helper
@@ -26,10 +28,8 @@ class FormFieldsBuilder(Builder):
             self.output.graft(build_output)
 
         context = dict(__=__, __form_fields_block=os.linesep.join(lines))
-        self.add(
-            imports=[tpls.render("form_fields_imports_tpl", context)],
-            lines=[tpls.render("form_fields_tpl", context)],
-        )
+        tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)
+        add_tpl_to_builder(tpl, self)
 
     def _get_field_widget_output(self, form_field_name, field_widget_spec, field_spec):
         from titan.react_view_pkg.pkg.build import build
@@ -39,76 +39,3 @@ class FormFieldsBuilder(Builder):
             field_widget_spec.values["field_spec"] = field_spec
             field_widget_spec.values["helper"] = self.__
             return build(field_widget_spec)
-
-
-class FormFieldBuilder(Builder):
-    def build(self):
-        field_spec = self.widget_spec.values.get("field_spec")
-        context = dict(
-            field_spec=field_spec,
-            name=self.widget_spec.values.get("form_field_name"),
-            __=self.widget_spec.values.get("helper"),
-        )
-        self.add(lines=[tpls.render("form_field_tpl", context)])
-
-
-form_fields_imports_tpl = chop0(
-    """
-import {
-  ControlledCheckbox,
-  Field,
-  GlobalError,
-  TextField,
-  SaveButton,
-  SlugField,
-  UpdateSlugButton,
-  ValuePickerField
-} from 'src/forms/components';
-  """
-)
-
-form_fields_tpl = chop0(
-    """
-    <GlobalError />
-    {{ __form_fields_block }}
-    <SaveButton
-      label="Save"
-      disabled={false}
-    />
-    """
-)
-
-form_field_tpl = chop0(
-    """
-{% magic_with field_spec.target as FieldSpecTarget %}
-    <Field
-      fieldName="{{ name }}"
-      label="{{ __.label(name) }}"
-      buttons={[                                                                                  {% if field_spec.field_type in ("slug",) %}
-        <UpdateSlugButton
-          key="1"
-          relatedFieldName="{{ __.slug_src(field_spec) }}"
-        />
-      ]}                                                                                          {% endif %}
-    >
-      <TextField controlled={true} />                                                             {% ?? field_spec.field_type in ("string", "text", "url") %}
-      <SlugField />                                                                               {% ?? field_spec.field_type in ("slug",) %}
-      <ValuePickerField                                                                           {% if field_spec.field_type in ("uuid",) and field_spec.target %}
-        isCreatable={false}
-        isMulti={false}
-        pickableValues={props.fieldSpecTargets}
-        pickableValue={initialValues['{{ name }}']}
-        labelFromValue={(x: any) => x.{{ __.display_field_name(field_spec.target_type_spec) }}}
-      />                                                                                          {% endif %}
-      <div className="flex flex-row items-begin mt-1"><ControlledCheckbox /></div>                {% ?? field_spec.field_type in ("boolean",) %}
-    </Field>
-{% end_magic_with %}
-  """
-)
-
-tpls = Tpls(
-    "form_fields_builder",
-    form_fields_tpl=form_fields_tpl,
-    form_field_tpl=form_field_tpl,
-    form_fields_imports_tpl=form_fields_imports_tpl,
-)

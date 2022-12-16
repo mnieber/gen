@@ -1,31 +1,6 @@
 from moonleap import u0
-from moonleap.utils import chop0
 from moonleap.utils.inflect import plural
 from titan.types_pkg.typeregistry import get_type_reg
-
-sp_state_hook_tpl = chop0(
-    """
-{% magic_with state.name as MyState %}
-{% magic_with container.item.item_name as containerItem %}
-    const [state] = React.useState(() => new MyState({                                                          {% if state %}
-      deleteContainerItems: (ids: string[]) => {                                                                {% for container in containers %}{% with d = __.delete_items_data(container) %}{% if d.deletes_items %}
-        R.map(setToUpdating, lookUp(ids, state.containerItems.data.containerItemById));
-        return {{ d.deleteMyItems }}.mutateAsync({ {{ d.myItemIds }}: ids });                                   {% if d.get('deleteMyItems') %}
-        return Promise.all(R.map(                                                                               {% else %}
-          (x: string) => {{ d.deleteMyItem }}.mutateAsync({ {{ d.myItemId }}: x }),
-          ids));                                                                                                {% endif %}
-      },                                                                                                        {% endif %}{% endwith %}
-      saveContainerItemOrdering: (containerItems: ContainerItemT[]) => {                                        {% with d = __.order_items_data(container) %}{% if d.orders_items %}
-        return {{ d.orderMyItems }}.mutateAsync({
-          // {{ otherKey }}: Moonleap Todo,                                                                     {% !! otherKey in d.otherKeys %}
-          {{ d.myItemIds }}: getIds({{ d.myItems }}),
-        });
-      },                                                                                                        {% endif %}{% endwith %}{% endfor %}
-    }));                                                                                                        {% endif %}
-{% end_magic_with %}
-{% end_magic_with %}
-    """
-)
 
 
 def delete_items_data(container):
@@ -34,13 +9,13 @@ def delete_items_data(container):
 
     if deletes_items:
         if container.delete_items_mutation:
-            data["deleteMyItems"] = container.delete_items_mutation.name
-            data["myItemIds"] = _get_field_name(
+            data["deleteMyCtrItems"] = container.delete_items_mutation.name
+            data["myCtrItemIds"] = _get_field_name(
                 container.delete_items_mutation, ["uuid[]"]
             )
         elif container.delete_item_mutation:
-            data["deleteMyItem"] = container.delete_item_mutation.name
-            data["myItemId"] = _get_field_name(
+            data["deleteMyCtrItem"] = container.delete_item_mutation.name
+            data["myCtrItemId"] = _get_field_name(
                 container.delete_item_mutation, ["uuid", "string"]
             )
     return data
@@ -68,9 +43,9 @@ def order_items_data(container):
                     for x in mutation.api_spec.get_inputs()
                     if x.key != ids_field_name
                 ]
-                data["orderMyItems"] = mutation.name
-                data["myItems"] = plural(container.item.item_name)
-                data["myItemIds"] = ids_field_name
+                data["orderMyCtrItems"] = mutation.name
+                data["myCtrItems"] = plural(container.item.item_name)
+                data["myCtrItemIds"] = ids_field_name
     return data
 
 

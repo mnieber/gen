@@ -1,0 +1,7 @@
+{% section attrs %}
+    tabIndex={123}
+    onKeyDown={(e) => {
+        if (e.key === 'ArrowLeft') moveBack();
+        if (e.key === 'ArrowRight') moveForward();
+    }}
+{% end_section %}

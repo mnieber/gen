@@ -1,0 +1,35 @@
+{% magic_with item_name as myItemName %}
+
+
+{% section lines %}
+    <button                                                                             {% if bvrs_has_deletion %}
+      className={smallButton}
+      onClick={() => {
+        props.onDelete();
+      }}
+    >
+      Delete
+    </button>                                                                           {% endif %}
+{% end_section %}
+
+
+{% section props %}
+onDelete: Function;                                                                     {% ?? bvrs_has_deletion %}
+{% end_section %}
+
+
+{% section preamble %}
+if (isUpdating(props.myItemName)) {
+  return UIkit && <div data-uk-spinner className=""></div>;                             {% ?? uikit %}
+  return null;                                                                          {% ?? not uikit %}
+}
+{{ "" }}
+{% end_section %}
+
+
+{% section imports %}
+import { smallButton } from 'src/frames/components';
+{% end_section %}
+
+
+{% end_magic_with %}

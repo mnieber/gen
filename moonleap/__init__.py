@@ -12,7 +12,7 @@ from moonleap.render.render_templates import render_templates  # noqa
 from moonleap.render.storetemplatedirs import RenderMixin  # noqa
 from moonleap.render.storetemplatedirs import TemplateDirMixin  # noqa
 from moonleap.render.storetemplatedirs import get_root_resource  # noqa
-from moonleap.render.tpls import Tpls  # noqa
+from moonleap.render.tpls import Tpl, get_tpl  # noqa
 from moonleap.report.report_resources import report_resources  # noqa
 from moonleap.resource import Resource  # noqa
 from moonleap.resource.forward import create_forward  # noqa

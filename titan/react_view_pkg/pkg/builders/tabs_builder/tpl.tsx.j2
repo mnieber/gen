@@ -1,0 +1,56 @@
+{% magic_with __.item_name as myItem %}
+{% magic_with __.component_name as MyComponent %}
+
+
+{% section imports %}
+import React from 'react';
+import { MyItemT } from 'src/api/types/MyItemT';
+import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
+import 'react-tabs/style/react-tabs.scss';
+{% end_section %}
+
+
+
+{% section preamble %}
+    const [myItemId, setMyItemId] = React.useState<string>(
+      props.myItems[0].id
+    );
+
+    const tabs = props.myItems.map((myItem: MyItemT) => {
+      return (
+        <Tab key={myItem.id} onClick={() => setMyItemId(myItem.id)}>
+          { myItem.{{ __.display_field_name }} }                                                   {% ?? __.display_field_name %}
+          Moonleap Todo                                                                            {% ?? not __.display_field_name %}
+        </Tab>
+      );
+    });
+
+    const tabPanels = props.myItems.map((myItem: MyItemT) => {
+      return <TabPanel key={myItem.id}>
+        {{ __.tab_instance_div }}                                                                  {% ?? not __.uniform_tab_height %}
+      </TabPanel>;
+    });
+
+    const myItemDivs = props.myItems.map((myItem: MyItemT) => {                                    {% if __.uniform_tab_height %}
+      {{ __.tab_instance_div }}
+    });                                                                                            {% endif %}
+
+    const noItems = (<h2 className="p-2">
+      There are no {{ __.item_name|camel_to_kebab|plural }}
+    </h2>);
+{{ "" }}
+{% end_section %}
+
+
+{% section lines %}
+        <Tabs className="MyComponent">
+          <TabList>{tabs}</TabList>
+          {tabPanels}
+        </Tabs>
+        {myItemDivs.length === 0 && noItems}
+        <div className={cn('CodeBlockTabView__Body')}>{myItemDivs}</div>
+{% end_section %}
+
+
+{% end_magic_with %}
+{% end_magic_with %}

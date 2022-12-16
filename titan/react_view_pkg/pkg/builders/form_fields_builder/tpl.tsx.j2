@@ -1,0 +1,22 @@
+{% section imports %}
+import {
+  ControlledCheckbox,
+  Field,
+  GlobalError,
+  TextField,
+  SaveButton,
+  SlugField,
+  UpdateSlugButton,
+  ValuePickerField
+} from 'src/forms/components';
+{% end_section %}
+
+
+{% section lines %}
+    <GlobalError />
+    {{ __form_fields_block }}
+    <SaveButton
+      label="Save"
+      disabled={false}
+    />
+{% end_section %}

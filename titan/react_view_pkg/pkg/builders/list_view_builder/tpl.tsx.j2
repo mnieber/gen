@@ -1,0 +1,54 @@
+{% magic_with __item_name as myItem %}
+
+
+{#
+Imports
+#}
+
+{% section imports %}
+import { MyItemT } from 'src/api/types/MyItemT';
+import {
+    useSelectionUIConnector,                                                                  {% ?? bvrs_has_selection %}
+    useDragAndDropUIConnector,                                                                {% ?? bvrs_has_drag_and_drop %}
+} from 'skandha-mobx/hooks';
+{% end_section %}
+
+
+{#
+Preamble hooks
+#}
+
+{% section preamble_hooks %}
+const dragAndDropUIConnector = useDragAndDropUIConnector(                                     {% if bvrs_has_drag_and_drop %}
+    props.myItemsDragAndDrop
+);                                                                                            {% endif %}
+const selectionUIConnector = useSelectionUIConnector(props.myItemsSelection);                 {% ?? bvrs_has_selection %}
+{{ "" }}
+{% end_section %}
+
+
+{#
+Preamble
+#}
+
+{% section preamble %}
+const noItems = <h2>There are no myItems</h2>;
+
+const myItemDivs = {{ __items_expr }}.map((myItem) => {
+  {{ child_widget_div }}
+});
+{{ "" }}
+{% end_section %}
+
+
+{#
+Lines
+#}
+
+{% section lines %}
+{myItemDivs.length > 0 && myItemDivs}
+{myItemDivs.length === 0 && noItems}
+{% end_section %}
+
+
+{% end_magic_with %}

@@ -1,5 +1,8 @@
-from moonleap import Tpls, chop0
+from pathlib import Path
+
+from moonleap.render.tpls import get_tpl
 from moonleap.utils.fp import append_uniq, extend_uniq
+from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_helper import BvrsHelper
 
@@ -29,101 +32,24 @@ class ListViewBuilder(Builder):
 
     def _add_lines(self):
         context = self._get_context()
-        context["child_widget_div"] = self.output.graft(
-            _get_lvi_instance_output(
-                self.widget_spec,
-                div_attrs=tpls.render("list_view_lvi_props_tpl", context),
-                key=f"{self.ilh.array_item_name}.id",
-            )
-        )
-
-        self.add(
-            imports=[tpls.render("list_view_imports_tpl", context)],
-            preamble_hooks=[tpls.render("list_view_preamble_hooks_tpl", context)],
-            preamble=[tpls.render("list_view_preamble_tpl", context)],
-            lines=[tpls.render("list_view_lvi_instance_tpl", context)],
-        )
+        context["child_widget_div"] = self.output.graft(self._get_lvi_instance_output())
+        tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)
+        add_tpl_to_builder(tpl, self)
 
     def update_widget_spec(self):
         self.ilh.update_widget_spec()
 
+    def _get_lvi_instance_output(self):
+        # This returns the div that is used in the ListView.
+        # Don't confuse this with the div that is used in the ListViewItem.
+        from titan.react_view_pkg.pkg.build import build
 
-def _get_lvi_instance_output(widget_spec, div_attrs, key):
-    # This returns the div that is used in the ListView.
-    # Don't confuse this with the div that is used in the ListViewItem.
-    from titan.react_view_pkg.pkg.build import build
+        context = self._get_context()
+        tpl_lvi_props = get_tpl(Path(__file__).parent / "tpl_lvi_props.tsx.j2", context)
 
-    child_widget_spec = widget_spec.find_child_with_place("ListViewItem")
-    with child_widget_spec.memo():
-        child_widget_spec.div.key = key
-        if div_attrs:
-            append_uniq(child_widget_spec.div.attrs, div_attrs)
-        return build(child_widget_spec)
-
-
-list_view_imports_tpl = chop0(
-    """
-{% magic_with __item_name as myItem %}
-import { MyItemT } from 'src/api/types/MyItemT';
-import {
-    useSelectionUIConnector,                                                                  {% ?? bvrs_has_selection %}
-    useDragAndDropUIConnector,                                                                {% ?? bvrs_has_drag_and_drop %}
-} from 'skandha-mobx/hooks';
-{% end_magic_with %}
-"""
-)
-
-list_view_preamble_hooks_tpl = chop0(
-    """
-{% magic_with __item_name as myItem %}
-const dragAndDropUIConnector = useDragAndDropUIConnector(                                     {% if bvrs_has_drag_and_drop %}
-    props.myItemsDragAndDrop
-);                                                                                            {% endif %}
-const selectionUIConnector = useSelectionUIConnector(props.myItemsSelection);                 {% ?? bvrs_has_selection %}
-{{ "" }}
-{% end_magic_with %}
-"""
-)
-
-list_view_preamble_tpl = chop0(
-    """
-{% magic_with __item_name as myItem %}
-const noItems = <h2>There are no myItems</h2>;
-
-const myItemDivs = {{ __items_expr }}.map((myItem) => {
-  {{ child_widget_div }}
-});
-{{ "" }}
-{% end_magic_with %}
-"""
-)
-
-list_view_lvi_props_tpl = chop0(
-    """
-{% magic_with __item_name as myItem %}
-myItem={myItem}
-isHighlighted={myItem && props.myItemsHighlight.id === myItem.id}                             {% ?? bvrs_has_highlight %}
-onDelete={() => props.myItemsDeletion.delete([myItem.id])}                                    {% ?? bvrs_has_deletion %}
-selectionUIProps={selectionUIConnector.handle(myItem.id)}                                     {% ?? bvrs_has_selection %}
-dragAndDropUIProps={dragAndDropUIConnector.handle(myItem.id)}                                 {% ?? bvrs_has_drag_and_drop %}
-{% end_magic_with %}
-"""
-)
-
-list_view_lvi_instance_tpl = chop0(
-    """
-{% magic_with __item_name as myItem %}
-{myItemDivs.length > 0 && myItemDivs}
-{myItemDivs.length === 0 && noItems}
-{% end_magic_with %}
-"""
-)
-
-tpls = Tpls(
-    "list_view_builder",
-    list_view_imports_tpl=list_view_imports_tpl,
-    list_view_preamble_hooks_tpl=list_view_preamble_hooks_tpl,
-    list_view_preamble_tpl=list_view_preamble_tpl,
-    list_view_lvi_props_tpl=list_view_lvi_props_tpl,
-    list_view_lvi_instance_tpl=list_view_lvi_instance_tpl,
-)
+        child_widget_spec = self.widget_spec.find_child_with_place("ListViewItem")
+        with child_widget_spec.memo():
+            key = f"{self.ilh.array_item_name}.id"
+            child_widget_spec.div.key = key
+            append_uniq(child_widget_spec.div.attrs, tpl_lvi_props.get_section("props"))
+            return build(child_widget_spec)

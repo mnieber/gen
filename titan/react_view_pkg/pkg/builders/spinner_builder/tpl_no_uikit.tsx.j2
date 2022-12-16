@@ -1,0 +1,7 @@
+{% section preamble %}
+    if (!isLoaded({{ data_path }})) {
+        return null;
+    }
+    else if ({{ test }}) return null;                                             {% ?? guard %}
+    {{ "" }}
+{% end_section %}

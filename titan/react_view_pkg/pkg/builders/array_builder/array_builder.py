@@ -1,5 +1,7 @@
-from moonleap import Tpls
-from moonleap.utils import chop0
+from pathlib import Path
+
+from moonleap.render.tpls import get_tpl
+from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
 
 
@@ -18,10 +20,8 @@ class ArrayBuilder(Builder):
             "child_widget_div": child_widget_div,
         }
 
-        self.add(
-            preamble=[tpls.render("preamble_tpl", context)],
-            lines=[tpls.render("instance_tpl", context)],
-        )
+        tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)
+        add_tpl_to_builder(tpl, self)
 
     def _get_const_name(self):
         const_name = self.widget_spec.widget_name
@@ -40,20 +40,3 @@ def _get_child_widget_output(widget_spec, item_name):
     with child_widget_spec.memo():
         child_widget_spec.div.key = f"{item_name}.id"
         return build(child_widget_spec)
-
-
-preamble_tpl = chop0(
-    """
-const {{ const_name }} = {{ items_expr }}.map(({{ item_name }}) => {
-  {{ child_widget_div }}
-});
-"""
-)
-
-instance_tpl = chop0(
-    """
-{ {{ const_name }} }
-"""
-)
-
-tpls = Tpls("array_builder", preamble_tpl=preamble_tpl, instance_tpl=instance_tpl)

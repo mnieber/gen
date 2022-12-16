@@ -1,0 +1,29 @@
+{% magic_with __item_name as myItem %}
+
+
+{% section preamble_hooks %}
+    const [myItemIdx, setMyItemIdx] = React.useState(0);
+
+    const moveBack = React.useCallback(
+      () =>
+        setMyItemIdx(myItemIdx > 0 ? myItemIdx - 1 : {{ __items_expr }}.length - 1),
+      [myItemIdx, setMyItemIdx, {{ __items_expr }}]
+    );
+
+    const moveForward = React.useCallback(
+      () =>
+        setMyItemIdx(myItemIdx < {{ __items_expr }}.length - 1 ? myItemIdx + 1 : 0),
+      [myItemIdx, setMyItemIdx, {{ __items_expr }}]
+    );
+    {{ "" }}
+{% end_section %}
+
+
+{% section preamble %}
+const {{ __const_name }} = {{ __items_expr }}.map(({{ __item_name }}, idx) => {
+  {{ __child_widget_div }}
+});
+{% end_section %}
+
+
+{% end_magic_with %}

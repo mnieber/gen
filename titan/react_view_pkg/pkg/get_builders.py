@@ -1,4 +1,4 @@
-from titan.react_view_pkg.pkg.builders.array_builder import ArrayBuilder
+from titan.react_view_pkg.pkg.builders.array_builder.array_builder import ArrayBuilder
 from titan.react_view_pkg.pkg.builders.bar_builder import BarBuilder
 from titan.react_view_pkg.pkg.builders.button_builder import ButtonBuilder
 from titan.react_view_pkg.pkg.builders.card_builder import CardBuilder
@@ -6,10 +6,8 @@ from titan.react_view_pkg.pkg.builders.children_builder import ChildrenBuilder
 from titan.react_view_pkg.pkg.builders.component_builder import ComponentBuilder
 from titan.react_view_pkg.pkg.builders.div_builder import DivBuilder
 from titan.react_view_pkg.pkg.builders.empty_builder import EmptyBuilder
-from titan.react_view_pkg.pkg.builders.form_fields_builder import (
-    FormFieldBuilder,
-    FormFieldsBuilder,
-)
+from titan.react_view_pkg.pkg.builders.form_field_builder import FormFieldBuilder
+from titan.react_view_pkg.pkg.builders.form_fields_builder import FormFieldsBuilder
 from titan.react_view_pkg.pkg.builders.form_state_provider_builder.form_state_provider_builder import (
     FormStateProviderBuilder,
 )
@@ -21,17 +19,25 @@ from titan.react_view_pkg.pkg.builders.layout_builder import LayoutBuilder
 from titan.react_view_pkg.pkg.builders.list_view_builder.list_view_builder import (
     ListViewBuilder,
 )
-from titan.react_view_pkg.pkg.builders.list_view_item_builder import ListViewItemBuilder
-from titan.react_view_pkg.pkg.builders.lvi_buttons_builder import LviButtonsBuilder
+from titan.react_view_pkg.pkg.builders.list_view_item_builder.list_view_item_builder import (
+    ListViewItemBuilder,
+)
+from titan.react_view_pkg.pkg.builders.lvi_buttons_builder.lvi_buttons_builder import (
+    LviButtonsBuilder,
+)
 from titan.react_view_pkg.pkg.builders.picker_builder.picker_builder import (
     PickerBuilder,
 )
-from titan.react_view_pkg.pkg.builders.spinner_builder import SpinnerBuilder
+from titan.react_view_pkg.pkg.builders.spinner_builder.spinner_builder import (
+    SpinnerBuilder,
+)
 from titan.react_view_pkg.pkg.builders.state_provider_builder.state_provider_builder import (
     StateProviderBuilder,
 )
-from titan.react_view_pkg.pkg.builders.stepper_builder import StepperBuilder
-from titan.react_view_pkg.pkg.builders.tabs_builder import TabsBuilder
+from titan.react_view_pkg.pkg.builders.stepper_builder.stepper_builder import (
+    StepperBuilder,
+)
+from titan.react_view_pkg.pkg.builders.tabs_builder.tabs_builder import TabsBuilder
 from titan.react_view_pkg.pkg.builders.text_builder import TextBuilder
 
 

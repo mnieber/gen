@@ -1,0 +1,61 @@
+{% magic_with component_name as myComponent %}
+
+
+{#
+Imports
+#}
+
+{% section imports %}
+import {                                                                                {% if bvrs_has_drag_and_drop %}
+  dragAndDropUIHandlers,
+  DragAndDropUIPropsT,
+} from 'skandha-facets/DragAndDrop';                                                    {% endif %}
+import {                                                                                {% if bvrs_has_selection %}
+  selectionUIHandlers,
+  SelectionUIPropsT,
+} from 'skandha-facets/Selection';                                                      {% endif %}
+{% end_section %}
+
+
+{#
+Props
+#}
+
+{% section props %}
+isHighlighted: boolean;                                                                 {% ?? bvrs_has_selection %}
+dragAndDropUIProps: DragAndDropUIPropsT;                                                {% ?? bvrs_has_drag_and_drop %}
+selectionUIProps: SelectionUIPropsT;                                                    {% ?? bvrs_has_selection %}
+{% end_section %}
+
+
+{#
+Scss
+#}
+
+{% section scss %}
+.MyComponent {
+  @apply cursor-pointer;                                                {% ?? uikit %}
+  cursor: pointer;                                                      {% ?? not uikit %}
+}
+
+.MyComponent--selected {                                                {% if bvrs_has_selection %}
+  @apply bg-blue-200;                                                   {% ?? uikit %}
+  background-color: #2222dd;                                            {% ?? not uikit %}
+}                                                                       {% endif %}
+
+.MyComponent--highlighted {                                             {% if bvrs_has_highlight %}
+  @apply font-bold;                                                     {% ?? uikit %}
+  font-weight: bold;                                                    {% ?? not uikit %}
+}                                                                       {% endif %}
+
+.MyComponent--drag-before {                                             {% if bvrs_has_drag_and_drop %}
+  border-top: solid;
+}
+
+.MyComponent--drag-after {
+  border-bottom: solid;
+}                                                                       {% endif %}
+{% end_section %}
+
+
+{% end_magic_with %}

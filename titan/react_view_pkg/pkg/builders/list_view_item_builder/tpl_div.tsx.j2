@@ -1,0 +1,19 @@
+{% magic_with component_name as MyComponent %}
+
+
+{% section attrs %}
+{...selectionUIHandlers(props.selectionUIProps)}                                        {% ?? bvrs_has_selection %}
+{...dragAndDropUIHandlers(props.dragAndDropUIProps)}                                    {% ?? bvrs_has_drag_and_drop %}
+{% end_section %}
+
+
+{% section styles %}
+{                                                                                       {% min_lines count=3 %}
+  'MyComponent--selected': props.selectionUIProps.isSelected,                           {% ?? bvrs_has_selection %}
+  'MyComponent--highlighted': props.isHighlighted,                                      {% ?? bvrs_has_highlight %}
+},                                                                                      {% end_min_lines %}
+`MyComponent--drag-${props.dragAndDropUIProps.dragState}`                               {% ?? bvrs_has_drag_and_drop %}
+{% end_section %}
+
+
+{% end_magic_with %}
