@@ -6,8 +6,10 @@ class BarBuilder(Builder):
         self._widgets = []
         self._has_widgets = False
         self.lhs_slot = None
+        self.lhs_content = None
         self.middle_slot = None
         self.rhs_slot = None
+        self.rhs_content = None
 
     def _get_widgets(self):
         if self._has_widgets:
@@ -18,6 +20,10 @@ class BarBuilder(Builder):
             self.lhs_slot = lhs_slot
             self._widgets.append(lhs_slot)
 
+        if lhs_content := self.widget_spec.find_child_with_place("LhsContent"):
+            self.lhs_content = lhs_content
+            self._widgets.append(lhs_content)
+
         if middle_slot := self.widget_spec.find_child_with_place("MiddleSlot"):
             self.middle_slot = middle_slot
             self._widgets.append(middle_slot)
@@ -25,6 +31,10 @@ class BarBuilder(Builder):
         if rhs_slot := self.widget_spec.find_child_with_place("RhsSlot"):
             self.rhs_slot = rhs_slot
             self._widgets.append(rhs_slot)
+
+        if rhs_content := self.widget_spec.find_child_with_place("RhsContent"):
+            self.rhs_content = rhs_content
+            self._widgets.append(rhs_content)
 
         if not self._widgets:
             raise Exception("Bar must have at least one used slot")

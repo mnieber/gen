@@ -28,6 +28,7 @@ from titan.react_view_pkg.pkg.builders.lvi_buttons_builder.lvi_buttons_builder i
 from titan.react_view_pkg.pkg.builders.picker_builder.picker_builder import (
     PickerBuilder,
 )
+from titan.react_view_pkg.pkg.builders.row_skewer_builder import RowSkewerBuilder
 from titan.react_view_pkg.pkg.builders.spinner_builder.spinner_builder import (
     SpinnerBuilder,
 )
@@ -118,7 +119,7 @@ def get_builders(widget_spec):
             builder = TextBuilder(widget_spec)
 
         elif widget_base_type == "RowSkewer":
-            builder = DivBuilder(widget_spec)
+            builder = RowSkewerBuilder(widget_spec)
 
         if builder:
             result.append(builder)
