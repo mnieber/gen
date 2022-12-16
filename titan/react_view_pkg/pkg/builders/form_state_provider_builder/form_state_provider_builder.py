@@ -11,10 +11,9 @@ class FormStateProviderBuilder(Builder):
 
     def build(self):
         from titan.react_view_pkg.pkg.build import build
-        from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_term
 
         __ = self.__ = Helper(
-            item_name=get_named_item_term(self.widget_spec).data,
+            item_name=self.ih.array_item_name,
             mutation_name=self.widget_spec.get_value_by_name("mutation"),
         )
 
@@ -24,9 +23,9 @@ class FormStateProviderBuilder(Builder):
         context = dict(__=__)
 
         self.add(
-            imports_lines=[tpls.render("form_sp_imports_tpl", context)],
-            preamble_lines=[tpls.render("form_sp_preamble_tpl", context)],
-            preamble_hooks_lines=[tpls.render("form_sp_hooks_tpl", context)],
+            imports=[tpls.render("form_sp_imports_tpl", context)],
+            preamble=[tpls.render("form_sp_preamble_tpl", context)],
+            preamble_hooks=[tpls.render("form_sp_hooks_tpl", context)],
             lines=[
                 tpls.render("form_sp_div_open_tpl", context),
                 *children_build_output.lines,

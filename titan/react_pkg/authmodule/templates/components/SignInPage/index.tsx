@@ -29,7 +29,7 @@ export const SignInPage: React.FC = observer(() => {
   useNextUrl(
     authState.state === States.SIGN_IN_SUCCEEDED ||
       authState.state === States.SIGN_IN_BY_MAGIC_LINK_SUCCEEDED
-      ? getNextUrl(routes.searchLandingView())
+      ? getNextUrl(routes.home())
       : undefined
   );
 

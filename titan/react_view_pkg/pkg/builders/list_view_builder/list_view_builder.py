@@ -3,16 +3,15 @@ from moonleap.utils.fp import append_uniq, extend_uniq
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_helper import BvrsHelper
 
-from .get_spec_extension import get_spec_extension
+from .spec_ext import spec_ext
 
 
 class ListViewBuilder(Builder):
-    def __init__(self, widget_spec):
-        Builder.__init__(self, widget_spec)
-        self.bvrs_helper = BvrsHelper(widget_spec, self.ilh.array_item_name)
+    def __post_init__(self):
+        self.bvrs_helper = BvrsHelper(self.widget_spec, self.ilh.array_item_name)
 
     def get_spec_extension(self, places):
-        return get_spec_extension(self.widget_spec, places)
+        return spec_ext(self.widget_spec, places)
 
     def build(self):
         self._add_default_props()
@@ -39,9 +38,9 @@ class ListViewBuilder(Builder):
         )
 
         self.add(
-            imports_lines=[tpls.render("list_view_imports_tpl", context)],
-            preamble_hooks_lines=[tpls.render("list_view_preamble_hooks_tpl", context)],
-            preamble_lines=[tpls.render("list_view_preamble_tpl", context)],
+            imports=[tpls.render("list_view_imports_tpl", context)],
+            preamble_hooks=[tpls.render("list_view_preamble_hooks_tpl", context)],
+            preamble=[tpls.render("list_view_preamble_tpl", context)],
             lines=[tpls.render("list_view_lvi_instance_tpl", context)],
         )
 

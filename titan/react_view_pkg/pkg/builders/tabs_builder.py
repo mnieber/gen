@@ -23,8 +23,8 @@ class TabsBuilder(Builder):
         )
 
         self.add(
-            imports_lines=[tpls.render("tab_view_imports_tpl", context)],
-            preamble_lines=[tpls.render("tab_view_preamble_tpl", context)],
+            imports=[tpls.render("tab_view_imports_tpl", context)],
+            preamble=[tpls.render("tab_view_preamble_tpl", context)],
             lines=[tpls.render("tab_view_div_tpl", context)],
         )
 

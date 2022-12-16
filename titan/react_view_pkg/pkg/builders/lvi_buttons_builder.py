@@ -1,22 +1,25 @@
 from moonleap import Tpls, chop0
 from titan.react_view_pkg.pkg.builder import Builder
+from titan.react_view_pkg.pkg.builders.bvrs_helper import BvrsHelper
 
 
 class LviButtonsBuilder(Builder):
+    def __post_init__(self):
+        self.bvrs_helper = BvrsHelper(self.widget_spec, self.ilh.array_item_name)
+
     def build(self):
         context = self._get_context()
 
-        self._add_div_open()
         self.add(
             lines=[tpls.render("lvi_buttons_tpl", context)],
-            imports_lines=[tpls.render("lvi_buttons_imports_tpl", context)],
-            preamble_lines=[tpls.render("lvi_buttons_preamble_tpl", context)],
-            props_lines=[tpls.render("lvi_buttons_props_tpl", context)],
+            imports=[tpls.render("lvi_buttons_imports_tpl", context)],
+            preamble=[tpls.render("lvi_buttons_preamble_tpl", context)],
+            props=[tpls.render("lvi_buttons_props_tpl", context)],
         )
-        self._add_div_close()
 
     def _get_context(self):
         return {
+            **self.bvrs_helper.bvrs_context(),
             "item_name": self.ih.array_item_name,
             "component_name": self.widget_spec.widget_class_name,
             "uikit": self.use_uikit,
@@ -25,14 +28,14 @@ class LviButtonsBuilder(Builder):
 
 lvi_buttons_tpl = chop0(
     """
-    <button
+    <button                                                                             {% if bvrs_has_deletion %}
       className={smallButton}
       onClick={() => {
         props.onDelete();
       }}
     >
       Delete
-    </button>
+    </button>                                                                           {% endif %}
     """
 )
 

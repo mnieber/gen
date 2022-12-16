@@ -1,5 +1,5 @@
 from titan.react_view_pkg.pkg.add_child_widgets import add_child_widgets
-from titan.react_view_pkg.pkg.add_div import add_div_close, add_div_open
+from titan.react_view_pkg.pkg.add_div import get_div_close, get_div_open
 from titan.react_view_pkg.pkg.builder_output import BuilderOutput
 from titan.react_view_pkg.pkg.builders.item_helper import ItemHelper
 from titan.react_view_pkg.pkg.builders.item_list_helper import ItemListHelper
@@ -21,34 +21,41 @@ class Builder:
     def add(
         self,
         lines=None,
-        props_lines=None,
-        add_props_lines=None,
-        imports_lines=None,
-        scss_lines=None,
-        preamble_lines=None,
-        preamble_hooks_lines=None,
+        props=None,
+        add_props=None,
+        imports=None,
+        scss=None,
+        preamble=None,
+        preamble_hooks=None,
     ):
         level = self.widget_spec.level
         if lines:
             indented_lines = ["  " * level + x for x in lines]
             self.output.lines.extend(indented_lines)
-        if props_lines:
-            self.output.props_lines.extend(_trim(props_lines))
-        if add_props_lines:
-            self.output.add_props_lines.extend(_trim(add_props_lines))
-        if imports_lines:
-            self.output.imports_lines.extend(imports_lines)
-        if scss_lines:
-            self.output.scss_lines.extend(scss_lines)
-        if preamble_lines:
-            indented_lines = ["  " * level + x for x in preamble_lines]
+        if props:
+            self.output.props_lines.extend(_trim(props))
+        if add_props:
+            self.output.add_props_lines.extend(_trim(add_props))
+        if imports:
+            self.output.imports_lines.extend(imports)
+        if scss:
+            self.output.scss_lines.extend(scss)
+        if preamble:
+            indented_lines = ["  " * level + x for x in preamble]
             self.output.preamble_lines.extend(indented_lines)
-        if preamble_hooks_lines:
-            indented_lines = ["  " * level + x for x in preamble_hooks_lines]
+        if preamble_hooks:
+            indented_lines = ["  " * level + x for x in preamble_hooks]
             self.output.preamble_hooks_lines.extend(indented_lines)
 
     def _add_div_open(self):
-        add_div_open(self)
+        self.add(
+            lines=[
+                get_div_open(
+                    self.widget_spec.div,
+                    widget_class_name=self.widget_spec.widget_class_name,
+                )
+            ]
+        )
 
     def _add_child_widgets(self, child_widget_specs=None):
         add_child_widgets(
@@ -56,7 +63,7 @@ class Builder:
         )
 
     def _add_div_close(self):
-        add_div_close(self)
+        self.add(lines=[get_div_close()])
 
     def build(self):
         pass

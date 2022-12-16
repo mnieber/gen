@@ -1,20 +1,16 @@
 import os
 
+from titan.widgets_pkg.pkg.div import Div
 
-def add_div_open(builder):
-    class_names = (
-        [f'"{builder.widget_spec.widget_class_name}"']
-        + builder.widget_spec.div.styles
-        + (["props.className"] if builder.widget_spec.is_component_def else [])
-    )
 
-    class_name = ", ".join(class_names)
-    props_attr = os.linesep.join(builder.widget_spec.div.attrs)
+def get_div_open(div: Div, widget_class_name=None):
+    class_name_attr = div.get_class_name_attr(widget_class_name)
+    props_attr = os.linesep.join(div.attrs)
 
-    key = builder.widget_spec.div.key
+    key = div.key
     key_attr = f"key={{{key}}}" if key else ""
-    builder.add(lines=[f"<div {key_attr} className={{cn({class_name})}} {props_attr}>"])
+    return f"<div {key_attr} {class_name_attr} {props_attr}>"
 
 
-def add_div_close(builder):
-    builder.add(lines=[f"</div>"])
+def get_div_close():
+    return f"</div>"

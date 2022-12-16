@@ -111,6 +111,9 @@ def get_builders(widget_spec):
         elif widget_base_type == "Text":
             builder = TextBuilder(widget_spec)
 
+        elif widget_base_type == "RowSkewer":
+            builder = DivBuilder(widget_spec)
+
         if builder:
             result.append(builder)
         else:

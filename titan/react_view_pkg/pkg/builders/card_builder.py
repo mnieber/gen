@@ -6,7 +6,7 @@ class CardBuilder(Builder):
         self.widget_spec.div.prepend_styles(["card"])
 
     def build(self):
-        self.add(imports_lines=["import { card } from 'src/frames/components';"])
+        self.add(imports=["import { card } from 'src/frames/components';"])
         self._add_div_open()
         self._add_child_widgets()
         self._add_div_close()

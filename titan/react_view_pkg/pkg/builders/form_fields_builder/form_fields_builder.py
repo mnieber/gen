@@ -12,10 +12,8 @@ class FormFieldsBuilder(Builder):
             return {f"Field with FormField": "pass"}
 
     def build(self):
-        from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_term
-
         __ = self.__ = Helper(
-            item_name=get_named_item_term(self.widget_spec).data,
+            item_name=self.ih.array_item_name,
             mutation_name=self.widget_spec.get_value_by_name("mutation"),
         )
         field_widget_spec = self.widget_spec.find_child_with_place("Field")
@@ -29,7 +27,7 @@ class FormFieldsBuilder(Builder):
 
         context = dict(__=__, __form_fields_block=os.linesep.join(lines))
         self.add(
-            imports_lines=[tpls.render("form_fields_imports_tpl", context)],
+            imports=[tpls.render("form_fields_imports_tpl", context)],
             lines=[tpls.render("form_fields_tpl", context)],
         )
 

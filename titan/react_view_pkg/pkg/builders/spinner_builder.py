@@ -40,4 +40,4 @@ class SpinnerBuilder(Builder):
             "guard": self.widget_spec.get_value_by_name("guard"),
         }
 
-        self.add(preamble_lines=[tpls.render(tpl, context)])
+        self.add(preamble=[tpls.render(tpl, context)])

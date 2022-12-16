@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 
 @dataclass
 class Div:
-    styles: T.List[str] = field(repr=False, default_factory=list)
+    styles: T.List[str] = field(repr=True, default_factory=list)
     attrs: T.List[str] = field(repr=False, default_factory=list)
     key: T.Optional[str] = None
 
@@ -18,9 +18,14 @@ class Div:
             if style not in self.styles:
                 self.styles.append(style)
 
-    @property
-    def class_name_attr(self):
-        if self.styles:
-            styles_str = " ".join(self.styles)
-            return f"className={{ cn({styles_str}) }}"
-        return None
+    def get_class_name_attr(self, widget_class_name=None):
+        prefix = [f'"{widget_class_name}"'] if widget_class_name else []
+        infix = list(self.styles)
+
+        suffix = []
+        if "props.className" in self.styles:
+            suffix += ["props.className"]
+            infix.remove("props.className")
+
+        styles_str = ", ".join(prefix + infix + suffix)
+        return f"className={{ cn({styles_str}) }}"

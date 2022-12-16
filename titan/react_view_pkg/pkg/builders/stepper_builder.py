@@ -19,8 +19,8 @@ class StepperBuilder(Builder):
         }
 
         self.add(
-            preamble_hooks_lines=[tpls.render("preamble_hooks_tpl", context)],
-            preamble_lines=[tpls.render("preamble_uniform_height_tpl", context)],
+            preamble_hooks=[tpls.render("preamble_hooks_tpl", context)],
+            preamble=[tpls.render("preamble_uniform_height_tpl", context)],
         )
 
     def _get_const_name(self):

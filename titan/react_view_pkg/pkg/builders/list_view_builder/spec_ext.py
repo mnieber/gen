@@ -1,4 +1,4 @@
-def get_spec_extension(widget_spec, places):
+def spec_ext(widget_spec, places):
     named_item_term_str = widget_spec.get_value_by_name("item")
     lvi_name = widget_spec.get_value_by_name("lvi-name") or _get_default_lvi_name(
         widget_spec
@@ -22,8 +22,20 @@ def _lvi_component_spec(lvi_name, named_item_term_str):
     return {
         f"LviComponent with {lvi_name} as ListViewItem, Bar[p-2]": {
             "__default_props__": [named_item_term_str],
-            "LeftSlot with ItemFields": "display=1",
-            "RightSlot with Buttons as LviButtons": "pass",
+            "LhsSlot with RowSkewer[justify=start.cn=__Fields]": {
+                "ItemFields": "display=1"
+            },
+            "RhsSlot with RowSkewer[justify=end.cn=__Buttons]": {"LviButtons": "pass"},
+        },
+    }
+
+
+def _lvi_component_spec_2(lvi_name, named_item_term_str):
+    return {
+        f"LviComponent with {lvi_name} as ListViewItem, Bar[p-2]": {
+            "__default_props__": [named_item_term_str],
+            "LhsContents[cn=__Fields] with ItemFields": "display=1",
+            "RhsContents[cn=__Buttons] with LviButtons": "pass",
         },
     }
 

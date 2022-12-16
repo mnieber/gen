@@ -41,13 +41,13 @@ class StateProviderBuilder(Builder):
         )
 
         self.add(
-            imports_lines=[tpls.render("sp_imports_tpl", context)],
-            preamble_hooks_lines=[
+            imports=[tpls.render("sp_imports_tpl", context)],
+            preamble_hooks=[
                 tpls.render("sp_preamble_hooks_tpl", context),
                 tpls.render("sp_state_hook_tpl", context),
                 tpls.render("sp_reaction_effect_hook_tpl", context),
             ],
-            preamble_lines=[tpls.render("sp_preamble_tpl", context)],
+            preamble=[tpls.render("sp_preamble_tpl", context)],
             lines=[tpls.render("sp_return_value_tpl", context)],
         )
 

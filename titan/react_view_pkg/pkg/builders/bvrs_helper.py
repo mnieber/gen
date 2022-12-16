@@ -1,7 +1,10 @@
+from moonleap.utils.inflect import plural
+
+
 class BvrsHelper:
-    def __init__(self, widget_spec, items_name):
+    def __init__(self, widget_spec, item_name):
         self.widget_spec = widget_spec
-        self.bvrs_items_name = items_name
+        self.bvrs_items_name = plural(item_name)
 
         self.bvrs = self.widget_spec.get_value_by_name("bvrs", default="").split(",")
         self.bvrs_has_selection = "selection" in self.bvrs

@@ -19,7 +19,7 @@ class ArrayBuilder(Builder):
         }
 
         self.add(
-            preamble_lines=[tpls.render("preamble_tpl", context)],
+            preamble=[tpls.render("preamble_tpl", context)],
             lines=[tpls.render("instance_tpl", context)],
         )
 

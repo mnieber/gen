@@ -31,10 +31,10 @@ class PickerBuilder(Builder):
         }
 
         self.add(
-            preamble_lines=[tpls.render("picker_handler_tpl", context)],
+            preamble=[tpls.render("picker_handler_tpl", context)],
             lines=[tpls.render("picker_div_tpl", context)],
-            imports_lines=[tpls.render("picker_imports_tpl", context)],
-            props_lines=[tpls.render("picker_props_tpl", context)],
+            imports=[tpls.render("picker_imports_tpl", context)],
+            props=[tpls.render("picker_props_tpl", context)],
         )
 
     def _add_default_props(self):
@@ -50,7 +50,7 @@ class PickerBuilder(Builder):
 
 picker_handler_tpl = chop0(
     """
-{% magic_with __.item as myItem %}
+{% magic_with __.item_name as myItem %}
     const onChange = (value: PickerValueT) => {
       if (value.__isNew__) {
         // Moonleap Todo: add myItem
@@ -69,7 +69,7 @@ picker_handler_tpl = chop0(
 
 picker_div_tpl = chop0(
     """
-{% magic_with __.item as myItem %}
+{% magic_with __.item_name as myItem %}
     <ValuePicker
         isMulti={false}
         isCreatable={true}
@@ -84,7 +84,7 @@ picker_div_tpl = chop0(
 
 picker_imports_tpl = chop0(
     """
-{% magic_with __.item as myItem %}
+{% magic_with __.item_name as myItem %}
 import { PickerValueT, ValuePicker } from 'src/utils/components/ValuePicker';
 import { MyItemT } from 'src/api/types/MyItemT';                                {% ?? __.update_url %}
 {% end_magic_with %}
@@ -93,7 +93,7 @@ import { MyItemT } from 'src/api/types/MyItemT';                                
 
 picker_props_tpl = chop0(
     """
-{% magic_with __.item as myItem %}
+{% magic_with __.item_name as myItem %}
     updateUrl?: (myItem: MyItemT) => void;                                      {% ?? __.update_url %}
 {% end_magic_with %}
     """

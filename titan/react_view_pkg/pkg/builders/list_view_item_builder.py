@@ -13,9 +13,9 @@ class ListViewItemBuilder(Builder):
         context = self._get_context()
 
         self.add(
-            imports_lines=[tpls.render("lvi_imports_tpl", context)],
-            props_lines=[tpls.render("lvi_props_tpl", context)],
-            scss_lines=[tpls.render("lvi_scss_tpl", context)],
+            imports=[tpls.render("lvi_imports_tpl", context)],
+            props=[tpls.render("lvi_props_tpl", context)],
+            scss=[tpls.render("lvi_scss_tpl", context)],
         )
 
     def update_widget_spec(self):

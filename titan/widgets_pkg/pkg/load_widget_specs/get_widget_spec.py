@@ -12,7 +12,11 @@ def get_widget_spec(key, value, module_name):
     spec = value if is_dict else {}
     widget_values, div_attrs = get_widget_attrs(key, value_parts)
     widget_spec = WidgetSpec(**widget_values)
+
     widget_spec.div = Div(**div_attrs)
+    if widget_spec.is_component_def:
+        widget_spec.div.append_styles(["props.className"])
+
     widget_spec.module_name = module_name
     widget_spec.src_dict = spec
     return widget_spec, spec
