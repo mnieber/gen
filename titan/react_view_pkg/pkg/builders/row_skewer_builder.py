@@ -4,11 +4,6 @@ from titan.react_view_pkg.pkg.builder import Builder
 class RowSkewerBuilder(Builder):
     def update_widget_spec(self):
         self.widget_spec.div.styles += ["rowSkewer"]
-        if justify := self.widget_spec.values.get("justify"):
-            if justify == "end":
-                self.widget_spec.div.styles += ['"justify-end"']
-            if justify == "start":
-                self.widget_spec.div.styles += ['"justify-start"']
 
     def build(self):
         self.add(imports=["import { rowSkewer } from 'src/frames/components';"])

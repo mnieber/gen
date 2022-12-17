@@ -79,6 +79,8 @@ style_patterns = [
     r"flex",
     r"flex-col",
     r"flex-row",
+    r"justify-end",
+    r"justify-start",
 ]
 
 
