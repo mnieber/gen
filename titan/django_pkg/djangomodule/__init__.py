@@ -3,7 +3,6 @@ from pathlib import Path
 import moonleap.resource.props as P
 from moonleap import (
     MemFun,
-    Priorities,
     Prop,
     create,
     create_forward,
@@ -68,7 +67,7 @@ def django_app_has_module(django_app, module):
     )
 
 
-@rule("django-app", priority=Priorities.LOW.value)
+@rule("django-app")
 def django_modules_provide_item_lists(django_app):
     lut = get_map_from_item_to_django_module(get_type_reg(), django_app.modules)
     forwards = []

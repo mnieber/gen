@@ -1,5 +1,5 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, Priorities, create_forward, empty_rule, extend, rule
+from moonleap import MemFun, create_forward, empty_rule, extend, rule
 from moonleap.verbs import has, has_default_prop, has_prop
 from titan.react_pkg.reactmodule import ReactModule
 from titan.widgets_pkg.widgetregistry import get_widget_reg
@@ -37,7 +37,7 @@ def set_component_props(component):
     return get_props_forwards(component)
 
 
-@rule("component", priority=Priorities.LOW.value)
+@rule("component")
 def created_component(component):
     return create_forward(get_widget_reg(), has, component)
 
@@ -52,7 +52,7 @@ class ExtendComponent:
     named_default_props = P.children(has_default_prop, "x+pipeline-elm")
 
 
-@rule("widget-registry", has, "component", priority=Priorities.LOW.value)
+@rule("widget-registry", has, "component")
 def component_builder(widget_reg, component):
     props.load_component(component)
 
