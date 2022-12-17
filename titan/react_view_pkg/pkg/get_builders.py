@@ -4,6 +4,7 @@ from titan.react_view_pkg.pkg.builders.button_builder import ButtonBuilder
 from titan.react_view_pkg.pkg.builders.card_builder import CardBuilder
 from titan.react_view_pkg.pkg.builders.children_builder import ChildrenBuilder
 from titan.react_view_pkg.pkg.builders.component_builder import ComponentBuilder
+from titan.react_view_pkg.pkg.builders.const_builder.const_builder import ConstBuilder
 from titan.react_view_pkg.pkg.builders.div_builder import DivBuilder
 from titan.react_view_pkg.pkg.builders.empty_builder import EmptyBuilder
 from titan.react_view_pkg.pkg.builders.form_field_builder import FormFieldBuilder
@@ -66,6 +67,9 @@ def get_builders(widget_spec):
 
         elif widget_base_type == "Children":
             builder = ChildrenBuilder(widget_spec)
+
+        if widget_base_type == "Const":
+            builder = ConstBuilder(widget_spec)
 
         elif widget_base_type == "Div":
             builder = DivBuilder(widget_spec)

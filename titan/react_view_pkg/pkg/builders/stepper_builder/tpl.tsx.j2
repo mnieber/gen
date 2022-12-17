@@ -20,9 +20,18 @@
 
 
 {% section preamble %}
-const {{ __const_name }} = {{ __items_expr }}.map(({{ __item_name }}, idx) => {
+const {{ __const_name }} = {{ __items_expr }}.map(({{ __item_name }}, idx) => {                 {% if __child_widget_div %}{% if __uniform_height %}
   {{ __child_widget_div }}
 });
+const {{ __const_name }} = (({{ __item_name }}) => {                                            {% else %}
+  {{ __child_widget_div }}
+})({{ __items_expr }}[{{ __item_name }}Idx]);                                                   {% endif %}
+{{ "" }}                                                                                        {% endif %}
+{% end_section %}
+
+
+{% section lines %}
+{ {{ __const_name }} }
 {% end_section %}
 
 

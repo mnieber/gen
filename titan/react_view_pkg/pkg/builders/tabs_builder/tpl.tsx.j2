@@ -43,12 +43,12 @@ import 'react-tabs/style/react-tabs.scss';
 
 
 {% section lines %}
-        <Tabs className="MyComponent">
-          <TabList>{tabs}</TabList>
-          {tabPanels}
-        </Tabs>
-        {myItemDivs.length === 0 && noItems}
-        <div className={cn('CodeBlockTabView__Body')}>{myItemDivs}</div>
+    <Tabs className="MyComponent">
+      <TabList>{tabs}</TabList>
+      {tabPanels}
+    </Tabs>
+    {myItemDivs.length === 0 && noItems}
+    <div className={cn('MyComponent__Tabs')}>{myItemDivs}</div>
 {% end_section %}
 
 
