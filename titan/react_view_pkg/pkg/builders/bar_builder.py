@@ -6,10 +6,10 @@ class BarBuilder(Builder):
         self._widgets = []
         self._has_widgets = False
         self.lhs_slot = None
-        self.lhs_content = None
+        self.lhs_wrapper = None
         self.middle_slot = None
         self.rhs_slot = None
-        self.rhs_content = None
+        self.rhs_wrapper = None
 
     def _get_widgets(self):
         if self._has_widgets:
@@ -20,9 +20,11 @@ class BarBuilder(Builder):
             self.lhs_slot = lhs_slot
             self._widgets.append(lhs_slot)
 
-        if lhs_content := self.widget_spec.find_child_with_place("LhsContent"):
-            self.lhs_content = lhs_content
-            self._widgets.append(lhs_content)
+        if lhs_content := self.widget_spec.find_child_with_place("LhsContents"):
+            self.lhs_wrapper = self.widget_spec.find_child_with_place("LhsWrapper")
+            assert self.lhs_wrapper
+            self.lhs_wrapper.child_widget_specs.append(lhs_content)
+            self._widgets.append(self.lhs_wrapper)
 
         if middle_slot := self.widget_spec.find_child_with_place("MiddleSlot"):
             self.middle_slot = middle_slot
@@ -32,12 +34,25 @@ class BarBuilder(Builder):
             self.rhs_slot = rhs_slot
             self._widgets.append(rhs_slot)
 
-        if rhs_content := self.widget_spec.find_child_with_place("RhsContent"):
-            self.rhs_content = rhs_content
-            self._widgets.append(rhs_content)
+        if rhs_content := self.widget_spec.find_child_with_place("rhsContents"):
+            self.rhs_wrapper = self.widget_spec.find_child_with_place("rhsWrapper")
+            assert self.rhs_wrapper
+            self.rhs_wrapper.child_widget_specs.append(rhs_content)
+            self._widgets.append(self.rhs_wrapper)
 
         if not self._widgets:
             raise Exception("Bar must have at least one used slot")
+
+    def get_spec_extension(self, places):
+        result = {}
+
+        if "LhsWrapper" not in places:
+            result["LhsWrapper with Div, RowSkewer[cn=Lhs.justify-start]"] = "pass"
+
+        if "RhsWrapper" not in places:
+            result["RhsWrapper with Div, RowSkewer[cn=Rhs.justify-end]"] = "pass"
+
+        return result
 
     def patch_widget_spec(self):
         self._get_widgets()
@@ -55,10 +70,11 @@ class BarBuilder(Builder):
         self.widget_spec.div.prepend_styles([f'"grid grid-cols-[{",".join(styles)}]"'])
 
     def build(self):
-        self.patch_widget_spec()
-        self._get_widgets()
+        with self.widget_spec.memo():
+            self.patch_widget_spec()
+            self._get_widgets()
 
-        self.add(imports=["import { rowSkewer } from 'src/frames/components';"])
-        self._add_div_open()
-        self._add_child_widgets(self._widgets)
-        self._add_div_close()
+            self.add(imports=["import { rowSkewer } from 'src/frames/components';"])
+            self._add_div_open()
+            self._add_child_widgets(self._widgets)
+            self._add_div_close()
