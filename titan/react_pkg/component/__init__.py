@@ -12,6 +12,7 @@ from .resources import Component  # noqa
 rules = {
     ("widget-registry", has, "component"): empty_rule(),
     ("component", has, "x+pipeline"): empty_rule(),
+    ("component", has_prop, "click:handler"): empty_rule(),
     ("component", has_prop, "x+pipeline-elm"): empty_rule(),
     ("component", has_default_prop, "x+pipeline-elm"): empty_rule(),
 }

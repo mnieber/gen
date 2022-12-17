@@ -23,6 +23,7 @@ class Builder:
         lines=None,
         props=None,
         add_props=None,
+        default_props=None,
         imports=None,
         scss=None,
         preamble=None,
@@ -36,6 +37,8 @@ class Builder:
             self.output.props_lines.extend(_trim(props))
         if add_props:
             self.output.add_props_lines.extend(_trim(add_props))
+        if default_props:
+            self.output.default_props.extend(default_props)
         if imports:
             self.output.imports_lines.extend(imports)
         if scss:

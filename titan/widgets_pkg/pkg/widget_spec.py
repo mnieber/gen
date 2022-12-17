@@ -34,6 +34,14 @@ class WidgetSpec:
         return self.widget_name and ":" in self.widget_name
 
     @property
+    def named_props(self):
+        return self.src_dict.setdefault("__props__", [])
+
+    @property
+    def named_default_props(self):
+        return self.src_dict.setdefault("__default_props__", [])
+
+    @property
     def is_component_def(self):
         return bool(
             self.is_component

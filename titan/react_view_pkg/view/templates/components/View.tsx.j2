@@ -3,7 +3,6 @@ import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { cn } from 'src/utils/classnames';
 import { observer } from 'mobx-react-lite';
 import { isLoaded, isUpdating } from 'src/api/ResourceState';
-import { {{ type_spec.type_name }}T } from 'src/api/types/{{ type_spec.type_name }}T';              {% !! type_spec in __.type_specs_to_import %}
 import UIkit from 'uikit';                                                                          {% ?? _.service.uikit %}
 {{ line }}                                                                                          {% !! line in __.build.imports_lines %}
 import './MyComponent.scss';                                                                        {% ?? __.has_scss %}
@@ -14,7 +13,6 @@ export type PropsT = {                                                          
 export type PropsT = React.PropsWithChildren<{                                                      {% ?? __.has_children %}
 {# Start: view props here #}
 {# End: view props here #}
-  {{ res.typ.ts_var }}: {{ res.typ.ts_type }}                                                       {% !! res in _.component.named_props %}
   {{ line }}                                                                                        {% !! line in __.build.props_lines %}
   className?: any;                                                                                  {% ?? __.has_scss %}
 }                                                                                                   {% ?? not __.has_children %}
@@ -25,7 +23,6 @@ export type PropsT = React.PropsWithChildren<{                                  
 const DefaultProps = {
 {# Start: default view props here #}
 {# End: default view props here #}
-  ...dps.{{ res.typ.ts_var }},                                                                      {% !! res in _.component.named_default_props %}
   ...dps.{{ default_prop }},                                                                        {% !! default_prop in __.build.default_props|sort %}
 };
 

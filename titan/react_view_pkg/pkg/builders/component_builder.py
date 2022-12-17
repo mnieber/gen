@@ -14,13 +14,8 @@ class ComponentBuilder(Builder):
                 component_def = get_widget_reg().get(
                     self.widget_spec.widget_name, default=None
                 )
-                if not component_def:
-                    return "retry"
-
-                props = component_def.src_dict.setdefault("__props__", [])
-                if False:
-                    # TODO: add a prop for the click handler
-                    append_uniq(props, "click:handler")
+                assert component_def
+                append_uniq(component_def.named_props, "click:handler")
 
             return update_component_def
 
