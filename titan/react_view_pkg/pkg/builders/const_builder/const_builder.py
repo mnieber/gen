@@ -12,7 +12,6 @@ class ConstBuilder(Builder):
         child_widget_output = _get_child_widget_output(self.widget_spec)
         child_widget_div = os.linesep.join(child_widget_output.lines)
         self.output.graft(child_widget_output)
-        __import__("pudb").set_trace()  # qq
         context = {
             "const_name": const_name,
             "child_widget_div": child_widget_div,

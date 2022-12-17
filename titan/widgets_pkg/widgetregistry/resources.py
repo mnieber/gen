@@ -19,7 +19,7 @@ class WidgetRegistry(Resource):
     def has(self, widget_name):
         return widget_name in self._widget_spec_by_widget_name
 
-    def get(self, widget_name, default="__not_set__") -> WidgetSpec:
+    def get(self, widget_name, default: T.Optional[str] = "__not_set__") -> WidgetSpec:
         widget_spec = self._widget_spec_by_widget_name.get(widget_name, None)
         if widget_spec is not None:
             return widget_spec

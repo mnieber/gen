@@ -1,13 +1,12 @@
-import re
-
 from moonleap.utils.fp import append_uniq
 from moonleap.utils.quote import quote
 from moonleap.utils.split_non_empty import split_non_empty
 from titan.types_pkg.pkg.load_type_specs.split_raw_key import split_symbols
+from titan.widgets_pkg.pkg.is_style import is_style
 
 
 def get_widget_attrs(key, value_parts):
-    div_attrs = dict(styles=[])
+    div_attrs = dict(styles=[], attrs=[])
     attrs = dict(values={}, place_values={}, widget_base_types=[])
 
     parts_with = key.split(" with ")
@@ -51,7 +50,7 @@ def get_widget_attrs(key, value_parts):
         attrs["widget_base_types"] = widget_base_types_str.split(", ")
 
     for part in symbol_parts + value_parts:
-        if _is_style(part):
+        if is_style(part):
             append_uniq(div_attrs["styles"], quote(part))
         else:
             parts_eq = part.split("=")
@@ -61,31 +60,3 @@ def get_widget_attrs(key, value_parts):
                 raise Exception(f"Invalid part: {part}")
 
     return attrs, div_attrs
-
-
-style_patterns = [
-    r"text-(.+)-([0-9]+)",
-    r"bg-(.+)-([0-9]+)",
-    r"p-([0-9]+)",
-    r"px-([0-9]+)",
-    r"py-([0-9]+)",
-    r"m-([0-9]+)",
-    r"mx-([0-9]+)",
-    r"my-([0-9]+)",
-    r"mt-([0-9]+)",
-    r"mb-([0-9]+)",
-    r"rounded",
-    r"rounded-(.+)",
-    r"flex",
-    r"flex-col",
-    r"flex-row",
-    r"justify-end",
-    r"justify-start",
-]
-
-
-def _is_style(part):
-    for style_pattern in style_patterns:
-        if re.fullmatch(style_pattern, part):
-            return True
-    return False

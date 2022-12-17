@@ -1,9 +1,29 @@
+from moonleap import append_uniq
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.get_data_path import get_data_path
 from titan.widgets_pkg.pkg.create_widget_class_name import get_component_name
+from titan.widgets_pkg.widgetregistry import get_widget_reg
 
 
 class ComponentBuilder(Builder):
+    def update_widget_spec(self):
+        if on_click := self.widget_spec.values.get("onClick"):
+            self.widget_spec.div.append_attrs([f"onClick={{{on_click}}}"])
+
+            def update_component_def():
+                component_def = get_widget_reg().get(
+                    self.widget_spec.widget_name, default=None
+                )
+                if not component_def:
+                    return "retry"
+
+                props = component_def.src_dict.setdefault("__props__", [])
+                if False:
+                    # TODO: add a prop for the click handler
+                    append_uniq(props, "click:handler")
+
+            return update_component_def
+
     def build(self):
         self.add(imports=[_get_component_import_path(self.widget_spec)])
 
@@ -43,10 +63,12 @@ def _get_component_import_path(widget_spec):
 
 def _get_attrs_str(widget_spec):
     attrs = list(widget_spec.div.attrs)
+
     for named_prop in widget_spec.component.named_props:
         required_prop_name = named_prop.name or named_prop.typ.ts_var
         data_path = _get_prop_data_path(widget_spec, named_prop)
         attrs += [f"{required_prop_name}={{{data_path}}}"]
+
     attrs_str = " ".join(attrs)
     return attrs_str
 

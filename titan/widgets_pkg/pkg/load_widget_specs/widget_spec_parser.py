@@ -7,8 +7,11 @@ class WidgetSpecParser:
         self.module_name = module_name
         self.widget_reg = widget_reg
 
-    def parse(self, spec_dict=None, parent_widget_spec=None):
+    def parse(self, spec_dict=None, parent_widget_spec=None, post_process_fns=None):
         from titan.react_view_pkg.pkg.get_builders import get_builders
+
+        if post_process_fns is None:
+            post_process_fns = []
 
         is_top_level = parent_widget_spec is None
         assert spec_dict is not None or is_top_level
@@ -39,7 +42,9 @@ class WidgetSpecParser:
 
             # Every builder has the option to update the created widget-spec.
             for builder in builders:
-                builder.update_widget_spec()
+                post_process_fn = builder.update_widget_spec()
+                if post_process_fn:
+                    post_process_fns.append(post_process_fn)
 
             # Every builder has the option to extend the spec before we continue
             # to process it.
@@ -60,7 +65,23 @@ class WidgetSpecParser:
             # Use recursion to convert child widget specs
             #
             if spec:
-                self.parse(spec, parent_widget_spec=widget_spec)
+                self.parse(
+                    spec,
+                    parent_widget_spec=widget_spec,
+                    post_process_fns=post_process_fns,
+                )
+
+        if parent_widget_spec is None:
+            iterations = 0
+            while post_process_fns:
+                iterations += 1
+                if iterations > 1000:
+                    raise Exception("Unable to resolve post-process functions.")
+
+                for post_process_fn in list(post_process_fns):
+                    result = post_process_fn()
+                    if result != "retry":
+                        post_process_fns.remove(post_process_fn)
 
     def _check_top_level_constraints(self, is_top_level, widget_spec):
         if is_top_level and not widget_spec.is_component_def:
