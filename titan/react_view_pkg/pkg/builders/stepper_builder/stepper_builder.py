@@ -30,7 +30,7 @@ class StepperBuilder(Builder):
     def update_widget_spec(self):
         self.ilh.update_widget_spec()
         tpl = get_tpl(Path(__file__).parent / "tpl_div.tsx.j2", {})
-        append_uniq(self.widget_spec.root.div.attrs, tpl.get_section("attrs"))
+        self.widget_spec.root.div.append_attrs([tpl.get_section("attrs")])
 
 
 def _get_child_widget_output(widget_spec, item_name, use_uniform_height):

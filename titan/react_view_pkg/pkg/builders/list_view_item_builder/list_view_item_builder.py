@@ -20,8 +20,8 @@ class ListViewItemBuilder(Builder):
     def update_widget_spec(self):
         context = self._get_context()
         tpl = get_tpl(Path(__file__).parent / "tpl_div.tsx.j2", context)
-        append_uniq(self.widget_spec.div.attrs, tpl.get_section("attrs"))
-        append_uniq(self.widget_spec.div.styles, tpl.get_section("styles"))
+        self.widget_spec.div.append_attrs([tpl.get_section("attrs")])
+        self.widget_spec.div.append_styles([tpl.get_section("styles")])
 
     def _get_context(self):
         return {

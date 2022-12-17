@@ -7,4 +7,4 @@ class ButtonBuilder(Builder):
             self.widget_spec.values.get("handler")
             or '() => console.log("Moonleap Todo")'
         )
-        self.widget_spec.div.attrs += [f"onClick={{ {handler} }}"]
+        self.widget_spec.div.append_attrs([f"onClick={{ {handler} }}"])

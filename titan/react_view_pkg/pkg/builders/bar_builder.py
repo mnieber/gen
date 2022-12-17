@@ -1,3 +1,4 @@
+from moonleap.utils.quote import quote_all
 from titan.react_view_pkg.pkg.builder import Builder
 
 
@@ -20,10 +21,10 @@ class BarBuilder(Builder):
             self.lhs_slot = lhs_slot
             self._widgets.append(lhs_slot)
 
-        if lhs_content := self.widget_spec.find_child_with_place("LhsContents"):
+        if lhs_contents := self.widget_spec.find_child_with_place("LhsContents"):
             self.lhs_wrapper = self.widget_spec.find_child_with_place("LhsWrapper")
             assert self.lhs_wrapper
-            self.lhs_wrapper.child_widget_specs.append(lhs_content)
+            self.lhs_wrapper.child_widget_specs.append(lhs_contents)
             self._widgets.append(self.lhs_wrapper)
 
         if middle_slot := self.widget_spec.find_child_with_place("MiddleSlot"):
@@ -34,10 +35,10 @@ class BarBuilder(Builder):
             self.rhs_slot = rhs_slot
             self._widgets.append(rhs_slot)
 
-        if rhs_content := self.widget_spec.find_child_with_place("rhsContents"):
-            self.rhs_wrapper = self.widget_spec.find_child_with_place("rhsWrapper")
+        if rhs_contents := self.widget_spec.find_child_with_place("RhsContents"):
+            self.rhs_wrapper = self.widget_spec.find_child_with_place("RhsWrapper")
             assert self.rhs_wrapper
-            self.rhs_wrapper.child_widget_specs.append(rhs_content)
+            self.rhs_wrapper.child_widget_specs.append(rhs_contents)
             self._widgets.append(self.rhs_wrapper)
 
         if not self._widgets:
@@ -58,23 +59,26 @@ class BarBuilder(Builder):
         self._get_widgets()
         styles = []
 
-        if self.lhs_slot:
+        if self.lhs_slot or self.lhs_wrapper:
             styles += ["1fr"]
 
         if self.middle_slot:
             styles += ["0fr"]
 
-        if self.rhs_slot:
+        if self.rhs_slot or self.rhs_wrapper:
             styles += ["0fr"] if (self.lhs_slot and not self.middle_slot) else ["1fr"]
 
-        self.widget_spec.div.prepend_styles([f'"grid grid-cols-[{",".join(styles)}]"'])
+        self.widget_spec.div.prepend_styles(
+            quote_all(["grid", f'grid-cols-[{",".join(styles)}]'])
+        )
 
     def build(self):
         with self.widget_spec.memo():
             self.patch_widget_spec()
             self._get_widgets()
 
-            self.add(imports=["import { rowSkewer } from 'src/frames/components';"])
+            if self.lhs_wrapper or self.rhs_wrapper:
+                self.add(imports=["import { rowSkewer } from 'src/frames/components';"])
             self._add_div_open()
             self._add_child_widgets(self._widgets)
             self._add_div_close()

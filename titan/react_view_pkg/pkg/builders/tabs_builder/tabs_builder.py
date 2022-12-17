@@ -52,7 +52,7 @@ class TabsBuilder(Builder):
         with child_widget_spec.memo():
             child_widget_spec.div.key = key
 
-            extend_uniq(child_widget_spec.div.styles, div_styles)
+            child_widget_spec.div.append_styles(div_styles)
             if div_attrs:
-                append_uniq(child_widget_spec.div.attrs, div_attrs)
+                child_widget_spec.div.append_attrs([div_attrs])
             return build(child_widget_spec)
