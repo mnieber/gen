@@ -25,7 +25,34 @@ class StepperBuilder(Builder):
 
     def get_spec_extension(self, places):
         if "Child" not in places:
-            return {"Child with Empty": "pass"}
+            src_dict = self.widget_spec.src_dict
+            lhs_dict, middle_dict, rhs_dict = None, None, None
+            for k, v in src_dict.items():
+                if k.startswith("LhsContents with"):
+                    lhs_dict = {k: v}
+                if k.startswith("MiddleSlot with"):
+                    middle_dict = {k: v}
+                if k.startswith("RhsContents with"):
+                    rhs_dict = {k: v}
+
+            lhs_dict = lhs_dict or {
+                "LhsContents with backButton as Const": {
+                    "Child with Div, Button[onClick=moveBack.cn=__Back]": {
+                        "Text": "value=Back"
+                    }
+                }
+            }
+            middle_dict = middle_dict or {"MiddleSlot with Empty": "pass"}
+            rhs_dict = rhs_dict or {
+                "RhsContents with forwardButton as Const": {
+                    "Child with Div, Button[onClick=moveForward.cn=__Forward]": {
+                        "Text": "value=Forward"
+                    }
+                }
+            }
+            return {
+                "Child with Bar[cn=__Stepper]": {**lhs_dict, **middle_dict, **rhs_dict}
+            }
 
     def _get_const_name(self):
         assert self.item_name
