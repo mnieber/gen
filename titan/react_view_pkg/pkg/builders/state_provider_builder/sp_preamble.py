@@ -1,41 +1,4 @@
-from moonleap.utils import chop0
 from moonleap.utils.inflect import plural
-
-sp_preamble_tpl = chop0(
-    """
-{% magic_with state.name as MyState %}
-{% magic_with container.item.item_name as containerItem %}
-{% magic_with named_item_list.typ.item_name as myNamedListItem %}
-{% magic_with named_item.typ.item_name as myNamedItem %}
-{% magic_with container.name as myContainer %}
-    const getDefaultPropsContext = () => {
-      const result: any = { defaultProps: {
-        myState: () => state,                                                                                   {% ?? state %}
-        myNamedItem: () => {{ __.return_value(named_item) }},                                                   {% !! named_item in state_provider.named_items_provided %}
-        myNamedListItems: () => {{ __.return_value(named_item_list) }},                                         {% !! named_item_list in state_provider.named_item_lists_provided %}
-      } };
-
-      result.defaultProps = {                                                                                   {% for container in state.containers %}
-        ...result.defaultProps,
-        containerItems: () => {{ __.return_value(container, "items") }},                                        {% ?? container.named_item_list %}
-        containerItem: () => {{ __.return_value(container, "highlighted_item") }},                              {% ?? container.get_bvr("highlight") %}
-        containerItemsDeletion: () => state.myContainer.deletion,                                               {% ?? container.get_bvr("deletion") %}
-        containerItemsDragAndDrop: () => state.myContainer.dragAndDrop,                                         {% ?? container.get_bvr("dragAndDrop") %}
-        containerItemsFiltering: () => state.myContainer.filtering,                                             {% ?? container.get_bvr("filtering") %}
-        containerItemsHighlight: () => state.myContainer.highlight,                                             {% ?? container.get_bvr("highlight") %}
-        containerItemsSelection: () => state.myContainer.selection,                                             {% ?? container.get_bvr("selection") %}
-      };
-      {{ "" }}                                                                                                  {% endfor %}
-      return result;
-    };
-    {{ "" }}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-    """
-)
 
 
 def return_value(state_provider, container, data, hint=None):
