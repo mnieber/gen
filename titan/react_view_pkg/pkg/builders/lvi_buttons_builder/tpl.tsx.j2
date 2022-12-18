@@ -20,8 +20,7 @@ onDelete: Function;                                                             
 
 {% section preamble %}
 if (isUpdating(props.myItemName)) {
-  return UIkit && <div data-uk-spinner className=""></div>;                             {% ?? uikit %}
-  return null;                                                                          {% ?? not uikit %}
+  return UIkit && <div data-uk-spinner className=""></div>;
 }
 {{ "" }}
 {% end_section %}

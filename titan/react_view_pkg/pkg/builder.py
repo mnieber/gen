@@ -80,11 +80,6 @@ class Builder:
     def __repr__(self):
         return f"{self.__class__.__name__}({self.widget_spec})"
 
-    @property
-    def use_uikit(self):
-        component = self.widget_spec.root.component
-        return component and component.module.react_app.service.uikit
-
 
 def _trim(lines):
     return [x if x == "\n" else x.removesuffix("\n") for x in lines]

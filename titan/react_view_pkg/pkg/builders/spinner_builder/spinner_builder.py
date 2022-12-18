@@ -20,6 +20,5 @@ class SpinnerBuilder(Builder):
             "guard": self.widget_spec.values.get("guard"),
         }
 
-        fn = "tpl_uikit.tsx.j2" if self.use_uikit else "tpl_no_uikit.tsx.j2"
-        tpl = get_tpl(Path(__file__).parent / fn, context)
+        tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)
         add_tpl_to_builder(tpl, self)

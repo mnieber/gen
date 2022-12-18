@@ -18,8 +18,6 @@ base_tags = {
     "pudb": ["tool"],
     "pytest": ["tool"],
     "setup.cfg": ["tool"],
-    "tailwind-css": ["tool"],
-    "uikit": ["tool"],
     "vandelay": ["tool"],
 }
 
@@ -75,6 +73,4 @@ class ExtendService:
     pudb = P.child(runs + uses, "pudb")
     pytest = P.child(runs + uses, "pytest")
     setup_cfg = P.child(runs + uses, "setup.cfg")
-    tailwindcss = P.child(runs + uses, "tailwind-css")
-    uikit = P.child(runs + uses, "uikit")
     vandelay = P.child(runs + uses, "vandelay")

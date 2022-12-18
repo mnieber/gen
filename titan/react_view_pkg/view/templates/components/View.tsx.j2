@@ -3,7 +3,7 @@ import { defaultProps as dps, withDefaultProps } from 'src/app/defaultProps';
 import { cn } from 'src/utils/classnames';
 import { observer } from 'mobx-react-lite';
 import { isLoaded, isUpdating } from 'src/api/ResourceState';
-import UIkit from 'uikit';                                                                          {% ?? _.service.uikit %}
+import UIkit from 'uikit';
 {{ line }}                                                                                          {% !! line in __.build.imports_lines %}
 import './MyComponent.scss';                                                                        {% ?? __.has_scss %}
 {# Start: view imports here #}

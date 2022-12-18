@@ -20,5 +20,4 @@ class LviButtonsBuilder(Builder):
             **self.bvrs_helper.bvrs_context(),
             "item_name": self.ih.array_item_name,
             "component_name": self.widget_spec.widget_class_name,
-            "uikit": self.use_uikit,
         }

@@ -34,18 +34,15 @@ Scss
 
 {% section scss %}
 .MyComponent {
-  @apply cursor-pointer;                                                {% ?? uikit %}
-  cursor: pointer;                                                      {% ?? not uikit %}
+  @apply cursor-pointer;
 }
 
 .MyComponent--selected {                                                {% if bvrs_has_selection %}
-  @apply bg-blue-200;                                                   {% ?? uikit %}
-  background-color: #2222dd;                                            {% ?? not uikit %}
+  @apply bg-blue-200;
 }                                                                       {% endif %}
 
 .MyComponent--highlighted {                                             {% if bvrs_has_highlight %}
-  @apply font-bold;                                                     {% ?? uikit %}
-  font-weight: bold;                                                    {% ?? not uikit %}
+  @apply font-bold;
 }                                                                       {% endif %}
 
 .MyComponent--drag-before {                                             {% if bvrs_has_drag_and_drop %}
