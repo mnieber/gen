@@ -5,33 +5,28 @@
 {% section imports %}
 import React from 'react';
 import { MyItemT } from 'src/api/types/MyItemT';
-import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
-import 'react-tabs/style/react-tabs.scss';
+import { Tab, Tabs } from 'src/frames/components';
 {% end_section %}
 
 
 
 {% section preamble %}
-    const [myItemId, setMyItemId] = React.useState<string>(
-      props.myItems[0].id
-    );
+    const [myItemIdx, setMyItemIdx] = React.useState<number>(0);
 
-    const tabs = props.myItems.map((myItem: MyItemT) => {
+    const tabs = props.myItems.map((myItem, idx) => {
       return (
-        <Tab key={myItem.id} onClick={() => setMyItemId(myItem.id)}>
+        <Tab
+          key={myItem.id}
+          active={idx === myItemIdx}
+          onClick={() => setMyItemIdx(idx)}
+        >
           { myItem.{{ __.display_field_name }} }                                                   {% ?? __.display_field_name %}
           Moonleap Todo                                                                            {% ?? not __.display_field_name %}
         </Tab>
       );
     });
 
-    const tabPanels = props.myItems.map((myItem: MyItemT) => {
-      return <TabPanel key={myItem.id}>
-        {{ __.tab_instance_div }}                                                                  {% ?? not __.uniform_tab_height %}
-      </TabPanel>;
-    });
-
-    const myItemDivs = props.myItems.map((myItem: MyItemT) => {                                    {% if __.uniform_tab_height %}
+    const myItemDivs = props.myItems.map((myItem, idx) => {                                        {% if __.uniform_tab_height %}
       {{ __.tab_instance_div }}
     });                                                                                            {% endif %}
 
@@ -43,14 +38,23 @@ import 'react-tabs/style/react-tabs.scss';
 
 
 {% section lines %}
-    <Tabs className="MyComponent">
-      <TabList>{tabs}</TabList>
-      {tabPanels}
-    </Tabs>
+    <Tabs className={cn("MyComponent__Tabs")}>{tabs}</Tabs>
     {myItemDivs.length === 0 && noItems}
-    <div className={cn('MyComponent__Tabs')}>{myItemDivs}</div>
+    <div className={cn('MyComponent__Body')}>{myItemDivs}</div>
 {% end_section %}
 
+
+{% section scss %}
+.MyComponent__Body {
+    display: grid;
+    grid-template-areas:
+        "content";
+
+    .MyComponent__Tab {
+        grid-area: content;
+    }
+}
+{% end_section %}
 
 {% end_magic_with %}
 {% end_magic_with %}

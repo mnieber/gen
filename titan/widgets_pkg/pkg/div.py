@@ -16,12 +16,12 @@ class Div:
                 self.styles.insert(0, style)
 
     def append_styles(self, styles):
-        for style in reversed(styles):
+        for style in styles:
             if style not in self.styles:
                 self.styles.append(style)
 
     def append_attrs(self, attrs):
-        for attr in reversed(attrs):
+        for attr in attrs:
             if attr not in self.attrs:
                 self.attrs.append(attr)
 

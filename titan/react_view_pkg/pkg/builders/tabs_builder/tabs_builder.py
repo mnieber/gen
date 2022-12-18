@@ -9,9 +9,10 @@ from titan.types_pkg.typeregistry import get_type_reg
 class TabsBuilder(Builder):
     def build(self):
         self.use_uniform_height = bool(self.widget_spec.values.get("uniformHeight"))
+        self.widget_class_name = self.widget_spec.root.widget_class_name
         context = dict(__=self._get_context())
         context["__"]["tab_instance_div"] = self.output.graft(
-            self._get_tab_instance_output()
+            self._get_tab_instance_output(self.widget_class_name + "__Tab")
         )
 
         tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)
@@ -23,7 +24,7 @@ class TabsBuilder(Builder):
         return {
             "item_name": self.ilh.array_item_name,
             "items_expr": self.ilh.item_list_data_path(),
-            "component_name": self.widget_spec.widget_class_name,
+            "component_name": self.widget_class_name,
             "display_field_name": (
                 type_spec.display_field.name if type_spec.display_field else None
             ),
@@ -33,7 +34,7 @@ class TabsBuilder(Builder):
     def update_widget_spec(self):
         self.ilh.update_widget_spec()
 
-    def _get_tab_instance_output(self):
+    def _get_tab_instance_output(self, tab_cn):
         # This returns the div that is used in the Tabs.
         # Don't confuse this with the div that is used in the TabsItem.
         from titan.react_view_pkg.pkg.build import build
@@ -44,6 +45,6 @@ class TabsBuilder(Builder):
             child_widget_spec.div.key = f"{item_name}.id"
             if self.use_uniform_height:
                 child_widget_spec.div.append_styles(
-                    [f"{item_name}.id === {item_name}Id ? 'visible' : 'invisible'"]
+                    [f'"{tab_cn}"', f"idx === {item_name}Idx ? 'visible' : 'invisible'"]
                 )
             return build(child_widget_spec)
