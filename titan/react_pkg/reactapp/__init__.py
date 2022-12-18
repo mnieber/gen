@@ -4,7 +4,7 @@ import moonleap.resource.props as P
 from moonleap import Priorities, create, create_forward, extend, rule
 from moonleap.verbs import has, runs
 from titan.project_pkg.service import Service
-from titan.react_pkg.packages.use_react_packages import use_react_packages
+from titan.react_pkg.packages.use_react_package import use_react_package
 
 from .resources import ReactApp
 
@@ -33,7 +33,7 @@ def add_react_app_features(react_app):
     forwards = []
     if react_app.service.get_setting_or(False, ["react_app", "reportWebVitals"]):
         react_app.use_webvitals = True
-        use_react_packages(react_app, ["reportWebVitals"])
+        use_react_package(react_app, "utils/reportWebVitals")
         forwards += [create_forward(":node-package", has, "web-vitals:node-pkg")]
 
 

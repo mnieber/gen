@@ -2,6 +2,7 @@ import os
 import typing as T
 from dataclasses import dataclass, field
 
+from moonleap import append_uniq
 from moonleap.utils.fp import extend_uniq
 from moonleap.utils.merge_into_config import merge_into_config
 
@@ -63,3 +64,7 @@ class BuilderOutput:
         rhs.preamble_hooks_lines = []
         self.add(rhs)
         return div
+
+    def add_react_package(self, module_name, package_name, output_dir):
+        packages = self.react_packages_by_module_name.setdefault(module_name, [])
+        append_uniq(packages, [package_name, output_dir])

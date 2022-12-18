@@ -13,6 +13,7 @@ from titan.react_view_pkg.pkg.builders.form_fields_builder import FormFieldsBuil
 from titan.react_view_pkg.pkg.builders.form_state_provider_builder.form_state_provider_builder import (
     FormStateProviderBuilder,
 )
+from titan.react_view_pkg.pkg.builders.icon_builder import IconBuilder
 from titan.react_view_pkg.pkg.builders.item_fields_builder import (
     ItemFieldBuilder,
     ItemFieldsBuilder,
@@ -90,6 +91,9 @@ def get_builders(widget_spec):
 
         elif widget_base_type == "FormStateProvider":
             builder = FormStateProviderBuilder(widget_spec)
+
+        elif widget_base_type == "Icon":
+            builder = IconBuilder(widget_spec)
 
         elif widget_base_type == "ItemField":
             builder = ItemFieldBuilder(widget_spec)

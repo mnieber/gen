@@ -39,7 +39,7 @@ def component_maybe_expression(component, named_item_or_item_list):
 
 
 def load_component(component):
-    from titan.react_pkg.packages.use_react_packages import use_react_packages
+    from titan.react_pkg.packages.use_react_package import use_react_package
     from titan.react_view_pkg.pkg.build import build
 
     if widget_spec := component.widget_spec:
@@ -50,4 +50,7 @@ def load_component(component):
             module_name,
             packages,
         ) in component.build_output.react_packages_by_module_name.items():
-            use_react_packages(react_app.get_module(module_name), packages)
+            for package, output_dir in packages:
+                use_react_package(
+                    react_app.get_module(module_name), package, output_dir
+                )
