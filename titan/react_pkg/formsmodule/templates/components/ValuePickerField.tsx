@@ -7,7 +7,7 @@ import {
   PropsT as ValuePickerPropsT,
   ValuePicker,
 } from 'src/utils/components/ValuePicker';
-import { useScheduledCall } from 'src/utils/useScheduledCall';
+import { useScheduledCall } from 'src/utils/hooks';
 
 type PropsT<ValueT> = ValuePickerPropsT<ValueT> & {
   submitOnChange?: boolean;

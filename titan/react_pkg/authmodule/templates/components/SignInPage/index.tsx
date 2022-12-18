@@ -11,8 +11,8 @@ import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { SignInForm } from 'src/auth/components/SignInForm';
 import { useAuthStateContext } from 'src/auth/hooks';
 import { getHomeRoute } from 'src/routes';
+import { getNextUrl, useNextUrl } from 'src/utils/hooks';
 import { ObjT } from 'src/utils/types';
-import { getNextUrl, useNextUrl } from 'src/utils/useNextUrl';
 import { useMessages } from './useMessages';
 
 export const SignInPage: React.FC = observer(() => {
