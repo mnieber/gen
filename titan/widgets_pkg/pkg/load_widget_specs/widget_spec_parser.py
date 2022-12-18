@@ -1,4 +1,4 @@
-from .get_widget_spec import get_widget_spec
+from .create_widget_spec import create_widget_spec
 
 
 class WidgetSpecParser:
@@ -28,7 +28,7 @@ class WidgetSpecParser:
         ]
 
         for key, value in items:
-            widget_spec, spec = get_widget_spec(
+            widget_spec, spec = create_widget_spec(
                 key, value, module_name=self.module_name
             )
 

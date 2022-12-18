@@ -5,7 +5,7 @@ from titan.types_pkg.pkg.load_type_specs.split_raw_key import split_symbols
 from titan.widgets_pkg.pkg.is_style import is_style
 
 
-def get_widget_attrs(key, value_parts):
+def get_widget_attrs(key, more_value_parts):
     div_attrs = dict(styles=[], attrs=[])
     attrs = dict(values={}, place_values={}, widget_base_types=[])
 
@@ -13,10 +13,11 @@ def get_widget_attrs(key, value_parts):
     if len(parts_with) == 2:
         place = parts_with[0]
         place, place_symbols = split_symbols(place)
-        attrs["place"] = parts_with[0]
-        attrs["place_values"] = split_non_empty(place_symbols, ".")
-
+        attrs["place"] = place
+        place_symbol_parts = split_non_empty(place_symbols, ".")
         key = parts_with[1]
+    else:
+        place_symbol_parts = []
 
     if key == "children":
         widget_base_types_str = "Children"
@@ -49,13 +50,23 @@ def get_widget_attrs(key, value_parts):
     if widget_base_types_str:
         attrs["widget_base_types"] = widget_base_types_str.split(", ")
 
-    for part in symbol_parts + value_parts:
+    for part in symbol_parts + more_value_parts:
         if is_style(part):
             append_uniq(div_attrs["styles"], quote(part))
         else:
             parts_eq = part.split("=")
             if len(parts_eq) == 2:
                 attrs["values"][parts_eq[0]] = parts_eq[1]
+            else:
+                raise Exception(f"Invalid part: {part}")
+
+    for part in place_symbol_parts:
+        if is_style(part):
+            pass
+        else:
+            parts_eq = part.split("=")
+            if len(parts_eq) == 2:
+                attrs["place_values"][parts_eq[0]] = parts_eq[1]
             else:
                 raise Exception(f"Invalid part: {part}")
 

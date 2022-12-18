@@ -4,13 +4,13 @@ from titan.widgets_pkg.pkg.widget_spec import Div, WidgetSpec
 from .get_widget_attrs import get_widget_attrs
 
 
-def get_widget_spec(key, value, module_name):
+def create_widget_spec(key, value, module_name):
     is_dict = isinstance(value, dict)
-    value_parts = split_non_empty(
+    more_value_parts = split_non_empty(
         _get_type_value(value) if is_dict else "" if value == "pass" else value, "."
     )
     spec = value if is_dict else {}
-    widget_values, div_attrs = get_widget_attrs(key, value_parts)
+    widget_values, div_attrs = get_widget_attrs(key, more_value_parts)
     widget_spec = WidgetSpec(**widget_values)
 
     widget_spec.div = Div(**div_attrs)

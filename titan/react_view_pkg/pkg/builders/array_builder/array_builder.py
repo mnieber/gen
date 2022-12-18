@@ -36,7 +36,7 @@ class ArrayBuilder(Builder):
 def _get_child_widget_output(widget_spec, item_name):
     from titan.react_view_pkg.pkg.build import build
 
-    child_widget_spec = widget_spec.find_child_with_place("Child")
+    child_widget_spec = widget_spec.get_place("Child")
     with child_widget_spec.memo():
         child_widget_spec.div.key = f"{item_name}.id"
         return build(child_widget_spec)

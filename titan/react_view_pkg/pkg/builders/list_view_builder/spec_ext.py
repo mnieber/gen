@@ -20,20 +20,9 @@ def _lvi_component_spec(lvi_name, named_item_term_str):
     return {
         f"LviComponent with {lvi_name} as ListViewItem, Bar[p-2]": {
             "__default_props__": [named_item_term_str],
-            "LhsSlot with RowSkewer[justify=start.cn=__Fields]": {
-                "ItemFields": "display=1"
-            },
-            "RhsSlot with RowSkewer[justify=end.cn=__Buttons]": {"LviButtons": "pass"},
-        },
-    }
-
-
-def _lvi_component_spec_2(lvi_name, named_item_term_str):
-    return {
-        f"LviComponent with {lvi_name} as ListViewItem, Bar[p-2]": {
-            "__default_props__": [named_item_term_str],
-            "LhsContents[cn=__Fields] with ItemFields": "display=1",
-            "RhsContents[cn=__Buttons] with LviButtons": "pass",
+            "__attrs__": "cnLhs=__Title.cnRhs=__Buttons",
+            "LhsContents with ItemFields": "display=1",
+            "RhsContents with LviButtons": "pass",
         },
     }
 

@@ -27,7 +27,7 @@ class ItemFieldsBuilder(Builder):
         self.type_spec = get_type_reg().get(u0(self.ih.array_item_name))
         self.display_only = self.widget_spec.values.get("display")
 
-        field_widget_spec = self.widget_spec.find_child_with_place("Field")
+        field_widget_spec = self.widget_spec.get_place("Field")
         for field_spec in self.get_field_specs():
             field_widget_spec.values["field_spec"] = field_spec
             self._add_child_widgets([field_widget_spec])

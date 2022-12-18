@@ -47,7 +47,7 @@ class ListViewBuilder(Builder):
         context = self._get_context()
         tpl_lvi_props = get_tpl(Path(__file__).parent / "tpl_lvi_props.tsx.j2", context)
 
-        child_widget_spec = self.widget_spec.find_child_with_place("ListViewItem")
+        child_widget_spec = self.widget_spec.get_place("ListViewItem")
         with child_widget_spec.memo():
             key = f"{self.ilh.array_item_name}.id"
             child_widget_spec.div.key = key

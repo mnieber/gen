@@ -20,7 +20,7 @@ class FormStateProviderBuilder(Builder):
             mutation_name=self.widget_spec.get_value_by_name("mutation"),
         )
 
-        children_ws = self.widget_spec.find_child_with_place("Children")
+        children_ws = self.widget_spec.get_place("Children")
         children_build_output = build(children_ws)
 
         context = dict(__=__)

@@ -1,7 +1,6 @@
 from pathlib import Path
 
 from moonleap import get_tpl
-from moonleap.utils.fp import append_uniq
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_helper import BvrsHelper

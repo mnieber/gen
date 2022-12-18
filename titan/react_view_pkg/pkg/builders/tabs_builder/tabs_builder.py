@@ -38,7 +38,7 @@ class TabsBuilder(Builder):
         # Don't confuse this with the div that is used in the TabsItem.
         from titan.react_view_pkg.pkg.build import build
 
-        child_widget_spec = self.widget_spec.find_child_with_place("Tab")
+        child_widget_spec = self.widget_spec.get_place("Tab")
         with child_widget_spec.memo():
             item_name = self.ilh.array_item_name
             child_widget_spec.div.key = f"{item_name}.id"

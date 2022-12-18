@@ -17,26 +17,26 @@ class BarBuilder(Builder):
             return
         self._has_widgets = True
 
-        if lhs_slot := self.widget_spec.find_child_with_place("LhsSlot"):
+        if lhs_slot := self.widget_spec.get_place("LhsSlot"):
             self.lhs_slot = lhs_slot
             self._widgets.append(lhs_slot)
 
-        if lhs_contents := self.widget_spec.find_child_with_place("LhsContents"):
-            self.lhs_wrapper = self.widget_spec.find_child_with_place("LhsWrapper")
+        if lhs_contents := self.widget_spec.get_place("LhsContents"):
+            self.lhs_wrapper = self.widget_spec.get_place("LhsWrapper")
             assert self.lhs_wrapper
             self.lhs_wrapper.child_widget_specs.append(lhs_contents)
             self._widgets.append(self.lhs_wrapper)
 
-        if middle_slot := self.widget_spec.find_child_with_place("MiddleSlot"):
+        if middle_slot := self.widget_spec.get_place("MiddleSlot"):
             self.middle_slot = middle_slot
             self._widgets.append(middle_slot)
 
-        if rhs_slot := self.widget_spec.find_child_with_place("RhsSlot"):
+        if rhs_slot := self.widget_spec.get_place("RhsSlot"):
             self.rhs_slot = rhs_slot
             self._widgets.append(rhs_slot)
 
-        if rhs_contents := self.widget_spec.find_child_with_place("RhsContents"):
-            self.rhs_wrapper = self.widget_spec.find_child_with_place("RhsWrapper")
+        if rhs_contents := self.widget_spec.get_place("RhsContents"):
+            self.rhs_wrapper = self.widget_spec.get_place("RhsWrapper")
             assert self.rhs_wrapper
             self.rhs_wrapper.child_widget_specs.append(rhs_contents)
             self._widgets.append(self.rhs_wrapper)
@@ -48,10 +48,12 @@ class BarBuilder(Builder):
         result = {}
 
         if "LhsWrapper" not in places:
-            result["LhsWrapper with Div, RowSkewer[cn=Lhs.justify-start]"] = "pass"
+            cn = self.widget_spec.values.get("cnLhs") or "Lhs"
+            result[f"LhsWrapper with Div, RowSkewer[cn={cn}.justify-start]"] = "pass"
 
         if "RhsWrapper" not in places:
-            result["RhsWrapper with Div, RowSkewer[cn=Rhs.justify-end]"] = "pass"
+            cn = self.widget_spec.values.get("cnRhs") or "Lhs"
+            result[f"RhsWrapper with Div, RowSkewer[cn={cn}.justify-end]"] = "pass"
 
         return result
 

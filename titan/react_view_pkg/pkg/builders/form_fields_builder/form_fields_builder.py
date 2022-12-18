@@ -18,7 +18,7 @@ class FormFieldsBuilder(Builder):
             item_name=self.ih.array_item_name,
             mutation_name=self.widget_spec.get_value_by_name("mutation"),
         )
-        field_widget_spec = self.widget_spec.find_child_with_place("Field")
+        field_widget_spec = self.widget_spec.get_place("Field")
         lines = []
         for form_field_name, field_spec in __.fields:
             build_output = self._get_field_widget_output(

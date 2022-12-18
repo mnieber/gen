@@ -58,7 +58,7 @@ class WidgetSpec:
     def set_widget_class_name(self, value):
         self._widget_class_name = value
 
-    def find_child_with_place(self, place):
+    def get_place(self, place):
         return R.head(x for x in self.child_widget_specs if x.place == place)
 
     def memo(self, fields=None):

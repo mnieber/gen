@@ -30,6 +30,6 @@ class ConstBuilder(Builder):
 def _get_child_widget_output(widget_spec):
     from titan.react_view_pkg.pkg.build import build
 
-    child_widget_spec = widget_spec.find_child_with_place("Child")
+    child_widget_spec = widget_spec.get_place("Child")
     with child_widget_spec.memo():
         return build(child_widget_spec)

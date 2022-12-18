@@ -3,6 +3,8 @@ from pathlib import Path
 from moonleap import get_tpl
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
+from titan.widgets_pkg.pkg.load_widget_specs.create_widget_spec import \
+    create_widget_spec
 
 
 class StepperBuilder(Builder):
@@ -28,11 +30,12 @@ class StepperBuilder(Builder):
             src_dict = self.widget_spec.src_dict
             lhs_dict, middle_dict, rhs_dict = None, None, None
             for k, v in src_dict.items():
-                if k.startswith("LhsContents with"):
+                ws, _ = create_widget_spec(k, v, None)
+                if ws.place == "LhsContents":
                     lhs_dict = {k: v}
-                if k.startswith("MiddleSlot with"):
+                if ws.place == "MiddleSlot":
                     middle_dict = {k: v}
-                if k.startswith("RhsContents with"):
+                if ws.place == "RhsContents":
                     rhs_dict = {k: v}
 
             lhs_dict = lhs_dict or {
@@ -66,7 +69,7 @@ class StepperBuilder(Builder):
     def _get_child_widget_output(self):
         from titan.react_view_pkg.pkg.build import build
 
-        child_widget_spec = self.widget_spec.find_child_with_place("Child")
+        child_widget_spec = self.widget_spec.get_place("Child")
         assert child_widget_spec
 
         with child_widget_spec.memo():
