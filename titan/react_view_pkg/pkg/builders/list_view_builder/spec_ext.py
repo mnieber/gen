@@ -1,3 +1,6 @@
+from titan.widgets_pkg.pkg.get_place_dict import get_place_dict
+
+
 def spec_ext(widget_spec, places):
     named_item_term_str = widget_spec.get_value_by_name("item")
     lvi_name = widget_spec.values.get("lvi-name") or _get_default_lvi_name(widget_spec)
@@ -6,7 +9,7 @@ def spec_ext(widget_spec, places):
     if "ListViewItem" not in places:
         result.update(_lvi_spec(lvi_name))
     if "LviComponent" not in places:
-        result.update(_lvi_component_spec(lvi_name, named_item_term_str))
+        result.update(_lvi_component_spec(widget_spec, lvi_name, named_item_term_str))
     return result
 
 
@@ -16,13 +19,24 @@ def _lvi_spec(lvi_name):
     }
 
 
-def _lvi_component_spec(lvi_name, named_item_term_str):
+def _lvi_component_spec(widget_spec, lvi_name, named_item_term_str):
+    lhs_contents = get_place_dict(widget_spec.src_dict, "LhsContents") or {
+        "LhsContents with ItemFields": "display=1",
+    }
+
+    middle_slot = get_place_dict(widget_spec.src_dict, "MiddleSlot") or {}
+
+    rhs_contents = get_place_dict(widget_spec.src_dict, "RhsContents") or {
+        "RhsContents with LviButtons": "pass",
+    }
+
     return {
         f"LviComponent with {lvi_name} as ListViewItem, Bar[p-2]": {
             "__default_props__": [named_item_term_str],
             "__attrs__": "cnLhs=__Title.cnRhs=__Buttons",
-            "LhsContents with ItemFields": "display=1",
-            "RhsContents with LviButtons": "pass",
+            **lhs_contents,
+            **middle_slot,
+            **rhs_contents,
         },
     }
 

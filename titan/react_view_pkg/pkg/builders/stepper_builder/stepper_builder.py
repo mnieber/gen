@@ -3,8 +3,7 @@ from pathlib import Path
 from moonleap import get_tpl
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.widgets_pkg.pkg.load_widget_specs.create_widget_spec import \
-    create_widget_spec
+from titan.widgets_pkg.pkg.get_place_dict import get_place_dict
 
 
 class StepperBuilder(Builder):
@@ -28,25 +27,17 @@ class StepperBuilder(Builder):
     def get_spec_extension(self, places):
         if "Child" not in places:
             src_dict = self.widget_spec.src_dict
-            lhs_dict, middle_dict, rhs_dict = None, None, None
-            for k, v in src_dict.items():
-                ws, _ = create_widget_spec(k, v, None)
-                if ws.place == "LhsContents":
-                    lhs_dict = {k: v}
-                if ws.place == "MiddleSlot":
-                    middle_dict = {k: v}
-                if ws.place == "RhsContents":
-                    rhs_dict = {k: v}
-
-            lhs_dict = lhs_dict or {
+            lhs_dict = get_place_dict(src_dict, "LhsContents") or {
                 "LhsContents with backButton as Const": {
                     "Child with Div, Button[onClick=moveBack.cn=__Back]": {
                         "Text": "value=Back"
                     }
                 }
             }
-            middle_dict = middle_dict or {"MiddleSlot with Empty": "pass"}
-            rhs_dict = rhs_dict or {
+            middle_dict = get_place_dict(src_dict, "MiddleSlot") or {
+                "MiddleSlot with Empty": "pass"
+            }
+            rhs_dict = get_place_dict(src_dict, "RhsContents") or {
                 "RhsContents with forwardButton as Const": {
                     "Child with Div, Button[onClick=moveForward.cn=__Forward]": {
                         "Text": "value=Forward"
