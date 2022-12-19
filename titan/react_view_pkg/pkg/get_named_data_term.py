@@ -17,7 +17,6 @@ def get_named_item_list(widget_spec):
     if not term_str:
         return None
 
-    # TODO: use get_named_global_res
     named_item_list = named(ItemList)()
     named_item_list.meta = get_meta(term_str)
     term = named_item_list.meta.term
@@ -33,7 +32,6 @@ def get_named_item(widget_spec):
     if not term_str:
         return None
 
-    # TODO: use get_named_global_res
     named_item = named(Item)()
     named_item.meta = get_meta(term_str)
     term = named_item.meta.term

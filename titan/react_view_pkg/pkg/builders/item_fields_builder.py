@@ -24,7 +24,6 @@ class ItemFieldsBuilder(Builder):
         ]
 
     def build(self):
-        # TODO: use ih.array_item.type_spec
         self.type_spec = get_type_reg().get(u0(self.ih.array_item_name))
         self.display_only = self.widget_spec.values.get("display")
 
