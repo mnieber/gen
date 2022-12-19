@@ -17,16 +17,11 @@ class ProvidedData:
 
 def get_helpers(_):
     class Helpers:
-        states = list()
         bvr_names = list()
         item_names = list()
         _provided_data_by_item_name = dict()
 
         def __init__(self):
-            for module in _.react_app.modules:
-                for state in module.states:
-                    self.states.append(state)
-
             for module in _.react_app.modules:
                 for component in module.components:
                     if component.meta.term.tag == "state~provider":
