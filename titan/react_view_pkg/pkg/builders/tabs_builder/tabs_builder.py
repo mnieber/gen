@@ -19,6 +19,7 @@ class TabsBuilder(Builder):
         add_tpl_to_builder(tpl, self)
 
     def _get_context(self):
+        # TODO: use ilh.array_item.type_spec
         type_spec = get_type_reg().get(u0(self.ilh.array_item_name))
 
         return {

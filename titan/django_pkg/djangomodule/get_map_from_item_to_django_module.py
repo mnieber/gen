@@ -15,6 +15,7 @@ def get_map_from_item_to_django_module(type_reg, modules):
     items = []
     lut = {}
 
+    # TODO: use get_global_rss_by_tag("item")?
     for item in type_reg.items:
         type_name = item.type_spec.type_name
 
