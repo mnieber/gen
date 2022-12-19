@@ -29,15 +29,6 @@ def module_renders_state(module, state):
     )
 
 
-@rule("module", has, "react-state")
-def module_has_state(module, state):
-    state_provider_term = f"{state.meta.term.data}:state~provider"
-    return [
-        create_forward(module, has, state_provider_term),
-        create_forward(state_provider_term, provides, state),
-    ]
-
-
 @rule("state")
 def created_state(state):
     return [
