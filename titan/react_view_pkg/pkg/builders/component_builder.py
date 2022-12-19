@@ -15,7 +15,7 @@ class ComponentBuilder(Builder):
                     self.widget_spec.widget_name, default=None
                 )
                 assert component_def
-                append_uniq(component_def.handlers, "click:handler")
+                append_uniq(component_def.handler_terms, "click:handler")
 
             return update_component_def
 

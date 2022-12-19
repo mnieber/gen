@@ -34,15 +34,15 @@ class WidgetSpec:
         return self.widget_name and ":" in self.widget_name
 
     @property
-    def named_props(self):
+    def named_prop_terms(self):
         return self.src_dict.setdefault("__props__", [])
 
     @property
-    def handlers(self):
+    def handler_terms(self):
         return self.src_dict.setdefault("__handlers__", [])
 
     @property
-    def named_default_props(self):
+    def named_default_prop_terms(self):
         return self.src_dict.setdefault("__default_props__", [])
 
     @property
