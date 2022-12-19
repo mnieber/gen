@@ -1,8 +1,6 @@
 import moonleap.resource.props as props  # noqa
 from moonleap.builder.create_resources import create_resources  # noqa
 from moonleap.packages.install import extend  # noqa
-from moonleap.packages.register_add import add  # noqa
-from moonleap.packages.register_add import register_add  # noqa
 from moonleap.packages.rule import Priorities  # noqa
 from moonleap.packages.rule import rule  # noqa
 from moonleap.packages.scope import create  # noqa

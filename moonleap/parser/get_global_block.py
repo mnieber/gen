@@ -5,6 +5,7 @@ from moonleap.resource import ResourceMetaData
 _global_block = None
 
 
+# Note: not used at the moment. Remove?
 def get_global_block():
     global _global_block
     if _global_block is None:
@@ -15,6 +16,6 @@ def get_global_block():
 def get_meta(word, block=None):
     return ResourceMetaData(
         term=word_to_term(word),
-        block=block or get_global_block(),
+        block=block,
         base_tags=[],
     )
