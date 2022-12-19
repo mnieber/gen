@@ -1,6 +1,11 @@
 {% magic_with __item_name as myItem %}
 
 
+{% section imports %}
+import React from 'react';
+{% end_section %}
+
+
 {% section preamble_hooks %}
     const [myItemIdx, setMyItemIdx] = React.useState(0);
 
@@ -15,6 +20,8 @@
         setMyItemIdx(myItemIdx < {{ __items_expr }}.length - 1 ? myItemIdx + 1 : 0),
       [myItemIdx, setMyItemIdx, {{ __items_expr }}]
     );
+
+    if (!{{ __items_expr }}.length) return null;                                                {% ?? __guard %}
     {{ "" }}
 {% end_section %}
 

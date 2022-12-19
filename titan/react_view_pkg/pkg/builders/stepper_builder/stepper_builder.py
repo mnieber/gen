@@ -14,10 +14,11 @@ class StepperBuilder(Builder):
 
         child_widget_div = self.output.graft(self._get_child_widget_output())
         context = {
-            "__const_name": const_name,
-            "__items_expr": self.ilh.item_list_data_path(),
-            "__item_name": self.item_name,
             "__child_widget_div": child_widget_div,
+            "__const_name": const_name,
+            "__guard": self.widget_spec.values.get("guard"),
+            "__item_name": self.item_name,
+            "__items_expr": self.ilh.item_list_data_path(),
             "__uniform_height": self.use_uniform_height,
         }
 
