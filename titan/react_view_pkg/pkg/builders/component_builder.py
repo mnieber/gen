@@ -15,7 +15,7 @@ class ComponentBuilder(Builder):
                     self.widget_spec.widget_name, default=None
                 )
                 assert component_def
-                append_uniq(component_def.named_props, "click:handler")
+                append_uniq(component_def.handlers, "click:handler")
 
             return update_component_def
 
@@ -78,6 +78,7 @@ def _get_prop_data_path(widget_spec, named_prop):
     # Note that we really need "widget_spec.parent_ws" here and not
     # "widget_spec", because the widget_spec can resolve the data path from
     # the widget props, but the component builder should not do that.
+
     data_path = get_data_path(widget_spec.parent_ws, obj=named_prop, term=None)
     if not data_path:
         raise Exception(

@@ -1,5 +1,4 @@
 from moonleap import append_uniq, kebab_to_camel, u0
-from moonleap.parser.term import word_to_term
 from titan.react_view_pkg.pkg.builder import Builder
 
 

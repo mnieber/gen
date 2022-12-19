@@ -4,33 +4,32 @@ import { cn } from 'src/utils/classnames';
 import { observer } from 'mobx-react-lite';
 import { isLoaded, isUpdating } from 'src/api/ResourceState';
 import UIkit from 'uikit';
+{# Imports #}
 {{ line }}                                                                                          {% !! line in __.build.imports_lines %}
 import './MyComponent.scss';                                                                        {% ?? __.has_scss %}
-{# Start: view imports here #}
-{# End: view imports here #}
 
 export type PropsT = {                                                                              {% ?? not __.has_children %}
 export type PropsT = React.PropsWithChildren<{                                                      {% ?? __.has_children %}
-{# Start: view props here #}
-{# End: view props here #}
+{# Props #}
   {{ line }}                                                                                        {% !! line in __.build.props_lines %}
+  onClick?: Function;                                                                               {% ?? __.has_click_handler %}
   className?: any;                                                                                  {% ?? __.has_scss %}
 }                                                                                                   {% ?? not __.has_children %}
 }>                                                                                                  {% ?? __.has_children %}
 {{ line }}                                                                                          {% !! line in __.build.add_props_lines %}
 ;
 
-const DefaultProps = {
-{# Start: default view props here #}
-{# End: default view props here #}
+const DefaultProps = {                                                                              {% if __.has_default_props %}
+{# Default props #}
   ...dps.{{ default_prop }},                                                                        {% !! default_prop in __.build.default_props|sort %}
 };
-
+{{ "" }}                                                                                            {% endif %}
 export const MyComponent = observer(
-  withDefaultProps((props: PropsT & typeof DefaultProps) => {
-{# Start: view body here #}
-{# End: view body here #}
+  withDefaultProps((props: PropsT & typeof DefaultProps) => {                                       {% ?? __.has_default_props %}
+  (props: PropsT) => {                                                                              {% ?? not __.has_default_props %}
+{# View body #}
 {{ __.build.div }}
-  }, DefaultProps)
+  }, DefaultProps)                                                                                  {% ?? __.has_default_props %}
+  }                                                                                                 {% ?? not __.has_default_props %}
 );
 {% end_magic_with %}

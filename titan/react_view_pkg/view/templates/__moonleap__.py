@@ -11,6 +11,8 @@ def get_helpers(_):
         pipelines = _.component.pipelines
         has_children = build.has_children
         has_scss = not build.no_scss
+        has_default_props = bool(build.default_props)
+        has_click_handler = "click:handler" in widget_spec.handlers
 
         def __init__(self):
             self._get_queries_from_pipelines()

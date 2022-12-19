@@ -38,6 +38,10 @@ class WidgetSpec:
         return self.src_dict.setdefault("__props__", [])
 
     @property
+    def handlers(self):
+        return self.src_dict.setdefault("__handlers__", [])
+
+    @property
     def named_default_props(self):
         return self.src_dict.setdefault("__default_props__", [])
 

@@ -2,7 +2,7 @@ from moonleap import create, kebab_to_camel, named
 from titan.types_pkg.typeregistry.resources import ItemList
 
 base_tags = {
-    "item~list": ["pipeline-elm"],
+    "item~list": ["pipeline-elm", "react-prop"],
 }
 
 

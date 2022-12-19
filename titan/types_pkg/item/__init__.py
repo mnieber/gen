@@ -4,7 +4,7 @@ from titan.types_pkg.typeregistry.resources import Item
 from . import props
 
 base_tags = {
-    "item": ["pipeline-elm", "generic-item"],
+    "item": ["pipeline-elm", "generic-item", "react-prop"],
 }
 
 

@@ -1,5 +1,6 @@
 import moonleap.resource.props as P
-from moonleap import MemFun, create_forward, empty_rule, extend, rule
+from moonleap import (MemFun, create, create_forward, empty_rule, extend,
+                      named, rule)
 from moonleap.verbs import has, has_default_prop, has_prop
 from titan.react_pkg.reactmodule import ReactModule
 from titan.widgets_pkg.widgetregistry import get_widget_reg
@@ -12,9 +13,8 @@ from .resources import Component  # noqa
 rules = {
     ("widget-registry", has, "component"): empty_rule(),
     ("component", has, "x+pipeline"): empty_rule(),
-    ("component", has_prop, "click:handler"): empty_rule(),
-    ("component", has_prop, "x+pipeline-elm"): empty_rule(),
-    ("component", has_default_prop, "x+pipeline-elm"): empty_rule(),
+    ("component", has_prop, "x+react-prop"): empty_rule(),
+    ("component", has_default_prop, "x+react-prop"): empty_rule(),
 }
 
 
@@ -49,8 +49,8 @@ class ExtendComponent:
     pipelines = P.children(has, "x+pipeline")
     get_data_path = MemFun(props.component_get_data_path)
     maybe_expression = MemFun(props.component_maybe_expression)
-    named_props = P.children(has_prop, "x+pipeline-elm")
-    named_default_props = P.children(has_default_prop, "x+pipeline-elm")
+    named_props = P.children(has_prop, "x+react-prop")
+    named_default_props = P.children(has_default_prop, "x+react-prop")
 
 
 @rule("widget-registry", has, "component")
