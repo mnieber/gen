@@ -1,4 +1,4 @@
-from moonleap.utils.case import l0
+from moonleap import l0
 
 from .foreign_key import ForeignKey
 

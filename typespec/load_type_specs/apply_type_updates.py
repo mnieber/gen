@@ -1,4 +1,4 @@
-from moonleap.utils.fp import append_uniq
+from moonleap import append_uniq
 
 from .split_raw_key import split_raw_key
 

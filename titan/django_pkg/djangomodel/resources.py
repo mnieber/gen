@@ -3,8 +3,8 @@ from dataclasses import dataclass, field
 
 from moonleap import RenderMixin, Resource
 from moonleap.utils.case import sn, snake_to_kebab
-from titan.types_pkg.pkg.field_spec import FieldSpec
-from titan.types_pkg.pkg.type_spec import TypeSpec
+from typespec.field_spec import FieldSpec
+from typespec.type_spec import TypeSpec
 
 verbose_name_block_list = ["id", "sort_pos", "slug"]
 

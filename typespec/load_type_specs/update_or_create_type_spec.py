@@ -1,7 +1,7 @@
 from titan.types_pkg.pkg.form_type_spec_from_data_type_spec import (
     form_type_spec_from_data_type_spec,
 )
-from titan.types_pkg.pkg.type_spec import TypeSpec
+from typespec.type_spec import TypeSpec
 
 from .add_host_to_type_spec import add_host_to_type_spec
 

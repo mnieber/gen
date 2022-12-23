@@ -6,7 +6,7 @@ from moonleap import Resource, u0
 from moonleap.parser.get_global_block import get_meta
 from moonleap.utils.case import l0
 from titan.types_pkg.pkg.default_field_specs_store import DefaultFieldSpecsStore
-from titan.types_pkg.pkg.type_spec import TypeSpec
+from typespec.type_spec import TypeSpec
 
 _default_type_spec_placeholder = TypeSpec(type_name="placeholder", field_specs=[])
 
@@ -96,3 +96,7 @@ class TypeRegistry(Resource):
 
     def register_parent_child(self, parent_type_name, child_type_name):
         self.parents_by_type_name[child_type_name].append(parent_type_name)
+
+    @property
+    def type_names(self):
+        return self._type_spec_by_type_name.keys()

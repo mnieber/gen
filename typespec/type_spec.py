@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 
 import ramda as R
 
-from titan.types_pkg.pkg.field_spec import FieldSpec
+from typespec.field_spec import FieldSpec
 
 
 @dataclass

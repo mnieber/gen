@@ -1,15 +1,12 @@
 from moonleap import u0
-from titan.types_pkg.pkg.field_spec import FieldSpec
-from titan.types_pkg.pkg.load_type_specs.field_spec_from_dict import (
-    field_spec_from_dict,
-)
-from titan.types_pkg.pkg.type_spec import TypeSpec
-from titan.types_pkg.typeregistry import get_type_reg
+from typespec.api_spec import ApiSpec
+from typespec.field_spec import FieldSpec
+from typespec.type_spec import TypeSpec
 
-from .api_spec import ApiSpec
+from .load_type_specs.field_spec_from_dict import field_spec_from_dict
 
 
-def get_api_spec(api_reg, host, endpoint_key, endpoint_spec_dict):
+def get_api_spec(api_reg, host, endpoint_key, endpoint_spec_dict, known_type_names):
     parts = endpoint_key.split()
     if not parts:
         raise Exception("Invalid endpoint key: " + endpoint_key)
@@ -26,7 +23,7 @@ def get_api_spec(api_reg, host, endpoint_key, endpoint_spec_dict):
     for key, field_spec_value in endpoint_spec_dict.get("inputs", {}).items():
         field_spec_data = field_spec_from_dict(host, key, field_spec_value)
         field_spec = field_spec_data["field_spec"]
-        _check_field_spec(field_spec)
+        _check_field_spec(field_spec, known_type_names)
 
         inputs.append(field_spec)
 
@@ -85,9 +82,9 @@ def get_api_spec(api_reg, host, endpoint_key, endpoint_spec_dict):
     )
 
 
-def _check_field_spec(field_spec):
+def _check_field_spec(field_spec, known_type_names):
     if field_spec.field_type in ("fk", "relatedSet", "form", "uuid[]", "uuid"):
-        if not get_type_reg().get(field_spec.target, None):
+        if field_spec.target not in known_type_names:
             raise Exception(
-                f"Type {field_spec.target} not found for field {field_spec.name}"
+                f"Unknown type {field_spec.target} for field {field_spec.name}"
             )

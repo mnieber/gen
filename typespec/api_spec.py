@@ -1,7 +1,7 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from titan.types_pkg.pkg.type_spec import TypeSpec
+from typespec.type_spec import TypeSpec
 
 
 @dataclass

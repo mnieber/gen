@@ -1,5 +1,5 @@
 from moonleap import Prop, extend
-from titan.types_pkg.pkg.field_spec import FieldSpec, FormFieldSpec
+from typespec.field_spec import FieldSpec, FormFieldSpec
 
 from . import props
 

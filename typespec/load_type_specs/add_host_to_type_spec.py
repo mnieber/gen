@@ -1,4 +1,4 @@
-from moonleap.utils.fp import append_uniq
+from moonleap import append_uniq
 
 
 def add_host_to_type_spec(host, type_spec):

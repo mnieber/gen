@@ -1,5 +1,5 @@
 from moonleap.utils.fp import uniq
-from titan.api_pkg.pkg.api_spec import ApiSpec
+from typespec.api_spec import ApiSpec
 
 # This function returns different paths from type_spec_or_api_spec to
 # an fk field of type "type_name", e.g. the path Foo.bar.baz goes

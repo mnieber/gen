@@ -3,7 +3,7 @@ from dataclasses import replace
 
 import ramda as R
 
-from .type_spec import TypeSpec
+from typespec.type_spec import TypeSpec
 
 
 def form_type_spec_from_data_type_spec(data_type_spec, form_type_name):

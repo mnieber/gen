@@ -1,5 +1,5 @@
 from moonleap.session import get_session
-from titan.types_pkg.pkg.load_type_specs import load_type_specs
+from typespec.load_type_specs import load_type_specs
 
 from .resources import TypeRegistry
 

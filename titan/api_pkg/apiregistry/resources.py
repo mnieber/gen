@@ -4,8 +4,8 @@ from dataclasses import dataclass, field
 from moonleap import RenderMixin, Resource
 from moonleap.parser.get_global_block import get_meta
 from moonleap.utils.case import l0
-from titan.api_pkg.pkg.api_spec import ApiSpec
 from titan.types_pkg.typeregistry import get_type_reg
+from typespec.api_spec import ApiSpec
 
 
 @dataclass

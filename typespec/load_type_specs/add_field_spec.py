@@ -1,4 +1,4 @@
-from moonleap.utils.fp import append_uniq
+from moonleap import append_uniq
 
 
 def add_field_spec(type_spec, field_spec):
