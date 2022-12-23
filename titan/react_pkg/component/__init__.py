@@ -1,10 +1,8 @@
 import moonleap.resource.props as P
-from moonleap import (MemFun, create, create_forward, empty_rule, extend,
-                      named, rule)
+from moonleap import MemFun, create_forward, empty_rule, extend, rule
 from moonleap.verbs import has, has_default_prop, has_prop
 from titan.react_pkg.reactmodule import ReactModule
-from titan.widgets_pkg.widgetregistry import get_widget_reg
-from titan.widgets_pkg.widgetregistry.resources import WidgetRegistry
+from titan.react_view_pkg.widgetregistry.resources import WidgetRegistry
 
 from . import props
 from .pipelines import get_pipeline_forwards, get_props_forwards
@@ -40,6 +38,8 @@ def set_component_props(component):
 
 @rule("component")
 def created_component(component):
+    from titan.react_view_pkg.widgetregistry import get_widget_reg
+
     return create_forward(get_widget_reg(), has, component)
 
 

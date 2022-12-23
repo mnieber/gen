@@ -1,8 +1,8 @@
 from moonleap.utils.fp import append_uniq
 from moonleap.utils.quote import quote
 from moonleap.utils.split_non_empty import split_non_empty
-from titan.widgets_pkg.pkg.is_style import is_style
 from typespec.load_type_specs.split_raw_key import split_symbols
+from widgetspec.is_style import is_style
 
 
 def get_widget_attrs(key, more_value_parts):

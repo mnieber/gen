@@ -4,10 +4,9 @@ from dataclasses import dataclass, field
 
 import ramda as R
 
-from titan.widgets_pkg.pkg.div import Div
-from titan.widgets_pkg.pkg.widget_spec_memo import WidgetSpecMemoContext
-
-from .create_widget_class_name import create_widget_class_name
+from widgetspec.create_widget_class_name import create_widget_class_name
+from widgetspec.div import Div
+from widgetspec.widget_spec_memo import WidgetSpecMemoContext
 
 
 @dataclass

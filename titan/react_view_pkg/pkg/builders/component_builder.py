@@ -1,8 +1,8 @@
 from moonleap import append_uniq
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.get_data_path import get_data_path
-from titan.widgets_pkg.pkg.create_widget_class_name import get_component_name
-from titan.widgets_pkg.widgetregistry import get_widget_reg
+from titan.react_view_pkg.widgetregistry import get_widget_reg
+from widgetspec.create_widget_class_name import get_component_name
 
 
 class ComponentBuilder(Builder):

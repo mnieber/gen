@@ -4,7 +4,7 @@ from titan.react_view_pkg.pkg.get_named_data_term import (
     get_named_item,
     get_named_item_list,
 )
-from titan.widgets_pkg.pkg.widget_spec_pipeline import WsPipeline
+from widgetspec.widget_spec_pipeline import WsPipeline
 
 
 class ItemListHelper:

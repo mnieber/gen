@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from pprint import pprint
 
 from moonleap import Resource
-from titan.widgets_pkg.pkg.widget_spec import WidgetSpec
+from widgetspec.widget_spec import WidgetSpec
 
 
 @dataclass

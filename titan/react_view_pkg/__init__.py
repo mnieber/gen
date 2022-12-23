@@ -8,6 +8,7 @@ from . import (
     state,
     stateprovider,
     view,
+    widgetregistry,
 )
 
 modules = [
@@ -18,4 +19,5 @@ modules = [
     state,
     stateprovider,
     view,
+    widgetregistry,
 ]

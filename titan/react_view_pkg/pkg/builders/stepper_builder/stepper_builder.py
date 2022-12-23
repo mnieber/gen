@@ -3,7 +3,7 @@ from pathlib import Path
 from moonleap import get_tpl
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.widgets_pkg.pkg.get_place_dict import get_place_dict
+from widgetspec.get_place_dict import get_place_dict
 
 
 class StepperBuilder(Builder):

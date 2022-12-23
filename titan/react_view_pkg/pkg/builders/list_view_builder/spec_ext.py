@@ -1,4 +1,4 @@
-from titan.widgets_pkg.pkg.get_place_dict import get_place_dict
+from widgetspec.get_place_dict import get_place_dict
 
 
 def spec_ext(widget_spec, places):

@@ -1,9 +1,9 @@
 from moonleap import Prop, extend
-from titan.react_pkg.component import Component
+from titan.react_pkg.component.resources import Component
 from titan.types_pkg.item import Item
 from titan.types_pkg.itemlist import ItemList
-from titan.widgets_pkg.pkg.widget_spec import WidgetSpec
 from typespec.field_spec import FieldSpec
+from widgetspec.widget_spec import WidgetSpec
 
 from . import props
 

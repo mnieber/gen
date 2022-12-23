@@ -1,7 +1,7 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from titan.widgets_pkg.pkg.sort_styles import sort_styles
+from widgetspec.sort_styles import sort_styles
 
 
 @dataclass

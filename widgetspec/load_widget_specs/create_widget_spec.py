@@ -1,5 +1,6 @@
 from moonleap.utils.split_non_empty import split_non_empty
-from titan.widgets_pkg.pkg.widget_spec import Div, WidgetSpec
+from widgetspec.div import Div
+from widgetspec.widget_spec import WidgetSpec
 
 from .get_widget_attrs import get_widget_attrs
 

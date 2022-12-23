@@ -1,5 +1,5 @@
 from moonleap import create
-from titan.react_pkg.component import Component
+from titan.react_pkg.component.resources import Component
 
 base_tags = {"menu": ["component"]}
 

@@ -13,7 +13,6 @@ from moonleap import (
 )
 from moonleap.verbs import has
 from titan.react_pkg.reactapp import ReactApp
-from titan.widgets_pkg.widgetregistry import get_widget_reg
 
 from . import props
 from .resources import ReactModule  # noqa
@@ -46,6 +45,8 @@ def react_app_has_module(react_app, module):
 
 @rule("react-app")
 def react_modules_have_components(react_app):
+    from titan.react_view_pkg.widgetregistry import get_widget_reg
+
     widget_reg = get_widget_reg()
     forwards = []
     for widget_spec in widget_reg.widget_specs():

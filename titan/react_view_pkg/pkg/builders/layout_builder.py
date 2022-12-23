@@ -1,5 +1,5 @@
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.widgets_pkg.pkg.widget_spec import WidgetSpec
+from widgetspec.widget_spec import WidgetSpec
 
 
 class LayoutBuilder(Builder):

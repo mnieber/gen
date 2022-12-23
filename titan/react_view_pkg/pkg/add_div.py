@@ -1,6 +1,6 @@
 import os
 
-from titan.widgets_pkg.pkg.div import Div
+from widgetspec.div import Div
 
 
 def get_div_open(div: Div, widget_class_name=None):
