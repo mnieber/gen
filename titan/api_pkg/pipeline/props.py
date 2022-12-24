@@ -237,11 +237,10 @@ def pipeline_source(pipeline):
 
 
 def pipeline_maybe_expression(pipeline, named_item_or_item_list):
-    pipeline_source = pipeline.source
     elements = _get_elements(pipeline)
-    if pipeline_source.meta.term.tag in ("query", "mutation"):
-        return pipeline_source.name
-    elif pipeline_source.meta.term.tag in ("props",):
+    if pipeline._root_query:
+        return pipeline._root_query.name
+    elif pipeline._root_props:
         named_item = elements[0].obj
         if (
             named_item.name == named_item_or_item_list.name
@@ -249,9 +248,9 @@ def pipeline_maybe_expression(pipeline, named_item_or_item_list):
         ):
             return None
         return f"props.{named_item.typ.item_name}"
-    elif pipeline_source.meta.term.tag in ("state~provider",):
+    elif pipeline._root_state_provider:
         item_or_item_list = elements[0].obj
         if item_or_item_list.meta.term.tag in ("item", "item-list"):
             return f"state.{item_or_item_list.typ.ts_var}"
     else:
-        raise Exception(f"Unknown pipeline source: {pipeline_source}")
+        raise Exception(f"Unknown pipeline source: {pipeline.source}")
