@@ -36,7 +36,7 @@ class ItemListHelper:
 
     def item_list_data_path(self):
         return (
-            get_data_path(self.widget_spec, obj=self.named_item_list, term=None)
+            get_data_path(self.widget_spec, obj=self.named_item_list)
             if self.named_item_list
             else None
         )

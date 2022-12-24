@@ -186,7 +186,7 @@ def _match_named_item(named_item, provided_named_item):
     )
 
 
-def pipeline_data_path(self, obj=None, obj_term=None):
+def pipeline_data_path(self, obj):
     result = ""
     elements = _get_elements(self)
     nr_elms = len(elements)
@@ -217,12 +217,10 @@ def pipeline_data_path(self, obj=None, obj_term=None):
         else:
             raise Exception(f"Unexpected element {elm}")
 
-        if (obj and elm.obj.typ is obj.typ) or (
-            obj_term and match_term_to_pattern(elm.obj.meta.term, obj_term)
-        ):
+        if elm.obj.typ is obj.typ:
             return result.removesuffix("?")
 
-    return None if (obj or obj_term) else result
+    return None
 
 
 def pipeline_source(pipeline):

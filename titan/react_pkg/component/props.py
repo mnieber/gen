@@ -1,29 +1,29 @@
 from moonleap.parser.term import match_term_to_pattern
 
 
-def component_get_data_path(component, obj=None, term=None):
-    pipeline, data_path = _get_component_pipeline(component, obj, term)
+def component_get_data_path(component, obj):
+    pipeline, data_path = _get_component_pipeline(component, obj)
     if not data_path:
         for named_res_set in (component.named_props, component.named_default_props):
             for named_prop in named_res_set:
-                t = obj.meta.term if obj else term
+                t = obj.meta.term
                 if match_term_to_pattern(named_prop.meta.term, t):
                     return f"props.{named_prop.typ.ts_var}"
     return data_path
 
 
-def _get_component_pipeline(component, obj=None, term=None):
+def _get_component_pipeline(component, obj):
     try:
-        return get_pipeline_and_data_path(component.pipelines, obj, term)
+        return get_pipeline_and_data_path(component.pipelines, obj)
     except Exception as e:
         print(f"\nIn component {component}")
         raise
 
 
-def get_pipeline_and_data_path(pipelines, obj=None, term=None):
+def get_pipeline_and_data_path(pipelines, obj):
     results = []
     for pipeline in pipelines:
-        if data_path := pipeline.data_path(obj, term):
+        if data_path := pipeline.data_path(obj):
             results.append((pipeline, data_path))
 
     if len(results) > 1:

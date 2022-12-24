@@ -31,8 +31,4 @@ class ItemHelper:
 
     def item_data_path(self):
         named_item = get_named_item(self.widget_spec)
-        return (
-            get_data_path(self.widget_spec, obj=named_item, term=None)
-            if named_item
-            else None
-        )
+        return get_data_path(self.widget_spec, obj=named_item) if named_item else None

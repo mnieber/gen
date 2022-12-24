@@ -80,7 +80,7 @@ def _get_prop_data_path(widget_spec, named_prop):
     # "widget_spec", because the widget_spec can resolve the data path from
     # the widget props, but the component builder should not do that.
 
-    data_path = get_data_path(widget_spec.parent_ws, obj=named_prop, term=None)
+    data_path = get_data_path(widget_spec.parent_ws, obj=named_prop)
     if not data_path:
         raise Exception(
             f"Could not find data path for {named_prop} "
