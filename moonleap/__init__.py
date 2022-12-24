@@ -1,11 +1,7 @@
 import moonleap.resource.props as props  # noqa
-from moonleap.builder.create_resources import create_resources  # noqa
+from moonleap.blocks.term import Term, word_to_term  # noqa
 from moonleap.packages.install import extend  # noqa
-from moonleap.packages.rule import Priorities  # noqa
-from moonleap.packages.rule import rule  # noqa
-from moonleap.packages.scope import create  # noqa
-from moonleap.parser.block_collector import get_blocks  # noqa
-from moonleap.parser.term import Term, word_to_term  # noqa
+from moonleap.parser.get_blocks import get_blocks  # noqa
 from moonleap.render.render_templates import render_templates  # noqa
 from moonleap.render.storetemplatedirs import RenderMixin  # noqa
 from moonleap.render.storetemplatedirs import TemplateDirMixin  # noqa
@@ -20,6 +16,9 @@ from moonleap.resource.named_class import named  # noqa
 from moonleap.resource.prop import Prop  # noqa
 from moonleap.resource.props import empty_rule  # noqa
 from moonleap.resource.rel import Rel  # noqa
+from moonleap.scopes.scope import create  # noqa
+from moonleap.scopes.scope.rule import Priorities  # noqa
+from moonleap.scopes.scope.rule import rule  # noqa
 from moonleap.session import get_session  # noqa
 from moonleap.utils import chop0, yaml2dict  # noqa
 from moonleap.utils.case import kebab_to_camel, l0, sn, u0  # noqa

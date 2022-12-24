@@ -19,7 +19,7 @@ def expand_markdown(spec_file, output_fn=None, base_level=0, scope_names=None):
 
 
 def _get_one_time_parse_fn(spec_file, base_level, scope_names):
-    from moonleap.parser.block_expander import BlockExpander
+    from moonleap.parser.expand_markdown.block_expander import BlockExpander
 
     expander = BlockExpander(Path(spec_file).parent, base_level, scope_names)
     parser = CustomMarkdown(renderer=expander)

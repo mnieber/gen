@@ -2,7 +2,7 @@ import typing as T
 from dataclasses import dataclass
 from enum import Enum
 
-from moonleap.parser.term import word_to_term
+from moonleap.blocks.term import word_to_term
 from moonleap.resource import Resource
 from moonleap.resource.rel import Rel
 from moonleap.verbs import is_created_as

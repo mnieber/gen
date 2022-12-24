@@ -2,7 +2,7 @@ from pathlib import Path
 
 import mistune
 
-from moonleap.scope_manager import get_local_scope_names
+from moonleap.scopes.scope_manager import get_local_scope_names
 
 
 def _update_local_scope_names(raw, scope_names, new_scope_name):

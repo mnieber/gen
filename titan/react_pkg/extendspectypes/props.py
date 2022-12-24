@@ -1,4 +1,4 @@
-from moonleap.parser.term import match_term_to_pattern, word_to_term
+from moonleap.blocks.term import match_term_to_pattern, word_to_term
 from moonleap.utils.case import u0
 from moonleap.utils.inflect import plural
 from titan.react_view_pkg.widgetregistry import get_widget_reg

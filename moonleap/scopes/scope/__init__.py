@@ -1,7 +1,7 @@
-from moonleap.packages.get_module_symbols import get_module_symbols
-from moonleap.packages.rule import rule as rule_decorator
-from moonleap.parser.term import match_term_to_pattern, patch_tag, word_to_term
+from moonleap.blocks.term import match_term_to_pattern, patch_tag, word_to_term
+from moonleap.packages.utils.get_module_symbols import get_module_symbols
 from moonleap.resource.rel import fuzzy_match
+from moonleap.scopes.scope.rule import rule as rule_decorator
 from moonleap.utils.queue import Queue
 
 

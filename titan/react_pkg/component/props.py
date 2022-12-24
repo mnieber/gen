@@ -1,4 +1,4 @@
-from moonleap.parser.term import match_term_to_pattern
+from moonleap.blocks.term import match_term_to_pattern
 
 
 def component_get_data_path(component, obj):

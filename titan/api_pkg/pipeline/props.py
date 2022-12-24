@@ -2,7 +2,6 @@ import typing as T
 from dataclasses import dataclass
 
 from moonleap import Resource, named
-from moonleap.parser.term import match_term_to_pattern
 from moonleap.utils.fp import aperture
 from titan.api_pkg.mutation import Mutation
 from titan.api_pkg.pipeline.resources import PropsSource

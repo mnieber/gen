@@ -3,9 +3,10 @@ import re
 
 import mistune
 import nltk
-from moonleap.parser.block import Block
-from moonleap.parser.line import get_create_line
-from moonleap.scope_manager import get_local_scope_names
+
+from moonleap.blocks.block import Block
+from moonleap.blocks.line import get_create_line
+from moonleap.scopes.scope_manager import get_local_scope_names
 
 try:
     nltk.sent_tokenize("test")

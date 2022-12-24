@@ -1,4 +1,4 @@
-from moonleap.parser.term import is_it_term, word_to_term
+from moonleap.blocks.term import is_it_term, word_to_term
 from moonleap.resource.rel import Rel
 
 
@@ -49,7 +49,7 @@ def _process_words(block, words, it_term, result, word_idx=0):
     return first_term, word_idx
 
 
-def get_relations(block):
+def extract_relations(block):
     result = []
     for line in block.lines:
         _process_words(block, line.words, line.it_term, result)

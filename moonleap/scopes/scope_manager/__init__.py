@@ -2,7 +2,7 @@ import importlib
 import re
 
 from moonleap.packages.install import install_package
-from moonleap.packages.scope import Scope
+from moonleap.scopes.scope import Scope
 
 
 def _import_package(package_name):

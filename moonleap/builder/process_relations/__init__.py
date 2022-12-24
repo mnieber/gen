@@ -1,15 +1,13 @@
 import typing as T
 
-from moonleap.builder.create_resource import (
-    create_resource_in_block,
-    find_describing_block,
-)
-from moonleap.packages.rule import Action
-from moonleap.parser.term import Term
+from moonleap.blocks.term import Term
 from moonleap.resource.named_class import NamedResource
 from moonleap.resource.rel import Rel
+from moonleap.scopes.scope.rule import Action
 from moonleap.utils.case import kebab_to_camel
 from moonleap.verbs import is_created_as
+
+from .create_resource_in_block import create_resource_in_block, find_describing_block
 
 
 def process_relations(relations: T.List[Rel], actions):

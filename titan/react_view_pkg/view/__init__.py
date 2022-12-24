@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from moonleap import create, u0
-from moonleap.parser.term import term_to_camel
+from moonleap.blocks.term import term_to_camel
 
 from .resources import View
 

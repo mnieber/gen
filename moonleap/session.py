@@ -3,7 +3,7 @@ from pathlib import Path
 
 import ramda as R
 
-from moonleap.scope_manager import ScopeManager
+from moonleap.scopes.scope_manager import ScopeManager
 from moonleap.settings import load_settings
 from moonleap.utils.inflect import install_plural
 
@@ -21,6 +21,13 @@ class Session:
         self.expected_dir = f"{output_root_dir}/expected"
         self.snapshot_fn = f"{output_root_dir}/snapshot.json"
         self.type_specs_dir = os.path.join(self.spec_dir, "type_specs")
+
+    @property
+    def spec_fn(self):
+        spec_fn = Path(self.spec_dir) / "spec.md"
+        if not spec_fn.exists():
+            raise Exception(f"Spec file not found: {spec_fn}")
+        return spec_fn
 
     def load_settings(self):
         settings_fn = Path(self.spec_dir) / self.settings_fn

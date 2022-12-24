@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from moonleap import Term
-from moonleap.parser.term import match_term_to_pattern
+from moonleap.blocks.term import match_term_to_pattern
 
 
 @dataclass

@@ -1,6 +1,6 @@
 import re
 
-from moonleap.parser.term import is_it_term, words_to_terms
+from moonleap.blocks.term import is_it_term, words_to_terms
 
 
 class Line:

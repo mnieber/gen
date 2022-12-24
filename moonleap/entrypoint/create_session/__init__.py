@@ -1,7 +1,12 @@
+import os
+
 from moonleap.session import Session, set_session
 
 
 def create_session(args):
+    if not os.path.exists(args.spec_dir):
+        raise Exception("Spec directory not found: " + args.spec_dir)
+
     session = Session(
         args.spec_dir,
         "settings.yml",

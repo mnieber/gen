@@ -1,7 +1,7 @@
 import typing as T
 
-from moonleap.parser.block import Block
-from moonleap.parser.term import Term, word_to_term
+from moonleap.blocks.block import Block
+from moonleap.blocks.term import Term, word_to_term
 from moonleap.resource import Resource
 from moonleap.resource.rel import Rel
 

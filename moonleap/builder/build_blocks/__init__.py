@@ -1,10 +1,11 @@
 import typing as T
 
-from moonleap.builder.add_meta_data_to_blocks import add_meta_data_to_blocks
-from moonleap.builder.find_relations import get_relations
 from moonleap.builder.process_relations import process_relations
 from moonleap.resource.rel import Rel
 from moonleap.verbs import is_created_as
+
+from .add_meta_data_to_blocks import add_meta_data_to_blocks
+from .extract_relations import extract_relations
 
 
 def _to_list_of_relations(x, action):
@@ -20,12 +21,12 @@ def _to_list_of_relations(x, action):
     ]
 
 
-def create_resources(blocks):
+def build_blocks(blocks):
     add_meta_data_to_blocks(blocks)
 
     actions = []
     for block in blocks:
-        process_relations(get_relations(block), actions)
+        process_relations(extract_relations(block), actions)
 
     while actions:
         action = actions.pop()

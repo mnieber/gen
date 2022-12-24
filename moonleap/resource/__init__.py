@@ -1,8 +1,8 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap.parser.block import Block
-from moonleap.parser.term import Term
+from moonleap.blocks.block import Block
+from moonleap.blocks.term import Term
 from moonleap.resource.rel import Rel
 from moonleap.resource.slctrs import RelSelector
 from moonleap.utils.get_id import get_id

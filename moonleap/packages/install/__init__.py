@@ -1,11 +1,10 @@
+from moonleap.packages.utils.get_module_symbols import get_module_symbols
 from moonleap.render.file_merger import add_file_merger
 from moonleap.render.template_env import add_filter
 from moonleap.render.transforms import register_transforms
 from moonleap.resource.memfield import MemField
 from moonleap.resource.memfun import MemFun
 from moonleap.resource.prop import Prop
-
-from .get_module_symbols import get_module_symbols
 
 
 def install_package(package):

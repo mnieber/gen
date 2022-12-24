@@ -1,7 +1,7 @@
 import typing as T
 from dataclasses import dataclass
 
-from moonleap.parser.term import Term, word_to_term
+from moonleap.blocks.term import Term, word_to_term
 from moonleap.resource.prop import Prop
 from moonleap.resource.rel import Rel, fuzzy_match
 from moonleap.resource.slctrs import RelSelector

@@ -1,7 +1,7 @@
 import typing as T
 
-from moonleap.parser.line import Line
-from moonleap.parser.term import Term
+from moonleap.blocks.line import Line
+from moonleap.blocks.term import Term
 
 
 def _get_base_tags(term, block, include_self):

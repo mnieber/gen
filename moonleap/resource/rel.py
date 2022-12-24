@@ -1,8 +1,8 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap.parser.block import Block
-from moonleap.parser.term import Term, match_term_to_pattern, patch_tag
+from moonleap.blocks.block import Block
+from moonleap.blocks.term import Term, match_term_to_pattern, patch_tag
 from moonleap.utils import maybe_tuple_to_tuple
 
 
