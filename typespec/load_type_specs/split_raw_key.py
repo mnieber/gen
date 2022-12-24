@@ -1,7 +1,6 @@
-import re
-
 from moonleap import append_uniq
 from moonleap.utils.pop import pop
+from moonleap.utils.split_symbols import split_symbols
 
 
 def split_raw_key(key):
@@ -9,18 +8,6 @@ def split_raw_key(key):
     key, symbols = split_symbols(key)
 
     return key.strip(), symbols, parts
-
-
-def split_symbols(key):
-    regex = r"(.*)\[(.*)\]"
-    matches = list(re.finditer(regex, key, re.MULTILINE))
-    symbols = ""
-
-    if matches:
-        if len(matches) > 1:
-            raise Exception("Bad key syntax: " + key)
-        key, symbols = matches[0].group(1), matches[0].group(2)
-    return key, symbols
 
 
 def strip_generic_symbols(key):

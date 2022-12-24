@@ -1,7 +1,7 @@
-from moonleap.utils.fp import append_uniq
+from moonleap import append_uniq
 from moonleap.utils.quote import quote
 from moonleap.utils.split_non_empty import split_non_empty
-from typespec.load_type_specs.split_raw_key import split_symbols
+from moonleap.utils.split_symbols import split_symbols
 from widgetspec.is_style import is_style
 
 

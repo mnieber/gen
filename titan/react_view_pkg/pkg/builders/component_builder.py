@@ -1,12 +1,13 @@
 from moonleap import append_uniq
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.get_data_path import get_data_path
-from titan.react_view_pkg.widgetregistry import get_widget_reg
 from widgetspec.create_widget_class_name import get_component_name
 
 
 class ComponentBuilder(Builder):
     def update_widget_spec(self):
+        from titan.react_view_pkg.widgetregistry import get_widget_reg
+
         if on_click := self.widget_spec.values.get("onClick"):
             self.widget_spec.div.append_attrs([f"onClick={{{on_click}}}"])
 

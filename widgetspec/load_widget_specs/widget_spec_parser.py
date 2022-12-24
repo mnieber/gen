@@ -2,14 +2,13 @@ from .create_widget_spec import create_widget_spec
 
 
 class WidgetSpecParser:
-    def __init__(self, widget_spec_dict, module_name, widget_reg=None):
+    def __init__(self, widget_spec_dict, module_name, get_builders, widget_reg=None):
         self.widget_spec_dict = widget_spec_dict
         self.module_name = module_name
         self.widget_reg = widget_reg
+        self.get_builders = get_builders
 
     def parse(self, spec_dict=None, parent_widget_spec=None, post_process_fns=None):
-        from titan.react_view_pkg.pkg.get_builders import get_builders
-
         if post_process_fns is None:
             post_process_fns = []
 
@@ -38,7 +37,7 @@ class WidgetSpecParser:
                 parent_widget_spec.child_widget_specs.append(widget_spec)
 
             # Create builders for this widget spec
-            builders = get_builders(widget_spec)
+            builders = self.get_builders(widget_spec)
 
             # Every builder has the option to update the created widget-spec.
             for builder in builders:
