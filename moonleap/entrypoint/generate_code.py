@@ -8,14 +8,9 @@ from moonleap.render.storetemplatedirs import get_root_resource, render_resource
 
 
 def generate_code(spec_file, session, file_writer, post_process_all_files):
-    expanded_markdown = expand_markdown(spec_file)
-    expanded_markdown_fn = Path(".moonleap") / "spec.md"
-
-    if not expanded_markdown_fn.parent.exists():
-        expanded_markdown_fn.parent.mkdir()
-
-    with open(expanded_markdown_fn, "w") as f:
-        f.write(expanded_markdown)
+    expanded_markdown = expand_markdown(
+        spec_file, output_fn=Path(".moonleap") / "spec.md"
+    )
 
     session.report("Parsing...")
     blocks = get_blocks(expanded_markdown)
