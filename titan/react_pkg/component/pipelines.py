@@ -1,9 +1,8 @@
 from moonleap import create_forward
-from moonleap.blocks.builder.build_blocks.add_meta_data_to_blocks import (
-    add_meta_data_to_blocks,
-)
-from moonleap.blocks.parser.get_blocks import create_block
+from moonleap.blocks.parser.utils.get_meta import get_meta
 from moonleap.blocks.verbs import connects, has, has_default_prop, has_prop
+from moonleap.resources.named_resource import named
+from titan.api_pkg.pipeline.resources import Pipeline
 
 
 def get_pipeline_forwards(component):
@@ -12,54 +11,20 @@ def get_pipeline_forwards(component):
     if not widget_spec:
         return forwards
 
-    # Create a special block inside the component block for the pipelines.
-    _block = None
-    _pipeline_terms = []
-
-    def get_block():
-        nonlocal _block
-        if _block is None:
-            _block = _create_pipelines_block(component)
-        return _block
-
-    def _connect(pipeline_term_str, elm_term_str):
-        return create_forward(
-            pipeline_term_str, connects, elm_term_str, block=get_block()
-        )
-
-    def _add_pipeline(pipeline_term_str):
-        nonlocal _pipeline_terms
-        if pipeline_term_str in _pipeline_terms:
-            raise Exception(f"Duplicate pipeline term: {pipeline_term_str}")
-
-        _pipeline_terms.append(pipeline_term_str)
-        return create_forward(component, has, pipeline_term_str, block=get_block())
+    def _get_pipeline():
+        pipeline = named(Pipeline)()
+        pipeline.meta = get_meta("+:pipeline")
+        pipeline.typ = Pipeline()
+        return pipeline
 
     if pipeline_datas := widget_spec.src_dict.get("__pipelines__", {}):
         for pipeline_data in pipeline_datas:
-            pipeline_term_str = _get_pipeline_term_str(pipeline_data[-1])
-            forwards += [_add_pipeline(pipeline_term_str)]
+            pipeline = _get_pipeline()
+            forwards += [create_forward(component, has, pipeline)]
             for term_str in pipeline_data:
-                forwards += [_connect(pipeline_term_str, term_str)]
+                forwards += [create_forward(pipeline, connects, term_str)]
 
     return forwards
-
-
-def _get_pipeline_term_str(data_name):
-    name = data_name.replace("+", "-").replace(":", "-").replace("~", "-")
-    return f"{name}+:pipeline"
-
-
-def _create_pipelines_block(component):
-    parent_block = component.meta.block
-    block = create_block(
-        f"{component.id}_pipelines",
-        parent_block.level + 1,
-        parent_block,
-        [],
-    )
-    add_meta_data_to_blocks([block])
-    return block
 
 
 def get_props_forwards(component):

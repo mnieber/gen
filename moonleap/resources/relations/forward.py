@@ -1,6 +1,5 @@
 import typing as T
 
-from moonleap.blocks.block import Block
 from moonleap.blocks.term import Term, word_to_term
 from moonleap.resources.relations.rel import Rel
 from moonleap.resources.resource import Resource
@@ -19,8 +18,7 @@ def _to_term(x: T.Union[Term, str]) -> Term:
 def create_forward(
     subj: T.Union[Term, str, Resource],
     verb: T.Union[str, T.Tuple[str, ...]],
-    obj: T.Union[Term, str],
-    block: T.Optional[Block] = None,
+    obj: T.Union[Term, str, Resource],
     origin: T.Any = None,
 ):
     if subj is None:
@@ -30,12 +28,26 @@ def create_forward(
         raise Exception("Object is None")
 
     if isinstance(subj, str):
-        subj = word_to_term(subj, default_to_tag=True)
+        subj = _to_term(subj)
 
+    if isinstance(obj, str):
+        obj = _to_term(obj)
+
+    subj_res = None
     if isinstance(subj, Resource):
-        subj = subj.meta.term
+        subj_res = subj
+        subj = subj_res.meta.term
 
+    obj_res = None
     if isinstance(obj, Resource):
-        obj = obj.meta.term
+        obj_res = obj
+        obj = obj_res.meta.term
 
-    return Rel(subj=subj, verb=verb, obj=_to_term(obj), block=block, origin=origin)
+    return Rel(
+        subj=subj,
+        subj_res=subj_res,
+        verb=verb,
+        obj=obj,
+        obj_res=obj_res,
+        origin=origin,
+    )

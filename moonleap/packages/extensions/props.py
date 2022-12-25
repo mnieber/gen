@@ -64,7 +64,9 @@ def children(verb, term, rdcr=None, sort_attr: T.Optional[str] = None):
 
 def _get_parents(parent_term_str, verb, child_term, inv_relations):
     parents = []
-    pattern_rel = Rel(word_to_term(parent_term_str, True), verb, child_term)
+    pattern_rel = Rel(
+        subj=word_to_term(parent_term_str, True), verb=verb, obj=child_term
+    )
     for rel, subj_res in inv_relations:
         if fuzzy_match(rel, pattern_rel, subj_res.meta.base_tags, []):
             if subj_res not in parents:

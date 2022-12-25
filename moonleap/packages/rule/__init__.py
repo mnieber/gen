@@ -5,7 +5,6 @@ from enum import Enum
 from moonleap.blocks.term import word_to_term
 from moonleap.blocks.verbs import is_created_as
 from moonleap.resources.relations.rel import Rel
-from moonleap.resources.resource import Resource
 
 
 class Priorities(Enum):
@@ -36,8 +35,6 @@ class Rule:
 class Action:
     rule: Rule
     src_rel: Rel
-    subj_res: Resource
-    obj_res: Resource
 
     def trace(self):
         result = []

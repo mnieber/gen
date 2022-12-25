@@ -42,7 +42,7 @@ def create_resource_in_block(term, block):
                 )
 
     resource = resource or _create_generic_resource()
-    resource.meta = ResourceMetaData(term, block, _get_base_tags(term, block))
+    resource.meta = ResourceMetaData(term, _get_base_tags(term, block))
 
     block.add_resource_for_term(resource, term, True)
     return resource

@@ -48,7 +48,16 @@ def process_relations(relations: T.List[Rel], actions):
 
         # Step 6: process the is_created_as relation
         process_relations(
-            [Rel(term, is_created_as, term, publishing_block, rel.origin)], actions
+            [
+                Rel(
+                    subj=term,
+                    verb=is_created_as,
+                    obj=term,
+                    block=publishing_block,
+                    origin=rel.origin,
+                )
+            ],
+            actions,
         )
 
         return res
@@ -56,18 +65,21 @@ def process_relations(relations: T.List[Rel], actions):
     for rel in relations:
         rel.block.register_relation(rel)
 
-        subj_res = _find_or_create(rel, rel.subj)
-        obj_res = _find_or_create(rel, rel.obj)
+        if not rel.subj_res:
+            rel.subj_res = _find_or_create(rel, rel.subj)
 
-        if not subj_res.has_relation(rel, obj_res):
-            subj_res.add_relation(rel, obj_res)
+        if not rel.obj_res:
+            rel.obj_res = _find_or_create(rel, rel.obj)
 
-            rules = _find_rules(rel, subj_res, obj_res)
+        if not rel.subj_res.has_relation(rel, rel.obj_res):
+            rel.subj_res.add_relation(rel, rel.obj_res)
+
+            rules = _find_rules(rel)
             if not rules and rel.verb != is_created_as:
                 raise Exception(f"Unmatched relation ({rel}) in block: {rel.block}")
 
             for rule in rules:
-                _add_action(actions, Action(rule, rel, subj_res, obj_res))
+                _add_action(actions, Action(rule, rel))
 
 
 def _find_resource(term, block):
@@ -78,14 +90,14 @@ def _find_resource(term, block):
     return None
 
 
-def _find_rules(rel, subj_res, obj_res):
+def _find_rules(rel):
     rules = []
 
     for scope in rel.block.get_scopes():
         for rule in scope.find_rules(
             rel,
-            subj_base_tags=subj_res.meta.base_tags,
-            obj_base_tags=obj_res.meta.base_tags,
+            subj_base_tags=rel.subj_res.meta.base_tags,
+            obj_base_tags=rel.obj_res.meta.base_tags,
         ):
             rules.append(rule)
 

@@ -67,10 +67,16 @@ class Block:
         return False
 
     def get_resource(self, term):
+        result = None
         for t, res, _ in self._resource_by_term:
             if t == term:
-                return res
-        return None
+                if result:
+                    raise Exception(
+                        f"Multiple resources for term {term} in block {self.name}"
+                    )
+                result = res
+
+        return result
 
     def link(self, parent_block):
         self.parent_block = parent_block
@@ -96,14 +102,6 @@ class Block:
 
     def get_resource_by_term(self):
         return [x for x in self._resource_by_term]
-
-    def get_terms(self):
-        result = []
-        for line in self.lines:
-            for term in line.terms:
-                if term not in result:
-                    result.append(term)
-        return result
 
     def add_resource_for_term(self, resource, term, is_owner):
         existing_resource = self.get_resource(term)

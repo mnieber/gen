@@ -1,9 +1,7 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap.blocks.block import Block
 from moonleap.blocks.term import Term
-from moonleap.resources.relations.rel import Rel
 from moonleap.resources.relations.slctrs import RelSelector
 from moonleap.utils.get_id import get_id
 
@@ -11,17 +9,16 @@ from moonleap.utils.get_id import get_id
 @dataclass
 class ResourceMetaData:
     term: Term
-    block: Block
     base_tags: T.List[str]
 
 
 @dataclass
 class Resource:
     id: str = field(default_factory=get_id, init=False, repr=False)
-    _relations: T.List[T.Tuple[Rel, "Resource"]] = field(
+    _relations: T.List[T.Tuple["Rel", "Resource"]] = field(
         default_factory=list, init=False, repr=False
     )
-    _inv_relations: T.List[T.Tuple[Rel, "Resource"]] = field(
+    _inv_relations: T.List[T.Tuple["Rel", "Resource"]] = field(
         default_factory=list, init=False, repr=False
     )
     meta: T.Optional[ResourceMetaData] = field(

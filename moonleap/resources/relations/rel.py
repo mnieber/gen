@@ -6,12 +6,14 @@ from moonleap.blocks.term import Term, match_term_to_pattern, patch_tag
 from moonleap.utils import maybe_tuple_to_tuple
 
 
-@dataclass(frozen=True)
+@dataclass
 class Rel:
     subj: T.Optional[Term] = None
+    subj_res: T.Optional["Resource"] = None
     verb: T.Optional[T.Union[str, T.Tuple[str, ...]]] = None
     obj: T.Optional[Term] = None
     block: T.Optional[Block] = None
+    obj_res: T.Optional["Resource"] = None
 
     # This field is used for debugging purposes. It allows us to trace the chain of
     # action --(src_rel)--> relation --(origin)--> action etc, so we can figure out

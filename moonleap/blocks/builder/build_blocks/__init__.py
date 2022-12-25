@@ -1,5 +1,3 @@
-import typing as T
-
 from moonleap.blocks.builder.process_relations import process_relations
 from moonleap.blocks.verbs import is_created_as
 from moonleap.resources.relations.rel import Rel
@@ -16,7 +14,15 @@ def _to_list_of_relations(x, action):
                 f"A rule ({action.rule}) should either return a Rel or a list of Rel"
             )
     return [
-        Rel(x.subj, x.verb, x.obj, x.block or action.src_rel.block, origin=action)
+        Rel(
+            subj=x.subj,
+            subj_res=x.subj_res,
+            verb=x.verb,
+            obj=x.obj,
+            obj_res=x.obj_res,
+            block=x.block or action.src_rel.block,
+            origin=action,
+        )
         for x in result
     ]
 
@@ -31,9 +37,9 @@ def build_blocks(blocks):
     while actions:
         action = actions.pop()
         result = (
-            action.rule.f(action.subj_res)
+            action.rule.f(action.src_rel.subj_res)
             if action.src_rel.verb == is_created_as
-            else action.rule.f(action.subj_res, action.obj_res)
+            else action.rule.f(action.src_rel.subj_res, action.src_rel.obj_res)
         )
         if result:
             process_relations(
