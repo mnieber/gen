@@ -16,8 +16,10 @@ class FileWriter:
         self.root_dir = Path(get_session().output_dir)
         self.check_crc_before_write = check_crc_before_write
         self.fn_parts = {}
-
         self.snapshot_fn = Path(snapshot_fn)
+        self._load_crc_snapshot(snapshot_fn)
+
+    def _load_crc_snapshot(self, snapshot_fn):
         if self.snapshot_fn.exists():
             with open(snapshot_fn, "r") as f:
                 f_str = f.read()
@@ -33,18 +35,11 @@ class FileWriter:
             return
 
         if get_file_merger(fn):
-            if self._is_binary(content):
+            if _is_binary(content):
                 raise Exception(f"Cannot merge binary file: {fn}")
             self.fn_parts.setdefault(str(fn), []).append(content)
         else:
             self._write(fn, content)
-
-    def _is_binary(self, content):
-        return isinstance(content, bytes)
-
-    def _crc(self, content):
-        blob = content if self._is_binary(content) else bytes(str.encode(content))
-        return zlib.crc32(blob)
 
     def _write(self, fn, content):
         fn_str = str(fn)
@@ -54,7 +49,7 @@ class FileWriter:
         else:
             self.all_output_filenames.append(fn_str)
 
-        crc = self._crc(content)
+        crc = _crc(content)
         if (
             fn_str in self.crc_by_fn
             and self.crc_by_fn[fn_str] == crc
@@ -68,7 +63,7 @@ class FileWriter:
         if fn.is_symlink():
             fn.unlink()
         fn.parent.mkdir(parents=True, exist_ok=True)
-        with open(fn, "wb" if self._is_binary(content) else "w") as ofs:
+        with open(fn, "wb" if _is_binary(content) else "w") as ofs:
             ofs.write(content)
 
     def write_merged_files(self):
@@ -83,3 +78,12 @@ class FileWriter:
     def write_snapshot(self):
         with open(self.snapshot_fn, "w") as f:
             json.dump(self.crc_by_fn, f)
+
+
+def _is_binary(content):
+    return isinstance(content, bytes)
+
+
+def _crc(content):
+    blob = content if _is_binary(content) else bytes(str.encode(content))
+    return zlib.crc32(blob)

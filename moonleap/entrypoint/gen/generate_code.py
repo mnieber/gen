@@ -17,27 +17,28 @@ def generate_code(session, file_writer, post_process_all_files):
     blocks = get_blocks(expanded_markdown)
     build_blocks(blocks)
 
-    session.report("Rendering...")
-    render_resource(
-        get_root_resource(),
-        write_file=file_writer.write_file,
-        output_path="",
-    )
+    try:
+        session.report("Rendering...")
+        render_resource(
+            get_root_resource(),
+            write_file=file_writer.write_file,
+            output_path="",
+        )
 
-    file_writer.write_merged_files()
-    for warning in file_writer.warnings:
-        session.report(warning)
+        file_writer.write_merged_files()
+        for warning in file_writer.warnings:
+            session.report(warning)
+    finally:
+        file_writer.write_snapshot()
+
+        session.report("Post processing...")
+        post_process_output_files(
+            file_writer.all_output_filenames
+            if post_process_all_files
+            else file_writer.output_filenames,
+            session.get_post_process_settings(),
+            session.get_bin_settings(),
+        )
 
     session.report("Creating report...")
     report_resources(blocks)
-
-    session.report("Post processing...")
-    post_process_output_files(
-        file_writer.all_output_filenames
-        if post_process_all_files
-        else file_writer.output_filenames,
-        session.get_post_process_settings(),
-        session.get_bin_settings(),
-    )
-
-    file_writer.write_snapshot()
