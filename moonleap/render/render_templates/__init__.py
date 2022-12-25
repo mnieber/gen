@@ -3,17 +3,15 @@ from pathlib import Path
 
 from jinja2 import Template
 
-from moonleap.render.create_render_helpers import create_render_helpers
+from moonleap.render.render_templates.create_render_helpers import create_render_helpers
 from moonleap.utils.ruamel_yaml import ruamel_yaml
 
 
-def render_templates(
-    templates_dir, write_file, render_template, output_path, context, helpers
-):
+def render_templates(templates_dir, write_file, output_path, context, helpers):
     # Get next render helpers. Note that the existing helpers are continued to be
     # used in case the new __moonleap__.py file does not define get_helpers.
     helpers, render_in_context = create_render_helpers(
-        templates_dir, context, render_template, prev_helpers=helpers
+        templates_dir, context, prev_helpers=helpers
     )
 
     # Get template meta data
@@ -46,7 +44,6 @@ def render_templates(
             render_templates(
                 template_fn,
                 write_file,
-                render_template,
                 output_fn,
                 context,
                 helpers,

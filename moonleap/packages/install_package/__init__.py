@@ -1,8 +1,8 @@
 from moonleap.packages.extensions.extend import apply_extension
 from moonleap.packages.utils.get_module_symbols import get_module_symbols
 from moonleap.render.file_merger import add_file_merger
-from moonleap.render.template_env import add_filter
-from moonleap.render.transforms import register_transforms
+from moonleap.render.render_template.template_env import add_filter
+from moonleap.render.render_template.transforms import register_transforms
 
 
 def install_package(package):

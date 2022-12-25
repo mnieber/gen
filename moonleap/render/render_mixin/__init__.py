@@ -7,9 +7,7 @@ from moonleap.render.render_templates import render_templates
 from moonleap.resources.resource import Resource
 
 
-def render_resource(
-    res, write_file, render_template, output_path, context=None, template_dirs=None
-):
+def render_resource(res, write_file, output_path, context=None, template_dirs=None):
     if context is None:
         context = dict()
 
@@ -23,7 +21,6 @@ def render_resource(
             render_templates(
                 template_dir,
                 write_file,
-                render_template,
                 output_path,
                 context=context,
                 helpers=dict(),
@@ -45,7 +42,6 @@ def render_resource(
             render_resource(
                 res,
                 write_file,
-                render_template,
                 os.path.join(output_path, render_task.output_path),
                 context=dict(**context, **extra_context),
                 template_dirs=render_task.template_dirs,

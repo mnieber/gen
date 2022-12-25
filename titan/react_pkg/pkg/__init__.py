@@ -1,4 +1,4 @@
-from moonleap.render import simplefilemerger
+from moonleap.render.file_merger import simplefilemerger
 
 from . import jsfilemerger
 

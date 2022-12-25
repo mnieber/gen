@@ -3,7 +3,7 @@ import os
 
 import jinja2
 
-from moonleap.render.transforms import get_transforms
+from moonleap.render.render_template.transforms import get_transforms
 from moonleap.utils import chop
 
 _template_by_fn = dict()

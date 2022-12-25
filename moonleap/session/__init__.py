@@ -4,7 +4,7 @@ from pathlib import Path
 import ramda as R
 
 from moonleap.packages.scope_manager import ScopeManager
-from moonleap.settings import load_settings
+from moonleap.session.settings import load_settings
 from moonleap.utils.inflect import install_plural
 
 _session = None

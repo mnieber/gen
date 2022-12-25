@@ -3,10 +3,11 @@ import sys
 from argparse import Namespace
 from pathlib import Path
 
+from moonleap.render.render_template import render_template
 from moonleap.session import get_session
 
 
-def create_render_helpers(templates_dir, context, render_template, prev_helpers):
+def create_render_helpers(templates_dir, context, prev_helpers):
     if not Path(templates_dir).is_dir():
         raise Exception(f"{templates_dir} is not a directory")
 

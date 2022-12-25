@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from moonleap.render.tpls import get_tpl
+from moonleap.render.render_template.tpl import get_tpl
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
 
