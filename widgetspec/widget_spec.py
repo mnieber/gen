@@ -12,7 +12,6 @@ from widgetspec.widget_spec_memo import WidgetSpecMemoContext
 @dataclass
 class WidgetSpec:
     widget_base_types: T.List[str] = field(default_factory=list)
-    pipelines: T.List = field(default_factory=list)
     child_widget_specs: T.List["WidgetSpec"] = field(repr=False, default_factory=list)
     div: Div = field(default_factory=Div)
     widget_name: T.Optional[str] = None
@@ -31,18 +30,6 @@ class WidgetSpec:
     @property
     def is_component(self):
         return self.widget_name and ":" in self.widget_name
-
-    @property
-    def named_prop_terms(self):
-        return self.src_dict.setdefault("__props__", [])
-
-    @property
-    def handler_terms(self):
-        return self.src_dict.setdefault("__handlers__", [])
-
-    @property
-    def named_default_prop_terms(self):
-        return self.src_dict.setdefault("__default_props__", [])
 
     @property
     def is_component_def(self):
