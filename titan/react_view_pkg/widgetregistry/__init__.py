@@ -1,6 +1,6 @@
 from moonleap import create, create_forward, empty_rule, rule
+from moonleap.blocks.verbs import has
 from moonleap.session import get_session
-from moonleap.verbs import has
 from widgetspec.load_widget_specs import load_widget_specs
 
 from .resources import WidgetRegistry

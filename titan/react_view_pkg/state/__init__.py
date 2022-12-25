@@ -1,8 +1,8 @@
 from pathlib import Path
 
-import moonleap.resource.props as P
+import moonleap.packages.extensions.props as P
 from moonleap import Prop, create, create_forward, extend, kebab_to_camel, rule, u0
-from moonleap.verbs import has, provides
+from moonleap.blocks.verbs import has, provides
 from titan.react_pkg.reactmodule import ReactModule
 from titan.react_view_pkg.widgetregistry import get_widget_reg
 

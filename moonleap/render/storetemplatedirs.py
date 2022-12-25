@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from moonleap.render.render_templates import render_templates
-from moonleap.resource import Resource
+from moonleap.resources.resource import Resource
 
 
 def render_resource(

@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-import moonleap.resource.props as P
+import moonleap.packages.extensions.props as P
 from moonleap import create, create_forward, empty_rule, extend, rule
-from moonleap.verbs import has
+from moonleap.blocks.verbs import has
 from titan.project_pkg.service import Service, Tool
 
 rules = {

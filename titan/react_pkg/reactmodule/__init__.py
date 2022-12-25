@@ -1,6 +1,6 @@
 from pathlib import Path
 
-import moonleap.resource.props as P
+import moonleap.packages.extensions.props as P
 from moonleap import (
     MemFun,
     Prop,
@@ -11,7 +11,7 @@ from moonleap import (
     kebab_to_camel,
     rule,
 )
-from moonleap.verbs import has
+from moonleap.blocks.verbs import has
 from titan.react_pkg.reactapp import ReactApp
 
 from . import props

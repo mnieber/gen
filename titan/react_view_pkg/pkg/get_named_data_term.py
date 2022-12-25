@@ -1,5 +1,5 @@
 from moonleap import kebab_to_camel, named
-from moonleap.parser.utils.get_meta import get_meta
+from moonleap.blocks.parser.utils.get_meta import get_meta
 from titan.types_pkg.item import Item
 from titan.types_pkg.itemlist import ItemList
 from titan.types_pkg.typeregistry import get_type_reg

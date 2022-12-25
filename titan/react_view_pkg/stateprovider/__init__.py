@@ -1,4 +1,4 @@
-import moonleap.resource.props as P
+import moonleap.packages.extensions.props as P
 from moonleap import (
     create,
     create_forward,
@@ -8,7 +8,7 @@ from moonleap import (
     rule,
     u0,
 )
-from moonleap.verbs import has, provides
+from moonleap.blocks.verbs import has, provides
 from titan.react_view_pkg.view import default_view_templates_dir
 
 from . import props

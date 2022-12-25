@@ -1,8 +1,8 @@
 from pathlib import Path
 
-import moonleap.resource.props as P
+import moonleap.packages.extensions.props as P
 from moonleap import create, empty_rule, extend, get_root_resource, rule
-from moonleap.verbs import has
+from moonleap.blocks.verbs import has
 from titan.project_pkg.project import Project
 
 from .resources import VsCodeProject

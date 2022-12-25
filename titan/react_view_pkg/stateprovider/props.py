@@ -1,5 +1,5 @@
 from moonleap import create_forward
-from moonleap.verbs import provides
+from moonleap.blocks.verbs import provides
 
 
 def state_provider_load(state_provider):

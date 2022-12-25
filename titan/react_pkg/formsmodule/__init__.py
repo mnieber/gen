@@ -1,8 +1,8 @@
 from pathlib import Path
 
-import moonleap.resource.props as P
+import moonleap.packages.extensions.props as P
 from moonleap import create, extend, rule
-from moonleap.verbs import has
+from moonleap.blocks.verbs import has
 from titan.react_pkg.packages.use_react_package import use_react_package
 from titan.react_pkg.reactapp import ReactApp
 from titan.react_pkg.reactmodule import ReactModule

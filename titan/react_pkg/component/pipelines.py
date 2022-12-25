@@ -1,9 +1,9 @@
 from moonleap import create_forward
-from moonleap.builder.build_blocks.add_meta_data_to_blocks import (
+from moonleap.blocks.builder.build_blocks.add_meta_data_to_blocks import (
     add_meta_data_to_blocks,
 )
-from moonleap.parser.get_blocks import create_block
-from moonleap.verbs import connects, has, has_default_prop, has_prop
+from moonleap.blocks.parser.get_blocks import create_block
+from moonleap.blocks.verbs import connects, has, has_default_prop, has_prop
 
 
 def get_pipeline_forwards(component):

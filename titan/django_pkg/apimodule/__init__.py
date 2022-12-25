@@ -1,8 +1,8 @@
 from pathlib import Path
 
-import moonleap.resource.props as P
+import moonleap.packages.extensions.props as P
 from moonleap import create, extend, rule
-from moonleap.verbs import has
+from moonleap.blocks.verbs import has
 from titan.api_pkg.apiregistry import get_api_reg
 from titan.api_pkg.apiregistry.get_form_type_specs import get_form_type_specs
 from titan.api_pkg.apiregistry.get_public_type_specs import get_public_type_specs

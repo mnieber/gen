@@ -1,9 +1,9 @@
 from pathlib import Path
 
-import moonleap.resource.props as P
+import moonleap.packages.extensions.props as P
 from moonleap import create, create_forward, empty_rule, extend, rule, u0
+from moonleap.blocks.verbs import has, uses
 from moonleap.utils.case import kebab_to_camel
-from moonleap.verbs import has, uses
 
 from .resources import SelectItemEffect
 

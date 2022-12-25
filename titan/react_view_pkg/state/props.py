@@ -1,6 +1,6 @@
 from moonleap import create_forward
+from moonleap.blocks.verbs import has
 from moonleap.utils.case import l0
-from moonleap.verbs import has
 
 
 def state_ts_var(state):

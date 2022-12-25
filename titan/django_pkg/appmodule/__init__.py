@@ -1,8 +1,8 @@
 from pathlib import Path
 
-import moonleap.resource.props as P
+import moonleap.packages.extensions.props as P
 from moonleap import create, extend
-from moonleap.verbs import has
+from moonleap.blocks.verbs import has
 from titan.django_pkg.djangoapp import DjangoApp
 from titan.django_pkg.djangomodule import DjangoModule
 

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from moonleap import create, create_forward, empty_rule, rule
-from moonleap.verbs import has
+from moonleap.blocks.verbs import has
 from titan.project_pkg.service import Tool
 
 rules = {

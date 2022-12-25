@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-import moonleap.resource.props as P
+import moonleap.packages.extensions.props as P
 from moonleap import RenderMixin, Resource, create, extend, rule
-from moonleap.verbs import has
+from moonleap.blocks.verbs import has
 from titan.project_pkg.project import Project
 
 

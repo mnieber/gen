@@ -1,4 +1,4 @@
-import moonleap.resource.props as P
+import moonleap.packages.extensions.props as P
 from moonleap import (
     MemFun,
     create,
@@ -8,7 +8,7 @@ from moonleap import (
     kebab_to_camel,
     rule,
 )
-from moonleap.verbs import has, runs, uses
+from moonleap.blocks.verbs import has, runs, uses
 
 from . import props
 from .resources import Service, Tool

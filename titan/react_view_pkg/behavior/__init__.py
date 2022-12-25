@@ -1,5 +1,5 @@
 from moonleap import create, empty_rule, kebab_to_camel
-from moonleap.verbs import has
+from moonleap.blocks.verbs import has
 
 from .resources import Behavior
 

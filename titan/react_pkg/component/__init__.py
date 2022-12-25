@@ -1,6 +1,6 @@
-import moonleap.resource.props as P
+import moonleap.packages.extensions.props as P
 from moonleap import MemFun, create_forward, empty_rule, extend, rule
-from moonleap.verbs import has, has_default_prop, has_prop
+from moonleap.blocks.verbs import has, has_default_prop, has_prop
 from titan.react_pkg.reactmodule import ReactModule
 from titan.react_view_pkg.widgetregistry.resources import WidgetRegistry
 

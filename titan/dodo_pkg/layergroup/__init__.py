@@ -1,6 +1,6 @@
-import moonleap.resource.props as P
+import moonleap.packages.extensions.props as P
 from moonleap import Term, create, empty_rule, extend, kebab_to_camel
-from moonleap.verbs import contains, has
+from moonleap.blocks.verbs import contains, has
 from titan.dodo_pkg.layer.resources import DodoLayer
 
 from .resources import DodoLayerGroup

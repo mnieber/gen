@@ -1,6 +1,6 @@
-import moonleap.resource.props as P
+import moonleap.packages.extensions.props as P
 from moonleap import MemFun, Prop, create, empty_rule, extend, named
-from moonleap.verbs import connects, has
+from moonleap.blocks.verbs import connects, has
 
 from . import props
 from .resources import Pipeline, PropsSource

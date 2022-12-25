@@ -3,7 +3,7 @@ from pathlib import Path
 
 import ramda as R
 
-from moonleap.scopes.scope_manager import ScopeManager
+from moonleap.packages.scope_manager import ScopeManager
 from moonleap.settings import load_settings
 from moonleap.utils.inflect import install_plural
 

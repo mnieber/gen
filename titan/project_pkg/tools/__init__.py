@@ -1,8 +1,8 @@
 from pathlib import Path
 
-import moonleap.resource.props as P
+import moonleap.packages.extensions.props as P
 from moonleap import create, extend, rule
-from moonleap.verbs import runs, uses
+from moonleap.blocks.verbs import runs, uses
 from titan.project_pkg.service import Service, Tool
 
 from .resources import Vandelay
