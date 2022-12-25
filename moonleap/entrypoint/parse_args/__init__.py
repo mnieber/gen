@@ -22,13 +22,6 @@ def parse_args():
         + "skipped in the diff.",
     )
     parser.add_argument(
-        "--restore-missing",
-        required=False,
-        action="store_true",
-        dest="restore_missing_files",
-        help="If true, missing output files are recreated when using --smart mode",
-    )
-    parser.add_argument(
         "--post-process-all",
         required=False,
         action="store_true",
