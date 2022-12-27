@@ -1,7 +1,14 @@
 from pathlib import Path
 
 import moonleap.packages.extensions.props as P
-from moonleap import create, create_forward, extend, kebab_to_camel, rule
+from moonleap import (
+    create,
+    create_forward,
+    extend,
+    get_root_resource,
+    kebab_to_camel,
+    rule,
+)
 from moonleap.blocks.verbs import has
 from titan.api_pkg.apiregistry import get_api_reg
 from titan.api_pkg.apiregistry.get_public_type_specs import get_public_type_specs
@@ -33,7 +40,7 @@ def react_app_uses_graphql(react_app, api_module):
 
 @rule("react-app", has, ":graphql")
 def react_app_uses_graphql_node_pkg(react_app, graphql):
-    return create_forward(":node-package", has, "graphql-api:node-pkg")
+    get_root_resource().set_flags(["app/useGraphql"])
 
 
 @rule("react-app", has, "api:module")

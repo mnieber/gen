@@ -17,7 +17,7 @@ class BuilderOutput:
     scss_lines: list = field(default_factory=list)
     preamble_lines: list = field(default_factory=list)
     preamble_hooks_lines: list = field(default_factory=list)
-    react_packages_by_module_name: dict = field(default_factory=dict)
+    flags: list = field(default_factory=list)
     # True if the widget spec or any of its child widget specs has a Children type
     has_children: bool = False
     # True if the widget has no scss file
@@ -34,9 +34,7 @@ class BuilderOutput:
         extend_uniq(self.props_lines, rhs.props_lines)
         extend_uniq(self.add_props_lines, rhs.add_props_lines)
         extend_uniq(self.default_props, rhs.default_props)
-        merge_into_config(
-            self.react_packages_by_module_name, rhs.react_packages_by_module_name
-        )
+        extend_uniq(self.flags, rhs.flags)
 
     @property
     def debug(self):
@@ -65,6 +63,5 @@ class BuilderOutput:
         self.add(rhs)
         return div
 
-    def add_react_package(self, module_name, package_name, output_dir):
-        packages = self.react_packages_by_module_name.setdefault(module_name, [])
-        append_uniq(packages, [package_name, output_dir])
+    def set_flags(self, flags):
+        extend_uniq(self.flags, flags)

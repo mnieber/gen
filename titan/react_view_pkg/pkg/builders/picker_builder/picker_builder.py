@@ -40,7 +40,7 @@ class PickerBuilder(Builder):
         extend_uniq(self.output.default_props, self.bvrs_helper.bvrs_default_props())
 
     def _add_packages(self):
-        self.output.add_react_package("utils", "components/ValuePicker", "components")
+        self.output.set_flags(["utils/ValuePicker"])
 
     def update_widget_spec(self):
         self.ilh.update_widget_spec()

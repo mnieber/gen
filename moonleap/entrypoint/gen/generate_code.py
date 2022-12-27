@@ -19,10 +19,12 @@ def generate_code(session, file_writer, post_process_all_files):
 
     try:
         session.report("Rendering...")
+        root_resource = get_root_resource()
         render_resource(
-            get_root_resource(),
+            root_resource,
             write_file=file_writer.write_file,
             output_path="",
+            context=dict(has_flag=root_resource.has_flag),
         )
 
         file_writer.write_merged_files()

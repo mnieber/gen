@@ -3,6 +3,7 @@ from pathlib import Path
 import moonleap.packages.extensions.props as P
 from moonleap import create, create_forward, empty_rule, extend, kebab_to_camel, rule
 from moonleap.blocks.verbs import has
+from moonleap.render.render_mixin import get_root_resource
 from titan.react_pkg.reactapp import ReactApp
 from titan.react_pkg.reactmodule import ReactModule
 
@@ -22,7 +23,7 @@ def create_module(term):
 
 @rule("routes:module")
 def created_routes_module(routes_module):
-    return create_forward(":node-package", has, "router:node-pkg")
+    get_root_resource().set_flags(["app/useRouter"])
 
 
 @create("route")

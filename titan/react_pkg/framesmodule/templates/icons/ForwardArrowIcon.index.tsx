@@ -1,0 +1,1 @@
+export { ForwardArrowIcon } from './ForwardArrowIcon';

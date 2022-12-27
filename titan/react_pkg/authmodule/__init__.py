@@ -3,7 +3,7 @@ from pathlib import Path
 import moonleap.packages.extensions.props as P
 from moonleap import create, create_forward, extend, rule
 from moonleap.blocks.verbs import has
-from titan.react_pkg.packages.use_react_package import use_react_package
+from moonleap.render.render_mixin import get_root_resource
 from titan.react_pkg.reactapp import ReactApp
 from titan.react_pkg.reactmodule import ReactModule
 
@@ -17,7 +17,7 @@ def create_module(term):
 
 @rule("react-app", has, "auth:module")
 def react_app_has_auth_module(react_app, auth_module):
-    use_react_package(react_app.get_module("utils"), "hooks/useNextUrl", "hooks")
+    get_root_resource().set_flags(["utils/useNextUrl"])
     return [
         create_forward(auth_module.react_app, has, "forms:module"),
         create_forward(auth_module.react_app, has, ":graphql"),

@@ -1,19 +1,13 @@
 from pathlib import Path
 
-import moonleap.packages.extensions.props as P
-from moonleap import MemFun, create, create_forward, empty_rule, extend, rule
-from moonleap.blocks.verbs import has
-from titan.project_pkg.service import Service
+from moonleap import create, get_root_resource, rule
 
-from . import props
-from .resources import NodePackage, Pkg  # noqa
+from .resources import NodePackage  # noqa
 
 base_tags = {"node-package": ["tool"]}
 
 
-rules = {
-    ("node-package", has, "node-pkg"): empty_rule(),
-}
+rules = {}
 
 
 @create("node-package")
@@ -24,22 +18,6 @@ def create_node_package(term):
     return node_package
 
 
-@create("node-pkg")
-def create_package(term):
-    return Pkg(name=term.data)
-
-
 @rule("cypress")
 def created_cypress(cypress):
-    return create_forward(":node-package", has, "cypress:node-pkg")
-
-
-@extend(NodePackage)
-class ExtendNodePackage:
-    pkgs = P.children(has, "node-pkg")
-    has_pkg = MemFun(props.has_pkg)
-
-
-@extend(Service)
-class ExtendService:
-    node_package = P.child(has, "node-package")
+    get_root_resource().set_flags(["app/useCypress"])

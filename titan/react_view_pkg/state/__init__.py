@@ -1,8 +1,9 @@
 from pathlib import Path
 
 import moonleap.packages.extensions.props as P
-from moonleap import Prop, create, create_forward, extend, kebab_to_camel, rule, u0
+from moonleap import Prop, create, extend, kebab_to_camel, rule, u0
 from moonleap.blocks.verbs import has, provides
+from moonleap.render.render_mixin import get_root_resource
 from titan.react_pkg.reactmodule import ReactModule
 from titan.react_view_pkg.widgetregistry import get_widget_reg
 
@@ -31,9 +32,7 @@ def module_renders_state(module, state):
 
 @rule("state")
 def created_state(state):
-    return [
-        create_forward(":node-package", has, f"states:node-pkg"),
-    ]
+    get_root_resource().set_flags(["app/useStates"])
 
 
 @rule("react-app")

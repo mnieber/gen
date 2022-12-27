@@ -3,7 +3,7 @@ from pathlib import Path
 import moonleap.packages.extensions.props as P
 from moonleap import create, extend, rule
 from moonleap.blocks.verbs import has
-from titan.react_pkg.packages.use_react_package import use_react_package
+from moonleap.render.render_mixin import get_root_resource
 from titan.react_pkg.reactapp import ReactApp
 from titan.react_pkg.reactmodule import ReactModule
 
@@ -17,10 +17,9 @@ def create_module(term):
 
 @rule("forms:module")
 def created_forms_module(forms_module):
-    utils_module = forms_module.react_app.get_module("utils")
-    use_react_package(utils_module, "hooks/useScheduledCall", "hooks")
-    use_react_package(utils_module, "components/ValuePicker", "components")
-    use_react_package(utils_module, "utils/slugify")
+    get_root_resource().set_flags(
+        ["utils/useScheduledCall", "utils/ValuePicker", "utils/slugify"]
+    )
 
 
 @extend(ReactApp)

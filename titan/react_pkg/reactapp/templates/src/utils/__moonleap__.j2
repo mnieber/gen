@@ -1,2 +1,12 @@
 cookies.ts:
     include: {{ _.service.cypress|bool }}
+
+mergeClickHandlers.ts:
+    include: {{ _.has_flag("utils/mergeClickHandlers") }}
+
+slugify.ts:
+    include: {{ _.has_flag("utils/slugify") }}
+
+slugify.index.ts:
+    include: {{ _.has_flag("utils/slugify") }}
+    name: index.ts
