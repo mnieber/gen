@@ -19,6 +19,10 @@ def _args():
 if Dodo.is_main(__name__, safe=True):
     args = _args()
     Dodo.run(
-        ["python", "./default_pkg/inline_right_column/format_right_column.py", args.fn],
+        [
+            "python",
+            "./pkgs/default_pkg/inline_right_column/format_right_column.py",
+            args.fn,
+        ],
         cwd=args.cwd,
     )

@@ -1,7 +1,6 @@
 import os
 
 import yaml
-
 from titan.react_view_pkg.pkg.get_builders import get_builders
 
 from .widget_spec_parser import WidgetSpecParser
@@ -24,4 +23,6 @@ def load_widget_specs(widget_reg, spec_dir):
                     pass
                 except Exception as e:
                     raise Exception(f"Error parsing {fn}: {e}")
-            widget_reg.pprint()
+
+            if False:
+                widget_reg.pprint()

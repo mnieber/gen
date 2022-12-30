@@ -1,5 +1,11 @@
+import sys
+from pathlib import Path
+
 from moonleap.entrypoint import create_session, diff, gen, parse_args
 from moonleap.entrypoint.check_args import check_args
+
+pkgs_path = Path(__file__).parent / "pkgs"
+sys.path.append(str(pkgs_path))
 
 # import traceback
 
