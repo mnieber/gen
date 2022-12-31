@@ -20,11 +20,11 @@ def create_get_foo_query(
         }
     """
 
-    op_name = "getFoo"
+    operation_name = "getFoo"
     variables = dict(
         inputFieldName=input_field_name,                                        {% !! input_field_spec in __.input_field_specs %}
     )
-    return root.result, op_name, variables
+    return root.result, operation_name, variables
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

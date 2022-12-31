@@ -13,13 +13,13 @@ class TestPostFooMutation(GraphqlTestCase):
         self,
         client_query,
     ):
-        query, op_name, variables = create_post_foo_mutation(
+        query, operation_name, variables = create_post_foo_mutation(
             {{ __.create_mutation_args() }}
         );
-        response = client_query(query, op_name=op_name, variables=variables)
+        response = client_query(query, operation_name=operation_name, variables=variables)
         data = response.json()["data"]
 
-        # check that the response is as expected
+        # Moonleap Todo: check that the response is as expected
         assert data["postFoo"] == {"errors": {}, "success": True}
 
 {% end_magic_with %}

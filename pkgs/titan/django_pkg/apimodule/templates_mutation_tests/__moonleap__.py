@@ -1,10 +1,11 @@
 import os
 
+from titan.django_pkg.djangoapp.define_fixture import define_fixture
+from titan.types_pkg.typeregistry import get_type_reg
+
 from moonleap.utils.case import l0, sn
 from moonleap.utils.codeblock import CodeBlock
 from moonleap.utils.fp import uniq
-from titan.django_pkg.djangoapp.define_fixture import define_fixture
-from titan.types_pkg.typeregistry import get_type_reg
 
 
 def field_spec_default_value(field_spec):
@@ -67,7 +68,9 @@ def fk_field_specs_for_form_field(form_field_spec):
 
 def get_helpers(_):
     class Helpers:
-        input_field_specs = list(_.mutation.api_spec.get_inputs())
+        input_field_specs = [
+            (x, x.field_type == "form") for x in _.mutation.api_spec.get_inputs()
+        ]
         form_input_field_specs = _.mutation.api_spec.get_inputs(["form"])
         output_field_specs = _.mutation.api_spec.get_outputs()
         fk_output_field_specs = _.mutation.api_spec.get_outputs(["fk"])
@@ -109,10 +112,10 @@ def get_helpers(_):
         def create_mutation_args(self):
             root = CodeBlock(style="python", level=1)
 
-            for input_field_spec in self.input_field_specs:
+            for input_field_spec, is_form in self.input_field_specs:
                 input_arg_name = sn(input_field_spec.name)
 
-                if input_field_spec.field_type == "form":
+                if is_form:
                     create_form_args = []
                     for fk_field_spec in fk_field_specs_for_form_field(
                         input_field_spec
