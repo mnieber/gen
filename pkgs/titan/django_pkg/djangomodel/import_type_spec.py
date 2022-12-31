@@ -1,4 +1,3 @@
-from moonleap.utils.case import camel_to_kebab, sn
 from titan.django_pkg.djangomodel.resources import (
     DjangoBooleanField,
     DjangoCharField,
@@ -16,6 +15,9 @@ from titan.django_pkg.djangomodel.resources import (
     DjangoUrlField,
     DjangoUuidField,
 )
+
+from moonleap import get_root_resource
+from moonleap.utils.case import camel_to_kebab, sn
 
 
 def import_type_spec(type_spec, django_model):
@@ -81,6 +83,7 @@ def import_type_spec(type_spec, django_model):
         elif field_spec.field_type == "image":
             django_model.fields.append(DjangoImageField(**args))
         elif field_spec.field_type == "markdown":
+            get_root_resource().set_flags(["django/hasMarkdownFields"])
             django_model.fields.append(DjangoMarkdownField(**args))
         else:
             raise ValueError(f"Unknown field type: {field_spec.field_type}")

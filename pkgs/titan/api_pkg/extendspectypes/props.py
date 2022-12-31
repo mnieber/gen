@@ -1,6 +1,7 @@
-from moonleap import u0
 from typespec.field_spec import FieldSpec
 from typespec.type_spec import TypeSpec
+
+from moonleap import u0
 
 
 def tn_graphene(self: TypeSpec):
@@ -30,7 +31,7 @@ def graphene_type(self: FieldSpec, args):
     if self.field_type == "float":
         return f"graphene.Float({args})"
 
-    if self.field_type in ("string", "text", "slug"):
+    if self.field_type in ("string", "text", "slug", "markdown"):
         return f"graphene.String({args})"
 
     if self.field_type == "string[]":
