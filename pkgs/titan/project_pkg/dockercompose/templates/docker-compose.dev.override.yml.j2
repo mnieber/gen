@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  {{ service.name }}:                                                                                                       {% for service in _.project.services %}{% min_lines count=2 %}
+  {{ service.name }}:                                                                                                     {% for service in _.project.services %}{% min_lines count=2 %}
     volumes:                                                                                                              {% if service.opt_dir %}
       - {{ __.pudb_path }}:/root/.config/pudb                                                                             {% ?? service.pudb %}
       - {{ _.project.opt_dir_fn }}/{{ service.name }}/fish_history:/root/.local/share/fish/fish_history                   {% ?? service.fish %}
@@ -10,4 +10,5 @@ services:
       - {{ _.project.opt_dir_fn }}/{{ service.name }}/assets:{{ service.install_dir }}/assets                             {% ?? service.pytest %}
       - {{ _.project.opt_dir_fn }}/{{ service.name }}/static:{{ service.install_dir }}/static                             {% ?? service.has_django_app %}
       - {{ _.project.opt_dir_fn }}/{{ service.name }}/media:{{ service.install_dir }}/media                               {% ?? service.has_django_app %}{% endif %}{% end_min_lines %}
-      - {{ src_dir }}:/npm/{{ name }}                                                                                     {% !! name, src_dir in service.npm_source_maps.items() %}{% endfor %}
+      - {{ src_dir }}:/npm/{{ name }}                                                                                     {% !! name, src_dir in service.npm_source_maps.items() %}
+      - {{ src_dir }}:/pypi/{{ name }}                                                                                    {% !! name, src_dir in service.pypi_source_maps.items() %}{% endfor %}

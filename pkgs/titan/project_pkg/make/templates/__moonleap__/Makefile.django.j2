@@ -17,4 +17,12 @@ migrate:
 
 run-server:
 	python manage.py runserver 0.0.0.0:{{ _.service.ports.django_app }}
+
+uninstall-editable-packages:														{% if _.service.pypi_source_maps %}
+	pip uninstall --yes {{ name }}                                                  {% !! name, src_dir in _.service.pypi_source_maps.items() %}
+
+install-editable-packages: uninstall-editable-packages
+	pip install -e /pypi/{{ name }}                                                 {% !! name, src_dir in _.service.pypi_source_maps.items() %}
+
+																					{% endif %}
 																					{% endif %}

@@ -72,6 +72,10 @@ class Service(RenderMixin, Resource):
     def npm_source_maps(self):
         return self.get_setting_or({}, ["npm_source_maps"])
 
+    @property
+    def pypi_source_maps(self):
+        return self.get_setting_or({}, ["pypi_source_maps"])
+
 
 @dataclass
 class Tool(TemplateDirMixin, RenderMixin, Resource):
