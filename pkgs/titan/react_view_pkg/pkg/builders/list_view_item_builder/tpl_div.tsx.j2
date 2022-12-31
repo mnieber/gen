@@ -8,10 +8,10 @@
 
 
 {% section styles %}
-{                                                                                       {% min_lines count=3 %}
+{                                                                                       {% if bvrs_has_selection or bvrs_has_highlight %}
   'MyComponent--selected': props.selectionUIProps.isSelected,                           {% ?? bvrs_has_selection %}
   'MyComponent--highlighted': props.isHighlighted,                                      {% ?? bvrs_has_highlight %}
-},                                                                                      {% end_min_lines %}
+},                                                                                      {% endif %}
 `MyComponent--drag-${props.dragAndDropUIProps.dragState}`                               {% ?? bvrs_has_drag_and_drop %}
 {% end_section %}
 
