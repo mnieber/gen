@@ -1,14 +1,19 @@
 from pathlib import Path
 
-import moonleap.packages.extensions.props as P
-from moonleap import create, create_forward, extend, rule
-from moonleap.blocks.verbs import connects, has, runs, uses
 from titan.project_pkg.service import Service
 
-from .resources import DjangoApp
+import moonleap.packages.extensions.props as P
+from moonleap import create, create_forward, empty_rule, extend, rule
+from moonleap.blocks.verbs import connects, has, runs, uses
+
+from .resources import DjangoAdminReorder, DjangoApp
 
 base_tags = {
     "django-app": ["tool"],
+}
+
+rules = {
+    ("django-app", uses, "admin-reorder"): empty_rule(),
 }
 
 
@@ -20,6 +25,11 @@ def create_django(term):
     return django_app
 
 
+@create("admin-reorder")
+def create_admin_reorder(term):
+    return DjangoAdminReorder()
+
+
 @rule("django-app")
 def created_django(django_app):
     return create_forward(django_app, has, "app:module")
@@ -28,6 +38,11 @@ def created_django(django_app):
 @rule("django-app", connects, "postgres:service")
 def django_uses_postgres_service(django_app, postgres_service):
     return create_forward(django_app.service, uses, "postgres:service")
+
+
+@extend(DjangoApp)
+class ExtendDjangoApp:
+    admin_reorder = P.child(uses, ":admin-reorder")
 
 
 @extend(Service)

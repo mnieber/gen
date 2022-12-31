@@ -14,6 +14,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "adminsortable2",
+    "admin_reorder",                                                    {% ?? _.django_app.admin_reorder %}
     "corsheaders",
     "django_extensions",
     *django_rtk_green_apps,                                             {% ?? _.django_app.user_accounts_module %}
@@ -27,4 +28,22 @@ LOCAL_APPS = [
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
+ADMIN_REORDER = (
+    "django_module_name",                                               {% for django_module in _.django_app.modules %}{% ?? django_module.django_models %}{% endfor %}
+    "users",
+    "user_profiles",
+    {
+        "app": "django_rtk_green",
+        "models": (
+            "graphql_jwt.RefreshToken",
+            "django_rtk_later.ActivationToken",
+            "django_rtk_magic_link.MagicLinkToken",
+            "django_rtk_password.PasswordResetToken",
+        ),
+    },
+    "auth",
+    "sites",
+)
+
 {% end_magic_with %}

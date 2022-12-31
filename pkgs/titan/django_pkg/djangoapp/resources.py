@@ -1,9 +1,10 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap import get_session
-from moonleap.utils.get_or_create_secret_key import get_or_create_secret_key
 from titan.project_pkg.service import Tool
+
+from moonleap import Resource, get_session
+from moonleap.utils.get_or_create_secret_key import get_or_create_secret_key
 
 
 @dataclass
@@ -26,3 +27,8 @@ class DjangoApp(Tool):
             return
         self.translation_ids.append(id)
         translations.append((id, value))
+
+
+@dataclass
+class DjangoAdminReorder(Resource):
+    pass

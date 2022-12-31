@@ -1,7 +1,9 @@
 Django                                      {% if _.service.has_django_app %}
+django-modeladmin-reorder                   {% ?? _.service.django_app.admin_reorder %}
 django-admin-sortable2==1.0.4
 django-cors-headers
 django-extensions
 django-rtk-green                            {% ?? _.service.django_app.user_accounts_module %}
 graphene-django                             {% ?? _.service.django_app.api_module %}
+martor                                      {% ?? _.has_flag("django/hasMarkdownFields") %}
                                             {% endif %}
