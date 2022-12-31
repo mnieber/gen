@@ -33,15 +33,16 @@ ADMIN_REORDER = (
     "django_module_name",                                               {% for django_module in _.django_app.modules %}{% ?? django_module.django_models %}{% endfor %}
     "users",
     "user_profiles",
-    {
-        "app": "django_rtk_green",
+    {                                                                   {% if _.django_app.user_accounts_module %}
+        "app": "refresh_token",
+        "label": "Django-RTK",
         "models": (
-            "graphql_jwt.RefreshToken",
+            "refresh_token.RefreshToken",
             "django_rtk_later.ActivationToken",
             "django_rtk_magic_link.MagicLinkToken",
             "django_rtk_password.PasswordResetToken",
         ),
-    },
+    },                                                                  {% endif %}
     "auth",
     "sites",
 )
