@@ -8,6 +8,6 @@ install:
 pip-compile:
 	pip-compile .requirements/base.in -o .requirements/base.txt
 	pip-compile .requirements/dev.in -o .requirements/dev.txt
-	pip-compile .requirements/prod.in -o .requirements/prod.txt
+	pip-compile .requirements/prod.in -o .requirements/prod.txt						{% ?? _.project.has_prod_config %}
 
                                                                                     {% endif %}
