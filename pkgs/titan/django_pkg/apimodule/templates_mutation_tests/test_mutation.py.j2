@@ -1,6 +1,8 @@
 {% magic_with _.mutation.name as postFoo %}
 {% magic_with field_spec.target as MyFieldTarget %}
 {% magic_with field_spec.name as myFieldName %}
+{% magic_with fixture.name as my_fixture_name %}
+{% magic_with fixture.field_spec.target as MyFixtureTarget %}
 import pytest
 from api.tests.graphqltestcase import GraphqlTestCase
 from .create_post_foo_mutation import create_post_foo_mutation
@@ -12,14 +14,17 @@ class TestPostFooMutation(GraphqlTestCase):
     @pytest.mark.django_db()
     def test_post_foo__(
         self,
-        my_field_target,                                                    {% !! field_spec in __.id_input_field_specs %}
+        my_fixture_name,                                                    {% !! fixture in __.fixtures %}
         client_query,
     ):
+        my_fixture_target_ids = [str(x.id) for x in my_fixture_name]        {% !! fixture in __.ids_fixtures %}
         query, operation_name, variables = create_post_foo_mutation(
-            my_field_target_id=str(my_field_target.id),                     {% !! field_spec in __.id_input_field_specs %}
+            my_fixture_target_id=str(my_fixture_name.id),                   {% !! fixture in __.id_fixtures %}
+            my_fixture_target_ids=my_fixture_target_ids,                    {% !! fixture in __.ids_fixtures %}
+            my_field_target=create_random_my_field_target(),                {% !! field_spec in __.form_input_field_specs %}
             output_values=[
                 'myFieldName'      {% if not loop.last %},{% endif %}       {% !! field_spec in __.scalar_output_field_specs %}
-            ]
+            ],
         );
         response = client_query(
             query, operation_name=operation_name, variables=variables
@@ -31,6 +36,8 @@ class TestPostFooMutation(GraphqlTestCase):
         assert False, "Moonleap Todo"
 
 
+{% end_magic_with %}
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

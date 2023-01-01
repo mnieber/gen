@@ -24,7 +24,7 @@ def create_get_foo_query(
     variables = dict(
         inputFieldName=input_field_name,                                        {% !! input_field_spec in __.input_field_specs %}
     )
-    return root.result, operation_name, variables
+    return result, operation_name, variables
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

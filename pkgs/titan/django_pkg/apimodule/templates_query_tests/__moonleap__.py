@@ -1,6 +1,6 @@
 import os
 
-from titan.django_pkg.djangoapp.define_fixture import define_fixture
+from titan.django_pkg.djangoapp.define_fixture import create_fixture, define_fixture
 
 from moonleap.utils.case import l0, sn
 from moonleap.utils.codeblock import CodeBlock
@@ -12,6 +12,7 @@ def get_helpers(_):
         input_field_specs = list(_.query.api_spec.get_inputs())
         output_field_specs = list(_.query.api_spec.get_outputs())
         fk_output_field_specs = list(_.query.api_spec.get_outputs(["fk", "relatedSet"]))
+        fixtures = [create_fixture(x) for x in fk_output_field_specs]
 
         def query_fixture_imports(self):
             result = []
@@ -28,8 +29,8 @@ def get_helpers(_):
         def define_query_fixtures(self):
             root = CodeBlock(level=1)
 
-            for output_field_spec in self.fk_output_field_specs:
-                define_fixture(root, output_field_spec)
+            for fixture in self.fixtures:
+                define_fixture(root, fixture)
 
             return root.result
 

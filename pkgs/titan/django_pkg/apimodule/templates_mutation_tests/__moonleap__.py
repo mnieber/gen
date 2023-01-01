@@ -1,9 +1,8 @@
 import os
 
-from titan.django_pkg.djangoapp.define_fixture import define_fixture
+from titan.django_pkg.djangoapp.define_fixture import create_fixture, define_fixture
 from titan.types_pkg.typeregistry import get_type_reg
 
-from moonleap import append_uniq
 from moonleap.utils.case import l0, sn
 from moonleap.utils.codeblock import CodeBlock
 from moonleap.utils.fp import uniq
@@ -65,14 +64,16 @@ def get_helpers(_):
             x for x in output_field_specs if x.field_type not in ("fk", "relatedSet")
         ]
         fk_output_field_specs = _.mutation.api_spec.get_outputs(["fk"])
-        fixture_field_specs = _get_fixture_field_specs(
-            form_input_field_specs, id_input_field_specs
-        )
+        fixtures = [create_fixture(x) for x in id_input_field_specs]
+        ids_fixtures = [x for x in fixtures if x.field_spec.field_type == "uuid[]"]
+        id_fixtures = [x for x in fixtures if x.field_spec.field_type == "uuid"]
 
         def mutation_fixture_imports(self):
             result = []
 
-            for form_field_spec in self.fixture_field_specs:
+            for form_field_spec in (
+                self.form_input_field_specs + self.id_input_field_specs
+            ):
                 django_module = form_field_spec.target_type_spec.django_module
                 if not django_module:
                     continue
@@ -97,33 +98,12 @@ def get_helpers(_):
         def define_fixtures(self):
             root = CodeBlock(level=1)
 
-            for field_spec in self.fixture_field_specs:
-                define_fixture(root, field_spec)
+            for fixture in self.fixtures:
+                define_fixture(root, fixture)
 
             return root.result
 
     return Helpers()
-
-
-def _get_fixture_field_specs(form_input_field_specs, id_input_field_specs):
-    result = []
-
-    for id_input_field_spec in id_input_field_specs:
-        type_spec = get_type_reg().get(id_input_field_spec.target)
-        if type_spec:
-            append_uniq(result, id_input_field_spec)
-
-    type_specs = []
-    for form_field_spec in form_input_field_specs:
-        type_spec = get_type_reg().get(form_field_spec.target)
-        if type_spec:
-            append_uniq(type_specs, type_spec)
-
-    for type_spec in type_specs:
-        for fk_field_spec in type_spec.get_field_specs(["fk"]):
-            append_uniq(result, fk_field_spec)
-
-    return result
 
 
 def _fk_field_specs_for_form_field(form_field_spec):

@@ -22,9 +22,9 @@ def apply_special_rules(type_spec, value, fk: ForeignKey, parent_type_spec=None)
     ):
         value["sortPos|"] = "Int = 0"
 
-    # If we are adding a related set, then create a related fk auto-field. Note that
-    # this auto-field may be added to the type spec and then removed again if some
-    # non-auto field matches it.
+    # If we are adding a related set, then create a related fk auto-field that points back
+    # to the parent type-spec. Note that this auto-field may be added to the type spec and then
+    # removed again if some non-auto field is using the same name.
     if fk.foo.field_type == "relatedSet":
         if parent_type_spec:
             key = l0(parent_type_spec.type_name)
