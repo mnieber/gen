@@ -3,6 +3,7 @@ import os
 from titan.django_pkg.djangoapp.define_fixture import define_fixture
 from titan.types_pkg.typeregistry import get_type_reg
 
+from moonleap import append_uniq
 from moonleap.utils.case import l0, sn
 from moonleap.utils.codeblock import CodeBlock
 from moonleap.utils.fp import uniq
@@ -50,36 +51,28 @@ def field_spec_default_value(field_spec):
     raise Exception(f"Unknown graphene field type: {t} in spec for {field_spec.name}")
 
 
-def _get_fixture_field_specs(form_input_field_specs):
-    result = []
-    for input_field_spec in form_input_field_specs:
-        type_spec = get_type_reg().get(input_field_spec.target)
-        for fk_field_spec in type_spec.get_field_specs(["fk"]):
-            if fk_field_spec not in result:
-                result.append(fk_field_spec)
-
-    return result
-
-
-def fk_field_specs_for_form_field(form_field_spec):
-    data_type_spec = get_type_reg().get(form_field_spec.target)
-    return data_type_spec.get_field_specs(["fk"])
-
-
 def get_helpers(_):
     class Helpers:
+        mutation_name = _.mutation.name
+
         input_field_specs = [
             (x, x.field_type == "form") for x in _.mutation.api_spec.get_inputs()
         ]
         form_input_field_specs = _.mutation.api_spec.get_inputs(["form"])
+        id_input_field_specs = _.mutation.api_spec.get_inputs(["uuid"])
         output_field_specs = _.mutation.api_spec.get_outputs()
+        scalar_output_field_specs = [
+            x for x in output_field_specs if x.field_type not in ("fk", "relatedSet")
+        ]
         fk_output_field_specs = _.mutation.api_spec.get_outputs(["fk"])
-        fixture_field_specs = _get_fixture_field_specs(form_input_field_specs)
+        fixture_field_specs = _get_fixture_field_specs(
+            form_input_field_specs, id_input_field_specs
+        )
 
         def mutation_fixture_imports(self):
             result = []
 
-            for form_field_spec in self.form_input_field_specs:
+            for form_field_spec in self.fixture_field_specs:
                 django_module = form_field_spec.target_type_spec.django_module
                 if not django_module:
                     continue
@@ -89,7 +82,7 @@ def get_helpers(_):
                     f"from {import_path} import create_random_{sn(form_field_spec.target)}"
                 )
 
-                for fk_field_spec in fk_field_specs_for_form_field(form_field_spec):
+                for fk_field_spec in _fk_field_specs_for_form_field(form_field_spec):
                     django_module = fk_field_spec.target_type_spec.django_module
                     if not django_module:
                         continue
@@ -109,40 +102,30 @@ def get_helpers(_):
 
             return root.result
 
-        def create_mutation_args(self):
-            root = CodeBlock(style="python", level=1)
-
-            for input_field_spec, is_form in self.input_field_specs:
-                input_arg_name = sn(input_field_spec.name)
-
-                if is_form:
-                    create_form_args = []
-                    for fk_field_spec in fk_field_specs_for_form_field(
-                        input_field_spec
-                    ):
-                        arg_name = sn(fk_field_spec.name + "Id")
-                        fixture = sn(fk_field_spec.name)
-                        create_form_args.append(f"{arg_name}={fixture + '.id'}")
-
-                    root.IxI(
-                        f"{input_arg_name}="
-                        + f"create_random_{sn(l0(input_field_spec.target))}",
-                        create_form_args,
-                        ",",
-                    )
-                else:
-                    value = field_spec_default_value(input_field_spec)
-                    root.abc(f"{input_arg_name}={value}, ")
-
-            root._x_(
-                f"output_values=[",
-                [
-                    f"'{x.name}'"
-                    for x in self.output_field_specs
-                    if x.field_type not in ("fk", "relatedSet")
-                ],
-                "]",
-            )
-            return root.result
-
     return Helpers()
+
+
+def _get_fixture_field_specs(form_input_field_specs, id_input_field_specs):
+    result = []
+
+    for id_input_field_spec in id_input_field_specs:
+        type_spec = get_type_reg().get(id_input_field_spec.target)
+        if type_spec:
+            append_uniq(result, id_input_field_spec)
+
+    type_specs = []
+    for form_field_spec in form_input_field_specs:
+        type_spec = get_type_reg().get(form_field_spec.target)
+        if type_spec:
+            append_uniq(type_specs, type_spec)
+
+    for type_spec in type_specs:
+        for fk_field_spec in type_spec.get_field_specs(["fk"]):
+            append_uniq(result, fk_field_spec)
+
+    return result
+
+
+def _fk_field_specs_for_form_field(form_field_spec):
+    data_type_spec = get_type_reg().get(form_field_spec.target)
+    return data_type_spec.get_field_specs(["fk"])

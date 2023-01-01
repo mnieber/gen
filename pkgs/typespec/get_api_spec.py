@@ -1,7 +1,8 @@
-from moonleap import u0
 from typespec.api_spec import ApiSpec
 from typespec.field_spec import FieldSpec
 from typespec.type_spec import TypeSpec
+
+from moonleap import u0
 
 from .load_type_specs.field_spec_from_dict import field_spec_from_dict
 

@@ -9,7 +9,7 @@ class TestYellowTulipQuery(GraphqlTestCase):
 {{ __.define_query_fixtures() }}
 
     @pytest.mark.django_db()
-    def test_yellow_tulip(
+    def test_yellow_tulip__(
         self,
         client_query,
         output_field_name,                                                      {% !! output_field_spec in __.fk_output_field_specs %}
@@ -19,8 +19,9 @@ class TestYellowTulipQuery(GraphqlTestCase):
         )
         response = client_query(query, operation_name=operation_name, variables=variables)
 
-        # Moonleap Todo: check that the response is as expected
+        # Check that the response is as expected
         data = response.json()['data']
+        assert False, "Moonleap Todo"
 
 
 {{ __.assert_query_response(output_field_spec) }}                               {% !! output_field_spec in __.output_field_specs %}
