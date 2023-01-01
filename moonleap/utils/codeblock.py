@@ -27,12 +27,11 @@ def get_indent(x):
 
 
 class CodeBlock:
-    def __init__(self, style, parent=None, level=0):
+    def __init__(self, parent=None, level=0):
         self.result = ""
-        self.style = style
         self.parent = parent
         self.i = i(level)
-        self.tab_size = 1 if style == "typescript" else 2
+        self.tab_size = 2
 
     def add(self, x):
         if self.parent:
@@ -46,7 +45,7 @@ class CodeBlock:
         self.add(tab + head + os.linesep)
 
     def block(self, level):
-        return CodeBlock(self.style, parent=self, level=level)
+        return CodeBlock(parent=self, level=level)
 
     def IxI(self, head, *parts):
         indent, head = get_indent(head)
@@ -54,8 +53,8 @@ class CodeBlock:
 
         if parts:
             args, tail = parts
-            opn = "" if self.style == "graphql" and not args else "("
-            cls = "" if self.style == "graphql" and not args else ")"
+            opn = "("
+            cls = ")"
             result = f"{tab}{head}{opn}{', '.join(args)}{cls}{tail}{os.linesep}"
 
             if len(result) < 90:
@@ -86,7 +85,7 @@ class CodeBlock:
 
 
 if __name__ == "__main__":
-    root = CodeBlock(style="graphql")
+    root = CodeBlock()
     root.IxI("def hello_world", ["name"], ":")
     root.IxI("  print", ["'Hello, {}!'.format(name)"], "")
     root._x_("  if ", ["name == 'Alice'"], ":")

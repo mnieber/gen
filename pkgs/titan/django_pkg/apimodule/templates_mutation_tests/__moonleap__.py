@@ -59,7 +59,7 @@ def get_helpers(_):
             (x, x.field_type == "form") for x in _.mutation.api_spec.get_inputs()
         ]
         form_input_field_specs = _.mutation.api_spec.get_inputs(["form"])
-        id_input_field_specs = _.mutation.api_spec.get_inputs(["uuid"])
+        id_input_field_specs = _.mutation.api_spec.get_inputs(["uuid", "uuid[]"])
         output_field_specs = _.mutation.api_spec.get_outputs()
         scalar_output_field_specs = [
             x for x in output_field_specs if x.field_type not in ("fk", "relatedSet")
@@ -95,7 +95,7 @@ def get_helpers(_):
             return os.linesep.join(uniq(result))
 
         def define_fixtures(self):
-            root = CodeBlock(style="python", level=1)
+            root = CodeBlock(level=1)
 
             for field_spec in self.fixture_field_specs:
                 define_fixture(root, field_spec)

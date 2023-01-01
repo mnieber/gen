@@ -1,9 +1,10 @@
 import os
 
+from titan.django_pkg.djangoapp.define_fixture import define_fixture
+
 from moonleap.utils.case import l0, sn
 from moonleap.utils.codeblock import CodeBlock
 from moonleap.utils.fp import uniq
-from titan.django_pkg.djangoapp.define_fixture import define_fixture
 
 
 def get_helpers(_):
@@ -25,7 +26,7 @@ def get_helpers(_):
             return os.linesep.join(uniq(result))
 
         def define_query_fixtures(self):
-            root = CodeBlock(style="python", level=1)
+            root = CodeBlock(level=1)
 
             for output_field_spec in self.fk_output_field_specs:
                 define_fixture(root, output_field_spec)
@@ -44,7 +45,7 @@ def get_helpers(_):
             return ", ".join(args)
 
         def assert_query_response(self, output_field_spec):
-            root = CodeBlock(style="python", level=2)
+            root = CodeBlock(level=2)
             if output_field_spec.field_type == "fk":
                 root.abc(f"assert data['{output_field_spec.name}'] == {{")
                 root.abc(f"  'id': {sn(output_field_spec.name)}.id")
