@@ -16,6 +16,7 @@ export type PropsT<ValueT> = {
   pickableValue: ValueT;
   labelFromValue: (value: any) => string;
   labelFromPickedValue?: (value: any) => string;
+  placeholder?: string;
   [k: string]: any;
   className?: any;
 };
@@ -31,6 +32,7 @@ export const ValuePicker = observer(
       pickableValues,
       labelFromValue,
       labelFromPickedValue,
+      placeholder,
       ...others
     } = props;
 
@@ -62,6 +64,9 @@ export const ValuePicker = observer(
         : isMulti
         ? (pickableValue as any).map(toPickedValue)
         : toPickedValue(pickableValue),
+      placeholder:
+        placeholder ??
+        (isCreatable && !options.length ? 'Type to create...' : 'Select...'),
       onKeyDown: (e: any) => {
         if (others.onKeyDown) {
           others.onKeyDown(e);
