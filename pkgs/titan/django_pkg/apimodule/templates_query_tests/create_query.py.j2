@@ -4,25 +4,31 @@
 {% magic_with input_field_spec.graphql_type("server") as inputFieldGqlType %}
 
 def create_get_foo_query(
-    input_field_name,                                                         {% !! input_field_spec in __.input_field_specs %}
-    output_field_name_outputs=None,                                           {% !! output_field_spec in __.fk_output_field_specs %}
+    input_field_name,                                                                       {% !! input_field_spec in __.input_field_specs %}
+    output_field_name_outputs=None,                                                         {% !! output_field_spec in __.fk_output_field_specs %}
 
 ):
-    result = """
-        query getFoo(
-            $inputFieldName: inputFieldGqlType,                               {% !! input_field_spec in __.input_field_specs %}
-        ) {
-            getFoo(
-                $inputFieldName: inputFieldName,                              {% !! input_field_spec in __.input_field_specs %}
-            ) {
-                output_field_name_outputs                                     {% !! output_field_spec in __.fk_output_field_specs %}
+    result = ("""
+        query getFoo {                                                                      {% ?? not __.input_field_specs %}
+        query getFoo(                                                                       {% if __.input_field_specs %}
+            $inputFieldName: inputFieldGqlType,                                             {% !! input_field_spec in __.input_field_specs %}
+        ) {                                                                                 {% endif %}
+            getFoo {                                                                        {% ?? not __.input_field_specs %}
+            getFoo(                                                                         {% if __.input_field_specs %}
+                $inputFieldName: inputFieldName,                                            {% !! input_field_spec in __.input_field_specs %}
+            ) {                                                                             {% endif %}
+                output_field_name {                                                         {% for output_field_spec in __.fk_output_field_specs %}
+                    output_field_name_outputs
+                }                                                                           {% endfor %}
             }
         }
     """
+      .replace("output_field_name_outputs", ", ".join(output_field_name_outputs or []))     {% !! output_field_spec in __.fk_output_field_specs %}
+    )
 
     operation_name = "getFoo"
     variables = dict(
-        inputFieldName=input_field_name,                                        {% !! input_field_spec in __.input_field_specs %}
+        inputFieldName=input_field_name,                                                    {% !! input_field_spec in __.input_field_specs %}
     )
     return result, operation_name, variables
 {% end_magic_with %}
