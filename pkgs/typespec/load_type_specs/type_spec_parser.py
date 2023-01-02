@@ -102,8 +102,7 @@ class TypeSpecParser:
                     #
                     fk_trace = self.parse(host, value, fk_type_spec)
 
-                    # Set related name. If there is no type spec then we are in the root and in
-                    # that case we never want to set a related name.
+                    # Set related name.
                     if field_spec.field_type == "fk" and fk.foo.related_name:
                         field_spec.related_name = fk.foo.related_name
 

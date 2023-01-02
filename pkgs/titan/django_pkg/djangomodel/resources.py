@@ -1,10 +1,11 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap import RenderMixin, Resource
-from moonleap.utils.case import sn, snake_to_kebab
 from typespec.field_spec import FieldSpec
 from typespec.type_spec import TypeSpec
+
+from moonleap import RenderMixin, Resource
+from moonleap.utils.case import sn, snake_to_kebab
 
 verbose_name_block_list = ["id", "sort_pos", "slug"]
 
@@ -90,9 +91,11 @@ class DjangoManyToManyField(DjangoModelField):
     def field_args(self, django_model):
         return [
             self.field_spec.target,
-            None
-            if self.field_spec.through == "+"
-            else f'through="{self.field_spec.through}"',
+            (
+                None
+                if self.field_spec.through == "+"
+                else f'through="{self.field_spec.through}"'
+            ),
             *([f'related_name="+"']),
         ]
 
