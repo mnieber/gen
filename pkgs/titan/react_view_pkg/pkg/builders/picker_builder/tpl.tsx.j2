@@ -9,7 +9,7 @@
         props.myItemsSelection.selectItem({                           {% if __.bvrs_has_selection %}
           itemId: value.value.id
         });
-        props.myItemsHighlight.id = value.value.id;                   {% elif __.bvrs_has_highlight %}{% endif %}
+        props.myItemsHighlight.highlightItem(value.value.id);         {% elif __.bvrs_has_highlight %}{% endif %}
         props.updateUrl && props.updateUrl(value.value);              {% ?? __.update_url %}
       }
     };
