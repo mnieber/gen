@@ -1,7 +1,8 @@
-from moonleap import append_uniq
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.get_data_path import get_data_path
 from widgetspec.create_widget_class_name import get_component_name
+
+from moonleap import append_uniq
 
 
 class ComponentBuilder(Builder):
@@ -21,7 +22,14 @@ class ComponentBuilder(Builder):
             return update_component_def
 
     def build(self):
-        self.add(imports=[_get_component_import_path(self.widget_spec)])
+        parent_module_name = (
+            self.widget_spec.parent_ws.module_name
+            if self.widget_spec.parent_ws
+            else None
+        )
+        self.add(
+            imports=[_get_component_import_path(self.widget_spec, parent_module_name)]
+        )
 
         attrs_str = _get_attrs_str(self.widget_spec)
         class_name_attr = self.widget_spec.div.get_class_name_attr()
@@ -47,13 +55,18 @@ class ComponentBuilder(Builder):
             )
 
 
-def _get_component_import_path(widget_spec):
-    is_same_module = widget_spec.module_name == widget_spec.parent_ws.module_name
-    component_name = get_component_name(widget_spec)
+def _get_component_import_path(widget_spec, parent_module_name):
+    from titan.react_view_pkg.widgetregistry import get_widget_reg
+
+    ws_with_component_def = get_widget_reg().get(widget_spec.widget_name)
+    is_same_module = parent_module_name and (
+        ws_with_component_def.module_name == parent_module_name
+    )
+    component_name = get_component_name(ws_with_component_def)
     suffix = f"/{component_name}" if is_same_module else ""
     return (
         f"import {{ {component_name} }} from "
-        + f"'src/{widget_spec.module_name}/components{suffix}';"
+        + f"'src/{ws_with_component_def.module_name}/components{suffix}';"
     )
 
 

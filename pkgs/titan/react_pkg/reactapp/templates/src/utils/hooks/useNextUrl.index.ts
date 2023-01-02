@@ -1,1 +1,1 @@
-export { useNextUrl } from './useNextUrl';
+export { getNextUrl, useNextUrl } from './useNextUrl';

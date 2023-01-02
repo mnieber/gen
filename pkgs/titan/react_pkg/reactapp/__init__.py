@@ -1,9 +1,10 @@
 from pathlib import Path
 
+from titan.project_pkg.service import Service
+
 import moonleap.packages.extensions.props as P
 from moonleap import Priorities, create, create_forward, extend, get_root_resource, rule
 from moonleap.blocks.verbs import has, runs
-from titan.project_pkg.service import Service
 
 from .resources import ReactApp
 
@@ -41,6 +42,7 @@ def service_uses_react_app(service, react_app):
 @extend(Service)
 class ExtendService:
     react_app = P.child(runs, "react-app")
+    node_package = P.child(has, "node-package")
 
 
 @extend(ReactApp)
