@@ -1,8 +1,11 @@
+from titan.react_pkg.reactmodule import ReactModule
+from titan.react_view_pkg.widgetregistry import get_widget_reg
+from titan.react_view_pkg.widgetregistry.resources import WidgetRegistry
+from widgetspec.widget_spec import WidgetSpec
+
 import moonleap.packages.extensions.props as P
 from moonleap import MemFun, create_forward, empty_rule, extend, rule
 from moonleap.blocks.verbs import has, has_default_prop, has_prop
-from titan.react_pkg.reactmodule import ReactModule
-from titan.react_view_pkg.widgetregistry.resources import WidgetRegistry
 
 from . import props
 from .pipelines import get_pipeline_forwards, get_props_forwards
@@ -18,6 +21,17 @@ rules = {
 
 @rule("module", has, "component")
 def module_has_component(module, component):
+    term = component.meta.term
+    widget_name = term.data + ":" + term.tag
+
+    # If the widget was defined in the widget-spec yaml file, then widget_name
+    # is already known. Otherwise, create the widget-spec.
+    if not get_widget_reg().has(widget_name):
+        widget_spec = WidgetSpec()
+        widget_spec.widget_name = widget_name
+        widget_spec.module_name = module.name
+        get_widget_reg().setdefault(widget_spec.widget_name, widget_spec)
+
     module.renders(
         [component],
         "",

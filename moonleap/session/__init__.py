@@ -21,6 +21,7 @@ class Session:
         self.expected_dir = f"{output_root_dir}/expected"
         self.snapshot_fn = f"{output_root_dir}/snapshot.json"
         self.type_specs_dir = os.path.join(self.spec_dir, "type_specs")
+        self.trace_level = 1
 
     @property
     def spec_fn(self):
@@ -67,3 +68,9 @@ def get_session():
     if not _session:
         raise Exception("There is no session")
     return _session
+
+
+def trace(msg, level=0):
+    session = get_session()
+    if level <= session.trace_level:
+        session.report(msg)

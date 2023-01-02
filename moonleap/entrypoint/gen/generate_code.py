@@ -6,6 +6,7 @@ from moonleap.blocks.parser.get_blocks import get_blocks
 from moonleap.post_process import post_process_output_files
 from moonleap.render.render_mixin import get_root_resource, render_resource
 from moonleap.report.report_resources import report_resources
+from moonleap.session import trace
 
 
 def generate_code(session, file_writer, post_process_all_files):
@@ -13,12 +14,13 @@ def generate_code(session, file_writer, post_process_all_files):
         session.spec_fn, output_fn=Path(".moonleap") / "spec.md"
     )
 
-    session.report("Parsing...")
+    trace("Parsing...")
     blocks = get_blocks(expanded_markdown)
     build_blocks(blocks)
 
     try:
-        session.report("Rendering...")
+        trace("Rendering...")
+        trace("Rendering root resource", 1)
         root_resource = get_root_resource()
         render_resource(
             root_resource,
@@ -29,11 +31,11 @@ def generate_code(session, file_writer, post_process_all_files):
 
         file_writer.write_merged_files()
         for warning in file_writer.warnings:
-            session.report(warning)
+            trace(warning)
     finally:
         file_writer.write_snapshot()
 
-        session.report("Post processing...")
+        trace("Post processing...")
         post_process_output_files(
             file_writer.all_output_filenames
             if post_process_all_files
@@ -42,5 +44,5 @@ def generate_code(session, file_writer, post_process_all_files):
             session.get_bin_settings(),
         )
 
-    session.report("Creating report...")
+    trace("Creating report...")
     report_resources(blocks)
