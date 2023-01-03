@@ -1,5 +1,6 @@
-from moonleap.utils.quote import quote_all
 from titan.react_view_pkg.pkg.builder import Builder
+
+from moonleap.utils.quote import quote_all
 
 
 class BarBuilder(Builder):
@@ -52,7 +53,7 @@ class BarBuilder(Builder):
             result[f"LhsWrapper with Div, RowSkewer[cn={cn}.justify-start]"] = "pass"
 
         if "RhsWrapper" not in places:
-            cn = self.widget_spec.values.get("cnRhs") or "Lhs"
+            cn = self.widget_spec.values.get("cnRhs") or "Rhs"
             result[f"RhsWrapper with Div, RowSkewer[cn={cn}.justify-end]"] = "pass"
 
         return result
