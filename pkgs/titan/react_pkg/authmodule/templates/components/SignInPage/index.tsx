@@ -45,10 +45,10 @@ export const SignInPage: React.FC = observer(() => {
       )}
       <SignInForm
         signIn={(email, password) => {
-          signIn({ userId: email, password });
+          return signIn({ userId: email, password });
         }}
         requestMagicLink={(email) => {
-          requestMagicLink({ userId: email });
+          return requestMagicLink({ userId: email });
         }}
         errors={authState.errors}
         className="mb-4"

@@ -4,6 +4,7 @@ import { EmailField } from 'src/auth/components/formFields/EmailField';
 import { PasswordField } from 'src/auth/components/formFields/PasswordField';
 import { SubmitButton } from 'src/auth/components/formFields/SubmitButton';
 import { Field, GlobalError } from 'src/forms/components';
+import { colSkewer } from 'src/frames/components';
 import { cn } from 'src/utils/classnames';
 import { form } from './form';
 import { useMessages } from './useMessages';
@@ -34,33 +35,34 @@ export function SignInForm(props: PropsT) {
       <div
         className={cn(
           'SignInForm',
-          'flex flex-col justify-center',
+          colSkewer,
+          'items-stretch',
           props.className
         )}
       >
         <GlobalError className="mb-2" />
 
-        <div className="uk-grid-small uk-child-width-auto uk-grid">
+        <div className={cn('grid grid-cols-[1fr,1fr] gap-x-2')}>
           <label>
             <input
-              className={cn('uk-radio', 'mr-2 sm:ml-2')}
+              className={cn('uk-radio', 'mr-2')}
               type="radio"
               value={'password'}
               checked={!useMagicLink}
               onChange={() => setUseMagicLink(false)}
             />
-            I'm using my password
+            <span className="ml-2">{messages.divImUsingMyPassword}</span>
           </label>
           <label>
             <input
-              className={cn('uk-radio', 'mr-2 sm:ml-2')}
+              className={cn('uk-radio', 'mr-2')}
               data-cy="signInByMagicLinkBtn"
               type="radio"
               value={'magicLink'}
               checked={useMagicLink}
               onChange={() => setUseMagicLink(true)}
             />
-            I'm using a magic link
+            <span className="ml-2">{messages.divImUsingAMagicLink}</span>
           </label>
         </div>
 
@@ -84,13 +86,17 @@ export function SignInForm(props: PropsT) {
             submitOnEnter={true}
             className="my-4"
           >
-            <PasswordField placeholder="Enter your password" />
+            <PasswordField placeholder={messages.divEnterYourPassword} />
           </Field>
         )}
 
         <SubmitButton
           dataCy={useMagicLink ? 'sendMagicLinkBtn' : 'signInBtn'}
-          label={useMagicLink ? 'Send me the magic link' : 'Sign in'}
+          label={
+            useMagicLink
+              ? messages.labelSendMeTheMagicLink
+              : messages.labelSignIn
+          }
           className={cn('place-self-center', 'my-4')}
         />
       </div>

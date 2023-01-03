@@ -17,9 +17,18 @@ function _createClient() {
   });
 }
 
-export const setToken = (authToken: string, refreshToken?: string) => {
-  localStorage.setItem('authToken', authToken);
-  if (refreshToken !== undefined) {
+export const setToken = (
+  authToken: string | undefined,
+  refreshToken?: string
+) => {
+  if (authToken === undefined) {
+    localStorage.removeItem('authToken');
+  } else {
+    localStorage.setItem('authToken', authToken);
+  }
+  if (refreshToken === undefined) {
+    localStorage.removeItem('refreshToken');
+  } else {
     localStorage.setItem('refreshToken', refreshToken);
   }
   _graphqlClient = _createClient();

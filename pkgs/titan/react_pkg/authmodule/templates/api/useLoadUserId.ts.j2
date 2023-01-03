@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { doQuery, getRefreshToken } from 'src/api/graphqlClient';
+import { doQuery, getRefreshToken, setToken } from 'src/api/graphqlClient';
 import { useQueryData } from 'src/api/hooks';
 import { refreshToken } from 'src/auth/api/refreshToken';
 import { maybeSetCypressCookie } from 'src/utils/cookies';                          {% ?? _.service.cypress %}
@@ -27,14 +27,23 @@ export function loadUserId(args: ArgsT): Promise<any> {
     .catch((error: ObjT) => {
       const message = error.response.errors[0].message;
       if (
-        ['Signature has expired', 'Signature has expired'].includes(message) &&
+        ['Signature has expired', 'Error decoding signature'].includes(
+          message
+        ) &&
         getRefreshToken() &&
         args.maybeRefreshToken
       ) {
-        return refreshToken().then(() =>
+        // Try to refresh the token. Regardless of whether that worked, retry the
+        // loadUserId, but this time with maybeRefreshToken set to false.
+        return refreshToken().finally(() =>
           loadUserId({ maybeRefreshToken: false })
         );
       }
+
+      // If we get here, then there was an unresolvable problem with the auth tokens,
+      // and we've already tried to refresh them. In that case, clear the tokens and
+      // throw an error.
+      setToken(undefined, undefined);
       throw new Error(message);
     })
     .catch(() => {

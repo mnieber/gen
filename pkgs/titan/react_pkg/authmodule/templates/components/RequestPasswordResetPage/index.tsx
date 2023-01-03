@@ -19,9 +19,9 @@ export const RequestPasswordResetPage: React.FC = observer(() => {
       )}
       {authState.state !== States.REQUEST_PASSWORD_RESET_SUCCEEDED && (
         <RequestPasswordResetForm
-          requestPasswordReset={(email: string) =>
-            requestPasswordReset({ email })
-          }
+          requestPasswordReset={(email: string) => {
+            return requestPasswordReset({ email });
+          }}
           errors={authState.errors}
           className="mb-4"
         />

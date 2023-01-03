@@ -23,13 +23,13 @@ export const SignUpPage: React.FC = observer(() => {
       {authState.state !== States.SIGN_UP_SUCCEEDED && (
         <React.Fragment>
           <SignUpForm
-            signUp={(email: string, acceptsTerms: boolean) =>
-              signUp({
+            signUp={(email: string, acceptsTerms: boolean) => {
+              return signUp({
                 userId: email,
                 acceptsTerms,
                 termsVersionAccepted: termsVersion,
-              })
-            }
+              });
+            }}
             errors={authState.errors}
           />
           <div className="mt-4">{messages.ifYouAlreadyHaveAnAccount}</div>

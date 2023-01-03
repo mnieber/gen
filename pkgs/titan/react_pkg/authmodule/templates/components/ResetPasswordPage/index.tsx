@@ -22,12 +22,12 @@ export const ResetPasswordPage: React.FC = observer(() => {
       {!isPasswordChanged && (
         <ResetPasswordForm
           errors={authState.errors}
-          resetPassword={(password) =>
-            resetPassword({
+          resetPassword={(password) => {
+            return resetPassword({
               password,
               passwordResetToken: (params as any).passwordResetToken,
-            })
-          }
+            });
+          }}
         />
       )}
     </AuthFrame>
