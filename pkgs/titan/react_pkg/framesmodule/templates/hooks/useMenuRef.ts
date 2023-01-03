@@ -1,4 +1,3 @@
-import jQuery from 'jquery';
 import React from 'react';
 import UIkit from 'uikit';
 
@@ -6,7 +5,7 @@ export const useMenuRef = () => {
   const _ref = React.useRef(null);
 
   const closeDropDown = () => {
-    jQuery(_ref.current as any).hide();
+    UIkit.dropdown(_ref.current as any).hide(false);
   };
 
   const ref = (elm: any) => {
