@@ -1,16 +1,22 @@
 {% magic_with __.item_name as myItem %}
 
 
+{% section preamble_hooks %}
+    const state = useValuePickerState<MyItemT>({
+      selection: props.myItemsSelection,                            {% if __.bvrs_has_selection %}
+      highlight: props.myItemsHighlight,                            {% elif __.bvrs_has_highlight %}{% endif %}
+      updateUrl: props.updateUrl,
+    });
+    {{ "" }}
+{% end_section %}
+
+
 {% section preamble %}
     const onChange = (value: PickerValueT) => {
       if (value.__isNew__) {
         // Moonleap Todo: add myItem
       } else if (value.value) {
-        props.myItemsSelection.selectItem({                           {% if __.bvrs_has_selection %}
-          itemId: value.value.id
-        });
-        props.myItemsHighlight.highlightItem(value.value.id);         {% elif __.bvrs_has_highlight %}{% endif %}
-        props.updateUrl && props.updateUrl(value.value);              {% ?? __.update_url %}
+        state.setItem(value.value);
       }
     };
     {{ "" }}
