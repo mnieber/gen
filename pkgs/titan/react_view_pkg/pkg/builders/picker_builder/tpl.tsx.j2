@@ -1,6 +1,13 @@
 {% magic_with __.item_name as myItem %}
 
 
+{% section imports %}
+import { PickerValueT, ValuePicker } from 'src/utils/components/ValuePicker';
+import { useValuePickerState } from 'src/utils/hooks/useValuePickerState';
+import { MyItemT } from 'src/api/types/MyItemT';                                {% ?? __.update_url %}
+{% end_section %}
+
+
 {% section preamble_hooks %}
     const state = useValuePickerState<MyItemT>({
       selection: props.myItemsSelection,                            {% if __.bvrs_has_selection %}
@@ -32,12 +39,6 @@
         pickableValue={props.myItemsHighlight.item}
         onChange={onChange}
     />
-{% end_section %}
-
-
-{% section imports %}
-import { PickerValueT, ValuePicker } from 'src/utils/components/ValuePicker';
-import { MyItemT } from 'src/api/types/MyItemT';                                {% ?? __.update_url %}
 {% end_section %}
 
 
