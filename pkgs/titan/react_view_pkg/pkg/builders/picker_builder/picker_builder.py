@@ -1,10 +1,11 @@
 from pathlib import Path
 
-from moonleap import get_tpl
-from moonleap.utils.fp import extend_uniq
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_helper import BvrsHelper
+
+from moonleap import get_tpl
+from moonleap.utils.fp import extend_uniq
 
 
 class PickerBuilder(Builder):
@@ -26,11 +27,9 @@ class PickerBuilder(Builder):
 
     def _add_lines(self):
         context = {
-            "__": {
-                **self.bvrs_helper.bvrs_context(),
-                "update_url": self.widget_spec.values.get("updateUrl"),
-                "item_name": self.ilh.array_item_name,
-            },
+            **self.bvrs_helper.bvrs_context(),
+            "update_url": self.widget_spec.values.get("updateUrl"),
+            "item_name": self.ilh.array_item_name,
         }
 
         tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)

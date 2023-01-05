@@ -1,10 +1,11 @@
 from pathlib import Path
 
-from moonleap.render.render_template.tpl import get_tpl
-from moonleap.utils.fp import append_uniq, extend_uniq
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_helper import BvrsHelper
+
+from moonleap.render.render_template.tpl import get_tpl
+from moonleap.utils.fp import append_uniq, extend_uniq
 
 from .spec_ext import spec_ext
 
@@ -28,6 +29,7 @@ class ListViewBuilder(Builder):
             **self.bvrs_helper.bvrs_context(),
             "__item_name": self.ilh.array_item_name,
             "__items_expr": self.ilh.item_list_data_path(),
+            "update_url": self.widget_spec.values.get("updateUrl"),
         }
 
     def _add_lines(self):

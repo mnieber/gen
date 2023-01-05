@@ -4,8 +4,9 @@ import { ObjT } from 'src/utils/types';
 
 export class RouteTable {
   routeByName: ObjT = {};
+  routeUfnByName: ObjT = {};
   _routes: ObjT = {};
-  tableByPrefix: ObjT = {};
+  _routeUfns: ObjT = {};
 
   addRoute(route: string | Function, name: string, prefix: string = '') {
     if (this._routes[name]) {
@@ -23,15 +24,45 @@ export class RouteTable {
     }
   }
 
+  addRouteUfn(name: string, getRouteArgs: Function) {
+    if (this._routeUfns[name]) {
+      if (this._routes[name] !== getRouteArgs) {
+        throw new Error(
+          `A routeUfn with ${name} already exists, with a different value`
+        );
+      }
+    } else {
+      this._routeUfns[name] = getRouteArgs;
+      this.routeUfnByName[name] =
+        (updateRoute: Function) =>
+        (...args: any[]) => {
+          const routeArgs = getRouteArgs(...args);
+          const newRoute = this.routeByName[name](routeArgs);
+          updateRoute(newRoute);
+        };
+    }
+  }
+
   addRoutes(routeByName: ObjT, prefix: string = '') {
     for (const name in routeByName) {
-      this.addRoute(routeByName[name], name, prefix);
+      const value = routeByName[name];
+      const [route, getRouteArgs] = Array.isArray(value)
+        ? value
+        : [value, null];
+
+      if (getRouteArgs) {
+        this.addRouteUfn(name, getRouteArgs);
+      }
+      this.addRoute(route, name, prefix);
     }
   }
 
   addTable(table: RouteTable, prefix: string) {
     for (const [name, route] of Object.entries(table._routes)) {
       this.addRoute(route, name, prefix);
+    }
+    for (const [name, routeUfn] of Object.entries(table._routeUfns)) {
+      this.addRouteUfn(name, routeUfn);
     }
   }
 }

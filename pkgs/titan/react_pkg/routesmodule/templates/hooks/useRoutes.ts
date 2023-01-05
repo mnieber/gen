@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { RoutesContext } from 'src/routes/components/RoutesProvider';
 import { RouteTable } from 'src/routes/utils/RouteTable';
 
@@ -9,4 +10,9 @@ export const useRouteTable = () => {
 
 export const useRoutes = () => {
   return useRouteTable().routeByName;
+};
+
+export const useRouteUfns = () => {
+  const history = useHistory();
+  return { routeUfns: useRouteTable().routeUfnByName, history };
 };
