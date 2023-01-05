@@ -2,8 +2,10 @@ import { when } from 'mobx';
 import React from 'react';
 import { Highlight } from 'skandha-facets/Highlight';
 import { Selection } from 'skandha-facets/Selection';
+import { isLoading } from 'src/api/ResourceState';
 
 export type PropsT<ValueT> = {
+  values: ValueT[];
   highlight?: Highlight;
   selection?: Selection;
   updateUrl?: (value: ValueT) => void;
@@ -43,5 +45,11 @@ export const useValuePickerState = <ValueT extends { id: string }>(
     );
   };
 
-  return { isUpdating, setIsUpdating, isError, setItem, setItemWhenReady };
+  return {
+    isUpdating: isUpdating || isLoading(props.values),
+    setIsUpdating,
+    isError,
+    setItem,
+    setItemWhenReady,
+  };
 };
