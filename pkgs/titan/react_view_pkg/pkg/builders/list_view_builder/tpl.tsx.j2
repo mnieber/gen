@@ -7,6 +7,7 @@ import {
     useSelectionUIConnector,                                                                  {% ?? bvrs_has_selection %}
     useDragAndDropUIConnector,                                                                {% ?? bvrs_has_drag_and_drop %}
 } from 'skandha-mobx/hooks';
+import { getUpdateUrlFn } from 'src/routes/utils';                                            {% ?? update_url %}
 {% end_section %}
 
 
@@ -19,7 +20,13 @@ import {
 const dragAndDropUIConnector = useDragAndDropUIConnector(                                     {% if bvrs_has_drag_and_drop %}
     props.myItemsDragAndDrop
 );                                                                                            {% endif %}
-const selectionUIConnector = useSelectionUIConnector(props.myItemsSelection);                 {% ?? bvrs_has_selection %}
+const selectionUIConnector = useSelectionUIConnector(                                         {% if bvrs_has_selection %}
+    props.myItemsSelection,
+    {                                                                                         {% if update_url %}
+      onSelectItem: getUpdateUrlFn(props.myItems, props.updateUrl),
+    },
+    [props.myItems, props.updateUrl]                                                          {% endif %}
+);                                                                                            {% endif %}
 {{ "" }}
 {% end_section %}
 

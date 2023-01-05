@@ -3,8 +3,6 @@ import UIkit from 'uikit';
 
 export const NewIcon = () => {
   return (
-    UIkit && (
-      <div className="NewIcon Icon" data-uk-icon="icon: check; ratio: 2"></div>
-    )
+    UIkit && <div className="NewIcon Icon" data-uk-icon="icon: plus;"></div>
   );
 };
