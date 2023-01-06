@@ -8,7 +8,6 @@ from titan.django_pkg.djangomodel.resources import (
     DjangoImageField,
     DjangoIntegerField,
     DjangoJsonField,
-    DjangoManyToManyField,
     DjangoMarkdownField,
     DjangoSlugField,
     DjangoTextField,
@@ -42,16 +41,9 @@ def import_type_spec(type_spec, django_model):
         )
 
         if field_spec.field_type == "fk":
-            if field_spec.through:
-                raise Exception(
-                    f"Fk fields cannot use 'through'. Use a relatedSet field instead. "
-                    + f"For field: {field_spec.key} in type: {django_model.name}"
-                )
-
             django_model.fields.append(DjangoFkField(**args))
         elif field_spec.field_type == "relatedSet":
-            if field_spec.through:
-                django_model.fields.append(DjangoManyToManyField(**args))
+            pass
         elif field_spec.field_type == "slug":
             slug_sources = [x.name for x in field_specs if x.is_slug_src]
             django_model.fields.append(

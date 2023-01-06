@@ -1,7 +1,8 @@
-from moonleap import u0
-from moonleap.utils.case import sn
 from titan.django_pkg.djangomodel.sort_django_models import sort_django_models
 from titan.types_pkg.typeregistry import get_type_reg
+
+from moonleap import u0
+from moonleap.utils.case import sn
 
 
 def get_helpers(_):
@@ -50,8 +51,7 @@ def get_helpers(_):
             return [
                 sn(x.name)
                 for x in type_spec.get_field_specs(["relatedSet"])
-                if (not x.through or x.through == "+")
-                and x.target_type_spec.admin_search_by
+                if x.target_type_spec.admin_search_by
             ]
 
         def get_sortable_inlines(self, type_spec):

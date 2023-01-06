@@ -82,25 +82,6 @@ class DjangoFkField(DjangoModelField):
 
 
 @dataclass
-class DjangoManyToManyField(DjangoModelField):
-    field_name: str = "models.ManyToManyField"
-
-    def arg_null_blank(self):
-        return [] if "required_server" in self.field_spec.optional else ["blank=True"]
-
-    def field_args(self, django_model):
-        return [
-            self.field_spec.target,
-            (
-                None
-                if self.field_spec.through == "+"
-                else f'through="{self.field_spec.through}"'
-            ),
-            *([f'related_name="+"']),
-        ]
-
-
-@dataclass
 class DjangoCharField(DjangoModelField):
     field_name: str = "models.CharField"
 
@@ -270,7 +251,3 @@ class DjangoModel(RenderMixin, Resource):
     @property
     def fk_fields(self):
         return [x for x in self.fields if isinstance(x, DjangoFkField)]
-
-    @property
-    def many_to_many_fields(self):
-        return [x for x in self.fields if isinstance(x, DjangoManyToManyField)]

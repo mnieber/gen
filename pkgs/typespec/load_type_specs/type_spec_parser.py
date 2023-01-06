@@ -55,63 +55,32 @@ class TypeSpecParser:
                 if not add_field_spec(type_spec, field_spec):
                     continue
 
-            # Get/update the target type in a many-to-many through-bar relationship
+            # Get/update the target type
             if field_spec.field_type in ("fk", "relatedSet", "form"):
-                if fk.bar:
-                    update_or_create_type_spec(
-                        host,
-                        self.type_reg,
-                        fk.foo.var_type,
-                        (
-                            u0(value["__target_base_type__"])
-                            if "__target_base_type__" in value
-                            else None
-                        ),
-                        fk.target_parts,
-                        fk.foo.module_name,
-                        parent_type_spec=type_spec,
-                    )
+                fk_type_spec = update_or_create_type_spec(
+                    host,
+                    self.type_reg,
+                    fk.data.var_type,
+                    (u0(value["__base_type__"]) if "__base_type__" in value else None),
+                    fk.data.parts,
+                    fk.data.module_name or value.get("__module__"),
+                    parent_type_spec=type_spec,
+                )
+                apply_special_rules(fk_type_spec, value, fk, parent_type_spec=type_spec)
 
-                    # Add a related set to the through type.
-                    if fk.data.var_type != "+":
-                        related_set_key = f"{fk.through_var} as {fk.through_var_type}"
-                        related_set_value = ".".join(["pass", ".".join(fk.data_parts)])
-                        fk_items.append((related_set_key, related_set_value))
+                #
+                # Use recursion to convert child type specs
+                #
+                fk_trace = self.parse(host, value, fk_type_spec)
 
-                # Get/update the specced type
-                if fk.data.var_type != "+":
-                    fk_type_spec = update_or_create_type_spec(
-                        host,
-                        self.type_reg,
-                        fk.data.var_type,
-                        (
-                            u0(value["__base_type__"])
-                            if "__base_type__" in value
-                            else None
-                        ),
-                        fk.data_parts,
-                        fk.data.module_name or value.get("__module__"),
-                        parent_type_spec=type_spec,
-                    )
-                    apply_special_rules(
-                        fk_type_spec, value, fk, parent_type_spec=type_spec
-                    )
+                # Set related name.
+                if field_spec.field_type == "fk" and fk.data.related_name:
+                    field_spec.related_name = fk.data.related_name
 
-                    #
-                    # Use recursion to convert child type specs
-                    #
-                    fk_trace = self.parse(host, value, fk_type_spec)
-
-                    # Set related name.
-                    if field_spec.field_type == "fk" and fk.foo.related_name:
-                        field_spec.related_name = fk.foo.related_name
-
-                    # Update trace
-                    if fk.data_parts:
-                        fk_trace["__attrs__"] = ".".join(fk.data_parts)
-                    if fk.target_parts:
-                        fk_trace["__target_type__"] = ".".join(fk.target_parts)
-                    trace[fk.clean_key] = org_value if is_pass else fk_trace
+                # Update trace
+                if fk.data.parts:
+                    fk_trace["__attrs__"] = ".".join(fk.data.parts)
+                trace[fk.data.key] = org_value if is_pass else fk_trace
 
         if "__update__" in type_spec_dict:
             trace["__update__"] = type_spec_dict["__update__"]

@@ -41,49 +41,16 @@ class Data:
 class ForeignKey:
     def __init__(self, key, value):
         _init_parts = value["__attrs__"].split(".") if "__attrs__" in value else []
-        _init_target_parts = (
-            value["__target_attrs__"].split(".") if "__target_attrs__" in value else []
-        )
-        parts_through = key.split(" through ")
-        if len(parts_through) == 2:
-            self.foo, self.bar = Data(), Data()
-            _process_data(self.foo, parts_through[0], _init_target_parts)
-            _process_data(self.bar, parts_through[1], _init_parts)
-        else:
-            self.foo, self.bar = Data(), None
-            _process_data(self.foo, key, _init_parts)
-
-    @property
-    def data(self):
-        return self.bar or self.foo
-
-    @property
-    def data_parts(self):
-        return self.data.parts
-
-    @property
-    def target_parts(self):
-        return [] if not self.bar else self.foo.parts
+        self.data = Data()
+        _process_data(self.data, key, _init_parts)
 
     @property
     def var(self):
-        return self.foo.var or self.foo.default_var
+        return self.data.var or self.data.default_var
 
     @property
     def var_type(self):
-        return self.foo.var_type
-
-    @property
-    def through_var(self):
-        return self.bar.var or self.bar.default_var
-
-    @property
-    def through_var_type(self):
-        return f"{l0(self.bar.var_type)}Set"
-
-    @property
-    def clean_key(self):
-        return self.foo.key + ((" through " + self.bar.key) if self.bar else "")
+        return self.data.var_type
 
 
 def _process_data(data, value, parts):

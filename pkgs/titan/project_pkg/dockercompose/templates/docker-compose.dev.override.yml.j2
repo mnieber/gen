@@ -10,5 +10,6 @@ services:
       - {{ _.project.opt_dir_fn }}/{{ service.name }}/assets:{{ service.install_dir }}/assets                             {% ?? service.pytest %}
       - {{ _.project.opt_dir_fn }}/{{ service.name }}/static:{{ service.install_dir }}/static                             {% ?? service.has_django_app %}
       - {{ _.project.opt_dir_fn }}/{{ service.name }}/media:{{ service.install_dir }}/media                               {% ?? service.has_django_app %}{% endif %}{% end_min_lines %}
+      # Map editable packages to the container                                                                            {% ?? service.npm_source_maps or service.pypi_source_maps %}
       - {{ src_dir }}:/npm/{{ name }}                                                                                     {% !! name, src_dir in service.npm_source_maps.items() %}
       - {{ src_dir }}:/pypi/{{ name }}                                                                                    {% !! name, src_dir in service.pypi_source_maps.items() %}{% endfor %}

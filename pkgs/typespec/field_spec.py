@@ -45,8 +45,6 @@ class FormFieldSpec(FieldSpec):
 
 @dataclass
 class FkFieldSpec(FieldSpec):
-    through: T.Optional[str] = None
-    through_var: T.Optional[str] = None
     related_name: T.Optional[str] = None
     admin_inline: T.Optional[bool] = field(default=None, repr=False)
     set_null: T.Optional[bool] = field(default=None, repr=False)
