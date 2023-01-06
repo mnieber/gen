@@ -17,7 +17,7 @@ class MyModel(                                                                  
     Entity                                                                                              {% ?? model.type_spec.is_entity %}
     models.Model                                                                                        {% ?? not model.type_spec.is_entity %}
 ):
-    class Meta:                                                                                         {% min_lines count=3 %}
+    class Meta:                                                                                         {% min_lines count=2 %}
         indexes = [                                                                                     {% if model.indexed_fields %}
             models.Index(fields=["my_field"])                                                           {% !! field in model.indexed_fields %}
         ]                                                                                               {% endif %}
