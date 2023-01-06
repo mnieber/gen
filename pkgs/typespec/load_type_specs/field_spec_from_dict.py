@@ -1,5 +1,7 @@
+from typespec.field_spec import get_field_spec_constructor
+
 from .foreign_key import ForeignKey
-from .get_fk_field_spec import get_fk_field_spec
+from .get_fk_field_attrs import get_fk_field_attrs
 from .get_scalar_field_spec import get_scalar_field_spec
 from .split_raw_key import split_raw_key
 
@@ -13,8 +15,10 @@ def field_spec_from_dict(host, key, value):
 
     if is_fk:
         fk = ForeignKey(key, value)
-        field_spec = get_fk_field_spec(host, fk)
-
+        field_attrs = get_fk_field_attrs(host, fk)
+        field_spec = get_field_spec_constructor(field_attrs["field_type"])(
+            **field_attrs
+        )
         return dict(
             fk=fk,
             new_value=value,

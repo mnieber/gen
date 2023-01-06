@@ -9,7 +9,11 @@ def apply_type_updates(host, type_spec, updates):
 
         field_spec = type_spec.get_field_spec_by_key(key)
         if not field_spec:
-            raise Exception(f"Cannot update type {type_spec}. Field {key} not found.")
+            raise Exception(
+                f"Cannot update type {type_spec}. "
+                + f"Field {key} not found. "
+                + "Please check your models.yaml file"
+            )
 
         if "omit_model" in parts and host in field_spec.has_model:
             field_spec.has_model.remove(host)

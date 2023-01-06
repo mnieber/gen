@@ -1,9 +1,9 @@
 import typing as T
 
-from moonleap import u0
+from moonleap import l0, u0
 
+from .add_extra_model_fields import add_extra_model_fields
 from .add_field_spec import add_field_spec
-from .apply_special_rules import apply_special_rules
 from .apply_type_updates import apply_type_updates
 from .field_spec_from_dict import field_spec_from_dict, is_pass
 from .foreign_key import ForeignKey
@@ -60,13 +60,16 @@ class TypeSpecParser:
                 fk_type_spec = update_or_create_type_spec(
                     host,
                     self.type_reg,
-                    fk.data.var_type,
+                    fk.var_type,
                     (u0(value["__base_type__"]) if "__base_type__" in value else None),
-                    fk.data.parts,
-                    fk.data.module_name or value.get("__module__"),
+                    fk.parts,
+                    fk.module_name or value.get("__module__"),
                     parent_type_spec=type_spec,
                 )
-                apply_special_rules(fk_type_spec, value, fk, parent_type_spec=type_spec)
+                if "omit_model" not in fk.parts:
+                    add_extra_model_fields(
+                        fk_type_spec, value, fk, parent_type_spec=type_spec
+                    )
 
                 #
                 # Use recursion to convert child type specs
@@ -74,13 +77,13 @@ class TypeSpecParser:
                 fk_trace = self.parse(host, value, fk_type_spec)
 
                 # Set related name.
-                if field_spec.field_type == "fk" and fk.data.related_name:
-                    field_spec.related_name = fk.data.related_name
+                if field_spec.field_type == "fk" and fk.related_name:
+                    field_spec.related_name = fk.related_name
 
                 # Update trace
-                if fk.data.parts:
-                    fk_trace["__attrs__"] = ".".join(fk.data.parts)
-                trace[fk.data.key] = org_value if is_pass else fk_trace
+                if fk.parts:
+                    fk_trace["__attrs__"] = ".".join(fk.parts)
+                trace[_trace_key(fk)] = org_value if is_pass else fk_trace
 
         if "__update__" in type_spec_dict:
             trace["__update__"] = type_spec_dict["__update__"]
@@ -99,4 +102,23 @@ def _is_fk_item(item):
         or is_pass(item[1])
         or item[0].endswith("Id")
         or item[0].endswith("Ids")
+    )
+
+
+def _trace_key(fk):
+    suffix = (
+        "Set"
+        if fk.field_type == "relatedSet"
+        else "Form"
+        if fk.field_type == "form"
+        else "Id"
+        if fk.field_type == "id"
+        else "Ids"
+        if fk.field_type == "uuid[]"
+        else ""
+    )
+    return (
+        f"{fk.maybe_var} as {l0(fk.var_type)}{suffix}"
+        if fk.maybe_var
+        else fk.default_var
     )
