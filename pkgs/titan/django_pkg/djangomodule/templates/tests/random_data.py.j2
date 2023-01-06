@@ -1,13 +1,25 @@
-{% magic_with django_model.item_list.item_name as redRose %}
+{% magic_with django_model.item_list.item_name as myItem %}
+{% magic_with field_spec.name as myField %}
 import faker
-from {{ _.module.name|sn }}.models import RedRose                                   {% !! django_model in _.module.django_models %}
+from {{ _.module.name|sn }}.models import MyItem                                    {% for django_model in _.module.django_models %}
+from api.types.my_item_form_t import MyItemFormT                                    {% ?? __.has_form(django_model) %}{% endfor %}
 
 f = faker.Faker()
 
-def create_random_red_rose({{ __.create_random_args(django_model) }}):              {% for django_model in _.module.django_models %}
-    obj, created = RedRose.objects.get_or_create(
-        {{ __.create_random_body(django_model, snake_args=True) }}
+def create_random_my_item(                                                          {% for django_model in _.module.django_models %}
+    my_field_id,                                                                    {% for field_spec in __.get_field_specs(django_model.type_spec) %}{% ?? field_spec.field_type == "fk" %}{% endfor %}
+):
+    obj, created = MyItem.objects.get_or_create(
+        my_field_id=my_field_id,                                                    {% for field_spec in __.get_field_specs(django_model.type_spec) %}{% if field_spec.field_type == "fk" %}
+        my_field={{ __.get_faker_value(field_spec) }},                              {% else %}{% endif %}{% endfor %}
     )
     return obj
+                                                                                    {% if __.has_form(django_model) %}
+def create_random_my_item_form():
+    return MyItemFormT(
+        my_field={{ __.get_faker_value(field_spec) }},                              {% !! field_spec in __.get_field_specs(django_model.form_field_spec) %}
+    )                                                                               {% endif %}
+
                                                                                     {% endfor %}
+{% end_magic_with %}
 {% end_magic_with %}

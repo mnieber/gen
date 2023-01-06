@@ -1,8 +1,9 @@
 import moonleap.packages.extensions.props as P
-from moonleap import create, empty_rule, extend, rule
+from moonleap import Prop, create, empty_rule, extend, rule
 from moonleap.blocks.verbs import contains, has, provides
 from moonleap.utils.case import kebab_to_camel
 
+from . import props
 from .import_type_spec import import_type_spec
 from .resources import DjangoModel
 
@@ -29,3 +30,4 @@ def django_model_provides_item_list(django_model, item_list):
 class ExtendDjangoModel:
     item_list = P.child(provides, "item~list")
     module = P.parent("module", has)
+    form_field_spec = Prop(props.django_model_form_field_spec)

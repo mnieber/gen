@@ -1,4 +1,6 @@
-from moonleap.utils.case import sn
+from titan.api_pkg.apiregistry import get_api_reg
+
+from moonleap import u0
 
 field_name_block_list = ["sortPos", "id"]
 
@@ -48,34 +50,23 @@ def _get_faker_value(field_spec):
 
 def get_helpers(_):
     class Helpers:
-        def create_random_args(self, django_model):
-            type_spec = django_model.type_spec
-            fk_field_names = [
-                f"{sn(field_spec.name + 'Id')}"
-                for field_spec in type_spec.get_field_specs(["fk"])
-                if "server" in field_spec.has_model
-            ]
-            return ", ".join(fk_field_names)
+        def has_form(self, django_model):
+            for api_spec in get_api_reg().api_specs():
+                for item_name_saved, is_list in api_spec.saves:
+                    if django_model.type_spec.type_name == u0(item_name_saved):
+                        return True
+            return False
 
-        def create_random_body(self, django_model, snake_args):
-            args = []
-            transform_name = sn if snake_args else lambda x: x
-            type_spec = django_model.type_spec
-            for field_spec in [
-                x for x in type_spec.get_field_specs() if "server" in x.has_model
-            ]:
-                if field_spec.field_type == "fk":
-                    args.append(
-                        f"{transform_name(field_spec.name + 'Id')}={sn(field_spec.name + 'Id')}"
-                    )
-                elif field_spec.field_type == "relatedSet":
-                    pass
-                elif field_spec.name in field_name_block_list:
-                    pass
-                else:
-                    args.append(
-                        f"{transform_name(field_spec.name)}={_get_faker_value(field_spec)}"
-                    )
-            return ",\n      ".join(args)
+        def get_field_specs(self, type_spec):
+            return [
+                x
+                for x in type_spec.get_field_specs()
+                if "server" in x.has_model
+                # and "server" not in x.optional
+                and x.name not in field_name_block_list and x.field_type != "relatedSet"
+            ]
+
+        def get_faker_value(self, field_spec):
+            return _get_faker_value(field_spec)
 
     return Helpers()
