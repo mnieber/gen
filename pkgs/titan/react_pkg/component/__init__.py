@@ -5,7 +5,7 @@ from widgetspec.widget_spec import WidgetSpec
 
 import moonleap.packages.extensions.props as P
 from moonleap import MemFun, create_forward, empty_rule, extend, rule
-from moonleap.blocks.verbs import has, has_default_prop, has_prop
+from moonleap.blocks.verbs import _has_default_prop, _has_prop, has
 
 from . import props
 from .pipelines import get_pipeline_forwards, get_props_forwards
@@ -14,8 +14,8 @@ from .resources import Component  # noqa
 rules = {
     ("widget-registry", has, "component"): empty_rule(),
     ("component", has, "x+pipeline"): empty_rule(),
-    ("component", has_prop, "x+react-prop"): empty_rule(),
-    ("component", has_default_prop, "x+react-prop"): empty_rule(),
+    ("component", _has_prop, "x+react-prop"): empty_rule(),
+    ("component", _has_default_prop, "x+react-prop"): empty_rule(),
 }
 
 
@@ -63,8 +63,8 @@ class ExtendComponent:
     pipelines = P.children(has, "x+pipeline")
     get_data_path = MemFun(props.component_get_data_path)
     maybe_expression = MemFun(props.component_maybe_expression)
-    named_props = P.children(has_prop, "x+react-prop")
-    named_default_props = P.children(has_default_prop, "x+react-prop")
+    named_props = P.children(_has_prop, "x+react-prop")
+    named_default_props = P.children(_has_default_prop, "x+react-prop")
 
 
 @rule("widget-registry", has, "component")

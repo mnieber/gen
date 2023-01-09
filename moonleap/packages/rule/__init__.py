@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 from moonleap.blocks.term import word_to_term
-from moonleap.blocks.verbs import is_created_as
+from moonleap.blocks.verbs import _is_created_as
 from moonleap.resources.relations.rel import Rel
 
 
@@ -58,7 +58,7 @@ def rule(subj_term, verb=None, obj_term=None, priority=Priorities.NORMAL.value):
     if verb is None or obj_term is None:
         if verb is not None or obj_term is not None:
             raise Exception("Either define both verb and obj_term or neither")
-        verb = is_created_as
+        verb = _is_created_as
         obj_term = subj_term
 
     def wrapped(f):

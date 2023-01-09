@@ -81,6 +81,7 @@ import { log } from 'src/utils/logging';
         containerItem: () => {{ __.return_value(container, "highlighted_item") }},                              {% ?? container.get_bvr("highlight") %}
         containerItemsDeletion: () => state.myContainer.deletion,                                               {% ?? container.get_bvr("deletion") %}
         containerItemsDragAndDrop: () => state.myContainer.dragAndDrop,                                         {% ?? container.get_bvr("dragAndDrop") %}
+        containerItemsEditing: () => state.myContainer.editing,                                                 {% ?? container.get_bvr("editing") %}
         containerItemsFiltering: () => state.myContainer.filtering,                                             {% ?? container.get_bvr("filtering") %}
         containerItemsHighlight: () => state.myContainer.highlight,                                             {% ?? container.get_bvr("highlight") %}
         containerItemsSelection: () => state.myContainer.selection,                                             {% ?? container.get_bvr("selection") %}

@@ -1,8 +1,9 @@
+from titan.api_pkg.pipeline.resources import Pipeline
+
 from moonleap import create_forward
 from moonleap.blocks.parser.utils.get_meta import get_meta
-from moonleap.blocks.verbs import connects, has, has_default_prop, has_prop
+from moonleap.blocks.verbs import _has_default_prop, _has_prop, connects, has
 from moonleap.resources.named_resource import named
-from titan.api_pkg.pipeline.resources import Pipeline
 
 
 def get_pipeline_forwards(component):
@@ -34,9 +35,11 @@ def get_props_forwards(component):
         return forwards
 
     for prop_term_str in widget_spec.named_prop_terms:
-        forwards += [create_forward(component, has_prop, prop_term_str)]
+        forwards += [create_forward(component, _has_prop, prop_term_str)]
 
     for default_prop_term_str in widget_spec.named_default_prop_terms:
-        forwards += [create_forward(component, has_default_prop, default_prop_term_str)]
+        forwards += [
+            create_forward(component, _has_default_prop, default_prop_term_str)
+        ]
 
     return forwards

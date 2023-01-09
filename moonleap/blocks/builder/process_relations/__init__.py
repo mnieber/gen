@@ -1,7 +1,7 @@
 import typing as T
 
 from moonleap.blocks.term import Term
-from moonleap.blocks.verbs import is_created_as
+from moonleap.blocks.verbs import _is_created_as
 from moonleap.packages.rule import Action
 from moonleap.resources.named_resource import NamedResource
 from moonleap.resources.relations.rel import Rel
@@ -46,12 +46,12 @@ def process_relations(relations: T.List[Rel], actions):
                 rel, Term(data=term.data, tag=term.tag, is_title=term.is_title)
             )
 
-        # Step 6: process the is_created_as relation
+        # Step 6: process the _is_created_as relation
         process_relations(
             [
                 Rel(
                     subj=term,
-                    verb=is_created_as,
+                    verb=_is_created_as,
                     obj=term,
                     block=publishing_block,
                     origin=rel.origin,
@@ -75,7 +75,7 @@ def process_relations(relations: T.List[Rel], actions):
             rel.subj_res.add_relation(rel, rel.obj_res)
 
             rules = _find_rules(rel)
-            if not rules and rel.verb != is_created_as:
+            if not rules and rel.verb != _is_created_as:
                 raise Exception(f"Unmatched relation ({rel}) in block: {rel.block}")
 
             for rule in rules:
