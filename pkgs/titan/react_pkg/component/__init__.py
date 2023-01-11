@@ -39,42 +39,33 @@ def set_component_props(component):
     return create_forwards_for_component_props(component)
 
 
-@rule("component", priority=Priorities.LOW.value)
-def build_component_widget_spec(component):
+@rule("module", has, "component", priority=Priorities.LOW.value)
+def build_component_widget_spec(module, component):
     # Note that this rule has low priority so that it runs after
     # all the component information - which is used in the build function -
     # has been collected.
+    component.build_output = build(component.widget_spec)
+    get_root_resource().set_flags(component.build_output.flags)
 
-    widget_reg = get_widget_reg()
 
+@rule("module", has, "component")
+def add_component_widget_spec(module, component):
     term = component.meta.term
     widget_name = term.data + ":" + term.tag
 
-    # If the widget was defined in the widget-spec yaml file, then widget_name
-    # is already known. Otherwise, create the widget-spec.
-    widget_spec = widget_reg.get(widget_name, None)
-    if not widget_spec:
+    widget_reg = get_widget_reg()
+    if not widget_reg.has(widget_name):
         widget_spec = WidgetSpec()
         widget_spec.widget_name = widget_name
+        widget_spec.module_name = module.name
         # We need to add a widget_base_type so that widget_spec.is_component_def
         # returns True.
         widget_spec.widget_base_types = ["Empty"]
         widget_reg.setdefault(widget_spec.widget_name, widget_spec)
 
-    # Build the widget-spec
-    component.build_output = build(widget_spec)
-    get_root_resource().set_flags(component.build_output.flags)
-
 
 @rule("module", has, "component")
 def module_has_component(module, component):
-    if not component.widget_spec:
-        return "retry"
-
-    # Add component to module
-    component.widget_spec.module_name = module.name
-
-    # Schedule rendering
     module.renders(
         [component],
         "",
