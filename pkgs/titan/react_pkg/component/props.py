@@ -1,4 +1,3 @@
-from moonleap import get_root_resource
 from moonleap.blocks.term import match_term_to_pattern
 
 
@@ -37,11 +36,3 @@ def component_maybe_expression(component, named_item_or_item_list):
     if not pipeline:
         return "'Moonleap Todo'"
     return pipeline.maybe_expression(named_item_or_item_list)
-
-
-def load_component(component):
-    from titan.react_view_pkg.pkg.build import build
-
-    if widget_spec := component.widget_spec:
-        component.build_output = build(widget_spec)
-        get_root_resource().set_flags(component.build_output.flags)

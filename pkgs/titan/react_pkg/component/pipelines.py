@@ -6,7 +6,7 @@ from moonleap.blocks.verbs import _has_default_prop, _has_prop, connects, has
 from moonleap.resources.named_resource import named
 
 
-def get_pipeline_forwards(component):
+def create_forwards_for_component_pipelines(component):
     widget_spec = component.widget_spec
     forwards = []
     if not widget_spec:
@@ -28,7 +28,7 @@ def get_pipeline_forwards(component):
     return forwards
 
 
-def get_props_forwards(component):
+def create_forwards_for_component_props(component):
     widget_spec = component.widget_spec
     forwards = []
     if not widget_spec:
