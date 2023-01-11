@@ -13,13 +13,12 @@ def create_render_helpers(templates_dir, context, prev_helpers):
 
     helpers = prev_helpers
     context_ns = Namespace(**context, render=None)
+    helpers_fn = templates_dir / "__moonleap__.py"
 
-    if (templates_dir / "__moonleap__.py").exists():
+    if helpers_fn.exists():
+        _validate_render_helpers_module(helpers_fn)
         sys.path.insert(0, str(templates_dir))
         m = importlib.import_module("__moonleap__")
-        # TODO: if the new __moonleap__ file does not define get_helpers then
-        # the one from the previously loaded __moonleap__ file will be used,
-        # potentially crashing the code.
         importlib.reload(m)
         sys.path.pop(0)
 
@@ -41,3 +40,13 @@ def create_render_helpers(templates_dir, context, prev_helpers):
 
     context_ns.render = render_in_context
     return helpers, render_in_context
+
+
+def _validate_render_helpers_module(fn):
+    # Note that we are forced to take a cumbersome approach to validate the
+    # __moonleap__.py file. If we simply import it, then Python may use a cached
+    # version of get_helpers from a different __moonleap__.py file. Therefore,
+    # we read the file and check that it contains the function get_helpers.
+    with open(fn) as f:
+        if "def get_helpers" not in f.read():
+            raise Exception(f"__moonleap__.py must define a function get_helpers: {fn}")
