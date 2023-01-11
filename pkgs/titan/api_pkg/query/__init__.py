@@ -1,5 +1,6 @@
-from moonleap import create, kebab_to_camel
 from titan.api_pkg.apiregistry.resources import Query  # noqa
+
+from moonleap import create, kebab_to_camel
 
 base_tags = {
     "query": ["api-endpoint"],

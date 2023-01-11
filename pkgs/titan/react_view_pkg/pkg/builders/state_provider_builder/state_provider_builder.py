@@ -1,8 +1,9 @@
 from pathlib import Path
 
-from moonleap import append_uniq, get_tpl
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
+
+from moonleap import append_uniq, get_tpl
 
 from .sp_preamble import return_value
 from .sp_state_hook import delete_items_data, order_items_data
@@ -16,11 +17,10 @@ class StateProviderBuilder(Builder):
         state_provider = self.widget_spec.component
         state = state_provider.state
         containers = state.containers if state else []
-        pipelines = state_provider.pipelines
 
-        queries, mutations = [], []
-        _get_endpoints_from_pipelines(pipelines, queries, mutations)
-        _get_mutations_from_containers(containers, mutations)
+        queries = state_provider.queries
+        mutations = state_provider.mutations
+        _append_mutations_from_containers(containers, mutations)
 
         functions = dict(
             delete_items_data=delete_items_data,
@@ -46,16 +46,7 @@ class StateProviderBuilder(Builder):
         add_tpl_to_builder(tpl, self)
 
 
-def _get_endpoints_from_pipelines(pipelines, queries, mutations):
-    for pipeline in pipelines:
-        pipeline_source = pipeline.source
-        if pipeline_source.meta.term.tag == "query":
-            append_uniq(queries, pipeline_source)
-        if pipeline_source.meta.term.tag == "mutation":
-            append_uniq(mutations, pipeline_source)
-
-
-def _get_mutations_from_containers(containers, mutations):
+def _append_mutations_from_containers(containers, mutations):
     for container in containers:
         if delete_items_mutation := container.delete_items_mutation:
             append_uniq(mutations, delete_items_mutation)

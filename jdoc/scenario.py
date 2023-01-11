@@ -1,5 +1,7 @@
 import typing as T
-from dataclasses import dataclass, field
+import uuid
+
+from dataclassy import dataclass, factory
 
 
 def label(types):
@@ -7,18 +9,17 @@ def label(types):
     return " ".join(parts)
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Scenario:
-    facts: T.List[str] = field(default_factory=list)
+    facts: T.List[str] = []
     level: int = 0
 
     def add_fact(self, fact: T.Any):
         self.facts.append(self.level * " " + label(fact))
         return ScenarioContext(self)
 
-    def add_infos(self, infos: T.Optional[list[str]]):
-        if infos:
-            pass
+    def add_info(self, info: str):
+        pass
 
     def push(self):
         self.level += 1
@@ -43,11 +44,10 @@ class ScenarioContext:
         self.scenario.pop()
 
 
+@dataclass(kw_only=True)
 class Entity:
-    _traces: T.List[str]
-
-    def __init__(self):
-        self._traces = []
+    id: str = factory(lambda: uuid.uuid4().hex)
+    _traces: T.List[str] = []
 
     def add_trace(self, trace: str):
         self._traces.append(trace)
@@ -55,6 +55,11 @@ class Entity:
     @property
     def t(self):
         return self.__class__.__name__
+
+
+@dataclass(kw_only=True)
+class Fn:
+    name: str
 
 
 def _get(f: tuple, t: T.Type[Entity]):

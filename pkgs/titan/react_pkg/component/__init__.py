@@ -4,7 +4,15 @@ from titan.react_view_pkg.widgetregistry.resources import WidgetRegistry
 from widgetspec.widget_spec import WidgetSpec
 
 import moonleap.packages.extensions.props as P
-from moonleap import MemFun, create_forward, empty_rule, extend, get_root_resource, rule
+from moonleap import (
+    MemFun,
+    Prop,
+    create_forward,
+    empty_rule,
+    extend,
+    get_root_resource,
+    rule,
+)
 from moonleap.blocks.verbs import _has_default_prop, _has_prop, has
 from moonleap.packages.rule import Priorities
 from pkgs.titan.react_view_pkg.pkg.build import build
@@ -82,6 +90,8 @@ class ExtendComponent:
     maybe_expression = MemFun(props.component_maybe_expression)
     named_props = P.children(_has_prop, "x+react-prop")
     named_default_props = P.children(_has_default_prop, "x+react-prop")
+    queries = Prop(props.component_queries)
+    mutations = Prop(props.component_mutations)
 
 
 @extend(ReactModule)

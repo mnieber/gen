@@ -1,3 +1,4 @@
+from moonleap import append_uniq
 from moonleap.blocks.term import match_term_to_pattern
 
 
@@ -36,3 +37,25 @@ def component_maybe_expression(component, named_item_or_item_list):
     if not pipeline:
         return "'Moonleap Todo'"
     return pipeline.maybe_expression(named_item_or_item_list)
+
+
+def component_queries(component):
+    result = []
+
+    for pipeline in component.pipelines:
+        pipeline_source = pipeline.source
+        if pipeline_source.meta.term.tag == "query":
+            append_uniq(result, pipeline_source)
+
+    return result
+
+
+def component_mutations(component):
+    result = []
+
+    for pipeline in component.pipelines:
+        pipeline_source = pipeline.source
+        if pipeline_source.meta.term.tag == "mutation":
+            append_uniq(result, pipeline_source)
+
+    return result

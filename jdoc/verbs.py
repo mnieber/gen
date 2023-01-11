@@ -22,6 +22,10 @@ class hides_:
     pass
 
 
+class loads_:
+    pass
+
+
 class post_processes_:
     pass
 

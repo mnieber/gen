@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from titan.react_pkg.reactapp import ReactApp
+
 import moonleap.packages.extensions.props as P
 from moonleap import (
     MemFun,
@@ -12,7 +14,6 @@ from moonleap import (
     rule,
 )
 from moonleap.blocks.verbs import has
-from titan.react_pkg.reactapp import ReactApp
 
 from . import props
 from .resources import ReactModule  # noqa
@@ -44,16 +45,17 @@ def react_app_has_module(react_app, module):
 
 
 @rule("react-app")
-def react_modules_have_components(react_app):
+def assign_components_to_react_modules(react_app):
     from titan.react_view_pkg.widgetregistry import get_widget_reg
 
     widget_reg = get_widget_reg()
     forwards = []
     for widget_spec in widget_reg.widget_specs():
         react_module_term_str = f"{widget_spec.module_name}:module"
+        component_term_str = widget_spec.widget_name
         forwards += [
             create_forward(react_app, has, react_module_term_str),
-            create_forward(react_module_term_str, has, widget_spec.widget_name),
+            create_forward(react_module_term_str, has, component_term_str),
         ]
 
     return forwards

@@ -1,13 +1,13 @@
-from moonleap import u0
-from titan.api_pkg.apiregistry import get_api_reg
 from titan.types_pkg.typeregistry import get_type_reg
+
+from moonleap import u0
 
 
 class Helper:
-    def __init__(self, item_name, mutation_name):
+    def __init__(self, item_name, mutation):
         self.item_name = item_name
         self.type_spec = get_type_reg().get(u0(self.item_name) + "Form")
-        self.mutation = get_api_reg().get(mutation_name)
+        self.mutation = mutation.api_spec
         self.fields = get_fields(self.mutation) if self.mutation else []
         self.uuid_fields = [
             x for x in self.fields if x[1].field_type == "uuid" and x[1].target

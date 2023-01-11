@@ -9,3 +9,4 @@ ruamel.yaml
 python-slugify
 PyYAML
 ramda
+dataclassy

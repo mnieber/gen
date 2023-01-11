@@ -1,5 +1,6 @@
-from moonleap import create, kebab_to_camel
 from titan.api_pkg.apiregistry.resources import Mutation  # noqa
+
+from moonleap import create, kebab_to_camel
 
 base_tags = {
     "mutation": ["api-endpoint"],

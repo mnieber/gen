@@ -1,8 +1,10 @@
 from pathlib import Path
 
-from moonleap import get_tpl
+import ramda as R
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
+
+from moonleap import get_tpl
 
 from .helper import Helper
 
@@ -15,9 +17,10 @@ class FormStateProviderBuilder(Builder):
     def build(self):
         from titan.react_view_pkg.pkg.build import build
 
+        component = self.widget_spec.root.component
         __ = self.__ = Helper(
             item_name=self.ih.array_item_name,
-            mutation_name=self.widget_spec.get_value_by_name("mutation"),
+            mutation=R.head(component.mutations),
         )
 
         children_ws = self.widget_spec.get_place("Children")
