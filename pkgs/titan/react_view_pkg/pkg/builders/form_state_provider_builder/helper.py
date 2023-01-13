@@ -1,14 +1,16 @@
+import typing as T
+
 from titan.types_pkg.typeregistry import get_type_reg
 
 from moonleap import u0
 
 
 class Helper:
-    def __init__(self, item_name, mutation):
+    def __init__(self, item_name, mutation, fields):
         self.item_name = item_name
         self.type_spec = get_type_reg().get(u0(self.item_name) + "Form")
         self.mutation = mutation.api_spec
-        self.fields = get_fields(self.mutation) if self.mutation else []
+        self.fields = get_fields(self.mutation, fields) if self.mutation else []
         self.uuid_fields = [
             x for x in self.fields if x[1].field_type == "uuid" and x[1].target
         ]
@@ -31,19 +33,19 @@ class Helper:
         return result
 
 
-def get_fields(mutation):
+def get_fields(mutation, fields: T.Optional[list[str]]):
     scalar_field_specs = [x for x in mutation.get_inputs() if x.field_type != "form"]
-    fields = []
-    fields.extend([(x.name, x) for x in scalar_field_specs])
+    result = []
+    result.extend([(x.name, x) for x in scalar_field_specs])
     for form_field_spec in mutation.get_inputs(["form"]):
-        fields.extend(
+        result.extend(
             [
                 (f"{form_field_spec.name}.{x.name}", x)
                 for x in _form_fields(form_field_spec)
                 if not (x.field_type == "uuid" and not x.target)
             ]
         )
-    return fields
+    return result
 
 
 def _form_fields(form_field_spec):

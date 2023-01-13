@@ -20,6 +20,7 @@ class FormFieldsBuilder(Builder):
         __ = self.__ = Helper(
             item_name=self.ih.array_item_name,
             mutation=R.head(component.mutations),
+            fields=self.widget_spec.values.get("fields"),
         )
         field_widget_spec = self.widget_spec.get_place("Field")
         lines = []

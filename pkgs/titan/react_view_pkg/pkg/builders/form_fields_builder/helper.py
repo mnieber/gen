@@ -8,11 +8,11 @@ from moonleap import u0
 
 
 class Helper:
-    def __init__(self, item_name, mutation):
+    def __init__(self, item_name, mutation, fields):
         self.item_name = item_name
         self.type_spec = get_type_reg().get(u0(self.item_name) + "Form")
         self.mutation = mutation.api_spec
-        self.fields = get_fields(self.mutation) if self.mutation else []
+        self.fields = get_fields(self.mutation, fields) if self.mutation else []
 
     def slug_src(self, field_spec):
         slug_sources = [
