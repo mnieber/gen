@@ -12,7 +12,7 @@ class Builder:
         self.ilh = ItemListHelper(widget_spec)
         self.ih = ItemHelper(widget_spec)
         if "Children" in widget_spec.widget_base_types:
-            self.output.has_children = True
+            self.output.has_children_prop = True
         self.__post_init__()
 
     def __post_init__(self):

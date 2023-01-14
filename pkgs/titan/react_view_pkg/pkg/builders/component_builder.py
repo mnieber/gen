@@ -34,8 +34,8 @@ class ComponentBuilder(Builder):
         attrs_str = _get_attrs_str(self.widget_spec)
         class_name_attr = self.widget_spec.div.get_class_name_attr()
         key_attr = _get_key_attr(self.widget_spec)
-        has_children = bool(self.widget_spec.child_widget_specs)
-        if has_children:
+        has_child_widgets = bool(self.widget_spec.child_widget_specs)
+        if has_child_widgets:
             self.add(
                 lines=[
                     f"<{self.widget_spec.widget_class_name} "

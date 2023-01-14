@@ -11,7 +11,7 @@ from .sp_state_hook import delete_items_data, order_items_data
 
 class StateProviderBuilder(Builder):
     def build(self):
-        self.output.has_children = True
+        self.output.has_children_prop = True
         self.output.no_scss = True
 
         state_provider = self.widget_spec.component

@@ -19,7 +19,7 @@ class BuilderOutput:
     preamble_hooks_lines: list = field(default_factory=list)
     flags: list = field(default_factory=list)
     # True if the widget spec or any of its child widget specs has a Children type
-    has_children: bool = False
+    has_children_prop: bool = False
     # True if the widget has no scss file
     no_scss: bool = False
 
@@ -28,7 +28,7 @@ class BuilderOutput:
         self.preamble_lines += rhs.preamble_lines
         self.lines += rhs.lines
         self.scss_lines += rhs.scss_lines
-        self.has_children = self.has_children or rhs.has_children
+        self.has_children_prop = self.has_children_prop or rhs.has_children_prop
         self.no_scss = self.no_scss or rhs.no_scss
         extend_uniq(self.imports_lines, rhs.imports_lines)
         extend_uniq(self.props_lines, rhs.props_lines)
