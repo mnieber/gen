@@ -1,5 +1,5 @@
 import ramda as R
-from titan.react_view_pkg.pkg.builders.form_state_provider_builder.helper import (
+from titan.react_view_pkg.pkg.builders.form_state_provider_builder.get_fields import (
     get_fields,
 )
 from titan.types_pkg.typeregistry import get_type_reg

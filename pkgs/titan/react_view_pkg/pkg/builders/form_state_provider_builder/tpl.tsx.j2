@@ -1,4 +1,4 @@
-{% magic_with __.mutation.name as postMyMutation %}
+{% magic_with mutation.name as postMyMutation %}
 
 
 {% section imports %}
@@ -9,7 +9,7 @@ import {
   HandleSubmitArgsT,
   unflatten
 } from 'react-form-state-context';
-import { usePostMyMutation } from 'src/api/mutations';              {% ?? __.mutation %}
+import { usePostMyMutation } from 'src/api/mutations';              {% ?? mutation %}
 {% end_section %}
 
 
@@ -29,26 +29,26 @@ import { usePostMyMutation } from 'src/api/mutations';              {% ?? __.mut
 
 
 {% section preamble_hooks %}
-  const postMyMutation = usePostMyMutation().mutateAsync;                                         {% if __.mutation %}
+  const postMyMutation = usePostMyMutation().mutateAsync;                                         {% if mutation %}
   {{ "" }}                                                                                        {% endif %}
 {% end_section %}
 
 
 {% section preamble %}
     const initialValues = {
-      '{{ name }}': {{ __.initial_value(field_spec) }},                                                 {% !! name, field_spec in __.fields %}
+      '{{ name }}': {{ get_initial_value(field_spec) }},                                                {% !! name, field_spec in fields %}
     };
     const initialErrors = {};
     const handleValidate = ({values, setError} : HandleValidateArgsT) => {
-      if (R.isNil(values['{{ name }}'])) {                                                              {% for name, field_spec in __.validated_fields %}
+      if (R.isNil(values['{{ name }}'])) {                                                              {% for name, field_spec in validated_fields %}
         setError('{{ name }}', 'This field is required');
       }                                                                                                 {% endfor %}
     };
     const handleSubmit = ({ formState, values }: HandleSubmitArgsT) => {
-      return postMyMutation(unflatten(                                                                  {% if __.mutation %}
-        {                                                                                               {% if __.uuid_fields %}
+      return postMyMutation(unflatten(                                                                  {% if mutation %}
+        {                                                                                               {% if uuid_fields %}
           ...values,
-          '{{ name }}': values['{{ name }}'].id,                                                        {% !! name, field_spec in __.uuid_fields %}
+          '{{ name }}': values['{{ name }}'].id,                                                        {% !! name, field_spec in uuid_fields %}
         }
         values                                                                                          {% else %}{% endif %}
       )).then(() => formState.reset(initialValues, initialErrors));                                     {% endif %}
