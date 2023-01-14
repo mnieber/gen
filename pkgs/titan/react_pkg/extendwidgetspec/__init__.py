@@ -1,8 +1,9 @@
+from titan.react_pkg.component.resources import Component
+from widgetspec.widget_spec import WidgetSpec
+
 from moonleap.packages.extensions.extend import extend
 from moonleap.packages.extensions.memfield import MemField
 from moonleap.packages.extensions.prop import Prop
-from titan.react_pkg.component.resources import Component
-from widgetspec.widget_spec import WidgetSpec
 
 from . import props
 
@@ -14,6 +15,7 @@ class ExtendWidgetSpec:
     handler_terms = Prop(props.widget_spec_handler_terms)
     named_prop_terms = Prop(props.widget_spec_named_prop_terms)
     named_default_prop_terms = Prop(props.widget_spec_named_default_prop_terms)
+    field_names = Prop(props.widget_spec_field_names)
 
 
 @extend(Component)

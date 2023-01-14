@@ -1,5 +1,7 @@
-from moonleap.blocks.term import match_term_to_pattern, word_to_term
 from titan.react_view_pkg.widgetregistry import get_widget_reg
+
+from moonleap.blocks.term import match_term_to_pattern, word_to_term
+from moonleap.utils.__init__ import remove_trailing_tildes
 
 
 def widget_spec_handler_terms(widget_spec):
@@ -12,6 +14,17 @@ def widget_spec_named_prop_terms(widget_spec):
 
 def widget_spec_named_default_prop_terms(widget_spec):
     return widget_spec.src_dict.setdefault("__default_props__", [])
+
+
+def widget_spec_field_names(widget_spec):
+    result = []
+    fields = widget_spec.src_dict.setdefault("__fields__", {})
+    for field_name, fields in fields.items():
+        for field in fields:
+            clean_field_name = remove_trailing_tildes(field_name)
+            prefix = "" if clean_field_name == "." else clean_field_name + "."
+            result.append(f"{prefix}{field}")
+    return result
 
 
 def widget_spec_component(widget_spec):

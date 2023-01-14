@@ -1,6 +1,8 @@
 import typing as T
 from dataclasses import dataclass, field
 
+from moonleap.utils.__init__ import remove_trailing_tildes
+
 
 @dataclass
 class FieldSpec:
@@ -35,7 +37,7 @@ class FieldSpec:
 
     @property
     def name(self):
-        return self.key.removesuffix("~")
+        return remove_trailing_tildes(self.key)
 
 
 @dataclass

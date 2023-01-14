@@ -38,15 +38,12 @@ class FormStateProviderBuilder(Builder):
     def get_context(self):
         component = self.widget_spec.root.component
         mutation = R.head(component.mutations).api_spec
+        fields = (
+            get_fields(mutation, component.widget_spec.field_names) if mutation else []
+        )
 
         item_name = self.ih.array_item_name
         assert item_name
-
-        fields = (
-            get_fields(mutation, component.widget_spec.values.get("fields"))
-            if mutation
-            else []
-        )
 
         return dict(
             item_name=item_name,

@@ -37,9 +37,7 @@ class FormFieldsBuilder(Builder):
         item_name = self.ih.array_item_name
         mutation = R.head(component.mutations).api_spec
         fields = (
-            get_fields(mutation, self.widget_spec.values.get("fields"))
-            if mutation
-            else []
+            get_fields(mutation, component.widget_spec.field_names) if mutation else []
         )
 
         return dict(
