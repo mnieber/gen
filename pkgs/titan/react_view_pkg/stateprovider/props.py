@@ -1,6 +1,7 @@
+from titan.react_pkg.component.props import component_mutations
+
 from moonleap import append_uniq, create_forward
 from moonleap.blocks.verbs import provides
-from pkgs.titan.react_pkg.component.props import component_mutations
 
 
 def state_provider_load(state_provider):

@@ -1,4 +1,5 @@
 from titan.react_pkg.reactmodule import ReactModule
+from titan.react_view_pkg.pkg.build import build
 from titan.react_view_pkg.widgetregistry import get_widget_reg
 from titan.react_view_pkg.widgetregistry.resources import WidgetRegistry
 from widgetspec.widget_spec import WidgetSpec
@@ -15,7 +16,6 @@ from moonleap import (
 )
 from moonleap.blocks.verbs import _has_default_prop, _has_prop, has
 from moonleap.packages.rule import Priorities
-from pkgs.titan.react_view_pkg.pkg.build import build
 
 from . import props
 from .pipelines import (

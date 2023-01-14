@@ -1,14 +1,16 @@
 import typing as T
 from dataclasses import dataclass
 
-from moonleap import Resource, named
-from moonleap.utils.fp import aperture
 from titan.api_pkg.mutation import Mutation
 from titan.api_pkg.pipeline.resources import PropsSource
 from titan.api_pkg.query import Query
+from titan.react_view_pkg.behavior import Behavior
 from titan.types_pkg.item import Item
 from titan.types_pkg.itemlist import ItemList
 from titan.types_pkg.pkg.get_member_field_spec import get_member_field_spec
+
+from moonleap import Resource, named
+from moonleap.utils.fp import aperture
 
 
 @dataclass
@@ -22,6 +24,10 @@ class TakeItemListFromStateProvider(PipelineElement):
 
 
 class TakeItemFromStateProvider(PipelineElement):
+    pass
+
+
+class TakeBvrFromProps(PipelineElement):
     pass
 
 
@@ -169,6 +175,14 @@ def _get_elements(self):
                         obj=named_item_list,
                     )
                 )
+            elif isinstance(next_res, named(Behavior)):
+                named_bvr = next_res
+                result.append(
+                    TakeBvrFromProps(
+                        subj=res,
+                        obj=named_bvr,
+                    )
+                )
             else:
                 raise Exception(f"Unexpected resource sequence: {res}, {next_res}")
         else:
@@ -206,7 +220,9 @@ def pipeline_data_path(self, obj):
         elif isinstance(elm, (TakeItemFromQuery, TakeItemListFromQuery)):
             query = elm.subj
             result = f"{query.name}.data?.{elm.obj.typ.ts_var}"
-        elif isinstance(elm, (TakeItemFromProps, TakeItemListFromProps)):
+        elif isinstance(
+            elm, (TakeItemFromProps, TakeItemListFromProps, TakeBvrFromProps)
+        ):
             result = f"props.{elm.obj.typ.ts_var}{postfix}"
         elif isinstance(elm, (ExtractItemFromItem, ExtractItemListFromItem)):
             member = get_member_field_spec(

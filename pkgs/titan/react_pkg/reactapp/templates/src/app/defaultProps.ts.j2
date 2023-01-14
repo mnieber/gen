@@ -22,5 +22,7 @@ const dps{{ item_name|u0|plural }} = {                                          
 export const defaultProps = {
     ...dps{{ item_name|u0|plural }},                                            {% !! item_name, data in __.provided_data %}
 };
+
+export const dps = defaultProps;
 {% end_magic_with %}
 {% end_magic_with %}

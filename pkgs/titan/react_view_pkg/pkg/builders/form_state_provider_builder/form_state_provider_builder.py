@@ -37,9 +37,14 @@ class FormStateProviderBuilder(Builder):
 
     def get_context(self):
         component = self.widget_spec.root.component
-        mutation = R.head(component.mutations).api_spec
+
+        # We expect the component to have a pipeline that returns
+        # a mutation or an edit:behavior.
+        mutation, editing_bvr = get_form_mutation_or_bvr(component)
         fields = (
-            get_fields(mutation, component.widget_spec.field_names) if mutation else []
+            get_fields(mutation.api_spec, component.widget_spec.field_names)
+            if mutation
+            else []
         )
 
         item_name = self.ih.array_item_name
@@ -49,6 +54,7 @@ class FormStateProviderBuilder(Builder):
             item_name=item_name,
             type_spec=get_type_reg().get(u0(item_name) + "Form"),
             mutation=mutation,
+            editing_bvr=editing_bvr,
             fields=fields,
             uuid_fields=[
                 x for x in fields if x[1].field_type == "uuid" and x[1].target
@@ -56,6 +62,21 @@ class FormStateProviderBuilder(Builder):
             validated_fields=_get_validated_fields(fields),
             get_initial_value=_get_initial_value,
         )
+
+
+def get_form_mutation_or_bvr(component):
+    mutation = None
+    editing_bvr = None
+    for pipeline in component.pipelines:
+        pipeline_source = pipeline.source
+        if pipeline_source.meta.term.tag == "mutation":
+            mutation = pipeline_source
+        if pipeline_source.meta.term.tag == "props":
+            prop = pipeline.resources[0]
+            if prop.typ.meta.term.tag == "editing":
+                editing_bvr = prop.typ
+                mutation = editing_bvr.mutation
+    return mutation, editing_bvr
 
 
 def _get_initial_value(field_spec):

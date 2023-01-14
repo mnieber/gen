@@ -4,8 +4,9 @@ from pathlib import Path
 import ramda as R
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.react_view_pkg.pkg.builders.form_state_provider_builder.get_fields import (
+from titan.react_view_pkg.pkg.builders.form_state_provider_builder import (
     get_fields,
+    get_form_mutation_or_bvr,
 )
 
 from moonleap import get_tpl, u0
@@ -35,9 +36,11 @@ class FormFieldsBuilder(Builder):
     def get_context(self):
         component = self.widget_spec.root.component
         item_name = self.ih.array_item_name
-        mutation = R.head(component.mutations).api_spec
+        mutation, editing_bvr = get_form_mutation_or_bvr(component)
         fields = (
-            get_fields(mutation, component.widget_spec.field_names) if mutation else []
+            get_fields(mutation.api_spec, component.widget_spec.field_names)
+            if mutation
+            else []
         )
 
         return dict(
