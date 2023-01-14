@@ -35,7 +35,7 @@ class FormFieldsBuilder(Builder):
 
     def get_context(self):
         component = self.widget_spec.root.component
-        item_name = self.ih.array_item_name
+        item_name = self.ih.working_item_name
         mutation, editing_bvr = get_form_mutation_or_bvr(component)
         fields = (
             get_fields(mutation.api_spec, component.widget_spec.field_names)

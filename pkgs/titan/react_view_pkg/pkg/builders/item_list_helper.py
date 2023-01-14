@@ -1,4 +1,3 @@
-from moonleap import kebab_to_camel
 from titan.react_view_pkg.pkg.get_data_path import get_data_path
 from titan.react_view_pkg.pkg.get_named_data_term import (
     get_named_item,
@@ -6,12 +5,14 @@ from titan.react_view_pkg.pkg.get_named_data_term import (
 )
 from widgetspec.widget_spec_pipeline import WsPipeline
 
+from moonleap import kebab_to_camel
+
 
 class ItemListHelper:
     def __init__(self, widget_spec):
         self.widget_spec = widget_spec
         self._named_item_list = None
-        self._array_item_name = None
+        self._working_item_name = None
         self._has_data = False
 
     @property
@@ -22,17 +23,19 @@ class ItemListHelper:
         return self._named_item_list
 
     @property
-    def array_item_name(self):
+    def working_item_name(self):
         if not self._has_data:
             self._get_data()
 
-        return self._array_item_name
+        return self._working_item_name
 
     def _get_data(self):
         self._has_data = True
         self._named_item_list = get_named_item_list(self.widget_spec)
         if self._named_item_list:
-            self._array_item_name = kebab_to_camel(self.named_item_list.meta.term.data)
+            self._working_item_name = kebab_to_camel(
+                self.named_item_list.meta.term.data
+            )
 
     def item_list_data_path(self):
         return (
@@ -53,6 +56,6 @@ class ItemListHelper:
         self.widget_spec.pipelines.append(
             WsPipeline(
                 term=get_named_item(self.widget_spec).meta.term,
-                term_data_path=self.array_item_name,
+                term_data_path=self.working_item_name,
             )
         )

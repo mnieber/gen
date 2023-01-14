@@ -1,13 +1,14 @@
 from pathlib import Path
 
-from moonleap.render.render_template.tpl import get_tpl
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
+
+from moonleap.render.render_template.tpl import get_tpl
 
 
 class ArrayBuilder(Builder):
     def build(self):
-        item_name = self.ilh.array_item_name
+        item_name = self.ilh.working_item_name
         const_name = self._get_const_name()
 
         child_widget_div = self.output.graft(

@@ -6,7 +6,7 @@ class ItemHelper:
     def __init__(self, widget_spec):
         self.widget_spec = widget_spec
         self._named_item = None
-        self._array_item_name = None
+        self._working_item_name = None
         self._has_data = False
 
     @property
@@ -17,17 +17,17 @@ class ItemHelper:
         return self._named_item
 
     @property
-    def array_item_name(self):
+    def working_item_name(self):
         if not self._has_data:
             self._get_data()
 
-        return self._array_item_name
+        return self._working_item_name
 
     def _get_data(self):
         self._has_data = True
         self._named_item = get_named_item(self.widget_spec)
         if self._named_item:
-            self._array_item_name = self.named_item.meta.term.data
+            self._working_item_name = self.named_item.meta.term.data
 
     def item_data_path(self):
         named_item = get_named_item(self.widget_spec)

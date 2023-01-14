@@ -1,15 +1,16 @@
 from pathlib import Path
 
-from moonleap import get_tpl
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
 from widgetspec.get_place_dict import get_place_dict
+
+from moonleap import get_tpl
 
 
 class StepperBuilder(Builder):
     def build(self):
         self.use_uniform_height = self.widget_spec.values.get("uniformHeight")
-        self.item_name = self.ilh.array_item_name
+        self.item_name = self.ilh.working_item_name
         const_name = self._get_const_name()
 
         child_widget_div = self.output.graft(self._get_child_widget_output())

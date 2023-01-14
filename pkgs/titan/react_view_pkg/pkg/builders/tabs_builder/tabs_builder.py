@@ -1,9 +1,10 @@
 from pathlib import Path
 
-from moonleap import get_tpl, u0
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.types_pkg.typeregistry import get_type_reg
+
+from moonleap import get_tpl, u0
 
 
 class TabsBuilder(Builder):
@@ -19,10 +20,10 @@ class TabsBuilder(Builder):
         add_tpl_to_builder(tpl, self)
 
     def _get_context(self):
-        type_spec = get_type_reg().get(u0(self.ilh.array_item_name))
+        type_spec = get_type_reg().get(u0(self.ilh.working_item_name))
 
         return {
-            "item_name": self.ilh.array_item_name,
+            "item_name": self.ilh.working_item_name,
             "items_expr": self.ilh.item_list_data_path(),
             "component_name": self.widget_class_name,
             "display_field_name": (
@@ -41,7 +42,7 @@ class TabsBuilder(Builder):
 
         child_widget_spec = self.widget_spec.get_place("Tab")
         with child_widget_spec.memo():
-            item_name = self.ilh.array_item_name
+            item_name = self.ilh.working_item_name
             child_widget_spec.div.key = f"{item_name}.id"
             if self.use_uniform_height:
                 child_widget_spec.div.append_styles(

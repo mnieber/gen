@@ -12,7 +12,7 @@ from .spec_ext import spec_ext
 
 class ListViewBuilder(Builder):
     def __post_init__(self):
-        self.bvrs_helper = BvrsHelper(self.widget_spec, self.ilh.array_item_name)
+        self.bvrs_helper = BvrsHelper(self.widget_spec, self.ilh.working_item_name)
 
     def get_spec_extension(self, places):
         return spec_ext(self.widget_spec, places)
@@ -27,7 +27,7 @@ class ListViewBuilder(Builder):
     def _get_context(self):
         return {
             **self.bvrs_helper.bvrs_context(),
-            "__item_name": self.ilh.array_item_name,
+            "__item_name": self.ilh.working_item_name,
             "__items_expr": self.ilh.item_list_data_path(),
             "update_url": self.widget_spec.values.get("updateUrl"),
         }
@@ -51,7 +51,7 @@ class ListViewBuilder(Builder):
 
         child_widget_spec = self.widget_spec.get_place("ListViewItem")
         with child_widget_spec.memo():
-            key = f"{self.ilh.array_item_name}.id"
+            key = f"{self.ilh.working_item_name}.id"
             child_widget_spec.div.key = key
             append_uniq(child_widget_spec.div.attrs, tpl_lvi_props.get_section("props"))
             return build(child_widget_spec)

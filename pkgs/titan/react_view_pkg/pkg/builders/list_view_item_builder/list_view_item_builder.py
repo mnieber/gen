@@ -10,7 +10,7 @@ from moonleap import get_tpl
 class ListViewItemBuilder(Builder):
     def __init__(self, widget_spec):
         Builder.__init__(self, widget_spec)
-        self.bvrs_helper = BvrsHelper(widget_spec, self.ih.array_item_name)
+        self.bvrs_helper = BvrsHelper(widget_spec, self.ih.working_item_name)
 
     def build(self):
         context = self._get_context()
@@ -26,6 +26,6 @@ class ListViewItemBuilder(Builder):
     def _get_context(self):
         return {
             **self.bvrs_helper.bvrs_context(),
-            "item_name": self.ih.array_item_name,
+            "item_name": self.ih.working_item_name,
             "component_name": self.widget_spec.widget_class_name,
         }

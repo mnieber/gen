@@ -11,7 +11,7 @@ from moonleap.utils.fp import extend_uniq
 class PickerBuilder(Builder):
     def __init__(self, widget_spec):
         Builder.__init__(self, widget_spec)
-        self.bvrs_helper = BvrsHelper(widget_spec, self.ilh.array_item_name)
+        self.bvrs_helper = BvrsHelper(widget_spec, self.ilh.working_item_name)
         if (
             self.bvrs_helper.bvrs_has_selection
             and not self.bvrs_helper.bvrs_has_highlight
@@ -29,7 +29,7 @@ class PickerBuilder(Builder):
         context = {
             **self.bvrs_helper.bvrs_context(),
             "update_url": self.widget_spec.values.get("updateUrl"),
-            "item_name": self.ilh.array_item_name,
+            "item_name": self.ilh.working_item_name,
         }
 
         tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)

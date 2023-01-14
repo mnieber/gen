@@ -1,6 +1,7 @@
-from moonleap import u0
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.types_pkg.typeregistry import get_type_reg
+
+from moonleap import u0
 
 
 class ItemFieldsBuilder(Builder):
@@ -24,7 +25,7 @@ class ItemFieldsBuilder(Builder):
         ]
 
     def build(self):
-        self.type_spec = get_type_reg().get(u0(self.ih.array_item_name))
+        self.type_spec = get_type_reg().get(u0(self.ih.working_item_name))
         self.display_only = self.widget_spec.values.get("display")
 
         field_widget_spec = self.widget_spec.get_place("Field")

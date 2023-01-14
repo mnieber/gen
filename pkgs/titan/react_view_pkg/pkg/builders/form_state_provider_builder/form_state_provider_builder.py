@@ -47,7 +47,7 @@ class FormStateProviderBuilder(Builder):
             else []
         )
 
-        item_name = self.ih.array_item_name
+        item_name = self.ih.working_item_name
         assert item_name
 
         return dict(
