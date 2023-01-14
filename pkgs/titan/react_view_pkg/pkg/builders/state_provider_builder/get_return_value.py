@@ -1,7 +1,7 @@
 from moonleap.utils.inflect import plural
 
 
-def return_value(state_provider, container, data, hint=None):
+def get_return_value(state_provider, container, data, hint=None):
     if data in state_provider.named_items_provided:
         data_path = state_provider.get_data_path(data)
         maybe_expr = state_provider.maybe_expression(data)

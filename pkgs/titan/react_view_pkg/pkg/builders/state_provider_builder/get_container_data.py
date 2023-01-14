@@ -1,6 +1,7 @@
+from titan.types_pkg.typeregistry import get_type_reg
+
 from moonleap import u0
 from moonleap.utils.inflect import plural
-from titan.types_pkg.typeregistry import get_type_reg
 
 
 def delete_items_data(container):
@@ -47,6 +48,18 @@ def order_items_data(container):
                 data["myCtrItems"] = plural(container.item.item_name)
                 data["myCtrItemIds"] = ids_field_name
     return data
+
+
+def get_container_inputs(containers, named_items=True, named_item_lists=True):
+    result = []
+    for container in containers:
+        if named_items:
+            for named_item in container.named_items:
+                result.append(named_item)
+        if named_item_lists:
+            if container.named_item_list:
+                result.append(container.named_item_list)
+    return result
 
 
 def _get_field_name(mutation, field_types):

@@ -5,8 +5,12 @@ from titan.react_view_pkg.pkg.builder import Builder
 
 from moonleap import append_uniq, get_tpl
 
-from .sp_preamble import return_value
-from .sp_state_hook import delete_items_data, order_items_data
+from .get_container_data import (
+    delete_items_data,
+    get_container_inputs,
+    order_items_data,
+)
+from .get_return_value import get_return_value
 
 
 class StateProviderBuilder(Builder):
@@ -21,16 +25,6 @@ class StateProviderBuilder(Builder):
         queries = state_provider.queries
         mutations = state_provider.mutations
 
-        functions = dict(
-            delete_items_data=delete_items_data,
-            order_items_data=order_items_data,
-            container_inputs=_container_inputs,
-            return_value=lambda data, hint=None: return_value(
-                state_provider, containers, data, hint
-            ),
-            get_data_path=state_provider.get_data_path,
-        )
-
         context = dict(
             containers=containers,
             mutations=mutations,
@@ -38,23 +32,17 @@ class StateProviderBuilder(Builder):
             state=state,
             state_provider=state_provider,
             more_type_specs_to_import=_more_type_specs_to_import(mutations),
-            __=functions,
+            delete_items_data=delete_items_data,
+            order_items_data=order_items_data,
+            get_container_inputs=get_container_inputs,
+            get_return_value=lambda data, hint=None: get_return_value(
+                state_provider, containers, data, hint
+            ),
+            get_data_path=state_provider.get_data_path,
         )
 
         tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)
         add_tpl_to_builder(tpl, self)
-
-
-def _container_inputs(containers, named_items=True, named_item_lists=True):
-    result = []
-    for container in containers:
-        if named_items:
-            for named_item in container.named_items:
-                result.append(named_item)
-        if named_item_lists:
-            if container.named_item_list:
-                result.append(container.named_item_list)
-    return result
 
 
 def _more_type_specs_to_import(mutations):
