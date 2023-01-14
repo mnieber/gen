@@ -4,11 +4,11 @@
 {% section lines %}
     <Field
       fieldName="{{ name }}"
-      label="{{ __.label(name) }}"
+      label="{{ get_label(name) }}"
       buttons={[                                                                                  {% if field_spec.field_type in ("slug",) %}
         <UpdateSlugButton
           key="1"
-          relatedFieldName="{{ __.slug_src(field_spec) }}"
+          relatedFieldName="{{ get_slug_src(fields, field_spec) }}"
         />
       ]}                                                                                          {% endif %}
     >
@@ -19,7 +19,7 @@
         isMulti={false}
         pickableValues={props.fieldSpecTargets}
         pickableValue={initialValues['{{ name }}']}
-        labelFromValue={(x: any) => x.{{ __.display_field_name(field_spec.target_type_spec) }}}
+        labelFromValue={(x: any) => x.{{ get_display_field_name(field_spec.target_type_spec) }}}
       />                                                                                          {% endif %}
       <div className="flex flex-row items-begin mt-1"><ControlledCheckbox /></div>                {% ?? field_spec.field_type in ("boolean",) %}
     </Field>
