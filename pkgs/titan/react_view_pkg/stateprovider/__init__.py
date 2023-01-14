@@ -1,5 +1,8 @@
+from titan.react_view_pkg.view import default_view_templates_dir
+
 import moonleap.packages.extensions.props as P
 from moonleap import (
+    Prop,
     create,
     create_forward,
     empty_rule,
@@ -9,7 +12,6 @@ from moonleap import (
     u0,
 )
 from moonleap.blocks.verbs import has, provides
-from titan.react_view_pkg.view import default_view_templates_dir
 
 from . import props
 from .resources import StateProvider
@@ -51,3 +53,4 @@ class ExtendStateProvider:
     named_items_provided = P.children(provides, "x+item")
     named_item_lists_provided = P.children(provides, "x+item~list")
     state = P.child(provides, "react-state")
+    mutations = Prop(props.state_provider_mutations)

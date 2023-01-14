@@ -1,5 +1,6 @@
-from moonleap import create_forward
+from moonleap import append_uniq, create_forward
 from moonleap.blocks.verbs import provides
+from pkgs.titan.react_pkg.component.props import component_mutations
 
 
 def state_provider_load(state_provider):
@@ -16,3 +17,17 @@ def state_provider_load(state_provider):
                     forwards.append(create_forward(state_provider, provides, res))
 
     return forwards
+
+
+def state_provider_mutations(state_provider):
+    mutations = component_mutations(state_provider)
+    state = state_provider.state
+    containers = state.containers if state else []
+    for container in containers:
+        if delete_items_mutation := container.delete_items_mutation:
+            append_uniq(mutations, delete_items_mutation)
+        if delete_item_mutation := container.delete_item_mutation:
+            append_uniq(mutations, delete_item_mutation)
+        if order_items_mutation := container.order_items_mutation:
+            append_uniq(mutations, order_items_mutation)
+    return mutations

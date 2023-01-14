@@ -20,7 +20,6 @@ class StateProviderBuilder(Builder):
 
         queries = state_provider.queries
         mutations = state_provider.mutations
-        _append_mutations_from_containers(containers, mutations)
 
         functions = dict(
             delete_items_data=delete_items_data,
@@ -44,16 +43,6 @@ class StateProviderBuilder(Builder):
 
         tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)
         add_tpl_to_builder(tpl, self)
-
-
-def _append_mutations_from_containers(containers, mutations):
-    for container in containers:
-        if delete_items_mutation := container.delete_items_mutation:
-            append_uniq(mutations, delete_items_mutation)
-        if delete_item_mutation := container.delete_item_mutation:
-            append_uniq(mutations, delete_item_mutation)
-        if order_items_mutation := container.order_items_mutation:
-            append_uniq(mutations, order_items_mutation)
 
 
 def _container_inputs(containers, named_items=True, named_item_lists=True):
