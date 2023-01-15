@@ -39,7 +39,7 @@ Every block automatically has the `default` scope.
 ```
 packages_by_scope:
     default:
-        - default_pkg
+        - titan.default_pkg
         - titan.project_pkg
     bar-service:
         - bar_pkg
@@ -50,7 +50,7 @@ packages_by_scope:
 
 ## Fact
 
-Here, the :settings file specifies that the `default_pkg` and `titan.project_pkg` are used for all blocks with the `default` scope, and `bar_pgk` is used for blocks with the `bar-service` scope.
+Here, the :settings file specifies that the `titan.default_pkg` and `titan.project_pkg` are used for all blocks with the `default` scope, and `bar_pgk` is used for blocks with the `bar-service` scope.
 
 ## Fact
 

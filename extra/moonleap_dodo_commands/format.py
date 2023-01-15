@@ -21,7 +21,7 @@ if Dodo.is_main(__name__, safe=True):
     Dodo.run(
         [
             "python",
-            "./pkgs/default_pkg/inline_right_column/format_right_column.py",
+            "./default_pkg/inline_right_column/format_right_column.py",
             args.fn,
         ],
         cwd=args.cwd,

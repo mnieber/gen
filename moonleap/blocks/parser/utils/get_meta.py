@@ -5,5 +5,6 @@ from moonleap.resources.resource import ResourceMetaData
 def get_meta(word):
     return ResourceMetaData(
         term=word_to_term(word),
+        block=None,
         base_tags=[],
     )

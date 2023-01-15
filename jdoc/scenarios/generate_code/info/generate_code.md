@@ -1,6 +1,6 @@
 # Generate code
 
-## The entry_point loads settings
+## The entry point loads settings
 
 In the :settings you can define a mapping from :scope~name to :package~names.
 

@@ -1,6 +1,7 @@
 import typing as T
 from dataclasses import dataclass, field
 
+from jdoc.moonleap.block import Block
 from moonleap.blocks.term import Term
 from moonleap.resources.relations.slctrs import RelSelector
 from moonleap.utils.get_id import get_id
@@ -9,6 +10,7 @@ from moonleap.utils.get_id import get_id
 @dataclass
 class ResourceMetaData:
     term: Term
+    block: Block
     base_tags: T.List[str]
 
 

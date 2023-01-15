@@ -12,7 +12,7 @@ class Scope:
         self.rules = []
         self.base_tags_by_tag = {}
 
-    def __str__(self):
+    def __repr__(self):
         return f"Scope: {self.name}"
 
     def add_rules(self, module):
