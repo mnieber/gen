@@ -24,7 +24,7 @@ def _get_state(state, state_data):
 
 
 def _create_container(state, container_term_str, container_data):
-    container = Container(name=word_to_term(container_term_str).name)
+    container = Container(name=word_to_term(container_term_str).data)
     for data_term_str in container_data.get("__data__", []):
         data_term = word_to_term(data_term_str)
         data_res = create_resource(state.meta.block, data_term)

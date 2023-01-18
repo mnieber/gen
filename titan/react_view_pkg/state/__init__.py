@@ -32,7 +32,7 @@ def module_renders_state(module, state):
     for container in state.containers:
         state.renders(
             [container],
-            state.name,
+            container.name,
             lambda state: dict(container=container),
             [Path(__file__).parent / "templates_container"],
         )
