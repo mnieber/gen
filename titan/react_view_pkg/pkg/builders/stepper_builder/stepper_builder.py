@@ -54,7 +54,10 @@ class StepperBuilder(Builder):
         return self.item_name + ("Divs" if self.use_uniform_height else "Div")
 
     def get_spec_extension(self, places):
-        self.ilh.get_spec_extension()
+        extension = {}
+        if not self.ilh.maybe_add_items_pipeline_to_spec_extension(extension):
+            raise Exception("FormStateProviderBuilder: no items pipeline")
+        return extension
 
     def update_widget_spec(self):
         tpl = get_tpl(Path(__file__).parent / "tpl_div.tsx.j2", {})

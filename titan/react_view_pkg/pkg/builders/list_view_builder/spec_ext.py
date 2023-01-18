@@ -2,16 +2,18 @@ from titan.widgetspec.get_place_dict import get_place_dict
 
 
 def spec_ext(list_view_builder, places):
-    result = list_view_builder.ilh.get_spec_extension()
+    extension = {}
     widget_spec = list_view_builder.widget_spec
     named_item_term_str = widget_spec.get_value_by_name("item")
     lvi_name = widget_spec.values.get("lvi-name") or _get_default_lvi_name(widget_spec)
 
     if "ListViewItem" not in places:
-        result.update(_lvi_spec(lvi_name))
+        extension.update(_lvi_spec(lvi_name))
     if "LviComponent" not in places:
-        result.update(_lvi_component_spec(widget_spec, lvi_name, named_item_term_str))
-    return result
+        extension.update(
+            _lvi_component_spec(widget_spec, lvi_name, named_item_term_str)
+        )
+    return extension
 
 
 def _lvi_spec(lvi_name):

@@ -30,3 +30,27 @@ class ItemHelper:
             named_item = pipeline.resources[-1]
             return pipeline.get_data_path(obj=named_item)
         return None
+
+    def maybe_add_item_pipeline_to_spec_extension(self, extension):
+        pipelines = extension.setdefault("__pipelines__", {})
+        if self.widget_spec.get_pipeline_by_name("item", recurse=True):
+            return True
+        named_props = self.widget_spec.root.get_named_props(
+            lambda x: x.meta.term.tag == "item"
+        )
+        if len(named_props) != 1:
+            return False
+        pipelines["item"] = ["component:props", str(named_props[0].meta.term)]
+        return True
+
+    def maybe_add_save_pipeline_to_spec_extension(self, extension):
+        pipelines = extension.setdefault("__pipelines__", {})
+        if self.widget_spec.get_pipeline_by_name("save", recurse=True):
+            return True
+        named_props = self.widget_spec.root.get_named_props(
+            lambda x: x.meta.term.tag == "editing"
+        )
+        if len(named_props) != 1:
+            return False
+        pipelines["save"] = ["component:props", str(named_props[0].meta.term)]
+        return True

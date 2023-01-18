@@ -21,3 +21,6 @@ class ExtendWidgetSpec:
     mutations = Prop(props.widget_spec_mutations)
     named_props = MemField(lambda: list())
     named_default_props = MemField(lambda: list())
+    get_named_props = MemFun(props.widget_spec_get_named_props)
+    get_field_names = MemFun(props.widget_spec_get_field_names)
+    get_bvr_names = MemFun(props.widget_spec_get_bvr_names)

@@ -32,7 +32,10 @@ class TabsBuilder(Builder):
         }
 
     def get_spec_extension(self, places):
-        self.ilh.get_spec_extension()
+        extension = {}
+        if not self.ilh.maybe_add_items_pipeline_to_spec_extension(extension):
+            raise Exception("FormStateProviderBuilder: no items pipeline")
+        return extension
 
     def _get_tab_instance_output(self, tab_cn):
         # This returns the div that is used in the Tabs.

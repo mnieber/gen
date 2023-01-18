@@ -1,7 +1,5 @@
 from pathlib import Path
 
-import ramda as R
-
 from moonleap import get_tpl, u0
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
@@ -11,10 +9,6 @@ from .get_fields import get_fields
 
 
 class FormStateProviderBuilder(Builder):
-    def get_spec_extension(self, places):
-        if "Children" not in places:
-            return {f"Children with FormFields": "pass"}
-
     def build(self):
         from titan.react_view_pkg.pkg.build_widget_spec import build_widget_spec
 
@@ -36,13 +30,15 @@ class FormStateProviderBuilder(Builder):
         self.output.graft(children_build_output)
 
     def get_context(self):
-        widget_spec = self.widget_spec.root
+        # We expect the widget_spec to have a "save" pipeline
+        mutation, editing_bvr = get_form_mutation_or_bvr(self.widget_spec)
 
-        # We expect the component to have a pipeline that returns
-        # a mutation or an edit:behavior.
-        mutation, editing_bvr = get_form_mutation_or_bvr(widget_spec)
         fields = (
-            get_fields(mutation.api_spec, widget_spec.field_names) if mutation else []
+            get_fields(
+                mutation.api_spec, self.widget_spec.get_field_names(recurse=True)
+            )
+            if mutation
+            else []
         )
 
         item_name = self.ih.working_item_name
@@ -61,19 +57,31 @@ class FormStateProviderBuilder(Builder):
             get_initial_value=_get_initial_value,
         )
 
+    def get_spec_extension(self, places):
+        extension = {}
+
+        if "Children" not in places:
+            extension[f"Children with FormFields"] = "pass"
+
+        if not self.ih.maybe_add_item_pipeline_to_spec_extension(extension):
+            raise Exception("FormStateProviderBuilder: no item pipeline")
+
+        if not self.ih.maybe_add_save_pipeline_to_spec_extension(extension):
+            raise Exception("FormStateProviderBuilder: no save pipeline")
+
+        return extension
+
 
 def get_form_mutation_or_bvr(widget_spec):
     mutation = None
     editing_bvr = None
-    for pipeline in widget_spec.pipelines:
-        pipeline_source = pipeline.source
-        if pipeline_source.meta.term.tag == "mutation":
-            mutation = pipeline_source
-        if pipeline_source.meta.term.tag == "props":
-            prop = pipeline.resources[1]
-            if prop.typ.meta.term.tag == "editing":
-                editing_bvr = prop.typ
-                mutation = editing_bvr.mutation
+    save_pipeline = widget_spec.get_pipeline_by_name("save", recurse=True)
+    res = save_pipeline.resources[-1]
+    if res.meta.term.tag == "mutation":
+        mutation = res.typ
+    if res.meta.term.tag == "editing":
+        editing_bvr = res.typ
+        mutation = editing_bvr.mutation
     return mutation, editing_bvr
 
 

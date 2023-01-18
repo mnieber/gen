@@ -38,13 +38,22 @@ class ItemListHelper:
             else None
         )
 
-    def get_spec_extension(self):
-        pipelines = self.widget_spec.src_dict.get("__pipelines__", {})
-        # The widget_spec for the component should have a pipeline for the item
-        # that returns a data-path to the local variable that holds the item.
-        if "item" not in pipelines.keys():
-            item_name = self.working_item_name
-            return dict(
-                __pipelines__=dict(item=["local:vars", f"{item_name}+{item_name}:item"])
-            )
-        return None
+    def maybe_add_item_pipeline_to_spec_extension(self, extension):
+        pipelines = extension.setdefault("__pipelines__", {})
+        if self.widget_spec.get_pipeline_by_name("item", recurse=True):
+            return True
+        item_name = self.working_item_name
+        pipelines["item"] = ["local:vars", f"{item_name}+{item_name}:item"]
+        return True
+
+    def maybe_add_items_pipeline_to_spec_extension(self, extension):
+        pipelines = extension.setdefault("__pipelines__", {})
+        if self.widget_spec.get_pipeline_by_name("items", recurse=True):
+            return True
+        named_props = self.widget_spec.root.get_named_props(
+            lambda x: x.meta.term.tag == "item~list"
+        )
+        if len(named_props) != 1:
+            return False
+        pipelines["items"] = ["component:props", str(named_props[0].meta.term)]
+        return True

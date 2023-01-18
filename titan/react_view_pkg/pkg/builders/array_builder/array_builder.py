@@ -30,7 +30,10 @@ class ArrayBuilder(Builder):
         return const_name
 
     def get_spec_extension(self, places):
-        self.ilh.get_spec_extension()
+        extension = {}
+        if not self.ilh.maybe_add_items_pipeline_to_spec_extension(extension):
+            raise Exception("FormStateProviderBuilder: no items pipeline")
+        return extension
 
 
 def _get_child_widget_output(widget_spec, item_name):

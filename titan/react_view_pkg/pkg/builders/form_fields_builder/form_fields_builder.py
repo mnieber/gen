@@ -34,11 +34,17 @@ class FormFieldsBuilder(Builder):
         add_tpl_to_builder(tpl, self)
 
     def get_context(self):
-        widget_spec = self.widget_spec.root
         item_name = self.ih.working_item_name
-        mutation, editing_bvr = get_form_mutation_or_bvr(widget_spec)
+
+        # We expect the widget_spec to have a "save" pipeline
+        mutation, editing_bvr = get_form_mutation_or_bvr(self.widget_spec)
+
         fields = (
-            get_fields(mutation.api_spec, widget_spec.field_names) if mutation else []
+            get_fields(
+                mutation.api_spec, self.widget_spec.get_field_names(recurse=True)
+            )
+            if mutation
+            else []
         )
 
         return dict(

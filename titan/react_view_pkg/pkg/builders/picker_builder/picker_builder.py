@@ -39,4 +39,7 @@ class PickerBuilder(Builder):
         self.output.set_flags(["utils/ValuePicker"])
 
     def get_spec_extension(self, places):
-        self.ilh.get_spec_extension()
+        extension = {}
+        if not self.ilh.maybe_add_items_pipeline_to_spec_extension(extension):
+            raise Exception("FormStateProviderBuilder: no items pipeline")
+        return extension

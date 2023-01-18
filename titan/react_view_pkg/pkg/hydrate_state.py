@@ -34,8 +34,8 @@ def _create_container(state, container_term_str, container_data):
     if not container.named_item_list:
         raise Exception(f"Container should have an item list: {container_data}")
 
-    for bvr_name in _get_state_bvr_names(container_data):
-        bvr_term_str = f"{container.item.item_name}:{bvr_name}"
+    for kebab_bvr_name in _get_state_kebab_bvr_names(container_data):
+        bvr_term_str = f"{container.item.item_name}:{kebab_bvr_name}"
         bvr_term = word_to_term(bvr_term_str)
         bvr = create_resource(state.meta.block, bvr_term)
         container.bvrs.append(bvr)
@@ -43,13 +43,13 @@ def _create_container(state, container_term_str, container_data):
     return container
 
 
-def _get_state_bvr_names(container_data):
-    bvr_names = container_data.get("__bvrs__", [])
-    if "selection" in bvr_names and "highlight" not in bvr_names:
-        bvr_names.append("highlight")
-    if "drag-and-drop" in bvr_names and "insertion" not in bvr_names:
-        bvr_names.append("insertion")
-    return bvr_names
+def _get_state_kebab_bvr_names(container_data):
+    kebab_bvr_names = container_data.get("__bvrs__", [])
+    if "selection" in kebab_bvr_names and "highlight" not in kebab_bvr_names:
+        kebab_bvr_names.append("highlight")
+    if "drag-and-drop" in kebab_bvr_names and "insertion" not in kebab_bvr_names:
+        kebab_bvr_names.append("insertion")
+    return kebab_bvr_names
 
 
 def _check_name(name):

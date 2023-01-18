@@ -10,9 +10,6 @@ from .spec_ext import spec_ext
 
 
 class ListViewBuilder(Builder):
-    def get_spec_extension(self, places):
-        return spec_ext(self, places)
-
     def build(self):
         self.bvrs_helper = BvrsHelper(self.widget_spec, self.ilh.working_item_name)
         self._add_default_props()
@@ -49,3 +46,11 @@ class ListViewBuilder(Builder):
             child_widget_spec.div.key = key
             append_uniq(child_widget_spec.div.attrs, tpl_lvi_props.get_section("props"))
             return build_widget_spec(child_widget_spec)
+
+    def get_spec_extension(self, places):
+        extension = spec_ext(self, places)
+
+        if not self.ilh.maybe_add_items_pipeline_to_spec_extension(extension):
+            raise Exception("FormStateProviderBuilder: no items pipeline")
+
+        return extension
