@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from moonleap import Resource, named
+from moonleap import named
 from titan.react_pkg.component.resources import Component
 from titan.react_view_pkg.behavior import Behavior
 from titan.types_pkg.itemlist import ItemList
@@ -12,7 +12,7 @@ class State(Component):
 
 
 @dataclass
-class Container(Resource):
+class Container:
     name: str
     bvrs: list[Behavior] = field(default_factory=list)
     named_item_list: named(ItemList) = None
@@ -57,5 +57,11 @@ class Container(Resource):
     @property
     def order_items_mutation(self):
         if bvr := self.get_bvr("insertion"):
+            return bvr.mutation
+        return None
+
+    @property
+    def save_item_mutation(self):
+        if bvr := self.get_bvr("editing"):
             return bvr.mutation
         return None

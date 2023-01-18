@@ -23,6 +23,7 @@ import { flags } from 'src/app/flags';
 import { useUpdateStateReaction } from 'src/frames/hooks/useUpdateStateReaction';
 import { lookUp, getIds } from 'src/utils/ids';
 import { log } from 'src/utils/logging';
+import { ObjT } from 'src/utils/types';
 {% end_section %}
 
 
@@ -37,6 +38,10 @@ import { log } from 'src/utils/logging';
         return Promise.all(R.map(                                                                               {% else %}
           (x: string) => {{ d.deleteMyCtrItem }}.mutateAsync({ {{ d.myCtrItemId }}: x }),
           ids));                                                                                                {% endif %}
+      },                                                                                                        {% endif %}{% endwith %}
+      saveContainerItem: (values: ObjT) => {                                                                    {% with d = save_item_data(container) %}{% if d.saves_item %}
+        // TODO: convert from values to containerItem form
+        return {{ d.saveMyCtrItem }}.mutateAsync(values);
       },                                                                                                        {% endif %}{% endwith %}
       saveContainerItemOrdering: (containerItems: ContainerItemT[]) => {                                        {% with d = order_items_data(container) %}{% if d.orders_items %}
         return {{ d.orderMyCtrItems }}.mutateAsync({

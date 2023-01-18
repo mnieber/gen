@@ -9,6 +9,7 @@ import * as Skandha from 'skandha';
 import { registerCtr } from 'skandha-mobx';
 import { MyItemT } from 'src/api/types/MyItemT';                                                        {% !! container in __.containers %}
 import { getIds } from 'src/utils/ids';
+import { ObjT } from 'src/utils/types';
 import * as Facets from 'skandha-facets';
 import { Deletion, DeletionCbs } from 'skandha-facets/Deletion';                                        {% ?? __.import_bvr("deletion") %}
 import { DragAndDrop } from 'skandha-facets/DragAndDrop';                                               {% ?? __.import_bvr("dragAndDrop") %}
@@ -21,6 +22,7 @@ import { initMyContainer, MyItemsData } from './myItems';                       
 
 export type PropsT = {
   deleteMyItems: (ids: string[]) => Promise<any>;                                                       {% for container in __.containers %}{% ?? container.get_bvr("deletion") %}
+  saveMyItem: (values: ObjT) => Promise<any>;                                                           {% ?? container.get_bvr("editing") %}
   saveMyItemOrdering: (myItems: MyItemT[]) => Promise<any>;                                             {% ?? container.get_bvr("dragAndDrop") %}{% endfor %}
 };
 

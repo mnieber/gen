@@ -8,6 +8,7 @@ from .get_container_data import (
     delete_items_data,
     get_container_inputs,
     order_items_data,
+    save_item_data,
 )
 from .get_return_value import get_return_value
 
@@ -34,6 +35,7 @@ class StateProviderBuilder(Builder):
             more_type_specs_to_import=_more_type_specs_to_import(mutations),
             delete_items_data=delete_items_data,
             order_items_data=order_items_data,
+            save_item_data=save_item_data,
             get_container_inputs=get_container_inputs,
             get_return_value=lambda data, hint=None: get_return_value(
                 state_provider, containers, data, hint
@@ -53,6 +55,8 @@ def _get_mutations(widget_spec, state):
             append_uniq(mutations, delete_items_mutation)
         if delete_item_mutation := container.delete_item_mutation:
             append_uniq(mutations, delete_item_mutation)
+        if save_item_mutation := container.save_item_mutation:
+            append_uniq(mutations, save_item_mutation)
         if order_items_mutation := container.order_items_mutation:
             append_uniq(mutations, order_items_mutation)
     return mutations

@@ -1,7 +1,6 @@
-from titan.types_pkg.typeregistry import get_type_reg
-
 from moonleap import u0
 from moonleap.utils.inflect import plural
+from titan.types_pkg.typeregistry import get_type_reg
 
 
 def delete_items_data(container):
@@ -47,6 +46,14 @@ def order_items_data(container):
                 data["orderMyCtrItems"] = mutation.name
                 data["myCtrItems"] = plural(container.item.item_name)
                 data["myCtrItemIds"] = ids_field_name
+    return data
+
+
+def save_item_data(container):
+    mutation = container.save_item_mutation
+    saves_item = container.get_bvr("editing") and mutation
+    data = dict(saves_item=saves_item)
+    data["saveMyCtrItem"] = mutation.name
     return data
 
 
