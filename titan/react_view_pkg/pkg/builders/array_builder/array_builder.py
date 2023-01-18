@@ -29,8 +29,8 @@ class ArrayBuilder(Builder):
             raise Exception("ArrayBuilder requires a widget name")
         return const_name
 
-    def update_widget_spec(self):
-        self.ilh.update_widget_spec()
+    def get_spec_extension(self, places):
+        self.ilh.get_spec_extension()
 
 
 def _get_child_widget_output(widget_spec, item_name):
