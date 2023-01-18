@@ -1,6 +1,5 @@
 from moonleap import kebab_to_camel
 from titan.react_view_pkg.pkg.get_data_path import get_data_path
-from titan.react_view_pkg.pkg.get_named_data_term import get_named_item_list_pipeline
 
 
 class ItemListHelper:
@@ -26,7 +25,7 @@ class ItemListHelper:
 
     def _get_data(self):
         self._has_data = True
-        if pipeline := get_named_item_list_pipeline(self.widget_spec):
+        if pipeline := self.widget_spec.get_pipeline_by_name("items", recurse=True):
             self._named_item_list = pipeline.resources[-1]
             self._working_item_name = kebab_to_camel(
                 self._named_item_list.meta.term.data

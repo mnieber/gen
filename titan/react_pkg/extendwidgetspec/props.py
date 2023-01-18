@@ -68,10 +68,13 @@ def _get_pipeline(widget_spec, obj):
         raise
 
 
-def widget_spec_get_pipeline_by_name(widget_spec, name):
-    for pipeline in widget_spec.pipelines:
-        if pipeline.name == name:
-            return pipeline
+def widget_spec_get_pipeline_by_name(widget_spec, name, recurse=False):
+    ws = widget_spec
+    while ws:
+        for pipeline in ws.pipelines:
+            if pipeline.name == name:
+                return pipeline
+        ws = ws.parent if recurse else None
     return None
 
 

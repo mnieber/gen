@@ -1,5 +1,6 @@
 {% magic_with mutation.name as postMyMutation %}
 {% magic_with editing_bvr.ts_var as myEditingBvr %}
+{% magic_with item_name as myItem %}
 
 {% section imports %}
 import * as R from 'ramda';
@@ -29,15 +30,15 @@ import { usePostMyMutation } from 'src/api/mutations';              {% ?? mutati
 
 
 {% section preamble_hooks %}
-  const postMyMutation = props.myEditingBvr.save;                                                 {% if editing_bvr %}
-  const postMyMutation = usePostMyMutation().mutateAsync;                                         {% elif mutation %}
-  {{ "" }}                                                                                        {% endif %}
+  const postMyMutation = props.myEditingBvr.save;                                                       {% if editing_bvr %}
+  const postMyMutation = usePostMyMutation().mutateAsync;                                               {% elif mutation %}
+  {{ "" }}                                                                                              {% endif %}
 {% end_section %}
 
 
 {% section preamble %}
     const initialValues = {
-      '{{ name }}': {{ get_initial_value(field_spec) }},                                                {% !! name, field_spec in fields %}
+      '{{ name }}': props.myItem.{{ field_spec.name}} ?? {{ get_initial_value(field_spec) }},           {% !! name, field_spec in fields|sort(attribute=0) %}
     };
     const initialErrors = {};
     const handleValidate = ({values, setError} : HandleValidateArgsT) => {
@@ -57,5 +58,6 @@ import { usePostMyMutation } from 'src/api/mutations';              {% ?? mutati
     {{ ""}}
 {% end_section %}
 
-
+{% end_magic_with %}
+{% end_magic_with %}
 {% end_magic_with %}
