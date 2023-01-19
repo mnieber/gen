@@ -6,14 +6,15 @@ from titan.react_view_pkg.widgetregistry import get_widget_reg
 
 
 def build_component_widget_spec(component):
-    widget_specs = list(get_widget_reg().widget_specs())
+    widget_specs_memo = list(get_widget_reg().widget_specs())
+
     component.build_output = build_widget_spec(component.widget_spec)
     get_root_resource().set_flags(component.build_output.flags)
-    new_widget_specs = [
-        x for x in get_widget_reg().widget_specs() if x not in widget_specs
-    ]
 
     forwards = []
+    new_widget_specs = [
+        x for x in get_widget_reg().widget_specs() if x not in widget_specs_memo
+    ]
     for widget_spec in new_widget_specs:
         forwards += create_forwards_for_widget_spec(
             component.module.react_app, widget_spec

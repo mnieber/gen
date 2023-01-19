@@ -41,5 +41,5 @@ class PickerBuilder(Builder):
     def get_spec_extension(self, places):
         extension = {}
         if not self.ilh.maybe_add_items_pipeline_to_spec_extension(extension):
-            raise Exception("FormStateProviderBuilder: no items pipeline")
+            raise Exception("PickerBuilder: no items pipeline")
         return extension

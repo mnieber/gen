@@ -7,7 +7,6 @@ from titan.widgetspec.load_widget_specs.widget_spec_parser import WidgetSpecPars
 
 
 def build_widget_spec(widget_spec) -> BuilderOutput:
-    x = widget_spec.widget_name, widget_spec.is_component_def
     result = BuilderOutput()
     builders = get_builders(widget_spec)
     assert builders
