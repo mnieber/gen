@@ -13,7 +13,6 @@ from .spec_ext import spec_ext
 class ListViewBuilder(Builder):
     def build(self):
         self.bvrs_helper = BvrsHelper(self.widget_spec, self.ilh.working_item_name)
-        self.output.has_update_url = self.widget_spec.values.get("updateUrl")
         self._add_default_props()
         self._add_lines()
 
@@ -25,7 +24,7 @@ class ListViewBuilder(Builder):
             **self.bvrs_helper.bvrs_context(),
             "__item_name": self.ilh.working_item_name,
             "__items_expr": self.ilh.item_list_data_path(),
-            "update_url": self.output.has_update_url,
+            "update_url": self.widget_spec.values.get("updateUrl"),
         }
 
     def _add_lines(self):
