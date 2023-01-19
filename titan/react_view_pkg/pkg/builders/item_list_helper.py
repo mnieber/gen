@@ -1,5 +1,6 @@
 from moonleap import kebab_to_camel
 from moonleap.blocks.term.__init__ import word_to_term
+from titan.react_view_pkg.pkg.builders.item_helper import get_named_prop_terms
 
 
 class ItemListHelper:
@@ -28,12 +29,11 @@ class ItemListHelper:
     def maybe_add_item_pipeline_to_spec_extension(self, source_term_str, extension):
         pipelines = extension.setdefault("__pipelines__", {})
 
-        if not self.widget_spec.get_pipeline_by_name("item", recurse=True):
+        if not self.widget_spec.get_pipeline_data("item", recurse=True):
             item_name = self.working_item_name
             if not item_name:
-                if named_prop := self._get_named_prop():
-                    item_name = named_prop.typ.item.item_name
-
+                if named_prop_term := self._get_named_item_list_prop_term():
+                    item_name = named_prop_term.data
             if not item_name:
                 return False
 
@@ -43,17 +43,17 @@ class ItemListHelper:
 
     def maybe_add_items_pipeline_to_spec_extension(self, extension):
         pipelines = extension.setdefault("__pipelines__", {})
-        if not self.widget_spec.get_pipeline_by_name("items", recurse=True):
-            if named_prop := self._get_named_prop():
-                pipelines["items"] = ["component:props", str(named_prop.meta.term)]
+        if not self.widget_spec.get_pipeline_data("items", recurse=True):
+            if named_prop_term := self._get_named_item_list_prop_term():
+                pipelines["items"] = ["component:props", str(named_prop_term)]
             else:
                 return False
         return True
 
-    def _get_named_prop(self):
-        named_props = self.widget_spec.root.get_named_props(
-            lambda x: x.meta.term.tag == "item~list"
+    def _get_named_item_list_prop_term(self):
+        named_prop_terms = get_named_prop_terms(
+            self.widget_spec.root, lambda term: term.tag == "item~list"
         )
-        if len(named_props) != 1:
+        if len(named_prop_terms) != 1:
             return None
-        return named_props[0]
+        return named_prop_terms[0]

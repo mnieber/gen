@@ -1,11 +1,12 @@
 import typing as T
-import uuid
 from dataclasses import dataclass, field
+from pprint import pprint as pp
 
 import ramda as R
 
 from moonleap import append_uniq
 from moonleap.blocks.term import match_term_to_pattern
+from moonleap.utils.get_id import get_id
 from titan.widgetspec.create_widget_class_name import create_widget_class_name
 from titan.widgetspec.div import Div
 from titan.widgetspec.widget_spec_memo import WidgetSpecMemoContext
@@ -21,7 +22,7 @@ class WidgetSpec:
     place: T.Optional[str] = None
     place_values: T.Dict[str, str] = field(default_factory=dict)
     values: T.Dict[str, str] = field(default_factory=dict)
-    id: str = field(default_factory=lambda: uuid.uuid4().hex)
+    id: str = field(default_factory=get_id)
     parent: T.Optional["WidgetSpec"] = field(repr=False, default=None)
     # This is the dict from which the widget_spec was created
     src_dict: T.Dict[str, str] = field(default_factory=dict)
@@ -34,6 +35,11 @@ class WidgetSpec:
 
     # Private
     _widget_class_name: str = ""
+
+    def add_child_widget_spec(self, widget_spec):
+        if [x for x in self.child_widget_specs if x.id == widget_spec.id]:
+            raise Exception(f"Duplicate widget_spec {widget_spec.id}")
+        self.child_widget_specs.append(widget_spec)
 
     @property
     def is_component(self):
@@ -118,16 +124,6 @@ class WidgetSpec:
             return "'Moonleap Todo'"
         return pipeline.maybe_expression(named_item_or_item_list)
 
-    def get_named_props(self, predicate):
-        result = []
-        for named_prop in self.named_props:
-            if predicate(named_prop):
-                append_uniq(result, named_prop)
-        for named_default_prop in self.named_default_props:
-            if predicate(named_default_prop):
-                append_uniq(result, named_default_prop)
-        return result
-
     @property
     def queries(self):
         result = []
@@ -165,3 +161,7 @@ class WidgetSpec:
         except Exception as e:
             print(f"\nIn widget_spec {self}")
             raise
+
+    @property
+    def debug(self):
+        pp(self.src_dict)

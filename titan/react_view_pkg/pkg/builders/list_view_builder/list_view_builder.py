@@ -63,5 +63,8 @@ class ListViewBuilder(Builder):
             or extension["__pipelines__"]["item"]
         )
         named_item_term_str = pipeline_data[-1]
-        merge_into_config(extension, spec_ext(self, places, named_item_term_str))
+        merge_into_config(
+            extension,
+            spec_ext(self, places, named_item_term_str, self.widget_spec.bvr_names),
+        )
         return extension

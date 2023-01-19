@@ -8,7 +8,7 @@ from titan.react_view_pkg.pkg.builders.bvrs_helper import BvrsHelper
 
 class LviButtonsBuilder(Builder):
     def build(self):
-        self.bvrs_helper = BvrsHelper(self.widget_spec, self.ilh.working_item_name)
+        self.bvrs_helper = BvrsHelper(self.widget_spec, self.ih.working_item_name)
         context = self._get_context()
         tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)
         add_tpl_to_builder(tpl, self)

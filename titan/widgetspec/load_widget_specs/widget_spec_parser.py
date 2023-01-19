@@ -24,9 +24,9 @@ class WidgetSpecParser:
             )
 
             # Update parent/child relationships
-            if parent_widget_spec:
+            if parent_widget_spec and not widget_spec.is_component_def:
                 widget_spec.parent = parent_widget_spec
-                parent_widget_spec.child_widget_specs.append(widget_spec)
+                parent_widget_spec.add_child_widget_spec(widget_spec)
 
             self._check_top_level_constraints(is_top_level, widget_spec)
 

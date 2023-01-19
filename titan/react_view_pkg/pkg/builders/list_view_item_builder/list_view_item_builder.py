@@ -20,6 +20,14 @@ class ListViewItemBuilder(Builder):
         self.widget_spec.div.append_attrs([tpl.get_section("attrs")])
         self.widget_spec.div.append_styles([tpl.get_section("styles")])
 
+    def get_spec_extension(self, places):
+        extension = {}
+        if not self.ih.maybe_add_item_pipeline_to_spec_extension(
+            "component:props", extension
+        ):
+            raise Exception("FormStateProviderBuilder: no item pipeline")
+        return extension
+
     def _get_context(self):
         return {
             **self.bvrs_helper.bvrs_context(),
