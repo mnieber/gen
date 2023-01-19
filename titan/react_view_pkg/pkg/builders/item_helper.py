@@ -3,24 +3,22 @@ class ItemHelper:
         self.widget_spec = widget_spec
         self._named_item = None
         self._working_item_name = None
-        self._has_data = False
 
     @property
     def named_item(self):
-        if not self._has_data:
+        if not self._working_item_name:
             self._get_data()
 
         return self._named_item
 
     @property
     def working_item_name(self):
-        if not self._has_data:
+        if not self._working_item_name:
             self._get_data()
 
         return self._working_item_name
 
     def _get_data(self):
-        self._has_data = True
         if pipeline := self.widget_spec.get_pipeline_by_name("item", recurse=True):
             self._named_item = pipeline.resources[-1]
             self._working_item_name = self._named_item.meta.term.data

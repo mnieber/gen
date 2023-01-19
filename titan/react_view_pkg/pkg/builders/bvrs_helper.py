@@ -3,6 +3,7 @@ from moonleap.utils.inflect import plural
 
 class BvrsHelper:
     def __init__(self, widget_spec, item_name):
+        assert item_name
         self.widget_spec = widget_spec
         self.bvrs_items_name = plural(item_name)
 

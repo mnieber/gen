@@ -20,7 +20,7 @@ def build_component_widget_spec(module, component):
     # Note that this rule has low priority so that it runs after
     # all the component information - which is used in the build function -
     # has been collected.
-    props.build_component_widget_spec(component)
+    return props.build_component_widget_spec(component)
 
 
 @rule("component")

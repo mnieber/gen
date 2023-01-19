@@ -48,9 +48,13 @@ class ListViewBuilder(Builder):
             return build_widget_spec(child_widget_spec)
 
     def get_spec_extension(self, places):
+        __import__("pudb").set_trace()  # zz
         extension = spec_ext(self, places)
 
         if not self.ilh.maybe_add_items_pipeline_to_spec_extension(extension):
             raise Exception("FormStateProviderBuilder: no items pipeline")
+
+        if not self.ilh.maybe_add_item_pipeline_to_spec_extension(extension):
+            raise Exception("FormStateProviderBuilder: no item pipeline")
 
         return extension
