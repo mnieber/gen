@@ -10,6 +10,7 @@ from titan.react_view_pkg.pkg.builders.bvrs_helper import BvrsHelper
 class PickerBuilder(Builder):
     def build(self):
         self.bvrs_helper = self._get_bvrs_helper()
+        self.output.has_update_url = self.widget_spec.values.get("updateUrl")
         self._add_packages()
         self._add_default_props()
         self._add_lines()
@@ -25,7 +26,7 @@ class PickerBuilder(Builder):
     def _add_lines(self):
         context = {
             **self.bvrs_helper.bvrs_context(),
-            "update_url": self.widget_spec.values.get("updateUrl"),
+            "update_url": self.output.has_update_url,
             "item_name": self.ilh.working_item_name,
         }
 

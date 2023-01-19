@@ -69,7 +69,7 @@ class StepperBuilder(Builder):
         child_widget_spec = self.widget_spec.get_place("Child")
         assert child_widget_spec
 
-        with child_widget_spec.memo():
+        with child_widget_spec.memo(["div"]):
             child_widget_spec.div.key = f"{self.item_name}.id"
             if self.use_uniform_height:
                 child_widget_spec.div.append_styles(

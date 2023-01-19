@@ -2,12 +2,14 @@ from moonleap import create_forward, get_root_resource
 from moonleap.blocks.term import match_term_to_pattern, word_to_term
 from moonleap.blocks.verbs import has
 from titan.react_view_pkg.pkg.build_widget_spec import build_widget_spec
+from titan.react_view_pkg.pkg.preprocess_widget_spec import preprocess_widget_spec
 from titan.react_view_pkg.widgetregistry import get_widget_reg
 
 
 def build_component_widget_spec(component):
     widget_specs_memo = list(get_widget_reg().widget_specs())
 
+    preprocess_widget_spec(component.widget_spec)
     component.build_output = build_widget_spec(component.widget_spec)
     get_root_resource().set_flags(component.build_output.flags)
 

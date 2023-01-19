@@ -41,6 +41,11 @@ class WidgetSpec:
             raise Exception(f"Duplicate widget_spec {widget_spec.id}")
         self.child_widget_specs.append(widget_spec)
 
+    def remove_child_widget_spec(self, widget_spec):
+        self.child_widget_specs = [
+            x for x in self.child_widget_specs if x.id != widget_spec.id
+        ]
+
     @property
     def is_component(self):
         return self.widget_name and ":" in self.widget_name
@@ -65,7 +70,7 @@ class WidgetSpec:
     def get_place(self, place):
         return R.head(x for x in self.child_widget_specs if x.place == place)
 
-    def memo(self, fields=None):
+    def memo(self, fields):
         return WidgetSpecMemoContext(self, fields)
 
     def get_value_by_name(self, name, default=None):

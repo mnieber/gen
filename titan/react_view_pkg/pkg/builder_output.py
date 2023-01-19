@@ -22,6 +22,8 @@ class BuilderOutput:
     has_children_prop: bool = False
     # True if the widget has no scss file
     no_scss: bool = False
+    # True if the widget uses an update-url-function
+    has_update_url: bool = False
 
     def merge(self, rhs: "BuilderOutput"):
         self.preamble_hooks_lines += rhs.preamble_hooks_lines
@@ -30,6 +32,7 @@ class BuilderOutput:
         self.scss_lines += rhs.scss_lines
         self.has_children_prop = self.has_children_prop or rhs.has_children_prop
         self.no_scss = self.no_scss or rhs.no_scss
+        self.has_update_url = self.has_update_url or rhs.has_update_url
         extend_uniq(self.imports_lines, rhs.imports_lines)
         extend_uniq(self.props_lines, rhs.props_lines)
         extend_uniq(self.add_props_lines, rhs.add_props_lines)

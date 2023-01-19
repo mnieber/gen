@@ -43,7 +43,7 @@ class TabsBuilder(Builder):
         from titan.react_view_pkg.pkg.build_widget_spec import build_widget_spec
 
         child_widget_spec = self.widget_spec.get_place("Tab")
-        with child_widget_spec.memo():
+        with child_widget_spec.memo(["div"]):
             item_name = self.ilh.working_item_name
             child_widget_spec.div.key = f"{item_name}.id"
             if self.use_uniform_height:

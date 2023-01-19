@@ -13,6 +13,7 @@ from .spec_ext import spec_ext
 class ListViewBuilder(Builder):
     def build(self):
         self.bvrs_helper = BvrsHelper(self.widget_spec, self.ilh.working_item_name)
+        self.output.has_update_url = self.widget_spec.values.get("updateUrl")
         self._add_default_props()
         self._add_lines()
 
@@ -24,7 +25,7 @@ class ListViewBuilder(Builder):
             **self.bvrs_helper.bvrs_context(),
             "__item_name": self.ilh.working_item_name,
             "__items_expr": self.ilh.item_list_data_path(),
-            "update_url": self.widget_spec.values.get("updateUrl"),
+            "update_url": self.output.has_update_url,
         }
 
     def _add_lines(self):
@@ -42,9 +43,8 @@ class ListViewBuilder(Builder):
         tpl_lvi_props = get_tpl(Path(__file__).parent / "tpl_lvi_props.tsx.j2", context)
 
         child_widget_spec = self.widget_spec.get_place("ListViewItem")
-        with child_widget_spec.memo():
-            key = f"{self.ilh.working_item_name}.id"
-            child_widget_spec.div.key = key
+        with child_widget_spec.memo(["div"]):
+            child_widget_spec.div.key = f"{self.ilh.working_item_name}.id"
             append_uniq(child_widget_spec.div.attrs, tpl_lvi_props.get_section("props"))
             return build_widget_spec(child_widget_spec)
 
