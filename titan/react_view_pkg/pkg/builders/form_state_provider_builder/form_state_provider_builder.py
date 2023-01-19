@@ -63,7 +63,9 @@ class FormStateProviderBuilder(Builder):
         if "Children" not in places:
             extension[f"Children with FormFields"] = "pass"
 
-        if not self.ih.maybe_add_item_pipeline_to_spec_extension(extension):
+        if not self.ih.maybe_add_item_pipeline_to_spec_extension(
+            "component:props", extension
+        ):
             raise Exception("FormStateProviderBuilder: no item pipeline")
 
         if not self.ih.maybe_add_save_pipeline_to_spec_extension(extension):

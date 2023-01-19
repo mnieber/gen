@@ -51,10 +51,12 @@ class ListViewBuilder(Builder):
     def get_spec_extension(self, places):
         extension = {}
         if not self.ilh.maybe_add_items_pipeline_to_spec_extension(extension):
-            raise Exception("FormStateProviderBuilder: no items pipeline")
+            raise Exception("ListViewBuilder: no items pipeline")
 
-        if not self.ilh.maybe_add_item_pipeline_to_spec_extension(extension):
-            raise Exception("FormStateProviderBuilder: no item pipeline")
+        if not self.ilh.maybe_add_item_pipeline_to_spec_extension(
+            "component:props", extension
+        ):
+            raise Exception("ListViewBuilder: no item pipeline")
 
         pipeline_data = (
             self.widget_spec.get_pipeline_data("item", recurse=True)

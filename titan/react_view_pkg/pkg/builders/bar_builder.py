@@ -82,6 +82,8 @@ class BarBuilder(Builder):
                 self.output.add(
                     imports=["import { rowSkewer } from 'src/frames/components';"]
                 )
+            if not self.widget_spec.is_component_def:
+                self.output.add(lines=["<></>{/* Bar */}<></>"])
             self._add_div_open()
             self._add_child_widgets(self._widgets)
             self._add_div_close()

@@ -25,7 +25,7 @@ class ItemListHelper:
             return pipeline.data_path(obj=named_item_list)
         return None
 
-    def maybe_add_item_pipeline_to_spec_extension(self, extension):
+    def maybe_add_item_pipeline_to_spec_extension(self, source_term_str, extension):
         pipelines = extension.setdefault("__pipelines__", {})
 
         if not self.widget_spec.get_pipeline_by_name("item", recurse=True):
@@ -37,7 +37,7 @@ class ItemListHelper:
             if not item_name:
                 return False
 
-            pipelines["item"] = ["local:vars", f"{item_name}+{item_name}:item"]
+            pipelines["item"] = [source_term_str, f"{item_name}+{item_name}:item"]
 
         return True
 

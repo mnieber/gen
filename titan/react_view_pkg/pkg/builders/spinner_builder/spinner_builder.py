@@ -22,3 +22,18 @@ class SpinnerBuilder(Builder):
 
         tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)
         add_tpl_to_builder(tpl, self)
+
+    def get_spec_extension(self, places):
+        extension = {}
+
+        has_item = self.widget_spec.get_pipeline_data("item", recurse=True)
+        has_items = self.widget_spec.get_pipeline_data("items", recurse=True)
+
+        if not has_item and not has_items:
+            if not self.ilh.maybe_add_items_pipeline_to_spec_extension(extension):
+                if not self.ih.maybe_add_item_pipeline_to_spec_extension(
+                    "component:props", extension
+                ):
+                    raise Exception("SpinnerBuilder: no item or items pipeline")
+
+        return extension
