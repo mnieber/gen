@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 
 import ramda as R
 
+from moonleap import append_uniq
+from moonleap.blocks.term import match_term_to_pattern
 from titan.widgetspec.create_widget_class_name import create_widget_class_name
 from titan.widgetspec.div import Div
 from titan.widgetspec.widget_spec_memo import WidgetSpecMemoContext
@@ -23,6 +25,12 @@ class WidgetSpec:
     parent: T.Optional["WidgetSpec"] = field(repr=False, default=None)
     # This is the dict from which the widget_spec was created
     src_dict: T.Dict[str, str] = field(default_factory=dict)
+
+    # The following fields are None by default because they should only
+    # exist after the call to 'hydrate'
+    pipelines: list = field(default_factory=list)
+    named_props: list = field(default_factory=list)
+    named_default_props: list = field(default_factory=list)
 
     # Private
     _widget_class_name: str = ""
@@ -69,3 +77,91 @@ class WidgetSpec:
         while ws.parent and not ws.is_component_def:
             ws = ws.parent
         return ws
+
+    def get_pipeline_data(self, name, recurse=False):
+        ws = self
+        while ws:
+            for pipeline_name, pipeline_data in ws.src_dict.get(
+                "__pipelines__", {}
+            ).items():
+                if pipeline_name == name:
+                    return pipeline_data
+            ws = ws.parent if recurse else None
+        return None
+
+    def get_pipeline_by_name(self, name, recurse=False):
+        ws = self
+        while ws:
+            for pipeline in ws.pipelines:
+                if pipeline.name == name:
+                    return pipeline
+            ws = ws.parent if recurse else None
+        return None
+
+    def get_data_path(self, obj, recurse=False):
+        ws = self
+        data_path = None
+        while ws:
+            pipeline, data_path = ws._get_pipeline(obj)
+            if not data_path:
+                for named_res_set in (ws.named_props, ws.named_default_props):
+                    for named_prop in named_res_set:
+                        t = obj.meta.term
+                        if match_term_to_pattern(named_prop.meta.term, t):
+                            return f"props.{named_prop.typ.ts_var}"
+            ws = ws.parent if recurse else None
+        return data_path
+
+    def maybe_expression(self, named_item_or_item_list):
+        pipeline, data_path = self._get_pipeline(named_item_or_item_list)
+        if not pipeline:
+            return "'Moonleap Todo'"
+        return pipeline.maybe_expression(named_item_or_item_list)
+
+    def get_named_props(self, predicate):
+        result = []
+        for named_prop in self.named_props:
+            if predicate(named_prop):
+                append_uniq(result, named_prop)
+        for named_default_prop in self.named_default_props:
+            if predicate(named_default_prop):
+                append_uniq(result, named_default_prop)
+        return result
+
+    @property
+    def queries(self):
+        result = []
+
+        for pipeline in self.pipelines:
+            pipeline_source = pipeline.source
+            if pipeline_source.meta.term.tag == "query":
+                append_uniq(result, pipeline_source)
+
+        return result
+
+    @property
+    def mutations(self):
+        result = []
+
+        for pipeline in self.pipelines:
+            pipeline_source = pipeline.source
+            if pipeline_source.meta.term.tag == "mutation":
+                append_uniq(result, pipeline_source)
+
+        return result
+
+    def _get_pipeline(self, obj):
+        try:
+            results = []
+            for pipeline in self.pipelines:
+                if data_path := pipeline.data_path(obj):
+                    results.append((pipeline, data_path))
+
+            if len(results) > 1:
+                raise Exception(
+                    "More than one data path found for " + f"{obj}: {results}"
+                )
+            return results[0] if results else (None, None)
+        except Exception as e:
+            print(f"\nIn widget_spec {self}")
+            raise

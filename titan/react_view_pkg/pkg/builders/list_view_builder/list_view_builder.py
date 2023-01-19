@@ -2,6 +2,7 @@ from pathlib import Path
 
 from moonleap.render.render_template.tpl import get_tpl
 from moonleap.utils.fp import append_uniq, extend_uniq
+from moonleap.utils.merge_into_config import merge_into_config
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_helper import BvrsHelper
@@ -48,13 +49,17 @@ class ListViewBuilder(Builder):
             return build_widget_spec(child_widget_spec)
 
     def get_spec_extension(self, places):
-        __import__("pudb").set_trace()  # zz
-        extension = spec_ext(self, places)
-
+        extension = {}
         if not self.ilh.maybe_add_items_pipeline_to_spec_extension(extension):
             raise Exception("FormStateProviderBuilder: no items pipeline")
 
         if not self.ilh.maybe_add_item_pipeline_to_spec_extension(extension):
             raise Exception("FormStateProviderBuilder: no item pipeline")
 
+        pipeline_data = (
+            self.widget_spec.get_pipeline_data("item", recurse=True)
+            or extension["__pipelines__"]["item"]
+        )
+        named_item_term_str = pipeline_data[-1]
+        merge_into_config(extension, spec_ext(self, places, named_item_term_str))
         return extension

@@ -1,6 +1,5 @@
 from moonleap import append_uniq
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.react_view_pkg.pkg.get_data_path import get_data_path
 from titan.widgetspec.create_widget_class_name import get_component_name
 
 
@@ -80,7 +79,7 @@ def _get_prop_data_path(widget_spec, named_prop):
     # "widget_spec", because the widget_spec can resolve the data path from
     # the widget props, but the component builder should not do that.
 
-    data_path = get_data_path(widget_spec.parent, obj=named_prop)
+    data_path = widget_spec.parent.get_data_path(obj=named_prop, recurse=True)
     if not data_path:
         raise Exception(
             f"Could not find data path for {named_prop} "

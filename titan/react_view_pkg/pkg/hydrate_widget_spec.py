@@ -4,13 +4,16 @@ from .create_resource import create_resource
 
 
 def hydrate_widget_spec(widget_spec):
+    widget_spec.pipelines = list()
+    widget_spec.named_props = list()
+    widget_spec.named_default_props = list()
+
     block = widget_spec.root.component.meta.block
     _create_pipelines(widget_spec, block)
     _get_props(widget_spec, block)
 
 
 def _create_pipelines(widget_spec, block):
-
     if pipeline_datas := widget_spec.src_dict.get("__pipelines__", {}):
         for pipeline_name, pipeline_data in pipeline_datas.items():
             pipeline = _create_pipeline(block, pipeline_name, pipeline_data)

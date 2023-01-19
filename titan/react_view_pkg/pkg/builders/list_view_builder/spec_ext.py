@@ -1,10 +1,9 @@
 from titan.widgetspec.get_place_dict import get_place_dict
 
 
-def spec_ext(list_view_builder, places):
+def spec_ext(list_view_builder, places, named_item_term_str):
     extension = {}
     widget_spec = list_view_builder.widget_spec
-    named_item_term_str = widget_spec.get_value_by_name("item")
     lvi_name = widget_spec.values.get("lvi-name") or _get_default_lvi_name(widget_spec)
 
     if "ListViewItem" not in places:

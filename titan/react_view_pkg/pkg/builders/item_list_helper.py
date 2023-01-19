@@ -1,19 +1,11 @@
 from moonleap import kebab_to_camel
-from titan.react_view_pkg.pkg.get_data_path import get_data_path
+from moonleap.blocks.term.__init__ import word_to_term
 
 
 class ItemListHelper:
     def __init__(self, widget_spec):
         self.widget_spec = widget_spec
-        self._named_item_list = None
         self._working_item_name = None
-
-    @property
-    def named_item_list(self):
-        if not self._working_item_name:
-            self._get_data()
-
-        return self._named_item_list
 
     @property
     def working_item_name(self):
@@ -23,18 +15,15 @@ class ItemListHelper:
         return self._working_item_name
 
     def _get_data(self):
-        if pipeline := self.widget_spec.get_pipeline_by_name("items", recurse=True):
-            self._named_item_list = pipeline.resources[-1]
-            self._working_item_name = kebab_to_camel(
-                self._named_item_list.meta.term.data
-            )
+        if pipeline_data := self.widget_spec.get_pipeline_data("items", recurse=True):
+            if term := word_to_term(pipeline_data[-1]):
+                self._working_item_name = kebab_to_camel(term.data)
 
     def item_list_data_path(self):
-        return (
-            get_data_path(self.widget_spec, obj=self.named_item_list)
-            if self.named_item_list
-            else None
-        )
+        if pipeline := self.widget_spec.get_pipeline_by_name("items", recurse=True):
+            named_item_list = pipeline.resources[-1]
+            return pipeline.data_path(obj=named_item_list)
+        return None
 
     def maybe_add_item_pipeline_to_spec_extension(self, extension):
         pipelines = extension.setdefault("__pipelines__", {})
