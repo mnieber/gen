@@ -24,7 +24,7 @@ class Block:
         self.parent_block = None
         self.child_blocks = []
         self._resource_by_term = []
-        self._relations = []
+        self._relation_tokens = []
         self.lines: T.List[Line] = []
         self._dbg_text = ""
 
@@ -39,11 +39,11 @@ class Block:
         self._scopes = scopes
 
     def has_relation(self, relation):
-        return relation in self._relations
+        return _get_token(relation) in self._relation_tokens
 
     def register_relation(self, relation):
-        if relation not in self._relations:
-            self._relations.append(relation)
+        if not self.has_relation(relation):
+            self._relation_tokens.append(_get_token(relation))
 
     def describes(self, term):
         def stem_term(term):
@@ -119,3 +119,7 @@ class Block:
 
     def __repr__(self):
         return f"Block ({self.name})"
+
+
+def _get_token(relation):
+    return (relation.subj, relation.verb, relation.obj)
