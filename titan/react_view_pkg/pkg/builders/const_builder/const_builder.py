@@ -31,5 +31,5 @@ def _get_child_widget_output(widget_spec):
     from titan.react_view_pkg.pkg.build_widget_spec import build_widget_spec
 
     child_widget_spec = widget_spec.get_place("Child")
-    with child_widget_spec.memo():
+    with child_widget_spec.memo([]):
         return build_widget_spec(child_widget_spec)

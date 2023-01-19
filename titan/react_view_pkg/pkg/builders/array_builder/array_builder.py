@@ -10,9 +10,7 @@ class ArrayBuilder(Builder):
         item_name = self.ilh.working_item_name
         const_name = self._get_const_name()
 
-        child_widget_div = self.output.graft(
-            _get_child_widget_output(self.widget_spec, item_name)
-        )
+        child_widget_div = self.output.graft(self._get_child_widget_output())
         context = {
             "const_name": const_name,
             "items_expr": self.ilh.item_list_data_path(),
@@ -35,11 +33,10 @@ class ArrayBuilder(Builder):
             raise Exception("FormStateProviderBuilder: no items pipeline")
         return extension
 
+    def _get_child_widget_output(self):
+        from titan.react_view_pkg.pkg.build_widget_spec import build_widget_spec
 
-def _get_child_widget_output(widget_spec, item_name):
-    from titan.react_view_pkg.pkg.build_widget_spec import build_widget_spec
-
-    child_widget_spec = widget_spec.get_place("Child")
-    with child_widget_spec.memo():
-        child_widget_spec.div.key = f"{item_name}.id"
-        return build_widget_spec(child_widget_spec)
+        child_widget_spec = self.widget_spec.get_place("Child")
+        with child_widget_spec.memo(["div"]):
+            child_widget_spec.div.key = f"{self.ilh.working_item_name}.id"
+            return build_widget_spec(child_widget_spec)
