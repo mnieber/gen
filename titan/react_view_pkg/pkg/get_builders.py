@@ -3,6 +3,7 @@ from titan.react_view_pkg.pkg.builders.bar_builder import BarBuilder
 from titan.react_view_pkg.pkg.builders.button_builder import ButtonBuilder
 from titan.react_view_pkg.pkg.builders.card_builder import CardBuilder
 from titan.react_view_pkg.pkg.builders.children_builder import ChildrenBuilder
+from titan.react_view_pkg.pkg.builders.col_skewer_builder import ColSkewerBuilder
 from titan.react_view_pkg.pkg.builders.component_builder import ComponentBuilder
 from titan.react_view_pkg.pkg.builders.component_def_builder import ComponentDefBuilder
 from titan.react_view_pkg.pkg.builders.const_builder.const_builder import ConstBuilder
@@ -71,6 +72,9 @@ def get_builders(widget_spec):
 
         elif widget_base_type == "Card":
             builder = CardBuilder(widget_spec)
+
+        elif widget_base_type == "ColSkewer":
+            builder = ColSkewerBuilder(widget_spec)
 
         elif widget_base_type == "Children":
             builder = ChildrenBuilder(widget_spec)

@@ -14,7 +14,7 @@ def get_widget_attrs(key, more_value_parts):
         place = parts_with[0]
         place, place_symbols = split_symbols(place)
         attrs["place"] = place
-        place_symbol_parts = split_non_empty(place_symbols, ".")
+        place_symbol_parts = split_non_empty(place_symbols, ",")
         key = parts_with[1]
     else:
         place_symbol_parts = []
@@ -28,12 +28,12 @@ def get_widget_attrs(key, more_value_parts):
 
         widget_base_types_str = parts_as[-1]
         widget_base_types_str, symbols = split_symbols(widget_base_types_str)
-        symbol_parts = split_non_empty(symbols, ".")
+        symbol_parts = split_non_empty(symbols, ",")
 
         widget_name = parts_as[0] if len(parts_as) == 2 else None
         if widget_name:
             widget_name, symbols = split_symbols(widget_name)
-            symbol_parts.extend(split_non_empty(symbols, "."))
+            symbol_parts.extend(split_non_empty(symbols, ","))
 
         if ":" in widget_base_types_str and not widget_name:
             widget_name, widget_base_types_str = widget_base_types_str, widget_name

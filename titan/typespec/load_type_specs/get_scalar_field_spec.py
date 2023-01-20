@@ -4,8 +4,8 @@ from .get_generic_field_attrs import get_generic_field_attrs
 
 
 def get_scalar_field_spec(host, key, field_spec_value):
-    field_attrs = get_generic_field_attrs(host, key, field_spec_value.split("."))
-    parts = field_spec_value.split(".")
+    field_attrs = get_generic_field_attrs(host, key, field_spec_value.split(","))
+    parts = field_spec_value.split(",")
 
     count_is = 0
     for part in parts:

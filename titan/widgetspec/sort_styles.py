@@ -34,7 +34,8 @@ def sort_styles(styles):
             if group == ["*"]:
                 result += group_styles
             else:
-                style = " ".join(group_styles)
+                sep = " " if is_quoted else ", "
+                style = sep.join(group_styles)
                 if is_quoted:
                     style = quote(style)
                 result.append(style)

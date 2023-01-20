@@ -10,7 +10,7 @@ def add_extra_model_fields(type_spec, value, fk: ForeignKey, parent_type_spec=No
         and not type_spec.get_field_spec_by_key("id")
         and not value.get("id")
     ):
-        value["id"] = "Id.primary_key.auto"
+        value["id"] = "Id,primary_key,auto"
 
     # Add an auto-field for the sortPos
     if (
@@ -27,4 +27,4 @@ def add_extra_model_fields(type_spec, value, fk: ForeignKey, parent_type_spec=No
         key = l0(parent_type_spec.type_name) + f" with {fk.var}"
         if key not in value:
             required = "is_owner" in fk.parts
-            value[key] = "pass.auto" + ("" if required else ".optional")
+            value[key] = "pass,auto" + ("" if required else ",optional")

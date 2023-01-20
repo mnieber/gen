@@ -8,7 +8,7 @@ from .get_widget_attrs import get_widget_attrs
 def create_widget_spec(key, value, module_name):
     is_dict = isinstance(value, dict)
     more_value_parts = split_non_empty(
-        _get_type_value(value) if is_dict else "" if value == "pass" else value, "."
+        _get_type_value(value) if is_dict else "" if value == "pass" else value, ","
     )
     spec = value if is_dict else {}
     widget_values, div_attrs = get_widget_attrs(key, more_value_parts)
@@ -37,4 +37,4 @@ def _get_type_value(spec):
                 raise Exception(f"__attrs__ must be a string: {value}")
             parts.append(value)
 
-    return ".".join(parts)
+    return ",".join(parts)

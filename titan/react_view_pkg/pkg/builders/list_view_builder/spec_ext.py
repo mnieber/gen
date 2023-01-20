@@ -39,7 +39,7 @@ def _lvi_component_spec(widget_spec, lvi_name, named_item_term_str, bvr_names):
         f"LviComponent with {lvi_name} as ListViewItem, Bar[p-2]": {
             "__default_props__": [named_item_term_str],
             "__bvrs__": bvr_names,
-            "__attrs__": "cnLhs=__Title.cnRhs=__Buttons",
+            "__attrs__": "cnLhs=__Title,cnRhs=__Buttons",
             **lhs_contents,
             **middle_slot,
             **rhs_contents,

@@ -18,7 +18,7 @@ class ForeignKey:
         self.related_name: T.Optional[str] = None
 
         self._process_data(
-            key, parts=value["__attrs__"].split(".") if "__attrs__" in value else []
+            key, parts=value["__attrs__"].split(",") if "__attrs__" in value else []
         )
 
     @property

@@ -19,12 +19,13 @@ class Builder:
     def __post_init__(self):
         pass
 
-    def _add_div_open(self):
+    def _add_div_open(self, also_close=False):
         self.output.add(
             lines=[
                 get_div_open(
                     self.widget_spec.div,
                     widget_class_name=self.widget_spec.widget_class_name,
+                    also_close=also_close,
                 )
             ]
         )
@@ -35,7 +36,7 @@ class Builder:
         )
 
     def _add_div_close(self):
-        self.output.add(lines=[get_div_close()])
+        self.output.add(lines=[get_div_close(self.widget_spec.div)])
 
     def build(self):
         pass

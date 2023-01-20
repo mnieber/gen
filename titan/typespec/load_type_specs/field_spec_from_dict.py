@@ -9,8 +9,8 @@ from .split_raw_key import split_raw_key
 def field_spec_from_dict(host, key, value):
     flag_is_pass = is_pass(value)
     if flag_is_pass:
-        parts = value.split(".")
-        value = {"__attrs__": ".".join(parts[1:])}
+        parts = value.split(",")
+        value = {"__attrs__": ",".join(parts[1:])}
     is_fk = isinstance(value, dict)
 
     if is_fk:
@@ -28,10 +28,10 @@ def field_spec_from_dict(host, key, value):
     else:
         new_key, symbols, value_parts = split_raw_key(key)
 
-        new_value = ".".join(value.split(".") + value_parts)
+        new_value = ",".join(value.split(",") + value_parts)
         field_spec = get_scalar_field_spec(host, new_key, new_value)
         return dict(new_key=new_key, new_value=new_value, field_spec=field_spec)
 
 
 def is_pass(value):
-    return isinstance(value, str) and value.split(".")[0] == "pass"
+    return isinstance(value, str) and value.split(",")[0] == "pass"

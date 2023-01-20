@@ -82,7 +82,7 @@ class TypeSpecParser:
 
                 # Update trace
                 if fk.parts:
-                    fk_trace["__attrs__"] = ".".join(fk.parts)
+                    fk_trace["__attrs__"] = ",".join(fk.parts)
                 trace[_trace_key(fk)] = org_value if is_pass else fk_trace
 
         if "__update__" in type_spec_dict:
