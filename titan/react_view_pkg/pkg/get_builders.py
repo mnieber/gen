@@ -14,6 +14,7 @@ from titan.react_view_pkg.pkg.builders.form_state_provider_builder.form_state_pr
     FormStateProviderBuilder,
 )
 from titan.react_view_pkg.pkg.builders.icon_builder import IconBuilder
+from titan.react_view_pkg.pkg.builders.image_builder import ImageBuilder
 from titan.react_view_pkg.pkg.builders.item_fields_builder import (
     ItemFieldBuilder,
     ItemFieldsBuilder,
@@ -112,6 +113,9 @@ def get_builders(widget_spec):
 
         elif widget_base_type == "LviButtons":
             builder = LviButtonsBuilder(widget_spec)
+
+        elif widget_base_type == "Image":
+            builder = ImageBuilder(widget_spec)
 
         elif widget_base_type == "Picker":
             builder = PickerBuilder(widget_spec)
