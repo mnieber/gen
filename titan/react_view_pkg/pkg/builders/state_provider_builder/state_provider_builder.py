@@ -15,8 +15,8 @@ from .get_return_value import get_return_value
 
 class StateProviderBuilder(Builder):
     def build(self):
-        self.output.has_children_prop = True
-        self.output.no_scss = True
+        self.widget_spec.root.add_tag("has_children_prop")
+        self.widget_spec.root.add_tag("no_scss")
 
         state_provider = self.widget_spec.component
         state = state_provider.state

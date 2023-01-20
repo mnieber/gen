@@ -1,3 +1,4 @@
+from moonleap import append_uniq
 from titan.react_view_pkg.pkg.add_child_widgets import add_child_widgets
 from titan.react_view_pkg.pkg.add_div import get_div_close, get_div_open
 from titan.react_view_pkg.pkg.builder_output import BuilderOutput
@@ -12,7 +13,7 @@ class Builder:
         self.ilh = ItemListHelper(widget_spec)
         self.ih = ItemHelper(widget_spec)
         if "Children" in widget_spec.widget_base_types:
-            self.output.has_children_prop = True
+            self.widget_spec.root.add_tag("has_children_prop")
         self.__post_init__()
 
     def __post_init__(self):

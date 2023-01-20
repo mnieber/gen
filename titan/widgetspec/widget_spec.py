@@ -26,6 +26,8 @@ class WidgetSpec:
     parent: T.Optional["WidgetSpec"] = field(repr=False, default=None)
     # This is the dict from which the widget_spec was created
     src_dict: T.Dict[str, str] = field(default_factory=dict)
+    # Tags are used to collect any kind of information use it in the root builder
+    tags: list = field(default_factory=list)
 
     # The following fields are None by default because they should only
     # exist after the call to 'hydrate'
@@ -73,13 +75,13 @@ class WidgetSpec:
     def memo(self, fields):
         return WidgetSpecMemoContext(self, fields)
 
-    def get_value_by_name(self, name, default=None):
+    def get_value_by_name(self, name, default=None, recurse=False):
         ws = self
         while ws:
             value = ws.values.get(name)
             if value:
                 return value
-            ws = ws.parent
+            ws = ws.parent if recurse else None
         return default
 
     @property
@@ -170,3 +172,9 @@ class WidgetSpec:
     @property
     def debug(self):
         pp(self.src_dict)
+
+    def add_tag(self, tag):
+        append_uniq(self.tags, tag)
+
+    def has_tag(self, tag):
+        return tag in self.tags

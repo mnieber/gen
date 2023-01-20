@@ -36,7 +36,7 @@ class ItemFieldsBuilder(Builder):
 class ItemFieldBuilder(Builder):
     def build(self):
         item_data_path = self.ih.item_data_path()
-        field_spec = self.widget_spec.get_value_by_name("field_spec")
+        field_spec = self.widget_spec.get_value_by_name("field_spec", recurse=True)
         assert field_spec
         label = f"{field_spec.name}: " if field_spec.field_type in ("boolean",) else ""
         postfix = " ? 'Yes' : 'No'" if field_spec.field_type in ("boolean",) else ""

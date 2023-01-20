@@ -9,8 +9,8 @@ def get_helpers(_):
         queries = list()
         mutations = list()
         pipelines = widget_spec.pipelines
-        has_children_prop = build.has_children_prop
-        has_scss = not build.no_scss
+        has_children_prop = widget_spec.has_tag("has_children_prop")
+        has_scss = not widget_spec.has_tag("no_scss")
         has_default_props = bool(build.default_props) or not widget_spec.values.get(
             "noDps"
         )

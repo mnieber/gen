@@ -17,9 +17,29 @@ class ComponentBuilder(Builder):
             imports=[_get_component_import_path(self.widget_spec, parent_module_name)]
         )
 
+        update_url = self.widget_spec.get_value_by_name("updateUrl")
+        if update_url:
+            if not self.widget_spec.root.has_tag("update_url"):
+                self.widget_spec.root.add_tag("update_url")
+                self.output.add(
+                    imports=[
+                        "import { useRouteUfns } from 'src/routes/hooks/useRoutes';"
+                    ]
+                )
+                self.output.add(
+                    preamble_hooks=[
+                        "const { routeUfns, history } = useRouteUfns();\n",
+                    ],
+                )
+
         attrs_str = _get_attrs_str(self.widget_spec)
         class_name_attr = self.widget_spec.div.get_class_name_attr()
         key_attr = _get_key_attr(self.widget_spec)
+        if update_url:
+            attrs_str += (
+                f" updateUrl={{() => routeUfns.moonleapTodo(history.replace)()}}"
+            )
+
         has_child_widgets = bool(self.widget_spec.child_widget_specs)
         if has_child_widgets:
             self.output.add(

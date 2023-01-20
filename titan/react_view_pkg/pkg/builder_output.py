@@ -4,7 +4,6 @@ from dataclasses import dataclass, field
 
 from moonleap import append_uniq
 from moonleap.utils.fp import extend_uniq
-from moonleap.utils.merge_into_config import merge_into_config
 
 
 @dataclass
@@ -17,19 +16,15 @@ class BuilderOutput:
     scss_lines: list = field(default_factory=list)
     preamble_lines: list = field(default_factory=list)
     preamble_hooks_lines: list = field(default_factory=list)
+    # Flags are collected by each builder and passed to the root resource. They
+    # can be considered global variables that can be used anywhere to generate code.
     flags: list = field(default_factory=list)
-    # True if the widget spec or any of its child widget specs has a Children type
-    has_children_prop: bool = False
-    # True if the widget has no scss file
-    no_scss: bool = False
 
     def merge(self, rhs: "BuilderOutput"):
         self.preamble_hooks_lines += rhs.preamble_hooks_lines
         self.preamble_lines += rhs.preamble_lines
         self.lines += rhs.lines
         self.scss_lines += rhs.scss_lines
-        self.has_children_prop = self.has_children_prop or rhs.has_children_prop
-        self.no_scss = self.no_scss or rhs.no_scss
         extend_uniq(self.imports_lines, rhs.imports_lines)
         extend_uniq(self.props_lines, rhs.props_lines)
         extend_uniq(self.add_props_lines, rhs.add_props_lines)
