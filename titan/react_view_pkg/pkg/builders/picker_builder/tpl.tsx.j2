@@ -1,10 +1,14 @@
 {% magic_with item_name as myItem %}
+{% magic_with editing_bvr.ts_var as myEditingBvr %}
 
 
 {% section imports %}
 import { PickerValueT, ValuePicker } from 'src/utils/components/ValuePicker';
 import { useValuePickerState } from 'src/utils/hooks/useValuePickerState';
 import { MyItemT } from 'src/api/types/MyItemT';                                {% ?? update_url %}
+import { error } from 'src/frames/components/Error';
+import { slugify } from 'src/utils';
+import { createUUID } from 'src/utils/ids';
 {% end_section %}
 
 
@@ -14,9 +18,14 @@ import { MyItemT } from 'src/api/types/MyItemT';                                
 
 
 {% section preamble_hooks %}
+    const saveMyItem = props.myEditingBvr.save;                                 {% if editing_bvr %}
+    {{ "" }}
+    const saveMyItem = usePostMyMutation().mutateAsync;                         {% elif mutation %}
+    {{ "" }}                                                                    {% endif %}
     const state = useValuePickerState<MyItemT>({
-      selection: props.myItemsSelection,                            {% if bvrs_has_selection %}
-      highlight: props.myItemsHighlight,                            {% elif bvrs_has_highlight %}{% endif %}
+      values: {{ path_to_items }},
+      selection: props.myItemsSelection,                                        {% if bvrs_has_selection %}
+      highlight: props.myItemsHighlight,                                        {% elif bvrs_has_highlight %}{% endif %}
       updateUrl: props.updateUrl,
     });
     {{ "" }}
@@ -26,7 +35,13 @@ import { MyItemT } from 'src/api/types/MyItemT';                                
 {% section preamble %}
     const onChange = (value: PickerValueT) => {
       if (value.__isNew__) {
-        // Moonleap Todo: add myItem
+        const myItemName = value.label;
+        const id = createUUID();
+        state.setIsUpdating(true);
+        saveMyItem({
+          // Moonleap Todo
+          id: id,
+        }).then(() => state.setItemWhenReady({{ path_to_items }}, id));
       } else if (value.value) {
         state.setItem(value.value);
       }
@@ -36,15 +51,29 @@ import { MyItemT } from 'src/api/types/MyItemT';                                
 
 
 {% section lines %}
+    {UIkit && state.isUpdating && (                                             {% if spinner %}
+      <div
+        data-uk-spinner
+        className="absolute"
+        style={{ "{{" }}zIndex: 100 {{ "}}" }}
+      ></div>                                                                   {% endif %}
+    )}
     <ValuePicker
         isMulti={false}
         isCreatable={true}
         pickableValues={ props.myItems }
         labelFromValue={(x: any) => x.name}
         pickableValue={props.myItemsHighlight.item}
+        placeholder="Select myItem"
         onChange={onChange}
     />
+    {state.isError && (                                                       {% if save %}
+      <div className={cn(error)}>
+        Oops, the myItem could not be created
+      </div>                                                                  {% endif %}
+    )}
 {% end_section %}
 
 
+{% end_magic_with %}
 {% end_magic_with %}

@@ -5,9 +5,15 @@ from moonleap.utils.fp import extend_uniq
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_helper import BvrsHelper
+from titan.react_view_pkg.pkg.builders.form_state_provider_builder import (
+    get_form_mutation_or_bvr,
+)
 
 
 class PickerBuilder(Builder):
+    def __post_init__(self):
+        self.save = self.widget_spec.get_value_by_name("save")
+
     def build(self):
         self.bvrs_helper = self._get_bvrs_helper()
         self._add_packages()
@@ -23,11 +29,21 @@ class PickerBuilder(Builder):
         return bvrs_helper
 
     def _add_lines(self):
-        context = {
+        # We expect the widget_spec to have a "save" pipeline
+        mutation, editing_bvr = (
+            get_form_mutation_or_bvr(self.widget_spec) if self.save else (None, None)
+        )
+
+        context = dict(
             **self.bvrs_helper.bvrs_context(),
-            "update_url": self.widget_spec.values.get("updateUrl"),
-            "item_name": self.ilh.working_item_name,
-        }
+            update_url=self.widget_spec.values.get("updateUrl"),
+            item_name=self.ilh.working_item_name,
+            mutation=mutation,
+            editing_bvr=editing_bvr,
+            path_to_items=self.ilh.item_list_data_path(),
+            save=self.save,
+            spinner=self.widget_spec.get_value_by_name("spinner"),
+        )
 
         tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)
         add_tpl_to_builder(tpl, self)
@@ -41,5 +57,10 @@ class PickerBuilder(Builder):
     def get_spec_extension(self, places):
         extension = {}
         if not self.ilh.maybe_add_items_pipeline_to_spec_extension(extension):
-            raise Exception("PickerBuilder: no items pipeline")
+            raise Exception("PickerBuilder: no 'items' pipeline")
+
+        if self.save:
+            if not self.ih.maybe_add_save_pipeline_to_spec_extension(extension):
+                raise Exception("PickerBuilder: no 'save' pipeline")
+
         return extension
