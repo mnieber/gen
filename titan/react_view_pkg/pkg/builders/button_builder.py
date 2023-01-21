@@ -10,3 +10,15 @@ class ButtonBuilder(Builder):
 
         onClick = self.widget_spec.values.get("onClick") or default_handler
         self.widget_spec.div.append_attrs([f"onClick={{ {onClick} }}"])
+        self.widget_spec.div.elm = "button"
+
+        t = self.widget_spec.get_value_by_name("size")
+        if t == "big":
+            self.widget_spec.div.append_styles(["bigButton"])
+
+    def build(self):
+        t = self.widget_spec.get_value_by_name("size")
+        if t == "big":
+            self.output.add(
+                imports=["import { bigButton } from 'src/frames/components';"]
+            )

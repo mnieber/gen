@@ -6,10 +6,18 @@ from titan.widgetspec.sort_styles import sort_styles
 
 @dataclass
 class Div:
-    elm: str = "div"
+    _elm: str = ""
     styles: T.List[str] = field(repr=True, default_factory=list)
     attrs: T.List[str] = field(repr=False, default_factory=list)
     key: T.Optional[str] = None
+
+    @property
+    def elm(self):
+        return self._elm or "div"
+
+    @elm.setter
+    def elm(self, x):
+        self._elm = x
 
     def prepend_styles(self, styles):
         for style in reversed(styles):
