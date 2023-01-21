@@ -1,4 +1,3 @@
-from moonleap.utils.quote import quote_all
 from titan.react_view_pkg.pkg.builder import Builder
 
 
@@ -45,7 +44,7 @@ class BarBuilder(Builder):
             and "LhsContents" in places
         ):
             cn = self.get_value("cnLhs") or "Lhs"
-            result[f"LhsWrapper with Div, RowSkewer[cn={cn}.justify-start]"] = "pass"
+            result[f"LhsWrapper with Div, RowSkewer[cn={cn},justify-start]"] = "pass"
 
         if (
             "RightSlot" not in places
@@ -53,7 +52,7 @@ class BarBuilder(Builder):
             and "RhsContents" in places
         ):
             cn = self.get_value("cnRhs") or "Rhs"
-            result[f"RhsWrapper with Div, RowSkewer[cn={cn}.justify-end]"] = "pass"
+            result[f"RhsWrapper with Div, RowSkewer[cn={cn},justify-end]"] = "pass"
 
         return result
 
@@ -80,9 +79,7 @@ class BarBuilder(Builder):
         if self.right_slot or self.rhs_wrapper:
             styles += ["0fr"] if (self.left_slot and not self.middle_slot) else ["1fr"]
 
-        self.widget_spec.div.prepend_styles(
-            quote_all(["grid", f'grid-cols-[{",".join(styles)}]'])
-        )
+        self.widget_spec.div.prepend_styles(["grid", f'grid-cols-[{",".join(styles)}]'])
 
     def build(self):
         self._update_widgets()

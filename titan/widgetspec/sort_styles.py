@@ -1,6 +1,6 @@
 import fnmatch
 
-from moonleap.utils.quote import quote, quote_all
+from moonleap.utils.quote import quote
 from titan.widgetspec.is_style import normalize_style
 
 style_order = [
@@ -8,7 +8,7 @@ style_order = [
     (["grid", "grid-*", "flex", "flex-*", "items-*", "justify-*"], True),
     (["m-*", "mt-*", "mb-*", "ml-*", "mr-*", "mx-*", "my-*"], True),
     (["p-*", "pt-*", "pb-*", "pl-*", "pr-*", "px-*", "py-*"], True),
-    (["*"], False),
+    (["*"], True),
     (["props.className"], False),
 ]
 
@@ -25,21 +25,28 @@ def sort_styles(styles):
     for group, is_quoted in style_order:
         group_styles = []
         for style in list(unused_styles):
-            for pattern in quote_all(group) if is_quoted else group:
+            if style == "props.className" and group == ["*"]:
+                continue
+            for pattern in group:
                 if fnmatch.fnmatch(normalize_style(style), pattern):
-                    unquoted_style = style[1:-1] if is_quoted else style
-                    group_styles.append(unquoted_style)
+                    group_styles.append(style)
                     unused_styles.remove(style)
                     break
 
         if group_styles:
-            if group == ["*"]:
-                result += group_styles
-            else:
-                sep = " " if is_quoted else ", "
-                style = sep.join(group_styles)
-                if is_quoted:
-                    style = quote(style)
-                result.append(style)
+            sep = " " if is_quoted else ", "
+            result += [sep.join(group_styles)]
 
     return result
+
+
+def maybe_quote_style(style):
+    if style.startswith("{"):
+        return style
+
+    for group, is_quoted in style_order:
+        if not is_quoted and group != ["*"]:
+            for pattern in group:
+                if fnmatch.fnmatch(normalize_style(style), pattern):
+                    return style
+    return quote(style)

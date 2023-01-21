@@ -2,7 +2,6 @@ import os
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap import append_uniq
 from moonleap.utils.fp import extend_uniq
 
 

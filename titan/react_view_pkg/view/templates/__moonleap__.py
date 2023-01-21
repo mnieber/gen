@@ -1,4 +1,5 @@
 from moonleap.utils.fp import append_uniq
+from titan.widgetspec.get_scss_styles_by_class_name import get_scss_styles_by_class_name
 
 
 def get_helpers(_):
@@ -18,6 +19,9 @@ def get_helpers(_):
 
         def __init__(self):
             self._get_queries_from_pipelines()
+            self.scss_styles_by_class_name = get_scss_styles_by_class_name(
+                self.widget_spec
+            )
 
         def _get_queries_from_pipelines(self):
             for pipeline in self.pipelines:

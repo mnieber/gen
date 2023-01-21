@@ -1,7 +1,7 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from titan.widgetspec.sort_styles import sort_styles
+from titan.widgetspec.sort_styles import maybe_quote_style, sort_styles
 
 
 @dataclass
@@ -35,7 +35,7 @@ class Div:
                 self.attrs.append(attr)
 
     def get_class_name_attr(self, widget_class_name=None):
-        prefix = [f'"{widget_class_name}"'] if widget_class_name else []
+        prefix = [widget_class_name] if widget_class_name else []
         infix = list(self.styles)
 
         suffix = []
@@ -44,6 +44,9 @@ class Div:
             infix.remove("props.className")
 
         if prefix or infix or suffix:
-            styles_str = ", ".join(prefix + sort_styles(infix + suffix))
+            quoted_styles = [
+                maybe_quote_style(x) for x in prefix + sort_styles(infix + suffix)
+            ]
+            styles_str = ", ".join(quoted_styles)
             return f"className={{ cn({styles_str}) }}"
         return ""

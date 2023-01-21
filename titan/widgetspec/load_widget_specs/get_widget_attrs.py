@@ -1,5 +1,4 @@
 from moonleap import append_uniq
-from moonleap.utils.quote import quote
 from moonleap.utils.split_non_empty import split_non_empty
 from moonleap.utils.split_symbols import split_symbols
 from titan.widgetspec.is_style import is_style
@@ -52,7 +51,7 @@ def get_widget_attrs(key, more_value_parts):
 
     for part in symbol_parts + more_value_parts:
         if is_style(part):
-            append_uniq(div_attrs["styles"], quote(part))
+            append_uniq(div_attrs["styles"], part)
         else:
             parts_eq = part.split("=")
             if len(parts_eq) == 2:

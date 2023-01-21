@@ -46,13 +46,13 @@ def _get_places_and_classes_from_widget_specs(widget_specs):
         places.append(child_widget_spec.place)
 
     if ordered_places := _get_ordered_places(places, ["LeftSidebar", "RightMain"]):
-        return ordered_places, ['"grid grid-cols-[400px,1fr]"']
+        return ordered_places, ["grid", "grid-cols-[400px,1fr]"]
     if ordered_places := _get_ordered_places(places, ["LeftMain", "RightSidebar"]):
-        return ordered_places, ['"grid grid-cols-[1fr,400px]"']
+        return ordered_places, ["grid", "grid-cols-[1fr,400px]"]
     if ordered_places := _get_ordered_places(places, ["TopBar", "BottomMain"]):
-        return ordered_places, ['"grid grid-rows-[60px,1fr]"']
+        return ordered_places, ["grid", "grid-rows-[60px,1fr]"]
     if ordered_places := _get_ordered_places(
         places, ["BottomPanel", "MiddlePanel", "TopPanel"]
     ):
-        return ordered_places, ['"grid grid-rows-3"']
+        return ordered_places, ["grid grid-rows-3"]
     raise Exception(f"Unknown places: {places}")
