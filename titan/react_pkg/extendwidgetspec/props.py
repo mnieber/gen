@@ -1,6 +1,5 @@
 from moonleap import kebab_to_camel
 from moonleap.blocks.term import match_term_to_pattern, word_to_term
-from moonleap.utils.__init__ import remove_trailing_tildes
 from titan.react_view_pkg.widgetregistry import get_widget_reg
 
 
@@ -17,7 +16,7 @@ def widget_spec_field_names(widget_spec):
     fields = widget_spec.src_dict.setdefault("__fields__", {})
     for field_name, fields in fields.items():
         for field in fields:
-            clean_field_name = remove_trailing_tildes(field_name)
+            clean_field_name = field_name.rstrip("~")
             prefix = "" if clean_field_name == "." else clean_field_name + "."
             result.append(f"{prefix}{field}")
     return result

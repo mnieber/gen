@@ -13,13 +13,6 @@ def chop(x):
     return x[:-1] if x.endswith(os.linesep) else x
 
 
-def remove_trailing_tildes(x):
-    # Remove all trailing tildes
-    while x.endswith("~"):
-        x = x[:-1]
-    return x
-
-
 def yaml2dict(x):
     s = StringIO(chop0(x))
     return yaml.safe_load(s)
