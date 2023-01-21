@@ -13,6 +13,8 @@ from titan.react_view_pkg.pkg.builders.form_state_provider_builder import (
 
 
 class FormFieldsBuilder(Builder):
+    type = "FormFields"
+
     def get_spec_extension(self, places):
         if "Field" not in places:
             return {f"Field with FormField": "pass"}

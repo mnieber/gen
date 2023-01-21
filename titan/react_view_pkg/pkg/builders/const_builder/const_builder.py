@@ -7,6 +7,8 @@ from titan.react_view_pkg.pkg.builder import Builder
 
 
 class ConstBuilder(Builder):
+    type = "Const"
+
     def build(self):
         const_name = self._get_const_name()
         child_widget_output = _get_child_widget_output(self.widget_spec)

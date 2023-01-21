@@ -11,8 +11,10 @@ from titan.react_view_pkg.pkg.builders.form_state_provider_builder import (
 
 
 class PickerBuilder(Builder):
+    type = "Picker"
+
     def __post_init__(self):
-        self.save = self.widget_spec.get_value_by_name("save")
+        self.save = self.get_value("save")
 
     def build(self):
         self.bvrs_helper = self._get_bvrs_helper()
@@ -42,7 +44,7 @@ class PickerBuilder(Builder):
             editing_bvr=editing_bvr,
             path_to_items=self.ilh.item_list_data_path(),
             save=self.save,
-            spinner=self.widget_spec.get_value_by_name("spinner"),
+            spinner=self.get_value("spinner"),
         )
 
         tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)

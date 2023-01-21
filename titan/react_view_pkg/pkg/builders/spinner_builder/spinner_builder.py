@@ -6,6 +6,8 @@ from titan.react_view_pkg.pkg.builder import Builder
 
 
 class SpinnerBuilder(Builder):
+    type = "Spinner"
+
     def build(self):
         item_list_data_path = self.ilh.item_list_data_path()
         item_data_path = self.ih.item_data_path()

@@ -7,6 +7,8 @@ from titan.types_pkg.typeregistry import get_type_reg
 
 
 class TabsBuilder(Builder):
+    type = "Tabs"
+
     def build(self):
         self.use_uniform_height = bool(self.widget_spec.values.get("uniformHeight"))
         self.widget_class_name = self.widget_spec.root.widget_class_name

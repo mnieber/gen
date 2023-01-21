@@ -4,8 +4,10 @@ from titan.react_view_pkg.pkg.builder import Builder
 
 
 class IconBuilder(Builder):
+    type = "Icon"
+
     def build(self):
-        name = u0(self.widget_spec.values["name"])
+        name = u0(self.get_value("name"))
         self.output.set_flags([f"frames/{name}Icon"])
 
         if name in ("New",):

@@ -9,6 +9,8 @@ from .get_fields import get_fields
 
 
 class FormStateProviderBuilder(Builder):
+    type = "FormStateProvider"
+
     def build(self):
         from titan.react_view_pkg.pkg.build_widget_spec import build_widget_spec
 

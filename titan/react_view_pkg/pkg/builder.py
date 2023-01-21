@@ -1,4 +1,3 @@
-from moonleap import append_uniq
 from titan.react_view_pkg.pkg.add_child_widgets import add_child_widgets
 from titan.react_view_pkg.pkg.add_div import get_div_close, get_div_open
 from titan.react_view_pkg.pkg.builder_output import BuilderOutput
@@ -7,6 +6,8 @@ from titan.react_view_pkg.pkg.builders.item_list_helper import ItemListHelper
 
 
 class Builder:
+    type = "None"
+
     def __init__(self, widget_spec):
         self.widget_spec = widget_spec
         self.output = BuilderOutput()
@@ -46,6 +47,9 @@ class Builder:
 
     def update_widget_spec(self):
         pass
+
+    def get_value(self, name, recurse=False):
+        return self.widget_spec.get_value_by_name(name, recurse=recurse)
 
     def __repr__(self):
         return f"{self.__class__.__name__}({self.widget_spec})"

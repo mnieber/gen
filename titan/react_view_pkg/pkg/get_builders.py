@@ -61,85 +61,85 @@ def get_builders(widget_spec):
     for widget_base_type in widget_spec.widget_base_types:
         builder = None
 
-        if widget_base_type == "Array":
+        if widget_base_type == ArrayBuilder.type:
             builder = ArrayBuilder(widget_spec)
 
-        elif widget_base_type == "Bar":
+        elif widget_base_type == BarBuilder.type:
             builder = BarBuilder(widget_spec)
 
-        elif widget_base_type == "Button":
+        elif widget_base_type == ButtonBuilder.type:
             builder = ButtonBuilder(widget_spec)
 
-        elif widget_base_type == "Card":
+        elif widget_base_type == CardBuilder.type:
             builder = CardBuilder(widget_spec)
 
-        elif widget_base_type == "ColSkewer":
+        elif widget_base_type == ColSkewerBuilder.type:
             builder = ColSkewerBuilder(widget_spec)
 
-        elif widget_base_type == "Children":
+        elif widget_base_type in ChildrenBuilder.type:
             builder = ChildrenBuilder(widget_spec)
 
-        if widget_base_type == "Const":
+        if widget_base_type == ConstBuilder.type:
             builder = ConstBuilder(widget_spec)
 
-        elif widget_base_type == "Div":
+        elif widget_base_type == DivBuilder.type:
             builder = DivBuilder(widget_spec)
 
-        elif widget_base_type == "Empty":
+        elif widget_base_type == EmptyBuilder.type:
             builder = EmptyBuilder(widget_spec)
 
-        elif widget_base_type == "FormField":
+        elif widget_base_type == FormFieldBuilder.type:
             builder = FormFieldBuilder(widget_spec)
 
-        elif widget_base_type == "FormFields":
+        elif widget_base_type == FormFieldsBuilder.type:
             builder = FormFieldsBuilder(widget_spec)
 
-        elif widget_base_type == "FormStateProvider":
+        elif widget_base_type == FormStateProviderBuilder.type:
             builder = FormStateProviderBuilder(widget_spec)
 
-        elif widget_base_type == "Icon":
+        elif widget_base_type == IconBuilder.type:
             builder = IconBuilder(widget_spec)
 
-        elif widget_base_type == "ItemField":
+        elif widget_base_type == ItemFieldBuilder.type:
             builder = ItemFieldBuilder(widget_spec)
 
-        elif widget_base_type == "ItemFields":
+        elif widget_base_type == ItemFieldsBuilder.type:
             builder = ItemFieldsBuilder(widget_spec)
 
-        elif widget_base_type == "Layout":
+        elif widget_base_type == LayoutBuilder.type:
             builder = LayoutBuilder(widget_spec)
 
-        elif widget_base_type == "ListView":
+        elif widget_base_type == ListViewBuilder.type:
             builder = ListViewBuilder(widget_spec)
 
-        elif widget_base_type == "ListViewItem":
+        elif widget_base_type == ListViewItemBuilder.type:
             builder = ListViewItemBuilder(widget_spec)
 
-        elif widget_base_type == "LviButtons":
+        elif widget_base_type == LviButtonsBuilder.type:
             builder = LviButtonsBuilder(widget_spec)
 
-        elif widget_base_type == "Image":
+        elif widget_base_type == ImageBuilder.type:
             builder = ImageBuilder(widget_spec)
 
-        elif widget_base_type == "Picker":
+        elif widget_base_type == PickerBuilder.type:
             builder = PickerBuilder(widget_spec)
 
-        elif widget_base_type == "Spinner":
+        elif widget_base_type == SpinnerBuilder.type:
             builder = SpinnerBuilder(widget_spec)
 
-        elif widget_base_type == "StateProvider":
+        elif widget_base_type == StateProviderBuilder.type:
             builder = StateProviderBuilder(widget_spec)
 
-        elif widget_base_type == "Stepper":
+        elif widget_base_type == StepperBuilder.type:
             builder = StepperBuilder(widget_spec)
 
-        elif widget_base_type == "Tabs":
+        elif widget_base_type == TabsBuilder.type:
             builder = TabsBuilder(widget_spec)
 
-        elif widget_base_type == "Text":
+        elif widget_base_type == TextBuilder.type:
             builder = TextBuilder(widget_spec)
 
-        elif widget_base_type == "RowSkewer":
+        elif widget_base_type == RowSkewerBuilder.type:
             builder = RowSkewerBuilder(widget_spec)
 
         if builder:

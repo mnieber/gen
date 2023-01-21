@@ -4,9 +4,11 @@ from titan.types_pkg.typeregistry import get_type_reg
 
 
 class ItemFieldsBuilder(Builder):
+    type = "ItemFields"
+
     def get_spec_extension(self, places):
         if "Field" not in places:
-            layout = "Card" if self.widget_spec.values.get("card") else "Div"
+            layout = "Card" if self.get_value("card") else "Div"
             return {f"Field with {layout}[cn=__]": {"ItemField": "pass"}}
 
     def get_field_specs(self):
@@ -25,7 +27,7 @@ class ItemFieldsBuilder(Builder):
 
     def build(self):
         self.type_spec = get_type_reg().get(u0(self.ih.working_item_name))
-        self.display_only = self.widget_spec.values.get("display")
+        self.display_only = self.get_value("display")
 
         field_widget_spec = self.widget_spec.get_place("Field")
         for field_spec in self.get_field_specs():
@@ -34,9 +36,11 @@ class ItemFieldsBuilder(Builder):
 
 
 class ItemFieldBuilder(Builder):
+    type = "ItemField"
+
     def build(self):
         item_data_path = self.ih.item_data_path()
-        field_spec = self.widget_spec.get_value_by_name("field_spec", recurse=True)
+        field_spec = self.get_value("field_spec", recurse=True)
         assert field_spec
         label = f"{field_spec.name}: " if field_spec.field_type in ("boolean",) else ""
         postfix = " ? 'Yes' : 'No'" if field_spec.field_type in ("boolean",) else ""

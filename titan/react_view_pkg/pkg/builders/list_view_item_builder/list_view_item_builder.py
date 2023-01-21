@@ -7,6 +7,8 @@ from titan.react_view_pkg.pkg.builders.bvrs_helper import BvrsHelper
 
 
 class ListViewItemBuilder(Builder):
+    type = "ListViewItem"
+
     def build(self):
         self.bvrs_helper = BvrsHelper(self.widget_spec, self.ih.working_item_name)
         context = self._get_context()

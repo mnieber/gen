@@ -6,6 +6,8 @@ from titan.react_view_pkg.pkg.builder import Builder
 
 
 class ArrayBuilder(Builder):
+    type = "Array"
+
     def build(self):
         item_name = self.ilh.working_item_name
         const_name = self._get_const_name()

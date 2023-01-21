@@ -7,6 +7,8 @@ from titan.widgetspec.get_place_dict import get_place_dict
 
 
 class StepperBuilder(Builder):
+    type = "Stepper"
+
     def build(self):
         self.use_uniform_height = self.widget_spec.values.get("uniformHeight")
         self.item_name = self.ilh.working_item_name

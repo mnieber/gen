@@ -11,6 +11,8 @@ from .spec_ext import spec_ext
 
 
 class ListViewBuilder(Builder):
+    type = "ListView"
+
     def build(self):
         self.bvrs_helper = BvrsHelper(self.widget_spec, self.ilh.working_item_name)
         self._add_default_props()

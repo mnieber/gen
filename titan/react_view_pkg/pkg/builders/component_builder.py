@@ -5,7 +5,7 @@ from titan.widgetspec.create_widget_class_name import get_component_name
 
 class ComponentBuilder(Builder):
     def update_widget_spec(self):
-        if on_click := self.widget_spec.values.get("onClick"):
+        if on_click := self.get_value("onClick"):
             self.widget_spec.div.append_attrs([f"onClick={{{on_click}}}"])
             append_uniq(self.widget_spec.handler_terms, "click:handler")
 
@@ -17,7 +17,7 @@ class ComponentBuilder(Builder):
             imports=[_get_component_import_path(self.widget_spec, parent_module_name)]
         )
 
-        update_url = self.widget_spec.get_value_by_name("updateUrl")
+        update_url = self.get_value("updateUrl")
         if update_url:
             if not self.widget_spec.root.has_tag("update_url"):
                 self.widget_spec.root.add_tag("update_url")

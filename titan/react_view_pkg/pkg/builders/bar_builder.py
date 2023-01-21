@@ -1,10 +1,10 @@
-from moonleap.utils.merge_into_config import merge_into_config
 from moonleap.utils.quote import quote_all
-from titan.react_view_pkg.pkg.add_child_widgets import add_child_widgets
 from titan.react_view_pkg.pkg.builder import Builder
 
 
 class BarBuilder(Builder):
+    type = "Bar"
+
     def __post_init__(self):
         self._widgets = []
         self.left_slot = None
@@ -44,7 +44,7 @@ class BarBuilder(Builder):
             and "LhsWrapper" not in places
             and "LhsContents" in places
         ):
-            cn = self.widget_spec.values.get("cnLhs") or "Lhs"
+            cn = self.get_value("cnLhs") or "Lhs"
             result[f"LhsWrapper with Div, RowSkewer[cn={cn}.justify-start]"] = "pass"
 
         if (
@@ -52,7 +52,7 @@ class BarBuilder(Builder):
             and "RhsWrapper" not in places
             and "RhsContents" in places
         ):
-            cn = self.widget_spec.values.get("cnRhs") or "Rhs"
+            cn = self.get_value("cnRhs") or "Rhs"
             result[f"RhsWrapper with Div, RowSkewer[cn={cn}.justify-end]"] = "pass"
 
         return result

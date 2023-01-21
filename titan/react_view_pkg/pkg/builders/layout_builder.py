@@ -3,6 +3,8 @@ from titan.widgetspec.widget_spec import WidgetSpec
 
 
 class LayoutBuilder(Builder):
+    type = "Layout"
+
     def build(self):
         places, more_classes = _get_places_and_classes_from_widget_specs(
             self.widget_spec.child_widget_specs

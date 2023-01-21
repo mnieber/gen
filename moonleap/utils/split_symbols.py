@@ -2,7 +2,7 @@ import re
 
 
 def split_symbols(key):
-    regex = r"(.*)\[(.*)\]"
+    regex = r"([^\[]*)\[(.*)\]$"
     matches = list(re.finditer(regex, key, re.MULTILINE))
     symbols = ""
 
