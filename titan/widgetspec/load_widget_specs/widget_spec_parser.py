@@ -1,3 +1,5 @@
+from moonleap import is_private_key
+
 from .create_widget_spec import create_widget_spec
 
 
@@ -15,7 +17,7 @@ class WidgetSpecParser:
         items = [
             (key.strip(), value)
             for key, value in spec_dict.items()
-            if not _is_private_member(key)
+            if not is_private_key(key)
         ]
 
         for key, value in items:
@@ -49,7 +51,3 @@ class WidgetSpecParser:
                 "The top-level can only have component definitions: "
                 + (widget_spec.widget_name or "")
             )
-
-
-def _is_private_member(key):
-    return key.startswith("__")

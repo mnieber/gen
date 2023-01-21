@@ -1,3 +1,4 @@
+from moonleap import is_private_key
 from moonleap.utils.merge_into_config import merge_into_config
 from titan.react_view_pkg.pkg.builder_output import BuilderOutput
 from titan.react_view_pkg.pkg.get_builders import get_builders
@@ -15,7 +16,7 @@ def preprocess_widget_spec(widget_spec) -> BuilderOutput:
         if extension := builder.get_spec_extension(places):
             private_fields = {}
             for key, value in extension.items():
-                if key.startswith("__"):
+                if is_private_key(key):
                     private_fields[key] = value
             merge_into_config(widget_spec.src_dict, private_fields)
 

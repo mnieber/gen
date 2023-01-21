@@ -1,6 +1,6 @@
 import typing as T
 
-from moonleap import l0, u0
+from moonleap import is_private_key, l0, u0
 
 from .add_extra_model_fields import add_extra_model_fields
 from .add_field_spec import add_field_spec
@@ -22,7 +22,7 @@ class TypeSpecParser:
         items = [
             (key.strip(), value)
             for key, value in type_spec_dict.items()
-            if not _is_private_member(key)
+            if not is_private_key(key)
         ]
         scalar_items = [item for item in items if not _is_fk_item(item)]
         fk_items = [item for item in items if _is_fk_item(item)]
@@ -90,10 +90,6 @@ class TypeSpecParser:
             apply_type_updates(host, type_spec, type_spec_dict["__update__"])
 
         return trace
-
-
-def _is_private_member(key):
-    return key.startswith("__")
 
 
 def _is_fk_item(item):
