@@ -30,8 +30,8 @@ def get_helpers(_):
                             self._add_provided_item(named_item)
                         for named_item_list in state_provider.named_item_lists_provided:
                             self._add_provided_item(named_item_list)
-                        if state_provider.state:
-                            for container in state_provider.state.containers:
+                        for state in state_provider.states:
+                            for container in state.containers:
                                 for named_item in container.named_items:
                                     self._add_provided_item(named_item)
                                 self._add_provided_item_list(container.named_item_list)

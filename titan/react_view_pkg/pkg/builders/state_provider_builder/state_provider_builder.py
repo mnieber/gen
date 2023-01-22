@@ -21,26 +21,25 @@ class StateProviderBuilder(Builder):
         self.widget_spec.root.add_tag("no_scss")
 
         state_provider = self.widget_spec.component
-        state = state_provider.state
-        containers = state.containers if state else []
+        states = state_provider.states
 
         queries = self.widget_spec.queries
-        mutations = _get_mutations(self.widget_spec, state)
+
+        mutations = _get_mutations(self.widget_spec, states)
 
         context = dict(
             state_provider=state_provider,
-            containers=containers,
             mutations=mutations,
             queries=queries,
-            state=state,
+            states=states,
             widget_spec=self.widget_spec,
             more_type_specs_to_import=_more_type_specs_to_import(mutations),
             delete_items_data=delete_items_data,
             order_items_data=order_items_data,
             save_item_data=save_item_data,
             get_container_inputs=get_container_inputs,
-            get_return_value=lambda data, hint=None: get_return_value(
-                state_provider, containers, data, hint
+            get_return_value=lambda state, data, hint=None: get_return_value(
+                state_provider, state, data, hint
             ),
             get_data_path=self.widget_spec.get_data_path,
         )
@@ -49,18 +48,18 @@ class StateProviderBuilder(Builder):
         add_tpl_to_builder(tpl, self)
 
 
-def _get_mutations(widget_spec, state):
+def _get_mutations(widget_spec, states):
     mutations = widget_spec.mutations
-    containers = state.containers if state else []
-    for container in containers:
-        if delete_items_mutation := container.delete_items_mutation:
-            append_uniq(mutations, delete_items_mutation)
-        if delete_item_mutation := container.delete_item_mutation:
-            append_uniq(mutations, delete_item_mutation)
-        if save_item_mutation := container.save_item_mutation:
-            append_uniq(mutations, save_item_mutation)
-        if order_items_mutation := container.order_items_mutation:
-            append_uniq(mutations, order_items_mutation)
+    for state in states:
+        for container in state.containers:
+            if delete_items_mutation := container.delete_items_mutation:
+                append_uniq(mutations, delete_items_mutation)
+            if delete_item_mutation := container.delete_item_mutation:
+                append_uniq(mutations, delete_item_mutation)
+            if save_item_mutation := container.save_item_mutation:
+                append_uniq(mutations, save_item_mutation)
+            if order_items_mutation := container.order_items_mutation:
+                append_uniq(mutations, order_items_mutation)
     return mutations
 
 

@@ -38,6 +38,11 @@ def module_renders_state(module, state):
         )
 
 
+@rule("react-app")
+def create_states_in_modules(react_app):
+    return props.create_states_in_modules()
+
+
 @rule("state")
 def created_state(state):
     get_root_resource().set_flags(["app/useStates"])

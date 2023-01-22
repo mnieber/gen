@@ -35,4 +35,4 @@ class ExtendStateProvider:
     module = P.parent("module", has)
     named_items_provided = P.children(provides, "x+item")
     named_item_lists_provided = P.children(provides, "x+item~list")
-    state = P.child(provides, "react-state")
+    states = P.children(provides, "react-state")

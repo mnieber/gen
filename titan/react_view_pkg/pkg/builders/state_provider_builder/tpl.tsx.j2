@@ -14,7 +14,7 @@ import * as R from 'ramda';
 import React from 'react';
 import { NestedDefaultPropsContext } from 'react-default-props-context';
 import { maybe, initRS, setToUpdating } from 'src/api/ResourceState';
-import { MyState } from 'src/{{ state.state_provider.module.module_path }}/MyState';            {% ?? state %}
+import { MyState } from 'src/{{ state.module.module_path }}/MyState';                           {% !! state in states %}
 import { {{ type_spec.type_name }}T } from 'src/api/types/{{ type_spec.type_name }}T';          {% !! type_spec in more_type_specs_to_import %}
 import { useMyQuery } from 'src/api/queries';                                                   {% !! query in queries %}
 import { useMyMutation } from 'src/api/mutations';                                              {% !! mutation in mutations %}
@@ -31,9 +31,9 @@ import { ObjT } from 'src/utils/types';
     const myQuery = useMyQuery();                                                                               {% !! query in queries %}
     const myMutation = useMyMutation();                                                                         {% !! mutation in mutations %}
 
-    const [state] = React.useState(() => new MyState({                                                          {% if state %}
-      deleteContainerItems: (ids: string[]) => {                                                                {% for container in containers %}{% with d = delete_items_data(container) %}{% if d.deletes_items %}
-        R.map(setToUpdating, lookUp(ids, state.containerItems.data.containerItemById));
+    const [myState] = React.useState(() => new MyState({                                                        {% for state in states %}
+      deleteContainerItems: (ids: string[]) => {                                                                {% for container in state.containers %}{% with d = delete_items_data(container) %}{% if d.deletes_items %}
+        R.map(setToUpdating, lookUp(ids, myState.containerItems.data.containerItemById));
         return {{ d.deleteMyCtrItems }}.mutateAsync({ {{ d.myCtrItemIds }}: ids });                             {% if d.get('deleteMyCtrItems') %}
         return Promise.all(R.map(                                                                               {% else %}
           (x: string) => {{ d.deleteMyCtrItem }}.mutateAsync({ {{ d.myCtrItemId }}: x }),
@@ -49,49 +49,49 @@ import { ObjT } from 'src/utils/types';
           {{ d.myCtrItemIds }}: getIds({{ d.myCtrItems }}),
         });
       },                                                                                                        {% endif %}{% endwith %}{% endfor %}
-    }));                                                                                                        {% endif %}
+    }));
 
     useUpdateStateReaction({
       getInputs: () => {
         return {
-          {{ container_input.typ.ts_var }}: {{ get_data_path(container_input) }},                             {% !! container_input in get_container_inputs(containers) %}
+          {{ container_input.typ.ts_var }}: {{ get_data_path(container_input) }},                             {% !! container_input in get_container_inputs(state.containers) %}
         }
       },
       updateState: (inputs) => {
-        R.forEach(initRS, inputs.myListItems ?? []);                                                          {% for container in containers %}{% for named_item_list in get_container_inputs([container], named_items=False) %}
-        state.myContainer.data.myListItems = inputs.myListItems ?? [];
+        R.forEach(initRS, inputs.myListItems ?? []);                                                          {% for container in state.containers %}{% for named_item_list in get_container_inputs([container], named_items=False) %}
+        myState.myContainer.data.myListItems = inputs.myListItems ?? [];
         {{ "" }}                                                                                              {% endfor %}
-        state.myContainer.data.myItem = inputs.myItem;                                                        {% !! named_item in get_container_inputs([container], named_item_lists=False) %}{% endfor %}
+        myState.myContainer.data.myItem = inputs.myItem;                                                      {% !! named_item in get_container_inputs([container], named_item_lists=False) %}{% endfor %}
         if (flags.logStateProviders) {
-          log('MyState updated', state.getSummary());
+          log('MyState updated', myState.getSummary());
         }
       },
-      destroyState: () => state.destroy(),
+      destroyState: () => myState.destroy(),
     });
-    {{ "" }}
+    {{ "" }}                                                                                                  {% endfor %}
 {% end_section %}
 
 
 {% section preamble %}
     const getDefaultPropsContext = () => {
       const result: any = { defaultProps: {
-        myState: () => state,                                                                                   {% ?? state %}
+        myState: () => myState,                                                                                   {% !! state in states %}
         myItem: () => {{ return_value(named_item) }},                                                           {% !! named_item in state_provider.named_items_provided %}
         myListItems: () => {{ return_value(named_item_list) }},                                                 {% !! named_item_list in state_provider.named_item_lists_provided %}
       } };
 
-      result.defaultProps = {                                                                                   {% for container in state.containers %}
+      result.defaultProps = {                                                                                   {% for state in states%}{% for container in state.containers %}
         ...result.defaultProps,
-        containerItems: () => {{ get_return_value(container, "items") }},                                       {% ?? container.named_item_list %}
-        containerItem: () => {{ get_return_value(container, "highlighted_item") }},                             {% ?? container.get_bvr("highlight") %}
-        containerItemsDeletion: () => state.myContainer.deletion,                                               {% ?? container.get_bvr("deletion") %}
-        containerItemsDragAndDrop: () => state.myContainer.dragAndDrop,                                         {% ?? container.get_bvr("dragAndDrop") %}
-        containerItemsEditing: () => state.myContainer.editing,                                                 {% ?? container.get_bvr("editing") %}
-        containerItemsFiltering: () => state.myContainer.filtering,                                             {% ?? container.get_bvr("filtering") %}
-        containerItemsHighlight: () => state.myContainer.highlight,                                             {% ?? container.get_bvr("highlight") %}
-        containerItemsSelection: () => state.myContainer.selection,                                             {% ?? container.get_bvr("selection") %}
+        containerItems: () => {{ get_return_value(state, container, "items") }},                                {% ?? container.named_item_list %}
+        containerItem: () => {{ get_return_value(state, container, "highlighted_item") }},                      {% ?? container.get_bvr("highlight") %}
+        containerItemsDeletion: () => myState.myContainer.deletion,                                             {% ?? container.get_bvr("deletion") %}
+        containerItemsDragAndDrop: () => myState.myContainer.dragAndDrop,                                       {% ?? container.get_bvr("dragAndDrop") %}
+        containerItemsEditing: () => myState.myContainer.editing,                                               {% ?? container.get_bvr("editing") %}
+        containerItemsFiltering: () => myState.myContainer.filtering,                                           {% ?? container.get_bvr("filtering") %}
+        containerItemsHighlight: () => myState.myContainer.highlight,                                           {% ?? container.get_bvr("highlight") %}
+        containerItemsSelection: () => myState.myContainer.selection,                                           {% ?? container.get_bvr("selection") %}
       };
-      {{ "" }}                                                                                                  {% endfor %}
+      {{ "" }}                                                                                                  {% endfor %}{% endfor %}
       return result;
     };
     {{ "" }}

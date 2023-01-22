@@ -1,6 +1,5 @@
-from moonleap import create_forward
-from moonleap.blocks.term.__init__ import word_to_term
-from moonleap.blocks.verbs import has, provides
+from moonleap import create_forward, word_to_term
+from moonleap.blocks.verbs import provides
 
 
 def state_provider_load(state_provider):
@@ -10,7 +9,6 @@ def state_provider_load(state_provider):
     for state_term_str in widget_spec.src_dict.get("__states__", []):
         forwards += [
             create_forward(state_provider, provides, state_term_str),
-            create_forward(state_provider.module, has, state_term_str),
         ]
 
     for pipeline_data in state_provider.widget_spec.src_dict.get(
