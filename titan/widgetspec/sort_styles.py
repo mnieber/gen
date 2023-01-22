@@ -1,16 +1,5 @@
-import fnmatch
-
 from moonleap.utils.quote import quote
-from titan.widgetspec.is_style import normalize_style
-
-style_order = [
-    (["card", "rowSkewer", "colSkewer", "button", "bigButton"], False),
-    (["grid", "grid-*", "flex", "flex-*", "items-*", "justify-*"], True),
-    (["m-*", "mt-*", "mb-*", "ml-*", "mr-*", "mx-*", "my-*"], True),
-    (["p-*", "pt-*", "pb-*", "pl-*", "pr-*", "px-*", "py-*"], True),
-    (["*"], True),
-    (["props.className"], False),
-]
+from titan.widgetspec.styles import get_style_groups
 
 
 def sort_styles(styles):
@@ -21,21 +10,38 @@ def sort_styles(styles):
 
     result = []
     unused_styles = list(styles)
+    has_prop_classname = False
 
-    for group, is_quoted in style_order:
-        group_styles = []
+    for group in get_style_groups():
+
+        quoted_group_styles = []
+        unquoted_group_styles = []
+
         for style in list(unused_styles):
-            if style == "props.className" and group == ["*"]:
+            if style == "props.className":
+                has_prop_classname = True
                 continue
-            for pattern in group:
-                if fnmatch.fnmatch(normalize_style(style), pattern):
-                    group_styles.append(style)
+
+            for style_pattern in group:
+                if style_pattern.is_scss:
+                    continue
+
+                if style_pattern.match(style):
+                    if style_pattern.is_quoted:
+                        quoted_group_styles.append(style)
+                    else:
+                        unquoted_group_styles.append(style)
                     unused_styles.remove(style)
                     break
 
-        if group_styles:
-            sep = " " if is_quoted else ", "
-            result += [sep.join(group_styles)]
+        if quoted_group_styles:
+            result += [" ".join(quoted_group_styles)]
+
+        if unquoted_group_styles:
+            result += [", ".join(unquoted_group_styles)]
+
+    if has_prop_classname:
+        result += ["props.className"]
 
     return result
 
@@ -44,9 +50,8 @@ def maybe_quote_style(style):
     if style.startswith("{"):
         return style
 
-    for group, is_quoted in style_order:
-        if not is_quoted and group != ["*"]:
-            for pattern in group:
-                if fnmatch.fnmatch(normalize_style(style), pattern):
-                    return style
+    for group in get_style_groups():
+        for pattern in group:
+            if not pattern.is_quoted and pattern.match(style):
+                return style
     return quote(style)

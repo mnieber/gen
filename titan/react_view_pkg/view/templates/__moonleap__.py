@@ -19,9 +19,10 @@ def get_helpers(_):
 
         def __init__(self):
             self._get_queries_from_pipelines()
-            self.scss_styles_by_class_name = get_scss_styles_by_class_name(
-                self.widget_spec
-            )
+            (
+                self.scss_imports,
+                self.scss_styles_by_class_name,
+            ) = get_scss_styles_by_class_name(self.widget_spec)
 
         def _get_queries_from_pipelines(self):
             for pipeline in self.pipelines:

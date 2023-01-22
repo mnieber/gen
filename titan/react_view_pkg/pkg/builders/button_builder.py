@@ -5,6 +5,8 @@ class ButtonBuilder(Builder):
     type = "Button"
 
     def update_widget_spec(self):
+        self.widget_spec.div.prepend_styles(["rowSkewer"])
+
         if "click:handler" in self.widget_spec.root.handler_terms:
             default_handler = "() => props.onClick && props.onClick()"
         else:
