@@ -28,7 +28,7 @@ def sort_styles(styles):
                 if style_pattern.match(style):
                     if style_pattern.is_scss:
                         pass
-                    if style_pattern.is_quoted:
+                    elif style_pattern.is_quoted:
                         quoted_group_styles.append(style)
                     else:
                         unquoted_group_styles.append(style)

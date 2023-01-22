@@ -43,6 +43,7 @@ from titan.react_view_pkg.pkg.builders.state_provider_builder.state_provider_bui
 from titan.react_view_pkg.pkg.builders.stepper_builder.stepper_builder import (
     StepperBuilder,
 )
+from titan.react_view_pkg.pkg.builders.switch_builder import SwitchBuilder
 from titan.react_view_pkg.pkg.builders.tabs_builder.tabs_builder import TabsBuilder
 from titan.react_view_pkg.pkg.builders.text_builder import TextBuilder
 
@@ -132,6 +133,9 @@ def get_builders(widget_spec):
 
         elif widget_base_type == StepperBuilder.type:
             builder = StepperBuilder(widget_spec)
+
+        elif widget_base_type == SwitchBuilder.type:
+            builder = SwitchBuilder(widget_spec)
 
         elif widget_base_type == TabsBuilder.type:
             builder = TabsBuilder(widget_spec)

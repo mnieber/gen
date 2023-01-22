@@ -1,4 +1,5 @@
 import os
+from io import StringIO
 
 import yaml
 
@@ -13,7 +14,9 @@ def load_widget_specs(widget_reg, spec_dir):
 
             module_name = os.path.splitext(module_spec_fn)[0]
             with open(fn) as f:
-                widget_spec_dict = yaml.load(f, Loader=yaml.SafeLoader)
+                contents = f.read().replace("🟢 ", "")
+                with StringIO(contents) as sio:
+                    widget_spec_dict = yaml.load(sio, Loader=yaml.SafeLoader)
                 parser = WidgetSpecParser(module_name, widget_reg)
                 parser.parse(widget_spec_dict)
                 try:
