@@ -20,13 +20,14 @@ def sort_styles(styles):
         for style in list(unused_styles):
             if style == "props.className":
                 has_prop_classname = True
+                unused_styles.remove(style)
                 continue
 
             for style_pattern in group:
-                if style_pattern.is_scss:
-                    continue
 
                 if style_pattern.match(style):
+                    if style_pattern.is_scss:
+                        pass
                     if style_pattern.is_quoted:
                         quoted_group_styles.append(style)
                     else:
@@ -40,6 +41,10 @@ def sort_styles(styles):
         if unquoted_group_styles:
             result += [", ".join(unquoted_group_styles)]
 
+    for style in unused_styles:
+        if is_style_expression(style):
+            result += [style]
+
     if has_prop_classname:
         result += ["props.className"]
 
@@ -47,7 +52,7 @@ def sort_styles(styles):
 
 
 def maybe_quote_style(style):
-    if style.startswith("{"):
+    if is_style_expression(style):
         return style
 
     for group in get_style_groups():
@@ -55,3 +60,7 @@ def maybe_quote_style(style):
             if not pattern.is_quoted and pattern.match(style):
                 return style
     return quote(style)
+
+
+def is_style_expression(style):
+    return style.startswith("{")
