@@ -36,16 +36,10 @@ class Div:
 
     def get_class_name_attr(self, widget_class_name=None):
         prefix = [widget_class_name] if widget_class_name else []
-        infix = list(self.styles)
 
-        suffix = []
-        if "props.className" in self.styles:
-            suffix += ["props.className"]
-            infix.remove("props.className")
-
-        if prefix or infix or suffix:
+        if prefix or self.styles:
             quoted_styles = [
-                maybe_quote_style(x) for x in prefix + sort_styles(infix + suffix)
+                maybe_quote_style(x) for x in prefix + sort_styles(self.styles)
             ]
             styles_str = ", ".join(quoted_styles)
             return f"className={{ cn({styles_str}) }}"

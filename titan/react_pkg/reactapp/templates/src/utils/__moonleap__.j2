@@ -10,3 +10,10 @@ slugify.ts:
 slugify.index.ts:
     include: {{ _.has_flag("utils/slugify") }}
     name: index.ts
+
+keyEvents.ts:
+    include: {{ _.has_flag("app/keyboardHandler") }}
+
+keyEvents.index.ts:
+    include: {{ _.has_flag("app/keyboardHandler") }}
+    name: index.ts

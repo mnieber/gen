@@ -34,6 +34,9 @@ from titan.react_view_pkg.pkg.builders.lvi_buttons_builder.lvi_buttons_builder i
 from titan.react_view_pkg.pkg.builders.picker_builder.picker_builder import (
     PickerBuilder,
 )
+from titan.react_view_pkg.pkg.builders.resize_detector_builder import (
+    ResizeDetectorBuilder,
+)
 from titan.react_view_pkg.pkg.builders.row_skewer_builder import RowSkewerBuilder
 from titan.react_view_pkg.pkg.builders.spinner_builder.spinner_builder import (
     SpinnerBuilder,
@@ -125,6 +128,9 @@ def get_builders(widget_spec):
 
         elif widget_base_type == PickerBuilder.type:
             builder = PickerBuilder(widget_spec)
+
+        elif widget_base_type == ResizeDetectorBuilder.type:
+            builder = ResizeDetectorBuilder(widget_spec)
 
         elif widget_base_type == SpinnerBuilder.type:
             builder = SpinnerBuilder(widget_spec)
