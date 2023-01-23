@@ -11,5 +11,8 @@ class GenericBuilder(Builder):
             self.widget_spec.div.append_styles(["props.className"])
 
     def update_widget_spec(self):
+        if "Children" in self.widget_spec.widget_base_types:
+            self.widget_spec.root.add_tag("has_children_prop")
+
         if self.get_value("noScss"):
             self.widget_spec.add_tag("no_scss")

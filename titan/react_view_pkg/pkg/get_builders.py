@@ -21,6 +21,7 @@ from titan.react_view_pkg.pkg.builders.item_fields_builder import (
     ItemFieldBuilder,
     ItemFieldsBuilder,
 )
+from titan.react_view_pkg.pkg.builders.key_handler_builder import KeyHandlerBuilder
 from titan.react_view_pkg.pkg.builders.layout_builder import LayoutBuilder
 from titan.react_view_pkg.pkg.builders.list_view_builder.list_view_builder import (
     ListViewBuilder,
@@ -110,6 +111,9 @@ def get_builders(widget_spec):
 
         elif widget_base_type == ItemFieldsBuilder.type:
             builder = ItemFieldsBuilder(widget_spec)
+
+        elif widget_base_type == KeyHandlerBuilder.type:
+            builder = KeyHandlerBuilder(widget_spec)
 
         elif widget_base_type == LayoutBuilder.type:
             builder = LayoutBuilder(widget_spec)
