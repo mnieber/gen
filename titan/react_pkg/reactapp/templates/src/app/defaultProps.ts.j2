@@ -1,13 +1,21 @@
 {% magic_with data.item_list.item_name as listItem %}
+{% magic_with state.name as MyState %}
 {% magic_with data.item.item_name as singleItem %}
 {% magic_with bvr.item_name as bvrItem %}
 import { stub, withDefaultProps } from 'react-default-props-context';
 import { {{ bvr_name|u0 }} } from 'skandha-facets/{{ bvr_name|u0 }}';           {% !! bvr_name in __.bvr_names %}
 import { {{ item_name|u0 }}T } from 'src/api/types/{{ item_name|u0 }}T';        {% !! item_name in __.item_names %}
+import { MyState } from 'src/{{ state.module.name }}/MyState';                  {% !! state in __.provided_states %}
 export { stub, withDefaultProps } from 'react-default-props-context';
 
 // This is a workaround for a bug in webpack
 !withDefaultProps && console.log(withDefaultProps);
+
+const dpsStates = {                                                             {% if __.provided_states %}
+    myState: {                                                                  {% for state in __.provided_states|sort(attribute="name") %}
+      myState: stub as MyState,
+    },                                                                          {% endfor %}
+}                                                                               {% endif %}
 
 const dps{{ item_name|u0|plural }} = {                                          {% for item_name, data in __.provided_data %}
     listItems: {                                                                {% if data.item_list %}
@@ -20,12 +28,15 @@ const dps{{ item_name|u0|plural }} = {                                          
       bvrItems{{ bvr.name|u0 }}: stub as {{ bvr.name|u0 }},
     },                                                                          {% endfor %}
 };
+{{ "" }}                                                                        {% endfor %}
 
-                                                                                {% endfor %}
 export const defaultProps = {
+    ...dpsStates,                                                               {% ?? __.provided_states %}
     ...dps{{ item_name|u0|plural }},                                            {% !! item_name, data in __.provided_data %}
 };
 
 export const dps = defaultProps;
+{% end_magic_with %}
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

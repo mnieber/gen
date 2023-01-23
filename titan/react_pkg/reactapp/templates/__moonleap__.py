@@ -1,8 +1,10 @@
 import typing as T
 from dataclasses import dataclass, field
 
+from moonleap import l0
 from moonleap.utils.fp import append_uniq
 from titan.react_view_pkg.behavior import Behavior
+from titan.react_view_pkg.state.resources import State
 from titan.types_pkg.item import Item
 from titan.types_pkg.itemlist import ItemList
 from titan.types_pkg.typeregistry import get_type_reg
@@ -13,6 +15,7 @@ class ProvidedData:
     item: T.Optional[Item] = None
     item_list: T.Optional[ItemList] = None
     bvrs: T.List[Behavior] = field(default_factory=list)
+    state: T.Optional[State] = None
 
 
 def get_helpers(_):
@@ -20,6 +23,7 @@ def get_helpers(_):
         bvr_names = list()
         item_names = list()
         _provided_data_by_item_name = dict()
+        provided_states = list()
 
         def __init__(self):
             for module in _.react_app.modules:
@@ -31,12 +35,16 @@ def get_helpers(_):
                         for named_item_list in state_provider.named_item_lists_provided:
                             self._add_provided_item(named_item_list)
                         for state in state_provider.states:
+                            self._add_state(state)
                             for container in state.containers:
                                 for named_item in container.named_items:
                                     self._add_provided_item(named_item)
                                 self._add_provided_item_list(container.named_item_list)
                                 for bvr in container.bvrs:
                                     self._add_provided_bvr(bvr)
+
+        def _add_state(self, state):
+            self.provided_states.append(state)
 
         def _add_provided_item(self, named_item):
             if named_item:
