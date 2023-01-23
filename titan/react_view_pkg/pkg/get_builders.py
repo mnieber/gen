@@ -14,6 +14,7 @@ from titan.react_view_pkg.pkg.builders.form_fields_builder import FormFieldsBuil
 from titan.react_view_pkg.pkg.builders.form_state_provider_builder.form_state_provider_builder import (
     FormStateProviderBuilder,
 )
+from titan.react_view_pkg.pkg.builders.generic_builder import GenericBuilder
 from titan.react_view_pkg.pkg.builders.icon_builder import IconBuilder
 from titan.react_view_pkg.pkg.builders.image_builder import ImageBuilder
 from titan.react_view_pkg.pkg.builders.item_fields_builder import (
@@ -49,7 +50,7 @@ from titan.react_view_pkg.pkg.builders.text_builder import TextBuilder
 
 
 def get_builders(widget_spec):
-    result = []
+    result = [GenericBuilder(widget_spec)]
 
     if widget_spec.is_component_def:
         result.append(ComponentDefBuilder(widget_spec))
