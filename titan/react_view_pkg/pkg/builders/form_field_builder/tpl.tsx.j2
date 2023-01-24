@@ -12,7 +12,7 @@
         />
       ]}                                                                                          {% endif %}
     >
-      <TextField controlled={true} />                                                             {% ?? field_spec.field_type in ("string", "text", "url") %}
+      <TextField controlled={true} />                                                             {% ?? field_spec.field_type in ("string", "text", "url", "markdown", "int") %}
       <SlugField />                                                                               {% ?? field_spec.field_type in ("slug",) %}
       <ValuePickerField                                                                           {% if field_spec.field_type in ("uuid",) and field_spec.target %}
         isCreatable={false}

@@ -1,3 +1,4 @@
+from moonleap import get_session
 from moonleap.utils.quote import quote
 from titan.widgetspec.styles import get_style_groups
 
@@ -10,6 +11,7 @@ def sort_styles(styles):
 
     result = []
     unused_styles = list(styles)
+
     has_prop_classname = False
 
     for group in get_style_groups():
@@ -44,6 +46,8 @@ def sort_styles(styles):
     for style in unused_styles:
         if is_style_expression(style):
             result += [style]
+        else:
+            get_session().warn(f"Unknown style '{style}' is ignored")
 
     if has_prop_classname:
         result += ["props.className"]

@@ -1,4 +1,5 @@
 export { AccountMenu } from './AccountMenu';
+export { colBanner, rowBanner } from './Banner';
 export {
   bigButton,
   button,

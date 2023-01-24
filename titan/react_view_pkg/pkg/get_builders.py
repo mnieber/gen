@@ -3,6 +3,7 @@ from titan.react_view_pkg.pkg.builders.bar_builder import BarBuilder
 from titan.react_view_pkg.pkg.builders.button_builder import ButtonBuilder
 from titan.react_view_pkg.pkg.builders.card_builder import CardBuilder
 from titan.react_view_pkg.pkg.builders.children_builder import ChildrenBuilder
+from titan.react_view_pkg.pkg.builders.col_banner_builder import ColBannerBuilder
 from titan.react_view_pkg.pkg.builders.col_skewer_builder import ColSkewerBuilder
 from titan.react_view_pkg.pkg.builders.component_builder import ComponentBuilder
 from titan.react_view_pkg.pkg.builders.component_def_builder import ComponentDefBuilder
@@ -32,12 +33,14 @@ from titan.react_view_pkg.pkg.builders.list_view_item_builder.list_view_item_bui
 from titan.react_view_pkg.pkg.builders.lvi_buttons_builder.lvi_buttons_builder import (
     LviButtonsBuilder,
 )
+from titan.react_view_pkg.pkg.builders.markdown_builder import MarkdownBuilder
 from titan.react_view_pkg.pkg.builders.picker_builder.picker_builder import (
     PickerBuilder,
 )
 from titan.react_view_pkg.pkg.builders.resize_detector_builder import (
     ResizeDetectorBuilder,
 )
+from titan.react_view_pkg.pkg.builders.row_banner_builder import RowBannerBuilder
 from titan.react_view_pkg.pkg.builders.row_skewer_builder import RowSkewerBuilder
 from titan.react_view_pkg.pkg.builders.spinner_builder.spinner_builder import (
     SpinnerBuilder,
@@ -79,6 +82,9 @@ def get_builders(widget_spec):
         elif widget_base_type == CardBuilder.type:
             builder = CardBuilder(widget_spec)
 
+        elif widget_base_type == ColBannerBuilder.type:
+            builder = ColBannerBuilder(widget_spec)
+
         elif widget_base_type == ColSkewerBuilder.type:
             builder = ColSkewerBuilder(widget_spec)
 
@@ -106,6 +112,9 @@ def get_builders(widget_spec):
         elif widget_base_type == IconBuilder.type:
             builder = IconBuilder(widget_spec)
 
+        elif widget_base_type == ImageBuilder.type:
+            builder = ImageBuilder(widget_spec)
+
         elif widget_base_type == ItemFieldBuilder.type:
             builder = ItemFieldBuilder(widget_spec)
 
@@ -127,8 +136,8 @@ def get_builders(widget_spec):
         elif widget_base_type == LviButtonsBuilder.type:
             builder = LviButtonsBuilder(widget_spec)
 
-        elif widget_base_type == ImageBuilder.type:
-            builder = ImageBuilder(widget_spec)
+        elif widget_base_type == MarkdownBuilder.type:
+            builder = MarkdownBuilder(widget_spec)
 
         elif widget_base_type == PickerBuilder.type:
             builder = PickerBuilder(widget_spec)
@@ -153,6 +162,9 @@ def get_builders(widget_spec):
 
         elif widget_base_type == TextBuilder.type:
             builder = TextBuilder(widget_spec)
+
+        elif widget_base_type == RowBannerBuilder.type:
+            builder = RowBannerBuilder(widget_spec)
 
         elif widget_base_type == RowSkewerBuilder.type:
             builder = RowSkewerBuilder(widget_spec)

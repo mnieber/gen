@@ -1,13 +1,15 @@
 {% section imports %}
+import { rowSkewer } from 'src/frames/components';
 import {
+  CancelButton,
   ControlledCheckbox,
   Field,
   GlobalError,
-  TextField,
   SaveButton,
   SlugField,
+  TextField,
   UpdateSlugButton,
-  ValuePickerField
+  ValuePickerField,
 } from 'src/forms/components';
 {% end_section %}
 
@@ -15,8 +17,14 @@ import {
 {% section lines %}
     <GlobalError />
     {{ form_fields_block }}
-    <SaveButton
-      label="Save"
-      disabled={false}
-    />
+    <div className={cn(rowSkewer)}>
+      <CancelButton
+        label="Cancel"
+        disabled={false}
+      />
+      <SaveButton
+        label="Save"
+        disabled={false}
+      />
+    </div>
 {% end_section %}

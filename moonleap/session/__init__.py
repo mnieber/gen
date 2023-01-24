@@ -50,6 +50,9 @@ class Session:
     def report(self, x, end=os.linesep):
         print(x, end=end)
 
+    def warn(self, x, end=os.linesep):
+        print(f"Warning: {x}", end=end)
+
     def get_setting_or(self, default_value, path):
         if not self.settings:
             raise Exception("No settings loaded")

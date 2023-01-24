@@ -26,6 +26,8 @@ style_patterns = [
     SP(group="mixins", is_quoted=0, is_scss=0, is_tailwind=0, pattern="card"),
     SP(group="mixins", is_quoted=0, is_scss=0, is_tailwind=0, pattern="rowSkewer"),
     SP(group="mixins", is_quoted=0, is_scss=0, is_tailwind=0, pattern="colSkewer"),
+    SP(group="mixins", is_quoted=0, is_scss=0, is_tailwind=0, pattern="rowBanner"),
+    SP(group="mixins", is_quoted=0, is_scss=0, is_tailwind=0, pattern="colBanner"),
     SP(group="mixins", is_quoted=0, is_scss=0, is_tailwind=0, pattern="button"),
     SP(group="mixins", is_quoted=0, is_scss=0, is_tailwind=0, pattern="bigButton"),
     SP(group="layout", is_quoted=1, is_scss=0, is_tailwind=0, pattern="grid"),
