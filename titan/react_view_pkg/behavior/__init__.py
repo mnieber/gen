@@ -4,6 +4,7 @@ from moonleap.blocks.verbs import has
 from .resources import Behavior, DeletionBehavior, EditingBehavior, InsertionBehavior
 
 base_tags = {
+    "addition": ["behavior"],
     "deletion": ["behavior"],
     "drag-and-drop": ["behavior"],
     "editing": ["behavior"],
@@ -25,6 +26,15 @@ def create_behavior(term):
         item_name=kebab_to_camel(term.data),
         name=kebab_to_camel(term.tag),
         has_param=has_param,
+    )
+
+
+@create("addition")
+def create_addition_behavior(term):
+    return Behavior(
+        item_name=kebab_to_camel(term.data),
+        name=kebab_to_camel(term.tag),
+        has_param=True,
     )
 
 

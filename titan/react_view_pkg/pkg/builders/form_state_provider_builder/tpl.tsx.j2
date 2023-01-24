@@ -8,6 +8,7 @@ import {
   FormStateProvider,
   HandleValidateArgsT,
   HandleSubmitArgsT,
+  HandleCancelArgsT,
   unflatten
 } from 'react-form-state-context';
 import { usePostMyMutation } from 'src/api/mutations';              {% ?? mutation %}
@@ -20,6 +21,7 @@ import { usePostMyMutation } from 'src/api/mutations';              {% ?? mutati
         initialErrors={initialErrors}
         handleValidate={handleValidate}
         handleSubmit={handleSubmit}
+        handleCancel={handleCancel}
     >
 {% end_section %}
 
@@ -30,7 +32,7 @@ import { usePostMyMutation } from 'src/api/mutations';              {% ?? mutati
 
 
 {% section preamble_hooks %}
-  const postMyMutation = props.myEditingBvr.save;                                                       {% if editing_bvr %}
+  const postMyMutation = props.myEditingBvr.save.bind(props.myEditingBvr);                              {% if editing_bvr %}
   const postMyMutation = usePostMyMutation().mutateAsync;                                               {% elif mutation %}
   {{ "" }}                                                                                              {% endif %}
 {% end_section %}
@@ -54,6 +56,10 @@ import { usePostMyMutation } from 'src/api/mutations';              {% ?? mutati
         }
         values                                                                                          {% else %}{% endif %}
       )).then(() => formState.reset(initialValues, initialErrors));                                     {% endif %}
+    };
+    const handleCancel = ({ formState }: HandleCancelArgsT) => {
+      props.myEditingBvr.cancel();                                                                      {% ?? editing_bvr %}
+      console.log("Moonleap Todo");                                                                     {% ?? not editing_bvr %}
     };
     {{ ""}}
 {% end_section %}

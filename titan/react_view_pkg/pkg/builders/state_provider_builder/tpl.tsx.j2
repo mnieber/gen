@@ -84,6 +84,7 @@ import { ObjT } from 'src/utils/types';
         ...result.defaultProps,
         containerItems: () => {{ get_return_value(state, container, "items") }},                                {% ?? container.named_item_list %}
         containerItem: () => {{ get_return_value(state, container, "highlighted_item") }},                      {% ?? container.get_bvr("highlight") %}
+        containerItemsAddition: () => myState.myContainer.addition,                                             {% ?? container.get_bvr("addition") %}
         containerItemsDeletion: () => myState.myContainer.deletion,                                             {% ?? container.get_bvr("deletion") %}
         containerItemsDragAndDrop: () => myState.myContainer.dragAndDrop,                                       {% ?? container.get_bvr("dragAndDrop") %}
         containerItemsEditing: () => myState.myContainer.editing,                                               {% ?? container.get_bvr("editing") %}

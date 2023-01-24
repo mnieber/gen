@@ -1,11 +1,11 @@
 import { useFormStateContext } from 'react-form-state-context';
 import { primaryButton } from 'src/frames/components';
 
-interface PropsT {
+export type PropsT = {
   label: string;
   disabled?: boolean;
   className?: any;
-}
+};
 
 export const SaveButton = (props: PropsT) => {
   const formState = useFormStateContext();

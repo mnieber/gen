@@ -8,17 +8,19 @@ class BvrsHelper:
         self.bvrs_items_name = plural(item_name)
 
         self.bvrs = self.widget_spec.get_bvr_names(recurse=True)
-        self.bvrs_has_selection = "selection" in self.bvrs
-        self.bvrs_has_highlight = "highlight" in self.bvrs
-        self.bvrs_has_drag_and_drop = "dragAndDrop" in self.bvrs
+        self.bvrs_has_addition = "addition" in self.bvrs
         self.bvrs_has_deletion = "deletion" in self.bvrs
+        self.bvrs_has_drag_and_drop = "dragAndDrop" in self.bvrs
+        self.bvrs_has_highlight = "highlight" in self.bvrs
+        self.bvrs_has_selection = "selection" in self.bvrs
 
     def bvrs_context(self):
         return {
-            "bvrs_has_selection": self.bvrs_has_selection,
-            "bvrs_has_highlight": self.bvrs_has_highlight,
-            "bvrs_has_drag_and_drop": self.bvrs_has_drag_and_drop,
+            "bvrs_has_addition": self.bvrs_has_addition,
             "bvrs_has_deletion": self.bvrs_has_deletion,
+            "bvrs_has_drag_and_drop": self.bvrs_has_drag_and_drop,
+            "bvrs_has_highlight": self.bvrs_has_highlight,
+            "bvrs_has_selection": self.bvrs_has_selection,
         }
 
     def bvrs_default_props(self):

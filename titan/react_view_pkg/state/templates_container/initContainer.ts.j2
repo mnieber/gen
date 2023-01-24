@@ -51,7 +51,7 @@ export const initMyContainer = (state: MyState, props: PropsT) => {
   setCallbackMap(ctr.highlight, {                                                                       {% if _.container.get_bvr("selection") %}
     highlightItem: {                                                                                    {% if _.container.get_bvr("addition") %}
       enter(this: HighlightCbs['highlightItem']) {
-        FacetPolicies.cancelNewItemOnHighlightChange(ctr.highlight, this.id);    # noqa: E501
+        FacetPolicies.cancelNewItemOnHighlightChange(ctr.highlight, this.id);
       },
     },                                                                                                  {% endif %}
   } as HighlightCbs);                                                                                   {% endif %}
