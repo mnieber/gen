@@ -25,6 +25,8 @@ class FormFieldsBuilder(Builder):
         field_widget_spec = self.widget_spec.get_place("Field")
         lines = []
         for form_field_name, field_spec in context["fields"]:
+            if field_spec.field_type in ("uuid",):
+                continue
             build_output = self._get_field_widget_output(
                 form_field_name, field_widget_spec, field_spec, context
             )

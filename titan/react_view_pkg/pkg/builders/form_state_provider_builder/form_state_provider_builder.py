@@ -85,6 +85,8 @@ def get_form_mutation_or_bvr(widget_spec):
 def _get_initial_value(field_spec):
     if field_spec.field_type == "boolean":
         return "false"
+    elif field_spec.field_type == "uuid":
+        return "createUUID().hex"
     return "null"
 
 

@@ -11,6 +11,7 @@ import {
   HandleCancelArgsT,
   unflatten
 } from 'react-form-state-context';
+import { createUUID } from 'src/utils/ids';
 import { usePostMyMutation } from 'src/api/mutations';              {% ?? mutation %}
 {% end_section %}
 
@@ -44,9 +45,9 @@ import { usePostMyMutation } from 'src/api/mutations';              {% ?? mutati
     };
     const initialErrors = {};
     const handleValidate = ({values, setError} : HandleValidateArgsT) => {
-      if (R.isNil(values['{{ name }}'])) {                                                              {% for name, field_spec in validated_fields %}
+      if (R.isNil(values['{{ name }}'])) {                                                              {% for name, field_spec in validated_fields %}{% if field_spec.field_type not in ("uuid",) %}
         setError('{{ name }}', 'This field is required');
-      }                                                                                                 {% endfor %}
+      }                                                                                                 {% endif %}{% endfor %}
     };
     const handleSubmit = ({ formState, values }: HandleSubmitArgsT) => {
       return postMyMutation(unflatten(                                                                  {% if mutation %}

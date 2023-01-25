@@ -10,7 +10,7 @@ def get_fields(mutation: ApiSpec, widget_spec: WidgetSpec):
     form_field_specs = mutation.get_inputs(["form"])
 
     result = []
-    for field_name in field_names or _get_field_names(
+    for field_name in field_names or _get_mutation_field_names(
         scalar_field_specs, form_field_specs
     ):
         if "." in field_name:
@@ -37,7 +37,7 @@ def _form_fields(form_field_spec):
     ]
 
 
-def _get_field_names(scalar_field_specs, form_field_specs):
+def _get_mutation_field_names(scalar_field_specs, form_field_specs):
     result = [x.name for x in scalar_field_specs]
     for form_field_spec in form_field_specs:
         result.extend(
