@@ -41,7 +41,7 @@ def sort_styles(styles):
             result += [" ".join(quoted_group_styles)]
 
         if unquoted_group_styles:
-            result += [", ".join(unquoted_group_styles)]
+            result += ["[" + ", ".join(unquoted_group_styles) + "]"]
 
     for style in unused_styles:
         if is_style_expression(style):
@@ -56,6 +56,9 @@ def sort_styles(styles):
 
 
 def maybe_quote_style(style):
+    if style.startswith("["):
+        return style[1:-1]
+
     if is_style_expression(style):
         return style
 
