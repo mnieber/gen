@@ -5,5 +5,4 @@ class EmptyBuilder(Builder):
     type = "Empty"
 
     def build(self):
-        self._add_div_open()
-        self._add_div_close()
+        pass

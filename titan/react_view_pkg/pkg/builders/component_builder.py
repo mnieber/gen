@@ -1,4 +1,5 @@
 from moonleap import append_uniq
+from titan.react_view_pkg.pkg.add_child_widgets import add_child_widgets
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.widgetspec.create_widget_class_name import get_component_name
 
@@ -9,7 +10,44 @@ class ComponentBuilder(Builder):
             self.widget_spec.div.append_attrs([f"onClick={{{on_click}}}"])
             append_uniq(self.widget_spec.handler_terms, "click:handler")
 
+    @property
+    def has_child_widgets(self):
+        return bool(self.widget_spec.child_widget_specs)
+
+    @property
+    def update_url(self):
+        return self.get_value("updateUrl")
+
     def build(self):
+        self.add_div_open()
+        self.add_body()
+        self.add_div_close()
+
+    def add_div_open(self):
+        class_name_attr = self.widget_spec.div.get_class_name_attr()
+        key_attr = _get_key_attr(self.widget_spec)
+        attrs_str = _get_attrs_str(self.widget_spec)
+        if self.update_url:
+            attrs_str += (
+                f" updateUrl={{() => routeUfns.moonleapTodo(history.replace)()}}"
+            )
+
+        if self.has_child_widgets:
+            self.output.add(
+                lines=[
+                    f"<{self.widget_spec.widget_class_name} "
+                    + f"{key_attr} {class_name_attr} {attrs_str}>"
+                ],
+            )
+        else:
+            self.output.add(
+                lines=[
+                    f"<{self.widget_spec.widget_class_name} "
+                    + f"{key_attr} {class_name_attr} {attrs_str}/>"
+                ],
+            )
+
+    def add_body(self):
         parent_module_name = (
             self.widget_spec.parent.module_name if self.widget_spec.parent else None
         )
@@ -17,8 +55,7 @@ class ComponentBuilder(Builder):
             imports=[_get_component_import_path(self.widget_spec, parent_module_name)]
         )
 
-        update_url = self.get_value("updateUrl")
-        if update_url:
+        if self.update_url:
             if not self.widget_spec.root.has_tag("update_url"):
                 self.widget_spec.root.add_tag("update_url")
                 self.output.add(
@@ -32,32 +69,12 @@ class ComponentBuilder(Builder):
                     ],
                 )
 
-        attrs_str = _get_attrs_str(self.widget_spec)
-        class_name_attr = self.widget_spec.div.get_class_name_attr()
-        key_attr = _get_key_attr(self.widget_spec)
-        if update_url:
-            attrs_str += (
-                f" updateUrl={{() => routeUfns.moonleapTodo(history.replace)()}}"
-            )
+        add_child_widgets(self, self.widget_spec.child_widget_specs)
 
-        has_child_widgets = bool(self.widget_spec.child_widget_specs)
-        if has_child_widgets:
-            self.output.add(
-                lines=[
-                    f"<{self.widget_spec.widget_class_name} "
-                    + f"{key_attr} {class_name_attr} {attrs_str}>"
-                ],
-            )
-            self._add_child_widgets()
+    def add_div_close(self):
+        if self.has_child_widgets:
             self.output.add(
                 lines=[f"</ {self.widget_spec.widget_class_name}>"],
-            )
-        else:
-            self.output.add(
-                lines=[
-                    f"<{self.widget_spec.widget_class_name} "
-                    + f"{key_attr} {class_name_attr} {attrs_str}/>"
-                ],
             )
 
 

@@ -8,7 +8,7 @@ class WidgetSpecParser:
         self.module_name = module_name
         self.widget_reg = widget_reg
 
-    def parse(self, spec_dict, parent_widget_spec=None):
+    def parse(self, spec_dict, parent_widget_spec=None, is_wrapper=False):
         is_top_level = parent_widget_spec is None
         if is_top_level and self.widget_reg:
             if states := spec_dict.get("__states__"):
@@ -20,6 +20,14 @@ class WidgetSpecParser:
             if not is_private_key(key)
         ]
 
+        if wrappers := spec_dict.get("__wrappers__"):
+            for wrapper in wrappers:
+                self.parse(
+                    {wrapper: {}},
+                    parent_widget_spec=parent_widget_spec,
+                    is_wrapper=True,
+                )
+
         for key, value in items:
             widget_spec, spec = create_widget_spec(
                 key, value, module_name=self.module_name
@@ -28,7 +36,10 @@ class WidgetSpecParser:
             # Update parent/child relationships
             if parent_widget_spec and not widget_spec.is_component_def:
                 widget_spec.parent = parent_widget_spec
-                parent_widget_spec.add_child_widget_spec(widget_spec)
+                if is_wrapper:
+                    parent_widget_spec.add_wrapper_widget_spec(widget_spec)
+                else:
+                    parent_widget_spec.add_child_widget_spec(widget_spec)
 
             self._check_top_level_constraints(is_top_level, widget_spec)
 

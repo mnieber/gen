@@ -16,3 +16,6 @@ class GenericBuilder(Builder):
 
         if self.get_value("noScss"):
             self.widget_spec.add_tag("no_scss")
+
+        if tabIndex := self.get_value("tabIndex"):
+            self.widget_spec.div.append_attrs([f"tabIndex={tabIndex}"])

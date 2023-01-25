@@ -1,3 +1,5 @@
+from titan.react_view_pkg.pkg.add_child_widgets import add_child_widgets
+from titan.react_view_pkg.pkg.add_div import add_div_close, add_div_open
 from titan.react_view_pkg.pkg.builder import Builder
 
 
@@ -82,13 +84,19 @@ class BarBuilder(Builder):
         self.widget_spec.div.prepend_styles(["grid", f'grid-cols-[{",".join(styles)}]'])
 
     def build(self):
+        self.add_div_open()
+        self.add_body()
+        add_div_close(self)
+
+    def add_div_open(self):
+        if not self.widget_spec.is_component_def:
+            self.output.add(lines=["<></>{/* Bar */}<></>"])
+        add_div_open(self)
+
+    def add_body(self):
         self._update_widgets()
         if not self._widgets:
             raise Exception("Bar must have at least one used slot")
 
         self.output.add(imports=["import { rowSkewer } from 'src/frames/components';"])
-        if not self.widget_spec.is_component_def:
-            self.output.add(lines=["<></>{/* Bar */}<></>"])
-        self._add_div_open()
-        self._add_child_widgets(self._widgets)
-        self._add_div_close()
+        add_child_widgets(self, self._widgets)

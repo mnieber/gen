@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { App } from 'src/app/components';
 import reportWebVitals from './reportWebVitals';                                      {% ?? _.has_flag("app/reportWebVitals") %}
 import { toJS } from 'mobx';                                                          {% if _.has_flag("app/useStates") %}
+import { action } from 'mobx';
 import { setOptions } from 'skandha';                                                 {% endif %}
 import { flags } from 'src/app/flags';
 import { applyFormatters } from 'mobx-log';
@@ -39,4 +40,5 @@ reportWebVitals();                                                              
 setOptions({                                                                          {% if _.has_flag("app/useStates") %}
   logging: flags.logSkandha,
   formatObject: toJS,
+  decorateCb: action,
 });                                                                                   {% endif %}

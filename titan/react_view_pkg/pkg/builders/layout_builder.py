@@ -1,3 +1,5 @@
+from titan.react_view_pkg.pkg.add_child_widgets import add_child_widgets
+from titan.react_view_pkg.pkg.add_div import add_div_close, add_div_open
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.widgetspec.widget_spec import WidgetSpec
 
@@ -5,17 +7,29 @@ from titan.widgetspec.widget_spec import WidgetSpec
 class LayoutBuilder(Builder):
     type = "Layout"
 
+    def __post_init__(self):
+        self.places = []
+
     def build(self):
-        places, more_classes = _get_places_and_classes_from_widget_specs(
+        self.add_div_open()
+        self.add_body()
+        add_div_close(self)
+
+    def add_div_open(self):
+        self.places, more_classes = _get_places_and_classes_from_widget_specs(
             self.widget_spec.child_widget_specs
         )
 
         self.widget_spec.div.prepend_styles(more_classes)
-        self._add_div_open()
-        self._add_child_widgets(
-            _filtered_child_widget_specs(places, self.widget_spec.child_widget_specs)
+        add_div_open(self)
+
+    def add_body(self):
+        add_child_widgets(
+            self,
+            _filtered_child_widget_specs(
+                self.places, self.widget_spec.child_widget_specs
+            ),
         )
-        self._add_div_close()
 
 
 def _filtered_child_widget_specs(places, child_widget_specs):

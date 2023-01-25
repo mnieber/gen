@@ -15,7 +15,10 @@ from titan.widgetspec.widget_spec_memo import WidgetSpecMemoContext
 @dataclass
 class WidgetSpec:
     widget_base_types: T.List[str] = field(default_factory=list)
+    # The sub-widget specs inside this widget spec
     child_widget_specs: T.List["WidgetSpec"] = field(repr=False, default_factory=list)
+    # The widget specs that wrap this widget spec
+    wrapper_widget_specs: T.List["WidgetSpec"] = field(repr=False, default_factory=list)
     div: Div = field(default_factory=Div)
     widget_name: T.Optional[str] = None
     module_name: T.Optional[str] = None
@@ -42,6 +45,11 @@ class WidgetSpec:
         if [x for x in self.child_widget_specs if x.id == widget_spec.id]:
             raise Exception(f"Duplicate widget_spec {widget_spec.id}")
         self.child_widget_specs.append(widget_spec)
+
+    def add_wrapper_widget_spec(self, widget_spec):
+        if [x for x in self.wrapper_widget_specs if x.id == widget_spec.id]:
+            raise Exception(f"Duplicate widget_spec {widget_spec.id}")
+        self.wrapper_widget_specs.append(widget_spec)
 
     def remove_child_widget_spec(self, widget_spec):
         self.child_widget_specs = [

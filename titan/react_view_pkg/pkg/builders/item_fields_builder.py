@@ -1,4 +1,5 @@
 from moonleap import u0
+from titan.react_view_pkg.pkg.add_child_widgets import add_child_widgets
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.types_pkg.typeregistry import get_type_reg
 
@@ -32,7 +33,7 @@ class ItemFieldsBuilder(Builder):
         field_widget_spec = self.widget_spec.get_place("Field")
         for field_spec in self.get_field_specs():
             field_widget_spec.values["field_spec"] = field_spec
-            self._add_child_widgets([field_widget_spec])
+            add_child_widgets(self, [field_widget_spec])
 
 
 class ItemFieldBuilder(Builder):

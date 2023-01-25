@@ -11,24 +11,32 @@ from .get_fields import get_fields
 class FormStateProviderBuilder(Builder):
     type = "FormStateProvider"
 
+    def __post_init__(self):
+        self.tpl = None
+
     def build(self):
+        self.add_div_open()
+        self.add_body()
+        self.add_div_close()
+
+    def add_div_open(self):
+        context = self.get_context()
+        self.tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)
+        self.output.add(lines=[self.tpl.get_section("div_open")])
+
+    def add_div_close(self):
+        assert self.tpl
+        self.output.add(lines=[self.tpl.get_section("div_close")])
+
+    def add_body(self):
         from titan.react_view_pkg.pkg.build_widget_spec import build_widget_spec
 
-        context = self.get_context()
         children_ws = self.widget_spec.get_place("Children")
         children_build_output = build_widget_spec(children_ws)
 
-        tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)
-        add_tpl_to_builder(tpl, self)
-
-        self.output.add(
-            lines=[
-                tpl.get_section("div_open"),
-                *children_build_output.lines,
-                tpl.get_section("div_close"),
-            ],
-        )
-
+        assert self.tpl
+        add_tpl_to_builder(self.tpl, self)
+        self.output.add(lines=[*children_build_output.lines])
         self.output.graft(children_build_output)
 
     def get_context(self):
