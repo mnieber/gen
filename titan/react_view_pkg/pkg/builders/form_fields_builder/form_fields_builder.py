@@ -40,14 +40,7 @@ class FormFieldsBuilder(Builder):
 
         # We expect the widget_spec to have a "save" pipeline
         mutation, editing_bvr = get_form_mutation_or_bvr(self.widget_spec)
-
-        fields = (
-            get_fields(
-                mutation.api_spec, self.widget_spec.get_field_names(recurse=True)
-            )
-            if mutation
-            else []
-        )
+        fields = get_fields(mutation.api_spec, self.widget_spec) if mutation else []
 
         return dict(
             item_name=item_name,

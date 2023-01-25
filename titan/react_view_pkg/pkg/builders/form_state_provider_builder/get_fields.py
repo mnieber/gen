@@ -1,9 +1,11 @@
 import typing as T
 
+from jdoc.titan.widget_reg import WidgetSpec
 from titan.typespec.api_spec import ApiSpec
 
 
-def get_fields(mutation: ApiSpec, field_names: list[str]):
+def get_fields(mutation: ApiSpec, widget_spec: WidgetSpec):
+    field_names = widget_spec.get_field_names(recurse=True)
     scalar_field_specs = [x for x in mutation.get_inputs() if x.field_type != "form"]
     form_field_specs = mutation.get_inputs(["form"])
 

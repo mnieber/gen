@@ -34,14 +34,7 @@ class FormStateProviderBuilder(Builder):
     def get_context(self):
         # We expect the widget_spec to have a "save" pipeline
         mutation, editing_bvr = get_form_mutation_or_bvr(self.widget_spec)
-
-        fields = (
-            get_fields(
-                mutation.api_spec, self.widget_spec.get_field_names(recurse=True)
-            )
-            if mutation
-            else []
-        )
+        fields = get_fields(mutation.api_spec, self.widget_spec) if mutation else []
 
         item_name = self.ih.working_item_name
         assert item_name
