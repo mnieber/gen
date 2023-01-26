@@ -1,5 +1,5 @@
 import React from 'react';
-import UIkit from 'uikit';
+import UIkit from 'src/frames/styles/uikit';
 
 export type PropsT = React.PropsWithChildren<{
   [k: string]: any;

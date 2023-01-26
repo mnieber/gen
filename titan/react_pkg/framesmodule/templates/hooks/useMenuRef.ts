@@ -1,5 +1,5 @@
 import React from 'react';
-import UIkit from 'uikit';
+import UIkit from 'src/frames/styles/uikit';
 
 export const useMenuRef = () => {
   const _ref = React.useRef(null);

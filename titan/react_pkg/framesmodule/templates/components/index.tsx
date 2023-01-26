@@ -9,6 +9,7 @@ export {
 } from './Button';
 export { card } from './Card';
 export { error } from './Error';
+export { Icon } from './Icon';
 export { colSkewer, rowSkewer } from './Skewer';
 export { Tab } from './Tab';
 export { Tabs } from './Tabs';
