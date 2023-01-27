@@ -12,7 +12,7 @@ export const Icon = (props: PropsT) => {
     UIkit && (
       <div
         className={cn('Icon', '!mr-2', props.className)}
-        data-uk-icon={`icon: ${props.name}; ratio: 0.75`}
+        data-uk-icon={`icon: ${props.name}; ratio: 1`}
       ></div>
     )
   );

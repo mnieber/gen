@@ -24,6 +24,7 @@ class TypeSpecParser:
             for key, value in type_spec_dict.items()
             if not is_private_key(key)
         ]
+
         scalar_items = [item for item in items if not _is_fk_item(item)]
         fk_items = [item for item in items if _is_fk_item(item)]
 
@@ -93,6 +94,10 @@ class TypeSpecParser:
 
 
 def _is_fk_item(item):
+    if item[0].endswith("Id") or item[0].endswith("Ids"):
+        print("HACK: returning scalar item for key", item[0])
+        return False
+
     return (
         isinstance(item[1], dict)
         or is_pass(item[1])

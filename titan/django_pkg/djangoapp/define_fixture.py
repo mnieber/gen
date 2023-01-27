@@ -31,14 +31,15 @@ def create_fixture(field_spec):
 def define_fixture(root, fixture):
     target_type_spec = fixture.field_spec.target_type_spec
     provided_item_names = [
-        l0(x.target) for x in target_type_spec.get_field_specs(["fk"])
+        l0(sn(x.target)) for x in target_type_spec.get_field_specs(["fk"])
     ]
     django_model_args = [f"{sn(x + 'Id')}={sn(x)}.id" for x in provided_item_names]
 
     create_random = f"create_random_{fixture.item_name}"
 
     root.abc(r"@pytest.fixture()")
-    root.IxI(f"def {fixture.name}", ["self", *provided_item_names], ":")
+    fixture_name = sn(fixture.name)
+    root.IxI(f"def {fixture_name}", ["self", *provided_item_names], ":")
 
     if fixture.is_single:
         root.IxI(f"  return {create_random}", django_model_args, "")

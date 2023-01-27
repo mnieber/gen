@@ -32,7 +32,6 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 ADMIN_REORDER = (
     "django_module_name",                                               {% for django_module in _.django_app.modules %}{% ?? django_module.django_models %}{% endfor %}
     "users",
-    "user_profiles",
     {                                                                   {% if _.django_app.user_accounts_module %}
         "app": "refresh_token",
         "label": "Django-RTK",
