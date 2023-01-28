@@ -10,6 +10,9 @@ class GenericBuilder(Builder):
         ):
             self.widget_spec.div.append_styles(["props.className"])
 
+        if self.get_value("banner") == "1":
+            self.output.add(lines=[tpl_banner(self.widget_spec.widget_name)])
+
     def update_widget_spec(self):
         if "Children" in self.widget_spec.widget_base_types:
             self.widget_spec.root.add_tag("has_children_prop")
@@ -19,3 +22,14 @@ class GenericBuilder(Builder):
 
         if tabIndex := self.get_value("tabIndex"):
             self.widget_spec.div.append_attrs([f"tabIndex={tabIndex}"])
+
+
+def tpl_banner(name):
+    white_space = " " * (len(name) + 6)
+    open = "{"
+    close = "}"
+
+    return f"""
+    {open}/* {white_space} */{close}
+    {open}/* 🟩 {name} 🟩 */{close}
+    {open}/* {white_space} */{close}"""
