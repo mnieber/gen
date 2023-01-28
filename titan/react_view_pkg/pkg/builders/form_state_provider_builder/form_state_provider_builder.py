@@ -83,7 +83,7 @@ def get_form_mutation_or_bvr(widget_spec):
     save_pipeline = widget_spec.get_pipeline_by_name("save", recurse=True)
     res = save_pipeline.resources[-1]
     if res.meta.term.tag == "mutation":
-        mutation = res.typ
+        mutation = res
     if res.meta.term.tag == "editing":
         editing_bvr = res.typ
         mutation = editing_bvr.mutation
