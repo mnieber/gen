@@ -1,3 +1,5 @@
+@import 'src/frames/styles/breakpoints.scss';
+
 $font-xxs: 12px;
 $font-xs: 13px;
 $font-sm: 14px;
@@ -32,8 +34,7 @@ $line-height-title-xl: 50px;
 }
 
 .text-xxs {
-    font-size: $font-xxs;
-    line-height: $line-height-xxs;
+    @include text-xxs();
 }
 
 @mixin text-xs {
@@ -42,8 +43,7 @@ $line-height-title-xl: 50px;
 }
 
 .text-xs {
-    font-size: $font-xs;
-    line-height: $line-height-xs;
+    @include text-xs();
 }
 
 @mixin text-sm {
@@ -52,8 +52,7 @@ $line-height-title-xl: 50px;
 }
 
 .text-sm {
-    font-size: $font-sm;
-    line-height: $line-height-sm;
+    @include text-sm();
 }
 
 @mixin text-md {
@@ -62,8 +61,7 @@ $line-height-title-xl: 50px;
 }
 
 .text-md {
-    font-size: $font-md;
-    line-height: $line-height-md;
+    @include text-md();
 }
 
 @mixin text-l {
@@ -72,8 +70,7 @@ $line-height-title-xl: 50px;
 }
 
 .text-l {
-    font-size: $font-l;
-    line-height: $line-height-l;
+    @include text-l();
 }
 
 @mixin text-xl {
@@ -82,8 +79,7 @@ $line-height-title-xl: 50px;
 }
 
 .text-xl {
-    font-size: $font-xl;
-    line-height: $line-height-xl;
+    @include text-xl();
 }
 
 @mixin title-xs {
@@ -92,8 +88,7 @@ $line-height-title-xl: 50px;
 }
 
 .title-xs {
-    font-size: $font-title-xs;
-    line-height: $line-height-title-xs;
+    @include title-xs();
 }
 
 @mixin title-sm {
@@ -102,8 +97,7 @@ $line-height-title-xl: 50px;
 }
 
 .title-sm {
-    font-size: $font-title-sm;
-    line-height: $line-height-title-sm;
+    @include title-sm();
 }
 
 @mixin title-md {
@@ -112,25 +106,27 @@ $line-height-title-xl: 50px;
 }
 
 .title-md {
-    font-size: $font-title-md;
-    line-height: $line-height-title-md;
+    @include title-md();
 }
 
 @mixin title-l {
-    font-size: $font-title-l;
+    font-size: $font-title-l * 0.85;
     line-height: $line-height-title-l;
+
+    @media screen and (min-width: $breakpoint-large) {
+        font-size: $font-title-l;
+    }
 }
 
 .title-l {
-    font-size: $font-title-l;
-    line-height: $line-height-title-l;
+    @include title-l();
 }
 
 @mixin title-xl {
     font-size: $font-title-xl;
     line-height: $line-height-title-xl;
 }
+
 .title-xl {
-    font-size: $font-title-xl;
-    line-height: $line-height-title-xl;
+    @include title-xl();
 }
