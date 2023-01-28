@@ -283,7 +283,7 @@ def pipeline_data_path(self, obj):
 def pipeline_source(pipeline):
     source_res = pipeline.resources[0]
     tag = source_res.meta.term.tag
-    if tag not in ("query", "props", "state~provider"):
+    if tag not in ("query", "mutation", "props", "state~provider"):
         raise Exception(
             f"No query or state in pipeline of component {pipeline.component}."
             + " Did you forget to add :props?"
