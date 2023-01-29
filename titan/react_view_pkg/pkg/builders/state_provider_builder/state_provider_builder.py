@@ -32,6 +32,7 @@ class StateProviderBuilder(Builder):
             mutations=mutations,
             queries=queries,
             states=states,
+            updates_urls=_get_updates_urls(states),
             widget_spec=self.widget_spec,
             more_type_specs_to_import=_more_type_specs_to_import(mutations),
             delete_items_data=delete_items_data,
@@ -61,6 +62,14 @@ def _get_mutations(widget_spec, states):
             if order_items_mutation := container.order_items_mutation:
                 append_uniq(mutations, order_items_mutation)
     return mutations
+
+
+def _get_updates_urls(states):
+    for state in states:
+        for container in state.containers:
+            if container.get_bvr("addition"):
+                return True
+    return False
 
 
 def _more_type_specs_to_import(mutations):

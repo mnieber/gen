@@ -24,10 +24,13 @@ import { useUpdateStateReaction } from 'src/frames/hooks/useUpdateStateReaction'
 import { lookUp, getIds } from 'src/utils/ids';
 import { log } from 'src/utils/logging';
 import { ObjT } from 'src/utils/types';
+import { useRouteUfns } from 'src/routes/hooks/useRoutes';                                      {% ?? updates_urls %}
+import { createUUID, getIds, lookUp } from 'src/utils/ids';                                     {% ?? updates_urls %}
 {% end_section %}
 
 
 {% section preamble_hooks %}
+    const { routeUfns, history } = useRouteUfns();                                                              {% ?? updates_urls %}
     const myQuery = useMyQuery();                                                                               {% !! query in queries %}
     const myMutation = useMyMutation();                                                                         {% !! mutation in mutations %}
 
@@ -48,6 +51,19 @@ import { ObjT } from 'src/utils/types';
           // {{ otherKey }}: Moonleap Todo,                                                                     {% !! otherKey in d.otherKeys %}
           {{ d.myCtrItemIds }}: getIds({{ d.myCtrItems }}),
         });
+      },                                                                                                        {% endif %}
+      createContainerItem: (values: ObjT) => {                                                                  {% if container.get_bvr("addition") %}
+        const containerItem = {
+          id: createUUID(),
+          name: 'New containerItem',
+          slug: 'new-containerItem',
+        } as ContainerItemT;
+        initRS(containerItem);
+        return containerItem;
+      },
+      updateContainerItemUrl: (containerItem: ContainerItemT) => {
+        const replaceFn = routeUfns.containerItem(history.replace);
+        replaceFn(props.playlist, containerItem);
       },                                                                                                        {% endif %}{% endwith %}{% endfor %}
     }));
 
@@ -75,9 +91,9 @@ import { ObjT } from 'src/utils/types';
 {% section preamble %}
     const getDefaultPropsContext = () => {
       const result: any = { defaultProps: {
-        myState: () => myState,                                                                                   {% !! state in states %}
-        myItem: () => {{ return_value(named_item) }},                                                           {% !! named_item in state_provider.named_items_provided %}
-        myListItems: () => {{ return_value(named_item_list) }},                                                 {% !! named_item_list in state_provider.named_item_lists_provided %}
+        myState: () => myState,                                                                                 {% !! state in states %}
+        myItem: () => {{ get_return_value(named_item) }},                                                       {% !! named_item in state_provider.named_items_provided %}
+        myListItems: () => {{ get_return_value(named_item_list) }},                                             {% !! named_item_list in state_provider.named_item_lists_provided %}
       } };
 
       result.defaultProps = {                                                                                   {% for state in states%}{% for container in state.containers %}
