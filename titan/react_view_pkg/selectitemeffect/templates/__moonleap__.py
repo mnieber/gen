@@ -36,7 +36,7 @@ def get_helpers(_):
             search_function = f"(x: {self.item_list.item.ts_type}) => " + (
                 " && ".join(
                     [
-                        f"x.{param} === args.{self.item_name + u0(param)}"
+                        f"x.{param} === params.{self.item_name + u0(param)}"
                         for param in self.type_spec.select_by or []
                     ]
                 )
@@ -47,8 +47,7 @@ def get_helpers(_):
             return (
                 ""
                 if self.route_params == [f"{self.item_name}Id"]
-                else f"const {self.item_name}Id = "
-                + f"R.find({search_function})(args.{self.items_name})?.id"
+                else f"R.find({search_function})(props.{self.items_name})?.id"
             )
 
     return Helpers()

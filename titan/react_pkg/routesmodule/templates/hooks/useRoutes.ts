@@ -1,6 +1,6 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import { RoutesContext } from 'src/routes/components/RoutesProvider';
+import { history } from 'src/routes/components/UrlRouter';
 import { RouteTable } from 'src/routes/utils/RouteTable';
 
 export const useRouteTable = () => {
@@ -13,6 +13,5 @@ export const useRoutes = () => {
 };
 
 export const useRouteUfns = () => {
-  const history = useHistory();
   return { routeUfns: useRouteTable().routeUfnByName, history };
 };

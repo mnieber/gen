@@ -11,7 +11,7 @@ import {
 
 type ArgsT = {
   myItemsSelection: Selection;
-  myItems: {{ _.component.item_list.ts_type }};                                       {% ?? __.get_item_id() %}
+  myItemId?: string;                                                                  {% ?? __.get_item_id() %}
 {{ __.select_effect_args() }}
 };
 
@@ -29,19 +29,15 @@ export const MyComponent = observer(
         getArgs={(params) => {
           return {
             myItemsSelection: props.myItemsSelection,
-            myItems: props.myItems,                                                   {% ?? __.get_item_id() %}
+            myItemId: {{ __.get_item_id() }},                                         {% ?? __.get_item_id() %}
             {{ __.extract_params() }}
           }
         }}
         f={
           (args: ArgsT) => {
-            {{ __.get_item_id() }};                                                   {% if __.get_item_id() %}
-            if (myItemId) {
-              args.myItemsSelection.selectItem({ itemId: myItemId});
-            }
-            if (args.myItemId) {                                                      {% else %}
+            if (args.myItemId) {
               args.myItemsSelection.selectItem({ itemId: args.myItemId});
-            }                                                                         {% endif %}
+            }
           }
         }
       />

@@ -38,7 +38,7 @@ export const initMyContainer = (state: MyState, props: PropsT) => {
     cancel: {
       restoreLocation() {
         FacetPolicies.editingSetDisabled(ctr.addition);
-        props.updateUrl(ctr.data.previousMyItem!);
+        props.updateMyItemUrl(ctr.data.previousMyItem!);
         ctr.data.previousClip = undefined;
       },
     },
