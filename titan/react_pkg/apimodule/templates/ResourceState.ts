@@ -1,4 +1,5 @@
 import { action, makeObservable, observable } from 'mobx';
+import * as R from 'ramda';
 import { EndpointData } from 'src/api/EndpointData';
 
 export const symbolRS = Symbol('ResourceState');
@@ -27,7 +28,13 @@ export const setToUpdating = (x: any) => getRS(x).setIsUpdating(true);
 
 export const setToIdle = (x: any) => getRS(x).setIsUpdating(false);
 
-export const getRS = (x: any) => x[symbolRS];
+export const getRS = (x: any) => {
+  const rs = x[symbolRS];
+  if (R.isNil(rs)) {
+    throw new Error('ResourceState not initialized');
+  }
+  return rs;
+};
 
 export const initRS = (x: any) => {
   x[symbolRS] = x[symbolRS] ?? new ResourceState();

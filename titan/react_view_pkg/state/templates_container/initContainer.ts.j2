@@ -4,6 +4,7 @@
 import { PropsT, MyState } from 'src/{{ _.module.name }}/MyState';
 import * as FacetPolicies from 'skandha-facets/policies';
 import { SelectionCbs, handleSelectItem } from 'skandha-facets/Selection';                              {% ?? _.container.get_bvr("selection") %}
+import { AdditionCbs } from 'skandha-facets/Addition';
 import { HighlightCbs } from 'skandha-facets/Highlight';                                                {% ?? _.container.get_bvr("highlight") %}
 import { InsertionCbs } from 'skandha-facets/Insertion';                                                {% ?? _.container.get_bvr("insertion") %}
 import { DeletionCbs } from 'skandha-facets/Deletion';                                                  {% ?? _.container.get_bvr("deletion") %}
@@ -18,6 +19,30 @@ import {
 export const initMyContainer = (state: MyState, props: PropsT) => {
   const ctr = state.myContainer;
   addCleanUpFunctionToCtr(state, () => cleanUpCtr(ctr));
+
+  setCallbackMap(ctr.addition, {                                                                        {% if _.container.get_bvr("addition") %}
+    add: {
+      storeLocation() {
+        ctr.data.previousMyItem = ctr.highlight.item;
+        FacetPolicies.newItemsAreAddedBelowTheHighlight(ctr.addition);
+      },
+      createItem(this: AdditionCbs<MyItemT>['add']) {
+        return props.createMyItem(this.values);
+      },
+      highlightNewItem() {
+        ctr.selection.selectItem({ itemId: ctr.addition.item?.id });
+        props.updateMyItemUrl(ctr.addition.item!);
+        FacetPolicies.editingSetEnabled(ctr.addition);
+      },
+    },
+    cancel: {
+      restoreLocation() {
+        FacetPolicies.editingSetDisabled(ctr.addition);
+        props.updateUrl(ctr.data.previousMyItem!);
+        ctr.data.previousClip = undefined;
+      },
+    },
+  } as AdditionCbs<ClipT>);                                                                             {% endif %}
 
   setCallbackMap(ctr.deletion, {                                                                        {% if _.container.get_bvr("deletion") %}
     delete: {
@@ -42,7 +67,7 @@ export const initMyContainer = (state: MyState, props: PropsT) => {
       },
     },
     cancel: {
-      enter() {
+      exit() {
         FacetPolicies.newItemsAreCancelledOnEditingCancel(ctr.editing);
       },
     },

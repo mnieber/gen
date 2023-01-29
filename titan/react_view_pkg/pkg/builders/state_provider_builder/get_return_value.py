@@ -22,7 +22,9 @@ def get_return_value(state_provider, state, data, hint=None):
         assert named_item_list
         maybe_expr = widget_spec.maybe_expression(named_item_list)
         data_path = f"{l0(state.name)}.{container.name}.data.{items_name}" + (
-            "Display" if container.get_bvr("filtering") else ""
+            "Display"
+            if (container.get_bvr("filtering") or container.get_bvr("insertion"))
+            else ""
         )
         return f"maybe({maybe_expr}, [])({data_path})" if maybe_expr else data_path
 
