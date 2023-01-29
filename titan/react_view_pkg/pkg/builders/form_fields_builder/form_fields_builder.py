@@ -70,7 +70,7 @@ def _get_slug_src(fields, field_spec):
 
 
 def _get_label(name):
-    return u0(name.replace(".", " "))
+    return " ".join([u0(x) for x in name.split(".")])
 
 
 def _get_display_field_name(type_spec):
