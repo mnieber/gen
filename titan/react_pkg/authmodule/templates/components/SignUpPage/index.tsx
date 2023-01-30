@@ -10,7 +10,7 @@ import { useMessages } from './useMessages';
 export const termsVersion: string =
   process.env.REACT_APP_TERMS_VERSION ?? '1.0.0';
 
-export const SignUpPage: React.FC = observer(() => {
+export const SignUpPage = observer(() => {
   const { messages } = useMessages();
   const authState = useAuthStateContext(true);
   const signUp = useSignUp(authState).mutateAsync;

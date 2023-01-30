@@ -5,15 +5,15 @@ import { useFormFieldContext } from 'src/forms/components';
 import { cn } from 'src/utils/classnames';
 import './FormFieldError.scss';
 
-interface IProps {
+export type PropsT {
   extraClass?: string;
   extraClassOnError?: string;
 }
 
 // Generic component that shows the error in fieldName for the current
 // form state.
-export const FormFieldError: React.FC<IProps> = observer(
-  ({ extraClass, extraClassOnError }) => {
+export const FormFieldError = observer(
+  ({ extraClass, extraClassOnError }: PropsT) => {
     const formState = useFormStateContext();
     const fieldContext = useFormFieldContext();
 

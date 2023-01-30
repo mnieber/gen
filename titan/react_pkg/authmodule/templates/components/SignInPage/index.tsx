@@ -15,7 +15,7 @@ import { getNextUrl, useNextUrl } from 'src/utils/hooks';
 import { ObjT } from 'src/utils/types';
 import { useMessages } from './useMessages';
 
-export const SignInPage: React.FC = observer(() => {
+export const SignInPage = observer(() => {
   const { messages } = useMessages();
 
   const params = useParams() as ObjT;

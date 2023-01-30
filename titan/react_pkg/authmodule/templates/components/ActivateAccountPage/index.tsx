@@ -9,7 +9,7 @@ import { useAuthStateContext } from 'src/auth/hooks';
 import { ObjT } from 'src/utils/types';
 import { useMessages } from './useMessages';
 
-export const ActivateAccountPage: React.FC = observer(() => {
+export const ActivateAccountPage = observer(() => {
   const { messages } = useMessages();
   const params = useParams() as ObjT;
   const authState = useAuthStateContext(true);

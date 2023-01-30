@@ -8,7 +8,7 @@ import { SignInPage } from 'src/auth/components/SignInPage';
 import { SignUpPage } from 'src/auth/components/SignUpPage';
 import { useRoutes } from 'src/routes/hooks/useRoutes';
 
-export const AuthSwitch: React.FC = () => {
+export const AuthSwitch = () => {
   const routes = useRoutes();
 
   return (

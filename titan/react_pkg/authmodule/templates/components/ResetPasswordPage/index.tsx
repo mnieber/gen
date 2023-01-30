@@ -8,7 +8,7 @@ import { ResetPasswordForm } from 'src/auth/components/ResetPasswordForm';
 import { useAuthStateContext } from 'src/auth/hooks';
 import { useMessages } from './useMessages';
 
-export const ResetPasswordPage: React.FC = observer(() => {
+export const ResetPasswordPage = observer(() => {
   const { messages } = useMessages();
   const params = useParams();
   const authState = useAuthStateContext(true);

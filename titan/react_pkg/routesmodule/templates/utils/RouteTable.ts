@@ -48,11 +48,9 @@ export class RouteTable {
       const value = routeByName[name];
       const [route, getRouteArgs] = Array.isArray(value)
         ? value
-        : [value, null];
+        : [value, () => ({})];
 
-      if (getRouteArgs) {
-        this.addRouteUfn(name, getRouteArgs);
-      }
+      this.addRouteUfn(name, getRouteArgs);
       this.addRoute(route, name, prefix);
     }
   }
