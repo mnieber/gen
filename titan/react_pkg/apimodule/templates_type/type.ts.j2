@@ -9,6 +9,8 @@ import { typeSpecNameFields } from 'src/api/types/TypeSpecNameT';               
 import { MyBaseNameT } from 'src/api/types/MyBaseNameT';                                            {% ?? _.type_spec.base_type_name %}
 import { FieldSpecTargetT, getHydratedFieldSpecTarget } from 'src/api/types/FieldSpecTargetT';      {% for field_spec in __.hydrated_field_specs %}{% ?? field_spec.field_type in ("fk", "relatedSet") %}{% endfor %}
 import * as R from 'ramda';
+import { createUUID } from 'src/utils/ids';
+import { ObjT } from 'src/utils/types';
 
 export type MyTypeT = {                                                                             {% ?? not _.type_spec.base_type_name %}
 export type MyTypeT = {{ _.type_spec.base_type_name}}T & {                                          {% ?? _.type_spec.base_type_name %}
@@ -37,6 +39,15 @@ export const hydrateMyType = (data: ObjT) => {                                  
     // fieldSpecName: Moonleap Todo,                                                                {% ?? field_spec.field_type not in ("fk", "relatedSet") %}{% endfor %}
   };
 }                                                                                                   {% endif %}
+
+export const createMyType = (values: ObjT): MyTypeT => {                                            {% if __.item.addition %}
+  return {
+    id: createUUID(),
+    name: 'New myType',
+    slug: 'new-myType',
+  } as MyTypeT;
+};                                                                                                  {% endif %}
+
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

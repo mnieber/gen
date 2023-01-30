@@ -21,13 +21,14 @@ import { Highlight, HighlightCbs } from 'skandha-facets/Highlight';             
 import { Insertion } from 'skandha-facets/Insertion';                                                   {% ?? __.import_bvr("insertion") %}
 import { Selection, SelectionCbs, handleSelectItem } from 'skandha-facets/Selection';                   {% ?? __.import_bvr("selection") %}
 import { initMyContainer, MyItemsData } from './myItems';                                               {% !! container in __.containers %}
+import { LocationState } from 'src/routes/LocationState';
 
 export type PropsT = {
   deleteMyItems: (ids: string[]) => Promise<any>;                                                       {% for container in __.containers %}{% ?? container.get_bvr("deletion") %}
   saveMyItem: (values: ObjT) => Promise<any>;                                                           {% ?? container.get_bvr("editing") %}
   saveMyItemOrdering: (myItems: MyItemT[]) => Promise<any>;                                             {% ?? container.get_bvr("dragAndDrop") %}
   createMyItem: (values: ObjT) => MyItemT;                                                              {% ?? container.get_bvr("addition") %}
-  updateMyItemUrl: (myItem: MyItemT) => void;                                                           {% ?? container.get_bvr("addition") %}{% endfor %}
+  locationState: LocationState;                                                                         {% ?? container.get_bvr("addition") %}{% endfor %}
 };
 
 export class MyState {

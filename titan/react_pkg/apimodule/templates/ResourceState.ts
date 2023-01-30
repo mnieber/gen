@@ -38,6 +38,7 @@ export const getRS = (x: any) => {
 
 export const initRS = (x: any) => {
   x[symbolRS] = x[symbolRS] ?? new ResourceState();
+  return x;
 };
 
 export function isLoading(resource: any) {

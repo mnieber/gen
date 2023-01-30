@@ -23,7 +23,6 @@ export const initMyContainer = (state: MyState, props: PropsT) => {
   setCallbackMap(ctr.addition, {                                                                        {% if _.container.get_bvr("addition") %}
     add: {
       storeLocation() {
-        ctr.data.previousMyItem = ctr.highlight.item;
         FacetPolicies.newItemsAreAddedBelowTheHighlight(ctr.addition);
       },
       createItem(this: AdditionCbs<MyItemT>['add']) {
@@ -31,18 +30,17 @@ export const initMyContainer = (state: MyState, props: PropsT) => {
       },
       highlightNewItem() {
         ctr.selection.selectItem({ itemId: ctr.addition.item?.id });
-        props.updateMyItemUrl(ctr.addition.item!);
+        props.locationState.goToMyItem(ctr.addition.item!);
         FacetPolicies.editingSetEnabled(ctr.addition);
       },
     },
     cancel: {
       restoreLocation() {
         FacetPolicies.editingSetDisabled(ctr.addition);
-        props.updateMyItemUrl(ctr.data.previousMyItem!);
-        ctr.data.previousClip = undefined;
+        props.locationState.goBack();
       },
     },
-  } as AdditionCbs<ClipT>);                                                                             {% endif %}
+  } as AdditionCbs<MyItemT>);                                                                           {% endif %}
 
   setCallbackMap(ctr.deletion, {                                                                        {% if _.container.get_bvr("deletion") %}
     delete: {

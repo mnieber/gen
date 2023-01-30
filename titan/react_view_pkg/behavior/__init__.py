@@ -1,5 +1,16 @@
-from moonleap import create, empty_rule, get_root_resource, kebab_to_camel, named, rule
+import moonleap.packages.extensions.props as P
+from moonleap import (
+    create,
+    create_forward,
+    empty_rule,
+    extend,
+    get_root_resource,
+    kebab_to_camel,
+    named,
+    rule,
+)
 from moonleap.blocks.verbs import has
+from titan.types_pkg.item import Item
 
 from .resources import Behavior, DeletionBehavior, EditingBehavior, InsertionBehavior
 
@@ -16,6 +27,7 @@ base_tags = {
 
 rules = {
     ("x+item~list", has, "behavior"): empty_rule(),
+    ("item", has, "addition"): empty_rule(),
 }
 
 
@@ -31,8 +43,9 @@ def create_behavior(term):
 
 @create("addition")
 def create_addition_behavior(term):
+    item_name = kebab_to_camel(term.data)
     return Behavior(
-        item_name=kebab_to_camel(term.data),
+        item_name=item_name,
         name=kebab_to_camel(term.tag),
         has_param=True,
     )
@@ -70,6 +83,17 @@ def create_named_behavior(term):
     return named(Behavior)()
 
 
+@rule("addition")
+def created_addition(addition):
+    item_term_str = f"{addition.item_name}:item"
+    return create_forward(item_term_str, has, addition)
+
+
 @rule("selection")
 def created_selection(selection):
     get_root_resource().set_flags(["utils/mergeClickHandlers"])
+
+
+@extend(Item)
+class ExtendItem:
+    addition = P.child(has, "addition")

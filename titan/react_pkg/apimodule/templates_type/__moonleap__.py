@@ -1,3 +1,4 @@
+from moonleap import l0
 from titan.react_pkg.apimodule.graphql_body import (
     get_dependency_type_specs,
     graphql_body,
@@ -6,6 +7,7 @@ from titan.types_pkg.pkg.has_hydrated_fields import (
     has_hydrated_fields,
     is_hydrated_field,
 )
+from titan.types_pkg.typeregistry import get_type_reg
 
 
 def get_helpers(_):
@@ -24,6 +26,7 @@ def get_helpers(_):
             if _.form_type_spec
             else []
         )
+        item = get_type_reg().get_item(l0(_.type_spec.type_name))
 
         has_id_field = bool([x for x in field_specs if x.key == "id"])
 
