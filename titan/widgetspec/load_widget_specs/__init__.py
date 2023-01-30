@@ -16,7 +16,11 @@ def load_widget_specs(widget_reg, spec_dir):
             with open(fn) as f:
                 contents = f.read()
                 with StringIO(contents) as sio:
-                    widget_spec_dict = yaml.load(sio, Loader=yaml.SafeLoader)
+                    try:
+                        widget_spec_dict = yaml.load(sio, Loader=yaml.SafeLoader)
+                    except Exception as e:
+                        raise Exception(f"Error parsing {fn}: {e}")
+
                 parser = WidgetSpecParser(module_name, widget_reg)
                 parser.parse(widget_spec_dict)
                 try:
