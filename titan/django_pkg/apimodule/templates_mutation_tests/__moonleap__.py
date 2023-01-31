@@ -1,11 +1,10 @@
 import os
 
-from titan.django_pkg.djangoapp.define_fixture import create_fixture, define_fixture
-from titan.types_pkg.typeregistry import get_type_reg
-
 from moonleap.utils.case import l0, sn
 from moonleap.utils.codeblock import CodeBlock
 from moonleap.utils.fp import uniq
+from titan.django_pkg.djangoapp.define_fixture import create_fixture, define_fixture
+from titan.types_pkg.typeregistry import get_type_reg
 
 
 def field_spec_default_value(field_spec):

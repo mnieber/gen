@@ -54,14 +54,10 @@ export const initMyContainer = (state: MyState, props: PropsT) => {
     save: {
       saveItem(this: EditingCbs['save']) {
         const values = this.values;
-        return props.saveMyItem(values).then(() => {
+        return props.saveMyItem(values).then((localMyItem: MyItemT) => {
           FacetPolicies.newItemsAreConfirmedOnEditingSave(ctr.editing);
+          props.locationState.goToMyItem(localMyItem);
         });
-      },
-      refreshView() {
-        if (ctr.highlight.item) {
-          // Moonleap Todo: move to the new myItem
-        }
       },
     },
     cancel: {

@@ -3,7 +3,7 @@ from moonleap import append_uniq
 
 def add_field_spec(type_spec, field_spec):
     # Check if matching auto fields have previously been added for this field_spec
-    auto_field_specs = _get_matching_auto_field_specs(type_spec, field_spec)
+    auto_field_specs = _get_matching_field_specs(type_spec, field_spec, is_auto=True)
 
     if field_spec.is_auto:
         # Check if the new auto field_spec matches with an existing auto field.
@@ -43,16 +43,21 @@ def add_field_spec(type_spec, field_spec):
     return True
 
 
-def _get_matching_auto_field_specs(type_spec, field_spec):
+def _get_matching_field_specs(type_spec, field_spec, is_auto):
     result = []
-    auto_field_specs = [x for x in type_spec.field_specs if x.is_auto]
-    for auto_field_spec in auto_field_specs:
-        if auto_field_spec.key == field_spec.key:
-            result.append(auto_field_spec)
+    candidate_field_specs = [
+        x for x in type_spec.field_specs if bool(x.is_auto) == is_auto
+    ]
+    for candidate_field_spec in candidate_field_specs:
+        if candidate_field_spec.key == field_spec.key:
+            result.append(candidate_field_spec)
         else:
-            if field_spec.field_type == "fk" and auto_field_spec.field_type == "fk":
-                if auto_field_spec.target == field_spec.target:
-                    result.append(auto_field_spec)
+            if (
+                field_spec.field_type == "fk"
+                and candidate_field_spec.field_type == "fk"
+            ):
+                if candidate_field_spec.target == field_spec.target:
+                    result.append(candidate_field_spec)
     return result
 
 

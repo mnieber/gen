@@ -40,8 +40,9 @@ import { ObjT } from 'src/utils/types';
           ids));                                                                                                {% endif %}
       },                                                                                                        {% endif %}{% endwith %}
       saveContainerItem: (values: ObjT) => {                                                                    {% with d = save_item_data(container) %}{% if d.saves_item %}
-        // Moonleap Todo: convert from values to containerItem form
-        return {{ d.saveMyCtrItem }}.mutateAsync(values);
+        return {{ d.saveMyCtrItem }}.mutateAsync(values).then(
+          () => { return values.containerItemForm }
+        );
       },                                                                                                        {% endif %}{% endwith %}
       saveContainerItemOrdering: (containerItems: ContainerItemT[]) => {                                        {% with d = order_items_data(container) %}{% if d.orders_items %}
         return {{ d.orderMyCtrItems }}.mutateAsync({

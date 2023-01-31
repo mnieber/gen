@@ -1,10 +1,9 @@
 from dataclasses import dataclass
 
-from titan.api_pkg.apiregistry import get_api_reg
-from titan.types_pkg.typeregistry import get_type_reg
-
 from moonleap import Resource, u0
 from moonleap.utils.inflect import plural
+from titan.api_pkg.apiregistry import get_api_reg
+from titan.types_pkg.typeregistry import get_type_reg
 
 
 @dataclass
