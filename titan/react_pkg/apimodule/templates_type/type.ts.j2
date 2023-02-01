@@ -11,6 +11,7 @@ import { FieldSpecTargetT, getHydratedFieldSpecTarget } from 'src/api/types/Fiel
 import * as R from 'ramda';
 import { createUUID } from 'src/utils/ids';
 import { ObjT } from 'src/utils/types';
+import { initRS } from 'src/api/ResourceState';
 
 export type MyTypeT = {                                                                             {% ?? not _.type_spec.base_type_name %}
 export type MyTypeT = {{ _.type_spec.base_type_name}}T & {                                          {% ?? _.type_spec.base_type_name %}
@@ -41,11 +42,11 @@ export const hydrateMyType = (data: ObjT) => {                                  
 }                                                                                                   {% endif %}
 
 export const createMyType = (values: ObjT): MyTypeT => {                                            {% if __.item.addition %}
-  return {
+  return initRS({
     id: createUUID(),
     name: 'New myType',
     slug: 'new-myType',
-  } as MyTypeT;
+  }) as MyTypeT;
 };                                                                                                  {% endif %}
 
 {% end_magic_with %}

@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 import { generatePath } from 'react-router-dom';
 import { ObjT } from 'src/utils/types';
+import { pathname } from 'src/utils/urls';
 
 export class RouteTable {
   routeByName: ObjT = {};
@@ -38,7 +39,9 @@ export class RouteTable {
         (...args: any[]) => {
           const routeArgs = getRouteArgs(...args);
           const newRoute = this.routeByName[name](routeArgs);
-          updateRoute(newRoute);
+          if (pathname() !== newRoute) {
+            updateRoute(newRoute);
+          }
         };
     }
   }

@@ -25,19 +25,14 @@ export const initMyContainer = (state: MyState, props: PropsT) => {
       storeLocation() {
         FacetPolicies.newItemsAreAddedBelowTheHighlight(ctr.addition);
       },
-      createItem(this: AdditionCbs<MyItemT>['add']) {
-        return props.createMyItem(this.values);
-      },
       highlightNewItem() {
         ctr.selection.selectItem({ itemId: ctr.addition.item?.id });
-        props.locationState.goToMyItem(ctr.addition.item!);
         FacetPolicies.editingSetEnabled(ctr.addition);
       },
     },
     cancel: {
       restoreLocation() {
         FacetPolicies.editingSetDisabled(ctr.addition);
-        props.locationState.goBack();
       },
     },
   } as AdditionCbs<MyItemT>);                                                                           {% endif %}
@@ -56,7 +51,6 @@ export const initMyContainer = (state: MyState, props: PropsT) => {
         const values = this.values;
         return props.saveMyItem(values).then((localMyItem: MyItemT) => {
           FacetPolicies.newItemsAreConfirmedOnEditingSave(ctr.editing);
-          props.locationState.goToMyItem(localMyItem);
         });
       },
     },
