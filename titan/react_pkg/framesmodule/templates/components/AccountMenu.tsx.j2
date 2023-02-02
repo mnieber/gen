@@ -3,14 +3,14 @@ import { useLoadUserId, useSignOut } from 'src/auth/api';
 import { SignInLi } from 'src/auth/components/SignInLi';                                        {% ?? _.service.react_app.auth_module %}
 import { SignOutLi } from 'src/auth/components/SignOutLi';                                      {% ?? _.service.react_app.auth_module %}
 import { button } from 'src/frames/components/Button';
-import { useMenuRef } from 'src/frames/hooks/useMenuRef';
+import { useMenuHandler } from 'src/frames/hooks/useMenuHandler';
 import { cn } from 'src/utils/classnames';
 
 import './AccountMenu.scss';
 
 export const AccountMenu = observer(() => {
   const loadUserId = useLoadUserId();
-  const menuRef = useMenuRef();
+  const menuHandler = useMenuHandler();
 
   return (
     <div className={cn('AccountMenu', 'uk-inline')}>
@@ -22,11 +22,11 @@ export const AccountMenu = observer(() => {
         Account
       </button>
       <div
-        ref={menuRef.ref}
+        ref={menuHandler.ref}
       >
         <ul className="uk-nav uk-dropdown-nav">
-          {!loadUserId.data?.isAuthenticated && <SignInLi menuRef={menuRef} />}                 {% ?? _.service.react_app.auth_module %}
-          {loadUserId.data?.isAuthenticated && <SignOutLi menuRef={menuRef} />}                 {% ?? _.service.react_app.auth_module %}
+          {!loadUserId.data?.isAuthenticated && <SignInLi menuHandler={menuHandler} />}         {% ?? _.service.react_app.auth_module %}
+          {loadUserId.data?.isAuthenticated && <SignOutLi menuHandler={menuHandler} />}         {% ?? _.service.react_app.auth_module %}
         </ul>
       </div>
     </div>

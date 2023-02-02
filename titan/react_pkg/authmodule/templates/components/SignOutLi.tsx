@@ -1,11 +1,10 @@
-import React from 'react';
 import { useSignOut } from 'src/auth/api';
 import { RouterLink } from 'src/routes/components';
 import { history } from 'src/routes/components/UrlRouter';
 import { useRoutes } from 'src/routes/hooks/useRoutes';
 
 type PropsT = {
-  menuRef: any;
+  menuHandler: any;
 };
 
 export const SignOutLi = (props: PropsT) => {
@@ -19,7 +18,7 @@ export const SignOutLi = (props: PropsT) => {
         to={routes.signIn()}
         onClick={() =>
           signOut({}).then(() => {
-            props.menuRef.closeDropDown();
+            props.menuHandler.closeDropDown();
             history.push(routes.signIn());
           })
         }
