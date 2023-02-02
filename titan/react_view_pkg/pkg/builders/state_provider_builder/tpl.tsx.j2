@@ -15,7 +15,7 @@ import React from 'react';
 import { NestedDefaultPropsContext } from 'react-default-props-context';
 import { maybe, initRS, setToUpdating } from 'src/api/ResourceState';
 import { MyState } from 'src/{{ state.module.module_path }}/MyState';                           {% !! state in states %}
-import { MyTypeT, createMyType } from 'src/api/types/MyTypeT';                                  {% !! type_spec in more_type_specs_to_import %}
+import { MyTypeT } from 'src/api/types/MyTypeT';                                                {% !! type_spec in more_type_specs_to_import %}
 import { useMyQuery } from 'src/api/queries';                                                   {% !! query in queries %}
 import { useMyMutation } from 'src/api/mutations';                                              {% !! mutation in mutations %}
 import { dps, withDefaultProps } from 'src/app/defaultProps';
@@ -49,11 +49,7 @@ import { ObjT } from 'src/utils/types';
           // {{ otherKey }}: Moonleap Todo,                                                                     {% !! otherKey in d.otherKeys %}
           {{ d.myCtrItemIds }}: getIds({{ d.myCtrItems }}),
         });
-      },                                                                                                        {% endif %}
-      createContainerItem: (values: ObjT) => {                                                                  {% if container.get_bvr("addition") %}
-        return initRS(createContainerItem(values));
-      },
-      locationState: props.locationState,                                                                       {% endif %}{% endwith %}{% endfor %}
+      }                                                                                                         {% endif %}{% endwith %}{% endfor %}
     }));
 
     useUpdateStateReaction({
