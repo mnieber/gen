@@ -25,6 +25,7 @@ Props
 isHighlighted: boolean;                                                                 {% ?? bvrs_has_selection %}
 dragAndDropUIProps: DragAndDropUIPropsT;                                                {% ?? bvrs_has_drag_and_drop %}
 selectionUIProps: SelectionUIPropsT;                                                    {% ?? bvrs_has_selection %}
+onContextMenu?: (e: React.MouseEvent) => void;                                          {% ?? context_menu %}
 {% end_section %}
 
 

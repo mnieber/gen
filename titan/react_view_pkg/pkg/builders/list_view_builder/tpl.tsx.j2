@@ -7,7 +7,8 @@ import {
     useSelectionUIConnector,                                                                  {% ?? bvrs_has_selection %}
     useDragAndDropUIConnector,                                                                {% ?? bvrs_has_drag_and_drop %}
 } from 'skandha-mobx/hooks';
-import { getUpdateUrlFn } from 'src/routes/utils';                                            {% ?? update_url %}
+import { createOnSelectItemHandler } from 'src/routes/utils';                                 {% ?? update_url %}
+import { useMenuHandler } from 'src/frames/hooks/useMenuHandler';                             {% ?? context_menu %}
 {% end_section %}
 
 
@@ -17,13 +18,15 @@ import { getUpdateUrlFn } from 'src/routes/utils';                              
 
 
 {% section preamble_hooks %}
+const menuHandler = useMenuHandler();                                                         {% if context_menu %}
+{{ "" }}                                                                                      {% endif %}
 const dragAndDropUIConnector = useDragAndDropUIConnector(                                     {% if bvrs_has_drag_and_drop %}
     props.myItemsDragAndDrop
 );                                                                                            {% endif %}
 const selectionUIConnector = useSelectionUIConnector(                                         {% if bvrs_has_selection %}
     props.myItemsSelection,
     {                                                                                         {% if update_url %}
-      onSelectItem: getUpdateUrlFn(props.myItems, props.updateUrl),
+      onSelectItem: createOnSelectItemHandler(props.myItems, props.updateUrl),
     },
     [props.myItems, props.updateUrl]                                                          {% endif %}
 );                                                                                            {% endif %}
@@ -34,15 +37,23 @@ const selectionUIConnector = useSelectionUIConnector(                           
 {% section preamble %}
 const noItems = <h2>There are no myItems</h2>;
 
-const myItemDivs = {{ __items_expr }}.map((myItem) => {
+const myItemDivs = {{ __items_expr }}.map((myItem{% if context_menu %}, idx{% endif %}) => {
   {{ child_widget_div }}
 });
 {{ "" }}
+
+const menuDiv = UIkit && (                                                                    {% if context_menu %}
+  <div key="menu" ref={menuHandler.ref} data-uk-dropdown="mode:click">
+  {# Moonleap Todo #}
+  </div>
+);                                                                                            {% endif %}
+
 {% end_section %}
 
 
 {% section lines %}
-{myItemDivs.length > 0 && myItemDivs}
+{clipDivs.length > 0 && menuHandler.insertMenuDiv(clipDivs, menuDiv)}                         {% ?? context_menu %}
+{myItemDivs.length > 0 && myItemDivs}                                                         {% ?? not context_menu %}
 {myItemDivs.length === 0 && noItems}
 {% end_section %}
 

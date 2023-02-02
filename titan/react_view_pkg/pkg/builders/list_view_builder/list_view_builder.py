@@ -27,6 +27,7 @@ class ListViewBuilder(Builder):
             "__item_name": self.ilh.working_item_name,
             "__items_expr": self.ilh.item_list_data_path(),
             "update_url": self.widget_spec.values.get("updateUrl"),
+            "context_menu": self.widget_spec.values.get("contextMenu"),
         }
 
     def _add_lines(self):
@@ -66,6 +67,6 @@ class ListViewBuilder(Builder):
         named_item_term_str = pipeline_data[-1]
         merge_into_config(
             extension,
-            spec_ext(self, places, named_item_term_str, self.widget_spec.bvr_names),
+            spec_ext(self, places, named_item_term_str, self.widget_spec),
         )
         return extension

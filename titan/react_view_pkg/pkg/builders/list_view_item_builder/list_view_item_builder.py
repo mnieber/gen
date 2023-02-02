@@ -35,4 +35,5 @@ class ListViewItemBuilder(Builder):
             **self.bvrs_helper.bvrs_context(),
             "item_name": self.ih.working_item_name,
             "component_name": self.widget_spec.widget_class_name,
+            "context_menu": self.widget_spec.get_value_by_name("contextMenu"),
         }
