@@ -1,2 +1,3 @@
 graphql_query.j2:
+    include: {{ __.has_endpoint|bool }}
     name: use{{ _.query.name | u0 }}.ts

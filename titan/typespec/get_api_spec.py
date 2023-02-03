@@ -46,6 +46,8 @@ def get_api_spec(api_reg, host, endpoint_key, endpoint_spec_dict, known_type_nam
         is_list = item_name.endswith("Set")
         saves.append((item_name.removesuffix("Set"), is_list))
 
+    has_endpoint = endpoint_spec_dict.get("hasEndpoint", ["server", "client"])
+
     invalidates = endpoint_spec_dict.get("invalidates", [])
     is_stub = endpoint_spec_dict.get("isStub", False)
 
@@ -75,6 +77,7 @@ def get_api_spec(api_reg, host, endpoint_key, endpoint_spec_dict, known_type_nam
             orders=orders,
             saves=saves,
             invalidates=invalidates,
+            has_endpoint=has_endpoint,
             is_stub=is_stub,
             inputs_type_spec=TypeSpec(type_name=name + "Inputs", field_specs=inputs),
             outputs_type_spec=TypeSpec(type_name=name + "Outputs", field_specs=outputs),

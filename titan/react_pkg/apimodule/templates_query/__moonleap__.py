@@ -4,6 +4,7 @@ from titan.types_pkg.pkg.has_hydrated_fields import has_hydrated_fields
 
 def get_helpers(_):
     class Helpers:
+        has_endpoint = "client" in _.query.api_spec.has_endpoint
         input_field_specs = _.query.api_spec.get_inputs()
         output_schema_name = _.query.name + "Outputs"
         fk_output_field_specs = _.query.api_spec.get_outputs(["relatedSet", "fk"])

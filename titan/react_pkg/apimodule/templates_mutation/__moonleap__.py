@@ -6,6 +6,7 @@ from titan.types_pkg.typeregistry import get_type_reg
 
 def get_helpers(_):
     class Helpers:
+        has_endpoint = "client" in _.mutation.api_spec.has_endpoint
         input_field_specs = _.mutation.api_spec.get_inputs()
         form_input_field_specs = _.mutation.api_spec.get_inputs(["form"])
         fk_output_field_specs = _.mutation.api_spec.get_outputs(["relatedSet", "fk"])
