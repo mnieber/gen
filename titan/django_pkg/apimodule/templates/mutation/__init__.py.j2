@@ -4,7 +4,7 @@
 import graphene
 from graphene.types.generic import GenericScalar
 {% end_clean_up_py_imports %}
-from .{{ mutation.name|lower }} import FooMutation                              {% for mutation in _.api_reg.mutations %}{% endfor %}
+from .{{ mutation.name|lower }} import FooMutation                              {% for mutation in _.api_reg.get_mutations(module_name="api") %}{% endfor %}
 import foo_module.schema                                                        {% for module in __.modules %}{% endfor %}
 
 
@@ -19,7 +19,7 @@ class Mutation(
     foo_module.schema.Mutation,                                                 {% for module in __.modules %}{% endfor %}
     GrapheneNonEmptyMutation
 ):
-    foo_mutation = FooMutation.Field()                                          {% for mutation in _.api_reg.mutations %}
+    foo_mutation = FooMutation.Field()                                          {% for mutation in _.api_reg.get_mutations(module_name="api") %}
     pass                                                                        {% else %}{% endfor %}
 
 {% end_magic_with %}

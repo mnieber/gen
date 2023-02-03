@@ -27,26 +27,38 @@ def create_api_module(term):
 @rule("django-app", has, "api:module")
 def add_query_render_tasks(django_app, api_module):
     api_module.renders(
-        lambda: get_api_reg().queries,
+        lambda: get_api_reg().get_queries(module_name="api"),
         "query",
         lambda query: dict(query=query),
         [Path(__file__).parent / "templates_query"],
     )
     api_module.renders(
-        lambda: [x for x in get_api_reg().queries if not x.api_spec.is_stub],
+        lambda: [
+            x
+            for x in get_api_reg().get_queries(module_name="api")
+            if not x.api_spec.is_stub
+        ],
         "tests",
         lambda query: dict(query=query),
         [Path(__file__).parent / "templates_query_tests"],
     )
 
     api_module.renders(
-        lambda: [x for x in get_api_reg().mutations if not x.api_spec.is_stub],
+        lambda: [
+            x
+            for x in get_api_reg().get_mutations(module_name="api")
+            if not x.api_spec.is_stub
+        ],
         "mutation",
         lambda mutation: dict(mutation=mutation),
         [Path(__file__).parent / "templates_mutation"],
     )
     api_module.renders(
-        lambda: [x for x in get_api_reg().mutations if not x.api_spec.is_stub],
+        lambda: [
+            x
+            for x in get_api_reg().get_mutations(module_name="api")
+            if not x.api_spec.is_stub
+        ],
         "tests",
         lambda mutation: dict(mutation=mutation),
         [Path(__file__).parent / "templates_mutation_tests"],

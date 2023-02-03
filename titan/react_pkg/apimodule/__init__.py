@@ -31,7 +31,9 @@ def create_api_module(term):
 @rule("react-app", has, "api:module")
 def react_app_uses_graphql(react_app, api_module):
     use_graphql = False
-    for endpoint in get_api_reg().queries + get_api_reg().mutations:
+    for endpoint in get_api_reg().get_queries(
+        module_name="api"
+    ) + get_api_reg().get_mutations(module_name="api"):
         if not endpoint.api_spec.is_stub:
             use_graphql = True
     if use_graphql:
@@ -48,17 +50,32 @@ def add_api_render_tasks(react_app, api_module):
     type_reg = get_type_reg()
 
     api_module.renders(
-        lambda: get_api_reg().queries,
+        lambda: [
+            x
+            for x in get_api_reg().get_queries(module_name="api")
+            if "client" in x.api_spec.has_endpoint
+        ],
         "queries",
         lambda query: dict(query=query),
         [Path(__file__).parent / "templates_query"],
     )
 
     api_module.renders(
-        lambda: get_api_reg().mutations,
+        lambda: [
+            x
+            for x in get_api_reg().get_mutations(module_name="api")
+            if "client" in x.api_spec.has_endpoint
+        ],
         "mutations",
         lambda mutation: dict(mutation=mutation),
         [Path(__file__).parent / "templates_mutation"],
+    )
+
+    api_module.renders(
+        lambda: [get_api_reg()],
+        "endpoints",
+        lambda api_reg: dict(),
+        [Path(__file__).parent / "templates_endpoints"],
     )
 
     api_module.renders(

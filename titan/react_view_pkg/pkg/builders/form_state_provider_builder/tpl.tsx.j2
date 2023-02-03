@@ -12,7 +12,7 @@ import {
   unflatten
 } from 'react-form-state-context';
 import { createUUID } from 'src/utils/ids';
-import { usePostMyMutation } from 'src/api/mutations';              {% ?? mutation %}
+import { usePostMyMutation } from 'src/{{ mutation.api_spec.module_name }}/endpoints';                  {% ?? mutation %}
 {% end_section %}
 
 

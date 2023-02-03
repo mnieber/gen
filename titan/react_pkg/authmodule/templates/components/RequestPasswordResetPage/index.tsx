@@ -1,9 +1,9 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { useRequestPasswordReset } from 'src/auth/api';
-import { States } from 'src/auth/api/states';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { RequestPasswordResetForm } from 'src/auth/components/RequestPasswordResetForm';
+import { useRequestPasswordReset } from 'src/auth/endpoints';
+import { States } from 'src/auth/endpoints/states';
 import { useAuthStateContext } from 'src/auth/hooks';
 import { useMessages } from './useMessages';
 

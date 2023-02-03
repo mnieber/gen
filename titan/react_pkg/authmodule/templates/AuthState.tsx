@@ -1,6 +1,6 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 import * as R from 'ramda';
-import { States } from 'src/auth/api/states';
+import { States } from 'src/auth/endpoints/states';
 import { ObjT } from 'src/utils/types';
 
 const lutSuccess: ObjT = {

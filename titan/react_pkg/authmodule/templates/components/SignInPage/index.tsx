@@ -1,14 +1,14 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import { AuthFrame } from 'src/auth/components/AuthFrame';
+import { SignInForm } from 'src/auth/components/SignInForm';
 import {
   useRequestMagicLink,
   useSignIn,
   useSignInByMagicLink,
-} from 'src/auth/api';
-import { States } from 'src/auth/api/states';
-import { AuthFrame } from 'src/auth/components/AuthFrame';
-import { SignInForm } from 'src/auth/components/SignInForm';
+} from 'src/auth/endpoints';
+import { States } from 'src/auth/endpoints/states';
 import { useAuthStateContext } from 'src/auth/hooks';
 import { getHomeRoute } from 'src/routes';
 import { getNextUrl, useNextUrl } from 'src/utils/hooks';

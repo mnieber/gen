@@ -2,7 +2,7 @@ import {
   HandleSubmitArgsT,
   HandleValidateArgsT,
 } from 'react-form-state-context';
-import { States } from 'src/auth/api/states';
+import { States } from 'src/auth/endpoints/states';
 import { createFormErrorsObject } from 'src/forms/utils/createFormErrorsObject';
 import { ObjT } from 'src/utils/types';
 import { formFields as ff, PropsT } from './index';

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { doQuery, getRefreshToken, setToken } from 'src/api/graphqlClient';
 import { useQueryData } from 'src/api/hooks';
-import { refreshToken } from 'src/auth/api/refreshToken';
+import { refreshToken } from 'src/auth/endpoints/refreshToken';
 import { maybeSetCypressCookie } from 'src/utils/cookies';                          {% ?? _.service.cypress %}
 import { ObjT } from 'src/utils/types';
 

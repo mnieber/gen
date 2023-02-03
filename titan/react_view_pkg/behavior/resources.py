@@ -29,7 +29,7 @@ class Behavior(Resource):
 class EditingBehavior(Behavior):
     @property
     def mutation(self):
-        for mutation in get_api_reg().mutations:
+        for mutation in get_api_reg().get_mutations():
             for item_saved in mutation.items_saved:
                 if self.item_name == item_saved.item_name:
                     return mutation
@@ -39,7 +39,7 @@ class EditingBehavior(Behavior):
 class InsertionBehavior(Behavior):
     @property
     def mutation(self):
-        for mutation in get_api_reg().mutations:
+        for mutation in get_api_reg().get_mutations():
             for parent_type_name, parent_key in mutation.api_spec.orders:
                 field_spec = (
                     get_type_reg()
@@ -55,7 +55,7 @@ class InsertionBehavior(Behavior):
 class DeletionBehavior(Behavior):
     @property
     def mutation(self):
-        for mutation in get_api_reg().mutations:
+        for mutation in get_api_reg().get_mutations():
             for item_list_deleted in mutation.item_lists_deleted:
                 if self.item_name == item_list_deleted.item.item_name:
                     return mutation

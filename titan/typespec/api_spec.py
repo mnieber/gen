@@ -15,6 +15,7 @@ class ApiSpec:
     orders: T.List[T.List[str]] = field(default_factory=list)
     invalidates: T.List[str] = field(default_factory=list)
     is_stub: bool = False
+    module_name: str = "api"
     # If "server" in has_endpoint, then the endpoint is implemented in the server.
     # If "client" in has_endpoint, then the endpoint is implemented in the client.
     has_endpoint: T.List[T.List[str]] = field(default_factory=list)

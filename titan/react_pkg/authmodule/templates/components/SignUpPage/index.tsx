@@ -1,9 +1,9 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { useSignUp } from 'src/auth/api';
-import { States } from 'src/auth/api/states';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
 import { SignUpForm } from 'src/auth/components/SignUpForm';
+import { useSignUp } from 'src/auth/endpoints';
+import { States } from 'src/auth/endpoints/states';
 import { useAuthStateContext } from 'src/auth/hooks';
 import { useMessages } from './useMessages';
 

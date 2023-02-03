@@ -49,7 +49,9 @@ def get_helpers(_):
                         order_ids = input.key
 
                 api_specs = []
-                for api_spec in _.api_reg.api_specs():
+                for api_spec in [
+                    x for x in _.api_reg.api_specs() if "client" in x.has_endpoint
+                ]:
                     paths = get_paths_to(
                         type_spec.type_name,
                         api_spec,

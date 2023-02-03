@@ -49,7 +49,6 @@ export const callMyEndpoint = (args: ArgsT) => {
 
 export const useCallMyEndpoint = () => {
   const mutation = useMutation(['callMyEndpoint'], callMyEndpoint, {
-{% include_snippet "__moonleap__/onMutate.ts.j2" %}
 {% include_snippet "__moonleap__/onSuccess.ts.j2" %}
   });
   return useMutationData(mutation);

@@ -18,6 +18,11 @@ def get_api_spec(api_reg, host, endpoint_key, endpoint_spec_dict, known_type_nam
         raise Exception(f"Invalid endpoint key: {endpoint_key}")
 
     name = parts.pop(0)
+    parts = name.split(".")
+    if len(parts) == 2:
+        module_name, name = parts
+    else:
+        module_name = "api"
 
     inputs = []
     for key, field_spec_value in endpoint_spec_dict.get("inputs", {}).items():
@@ -72,6 +77,7 @@ def get_api_spec(api_reg, host, endpoint_key, endpoint_spec_dict, known_type_nam
         name,
         ApiSpec(
             name=name,
+            module_name=module_name,
             is_mutation=is_mutation,
             deletes=deletes,
             orders=orders,

@@ -1,10 +1,10 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useActivateAccount } from 'src/auth/api';
-import { States } from 'src/auth/api/states';
 import { ActivateAccountForm } from 'src/auth/components/ActivateAccountForm';
 import { AuthFrame } from 'src/auth/components/AuthFrame';
+import { useActivateAccount } from 'src/auth/endpoints';
+import { States } from 'src/auth/endpoints/states';
 import { useAuthStateContext } from 'src/auth/hooks';
 import { ObjT } from 'src/utils/types';
 import { useMessages } from './useMessages';

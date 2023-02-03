@@ -85,20 +85,20 @@ class ApiRegistry(Resource):
             self._mutation_by_mutation_name[mutation_name] = mutation
         return self._mutation_by_mutation_name[mutation_name]
 
-    @property
-    def queries(self):
+    def get_queries(self, module_name=None):
         return [
             self.get_query(api_spec.name)
             for api_spec in self.api_specs()
             if not api_spec.is_mutation
+            and ((module_name is None) or (api_spec.module_name == module_name))
         ]
 
-    @property
-    def mutations(self):
+    def get_mutations(self, module_name=None):
         return [
             self.get_mutation(api_spec.name)
             for api_spec in self.api_specs()
             if api_spec.is_mutation
+            and ((module_name is None) or (api_spec.module_name == module_name))
         ]
 
 

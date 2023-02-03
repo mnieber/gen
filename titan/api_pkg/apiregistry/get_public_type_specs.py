@@ -8,7 +8,7 @@ def get_public_type_specs(api_reg, include_stubs, predicate):
     result = []
     q = Queue(lambda x: x.type_name, [])
 
-    for endpoint in list(api_reg.mutations) + list(api_reg.queries):
+    for endpoint in list(api_reg.get_mutations()) + list(api_reg.get_queries()):
         if not include_stubs and endpoint.api_spec.is_stub:
             continue
         _add_target_type_specs(q, endpoint.api_spec.get_inputs(["fk", "relatedSet"]))

@@ -1,20 +1,23 @@
 import { useMutation } from '@tanstack/react-query';
 import { doQuery } from 'src/api/graphqlClient';
-import { States } from 'src/auth/api/states';
-import { hasErrorCode, isError } from 'src/auth/api/utils';
 import { AuthState } from 'src/auth/AuthState';
+import { States } from 'src/auth/endpoints/states';
+import { hasErrorCode, isError } from 'src/auth/endpoints/utils';
 import { ObjT } from 'src/utils/types';
 
 export type ArgsT = {
+  activationToken: string;
   password: string;
-  passwordResetToken: string;
 };
 
-export function resetPassword(args: ArgsT) {
+export function activateAccount(args: ArgsT) {
   return doQuery(
-    `mutation ($password: String!, $passwordResetToken: String!) {
-      resetPassword(
-        passwordResetToken: $passwordResetToken,
+    `mutation (
+      $activationToken: String!,
+      $password: String!,
+    ) {
+      activateAccount(
+        activationToken: $activationToken,
         password: $password,
       ) {
         success,
@@ -22,13 +25,13 @@ export function resetPassword(args: ArgsT) {
       }
     }`,
     {
+      activationToken: args.activationToken,
       password: args.password,
-      passwordResetToken: args.passwordResetToken,
     }
   ).then((response: ObjT) => {
     if (
       hasErrorCode(
-        ['resetPassword', 'errors', 'password'],
+        ['activateAccount', 'errors', 'password'],
         'TOO_SHORT'
       )(response)
     )
@@ -39,30 +42,19 @@ export function resetPassword(args: ArgsT) {
 
     if (
       hasErrorCode(
-        ['resetPassword', 'errors', 'passwordResetToken'],
+        ['activateAccount', 'errors', 'activationToken'],
         'NOT_FOUND'
       )(response)
     )
       return {
         success: false,
-        errors: [States.PASSWORD_RESET_TOKEN_NOT_FOUND],
+        errors: [States.ACTIVATION_TOKEN_NOT_FOUND],
       };
 
-    if (
-      hasErrorCode(
-        ['resetPassword', 'errors', 'passwordResetToken'],
-        'ACCOUNT_UNKNOWN'
-      )(response)
-    )
+    if (isError(['activateAccount', 'errors'])(response))
       return {
         success: false,
-        errors: [States.PASSWORD_RESET_EMAIL_UNKNOWN],
-      };
-
-    if (isError(['resetPassword', 'errors'])(response))
-      return {
-        success: false,
-        errors: [States.RESET_PASSWORD_FAILED],
+        errors: [States.ACTIVATE_ACCOUNT_FAILED],
       };
 
     return {
@@ -71,10 +63,10 @@ export function resetPassword(args: ArgsT) {
   });
 }
 
-export const useResetPassword = (authState?: AuthState) => {
-  const queryName = 'resetPassword';
+export const useActivateAccount = (authState?: AuthState) => {
+  const queryName = 'activateAccount';
 
-  return useMutation([queryName], resetPassword, {
+  return useMutation([queryName], activateAccount, {
     onMutate: () => {
       if (authState) authState.onUpdating(queryName);
     },
