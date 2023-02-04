@@ -5,10 +5,10 @@
 {% magic_with type_spec.type_name as MyTypeSpecName %}
 {% magic_with output_field_spec.target as myOutputFieldType %}
 {% magic_with output_field_spec.name as myOutputFieldName %}
+import * as R from 'ramda';
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from 'src/api/queryClient';                                                          {% ?? _.mutation.api_spec.invalidates %}
 import { doQuery } from 'src/api/graphqlClient';
-import { useMutationData } from 'src/api/hooks';
 import { ObjT } from 'src/utils/types';
 import { wait } from 'src/utils/wait';
 import { {{ type_spec.type_name }}T } from 'src/api/types/{{ type_spec.type_name.removesuffix("Form") }}T'; {% !! type_spec in __.form_input_type_specs %}
@@ -48,10 +48,11 @@ export const callMyEndpoint = (args: ArgsT) => {
 };
 
 export const useCallMyEndpoint = () => {
-  const mutation = useMutation(['callMyEndpoint'], callMyEndpoint, {
-{% include_snippet "__moonleap__/onSuccess.ts.j2" %}
+  return useMutation({
+    mutationKey: ['callMyEndpoint'],
+    mutationFn: callMyEndpoint,
+    {% include_snippet "__moonleap__/onSuccess.ts.j2" %}
   });
-  return useMutationData(mutation);
 };
 {% end_magic_with %}
 {% end_magic_with %}

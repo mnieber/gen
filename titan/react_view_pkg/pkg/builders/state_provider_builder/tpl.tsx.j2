@@ -18,6 +18,7 @@ import { MyState } from 'src/{{ state.module.module_path }}/MyState';           
 import { MyTypeT } from 'src/api/types/MyTypeT';                                                {% !! type_spec in more_type_specs_to_import %}
 import { useMyQuery } from 'src/{{ query.api_spec.module_name }}/endpoints';                    {% !! query in queries %}
 import { useMyMutation } from 'src/{{ mutation.api_spec.module_name }}/endpoints';              {% !! mutation in mutations %}
+import { useMutationData, useQueryData } from 'src/api/hooks';
 import { dps, withDefaultProps } from 'src/app/defaultProps';
 import { flags } from 'src/app/flags';
 import { useUpdateStateReaction } from 'src/frames/hooks/useUpdateStateReaction';
@@ -28,8 +29,8 @@ import { ObjT } from 'src/utils/types';
 
 
 {% section preamble_hooks %}
-    const myQuery = useMyQuery();                                                                               {% !! query in queries %}
-    const myMutation = useMyMutation();                                                                         {% !! mutation in mutations %}
+    const myQuery = useQueryData(useMyQuery());                                                                 {% !! query in queries %}
+    const myMutation = useMutationData(useMyMutation());                                                        {% !! mutation in mutations %}
 
     const [myState] = React.useState(() => new MyState({                                                        {% for state in states %}
       deleteContainerItems: (ids: string[]) => {                                                                {% for container in state.containers %}{% with d = delete_items_data(container) %}{% if d.deletes_items %}

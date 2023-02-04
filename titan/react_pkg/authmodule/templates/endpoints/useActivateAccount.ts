@@ -66,7 +66,9 @@ export function activateAccount(args: ArgsT) {
 export const useActivateAccount = (authState?: AuthState) => {
   const queryName = 'activateAccount';
 
-  return useMutation([queryName], activateAccount, {
+  return useMutation({
+    mutationKey: [queryName],
+    mutationFn: activateAccount,
     onMutate: () => {
       if (authState) authState.onUpdating(queryName);
     },

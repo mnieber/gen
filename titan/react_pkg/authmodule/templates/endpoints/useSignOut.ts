@@ -18,13 +18,15 @@ export function signOut(args: ArgsT) {
 export const useSignOut = (authState?: AuthState) => {
   const queryName = 'signOut';
 
-  return useMutation([queryName], signOut, {
+  return useMutation({
+    mutationKey: [queryName],
+    mutationFn: signOut,
     onMutate: () => {
       if (authState) authState.onUpdating(queryName);
     },
     onSuccess: (data: ObjT) => {
       if (authState) authState.onUpdated(queryName, data);
-      queryClient.invalidateQueries(['loadUserId']);
+      queryClient.invalidateQueries({ queryKey: ['loadUserId'] });
     },
     onError: (error: Error) => {
       if (authState) authState.onErrored(queryName, error.message);

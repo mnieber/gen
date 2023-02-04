@@ -41,7 +41,9 @@ export function requestMagicLink(args: ArgsT) {
 export const useRequestMagicLink = (authState?: AuthState) => {
   const queryName = 'requestMagicLink';
 
-  return useMutation([queryName], requestMagicLink, {
+  return useMutation({
+    mutationKey: [queryName],
+    mutationFn: requestMagicLink,
     onMutate: () => {
       maybeSetCypressCookie('cypressMagicLinkToken', '');                       {% ?? _.service.cypress %}
       if (authState) authState.onUpdating(queryName);

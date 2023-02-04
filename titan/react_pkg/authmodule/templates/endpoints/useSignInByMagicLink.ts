@@ -67,13 +67,15 @@ export function signInByMagicLink(args: ArgsT) {
 export const useSignInByMagicLink = (authState?: AuthState) => {
   const queryName = 'signInByMagicLink';
 
-  return useMutation([queryName], signInByMagicLink, {
+  return useMutation({
+    mutationKey: [queryName],
+    mutationFn: signInByMagicLink,
     onMutate: () => {
       if (authState) authState.onUpdating(queryName);
     },
     onSuccess: (data: ObjT) => {
       if (authState) authState.onUpdated(queryName, data);
-      queryClient.invalidateQueries(['loadUserId']);
+      queryClient.invalidateQueries({ queryKey: ['loadUserId'] });
     },
     onError: (error: Error) => {
       if (authState) authState.onErrored(queryName, error.message);

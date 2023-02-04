@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { doQuery, getRefreshToken, setToken } from 'src/api/graphqlClient';
-import { useQueryData } from 'src/api/hooks';
 import { refreshToken } from 'src/auth/endpoints/refreshToken';
 import { maybeSetCypressCookie } from 'src/utils/cookies';                          {% ?? _.service.cypress %}
 import { ObjT } from 'src/utils/types';
@@ -21,7 +20,8 @@ export function loadUserId(args: ArgsT): Promise<any> {
   )
     .then((response: ObjT) => {
       return {
-        userId: response.username,
+        userId: response.username ?? anonymous,
+        isAuthenticated: !!response.username,
       };
     })
     .catch((error: ObjT) => {
@@ -49,25 +49,22 @@ export function loadUserId(args: ArgsT): Promise<any> {
     .catch(() => {
       return {
         userId: anonymous,
+        isAuthenticated: false,
       };
     });
 }
 
 export const useLoadUserId = () => {
-  const query = useQuery(
-    ['loadUserId'],
-    () => {
-      maybeSetCypressCookie('cypressLoadedUserId', '');                         {% ?? _.service.cypress %}
-      return loadUserId({ maybeRefreshToken: true });
-    },
+  return useQuery(
     {
-      onSuccess: (data: ObjT) => {
-        maybeSetCypressCookie('cypressLoadedUserId', data.userId);              {% ?? _.service.cypress %}
-        data.userId = data.userId ?? anonymous;
-        data.isAuthenticated = data.userId !== anonymous;
-        return Promise.resolve(data);
+      queryKey: ['loadUserId'],
+      queryFn: () => {
+        maybeSetCypressCookie('cypressLoadedUserId', '');                         {% ?? _.service.cypress %}
+        return loadUserId({ maybeRefreshToken: true });
       },
+      onSuccess: (data: ObjT) => {                                                {% if _.service.cypress %}
+        maybeSetCypressCookie('cypressLoadedUserId', data.userId);
+      },                                                                          {% endif %}
     }
   );
-  return useQueryData(query);
 };

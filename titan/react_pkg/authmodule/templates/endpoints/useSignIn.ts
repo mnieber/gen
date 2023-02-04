@@ -61,13 +61,15 @@ export function signIn(args: ArgsT) {
 export const useSignIn = (authState?: AuthState) => {
   const queryName = 'signIn';
 
-  return useMutation([queryName], signIn, {
+  return useMutation({
+    mutationKey: [queryName],
+    mutationFn: signIn,
     onMutate: () => {
       if (authState) authState.onUpdating(queryName);
     },
     onSuccess: (data: ObjT) => {
       if (authState) authState.onUpdated(queryName, data);
-      queryClient.invalidateQueries(['loadUserId']);
+      queryClient.invalidateQueries({ queryKey: ['loadUserId'] });
     },
     onError: (error: Error) => {
       if (authState) authState.onErrored(queryName, error.message);

@@ -74,7 +74,9 @@ export function resetPassword(args: ArgsT) {
 export const useResetPassword = (authState?: AuthState) => {
   const queryName = 'resetPassword';
 
-  return useMutation([queryName], resetPassword, {
+  return useMutation({
+    mutationKey: [queryName],
+    mutationFn: resetPassword,
     onMutate: () => {
       if (authState) authState.onUpdating(queryName);
     },
