@@ -1,30 +1,40 @@
-import * as R from 'ramda';
 import { ObjT } from 'src/utils/types';
 
-export const applyUpdate = (path: string, data: ObjT, update: Function) => {
-  const pathParts = path.split('.');
-  applyUpdateImp(pathParts, 0, data, update);
-  return data;
+export const applyUpdate = (paths: string[], data: ObjT, update: Function) => {
+  let result = data;
+  for (const path of paths) {
+    const pathParts = path.split('.');
+    result = applyUpdateImp(pathParts, 0, result, update);
+  }
+  return result;
 };
 
 const applyUpdateImp = (
-  paths: string[],
+  paths: (string | number)[],
   pathIdx: number,
-  data: ObjT,
+  data: any,
   update: Function
 ) => {
-  if (pathIdx === paths.length) {
-    update(data);
-  }
-
   const path = paths[pathIdx];
-  if (path === '*') {
-    const updateItem = (item: any) => {
-      applyUpdateImp(paths, pathIdx + 1, item, update);
-    };
 
-    R.forEach(updateItem, Array.isArray(data) ? data : R.values(data));
-  } else if (path) {
-    applyUpdateImp(paths, pathIdx + 1, data[path], update);
+  if (pathIdx === paths.length - 1) {
+    return { ...data, [path]: update(data[path]) };
   }
+
+  if (path === '*') {
+    const result: any = Array.isArray(data) ? [] : {};
+    for (const idx in data) {
+      result[idx] = applyUpdateImp(paths, pathIdx + 1, data[idx], update);
+    }
+    return result;
+  }
+
+  const result = Array.isArray(data) ? [...data] : { ...data };
+  result[path as number] = applyUpdateImp(
+    paths,
+    pathIdx + 1,
+    data[path as number],
+    update
+  );
+  return result;
 };
