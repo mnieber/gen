@@ -1,6 +1,5 @@
-from titan.api_pkg.apiregistry import get_api_reg
-
 from moonleap import u0
+from titan.api_pkg.apiregistry import get_api_reg
 
 field_name_block_list = ["sortPos", "id"]
 
@@ -18,7 +17,7 @@ def _get_faker_value(field_spec):
     if field_spec.field_type in ("string", "text", "slug"):
         return f"f.word()"
 
-    if field_spec.field_type == "string[]":
+    if field_spec.field_type in ("string[]", "tags"):
         return f"[f.word(), f.word()]"
 
     if field_spec.field_type == "int[]":

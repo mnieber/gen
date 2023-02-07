@@ -1,3 +1,5 @@
+from moonleap import get_root_resource
+from moonleap.utils.case import camel_to_kebab, sn
 from titan.django_pkg.djangomodel.resources import (
     DjangoBooleanField,
     DjangoCharField,
@@ -14,9 +16,6 @@ from titan.django_pkg.djangomodel.resources import (
     DjangoUrlField,
     DjangoUuidField,
 )
-
-from moonleap import get_root_resource
-from moonleap.utils.case import camel_to_kebab, sn
 
 
 def import_type_spec(type_spec, django_model):
@@ -56,7 +55,7 @@ def import_type_spec(type_spec, django_model):
             django_model.fields.append(DjangoCharField(**args))
         elif field_spec.field_type == "text":
             django_model.fields.append(DjangoTextField(**args))
-        elif field_spec.field_type == "json":
+        elif field_spec.field_type in ("json", "tags"):
             django_model.fields.append(DjangoJsonField(**args))
         elif field_spec.field_type == "url":
             django_model.fields.append(DjangoUrlField(**args))

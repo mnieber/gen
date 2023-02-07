@@ -66,6 +66,8 @@ def get_scalar_field_spec(host, key, field_spec_value):
                 if "Image" in parts
                 else "markdown"
                 if "Markdown" in parts
+                else "tags"
+                if "Tags" in parts
                 else None
             )
 

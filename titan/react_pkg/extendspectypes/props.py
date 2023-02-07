@@ -44,7 +44,7 @@ def field_spec_ts_type(field_spec):
     ):
         return "string"
 
-    if field_spec.field_type in ("string[]", "uuid[]"):
+    if field_spec.field_type in ("string[]", "uuid[]", "tags"):
         return "string[]"
 
     if field_spec.field_type in ("int[]",):

@@ -33,7 +33,7 @@ def graphene_type(self: FieldSpec, args):
     if self.field_type in ("string", "text", "slug", "markdown"):
         return f"graphene.String({args})"
 
-    if self.field_type == "string[]":
+    if self.field_type in "string[], tags":
         return f"graphene.List(graphene.String{infix}{args})"
 
     if self.field_type == "uuid":
