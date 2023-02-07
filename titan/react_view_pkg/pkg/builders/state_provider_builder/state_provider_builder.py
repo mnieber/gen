@@ -1,15 +1,9 @@
 from pathlib import Path
 
-from moonleap import append_uniq, get_tpl
+from moonleap import get_tpl
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
 
-from .get_container_data import (
-    delete_items_data,
-    get_container_inputs,
-    order_items_data,
-    save_item_data,
-)
 from .get_return_value import get_return_value
 
 
@@ -23,21 +17,10 @@ class StateProviderBuilder(Builder):
         state_provider = self.widget_spec.component
         states = state_provider.states
 
-        queries = self.widget_spec.queries
-
-        mutations = _get_mutations(self.widget_spec, states)
-
         context = dict(
             state_provider=state_provider,
-            mutations=mutations,
-            queries=queries,
             states=states,
-            updates_urls=_get_updates_urls(states),
             widget_spec=self.widget_spec,
-            more_type_specs_to_import=_more_type_specs_to_import(mutations),
-            delete_items_data=delete_items_data,
-            order_items_data=order_items_data,
-            save_item_data=save_item_data,
             get_container_inputs=get_container_inputs,
             get_return_value=lambda state, data, hint=None: get_return_value(
                 state_provider, state, data, hint
@@ -49,34 +32,13 @@ class StateProviderBuilder(Builder):
         add_tpl_to_builder(tpl, self)
 
 
-def _get_mutations(widget_spec, states):
-    mutations = widget_spec.mutations
-    for state in states:
-        for container in state.containers:
-            if delete_items_mutation := container.delete_items_mutation:
-                append_uniq(mutations, delete_items_mutation)
-            if delete_item_mutation := container.delete_item_mutation:
-                append_uniq(mutations, delete_item_mutation)
-            if save_item_mutation := container.save_item_mutation:
-                append_uniq(mutations, save_item_mutation)
-            if order_items_mutation := container.order_items_mutation:
-                append_uniq(mutations, order_items_mutation)
-    return mutations
-
-
-def _get_updates_urls(states):
-    for state in states:
-        for container in state.containers:
-            if container.get_bvr("addition"):
-                return True
-    return False
-
-
-def _more_type_specs_to_import(mutations):
-    types = []
-    for mutation in mutations:
-        for field in mutation.api_spec.get_inputs(
-            ["fk", "relatedSet", "uuid", "uuid[]"]
-        ):
-            append_uniq(types, field.target_type_spec)
-    return types
+def get_container_inputs(containers, named_items=True, named_item_lists=True):
+    result = []
+    for container in containers:
+        if named_items:
+            for named_item in container.named_items:
+                result.append(named_item)
+        if named_item_lists:
+            if container.named_item_list:
+                result.append(container.named_item_list)
+    return result

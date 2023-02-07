@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import moonleap.packages.extensions.props as P
 from moonleap import create, empty_rule, extend, kebab_to_camel, rule, u0
 from moonleap.blocks.verbs import has, provides
@@ -28,6 +30,17 @@ def create_state_provider(term):
 @rule("state~provider")
 def created_state_provider(state_provider):
     return props.state_provider_load(state_provider)
+
+
+@rule("module", has, "state~provider")
+def module_renders_state_provider(module, state_provider):
+    for state in state_provider.states:
+        module.renders(
+            [state_provider],
+            "hooks",
+            lambda state_provider: dict(state_provider=state_provider, state=state),
+            [Path(__file__).parent / "templates_hook"],
+        )
 
 
 @extend(StateProvider)

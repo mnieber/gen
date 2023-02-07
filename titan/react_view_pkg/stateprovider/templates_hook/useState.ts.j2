@@ -1,0 +1,53 @@
+{% magic_with query.name as myQuery %}
+{% magic_with mutation.name as myMutation %}
+{% magic_with _.state.name as MyState %}
+{% magic_with container.item.item_name as containerItem %}
+import * as R from 'ramda';
+import React from 'react';
+import { setToUpdating } from 'src/api/ResourceState';
+import { MyState } from 'src/{{ _.state.module.module_path }}/MyState';
+import { useMyQuery } from 'src/{{ query.api_spec.module_name }}/endpoints';                                    {% !! query in __.queries %}
+import { useMyMutation } from 'src/{{ mutation.api_spec.module_name }}/endpoints';                              {% !! mutation in __.mutations %}
+import { useMutationData, useQueryData } from 'src/api/hooks';
+import { lookUp, getIds } from 'src/utils/ids';
+import { ObjT } from 'src/utils/types';
+
+export type PropsT = {};
+
+export const useMyState = (props: PropsT) => {
+  const myQuery = useQueryData(useMyQuery());                                                                   {% !! query in __.queries %}
+  const myMutation = useMutationData(useMyMutation());                                                          {% !! mutation in __.mutations %}
+
+  const [myState] = React.useState(() => new MyState({
+    deleteContainerItems: (ids: string[]) => {                                                                {% for container in _.state.containers %}{% with d = __.delete_items_data(container) %}{% if d.deletes_items %}
+      R.map(setToUpdating, lookUp(ids, myState.containerItems.data.containerItemById));
+      return {{ d.deleteMyCtrItems }}.mutateAsync({ {{ d.myCtrItemIds }}: ids });                             {% if d.get('deleteMyCtrItems') %}
+      return Promise.all(R.map(                                                                               {% else %}
+        (x: string) => {{ d.deleteMyCtrItem }}.mutateAsync({ {{ d.myCtrItemId }}: x }),
+        ids));                                                                                                {% endif %}
+    },                                                                                                        {% endif %}{% endwith %}
+    saveContainerItem: (values: ObjT) => {                                                                    {% with d = __.save_item_data(container) %}{% if d.saves_item %}
+      return {{ d.saveMyCtrItem }}.mutateAsync(values).then(
+        () => { return values.containerItemForm }
+      );
+    },                                                                                                        {% endif %}{% endwith %}
+    saveContainerItemOrdering: (containerItems: ContainerItemT[]) => {                                        {% with d = __.order_items_data(container) %}{% if d.orders_items %}
+      return {{ d.orderMyCtrItems }}.mutateAsync({
+        // {{ otherKey }}: Moonleap Todo,                                                                     {% !! otherKey in d.otherKeys %}
+        {{ d.myCtrItemIds }}: getIds({{ d.myCtrItems }}),
+      });
+    }                                                                                                         {% endif %}{% endwith %}{% endfor %}
+  }));
+
+  React.useEffect(() => () => myState.destroy(), [myState]);
+
+  return {
+    myState,
+    myQuery,                                                                                                    {% !! query in __.queries %}
+    myMutation,                                                                                                 {% !! mutation in __.mutations %}
+  };
+};
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}

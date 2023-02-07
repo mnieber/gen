@@ -57,18 +57,6 @@ def save_item_data(container):
     return data
 
 
-def get_container_inputs(containers, named_items=True, named_item_lists=True):
-    result = []
-    for container in containers:
-        if named_items:
-            for named_item in container.named_items:
-                result.append(named_item)
-        if named_item_lists:
-            if container.named_item_list:
-                result.append(container.named_item_list)
-    return result
-
-
 def _get_field_name(mutation, field_types):
     for field_type in field_types:
         for field in mutation.api_spec.get_inputs([field_type]):
