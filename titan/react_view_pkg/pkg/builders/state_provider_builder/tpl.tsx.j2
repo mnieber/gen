@@ -1,5 +1,3 @@
-{% magic_with query.name as myQuery %}
-{% magic_with mutation.name as myMutation %}
 {% magic_with state.name as MyState %}
 {% magic_with container.item.item_name as containerItem %}
 {% magic_with named_item_list.typ.item_name as myListItem %}
@@ -9,16 +7,14 @@
 
 
 {% section imports %}
-import { observer } from 'mobx-react-lite';
 import * as R from 'ramda';
 import React from 'react';
+import { makeAutoObservable } from 'mobx';
 import { NestedDefaultPropsContext } from 'react-default-props-context';
-import { maybe, initRS, setToUpdating } from 'src/api/ResourceState';
+import { cloneAndSetState, maybe, initRS } from 'src/api/ResourceState';
 import { MyState } from 'src/{{ state.module.module_path }}/MyState';                           {% !! state in states %}
+import { useMyState } from 'src/{{ state.module.module_path }}/hooks/useMyState';               {% !! state in states %}
 import { MyTypeT } from 'src/api/types/MyTypeT';                                                {% !! type_spec in more_type_specs_to_import %}
-import { useMyQuery } from 'src/{{ query.api_spec.module_name }}/endpoints';                    {% !! query in queries %}
-import { useMyMutation } from 'src/{{ mutation.api_spec.module_name }}/endpoints';              {% !! mutation in mutations %}
-import { useMutationData, useQueryData } from 'src/api/hooks';
 import { dps, withDefaultProps } from 'src/app/defaultProps';
 import { flags } from 'src/app/flags';
 import { useUpdateStateReaction } from 'src/frames/hooks/useUpdateStateReaction';
@@ -29,48 +25,33 @@ import { ObjT } from 'src/utils/types';
 
 
 {% section preamble_hooks %}
-    const myQuery = useQueryData(useMyQuery());                                                                 {% !! query in queries %}
-    const myMutation = useMutationData(useMyMutation());                                                        {% !! mutation in mutations %}
-
-    const [myState] = React.useState(() => new MyState({                                                        {% for state in states %}
-      deleteContainerItems: (ids: string[]) => {                                                                {% for container in state.containers %}{% with d = delete_items_data(container) %}{% if d.deletes_items %}
-        R.map(setToUpdating, lookUp(ids, myState.containerItems.data.containerItemById));
-        return {{ d.deleteMyCtrItems }}.mutateAsync({ {{ d.myCtrItemIds }}: ids });                             {% if d.get('deleteMyCtrItems') %}
-        return Promise.all(R.map(                                                                               {% else %}
-          (x: string) => {{ d.deleteMyCtrItem }}.mutateAsync({ {{ d.myCtrItemId }}: x }),
-          ids));                                                                                                {% endif %}
-      },                                                                                                        {% endif %}{% endwith %}
-      saveContainerItem: (values: ObjT) => {                                                                    {% with d = save_item_data(container) %}{% if d.saves_item %}
-        return {{ d.saveMyCtrItem }}.mutateAsync(values).then(
-          () => { return values.containerItemForm }
-        );
-      },                                                                                                        {% endif %}{% endwith %}
-      saveContainerItemOrdering: (containerItems: ContainerItemT[]) => {                                        {% with d = order_items_data(container) %}{% if d.orders_items %}
-        return {{ d.orderMyCtrItems }}.mutateAsync({
-          // {{ otherKey }}: Moonleap Todo,                                                                     {% !! otherKey in d.otherKeys %}
-          {{ d.myCtrItemIds }}: getIds({{ d.myCtrItems }}),
-        });
-      }                                                                                                         {% endif %}{% endwith %}{% endfor %}
-    }));
+    const {                                                                                                     {% for state in states %}
+      myState,
+    } = useMyState({
+    });
 
     useUpdateStateReaction({
-      getInputs: () => {
-        return {
-          {{ container_input.typ.ts_var }}: {{ get_data_path(container_input) }},                             {% !! container_input in get_container_inputs(state.containers) %}
-        }
-      },
+      getInputs: () => ({
+        {{ container_input.typ.ts_var }}: {{ get_data_path(container_input) }},                                 {% !! container_input in get_container_inputs(state.containers) %}
+      }),
       updateState: (inputs) => {
-        R.forEach(initRS, inputs.myListItems ?? []);                                                          {% for container in state.containers %}{% for named_item_list in get_container_inputs([container], named_items=False) %}
-        myState.myContainer.data.myListItems = inputs.myListItems ?? [];
-        {{ "" }}                                                                                              {% endfor %}
-        myState.myContainer.data.myItem = inputs.myItem;                                                      {% !! named_item in get_container_inputs([container], named_item_lists=False) %}{% endfor %}
-        if (flags.logStateProviders) {
-          log('MyState updated', myState.getSummary());
-        }
+        myState.myContainer.data.myListItems = inputs.myListItems ?? [];                                        {% for container in state.containers %}{% for named_item_list in get_container_inputs([container], named_items=False) %}
+        R.forEach(initRS, myState.myContainer.data.myListItems);
+
+        {{ "" }}                                                                                                {% endfor %}
+        myState.myContainer.data.myItem = inputs.myItem;                                                        {% !! named_item in get_container_inputs([container], named_item_lists=False) %}{% endfor %}
       },
-      destroyState: () => myState.destroy(),
+      logState: () => {
+        log('MyState updated', myState.getSummary());
+      },
     });
-    {{ "" }}                                                                                                  {% endfor %}
+
+    const [cache] = React.useState(() =>
+      makeAutoObservable({
+      })
+    );
+
+    {{ "" }}                                                                                                    {% endfor %}
 {% end_section %}
 
 
@@ -108,8 +89,6 @@ import { ObjT } from 'src/utils/types';
 {% end_section %}
 
 
-{% end_magic_with %}
-{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
