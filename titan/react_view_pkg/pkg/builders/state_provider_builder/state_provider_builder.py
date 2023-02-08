@@ -21,7 +21,6 @@ class StateProviderBuilder(Builder):
             state_provider=state_provider,
             states=states,
             widget_spec=self.widget_spec,
-            get_container_inputs=get_container_inputs,
             get_return_value=lambda data, state=None, hint=None: get_return_value(
                 state_provider, data, state, hint
             ),
@@ -30,15 +29,3 @@ class StateProviderBuilder(Builder):
 
         tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)
         add_tpl_to_builder(tpl, self)
-
-
-def get_container_inputs(containers, named_items=True, named_item_lists=True):
-    result = []
-    for container in containers:
-        if named_items:
-            for named_item in container.named_items:
-                result.append(named_item)
-        if named_item_lists:
-            if container.named_item_list:
-                result.append(container.named_item_list)
-    return result
