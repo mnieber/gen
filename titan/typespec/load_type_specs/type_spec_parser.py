@@ -94,16 +94,7 @@ class TypeSpecParser:
 
 
 def _is_fk_item(item):
-    if item[0].endswith("Id") or item[0].endswith("Ids"):
-        print("HACK: returning scalar item for key", item[0])
-        return False
-
-    return (
-        isinstance(item[1], dict)
-        or is_pass(item[1])
-        or item[0].endswith("Id")
-        or item[0].endswith("Ids")
-    )
+    return isinstance(item[1], dict) or is_pass(item[1])
 
 
 def _trace_key(fk):
