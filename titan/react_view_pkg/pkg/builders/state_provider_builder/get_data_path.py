@@ -2,7 +2,7 @@ from moonleap import l0
 from moonleap.utils.inflect import plural
 
 
-def get_return_value(state_provider, data, state=None, hint=None):
+def get_data_path(state_provider, data, state=None, hint=None):
     widget_spec = state_provider.widget_spec
 
     if data in state_provider.named_items_provided:

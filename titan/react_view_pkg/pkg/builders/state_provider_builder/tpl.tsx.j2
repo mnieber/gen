@@ -48,7 +48,7 @@ import { ObjT } from 'src/utils/types';
       makeAutoObservable({
         get myListItems() {                                                                                     {% for named_item_list in state_provider.named_item_lists_provided %}
           return cloneAndSetState(
-            {{ get_return_value(named_item_list) }}, {
+            {{ get_data_path(named_item_list) }}, {
               loading: [],
               updating: []
             }
@@ -56,14 +56,14 @@ import { ObjT } from 'src/utils/types';
         },                                                                                                      {% endfor %}
         get myItem() {                                                                                          {% for named_item in state_provider.named_items_provided %}
           return cloneAndSetState(
-            {{ get_return_value(named_item) }}, {
+            {{ get_data_path(named_item) }}, {
               loading: [],
               updating: []
             }
           );
         },                                                                                                      {% endfor %}
         get containerItems() {                                                                                  {% for state in states %}{% for container in state.containers %}{% if container.named_item_list %}
-          const containerItemsDisplay = {{ get_return_value(container, state, "items") }};
+          const containerItemsDisplay = {{ get_data_path(container, state, "items") }};
           return cloneAndSetState(
             containerItemsDisplay, {
               loading: [],
@@ -73,7 +73,7 @@ import { ObjT } from 'src/utils/types';
         },                                                                                                      {% endif %}
         get containerItem() {                                                                                   {% if container.get_bvr("highlight") %}
           return cloneAndSetState(
-            {{ get_return_value(container, state, "highlighted_item") }}, {
+            {{ get_data_path(container, state, "highlighted_item") }}, {
               loading: [],
               updating: []
             }

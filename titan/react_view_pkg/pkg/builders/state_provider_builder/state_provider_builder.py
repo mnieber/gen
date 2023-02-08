@@ -4,7 +4,7 @@ from moonleap import get_tpl
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
 
-from .get_return_value import get_return_value
+from .get_data_path import get_data_path
 
 
 class StateProviderBuilder(Builder):
@@ -21,7 +21,7 @@ class StateProviderBuilder(Builder):
             state_provider=state_provider,
             states=states,
             widget_spec=self.widget_spec,
-            get_return_value=lambda data, state=None, hint=None: get_return_value(
+            get_data_path=lambda data, state=None, hint=None: get_data_path(
                 state_provider, data, state, hint
             ),
             get_data_path=self.widget_spec.get_data_path,
