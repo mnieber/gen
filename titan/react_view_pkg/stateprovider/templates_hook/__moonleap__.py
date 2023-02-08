@@ -15,6 +15,7 @@ def get_helpers(_):
 
         def __init__(self):
             self.mutations = self._get_mutations()
+            self.type_specs_to_import = self._type_specs_to_import()
 
         def delete_items_data(self, container):
             return delete_items_data(container)
@@ -39,7 +40,7 @@ def get_helpers(_):
                         append_uniq(mutations, order_items_mutation)
             return mutations
 
-        def _more_type_specs_to_import(self):
+        def _type_specs_to_import(self):
             types = []
             for mutation in self.mutations:
                 for field in mutation.api_spec.get_inputs(
@@ -49,6 +50,3 @@ def get_helpers(_):
             return types
 
     return Helpers()
-
-
-# import { MyTypeT } from 'src/api/types/MyTypeT';                                                {% !! type_spec in more_type_specs_to_import %}

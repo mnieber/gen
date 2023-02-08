@@ -24,7 +24,6 @@ class StateProviderBuilder(Builder):
             get_data_path=lambda data, state=None, hint=None: get_data_path(
                 state_provider, data, state, hint
             ),
-            get_data_path=self.widget_spec.get_data_path,
         )
 
         tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)
