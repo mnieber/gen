@@ -1,6 +1,5 @@
 from moonleap import MemFun
 from moonleap.packages.extensions.extend import extend
-from moonleap.packages.extensions.memfield import MemField
 from moonleap.packages.extensions.prop import Prop
 from titan.widgetspec.widget_spec import WidgetSpec
 

@@ -289,28 +289,3 @@ def pipeline_source(pipeline):
             + " Did you forget to add :props?"
         )
     return source_res
-
-
-def pipeline_maybe_expression(pipeline, named_item_or_item_list):
-    elements = _get_elements(pipeline)
-    source_res = pipeline.resources[0]
-    tag = source_res.meta.term.tag
-
-    if tag == "query":
-        return source_res.name
-    elif tag == "props":
-        named_item = elements[0].obj
-        if (
-            named_item.name == named_item_or_item_list.name
-            and named_item.typ == named_item_or_item_list.typ
-        ):
-            # In this case, the component property *is* the named_item_or_item_list,
-            # and in that case the property is not the maybe_expression for itself.
-            return None
-        return f"props.{named_item.typ.item_name}"
-    elif tag == "state~provider":
-        item_or_item_list = elements[0].obj
-        if item_or_item_list.meta.term.tag in ("item", "item-list"):
-            return f"state.{item_or_item_list.typ.ts_var}"
-    else:
-        raise Exception(f"Unknown pipeline source: {pipeline.source}")

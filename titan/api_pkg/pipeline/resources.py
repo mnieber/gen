@@ -13,9 +13,6 @@ class Pipeline:
     def data_path(self, obj):
         return props.pipeline_data_path(self, obj)
 
-    def maybe_expression(self, named_item_or_item_list):
-        return props.pipeline_maybe_expression(self, named_item_or_item_list)
-
     @property
     def source(self):
         return props.pipeline_source(self)

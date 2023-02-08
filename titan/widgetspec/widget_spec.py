@@ -133,12 +133,6 @@ class WidgetSpec:
             ws = ws.parent if recurse else None
         return data_path
 
-    def maybe_expression(self, named_item_or_item_list):
-        pipeline, data_path = self._get_pipeline(named_item_or_item_list)
-        if not pipeline:
-            return "'Moonleap Todo'"
-        return pipeline.maybe_expression(named_item_or_item_list)
-
     @property
     def queries(self):
         result = []
