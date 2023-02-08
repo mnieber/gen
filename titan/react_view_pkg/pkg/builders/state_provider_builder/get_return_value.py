@@ -8,12 +8,14 @@ def get_return_value(state_provider, state, data, hint=None):
     if data in state_provider.named_items_provided:
         data_path = widget_spec.get_data_path(data)
         maybe_expr = widget_spec.maybe_expression(data)
-        return f"maybe({maybe_expr})({data_path})" if maybe_expr else data_path
+        item_name = data.typ.item_name
+        return f"cache.{item_name})" if maybe_expr else data_path
 
     if data in state_provider.named_item_lists_provided:
         data_path = widget_spec.get_data_path(data)
         maybe_expr = widget_spec.maybe_expression(data)
-        return f"maybe({maybe_expr})({data_path}, [])" if maybe_expr else data_path
+        items_name = plural(data.typ.item_name)
+        return f"cache.{items_name}" if maybe_expr else data_path
 
     if data in state.containers and hint == "items":
         container = data
@@ -26,7 +28,7 @@ def get_return_value(state_provider, state, data, hint=None):
             if (container.get_bvr("filtering") or container.get_bvr("insertion"))
             else ""
         )
-        return f"maybe({maybe_expr}, [])({data_path})" if maybe_expr else data_path
+        return f"cache.{items_name}" if maybe_expr else data_path
 
     if data in state.containers and hint == "highlighted_item":
         container = data
@@ -34,4 +36,5 @@ def get_return_value(state_provider, state, data, hint=None):
         assert named_item_list
         maybe_expr = widget_spec.maybe_expression(named_item_list)
         data_path = f"{l0(state.name)}.{container.name}.highlight.item"
-        return f"maybe({maybe_expr})({data_path})" if maybe_expr else data_path
+        item_name = container.item.item_name
+        return f"cache.{item_name}" if maybe_expr else data_path
