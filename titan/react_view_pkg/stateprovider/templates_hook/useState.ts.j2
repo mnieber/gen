@@ -1,4 +1,3 @@
-{% magic_with query.name as myQuery %}
 {% magic_with mutation.name as myMutation %}
 {% magic_with _.state.name as MyState %}
 {% magic_with container.item.item_name as containerItem %}
@@ -7,9 +6,8 @@ import * as R from 'ramda';
 import React from 'react';
 import { setToUpdating, setToReady } from 'src/api/ResourceState';
 import { MyState } from 'src/{{ _.state.module.module_path }}/MyState';
-import { useMyQuery } from 'src/{{ query.api_spec.module_name }}/endpoints';                                    {% !! query in __.queries %}
 import { useMyMutation, type MyMutationArgsT } from 'src/{{ mutation.api_spec.module_name }}/endpoints';        {% !! mutation in __.mutations %}
-import { useMutationData, useQueryData } from 'src/api/hooks';
+import { useMutationData } from 'src/api/hooks';
 import { lookUp, getIds } from 'src/utils/ids';
 import { ObjT } from 'src/utils/types';
 import { MyTypeT } from 'src/api/types/MyTypeT';                                                                {% !! type_spec in __.type_specs_to_import %}
@@ -17,7 +15,6 @@ import { MyTypeT } from 'src/api/types/MyTypeT';                                
 export type PropsT = {};
 
 export const useMyState = (props: PropsT) => {
-  const myQuery = useQueryData(useMyQuery());                                                                   {% !! query in __.queries|sort(attribute="name") %}
   const myMutation = useMutationData(useMyMutation());                                                          {% !! mutation in __.mutations|sort(attribute="name") %}
 
   const [myState] = React.useState(() => {
@@ -58,11 +55,9 @@ export const useMyState = (props: PropsT) => {
 
   return {
     myState,
-    myQuery,                                                                                                    {% !! query in __.queries|sort(attribute="name") %}
     myMutation,                                                                                                 {% !! mutation in __.mutations|sort(attribute="name") %}
   };
 };
-{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

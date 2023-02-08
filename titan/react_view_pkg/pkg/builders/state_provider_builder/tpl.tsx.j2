@@ -4,6 +4,7 @@
 {% magic_with named_item.typ.item_name as myItem %}
 {% magic_with container.name as myContainer %}
 {% magic_with type_spec.type_name as MyType %}
+{% magic_with query.name as myQuery %}
 
 
 {% section imports %}
@@ -20,69 +21,73 @@ import { useUpdateStateReaction } from 'src/frames/hooks/useUpdateStateReaction'
 import { lookUp, getIds } from 'src/utils/ids';
 import { log } from 'src/utils/logging';
 import { ObjT } from 'src/utils/types';
+import { useMyQuery } from 'src/{{ query.api_spec.module_name }}/endpoints';                    {% !! query in queries %}
+import { useQueryData } from 'src/api/hooks';
 {% end_section %}
 
 
 {% section preamble_hooks %}
-    const {                                                                                                     {% for state in states %}
-      myState,
-    } = useMyState({
-    });
+  const {                                                                                                     {% for state in states %}
+    myState,
+  } = useMyState({
+  });
 
-    useUpdateStateReaction({
-      getInputs: () => ({
-        {{ named_item.typ.ts_var }}: {{ get_data_path(named_item) }},                                           {% for container in state.containers %}{% !! named_item in container.named_items %}
-        {{ container.named_item_list.typ.ts_var }}: {{ get_data_path(container.named_item_list) }},             {% ?? container.named_item_list %}{% endfor %}
-      }),
-      updateState: (inputs) => {
-        myState.myContainer.data.myListItems = inputs.myListItems ?? [];                                        {% for container in state.containers %}{% ?? container.named_item_list %}
-        R.forEach(initRS, myState.myContainer.data.myListItems);
-        myState.myContainer.data.myItem = inputs.myItem;                                                        {% !! named_item in container.named_items %}{% endfor %}
-      },
-      logState: () => {
-        log('MyState updated', myState.getSummary());
-      },
-    });
+  const myQuery = useQueryData(useMyQuery());                                                                 {% !! query in queries|sort(attribute="name") %}
 
-    const [cache] = React.useState(() =>
-      makeAutoObservable({
-        get myListItems() {                                                                                     {% for named_item_list in state_provider.named_item_lists_provided %}
-          return cloneAndSetState(
-            {{ get_data_path(named_item_list) }}, {
-              loading: [],
-              updating: []
-            }
-          );
-        },                                                                                                      {% endfor %}
-        get myItem() {                                                                                          {% for named_item in state_provider.named_items_provided %}
-          return cloneAndSetState(
-            {{ get_data_path(named_item) }}, {
-              loading: [],
-              updating: []
-            }
-          );
-        },                                                                                                      {% endfor %}
-        get containerItems() {                                                                                  {% for state in states %}{% for container in state.containers %}{% if container.named_item_list %}
-          const containerItemsDisplay = {{ get_data_path(container, state, "items") }};
-          return cloneAndSetState(
-            containerItemsDisplay, {
-              loading: [],
-              updating: []
-            }
-          );
-        },                                                                                                      {% endif %}
-        get containerItem() {                                                                                   {% if container.get_bvr("highlight") %}
-          return cloneAndSetState(
-            {{ get_data_path(container, state, "highlighted_item") }}, {
-              loading: [],
-              updating: []
-            }
-          );
-        },                                                                                                      {% endif %}{% endfor %}{% endfor %}
-      })
-    );
+  useUpdateStateReaction({
+    getInputs: () => ({
+      {{ named_item.typ.ts_var }}: {{ get_data_path(named_item) }},                                           {% for container in state.containers %}{% !! named_item in container.named_items %}
+      {{ container.named_item_list.typ.ts_var }}: {{ get_data_path(container.named_item_list) }},             {% ?? container.named_item_list %}{% endfor %}
+    }),
+    updateState: (inputs) => {
+      myState.myContainer.data.myListItems = inputs.myListItems ?? [];                                        {% for container in state.containers %}{% ?? container.named_item_list %}
+      R.forEach(initRS, myState.myContainer.data.myListItems);
+      myState.myContainer.data.myItem = inputs.myItem;                                                        {% !! named_item in container.named_items %}{% endfor %}
+    },
+    logState: () => {
+      log('MyState updated', myState.getSummary());
+    },
+  });
 
-    {{ "" }}                                                                                                    {% endfor %}
+  const [cache] = React.useState(() =>
+    makeAutoObservable({
+      get myListItems() {                                                                                     {% for named_item_list in state_provider.named_item_lists_provided %}
+        return cloneAndSetState(
+          {{ get_data_path(named_item_list) }}, {
+            loading: [],
+            updating: []
+          }
+        );
+      },                                                                                                      {% endfor %}
+      get myItem() {                                                                                          {% for named_item in state_provider.named_items_provided %}
+        return cloneAndSetState(
+          {{ get_data_path(named_item) }}, {
+            loading: [],
+            updating: []
+          }
+        );
+      },                                                                                                      {% endfor %}
+      get containerItems() {                                                                                  {% for state in states %}{% for container in state.containers %}{% if container.named_item_list %}
+        const containerItemsDisplay = {{ get_data_path(container, state, "items") }};
+        return cloneAndSetState(
+          containerItemsDisplay, {
+            loading: [],
+            updating: []
+          }
+        );
+      },                                                                                                      {% endif %}
+      get containerItem() {                                                                                   {% if container.get_bvr("highlight") %}
+        return cloneAndSetState(
+          {{ get_data_path(container, state, "highlighted_item") }}, {
+            loading: [],
+            updating: []
+          }
+        );
+      },                                                                                                      {% endif %}{% endfor %}{% endfor %}
+    })
+  );
+
+  {{ "" }}                                                                                                    {% endfor %}
 {% end_section %}
 
 
@@ -120,6 +125,7 @@ import { ObjT } from 'src/utils/types';
 {% end_section %}
 
 
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}

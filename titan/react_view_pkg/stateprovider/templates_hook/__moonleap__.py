@@ -10,7 +10,6 @@ def get_helpers(_):
     class Helpers:
         states = _.state_provider.states
         widget_spec = _.state_provider.widget_spec
-        queries = widget_spec.queries
         mutations = []
 
         def __init__(self):

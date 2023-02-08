@@ -20,6 +20,7 @@ class StateProviderBuilder(Builder):
         context = dict(
             state_provider=state_provider,
             states=states,
+            queries=self.widget_spec.queries,
             widget_spec=self.widget_spec,
             get_data_path=lambda data, state=None, hint=None: get_data_path(
                 state_provider, data, state, hint
