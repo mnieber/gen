@@ -1,9 +1,4 @@
 from moonleap import append_uniq
-from titan.react_view_pkg.stateprovider.get_container_data import (
-    delete_items_data,
-    order_items_data,
-    save_item_data,
-)
 
 
 def get_helpers(_):
@@ -15,15 +10,6 @@ def get_helpers(_):
         def __init__(self):
             self.mutations = self._get_mutations()
             self.type_specs_to_import = self._type_specs_to_import()
-
-        def delete_items_data(self, container):
-            return delete_items_data(container)
-
-        def order_items_data(self, container):
-            return order_items_data(container)
-
-        def save_item_data(self, container):
-            return save_item_data(container)
 
         def _get_mutations(self):
             mutations = self.widget_spec.mutations

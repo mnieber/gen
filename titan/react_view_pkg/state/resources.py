@@ -31,8 +31,20 @@ class Container:
         return None
 
     @property
+    def deletion_bvr(self):
+        return self.get_bvr("deletion")
+
+    @property
+    def editing_bvr(self):
+        return self.get_bvr("editing")
+
+    @property
+    def drag_and_drop_bvr(self):
+        return self.get_bvr("dragAndDrop")
+
+    @property
     def delete_items_mutation(self):
-        if bvr := self.get_bvr("deletion"):
+        if bvr := self.deletion_bvr:
             mutation = bvr.mutation
             item_names = (
                 [x.item.item_name for x in mutation.item_lists_deleted]
@@ -45,7 +57,7 @@ class Container:
 
     @property
     def delete_item_mutation(self):
-        if bvr := self.get_bvr("deletion"):
+        if bvr := self.deletion_bvr:
             mutation = bvr.mutation
             item_names = (
                 [x.item_name for x in mutation.items_deleted] if mutation else []

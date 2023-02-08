@@ -23,6 +23,12 @@ class Mutation(RenderMixin, Resource):
     items_deleted: T.List[str] = field(default_factory=list)
     item_lists_deleted: T.List[str] = field(default_factory=list)
 
+    def get_field_name(self, field_types):
+        for field_type in field_types:
+            for field in self.api_spec.get_inputs([field_type]):
+                return field.name
+        raise Exception("Unknown field name")
+
 
 @dataclass
 class ApiRegistry(Resource):

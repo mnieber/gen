@@ -2,6 +2,13 @@
 {% magic_with _.state.name as MyState %}
 {% magic_with container.item.item_name as containerItem %}
 {% magic_with type_spec.type_name as MyType %}
+{% magic_with container.delete_items_mutation.name as deleteMyCtrItems %}
+{% magic_with container.delete_item_mutation.name as deleteMySingleCtrItem %}
+{% magic_with container.delete_items_mutation.get_field_name(["uuid[]"]) as idsToBeDeleted %}
+{% magic_with container.delete_item_mutation.get_field_name(["uuid", "string"]) as idToBeDeleted %}
+{% magic_with container.save_item_mutation.name as saveMyCtrItem %}
+{% magic_with container.order_items_mutation.name as orderMyCtrItems %}
+{% magic_with container.order_items_mutation.get_field_name(["uuid[]"]) as idsThatAreReordered %}
 import * as R from 'ramda';
 import React from 'react';
 import { setToUpdating, setToReady } from 'src/api/ResourceState';
@@ -19,35 +26,35 @@ export const useMyState = (props: PropsT) => {
 
   const [myState] = React.useState(() => {
     return new MyState({
-      deleteContainerItems: (ids: string[]) => {                                                                {% for container in _.state.containers %}{% with d = __.delete_items_data(container) %}{% if d.deletes_items %}
+      deleteContainerItems: (ids: string[]) => {                                                                {% for container in _.state.containers %}{% if container.deletion_bvr %}
         const containerItems = lookUp(ids, myState.containerItems.data.containerItemById);
         R.map(setToUpdating, containerItems);
-        return {{ d.deleteMyCtrItems }}.mutateAsync(                                                            {% if d.get('deleteMyCtrItems') %}
-          { {{ d.myCtrItemIds }}: ids } as {{ d.deleteMyCtrItems|u0 }}ArgsT
+        return deleteMyCtrItems.mutateAsync(                                                                    {% if container.delete_items_mutation %}
+          { idsToBeDeleted: ids } as DeleteMyCtrItemsArgsT
         )
         return Promise.all(R.map(                                                                               {% else %}
-          (x: string) => {{ d.deleteMyCtrItem }}.mutateAsync(
-            { {{ d.myCtrItemId }}: x } as {{ d.deleteMyCtrItem|u0 }}ArgsT
+          (x: string) => deleteMySingleCtrItem.mutateAsync(
+            { idToBeDeleted: x } as DeleteMySingleCtrItemArgsT
           ),
           ids))                                                                                                 {% endif %}
           .then((response: ObjT) => {
             R.map(setToReady, containerItems);
             return response;
           });
-      },                                                                                                        {% endif %}{% endwith %}
-      saveContainerItem: (values: ObjT) => {                                                                    {% with d = __.save_item_data(container) %}{% if d.saves_item %}
-        return {{ d.saveMyCtrItem }}.mutateAsync(
-          values as {{ d.saveMyCtrItem|u0 }}ArgsT
+      },                                                                                                        {% endif %}
+      saveContainerItem: (values: ObjT) => {                                                                    {% if container.editing_bvr  %}
+        return saveMyCtrItem.mutateAsync(                                                                       {% if container.editing_bvr.mutation %}
+          values as SaveMyCtrItemArgsT
         ).then(
           () => { return values.containerItemForm }
-        );
-      },                                                                                                        {% endif %}{% endwith %}
-      saveContainerItemOrdering: (containerItems: ContainerItemT[]) => {                                        {% with d = __.order_items_data(container) %}{% if d.orders_items %}
-        return {{ d.orderMyCtrItems }}.mutateAsync({
-          // {{ otherKey }}: Moonleap Todo,                                                                     {% !! otherKey in d.otherKeys %}
-          {{ d.myCtrItemIds }}: getIds({{ d.myCtrItems }}),
-        } as {{ d.orderMyCtrItems|u0 }}ArgsT );
-      }                                                                                                         {% endif %}{% endwith %}{% endfor %}
+        );                                                                                                      {% endif %}
+      },                                                                                                        {% endif %}
+      saveContainerItemOrdering: (containerItems: ContainerItemT[]) => {                                        {% if container.drag_and_drop_bvr %}
+        return orderMyCtrItems.mutateAsync({
+          // Moonleap Todo
+          idsThatAreReordered: getIds(containerItems),
+        } as OrderMyCtrItemsArgsT );
+      }                                                                                                         {% endif %}{% endfor %}
     });
   });
 
@@ -58,6 +65,13 @@ export const useMyState = (props: PropsT) => {
     myMutation,                                                                                                 {% !! mutation in __.mutations|sort(attribute="name") %}
   };
 };
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
+{% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
 {% end_magic_with %}
