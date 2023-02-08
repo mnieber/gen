@@ -47,6 +47,39 @@ import { ObjT } from 'src/utils/types';
 
     const [cache] = React.useState(() =>
       makeAutoObservable({
+        get myListItems() {                                                                                     {% for named_item_list in state_provider.named_item_lists_provided %}
+          return cloneAndSetState(
+            {{ get_return_value(named_item_list) }}, {
+              loading: [],
+              updating: []
+            }
+          );
+        },                                                                                                      {% endfor %}
+        get myItem() {                                                                                          {% for named_item in state_provider.named_items_provided %}
+          return cloneAndSetState(
+            {{ get_return_value(named_item) }}, {
+              loading: [],
+              updating: []
+            }
+          );
+        },                                                                                                      {% endfor %}
+        get containerItems() {                                                                                  {% for state in states %}{% for container in state.containers %}{% if container.named_item_list %}
+          const containerItemsDisplay = {{ get_return_value(container, state, "items") }};
+          return cloneAndSetState(
+            containerItemsDisplay, {
+              loading: [],
+              updating: []
+            }
+          );
+        },                                                                                                      {% endif %}
+        get containerItem() {                                                                                   {% if container.get_bvr("highlight") %}
+          return cloneAndSetState(
+            {{ get_return_value(container, state, "highlighted_item") }}, {
+              loading: [],
+              updating: []
+            }
+          );
+        },                                                                                                      {% endif %}{% endfor %}{% endfor %}
       })
     );
 
@@ -58,14 +91,14 @@ import { ObjT } from 'src/utils/types';
     const getDefaultPropsContext = () => {
       const result: any = { defaultProps: {
         myState: () => myState,                                                                                 {% !! state in states %}
-        myItem: () => {{ get_return_value(named_item) }},                                                       {% !! named_item in state_provider.named_items_provided %}
-        myListItems: () => {{ get_return_value(named_item_list) }},                                             {% !! named_item_list in state_provider.named_item_lists_provided %}
+        myListItems: () => cache.myListItems,                                                                   {% !! named_item_list in state_provider.named_item_lists_provided %}
+        myItem: () => cache.myItem,                                                                             {% !! named_item in state_provider.named_items_provided %}
       } };
 
       result.defaultProps = {                                                                                   {% for state in states%}{% for container in state.containers %}
         ...result.defaultProps,
-        containerItems: () => {{ get_return_value(state, container, "items") }},                                {% ?? container.named_item_list %}
-        containerItem: () => {{ get_return_value(state, container, "highlighted_item") }},                      {% ?? container.get_bvr("highlight") %}
+        containerItems: () => cache.containerItems,                                                             {% ?? container.named_item_list %}
+        containerItem: () => cache.containerItem,                                                               {% ?? container.get_bvr("highlight") %}
         containerItemsAddition: () => myState.myContainer.addition,                                             {% ?? container.get_bvr("addition") %}
         containerItemsDeletion: () => myState.myContainer.deletion,                                             {% ?? container.get_bvr("deletion") %}
         containerItemsDragAndDrop: () => myState.myContainer.dragAndDrop,                                       {% ?? container.get_bvr("dragAndDrop") %}

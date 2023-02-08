@@ -22,8 +22,8 @@ class StateProviderBuilder(Builder):
             states=states,
             widget_spec=self.widget_spec,
             get_container_inputs=get_container_inputs,
-            get_return_value=lambda state, data, hint=None: get_return_value(
-                state_provider, state, data, hint
+            get_return_value=lambda data, state=None, hint=None: get_return_value(
+                state_provider, data, state, hint
             ),
             get_data_path=self.widget_spec.get_data_path,
         )
