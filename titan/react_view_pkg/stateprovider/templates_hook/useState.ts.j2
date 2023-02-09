@@ -1,14 +1,14 @@
-{% magic_with myMutation            = mutation.name %}
-{% magic_with MyState               = _.state.name %}
 {% magic_with containerItem         = container.item.item_name %}
-{% magic_with MyType                = type_spec.type_name %}
 {% magic_with deleteMyCtrItems      = container.delete_items_mutation.name %}
 {% magic_with deleteMySingleCtrItem = container.delete_item_mutation.name %}
+{% magic_with idsThatAreReordered   = container.order_items_mutation.get_field_name(["uuid[]"]) %}
 {% magic_with idsToBeDeleted        = container.delete_items_mutation.get_field_name(["uuid[]"]) %}
 {% magic_with idToBeDeleted         = container.delete_item_mutation.get_field_name(["uuid", "string"]) %}
-{% magic_with saveMyCtrItem         = container.save_item_mutation.name %}
+{% magic_with myMutation            = mutation.name %}
+{% magic_with MyState               = _.state.name %}
+{% magic_with MyType                = type_spec.type_name %}
 {% magic_with orderMyCtrItems       = container.order_items_mutation.name %}
-{% magic_with idsThatAreReordered   = container.order_items_mutation.get_field_name(["uuid[]"]) %}
+{% magic_with saveMyCtrItem         = container.save_item_mutation.name %}
 import * as R from 'ramda';
 import React from 'react';
 import { setToUpdating, setToReady } from 'src/api/ResourceState';

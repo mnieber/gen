@@ -1,5 +1,5 @@
-{% magic_with myItem = django_model.item_list.item_name %}
 {% magic_with myField = field_spec.name %}
+{% magic_with myItem = django_model.item_list.item_name %}
 import faker
 from {{ _.module.name|sn }}.models import MyItem                                    {% for django_model in _.module.django_models %}
 from api.types.my_item_form_t import MyItemFormT                                    {% ?? __.has_form(django_model) %}{% endfor %}

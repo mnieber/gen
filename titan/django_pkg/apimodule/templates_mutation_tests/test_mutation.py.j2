@@ -1,8 +1,8 @@
-{% magic_with postFoo = _.mutation.name %}
-{% magic_with MyFieldTarget = field_spec.target %}
 {% magic_with myFieldName = field_spec.name %}
+{% magic_with MyFieldTarget = field_spec.target %}
 {% magic_with myFixtureName = fixture.name %}
 {% magic_with MyFixtureTarget = fixture.field_spec.target %}
+{% magic_with postFoo = _.mutation.name %}
 import pytest
 from api.tests.graphqltestcase import GraphqlTestCase
 from .create_post_foo_mutation import create_post_foo_mutation

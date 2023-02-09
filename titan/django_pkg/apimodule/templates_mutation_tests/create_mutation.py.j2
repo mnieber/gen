@@ -1,7 +1,7 @@
-{% magic_with postFooItem = _.mutation.name %}
-{% magic_with outputFieldName = output_field_spec.name %}
-{% magic_with inputFieldName = input_field_spec.name %}
 {% magic_with inputFieldGqlType = input_field_spec.graphql_type("server") %}
+{% magic_with inputFieldName = input_field_spec.name %}
+{% magic_with outputFieldName = output_field_spec.name %}
+{% magic_with postFooItem = _.mutation.name %}
 def create_post_foo_item_mutation(
     input_field_name,                                                                           {% !! input_field_spec, is_form in __.input_field_specs %}
     output_field_name_outputs=None,                                                             {% !! output_field_spec in __.fk_output_field_specs %}

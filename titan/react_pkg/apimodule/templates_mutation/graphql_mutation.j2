@@ -1,10 +1,10 @@
-{% magic_with MyTypeSpecName = type_spec.type_name %}
-{% magic_with myOutputFieldType = output_field_spec.target %}
-{% magic_with myOutputFieldName = output_field_spec.name %}
-{% magic_with myFieldTsType = field_spec.ts_type %}
-{% magic_with myFieldName = field_spec.name %}
-{% magic_with myFieldGqlType = field_spec.graphql_type("client") %}
 {% magic_with callMyEndpoint = _.mutation.name %}
+{% magic_with myFieldGqlType = field_spec.graphql_type("client") %}
+{% magic_with myFieldName = field_spec.name %}
+{% magic_with myFieldTsType = field_spec.ts_type %}
+{% magic_with myOutputFieldName = output_field_spec.name %}
+{% magic_with myOutputFieldType = output_field_spec.target %}
+{% magic_with MyTypeSpecName = type_spec.type_name %}
 import * as R from 'ramda';
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from 'src/api/queryClient';                                                          {% ?? _.mutation.api_spec.invalidates %}

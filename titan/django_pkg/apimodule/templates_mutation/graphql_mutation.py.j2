@@ -1,8 +1,8 @@
-{% magic_with OutputFieldTarget = output_field_spec.target %}
-{% magic_with outputFieldName = output_field_spec.name %}
-{% magic_with mutationName = _.mutation.name %}
-{% magic_with itemTypeName = item.item_name %}
 {% magic_with inputFieldName = input_field_spec.name %}
+{% magic_with itemTypeName = item.item_name %}
+{% magic_with mutationName = _.mutation.name %}
+{% magic_with outputFieldName = output_field_spec.name %}
+{% magic_with OutputFieldTarget = output_field_spec.target %}
 
 import graphene                                                                         {% clean_up_py_imports %}
 from graphene.types.generic import GenericScalar                                        {% end_clean_up_py_imports %}

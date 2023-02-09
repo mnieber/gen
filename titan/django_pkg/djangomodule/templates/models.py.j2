@@ -1,6 +1,6 @@
-{% magic_with MyThroughModel = field.target %}
-{% magic_with MyModel = model.name %}
 {% magic_with my_field = field.name %}
+{% magic_with MyModel = model.name %}
+{% magic_with MyThroughModel = field.target %}
 
 import uuid                                                                                             {% clean_up_py_imports %}
 from django.db import models

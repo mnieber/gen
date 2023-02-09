@@ -1,6 +1,6 @@
-{% magic_with MyState = _.state.name %}
-{% magic_with myItem = _.container.item.item_name %}
 {% magic_with myContainer = _.container.name %}
+{% magic_with myItem = _.container.item.item_name %}
+{% magic_with MyState = _.state.name %}
 import { PropsT, MyState } from 'src/{{ _.module.name }}/MyState';
 import * as FacetPolicies from 'skandha-facets/policies';
 import { SelectionCbs, handleSelectItem } from 'skandha-facets/Selection';                              {% ?? _.container.get_bvr("selection") %}

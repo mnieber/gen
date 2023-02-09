@@ -31,7 +31,7 @@ def process_magic_with(lines, template_fn=None):
             continue
 
         x = block_line
-        for var_name, as_ in var_names:
+        for var_name, as_ in reversed(var_names):
             char0 = as_[0]
             starts_low = char0.lower() == char0
             change0, change0_str = (u0, "u0") if starts_low else (l0, "l0")

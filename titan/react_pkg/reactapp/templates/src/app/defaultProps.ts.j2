@@ -1,7 +1,7 @@
+{% magic_with bvrItem = bvr.item_name %}
 {% magic_with listItem = data.item_list.item_name %}
 {% magic_with MyState = state.name %}
 {% magic_with singleItem = data.item.item_name %}
-{% magic_with bvrItem = bvr.item_name %}
 import { stub, withDefaultProps } from 'react-default-props-context';
 import { {{ bvr_name|u0 }} } from 'skandha-facets/{{ bvr_name|u0 }}';           {% !! bvr_name in __.bvr_names %}
 import { {{ item_name|u0 }}T } from 'src/api/types/{{ item_name|u0 }}T';        {% !! item_name in __.item_names %}
