@@ -1,5 +1,5 @@
 {% section preamble %}
-    if (!isLoaded({{ data_path }})) {
+    if (isLoading({{ data_path }})) {
         return UIkit && <div data-uk-spinner className="" />;
     }
     else if ({{ test }}) return null;                                             {% ?? guard %}
