@@ -1,9 +1,9 @@
-{% magic_with _.type_spec.type_name as MyType %}
-{% magic_with field_spec.name as fieldSpecName %}
-{% magic_with field_spec.ts_type as fieldSpecTsType %}
-{% magic_with field_spec.target as FieldSpecTarget %}
-{% magic_with type_spec.type_name as TypeSpecName %}
-{% magic_with _.type_spec.base_type_name as MyBaseName %}
+{% magic_with TypeSpecName = type_spec.type_name %}
+{% magic_with MyType = _.type_spec.type_name %}
+{% magic_with MyBaseName = _.type_spec.base_type_name %}
+{% magic_with fieldSpecTsType = field_spec.ts_type %}
+{% magic_with FieldSpecTarget = field_spec.target %}
+{% magic_with fieldSpecName = field_spec.name %}
 import { FieldSpecTargetT } from 'src/api/types/FieldSpecTargetT';                                  {% !! field_spec in __.fk_field_specs %}
 import { typeSpecNameFields } from 'src/api/types/TypeSpecNameT';                                   {% !! type_spec in __.dependency_type_specs %}
 import { MyBaseNameT } from 'src/api/types/MyBaseNameT';                                            {% ?? _.type_spec.base_type_name %}
@@ -48,10 +48,3 @@ export const createMyType = (values: ObjT): MyTypeT => {                        
     slug: 'new-myType',
   }) as MyTypeT;
 };                                                                                                  {% endif %}
-
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}

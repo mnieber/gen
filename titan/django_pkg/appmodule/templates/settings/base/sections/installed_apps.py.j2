@@ -1,4 +1,4 @@
-{% magic_with django_module.name as djangoModuleName %}
+{% magic_with djangoModuleName = django_module.name %}
 from django_rtk_green import django_rtk_green_apps                      {% ?? _.django_app.user_accounts_module %}
 
 DJANGO_APPS = [
@@ -45,5 +45,3 @@ ADMIN_REORDER = (
     "auth",
     "sites",
 )
-
-{% end_magic_with %}

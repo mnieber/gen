@@ -1,4 +1,4 @@
-{% magic_with item_name as myItemName %}
+{% magic_with myItemName = item_name %}
 
 
 {% section lines %}
@@ -29,6 +29,3 @@ if (isUpdating(props.myItemName)) {
 {% section imports %}
 import { smallButton } from 'src/frames/components';
 {% end_section %}
-
-
-{% end_magic_with %}

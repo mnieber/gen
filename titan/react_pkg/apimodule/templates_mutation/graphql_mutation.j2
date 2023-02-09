@@ -1,10 +1,10 @@
-{% magic_with _.mutation.name as callMyEndpoint %}
-{% magic_with field_spec.name as myFieldName %}
-{% magic_with field_spec.ts_type as myFieldTsType %}
-{% magic_with field_spec.graphql_type("client") as myFieldGqlType %}
-{% magic_with type_spec.type_name as MyTypeSpecName %}
-{% magic_with output_field_spec.target as myOutputFieldType %}
-{% magic_with output_field_spec.name as myOutputFieldName %}
+{% magic_with MyTypeSpecName = type_spec.type_name %}
+{% magic_with myOutputFieldType = output_field_spec.target %}
+{% magic_with myOutputFieldName = output_field_spec.name %}
+{% magic_with myFieldTsType = field_spec.ts_type %}
+{% magic_with myFieldName = field_spec.name %}
+{% magic_with myFieldGqlType = field_spec.graphql_type("client") %}
+{% magic_with callMyEndpoint = _.mutation.name %}
 import * as R from 'ramda';
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from 'src/api/queryClient';                                                          {% ?? _.mutation.api_spec.invalidates %}
@@ -54,10 +54,3 @@ export const useCallMyEndpoint = () => {
     {% include_snippet "__moonleap__/onSuccess.ts.j2" %}
   });
 };
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}

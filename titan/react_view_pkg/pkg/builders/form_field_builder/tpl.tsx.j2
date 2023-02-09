@@ -1,4 +1,4 @@
-{% magic_with field_spec.target as FieldSpecTarget %}
+{% magic_with FieldSpecTarget = field_spec.target %}
 
 
 {% section lines %}
@@ -26,6 +26,3 @@
       <div className="flex flex-row items-begin mt-1"><ControlledCheckbox /></div>                {% ?? field_spec.field_type in ("boolean",) %}
     </Field>
 {% end_section %}
-
-
-{% end_magic_with %}

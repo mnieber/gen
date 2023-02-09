@@ -1,8 +1,8 @@
-{% magic_with input_field_spec.name as inputFieldName %}
-{% magic_with output_field_spec.name as outputFieldName %}
-{% magic_with _.mutation.name as mutationName %}
-{% magic_with output_field_spec.target as OutputFieldTarget %}
-{% magic_with item.item_name as itemTypeName %}
+{% magic_with OutputFieldTarget = output_field_spec.target %}
+{% magic_with outputFieldName = output_field_spec.name %}
+{% magic_with mutationName = _.mutation.name %}
+{% magic_with itemTypeName = item.item_name %}
+{% magic_with inputFieldName = input_field_spec.name %}
 
 import graphene                                                                         {% clean_up_py_imports %}
 from graphene.types.generic import GenericScalar                                        {% end_clean_up_py_imports %}
@@ -39,8 +39,3 @@ class MutationName(graphene.Mutation):
                                                                                         {% endif %}
                                                                                         {% endwith %}{% endfor %}
         )
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}

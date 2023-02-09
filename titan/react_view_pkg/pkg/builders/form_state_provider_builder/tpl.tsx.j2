@@ -1,6 +1,6 @@
-{% magic_with mutation.name as postMyMutation %}
-{% magic_with editing_bvr.ts_var as myEditingBvr %}
-{% magic_with item_name as myItem %}
+{% magic_with postMyMutation = mutation.name %}
+{% magic_with myEditingBvr = editing_bvr.ts_var %}
+{% magic_with myItem = item_name %}
 
 {% section imports %}
 import * as R from 'ramda';
@@ -64,7 +64,3 @@ import { usePostMyMutation } from 'src/{{ mutation.api_spec.module_name }}/endpo
     };
     {{ ""}}
 {% end_section %}
-
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}

@@ -1,6 +1,6 @@
-{% magic_with model.name as MyModel %}
-{% magic_with field.target as MyThroughModel %}
-{% magic_with field.name as my_field %}
+{% magic_with MyThroughModel = field.target %}
+{% magic_with MyModel = model.name %}
+{% magic_with my_field = field.name %}
 
 import uuid                                                                                             {% clean_up_py_imports %}
 from django.db import models
@@ -37,6 +37,3 @@ class MyModel(                                                                  
         return "MyModel: " + {{ __.display_field_expr(model) }}                                         {% ?? not _.django_app.use_translation %}
 
                                                                                                         {% endfor %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}

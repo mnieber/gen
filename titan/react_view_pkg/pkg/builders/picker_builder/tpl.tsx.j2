@@ -1,5 +1,5 @@
-{% magic_with item_name as myItem %}
-{% magic_with editing_bvr.ts_var as myEditingBvr %}
+{% magic_with myItem = item_name %}
+{% magic_with myEditingBvr = editing_bvr.ts_var %}
 
 
 {% section imports %}
@@ -73,7 +73,3 @@ import { createUUID } from 'src/utils/ids';
       </div>                                                                  {% endif %}
     )}
 {% end_section %}
-
-
-{% end_magic_with %}
-{% end_magic_with %}

@@ -1,4 +1,4 @@
-{% magic_with __item_name as myItem %}
+{% magic_with myItem = __item_name %}
 
 
 {% section imports %}
@@ -40,6 +40,3 @@ const {{ __const_name }} = (({{ __item_name }}) => {                            
 {% section lines %}
 { {{ __const_name }} }
 {% end_section %}
-
-
-{% end_magic_with %}

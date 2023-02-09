@@ -1,5 +1,5 @@
-{% magic_with item_list.item_name as myModel %}
-{% magic_with model_field.name as modelFieldName %}
+{% magic_with myModel = item_list.item_name %}
+{% magic_with modelFieldName = model_field.name %}
 {% clean_up_py_imports %}
 from adminsortable2.admin import SortableAdminBase, SortableInlineAdminMixin
 {% end_clean_up_py_imports %}
@@ -40,5 +40,3 @@ class MyModelAdmin(
     )                                                                                               {% end_min_lines %}
     pass                                                                                            {% ?? not (data.inline_model_fields or data.autocomplete_fields or data.search_by or data.excluded_model_fields) %}
                                                                                                     {% endfor %}
-{% end_magic_with %}
-{% end_magic_with %}

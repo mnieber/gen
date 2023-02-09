@@ -1,5 +1,5 @@
-{% magic_with _.component.name as myComponent %}
-{% magic_with _.component.item_list.item_name as myItem %}
+{% magic_with myComponent = _.component.name %}
+{% magic_with myItem = _.component.item_list.item_name %}
 import { observer } from 'mobx-react-lite';
 import { dps, withDefaultProps } from 'src/app/defaultProps';
 import { Selection } from 'skandha-facets/Selection';
@@ -44,5 +44,3 @@ export const MyComponent = observer(
     );
   }, DefaultProps)
 );
-{% end_magic_with %}
-{% end_magic_with %}

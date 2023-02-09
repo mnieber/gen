@@ -1,5 +1,5 @@
-{% magic_with module.name as fooModule %}
-{% magic_with query.name as fooQuery %}
+{% magic_with fooQuery = query.name %}
+{% magic_with fooModule = module.name %}
 {% clean_up_py_imports %}
 import graphene
 from graphene.types.generic import GenericScalar
@@ -21,6 +21,3 @@ class Query(
     GrapheneNonEmptyQuery
 ):
     pass
-
-{% end_magic_with %}
-{% end_magic_with %}

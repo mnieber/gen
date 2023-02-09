@@ -1,4 +1,4 @@
-{% magic_with __item_name as myItem %}
+{% magic_with myItem = __item_name %}
 
 
 {% section imports %}
@@ -56,6 +56,3 @@ const menuDiv = UIkit && (                                                      
 {myItemDivs.length > 0 && myItemDivs}                                                         {% ?? not context_menu %}
 {myItemDivs.length === 0 && noItems}
 {% end_section %}
-
-
-{% end_magic_with %}

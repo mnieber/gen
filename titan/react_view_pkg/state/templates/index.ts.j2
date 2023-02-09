@@ -1,4 +1,3 @@
-{% magic_with _.state.name as MyState %}
+{% magic_with MyState = _.state.name %}
 export { MyState } from "./MyState";
 export type { PropsT } from "./MyState";
-{% end_magic_with %}

@@ -1,4 +1,4 @@
-{% magic_with __item_name as myItem %}
+{% magic_with myItem = __item_name %}
 
 
 {#
@@ -13,6 +13,3 @@ selectionUIProps={selectionUIConnector.handle(myItem.id)}                       
 dragAndDropUIProps={dragAndDropUIConnector.handle(myItem.id)}                                 {% ?? bvrs_has_drag_and_drop %}
 onContextMenu={menuHandler.handleContextMenu(idx + 1)}                                        {% ?? context_menu %}
 {% end_section %}
-
-
-{% end_magic_with %}

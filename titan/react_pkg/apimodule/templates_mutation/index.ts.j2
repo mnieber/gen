@@ -1,3 +1,2 @@
-{% magic_with _.mutation.name as postMyMutation %}
+{% magic_with postMyMutation = _.mutation.name %}
 export { usePostMyMutation } from "./usePostMyMutation";
-{% end_magic_with %}

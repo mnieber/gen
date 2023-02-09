@@ -1,8 +1,8 @@
-{% magic_with order_parent as MyOrderParent %}
-{% magic_with order_child as myOrderChild %}
-{% magic_with order_ids as myOrderIds %}
-{% magic_with api_spec.name as myEndpoint %}
-{% magic_with updatePath as myUpdatePath %}
+{% magic_with myUpdatePath = updatePath %}
+{% magic_with MyOrderParent = order_parent %}
+{% magic_with myOrderIds = order_ids %}
+{% magic_with myOrderChild = order_child %}
+{% magic_with myEndpoint = api_spec.name %}
     onMutate: (args: ArgsT) => {                                                                            {% if _.mutation.api_spec.orders %}
       const updateMyOrderParent = (myOrderParent: MyOrderParentT) => {                                      {% for order_parent, order_child, order_ids, order_api_specs in __.orders_data %}
         return R.isNil(myOrderParent.myOrderChild)
@@ -38,8 +38,3 @@
         }
       );                                                                                                    {% endif %}
     },                                                                                                      {% end_min_lines %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}

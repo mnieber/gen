@@ -1,14 +1,14 @@
-{% magic_with mutation.name as myMutation %}
-{% magic_with _.state.name as MyState %}
-{% magic_with container.item.item_name as containerItem %}
-{% magic_with type_spec.type_name as MyType %}
-{% magic_with container.delete_items_mutation.name as deleteMyCtrItems %}
-{% magic_with container.delete_item_mutation.name as deleteMySingleCtrItem %}
-{% magic_with container.delete_items_mutation.get_field_name(["uuid[]"]) as idsToBeDeleted %}
-{% magic_with container.delete_item_mutation.get_field_name(["uuid", "string"]) as idToBeDeleted %}
-{% magic_with container.save_item_mutation.name as saveMyCtrItem %}
-{% magic_with container.order_items_mutation.name as orderMyCtrItems %}
-{% magic_with container.order_items_mutation.get_field_name(["uuid[]"]) as idsThatAreReordered %}
+{% magic_with myMutation            = mutation.name %}
+{% magic_with MyState               = _.state.name %}
+{% magic_with containerItem         = container.item.item_name %}
+{% magic_with MyType                = type_spec.type_name %}
+{% magic_with deleteMyCtrItems      = container.delete_items_mutation.name %}
+{% magic_with deleteMySingleCtrItem = container.delete_item_mutation.name %}
+{% magic_with idsToBeDeleted        = container.delete_items_mutation.get_field_name(["uuid[]"]) %}
+{% magic_with idToBeDeleted         = container.delete_item_mutation.get_field_name(["uuid", "string"]) %}
+{% magic_with saveMyCtrItem         = container.save_item_mutation.name %}
+{% magic_with orderMyCtrItems       = container.order_items_mutation.name %}
+{% magic_with idsThatAreReordered   = container.order_items_mutation.get_field_name(["uuid[]"]) %}
 import * as R from 'ramda';
 import React from 'react';
 import { setToUpdating, setToReady } from 'src/api/ResourceState';
@@ -65,14 +65,3 @@ export const useMyState = (props: PropsT) => {
     myMutation,                                                                                                 {% !! mutation in __.mutations|sort(attribute="name") %}
   };
 };
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}

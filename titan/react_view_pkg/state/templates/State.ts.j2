@@ -1,7 +1,7 @@
-{% magic_with container.name as myContainer %}
-{% magic_with bvr.name as myBvr %}
-{% magic_with _.state.name as MyState %}
-{% magic_with container.item.item_name as myItem %}
+{% magic_with myContainer = container.name %}
+{% magic_with myBvr = bvr.name %}
+{% magic_with MyState = _.state.name %}
+{% magic_with myItem = container.item.item_name %}
 import { makeObservable } from 'mobx';
 import { mapDataToProps, pmap } from 'skandha';
 import { addCleanUpFunctionToCtr, cleanUpCtr } from 'react-default-props-context';
@@ -107,7 +107,3 @@ export class MyState {
     {{ "" }}                                                                                            {% endfor %}
   }
 }
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}

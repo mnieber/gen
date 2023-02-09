@@ -1,4 +1,4 @@
-{% magic_with component_name as MyComponent %}
+{% magic_with MyComponent = component_name %}
 
 
 {% section attrs %}
@@ -16,6 +16,3 @@ onContextMenu={props.onContextMenu}                                             
 ,                                                                                       {% ?? (bvrs_has_selection or bvrs_has_highlight) and bvrs_has_drag_and_drop %}
 `MyComponent--drag-${props.dragAndDropUIProps.dragState}`                               {% ?? bvrs_has_drag_and_drop %}
 {% end_section %}
-
-
-{% end_magic_with %}

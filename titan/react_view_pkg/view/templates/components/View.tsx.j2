@@ -1,4 +1,4 @@
-{% magic_with _.component.name as myComponent %}
+{% magic_with myComponent = _.component.name %}
 import { dps, withDefaultProps } from 'src/app/defaultProps';
 import { cn } from 'src/utils/classnames';
 import { observer } from 'mobx-react-lite';
@@ -32,4 +32,4 @@ export const MyComponent = observer(
   }, DefaultProps)                                                                                  {% ?? __.has_default_props %}
   }                                                                                                 {% ?? not __.has_default_props %}
 );
-{% end_magic_with %}
+

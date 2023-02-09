@@ -1,8 +1,8 @@
-{% magic_with _.mutation.name as postFoo %}
-{% magic_with field_spec.target as MyFieldTarget %}
-{% magic_with field_spec.name as myFieldName %}
-{% magic_with fixture.name as myFixtureName %}
-{% magic_with fixture.field_spec.target as MyFixtureTarget %}
+{% magic_with postFoo = _.mutation.name %}
+{% magic_with MyFieldTarget = field_spec.target %}
+{% magic_with myFieldName = field_spec.name %}
+{% magic_with myFixtureName = fixture.name %}
+{% magic_with MyFixtureTarget = fixture.field_spec.target %}
 import pytest
 from api.tests.graphqltestcase import GraphqlTestCase
 from .create_post_foo_mutation import create_post_foo_mutation
@@ -34,10 +34,3 @@ class TestPostFooMutation(GraphqlTestCase):
         # Check that the response is as expected
         assert data["postFoo"] == {"errors": {}, "success": True}
         assert False, "Moonleap Todo"
-
-
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}

@@ -1,5 +1,5 @@
-{% magic_with _.query.name as myQuery %}
-{% magic_with output_field_spec.name as outputFieldName %}
+{% magic_with outputFieldName = output_field_spec.name %}
+{% magic_with myQuery = _.query.name %}
 import pytest
 from api.tests.graphqltestcase import GraphqlTestCase
 from .create_my_query_query import create_my_query_query
@@ -25,6 +25,3 @@ class TestMyQueryQuery(GraphqlTestCase):
 
 
 {{ __.assert_query_response(output_field_spec) }}                               {% !! output_field_spec in __.output_field_specs %}
-
-{% end_magic_with %}
-{% end_magic_with %}

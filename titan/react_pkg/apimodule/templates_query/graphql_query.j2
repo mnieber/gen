@@ -1,10 +1,10 @@
-{% magic_with _.query.name as myEndpoint %}
-{% magic_with input_field_spec.name as myInputFieldName %}
-{% magic_with input_field_spec.graphql_type("client") as myInputFieldGqlType %}
-{% magic_with input_field_spec.ts_type as myInputFieldTsType %}
-{% magic_with output_field_spec.name as myOutputFieldName %}
-{% magic_with output_field_spec.target as myOutputFieldType %}
-{% magic_with type_spec.type_name as MyTypeSpecName %}
+{% magic_with MyTypeSpecName = type_spec.type_name %}
+{% magic_with myOutputFieldType = output_field_spec.target %}
+{% magic_with myOutputFieldName = output_field_spec.name %}
+{% magic_with myInputFieldTsType = input_field_spec.ts_type %}
+{% magic_with myInputFieldName = input_field_spec.name %}
+{% magic_with myInputFieldGqlType = input_field_spec.graphql_type("client") %}
+{% magic_with myEndpoint = _.query.name %}
 import { useQuery } from '@tanstack/react-query';
 import { doQuery } from 'src/api/graphqlClient';                                                    {% ?? _.react_app.use_graphql %}
 import * as R from 'ramda';
@@ -64,9 +64,3 @@ export const useMyEndpoint = (
   })                                                                                                {% endif %}
   ;
 };
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}
-{% end_magic_with %}

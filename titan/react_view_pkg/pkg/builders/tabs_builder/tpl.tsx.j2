@@ -1,5 +1,5 @@
-{% magic_with __.item_name as myItem %}
-{% magic_with __.component_name as MyComponent %}
+{% magic_with myItem = __.item_name %}
+{% magic_with MyComponent = __.component_name %}
 
 
 {% section imports %}
@@ -55,6 +55,3 @@ import { Tab, Tabs } from 'src/frames/components';
     }
 }
 {% end_section %}
-
-{% end_magic_with %}
-{% end_magic_with %}

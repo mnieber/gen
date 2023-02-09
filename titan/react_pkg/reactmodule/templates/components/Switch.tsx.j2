@@ -1,5 +1,5 @@
-{% magic_with _.module.name as moduleName %}
-{% magic_with route.name as routeName %}
+{% magic_with moduleName = _.module.name %}
+{% magic_with routeName = route.name %}
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { useRoutes } from 'src/routes/hooks/useRoutes';
@@ -13,5 +13,3 @@ export const ModuleNameSwitch = () => {
     </Switch>
   );
 };
-{% end_magic_with %}
-{% end_magic_with %}

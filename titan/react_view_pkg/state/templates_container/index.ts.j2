@@ -1,4 +1,4 @@
-{% magic_with _.container.name as myContainer %}
+{% magic_with myContainer = _.container.name %}
 export { initMyContainer } from './initMyContainer';
 export { MyContainerData } from './MyContainerData';
-{% end_magic_with %}
+

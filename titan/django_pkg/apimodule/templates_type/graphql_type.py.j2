@@ -1,5 +1,5 @@
-{% magic_with _.type_spec.type_name as myItem %}
-{% magic_with field_spec.name as fieldSpecName %}
+{% magic_with myItem = _.type_spec.type_name %}
+{% magic_with fieldSpecName = field_spec.name %}
 import graphene                                                                 {% clean_up_py_imports %}
 from graphene_django.types import DjangoObjectType
 
@@ -18,5 +18,3 @@ class MyItemT(DjangoObjectType):
     def resolve_field_spec_name(self, info):                                    {% for field_spec in __.derived_field_specs %}
         return None  # Moonleap Todo
                                                                                 {% endfor %}
-{% end_magic_with %}
-{% end_magic_with %}

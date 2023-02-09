@@ -1,5 +1,5 @@
-{% magic_with module.name as fooModule %}
-{% magic_with mutation.name as fooMutation %}
+{% magic_with fooMutation = mutation.name %}
+{% magic_with fooModule = module.name %}
 {% clean_up_py_imports %}
 import graphene
 from graphene.types.generic import GenericScalar
@@ -21,6 +21,3 @@ class Mutation(
 ):
     foo_mutation = FooMutation.Field()                                          {% for mutation in _.api_reg.get_mutations(module_name="api") %}
     pass                                                                        {% else %}{% endfor %}
-
-{% end_magic_with %}
-{% end_magic_with %}
