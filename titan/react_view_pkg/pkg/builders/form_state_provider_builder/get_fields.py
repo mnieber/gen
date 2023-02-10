@@ -5,7 +5,7 @@ from titan.typespec.api_spec import ApiSpec
 
 
 def get_fields(mutation: ApiSpec, widget_spec: WidgetSpec):
-    field_names = widget_spec.get_field_names(recurse=True)
+    field_names = _get_form_field_names(widget_spec)
     scalar_field_specs = [x for x in mutation.get_inputs() if x.field_type != "form"]
     form_field_specs = mutation.get_inputs(["form"])
 
@@ -44,3 +44,12 @@ def _get_mutation_field_names(scalar_field_specs, form_field_specs):
             [f"{form_field_spec.name}.{x.name}" for x in _form_fields(form_field_spec)]
         )
     return result
+
+
+def _get_form_field_names(widget_spec):
+    ws = widget_spec
+    while ws:
+        if form_fields := ws.form_fields:
+            return [x.name for x in form_fields]
+        ws = ws.parent
+    return None
