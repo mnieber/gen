@@ -1,16 +1,19 @@
-from moonleap.blocks.term import Term
+from moonleap.blocks.term import unnamed_term
 from moonleap.blocks.verbs import _is_created_as
-from moonleap.resources.named_resource import NamedResource
+from moonleap.resources.named_resource import NamedResource, named
 from moonleap.resources.relations.rel import Rel
+from moonleap.resources.resource import Resource
 from moonleap.utils.case import kebab_to_camel
 
-from .create_resource_in_block import create_resource_in_block, find_describing_block
+from .create_resource_in_block import (
+    create_resource_in_block,
+    find_describing_block,
+    register_resource_in_block,
+)
 
 
 def find_or_create_resource(block, term, origin, actions):
     from moonleap.blocks.builder.process_relations import process_relations
-
-    has_name = term.name is not None
 
     # Step 1: find existing resource
     res = _find_resource(term, block)
@@ -24,6 +27,17 @@ def find_or_create_resource(block, term, origin, actions):
 
     # Step 3: create the resource in the publishing block, and add to current block
     res = create_resource_in_block(term, publishing_block)
+    if not res:
+        if term.name is not None:
+            typ = find_or_create_resource(block, unnamed_term(term), origin, actions)
+            named_res_type = named(type(typ))
+            res = named_res_type()
+            res.name = kebab_to_camel(term.name)
+            res.typ = typ
+        else:
+            res = _create_generic_resource()
+        register_resource_in_block(term, block, res)
+
     if block is not publishing_block:
         block.add_resource_for_term(res, term, False)
 
@@ -36,20 +50,7 @@ def find_or_create_resource(block, term, origin, actions):
     if publishing_block.describes(term) and publishing_block.parent_block:
         publishing_block.parent_block.add_resource_for_term(res, term, False)
 
-    # Step 5: handle named term
-    if has_name:
-        if not isinstance(res, NamedResource):
-            raise Exception(f"Resource ({res}) is not named")
-
-        res.name = kebab_to_camel(term.name)
-        res.typ = find_or_create_resource(
-            block,
-            Term(data=term.data, tag=term.tag, is_title=term.is_title),
-            origin,
-            actions,
-        )
-
-    # Step 6: process the _is_created_as relation
+    # Step 5: process the _is_created_as relation
     process_relations(
         [
             Rel(
@@ -72,3 +73,7 @@ def _find_resource(term, block):
         if resource:
             return resource
     return None
+
+
+def _create_generic_resource():
+    return Resource()

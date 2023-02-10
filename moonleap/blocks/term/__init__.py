@@ -89,6 +89,10 @@ def named_term(term, name=""):
     return Term(term.data, term.tag, name=name)
 
 
+def unnamed_term(term):
+    return Term(data=term.data, tag=term.tag, is_title=term.is_title)
+
+
 def patch_tag(term, tag):
     return (
         term

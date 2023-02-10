@@ -1,6 +1,5 @@
-from titan.types_pkg.typeregistry.resources import ItemList
-
-from moonleap import create, kebab_to_camel, named
+from moonleap import create, kebab_to_camel
+from titan.types_pkg.typeregistry.resources import ItemList  # noqa: F401
 
 
 @create("item~list")
@@ -9,8 +8,3 @@ def create_item_list(term):
 
     item_name = kebab_to_camel(term.data)
     return get_type_reg().get_item_list(item_name)
-
-
-@create("x+item~list")
-def create_named_item(term):
-    return named(ItemList)()

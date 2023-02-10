@@ -1,6 +1,5 @@
-from titan.types_pkg.typeregistry.resources import Item
-
 from moonleap import Prop, create, extend, kebab_to_camel, named
+from titan.types_pkg.typeregistry.resources import Item
 
 from . import props
 
@@ -15,11 +14,6 @@ def create_item(term):
 
     item_name = kebab_to_camel(term.data)
     return get_type_reg().get_item(item_name)
-
-
-@create("x+item")
-def create_named_item(term):
-    return named(Item)()
 
 
 @extend(Item)

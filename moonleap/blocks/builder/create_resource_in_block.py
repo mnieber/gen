@@ -1,9 +1,5 @@
-from moonleap.resources.resource import Resource, ResourceMetaData
+from moonleap.resources.resource import ResourceMetaData
 from moonleap.utils.fp import uniq
-
-
-def _create_generic_resource():
-    return Resource()
 
 
 def _get_base_tags(term, block):
@@ -41,8 +37,12 @@ def create_resource_in_block(term, block):
                     "Resource creation rule returned None: " + str(create_rule)
                 )
 
-    resource = resource or _create_generic_resource()
-    resource.meta = ResourceMetaData(term, block, _get_base_tags(term, block))
+    if resource:
+        register_resource_in_block(term, block, resource)
 
-    block.add_resource_for_term(resource, term, True)
     return resource
+
+
+def register_resource_in_block(term, block, resource):
+    resource.meta = ResourceMetaData(term, block, _get_base_tags(term, block))
+    block.add_resource_for_term(resource, term, True)

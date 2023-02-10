@@ -78,11 +78,6 @@ def create_insertion_behavior(term):
     )
 
 
-@create("x+x:behavior")
-def create_named_behavior(term):
-    return named(Behavior)()
-
-
 @rule("addition")
 def created_addition(addition):
     item_term_str = f"{addition.item_name}:item"
