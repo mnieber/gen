@@ -1,3 +1,6 @@
+import ramda as R
+
+from moonleap.utils.merge_into_config import merge_into_config
 from titan.widgetspec.get_place_dict import get_place_dict
 
 
@@ -40,16 +43,25 @@ def _lvi_component_spec(widget_spec, lvi_name, named_item_term_str, parent_widge
     context_menu_value = parent_widget_spec.values.get("contextMenu")
     context_menu = f",contextMenu={context_menu_value}" if context_menu_value else ""
 
-    return {
-        f"LviComponent with {lvi_name} as ListViewItem, Bar[p-2]": {
-            "__default_props__": [named_item_term_str],
-            "__bvrs__": parent_widget_spec.bvr_names,
-            "__attrs__": f"cnLhs=__Title,cnRhs=__Buttons{context_menu}",
-            **lhs_contents,
-            **middle_slot,
-            **rhs_contents,
-        },
+    body = {
+        "__default_props__": [named_item_term_str],
+        "__bvrs__": parent_widget_spec.bvr_names,
+        "__attrs__": f"cnLhs=__Title,cnRhs=__Buttons{context_menu}",
+        **lhs_contents,
+        **middle_slot,
+        **rhs_contents,
     }
+
+    # Mix in the body of the LviComponentMixin place, if any.
+    merge_into_config(
+        body,
+        R.head(
+            R.values(get_place_dict(widget_spec.src_dict, "LviComponentMixin") or {})
+        )
+        or {},
+    )
+
+    return {f"LviComponent with {lvi_name} as ListViewItem, Bar[p-2]": body}
 
 
 def _get_default_lvi_name(widget_spec):
