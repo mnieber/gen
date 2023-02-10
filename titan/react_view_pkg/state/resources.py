@@ -12,6 +12,11 @@ class State(Component):
 
 
 @dataclass
+class LocationState(State):
+    pass
+
+
+@dataclass
 class Container:
     name: str
     bvrs: list[Behavior] = field(default_factory=list)

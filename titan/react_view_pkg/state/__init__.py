@@ -8,7 +8,7 @@ from titan.react_pkg.reactmodule import ReactModule
 from titan.react_view_pkg.pkg.hydrate_state import hydrate_state
 
 from . import props
-from .resources import State
+from .resources import LocationState, State
 
 base_tags = {"state": ["react-state"]}
 
@@ -18,6 +18,11 @@ def create_state(term):
     name = u0(kebab_to_camel(term.data) + "State")
     state = State(name=name)
     return state
+
+
+@create("location:state")
+def create_location_state(term):
+    return LocationState(name="locationState")
 
 
 @rule("module", has, "state")

@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import ramda as R
+
 from moonleap import get_tpl, u0
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
@@ -52,6 +54,13 @@ class FormStateProviderBuilder(Builder):
             type_spec=get_type_reg().get(u0(item_name) + "Form"),
             mutation=mutation,
             editing_bvr=editing_bvr,
+            location_state=R.head(
+                [
+                    x
+                    for x in self.widget_spec.root.named_default_props
+                    if _is_location_state(x)
+                ]
+            ),
             fields=fields,
             uuid_fields=[
                 x for x in fields if x[1].field_type == "uuid" and x[1].target
@@ -107,3 +116,8 @@ def _get_validated_fields(fields):
         ):
             result.append((name, field_spec))
     return result
+
+
+def _is_location_state(named_res):
+    term = named_res.meta.term
+    return term.tag == "state" and term.data == "location"

@@ -60,6 +60,7 @@ import { usePostMyMutation } from 'src/{{ mutation.api_spec.module_name }}/endpo
     };
     const handleCancel = ({ formState }: HandleCancelArgsT) => {
       props.myEditingBvr.cancel();                                                                      {% ?? editing_bvr %}
+      props.locationState.goBack();                                                                    {% ?? location_state %}
       console.log("Moonleap Todo");                                                                     {% ?? not editing_bvr %}
     };
     {{ ""}}
