@@ -1,6 +1,6 @@
 {% magic_with myEditingBvr = editing_bvr.ts_var %}
 {% magic_with myItem = item_name %}
-{% magic_with myField = field.name %}
+{% magic_with myField = field.dot_name %}
 {% magic_with postMyMutation = mutation.name %}
 
 {% section imports %}
@@ -13,6 +13,7 @@ import {
   unflatten
 } from 'react-form-state-context';
 import { createUUID } from 'src/utils/ids';
+import { MyItemT } from 'src/api/types/MyItemT';
 import { usePostMyMutation } from 'src/{{ mutation.api_spec.module_name }}/endpoints';                  {% ?? mutation %}
 {% end_section %}
 
@@ -42,7 +43,10 @@ import { usePostMyMutation } from 'src/{{ mutation.api_spec.module_name }}/endpo
 
 {% section preamble %}
     const initialValues = {
-      'myField': props.myItem.{{ field.field_spec.name}} ?? {{ get_initial_value(field) }},             {% !! field in fields|sort(attribute="name") %}
+      'myField': (                                                                                      {% for field in fields|sort(attribute="name") %}
+        props.myItem.{{ field.field_spec.name}}
+        ?? {{ get_initial_value(field) }}
+      ),{% if field.through %} // Moonleap Todo{% endif %}                                              {% endfor %}
     };
     const initialErrors = {};
     const handleValidate = ({values, setError} : HandleValidateArgsT) => {
@@ -52,16 +56,23 @@ import { usePostMyMutation } from 'src/{{ mutation.api_spec.module_name }}/endpo
     };
     const handleSubmit = ({ formState, values }: HandleSubmitArgsT) => {
       return postMyMutation(unflatten(                                                                  {% if mutation %}
-        {                                                                                               {% if uuid_fields %}
+        {                                                                                               {% if uuid_fields or through_fields %}
           ...values,
           'myField': values['myField'].id,                                                              {% !! field in uuid_fields %}
+          '{{ field.prefix }}{{ field.name }}': values['myField'],  // MoonleapTodo                     {% !! field in through_fields|sort(attribute="name") %}
+          'myField': undefined,                                                                         {% !! field in through_fields|sort(attribute="name") %}
         }
         values                                                                                          {% else %}{% endif %}
-      )).then(() => formState.reset(initialValues, initialErrors));                                     {% endif %}
+      )).then((
+        localMyItem: MyItemT                                                                            {% ?? location_state %}
+      ) => {
+        formState.reset(initialValues, initialErrors);
+        props.locationState.goToMyItem(localMyItem);                                                    {% ?? location_state %}
+      });                                                                                               {% endif %}
     };
     const handleCancel = ({ formState }: HandleCancelArgsT) => {
       props.myEditingBvr.cancel();                                                                      {% ?? editing_bvr %}
-      props.locationState.goBack();                                                                    {% ?? location_state %}
+      props.locationState.goBack();                                                                     {% ?? location_state %}
       console.log("Moonleap Todo");                                                                     {% ?? not editing_bvr %}
     };
     {{ ""}}

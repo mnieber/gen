@@ -5,6 +5,7 @@
     <Field
       fieldName="{{ name }}"
       label="{{ get_label(name) }}"
+      tabOnEnter={false}                                                                          {% ?? field_spec.field_type in ("text", "markdown") %}
       buttons={[                                                                                  {% if field_spec.field_type in ("slug",) %}
         <UpdateSlugButton
           key="1"

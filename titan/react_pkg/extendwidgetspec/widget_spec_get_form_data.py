@@ -16,8 +16,8 @@ class FormField:
     field_spec: T.Optional[FieldSpec] = None
 
     @property
-    def as_str(self):
-        return f"{self.prefix}{self.name}"
+    def dot_name(self):
+        return f"{self.prefix}{self.through or self.name}"
 
 
 @dataclass
@@ -26,30 +26,17 @@ class FormData:
     mutation: T.Optional[Mutation] = None
     editing_bvr: T.Optional[EditingBehavior] = None
 
-    @property
-    def as_str(self):
-        return f"{self.prefix}{self.name}"
 
-
-def get_form_data(widget_spec):
-    __import__("pudb").set_trace()  # zz
-    scalar_field_specs = []
-    form_field_specs = []
-    mutation, editing_bvr = _get_mutation_and_editing_bvr(widget_spec)
-    if mutation:
-        scalar_field_specs = [
-            x for x in mutation.api_spec.get_inputs() if x.field_type != "form"
-        ]
-        form_field_specs = mutation.api_spec.get_inputs(["form"])
+def _get_form_fields(
+    widget_spec, form_field_specs, scalar_field_specs, default_field_datas
+):
+    field_datas_by_form_name = widget_spec.src_dict.get(
+        "__fields__", default_field_datas
+    )
+    if field_datas_by_form_name is None:
+        return None
 
     fields = []
-    field_datas_by_form_name = widget_spec.src_dict.setdefault("__fields__", {})
-    if not field_datas_by_form_name and not widget_spec.parent:
-        for form_field_spec in form_field_specs:
-            field_datas_by_form_name[form_field_spec.name] = [
-                x.name for x in _form_fields(form_field_spec)
-            ]
-
     for form_name, field_datas in field_datas_by_form_name.items():
         clean_form_name = form_name.rstrip("~")
         prefix = "" if clean_form_name == "." else clean_form_name + "."
@@ -72,11 +59,7 @@ def get_form_data(widget_spec):
             )
             fields.append(form_field)
 
-    return FormData(
-        fields=fields,
-        mutation=mutation,
-        editing_bvr=editing_bvr,
-    )
+    return fields
 
 
 def _get_field_spec(scalar_field_specs, form_field_specs, field_name: str):
@@ -103,11 +86,36 @@ def _form_fields(form_field_spec):
 
 
 def widget_spec_get_form_data(widget_spec, recurse=False):
-    __import__("pudb").set_trace()  # zz
+    form_field_specs = []
+    scalar_field_specs = []
+    mutation, editing_bvr = _get_mutation_and_editing_bvr(widget_spec)
+    if mutation:
+        scalar_field_specs = [
+            x for x in mutation.api_spec.get_inputs() if x.field_type != "form"
+        ]
+        form_field_specs = mutation.api_spec.get_inputs(["form"])
+
+    default_field_datas = {}
+    for form_field_spec in form_field_specs:
+        default_field_datas[form_field_spec.name] = [
+            x.name for x in _form_fields(form_field_spec)
+        ]
+
     ws = widget_spec
     while ws:
-        if form_data := get_form_data(ws):
-            return [x.as_str for x in form_data.fields]
+        fields = _get_form_fields(
+            ws,
+            form_field_specs,
+            scalar_field_specs,
+            default_field_datas=None if ws.parent else default_field_datas,
+        )
+
+        if fields != None:
+            return FormData(
+                fields=fields,
+                mutation=mutation,
+                editing_bvr=editing_bvr,
+            )
         ws = ws.parent if recurse else None
     return None
 

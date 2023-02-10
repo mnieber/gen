@@ -20,11 +20,11 @@ class FormFieldsBuilder(Builder):
 
         field_widget_spec = self.widget_spec.get_place("Field")
         lines = []
-        for form_field_name, field_spec in context["fields"]:
-            if field_spec.field_type in ("uuid",):
+        for form_field in context["fields"]:
+            if form_field.field_spec.field_type in ("uuid",):
                 continue
             build_output = self._get_field_widget_output(
-                form_field_name, field_widget_spec, field_spec, context
+                form_field, field_widget_spec, context
             )
             lines.extend(build_output.lines)
             self.output.graft(build_output)
@@ -42,25 +42,23 @@ class FormFieldsBuilder(Builder):
             get_display_field_name=_get_display_field_name,
         )
 
-    def _get_field_widget_output(
-        self, form_field_name, field_widget_spec, field_spec, context
-    ):
+    def _get_field_widget_output(self, form_field, field_widget_spec, context):
         from titan.react_view_pkg.pkg.build_widget_spec import build_widget_spec
 
         with field_widget_spec.memo(["values"]):
-            field_widget_spec.values["form_field_name"] = form_field_name
-            field_widget_spec.values["field_spec"] = field_spec
+            field_widget_spec.values["form_field_name"] = form_field.dot_name
+            field_widget_spec.values["field_spec"] = form_field.field_spec
             field_widget_spec.values["parent_context"] = context
             return build_widget_spec(field_widget_spec)
 
 
 def _get_slug_src(fields, field_spec):
-    slug_sources = [name for name, field_spec in fields if field_spec.is_slug_src]
+    slug_sources = [field.dot_name for field in fields if field.field_spec.is_slug_src]
     return R.head(slug_sources) or "Moonleap Todo: slug_src"
 
 
 def _get_label(name):
-    return " ".join([u0(x) for x in name.split(".")])
+    return u0(R.last(name.split(".")))
 
 
 def _get_display_field_name(type_spec):

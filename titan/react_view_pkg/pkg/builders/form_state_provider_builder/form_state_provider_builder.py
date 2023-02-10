@@ -61,8 +61,11 @@ class FormStateProviderBuilder(Builder):
             ),
             fields=fields,
             uuid_fields=[
-                x for x in fields if x[1].field_type == "uuid" and x[1].target
+                x
+                for x in fields
+                if x.field_spec.field_type == "uuid" and x.field_spec.target
             ],
+            through_fields=[x for x in fields if x.through],
             validated_fields=_get_validated_fields(fields),
             get_initial_value=_get_initial_value,
         )
@@ -93,14 +96,14 @@ def _get_initial_value(form_field):
 
 
 def _get_validated_fields(fields):
-    result = []
-    for field in fields:
+    return [
+        field
+        for field in fields
         if (
             not field.field_spec.is_optional("client")
             and not field.field_spec.field_type == "boolean"
-        ):
-            result.append(field)
-    return result
+        )
+    ]
 
 
 def _is_location_state(named_res):
