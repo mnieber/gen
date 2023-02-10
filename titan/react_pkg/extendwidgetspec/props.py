@@ -11,26 +11,6 @@ def widget_spec_bvr_names(widget_spec):
     return [kebab_to_camel(x) for x in widget_spec.src_dict.setdefault("__bvrs__", [])]
 
 
-def widget_spec_form_fields(widget_spec):
-    from titan.react_pkg.extendwidgetspec import FormField
-
-    result = []
-    fields = widget_spec.src_dict.setdefault("__fields__", {})
-    for form_name, fields in fields.items():
-        clean_form_name = form_name.rstrip("~")
-        prefix = "" if clean_form_name == "." else clean_form_name + "."
-        for field in fields:
-            if isinstance(field, dict):
-                field_name = field["name"]
-                through = field["through"]
-            else:
-                field_name = field
-                through = None
-            form_field = FormField(name=field_name, prefix=prefix, through=through)
-            result.append(form_field)
-    return result
-
-
 def widget_spec_component(widget_spec):
     if not widget_spec.is_component:
         return None

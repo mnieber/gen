@@ -1,5 +1,6 @@
 {% magic_with myEditingBvr = editing_bvr.ts_var %}
 {% magic_with myItem = item_name %}
+{% magic_with myField = field.name %}
 {% magic_with postMyMutation = mutation.name %}
 
 {% section imports %}
@@ -41,19 +42,19 @@ import { usePostMyMutation } from 'src/{{ mutation.api_spec.module_name }}/endpo
 
 {% section preamble %}
     const initialValues = {
-      '{{ name }}': props.myItem.{{ field_spec.name}} ?? {{ get_initial_value(field_spec) }},           {% !! name, field_spec in fields|sort(attribute=0) %}
+      'myField': props.myItem.{{ field.field_spec.name}} ?? {{ get_initial_value(field) }},             {% !! field in fields|sort(attribute="name") %}
     };
     const initialErrors = {};
     const handleValidate = ({values, setError} : HandleValidateArgsT) => {
-      if (R.isNil(values['{{ name }}'])) {                                                              {% for name, field_spec in validated_fields %}{% if field_spec.field_type not in ("uuid",) %}
-        setError('{{ name }}', 'This field is required');
+      if (R.isNil(values['myField'])) {                                                                 {% for field in validated_fields %}{% if field.field_spec.field_type not in ("uuid",) %}
+        setError('myField', 'This field is required');
       }                                                                                                 {% endif %}{% endfor %}
     };
     const handleSubmit = ({ formState, values }: HandleSubmitArgsT) => {
       return postMyMutation(unflatten(                                                                  {% if mutation %}
         {                                                                                               {% if uuid_fields %}
           ...values,
-          '{{ name }}': values['{{ name }}'].id,                                                        {% !! name, field_spec in uuid_fields %}
+          'myField': values['myField'].id,                                                              {% !! field in uuid_fields %}
         }
         values                                                                                          {% else %}{% endif %}
       )).then(() => formState.reset(initialValues, initialErrors));                                     {% endif %}

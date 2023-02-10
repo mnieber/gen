@@ -7,8 +7,6 @@ from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.types_pkg.typeregistry import get_type_reg
 
-from .get_fields import get_fields
-
 
 class FormStateProviderBuilder(Builder):
     type = "FormStateProvider"
@@ -43,8 +41,8 @@ class FormStateProviderBuilder(Builder):
 
     def get_context(self):
         # We expect the widget_spec to have a "save" pipeline
-        mutation, editing_bvr = get_form_mutation_or_bvr(self.widget_spec)
-        fields = get_fields(mutation.api_spec, self.widget_spec) if mutation else []
+        form_data = self.widget_spec.get_form_data(recurse=True)
+        fields = form_data.fields
 
         item_name = self.ih.working_item_name
         assert item_name
@@ -52,8 +50,8 @@ class FormStateProviderBuilder(Builder):
         return dict(
             item_name=item_name,
             type_spec=get_type_reg().get(u0(item_name) + "Form"),
-            mutation=mutation,
-            editing_bvr=editing_bvr,
+            mutation=form_data.mutation,
+            editing_bvr=form_data.editing_bvr,
             location_state=R.head(
                 [
                     x
@@ -86,35 +84,22 @@ class FormStateProviderBuilder(Builder):
         return extension
 
 
-def get_form_mutation_or_bvr(widget_spec):
-    mutation = None
-    editing_bvr = None
-    save_pipeline = widget_spec.get_pipeline_by_name("save", recurse=True)
-    res = save_pipeline.resources[-1]
-    if res.meta.term.tag == "mutation":
-        mutation = res
-    if res.meta.term.tag == "editing":
-        editing_bvr = res.typ
-        mutation = editing_bvr.mutation
-    return mutation, editing_bvr
-
-
-def _get_initial_value(field_spec):
-    if field_spec.field_type == "boolean":
+def _get_initial_value(form_field):
+    if form_field.field_spec.field_type == "boolean":
         return "false"
-    elif field_spec.field_type == "uuid":
+    elif form_field.field_spec.field_type == "uuid":
         return "createUUID().hex"
     return "null"
 
 
 def _get_validated_fields(fields):
     result = []
-    for name, field_spec in fields:
+    for field in fields:
         if (
-            not field_spec.is_optional("client")
-            and not field_spec.field_type == "boolean"
+            not field.field_spec.is_optional("client")
+            and not field.field_spec.field_type == "boolean"
         ):
-            result.append((name, field_spec))
+            result.append(field)
     return result
 
 

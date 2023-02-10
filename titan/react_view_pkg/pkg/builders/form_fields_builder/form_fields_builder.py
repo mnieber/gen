@@ -6,10 +6,6 @@ import ramda as R
 from moonleap import get_tpl, u0
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
-from titan.react_view_pkg.pkg.builders.form_state_provider_builder import (
-    get_fields,
-    get_form_mutation_or_bvr,
-)
 
 
 class FormFieldsBuilder(Builder):
@@ -38,15 +34,9 @@ class FormFieldsBuilder(Builder):
         add_tpl_to_builder(tpl, self)
 
     def get_context(self):
-        item_name = self.ih.working_item_name
-
-        # We expect the widget_spec to have a "save" pipeline
-        mutation, editing_bvr = get_form_mutation_or_bvr(self.widget_spec)
-        fields = get_fields(mutation.api_spec, self.widget_spec) if mutation else []
-
         return dict(
-            item_name=item_name,
-            fields=fields,
+            item_name=self.ih.working_item_name,
+            fields=self.widget_spec.get_form_data(recurse=True).fields,
             get_slug_src=_get_slug_src,
             get_label=_get_label,
             get_display_field_name=_get_display_field_name,

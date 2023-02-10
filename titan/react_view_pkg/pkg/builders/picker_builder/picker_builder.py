@@ -5,9 +5,6 @@ from moonleap.utils.fp import extend_uniq
 from titan.react_view_pkg.pkg.add_tpl_to_builder import add_tpl_to_builder
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.bvrs_helper import BvrsHelper
-from titan.react_view_pkg.pkg.builders.form_state_provider_builder import (
-    get_form_mutation_or_bvr,
-)
 
 
 class PickerBuilder(Builder):
@@ -31,17 +28,13 @@ class PickerBuilder(Builder):
         return bvrs_helper
 
     def _add_lines(self):
-        # We expect the widget_spec to have a "save" pipeline
-        mutation, editing_bvr = (
-            get_form_mutation_or_bvr(self.widget_spec) if self.save else (None, None)
-        )
-
+        form_data = self.widget_spec.get_form_data(recurse=True)
         context = dict(
             **self.bvrs_helper.bvrs_context(),
             update_url=self.widget_spec.values.get("updateUrl"),
             item_name=self.ilh.working_item_name,
-            mutation=mutation,
-            editing_bvr=editing_bvr,
+            mutation=form_data.mutation,
+            editing_bvr=form_data.editing_bvr,
             path_to_items=self.ilh.item_list_data_path(),
             save=self.save,
             spinner=self.get_value("spinner"),
