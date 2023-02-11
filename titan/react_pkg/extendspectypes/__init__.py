@@ -1,4 +1,5 @@
 from moonleap import Prop, extend
+from titan.react_view_pkg.state.resources import State
 from titan.types_pkg.item import Item
 from titan.types_pkg.itemlist import ItemList
 from titan.typespec.field_spec import FieldSpec
@@ -22,3 +23,8 @@ class ExtendItemList:
 class ExtendFieldSpec:
     ts_type = Prop(props.field_spec_ts_type)
     ts_default_value = Prop(props.field_spec_ts_default_value)
+
+
+@extend(State)
+class ExtendState:
+    ts_type = Prop(props.state_ts_type)

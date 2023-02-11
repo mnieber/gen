@@ -52,7 +52,9 @@ def add_api_render_tasks(react_app, api_module):
     api_module.renders(
         lambda: [
             x
-            for x in get_api_reg().get_queries(module_name="api")
+            for x in sorted(
+                get_api_reg().get_queries(module_name="api"), key=lambda x: x.name
+            )
             if "client" in x.api_spec.has_endpoint
         ],
         "queries",
@@ -63,7 +65,9 @@ def add_api_render_tasks(react_app, api_module):
     api_module.renders(
         lambda: [
             x
-            for x in get_api_reg().get_mutations(module_name="api")
+            for x in sorted(
+                get_api_reg().get_mutations(module_name="api"), key=lambda x: x.name
+            )
             if "client" in x.api_spec.has_endpoint
         ],
         "mutations",

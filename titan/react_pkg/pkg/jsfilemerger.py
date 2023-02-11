@@ -22,7 +22,7 @@ class JsFileMerger(FileMerger):
         has_footer_content = False
 
         for content in (lhs_content, rhs_content):
-            lines = content.split(os.linesep)
+            lines = content.split(os.linesep) if content else []
             line_idx = 0
             while line_idx < len(lines):
                 line = lines[line_idx]

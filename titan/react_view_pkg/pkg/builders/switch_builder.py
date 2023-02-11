@@ -8,7 +8,13 @@ class SwitchBuilder(Builder):
     def build(self):
         cond = self.get_value("cond")
         if not self.widget_spec.is_component_def:
-            self.output.add(lines=["<></>{/* Switch */}<></>"])
+            self.output.add(
+                lines=[
+                    "{/*              */}",
+                    "{/* 🟩 Switch 🟩 */}",
+                    "{/*              */}",
+                ]
+            )
         self.output.add(lines=[f"{{{cond} &&"])
         add_child_widgets(self, [self.widget_spec.child_widget_specs[0]])
         self.output.add(lines=[f"}}"])

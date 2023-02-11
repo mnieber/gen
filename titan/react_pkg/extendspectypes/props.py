@@ -73,3 +73,7 @@ def field_spec_ts_default_value(field_spec):
         return "0"
 
     raise Exception(f"Cannot deduce ts default value for {field_spec.field_type}")
+
+
+def state_ts_type(state):
+    return state.name
