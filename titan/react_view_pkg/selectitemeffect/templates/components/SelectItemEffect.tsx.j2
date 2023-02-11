@@ -10,7 +10,6 @@ import {
 } from 'src/api/types/{{ _.component.item_list.item.type_name }}T';
 
 type ArgsT = {
-  myItemsSelection: Selection;
   myItemId?: string;                                                                  {% ?? __.get_item_id() %}
 {{ __.select_effect_args() }}
 };
@@ -28,7 +27,6 @@ export const MyComponent = observer(
       <Effect
         getArgs={(params) => {
           return {
-            myItemsSelection: props.myItemsSelection,
             myItemId: {{ __.get_item_id() }},                                         {% ?? __.get_item_id() %}
             {{ __.extract_params() }}
           }
@@ -36,7 +34,7 @@ export const MyComponent = observer(
         f={
           (args: ArgsT) => {
             if (args.myItemId) {
-              args.myItemsSelection.selectItem({ itemId: args.myItemId});
+              props.myItemsSelection.selectItem({ itemId: args.myItemId});
             }
           }
         }
