@@ -9,9 +9,12 @@ import {
 } from 'src/utils/components/ValuePicker';
 import { useScheduledCall } from 'src/utils/hooks';
 
-type PropsT<ValueT> = ValuePickerPropsT<ValueT> & {
-  submitOnChange?: boolean;
-};
+type PropsT<ValueT> = Omit<
+  ValuePickerPropsT<ValueT> & {
+    submitOnChange?: boolean;
+  },
+  'pickableValue'
+>;
 
 export const ValuePickerField = observer(<ValueT,>(props: PropsT<ValueT>) => {
   const formState = useFormStateContext();
@@ -40,6 +43,7 @@ export const ValuePickerField = observer(<ValueT,>(props: PropsT<ValueT>) => {
   };
 
   return (
+    // @ts-ignore
     <ValuePicker
       className="mt-1"
       {...valuePickerProps}

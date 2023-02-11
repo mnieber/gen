@@ -13,7 +13,7 @@ export type PropsT<ValueT> = {
   isMulti: boolean;
   isCreatable: boolean;
   pickableValues: ValueT[];
-  pickableValue: ValueT;
+  pickableValue: ValueT | ValueT[];
   labelFromValue: (value: any) => string;
   labelFromPickedValue?: (value: any) => string;
   placeholder?: string;

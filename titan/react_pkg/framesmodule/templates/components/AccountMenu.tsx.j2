@@ -1,4 +1,5 @@
 import { observer } from 'mobx-react-lite';
+import { dps, withDefaultProps } from 'src/app/defaultProps';
 import { useLoadUserId, useSignOut } from 'src/auth/endpoints';
 import { SignInLi } from 'src/auth/components/SignInLi';                                        {% ?? _.service.react_app.auth_module %}
 import { SignOutLi } from 'src/auth/components/SignOutLi';                                      {% ?? _.service.react_app.auth_module %}
@@ -8,27 +9,34 @@ import { cn } from 'src/utils/classnames';
 
 import './AccountMenu.scss';
 
-export const AccountMenu = observer(() => {
-  const loadUserId = useLoadUserId();
-  const menuHandler = useMenuHandler();
+export type PropsT = {};
 
-  return (
-    <div className={cn('AccountMenu', 'uk-inline')}>
-      <button
-        data-cy="accountMenu"
-        className={button}
-        type="button"
-      >
-        Account
-      </button>
-      <div
-        ref={menuHandler.ref}
-      >
-        <ul className="uk-nav uk-dropdown-nav">
-          {!loadUserId.data?.isAuthenticated && <SignInLi menuHandler={menuHandler} />}         {% ?? _.service.react_app.auth_module %}
-          {loadUserId.data?.isAuthenticated && <SignOutLi menuHandler={menuHandler} />}         {% ?? _.service.react_app.auth_module %}
-        </ul>
+const DefaultProps = {
+  ...dps.isAuthenticated,
+};
+
+export const AccountMenu = observer(
+  withDefaultProps((props: PropsT & typeof DefaultProps) => {
+    const menuHandler = useMenuHandler();
+
+    return (
+      <div className={cn('AccountMenu', 'uk-inline')}>
+        <button
+          data-cy="accountMenu"
+          className={button}
+          type="button"
+        >
+          Account
+        </button>
+        <div
+          ref={menuHandler.ref}
+        >
+          <ul className="uk-nav uk-dropdown-nav">
+            {!props.isAuthenticated && <SignInLi menuHandler={menuHandler} />}         {% ?? _.service.react_app.auth_module %}
+            {props.isAuthenticated && <SignOutLi menuHandler={menuHandler} />}         {% ?? _.service.react_app.auth_module %}
+          </ul>
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }, DefaultProps)
+);
