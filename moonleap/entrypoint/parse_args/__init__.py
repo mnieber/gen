@@ -14,12 +14,12 @@ def parse_args():
         + " a symlink if they have the same timestamp as the reference file.",
     )
     parser.add_argument(
-        "--smart-with-skip",
+        "--no-skip",
         required=False,
         action="store_true",
-        help="Same as --smart, but also use the settings/diff/skip patterns "
-        + "to create symlinks (in the output) to expected files that must be "
-        + "skipped in the diff.",
+        help="If true, then the --smart option is made a little faster by not "
+        + "executing the step that creates symlinks (in the output) to expected files "
+        + "that must be skipped in the diff.",
     )
     parser.add_argument(
         "--post-process-all",
@@ -33,4 +33,8 @@ def parse_args():
     parser.add_argument("--stacktrace", required=False, action="store_true")
     parser.add_argument("action", choices=["gen", "diff"])
 
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.no_skip and not args.smart:
+        parser.error("--no-skip requires --smart")
+
+    return args

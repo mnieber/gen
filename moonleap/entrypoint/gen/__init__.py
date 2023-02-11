@@ -13,8 +13,8 @@ def gen(args, smart, session):
 
     if smart:
         create_symlinks_for_identical_files(session)
-    if args.smart_with_skip:
-        create_symlinks_for_skip_patterns(session)
+        if not args.no_skip:
+            create_symlinks_for_skip_patterns(session)
 
     generate_code(
         session, create_file_writer(session, args), args.post_process_all_files

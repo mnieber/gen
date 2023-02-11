@@ -9,12 +9,13 @@ from moonleap.session import get_session
 
 
 class FileWriter:
-    def __init__(self, snapshot_fn, check_crc_before_write):
+    def __init__(self, snapshot_fn, check_crc_before_write, skip_list):
         self.output_filenames = []
         self.all_output_filenames = []
         self.warnings = []
         self.root_dir = Path(get_session().output_dir)
         self.check_crc_before_write = check_crc_before_write
+        self.skip_list = skip_list
         self.fn_parts = {}
         self.snapshot_fn = Path(snapshot_fn)
         self._load_crc_snapshot(snapshot_fn)
@@ -28,6 +29,9 @@ class FileWriter:
             self.crc_by_fn = {}
 
     def write_file(self, fn, content, is_dir=False):
+        if str(fn) in self.skip_list:
+            return
+
         fn = (self.root_dir / fn).absolute()
 
         if is_dir:

@@ -10,14 +10,13 @@ class NeverException(Exception):
 
 if __name__ == "__main__":
     args = parse_args()
-    smart = args.smart or args.smart_with_skip
-    check_args(args, smart)
+    check_args(args, args.smart)
 
     session = create_session(args)
 
     if args.action == "gen":
         try:
-            gen(args, smart, session)
+            gen(args, args.smart, session)
         except NeverException as e:
             session.report("Error: " + str(e))
             if args.stacktrace:
