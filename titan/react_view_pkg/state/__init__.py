@@ -22,7 +22,7 @@ def create_state(term):
 
 @create("location:state")
 def create_location_state(term):
-    return LocationState(name="locationState")
+    return LocationState(name="LocationState")
 
 
 @rule("module", has, "state")
