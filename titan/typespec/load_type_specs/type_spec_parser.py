@@ -78,7 +78,7 @@ class TypeSpecParser:
                 fk_trace = self.parse(host, value, fk_type_spec)
 
                 # Set related name.
-                if field_spec.field_type == "fk" and fk.related_name:
+                if field_spec.field_type in ("fk", "relatedSet") and fk.related_name:
                     field_spec.related_name = fk.related_name
 
                 # Update trace

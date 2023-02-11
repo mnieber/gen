@@ -31,12 +31,12 @@ def add_extra_model_fields(type_spec, value, fk: ForeignKey, parent_type_spec=No
         #   playlistSet: pass
         #   myPlaylists as playlistSet with owner: pass
         #
-        # to
+        # is automatically expanded to
         #
         # userProfile:
-        #   playlistSet: pass
+        #   playlistSet:
         #     userProfile with playlistSet: pass
-        #   myPlaylists as playlistSet with owner: pass
+        #   myPlaylists as playlistSet with owner:
         #     owner as userProfile with myPlaylistSet: pass
         fk_field_name = l0(parent_type_spec.type_name)
 
@@ -47,3 +47,17 @@ def add_extra_model_fields(type_spec, value, fk: ForeignKey, parent_type_spec=No
         if key not in value:
             required = "is_owner" in fk.parts
             value[key] = "pass,auto" + ("" if required else ",optional")
+
+    # There is also the case where (in playlist) we're adding a fk to userProfile
+    # that has a relatedSet pointing back to playlist. In this case we want
+    # the "owner" fk field to have a related_name of "playlistSet". This step is not
+    # performed here but in the add_missing_related_names post-processing step.
+    # Note that for this setup to work, you need to explicitly specify the related name
+    # of the relatedSet (in this case: "owner").
+    #
+    # playlist:
+    #   owner as userProfile:
+    #     playlistSet with owner: pass
+
+    if fk.field_type == "fk" and parent_type_spec:
+        pass
