@@ -33,7 +33,7 @@ data-type is defined.
 
 server:
   todolists.todolist:
-    '__type__': entity.sorted
+    '__attrs__': entity.sorted
     'name': String.255.display
 
     todos.todoSet=[@>]:
@@ -59,7 +59,7 @@ name (`todolists`) and the type-spec name (`todolist`). This allows us to split 
 
 ### A :type-spec contains :scalar-fields and :relational-fields, which are key/value pairs
 
-The `todolist` :type-spec has two normal keys (`name` and `todos.todoSet=[@>]`) and one :special-key: `__type__`.
+The `todolist` :type-spec has two normal keys (`name` and `todos.todoSet=[@>]`) and one :special-key: `__attrs__`.
 The `name` key belongs to what is called a :scalar-field. The `todos.todoSet=[@>]` key refers to another type-spec and belongs to a so-called :relational-field. The symbols at the end of our :relational-field key (such as `@`) are explained later.
 
 ## :Relational-fields
@@ -71,7 +71,7 @@ The `name` key belongs to what is called a :scalar-field. The `todos.todoSet=[@>
 
 server:
   todolists.todolist:
-    '__type__': entity.sorted
+    '__attrs__': entity.sorted
     'name': String.255.display
 
     todos.todoSet=[@>]:
@@ -92,10 +92,10 @@ Every key of a relational field indicates a type that is targetted by that field
 
 The symbols at the end of a :relational-field key represent attributes of target :type-spec. Here, the "@" symbol is used to indicate that `todo` is an entity and ">" indicates that it is sorted.
 
-### The `__type__` special key stores attributes of a :type-spec.
+### The `__attrs__` special key stores attributes of a :type-spec.
 
-Instead of using symbols, you can also specify the attributes of the target :type-spec using the `__type__` special key.
-Here, we see from the value for the `__type__` key that the `todolist` type is a sorted entity.
+Instead of using symbols, you can also specify the attributes of the target :type-spec using the `__attrs__` special key.
+Here, we see from the value for the `__attrs__` key that the `todolist` type is a sorted entity.
 
 ## Fact: A `relatedSet` field implies a related `fk` field on the target type.
 
@@ -122,7 +122,7 @@ If `TypeSpec.is_form` is true, the then `TypeSpec` describes the fields that are
 
 server:
   todolists.todolist:
-    '__type__': entity.sorted
+    '__attrs__': entity.sorted
     'name|': String.255.display
     'description^': String
 
