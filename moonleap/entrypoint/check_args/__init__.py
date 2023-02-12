@@ -1,6 +1,9 @@
-def check_args(args, smart):
-    if smart and args.action != "gen":
-        raise Exception("You can only use --smart with the 'gen' action")
+def check_args(parser, args):
+    if args.smart and args.action != "gen":
+        parser.error("You can only use --smart with the 'gen' action")
 
     if args.sudo and args.action != "diff":
-        raise Exception("You can only use --sudo with the 'diff' action")
+        parser.error("You can only use --sudo with the 'diff' action")
+
+    if args.no_scan and not args.smart:
+        parser.error("The --no-scan flag requires --smart")

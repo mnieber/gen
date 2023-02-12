@@ -1,6 +1,6 @@
 import re
 
-from moonleap.blocks.term import is_it_term, words_to_terms
+from moonleap.blocks.term import is_it_term, strs_to_terms
 
 
 class Line:
@@ -52,7 +52,7 @@ def get_create_line():
         words = _preprocess_words(clean_text.split())
 
         next_it_term = None
-        for term in words_to_terms(words):
+        for term in strs_to_terms(words):
             # check if :it must be replaced with it_term
             if is_it_term(term):
                 if not it_term:

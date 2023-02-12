@@ -1,4 +1,4 @@
-from moonleap.blocks.term import is_it_term, word_to_term
+from moonleap.blocks.term import is_it_term, str_to_term
 from moonleap.resources.relations.rel import Rel
 
 
@@ -25,7 +25,7 @@ def _process_words(block, words, it_term, result, word_idx=0):
             break
 
         if term is None:
-            term = word_to_term(word)
+            term = str_to_term(word)
 
         if term:
             if is_it_term(term):

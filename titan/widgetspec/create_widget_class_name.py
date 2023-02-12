@@ -14,7 +14,7 @@ def create_widget_class_name(widget_spec):
         or widget_spec.place
         or R.last(widget_spec.widget_base_types)
     )
-    widget_class_name = widget_spec.values.get("cn", default_class_name)
+    widget_class_name = widget_spec.values.get("class", default_class_name)
 
     shorten = widget_class_name.startswith("__")
     if shorten:

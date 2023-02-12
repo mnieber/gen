@@ -1,4 +1,5 @@
 import traceback
+from argparse import ArgumentParser
 
 from moonleap.entrypoint import create_session, diff, gen, parse_args
 from moonleap.entrypoint.check_args import check_args
@@ -9,8 +10,9 @@ class NeverException(Exception):
 
 
 if __name__ == "__main__":
-    args = parse_args()
-    check_args(args, args.smart)
+    parser = ArgumentParser()
+    args = parse_args(parser)
+    check_args(parser, args)
 
     session = create_session(args)
 

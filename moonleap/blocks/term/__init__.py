@@ -23,7 +23,7 @@ class Term:
         )
 
 
-def word_to_term(word, default_to_tag=False) -> T.Optional[Term]:
+def str_to_term(word, default_to_tag=False) -> T.Optional[Term]:
     stripped_word = word
 
     is_title = stripped_word.endswith("^")
@@ -50,10 +50,10 @@ def word_to_term(word, default_to_tag=False) -> T.Optional[Term]:
     return Term(data, tag, name, is_title)
 
 
-def words_to_terms(words):
+def strs_to_terms(strs):
     terms = []
-    for word in words:
-        term = word_to_term(word)
+    for s in strs:
+        term = str_to_term(s)
         if term:
             terms.append(term)
     return terms

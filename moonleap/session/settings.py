@@ -33,4 +33,23 @@ def load_settings(settings_fn):
         R.from_pairs,
     )(None)
 
+    settings["dps_term_str_by_ts_var"] = {
+        "clip": "+clip:item",
+        "clips": "+clip:item~list",
+        "clipsState": "+dashboard:state",
+        "clipsEditing": "+clip:editing",
+        "clipsHighlight": "+clip:highlight",
+        "clipsSelection": "+clip:selection",
+        "dashboardState": "+dashboard:state",
+        "locationState": "+location:state",
+        "playlist": "+playlist:item",
+        "playlists": "+playlist:item~list",
+        "playlistsState": "+playlists:state",
+        "playlistsEditing": "+playlist:editing",
+        "playlistsHighlight": "+playlist:highlight",
+        "playlistsSelection": "+playlist:selection",
+        "userProfile": "+user-profile:item",
+        "videoPlayerState": "+video-player:state",
+    }
+
     return settings

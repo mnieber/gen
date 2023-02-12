@@ -1,6 +1,6 @@
 import typing as T
 
-from moonleap.blocks.term import Term, word_to_term
+from moonleap.blocks.term import Term, str_to_term
 from moonleap.resources.relations.rel import Rel
 from moonleap.resources.resource import Resource
 
@@ -9,7 +9,7 @@ def _to_term(x: T.Union[Term, str]) -> Term:
     if isinstance(x, Term):
         return x
 
-    term = word_to_term(x)
+    term = str_to_term(x)
     if term is None:
         raise Exception(f"Cannot perform _to_term on {x}")
     return term

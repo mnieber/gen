@@ -10,7 +10,12 @@ class ItemFieldsBuilder(Builder):
     def get_spec_extension(self, places):
         if "Field" not in places:
             layout = "Card" if self.get_value("card") else "Div"
-            return {f"Field with {layout}[cn=__]": {"ItemField": "pass"}}
+            return {
+                f"Field with {layout}": {
+                    "__dict__": {"class": "__"},
+                    "ItemField": "pass",
+                }
+            }
 
     def get_field_specs(self):
         skip_list = ("slug", "fk", "relatedSet")

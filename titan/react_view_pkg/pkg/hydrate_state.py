@@ -1,5 +1,5 @@
 from moonleap import named
-from moonleap.blocks.term import word_to_term
+from moonleap.blocks.term import str_to_term
 from titan.react_view_pkg.state.resources import Container
 from titan.react_view_pkg.widgetregistry import get_widget_reg
 from titan.types_pkg.itemlist import ItemList
@@ -10,7 +10,7 @@ from .create_resource import create_resource
 def hydrate_state(state):
     for module_name, state_datas in get_widget_reg().states_by_module_name.items():
         for state_term_str, state_data in state_datas.items():
-            if state.meta.term == word_to_term(state_term_str):
+            if state.meta.term == str_to_term(state_term_str):
                 _get_state(state, state_data)
 
 
@@ -24,9 +24,9 @@ def _get_state(state, state_data):
 
 
 def _create_container(state, container_term_str, container_data):
-    container = Container(name=word_to_term(container_term_str).data)
+    container = Container(name=str_to_term(container_term_str).data)
     for data_term_str in container_data.get("__data__", []):
-        data_term = word_to_term(data_term_str)
+        data_term = str_to_term(data_term_str)
         data_res = create_resource(state.meta.block, data_term)
         if isinstance(data_res, named(ItemList)):
             container.named_item_list = data_res
@@ -36,7 +36,7 @@ def _create_container(state, container_term_str, container_data):
 
     for kebab_bvr_name in _get_state_kebab_bvr_names(container_data):
         bvr_term_str = f"{container.item.item_name}:{kebab_bvr_name}"
-        bvr_term = word_to_term(bvr_term_str)
+        bvr_term = str_to_term(bvr_term_str)
         bvr = create_resource(state.meta.block, bvr_term)
         container.bvrs.append(bvr)
 

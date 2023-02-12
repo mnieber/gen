@@ -32,8 +32,9 @@ class StepperBuilder(Builder):
             src_dict = self.widget_spec.src_dict
             lhs_dict = get_place_dict(src_dict, "LhsContents") or {
                 "LhsContents with backButton as Const": {
-                    "Child with Div, Button[onClick=moveBack.cn=__Back]": {
-                        "Text": "value=Back"
+                    "Child with Div, Button": {
+                        "__dict__": {"onClick": "moveBack", "class": "__Back"},
+                        "Text": "value=Back",
                     }
                 }
             }
@@ -42,13 +43,19 @@ class StepperBuilder(Builder):
             }
             rhs_dict = get_place_dict(src_dict, "RhsContents") or {
                 "RhsContents with forwardButton as Const": {
-                    "Child with Div, Button[onClick=moveForward.cn=__Forward]": {
-                        "Text": "value=Forward"
+                    "Child with Div, Button": {
+                        "__dict__": {"onClick": "moveForward", "class": "__Forward"},
+                        "Text": "value=Forward",
                     }
                 }
             }
             return {
-                "Child with Bar[cn=__Stepper]": {**lhs_dict, **middle_dict, **rhs_dict}
+                "Child with Bar": {
+                    "__dict__": {"class": "__Stepper"},
+                    **lhs_dict,
+                    **middle_dict,
+                    **rhs_dict,
+                }
             }
 
     def _get_const_name(self):

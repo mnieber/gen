@@ -1,4 +1,6 @@
-from moonleap.blocks.term import word_to_term
+from moonleap import get_session
+from moonleap.blocks.term import str_to_term
+from titan.react_view_pkg.pkg.preprocess_dps import get_dps_name
 
 from .create_resource import create_resource
 
@@ -25,7 +27,8 @@ def _create_pipeline(block, pipeline_name, pipeline_data):
 
     pipeline = Pipeline(name=pipeline_name)
     for term_str in pipeline_data:
-        pipeline.resources.append(create_resource(block, word_to_term(term_str)))
+        term = dps_str_to_term(term_str)
+        pipeline.resources.append(create_resource(block, term))
 
     return pipeline
 
@@ -33,10 +36,21 @@ def _create_pipeline(block, pipeline_name, pipeline_data):
 def _get_props(widget_spec, block):
     for prop_term_str in widget_spec.src_dict.get("__props__", []):
         widget_spec.named_props.append(
-            create_resource(block, word_to_term(prop_term_str))
+            create_resource(block, str_to_term(prop_term_str))
         )
 
-    for default_prop_term_str in widget_spec.src_dict.get("__default_props__", []):
-        widget_spec.named_default_props.append(
-            create_resource(block, word_to_term(default_prop_term_str))
-        )
+    for dps_value in widget_spec.src_dict.get("__dps__", []):
+        term = dps_str_to_term("props." + dps_value)
+        widget_spec.named_default_props.append(create_resource(block, term))
+
+
+def dps_str_to_term(dps_value):
+    lut = get_session().settings["dps_term_str_by_ts_var"]
+    term = str_to_term(dps_value)
+    if not term:
+        dps_name = get_dps_name(dps_value)
+        term_str = lut.get(dps_name)
+        if not term_str:
+            raise Exception(f"Dps term not found for {dps_name}")
+        term = str_to_term(term_str)
+    return term

@@ -12,8 +12,8 @@ def gen(args, smart, session):
     create_expected_dir(session.expected_dir, session.settings["references"])
 
     if smart:
-        create_symlinks_for_identical_files(session)
-        if not args.no_skip:
+        if not args.no_scan:
+            create_symlinks_for_identical_files(session)
             create_symlinks_for_skip_patterns(session)
 
     generate_code(

@@ -1,5 +1,5 @@
 from moonleap import kebab_to_camel
-from moonleap.blocks.term import match_term_to_pattern, word_to_term
+from moonleap.blocks.term import match_term_to_pattern, str_to_term
 from titan.react_view_pkg.widgetregistry import get_widget_reg
 
 
@@ -16,7 +16,7 @@ def widget_spec_component(widget_spec):
         return None
 
     for component in get_widget_reg().components:
-        if widget_term := word_to_term(widget_spec.widget_name):
+        if widget_term := str_to_term(widget_spec.widget_name):
             if match_term_to_pattern(component.meta.term, widget_term):
                 return component
 

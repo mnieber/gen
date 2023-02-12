@@ -1,6 +1,6 @@
 import moonleap.packages.extensions.props as props  # noqa
 from moonleap.blocks.parser.get_blocks import get_blocks  # noqa
-from moonleap.blocks.term import Term, word_to_term  # noqa
+from moonleap.blocks.term import Term, str_to_term  # noqa
 from moonleap.packages.extensions.extend import extend  # noqa
 from moonleap.packages.extensions.memfield import MemField  # noqa
 from moonleap.packages.extensions.memfun import MemFun  # noqa

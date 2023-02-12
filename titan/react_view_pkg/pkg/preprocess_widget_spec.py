@@ -5,10 +5,15 @@ from titan.react_view_pkg.pkg.get_builders import get_builders
 from titan.react_view_pkg.widgetregistry import get_widget_reg
 from titan.widgetspec.load_widget_specs.widget_spec_parser import WidgetSpecParser
 
+from .preprocess_dps import preprocess_dps
+
 
 def preprocess_widget_spec(widget_spec) -> BuilderOutput:
     builders = get_builders(widget_spec)
     assert builders
+
+    # Add default props to the __dps__ key.
+    preprocess_dps(widget_spec)
 
     # Apply the widget spec extensions from all builders
     places = _get_places(widget_spec.src_dict)

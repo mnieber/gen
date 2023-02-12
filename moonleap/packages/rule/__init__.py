@@ -2,7 +2,7 @@ import typing as T
 from dataclasses import dataclass
 from enum import Enum
 
-from moonleap.blocks.term import word_to_term
+from moonleap.blocks.term import str_to_term
 from moonleap.blocks.verbs import _is_created_as
 from moonleap.resources.relations.rel import Rel
 
@@ -63,9 +63,9 @@ def rule(subj_term, verb=None, obj_term=None, priority=Priorities.NORMAL.value):
 
     def wrapped(f):
         rel = Rel(
-            subj=word_to_term(subj_term, default_to_tag=True),
+            subj=str_to_term(subj_term, default_to_tag=True),
             verb=verb,
-            obj=word_to_term(obj_term, default_to_tag=True),
+            obj=str_to_term(obj_term, default_to_tag=True),
         )
         f.moonleap_rule = Rule(rel, f, priority=priority)
         return f

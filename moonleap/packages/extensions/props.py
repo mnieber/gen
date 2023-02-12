@@ -1,7 +1,7 @@
 import typing as T
 from dataclasses import dataclass
 
-from moonleap.blocks.term import Term, word_to_term
+from moonleap.blocks.term import Term, str_to_term
 from moonleap.packages.extensions.prop import Prop
 from moonleap.resources.relations.rel import Rel, fuzzy_match
 from moonleap.resources.relations.slctrs import RelSelector
@@ -28,7 +28,7 @@ class ParentNotFound(RelationNotFound):
 def child(verb, term, required=False):
     rel = Rel(
         verb=verb,
-        obj=term if isinstance(term, Term) else word_to_term(term, default_to_tag=True),
+        obj=term if isinstance(term, Term) else str_to_term(term, default_to_tag=True),
     )
     slctr = RelSelector(rel)
 
@@ -49,7 +49,7 @@ def child(verb, term, required=False):
 def children(verb, term, rdcr=None, sort_attr: T.Optional[str] = None):
     rel = Rel(
         verb=verb,
-        obj=term if isinstance(term, Term) else word_to_term(term, default_to_tag=True),
+        obj=term if isinstance(term, Term) else str_to_term(term, default_to_tag=True),
     )
     slctr = RelSelector(rel)
 
@@ -65,7 +65,7 @@ def children(verb, term, rdcr=None, sort_attr: T.Optional[str] = None):
 def _get_parents(parent_term_str, verb, child_term, inv_relations):
     parents = []
     pattern_rel = Rel(
-        subj=word_to_term(parent_term_str, True), verb=verb, obj=child_term
+        subj=str_to_term(parent_term_str, True), verb=verb, obj=child_term
     )
     for rel, subj_res in inv_relations:
         if fuzzy_match(rel, pattern_rel, subj_res.meta.base_tags, []):

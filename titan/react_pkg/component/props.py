@@ -1,5 +1,5 @@
 from moonleap import create_forward, get_root_resource
-from moonleap.blocks.term import match_term_to_pattern, word_to_term
+from moonleap.blocks.term import match_term_to_pattern, str_to_term
 from moonleap.blocks.verbs import has
 from titan.react_view_pkg.pkg.build_widget_spec import build_widget_spec
 from titan.react_view_pkg.pkg.preprocess_widget_spec import preprocess_widget_spec
@@ -27,7 +27,7 @@ def build_component_widget_spec(component):
 def component_widget_spec(component):
     for widget_spec in get_widget_reg().widget_specs():
         if widget_spec.is_component_def:
-            if widget_term := word_to_term(widget_spec.widget_name):
+            if widget_term := str_to_term(widget_spec.widget_name):
                 if match_term_to_pattern(component.meta.term, widget_term):
                     return widget_spec
     return None

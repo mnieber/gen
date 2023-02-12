@@ -44,9 +44,12 @@ def _lvi_component_spec(widget_spec, lvi_name, named_item_term_str, parent_widge
     context_menu = f",contextMenu={context_menu_value}" if context_menu_value else ""
 
     body = {
-        "__default_props__": [named_item_term_str],
         "__bvrs__": parent_widget_spec.bvr_names,
-        "__attrs__": f"cnLhs=__Title,cnRhs=__Buttons{context_menu}",
+        "__dict__": {
+            "item": named_item_term_str,
+            "cnLhs": "__Title",
+            "cnRhs": f"__Buttons{context_menu}",
+        },
         **lhs_contents,
         **middle_slot,
         **rhs_contents,

@@ -1,4 +1,4 @@
-from moonleap.blocks.term import match_term_to_pattern, patch_tag, word_to_term
+from moonleap.blocks.term import match_term_to_pattern, patch_tag, str_to_term
 from moonleap.packages.rule import rule as rule_decorator
 from moonleap.packages.utils.get_module_symbols import get_module_symbols
 from moonleap.resources.relations.rel import fuzzy_match
@@ -88,7 +88,7 @@ class Scope:
 
 def create(term_str):
     def wrapped(f):
-        term = word_to_term(term_str, default_to_tag=True)
+        term = str_to_term(term_str, default_to_tag=True)
         f.moonleap_create_rule_term = term
 
         return f
