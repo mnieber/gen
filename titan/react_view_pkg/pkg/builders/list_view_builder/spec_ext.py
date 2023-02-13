@@ -49,13 +49,13 @@ def _lvi_component_spec(widget_spec, lvi_name, parent_widget_spec):
     }
 
     # Mix in the body of the LviComponentMixin place, if any.
-    merge_into_config(
-        body,
-        R.head(
-            R.values(get_place_dict(widget_spec.src_dict, "LviComponentMixin") or {})
+    if lvi_component_mixin_spec := get_place_dict(
+        widget_spec.src_dict, "LviComponentMixin"
+    ):
+        merge_into_config(
+            body,
+            R.head(R.values(lvi_component_mixin_spec)),
         )
-        or {},
-    )
 
     return {f"LviComponent with {lvi_name} as ListViewItem, Bar[p-2]": body}
 

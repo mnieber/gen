@@ -34,6 +34,7 @@ from titan.react_view_pkg.pkg.builders.lvi_buttons_builder.lvi_buttons_builder i
     LviButtonsBuilder,
 )
 from titan.react_view_pkg.pkg.builders.markdown_builder import MarkdownBuilder
+from titan.react_view_pkg.pkg.builders.mixin_builder import MixinBuilder
 from titan.react_view_pkg.pkg.builders.picker_builder.picker_builder import (
     PickerBuilder,
 )
@@ -138,6 +139,9 @@ def get_builders(widget_spec):
 
         elif widget_base_type == MarkdownBuilder.type:
             builder = MarkdownBuilder(widget_spec)
+
+        elif widget_base_type == MixinBuilder.type:
+            builder = MixinBuilder(widget_spec)
 
         elif widget_base_type == PickerBuilder.type:
             builder = PickerBuilder(widget_spec)

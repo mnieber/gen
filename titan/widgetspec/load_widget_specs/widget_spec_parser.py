@@ -32,6 +32,8 @@ class WidgetSpecParser:
             widget_spec, spec = create_widget_spec(
                 key, value, module_name=self.module_name
             )
+            if "Mixin" in widget_spec.widget_base_types:
+                continue
 
             # Update parent/child relationships
             if parent_widget_spec and not widget_spec.is_component_def:

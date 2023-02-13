@@ -42,12 +42,14 @@ class ListViewBuilder(Builder):
         from titan.react_view_pkg.pkg.build_widget_spec import build_widget_spec
 
         context = self._get_context()
-        tpl_lvi_props = get_tpl(Path(__file__).parent / "tpl_lvi_props.tsx.j2", context)
+        lvi_props = get_tpl(
+            Path(__file__).parent / "tpl_lvi_props.tsx.j2", context
+        ).get_section("props")
 
         child_widget_spec = self.widget_spec.get_place("ListViewItem")
         with child_widget_spec.memo(["div"]):
             child_widget_spec.div.key = f"{self.ilh.working_item_name}.id"
-            append_uniq(child_widget_spec.div.attrs, tpl_lvi_props.get_section("props"))
+            append_uniq(child_widget_spec.div.attrs, lvi_props)
             return build_widget_spec(child_widget_spec)
 
     def get_spec_extension(self, places):

@@ -10,7 +10,6 @@ pattern = r"\bprops\.(?P<name>[a-zA-Z0-9_]+)\b"
 
 def preprocess_dps(widget_spec):
     # Add dps to the __dps__ key in widget_spec.root
-    # root = _get_root(widget_spec)
     root = widget_spec.root
     dps = root.src_dict.setdefault("__dps__", [])
     props = root.src_dict.setdefault("__props__", {})
@@ -44,11 +43,3 @@ def _iterate_values(widget_spec):
         else:
             if isinstance(value, str):
                 yield value
-
-
-def _get_root(widget_spec):
-    ws = widget_spec
-    while True:
-        if ws.place or not ws.parent:
-            return ws
-        ws = ws.parent
