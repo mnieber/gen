@@ -46,9 +46,7 @@ class BarBuilder(Builder):
             and "LhsContents" in places
         ):
             cn = self.get_value("cnLhs") or "Lhs"
-            result[
-                f"LhsWrapper with Div, RowSkewer[justify-start]"
-            ] = f"__dict__: {{ class: {cn} }}"
+            result[f"LhsWrapper with Div, RowSkewer[justify-start]"] = {"__class__": cn}
 
         if (
             "RightSlot" not in places
@@ -56,9 +54,7 @@ class BarBuilder(Builder):
             and "RhsContents" in places
         ):
             cn = self.get_value("cnRhs") or "Rhs"
-            result[
-                f"RhsWrapper with Div, RowSkewer[justify-end]"
-            ] = f"__dict__: {{ class: {cn} }}"
+            result[f"RhsWrapper with Div, RowSkewer[justify-end]"] = {"__class__": cn}
 
         return result
 

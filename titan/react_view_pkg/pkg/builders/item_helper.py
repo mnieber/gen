@@ -28,7 +28,7 @@ class ItemHelper:
     def maybe_add_item_pipeline_to_spec_extension(self, source_term_str, extension):
         pipelines = extension.setdefault("__pipelines__", {})
         if not self.widget_spec.get_pipeline_data("item", recurse=True):
-            if value := self.widget_spec.get_value_by_name("item", recurse=True):
+            if value := self.widget_spec.get_value("item", recurse=True):
                 pipelines["item"] = [source_term_str, value]
             else:
                 return False
@@ -37,7 +37,7 @@ class ItemHelper:
     def maybe_add_save_pipeline_to_spec_extension(self, extension):
         pipelines = extension.setdefault("__pipelines__", {})
         if not self.widget_spec.get_pipeline_data("save", recurse=True):
-            if value := self.widget_spec.get_value_by_name("save", recurse=True):
+            if value := self.widget_spec.get_value("save", recurse=True):
                 pipelines["save"] = ["component:props", value]
             else:
                 return False

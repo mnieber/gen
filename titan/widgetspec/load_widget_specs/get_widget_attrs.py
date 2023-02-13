@@ -7,7 +7,7 @@ from titan.widgetspec.styles import is_style
 
 
 def get_widget_attrs(key):
-    attrs = dict(widget_name=None, place=None, widget_base_types=[])
+    attrs = dict(widget_name=None, place=None, widget_base_types=[], styles=[])
 
     parts_with = key.split(" with ")
     if len(parts_with) == 2:
@@ -32,13 +32,12 @@ def get_widget_attrs(key):
         attrs["widget_name"] = widget_name
 
     # Determine styles and widget_base_types
-    styles = list()
     for widget_base_type_str in split_non_empty(widget_base_types_str):
         widget_base_type_str, symbols = split_symbols(widget_base_type_str)
         if widget_base_type_str:
             append_uniq(attrs["widget_base_types"], widget_base_type_str)
         for style in split_non_empty(symbols):
             assert is_style(style)
-            append_uniq(styles, style)
+            append_uniq(attrs["styles"], style)
 
-    return attrs, styles
+    return attrs

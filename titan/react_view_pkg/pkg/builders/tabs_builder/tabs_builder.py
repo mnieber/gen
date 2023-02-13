@@ -10,7 +10,7 @@ class TabsBuilder(Builder):
     type = "Tabs"
 
     def build(self):
-        self.use_uniform_height = bool(self.widget_spec.values.get("uniformHeight"))
+        self.use_uniform_height = bool(self.widget_spec.get_value("uniformHeight"))
         self.widget_class_name = self.widget_spec.root.widget_class_name
         context = dict(__=self._get_context())
         context["__"]["tab_instance_div"] = self.output.graft(

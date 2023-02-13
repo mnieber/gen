@@ -7,7 +7,7 @@ from titan.widgetspec.get_place_dict import get_place_dict
 def spec_ext(list_view_builder, places, parent_widget_spec):
     extension = {}
     widget_spec = list_view_builder.widget_spec
-    lvi_name = widget_spec.values.get("lvi-name") or _get_default_lvi_name(widget_spec)
+    lvi_name = widget_spec.get_value("lvi-name") or _get_default_lvi_name(widget_spec)
 
     if "ListViewItem" not in places:
         extension.update(_lvi_spec(lvi_name))
@@ -27,7 +27,7 @@ def _lvi_spec(lvi_name):
 def _lvi_component_spec(widget_spec, lvi_name, parent_widget_spec):
     # This function returns a spec for the list view item component.
     lhs_contents = get_place_dict(widget_spec.src_dict, "LhsContents") or {
-        "LhsContents with ItemFields": {"__dict__": {"display": 1}},
+        "LhsContents with ItemFields": {"__display__": 1},
     }
 
     middle_slot = get_place_dict(widget_spec.src_dict, "MiddleSlot") or {}
@@ -36,15 +36,13 @@ def _lvi_component_spec(widget_spec, lvi_name, parent_widget_spec):
         "RhsContents with LviButtons": "pass",
     }
 
-    context_menu_value = parent_widget_spec.values.get("contextMenu")
+    context_menu_value = parent_widget_spec.get_value("contextMenu")
     context_menu = f",contextMenu={context_menu_value}" if context_menu_value else ""
 
     body = {
         "__bvrs__": parent_widget_spec.bvr_names,
-        "__dict__": {
-            "cnLhs": "__Title",
-            "cnRhs": f"__Buttons{context_menu}",
-        },
+        "__cnLhs__": "__Title",
+        "__cnRhs__": f"__Buttons{context_menu}",
         **lhs_contents,
         **middle_slot,
         **rhs_contents,

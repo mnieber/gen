@@ -10,7 +10,7 @@ class StepperBuilder(Builder):
     type = "Stepper"
 
     def build(self):
-        self.use_uniform_height = self.widget_spec.values.get("uniformHeight")
+        self.use_uniform_height = self.widget_spec.get_value("uniformHeight")
         self.item_name = self.ilh.working_item_name
         const_name = self._get_const_name()
 
@@ -18,7 +18,7 @@ class StepperBuilder(Builder):
         context = {
             "__child_widget_div": child_widget_div,
             "__const_name": const_name,
-            "__guard": self.widget_spec.values.get("guard"),
+            "__guard": self.widget_spec.get_value("guard"),
             "__item_name": self.item_name,
             "__items_expr": self.ilh.item_list_data_path(),
             "__uniform_height": self.use_uniform_height,
@@ -33,8 +33,9 @@ class StepperBuilder(Builder):
             lhs_dict = get_place_dict(src_dict, "LhsContents") or {
                 "LhsContents with backButton as Const": {
                     "Child with Div, Button": {
-                        "__dict__": {"onClick": "moveBack", "class": "__Back"},
-                        "Text": "value=Back",
+                        "__onClick__": "moveBack",
+                        "__class__": "__Back",
+                        "Text": {"text": "Back"},
                     }
                 }
             }
@@ -44,14 +45,15 @@ class StepperBuilder(Builder):
             rhs_dict = get_place_dict(src_dict, "RhsContents") or {
                 "RhsContents with forwardButton as Const": {
                     "Child with Div, Button": {
-                        "__dict__": {"onClick": "moveForward", "class": "__Forward"},
-                        "Text": "value=Forward",
+                        "__onClick__": "moveForward",
+                        "__class__": "__Forward",
+                        "Text": {"__text__": "Forward"},
                     }
                 }
             }
             return {
                 "Child with Bar": {
-                    "__dict__": {"class": "__Stepper"},
+                    "__class__": "__Stepper",
                     **lhs_dict,
                     **middle_dict,
                     **rhs_dict,

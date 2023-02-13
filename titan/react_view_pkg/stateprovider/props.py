@@ -6,13 +6,13 @@ def state_provider_load(state_provider):
     forwards = []
     widget_spec = state_provider.widget_spec
 
-    for state_term_str in widget_spec.src_dict.get("__states__", []):
+    for state_term_str in widget_spec.get_value("states", default=[]):
         forwards += [
             create_forward(state_provider, provides, state_term_str),
         ]
 
-    for pipeline_data in state_provider.widget_spec.src_dict.get(
-        "__pipelines__", {}
+    for pipeline_data in state_provider.widget_spec.get_value(
+        "pipelines", default={}
     ).values():
         for term_str in pipeline_data:
             term = str_to_term(term_str)

@@ -26,8 +26,8 @@ class ListViewBuilder(Builder):
             **self.bvrs_helper.bvrs_context(),
             "__item_name": self.ilh.working_item_name,
             "__items_expr": self.ilh.item_list_data_path(),
-            "update_url": self.widget_spec.values.get("updateUrl"),
-            "context_menu": self.widget_spec.values.get("contextMenu"),
+            "update_url": self.widget_spec.get_value("updateUrl"),
+            "context_menu": self.widget_spec.get_value("contextMenu"),
         }
 
     def _add_lines(self):

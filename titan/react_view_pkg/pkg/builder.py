@@ -26,7 +26,7 @@ class Builder:
         pass
 
     def get_value(self, name, recurse=False):
-        return self.widget_spec.get_value_by_name(name, recurse=recurse)
+        return self.widget_spec.get_value(name, recurse=recurse)
 
     def __repr__(self):
         return f"{self.__class__.__name__}({self.widget_spec})"

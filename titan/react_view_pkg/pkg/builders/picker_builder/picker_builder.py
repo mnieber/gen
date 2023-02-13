@@ -31,7 +31,7 @@ class PickerBuilder(Builder):
         form_data = self.widget_spec.get_form_data(recurse=True)
         context = dict(
             **self.bvrs_helper.bvrs_context(),
-            update_url=self.widget_spec.values.get("updateUrl"),
+            update_url=self.widget_spec.get_value("updateUrl"),
             item_name=self.ilh.working_item_name,
             mutation=form_data.mutation,
             editing_bvr=form_data.editing_bvr,

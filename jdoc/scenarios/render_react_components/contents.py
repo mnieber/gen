@@ -13,7 +13,7 @@ todo-:view as Div:
     todo-form-:view: pass
 
 todo-form-:view as Div:
-  __dict__: { item: +todo:item }
+  __item__: +todo:item
   FormStateProvider:
-    __dict__: { fields: [name,description] }
+    __fields__: [name,description]
 """

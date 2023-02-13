@@ -23,10 +23,11 @@ class WidgetSpec:
     widget_name: T.Optional[str] = None
     module_name: T.Optional[str] = None
     place: T.Optional[str] = None
-    values: T.Dict[str, str] = field(default_factory=dict)
+    styles: list = field(default_factory=list)
     id: str = field(default_factory=get_id)
     parent: T.Optional["WidgetSpec"] = field(repr=False, default=None)
-    # This is the dict from which the widget_spec was created
+    # This is the dict from which the widget_spec was created. All values (see get_value and set_value)
+    # are sourced directly from this dict.
     src_dict: T.Dict[str, str] = field(default_factory=dict)
     # Tags are used to collect any kind of information use it in the root builder
     tags: list = field(default_factory=list)
@@ -82,14 +83,19 @@ class WidgetSpec:
     def memo(self, fields):
         return WidgetSpecMemoContext(self, fields)
 
-    def get_value_by_name(self, name, default=None, recurse=False):
+    def get_value(self, name, default=None, recurse=False):
+        private_key = f"__{name}__"
         ws = self
         while ws:
-            value = ws.values.get(name)
+            value = ws.src_dict.get(private_key)
             if value:
                 return value
             ws = ws.parent if recurse else None
         return default
+
+    def set_value(self, name, value):
+        private_key = f"__{name}__"
+        self.src_dict[private_key] = value
 
     @property
     def root(self):
@@ -101,8 +107,8 @@ class WidgetSpec:
     def get_pipeline_data(self, name, recurse=False):
         ws = self
         while ws:
-            for pipeline_name, pipeline_data in ws.src_dict.get(
-                "__pipelines__", {}
+            for pipeline_name, pipeline_data in ws.get_value(
+                "pipelines", default={}
             ).items():
                 if pipeline_name == name:
                     return pipeline_data

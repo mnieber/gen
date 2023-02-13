@@ -45,10 +45,10 @@ class FormFieldsBuilder(Builder):
     def _get_field_widget_output(self, form_field, field_widget_spec, context):
         from titan.react_view_pkg.pkg.build_widget_spec import build_widget_spec
 
-        with field_widget_spec.memo(["values"]):
-            field_widget_spec.values["form_field_name"] = form_field.dot_name
-            field_widget_spec.values["field_spec"] = form_field.field_spec
-            field_widget_spec.values["parent_context"] = context
+        with field_widget_spec.memo([]):  # TODO: memo values
+            field_widget_spec.set_value("form_field_name", form_field.dot_name)
+            field_widget_spec.set_value("field_spec", form_field.field_spec)
+            field_widget_spec.set_value("parent_context", context)
             return build_widget_spec(field_widget_spec)
 
 

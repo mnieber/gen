@@ -19,7 +19,7 @@ class SpinnerBuilder(Builder):
                 else f"!{item_data_path}"
             ),
             "data_path": item_list_data_path or item_data_path,
-            "guard": self.widget_spec.values.get("guard"),
+            "guard": self.widget_spec.get_value("guard"),
         }
 
         tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)

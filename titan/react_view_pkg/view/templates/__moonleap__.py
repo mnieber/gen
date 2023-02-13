@@ -9,7 +9,7 @@ def get_helpers(_):
         pipelines = widget_spec.pipelines
         has_children_prop = widget_spec.has_tag("has_children_prop")
         has_scss = not widget_spec.has_tag("no_scss")
-        has_default_props = bool(build.default_props) or not widget_spec.values.get(
+        has_default_props = bool(build.default_props) or not widget_spec.get_value(
             "noDps"
         )
         has_click_handler = "click:handler" in widget_spec.handler_term_strs

@@ -30,8 +30,8 @@ class FormData:
 def _get_form_fields(
     widget_spec, form_field_specs, scalar_field_specs, default_field_datas
 ):
-    field_datas_by_form_name = widget_spec.src_dict.get(
-        "__fields__", default_field_datas
+    field_datas_by_form_name = widget_spec.get_value(
+        "fields", default=default_field_datas
     )
     if field_datas_by_form_name is None:
         return None

@@ -4,11 +4,11 @@ from titan.react_view_pkg.widgetregistry import get_widget_reg
 
 
 def widget_spec_handler_term_strs(widget_spec):
-    return widget_spec.src_dict.setdefault("__handlers__", [])
+    return widget_spec.get_value("handlers", default=[])
 
 
 def widget_spec_bvr_names(widget_spec):
-    return [kebab_to_camel(x) for x in widget_spec.src_dict.setdefault("__bvrs__", [])]
+    return [kebab_to_camel(x) for x in widget_spec.get_value("bvrs", default=[])]
 
 
 def widget_spec_component(widget_spec):

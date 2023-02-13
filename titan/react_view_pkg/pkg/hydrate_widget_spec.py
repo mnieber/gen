@@ -16,7 +16,7 @@ def hydrate_widget_spec(widget_spec):
 
 
 def _create_pipelines(widget_spec, block):
-    if pipeline_datas := widget_spec.src_dict.get("__pipelines__", {}):
+    if pipeline_datas := widget_spec.get_value("pipelines", default={}):
         for pipeline_name, pipeline_data in pipeline_datas.items():
             pipeline = _create_pipeline(block, pipeline_name, pipeline_data)
             widget_spec.pipelines.append(pipeline)
@@ -34,11 +34,11 @@ def _create_pipeline(block, pipeline_name, pipeline_data):
 
 
 def _get_props(widget_spec, block):
-    for prop_name, prop_term_str in widget_spec.src_dict.get("__props__", {}).items():
+    for prop_name, prop_term_str in widget_spec.get_value("props", default={}).items():
         if term := str_to_term(prop_term_str):
             widget_spec.named_props.append(create_resource(block, term))
 
-    for dps_value in widget_spec.src_dict.get("__dps__", []):
+    for dps_value in widget_spec.get_value("dps", default=[]):
         term = dps_str_to_term("props." + dps_value)
         widget_spec.named_default_props.append(create_resource(block, term))
 

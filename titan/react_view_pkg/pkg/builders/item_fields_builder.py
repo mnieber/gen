@@ -12,7 +12,7 @@ class ItemFieldsBuilder(Builder):
             layout = "Card" if self.get_value("card") else "Div"
             return {
                 f"Field with {layout}": {
-                    "__dict__": {"class": "__"},
+                    "__class__": "__",
                     "ItemField": "pass",
                 }
             }
@@ -37,7 +37,7 @@ class ItemFieldsBuilder(Builder):
 
         field_widget_spec = self.widget_spec.get_place("Field")
         for field_spec in self.get_field_specs():
-            field_widget_spec.values["field_spec"] = field_spec
+            field_widget_spec.set_value("field_spec", field_spec)
             add_child_widgets(self, [field_widget_spec])
 
 

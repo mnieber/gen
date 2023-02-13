@@ -2,6 +2,7 @@ import re
 
 import ramda as R
 
+from moonleap import is_private_key
 from moonleap.utils.fp import append_uniq
 
 pattern = r"\bprops\.(?P<name>[a-zA-Z0-9_]+)\b"
@@ -13,7 +14,7 @@ def preprocess_dps(widget_spec):
     root = widget_spec.root
     dps = root.src_dict.setdefault("__dps__", [])
     props = root.src_dict.setdefault("__props__", {})
-    for value in _get_values(widget_spec):
+    for value in _iterate_values(widget_spec):
         if dps_name := get_dps_name(value):
             if dps_name not in props:
                 append_uniq(dps, dps_name)
@@ -31,8 +32,8 @@ def get_dps_name(value):
     return None
 
 
-def _get_values(widget_spec):
-    q = [dict(widget_spec.values), list(widget_spec.div.attrs)]
+def _iterate_values(widget_spec):
+    q = [v for k, v in widget_spec.src_dict.items() if is_private_key(k)]
 
     while q:
         value = q.pop()
