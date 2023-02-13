@@ -3,7 +3,7 @@ from moonleap.blocks.term import match_term_to_pattern, str_to_term
 from titan.react_view_pkg.widgetregistry import get_widget_reg
 
 
-def widget_spec_handler_terms(widget_spec):
+def widget_spec_handler_term_strs(widget_spec):
     return widget_spec.src_dict.setdefault("__handlers__", [])
 
 

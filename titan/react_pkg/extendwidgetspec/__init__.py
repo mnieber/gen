@@ -11,6 +11,6 @@ from .widget_spec_get_form_data import widget_spec_get_form_data
 class ExtendWidgetSpec:
     component = Prop(props.widget_spec_component)
     bvr_names = Prop(props.widget_spec_bvr_names)
-    handler_terms = Prop(props.widget_spec_handler_terms)
+    handler_term_strs = Prop(props.widget_spec_handler_term_strs)
     get_form_data = MemFun(widget_spec_get_form_data)
     get_bvr_names = MemFun(props.widget_spec_get_bvr_names)

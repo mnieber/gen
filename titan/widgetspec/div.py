@@ -2,6 +2,7 @@ import typing as T
 from dataclasses import dataclass, field
 
 from titan.widgetspec.sort_styles import maybe_quote_style, sort_styles
+from titan.widgetspec.styles import is_style
 
 
 @dataclass

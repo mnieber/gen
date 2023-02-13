@@ -15,10 +15,9 @@ class ItemHelper:
         return self._working_item_name
 
     def _get_data(self):
-        if pipeline_data := self.widget_spec.get_pipeline_data("item", recurse=True):
-            if term := dps_str_to_term(pipeline_data[-1]):
-                # TODO: should now be possible to base this on pipeline.resources[-1]
-                self._working_item_name = kebab_to_camel(term.data)
+        if pipeline := self.widget_spec.get_pipeline_by_name("item", recurse=True):
+            named_item = pipeline.resources[-1]
+            self._working_item_name = named_item.typ.item_name
 
     def item_data_path(self):
         if pipeline := self.widget_spec.get_pipeline_by_name("item", recurse=True):

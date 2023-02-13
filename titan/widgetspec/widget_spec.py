@@ -172,7 +172,7 @@ class WidgetSpec:
 
     @property
     def debug(self):
-        pp(self.src_dict)
+        pp(dict(widget_name=self.widget_name, src_dict=self.src_dict))
 
     def add_tag(self, tag):
         append_uniq(self.tags, tag)

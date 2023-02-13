@@ -1,5 +1,4 @@
 from moonleap.utils.merge_into_config import merge_into_config
-from moonleap.utils.split_non_empty import split_non_empty
 from titan.widgetspec.div import Div
 from titan.widgetspec.widget_spec import WidgetSpec
 

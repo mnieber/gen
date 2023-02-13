@@ -11,7 +11,7 @@ class ButtonBuilder(Builder):
     def update_widget_spec(self):
         self.widget_spec.div.prepend_styles(["rowSkewer"])
 
-        if "click:handler" in self.widget_spec.root.handler_terms:
+        if "click:handler" in self.widget_spec.root.handler_term_strs:
             default_handler = "() => props.onClick && props.onClick()"
         else:
             default_handler = "() => console.log('Moonleap Todo')"

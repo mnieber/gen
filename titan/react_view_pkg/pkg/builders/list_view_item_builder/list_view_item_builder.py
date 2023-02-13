@@ -12,15 +12,14 @@ class ListViewItemBuilder(Builder):
     def build(self):
         self.bvrs_helper = BvrsHelper(self.widget_spec, self.ih.working_item_name)
         context = self._get_context()
-        tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)
-        add_tpl_to_builder(tpl, self)
 
-    def update_widget_spec(self):
-        self.bvrs_helper = BvrsHelper(self.widget_spec, self.ih.working_item_name)
-        context = self._get_context()
         tpl = get_tpl(Path(__file__).parent / "tpl_div.tsx.j2", context)
         self.widget_spec.div.append_attrs([tpl.get_section("attrs")])
-        self.widget_spec.div.append_styles([tpl.get_section("styles")])
+        if styles := tpl.get_section("styles"):
+            self.widget_spec.div.append_styles([styles])
+
+        tpl = get_tpl(Path(__file__).parent / "tpl.tsx.j2", context)
+        add_tpl_to_builder(tpl, self)
 
     def get_spec_extension(self, places):
         extension = {}

@@ -30,6 +30,7 @@ class FileWriter:
 
     def write_file(self, fn, content, is_dir=False):
         if str(fn) in self.skip_list:
+            get_session().warn("Skipping file: " + str(fn))
             return
 
         fn = (self.root_dir / fn).absolute()

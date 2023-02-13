@@ -11,7 +11,7 @@ class ComponentBuilder(Builder):
     def update_widget_spec(self):
         if on_click := self.get_value("onClick"):
             self.widget_spec.div.append_attrs([f"onClick={{{on_click}}}"])
-            append_uniq(self.widget_spec.handler_terms, "click:handler")
+            append_uniq(self.widget_spec.handler_term_strs, "click:handler")
 
     @property
     def has_child_widgets(self):

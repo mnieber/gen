@@ -7,12 +7,12 @@ class BvrsHelper:
         self.widget_spec = widget_spec
         self.bvrs_items_name = plural(item_name)
 
-        self.bvrs = self.widget_spec.get_bvr_names(recurse=True)
-        self.bvrs_has_addition = "addition" in self.bvrs
-        self.bvrs_has_deletion = "deletion" in self.bvrs
-        self.bvrs_has_drag_and_drop = "dragAndDrop" in self.bvrs
-        self.bvrs_has_highlight = "highlight" in self.bvrs
-        self.bvrs_has_selection = "selection" in self.bvrs
+        self.bvr_names = self.widget_spec.get_bvr_names(recurse=True)
+        self.bvrs_has_addition = "addition" in self.bvr_names
+        self.bvrs_has_deletion = "deletion" in self.bvr_names
+        self.bvrs_has_drag_and_drop = "dragAndDrop" in self.bvr_names
+        self.bvrs_has_highlight = "highlight" in self.bvr_names
+        self.bvrs_has_selection = "selection" in self.bvr_names
 
     def bvrs_context(self):
         return {

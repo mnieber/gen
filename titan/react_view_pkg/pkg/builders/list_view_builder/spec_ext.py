@@ -4,7 +4,7 @@ from moonleap.utils.merge_into_config import merge_into_config
 from titan.widgetspec.get_place_dict import get_place_dict
 
 
-def spec_ext(list_view_builder, places, named_item_term_str, parent_widget_spec):
+def spec_ext(list_view_builder, places, parent_widget_spec):
     extension = {}
     widget_spec = list_view_builder.widget_spec
     lvi_name = widget_spec.values.get("lvi-name") or _get_default_lvi_name(widget_spec)
@@ -12,11 +12,7 @@ def spec_ext(list_view_builder, places, named_item_term_str, parent_widget_spec)
     if "ListViewItem" not in places:
         extension.update(_lvi_spec(lvi_name))
     if "LviComponent" not in places:
-        extension.update(
-            _lvi_component_spec(
-                widget_spec, lvi_name, named_item_term_str, parent_widget_spec
-            )
-        )
+        extension.update(_lvi_component_spec(widget_spec, lvi_name, parent_widget_spec))
     return extension
 
 
@@ -28,10 +24,10 @@ def _lvi_spec(lvi_name):
     }
 
 
-def _lvi_component_spec(widget_spec, lvi_name, named_item_term_str, parent_widget_spec):
+def _lvi_component_spec(widget_spec, lvi_name, parent_widget_spec):
     # This function returns a spec for the list view item component.
     lhs_contents = get_place_dict(widget_spec.src_dict, "LhsContents") or {
-        "LhsContents with ItemFields": "display=1",
+        "LhsContents with ItemFields": {"__dict__": {"display": 1}},
     }
 
     middle_slot = get_place_dict(widget_spec.src_dict, "MiddleSlot") or {}
@@ -46,7 +42,6 @@ def _lvi_component_spec(widget_spec, lvi_name, named_item_term_str, parent_widge
     body = {
         "__bvrs__": parent_widget_spec.bvr_names,
         "__dict__": {
-            "item": named_item_term_str,
             "cnLhs": "__Title",
             "cnRhs": f"__Buttons{context_menu}",
         },

@@ -34,10 +34,9 @@ def _create_pipeline(block, pipeline_name, pipeline_data):
 
 
 def _get_props(widget_spec, block):
-    for prop_term_str in widget_spec.src_dict.get("__props__", []):
-        widget_spec.named_props.append(
-            create_resource(block, str_to_term(prop_term_str))
-        )
+    for prop_name, prop_term_str in widget_spec.src_dict.get("__props__", {}).items():
+        if term := str_to_term(prop_term_str):
+            widget_spec.named_props.append(create_resource(block, term))
 
     for dps_value in widget_spec.src_dict.get("__dps__", []):
         term = dps_str_to_term("props." + dps_value)
