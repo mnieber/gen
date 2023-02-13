@@ -7,19 +7,18 @@ from titan.api_pkg.apiregistry import get_api_reg
 from titan.api_pkg.apiregistry.get_form_type_specs import get_form_type_specs
 from titan.api_pkg.apiregistry.get_public_type_specs import get_public_type_specs
 from titan.django_pkg.djangoapp import DjangoApp
-from titan.types_pkg.typeregistry import get_type_reg
+from titan.django_pkg.djangomodule import create_django_module
 
 from .resources import ApiModule  # noqa
 
 
 @create("api:module")
 def create_api_module(term):
-    api_module = ApiModule(name="api", kebab_name="api")
-    api_module.template_dir = Path(__file__).parent / "templates"
+    api_module = create_django_module(
+        ApiModule, term, Path(__file__).parent / "templates"
+    )
     api_module.template_context = lambda api_module: dict(
-        api_module=api_module,
-        api_reg=get_api_reg(),
-        type_reg=get_type_reg(),
+        module=api_module, api_reg=get_api_reg()
     )
     return api_module
 

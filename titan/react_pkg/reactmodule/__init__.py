@@ -16,12 +16,16 @@ rules = {
 base_tags = {"module": ["react-module"]}
 
 
-@create("module")
-def create_module(term):
-    module = ReactModule(name=kebab_to_camel(term.data))
-    module.template_dir = Path(__file__).parent / "templates"
+def create_react_module(klass, term, template_dir):
+    module = klass(name=kebab_to_camel(term.data))
+    module.template_dir = template_dir
     module.template_context = dict(module=module)
     return module
+
+
+@create("module")
+def create_module(term):
+    return create_react_module(ReactModule, term, Path(__file__).parent / "templates")
 
 
 @rule("react-app", has, "module")

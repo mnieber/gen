@@ -32,29 +32,34 @@ rules = {
 base_tags = {"module": ["django-module"]}
 
 
+def create_django_module(klass, term, template_dir, has_graphql_schema=False):
+    module = klass(name=kebab_to_camel(term.data), kebab_name=term.data)
+    module.template_dir = template_dir
+    module.template_context = dict(module=module)
+    module.has_graphql_schema = has_graphql_schema
+    return module
+
+
 @create("module")
 def create_module(term):
-    module = DjangoModule(name=kebab_to_camel(term.data), kebab_name=term.data)
-    module.template_dir = Path(__file__).parent / "templates"
-    module.template_context = dict(module=module)
-    return module
+    return create_django_module(DjangoModule, term, Path(__file__).parent / "templates")
 
 
 @create("user-accounts:module")
 def create_accounts_module(term):
-    module = DjangoModule(name=kebab_to_camel(term.data), kebab_name=term.data)
-    module.template_dir = Path(__file__).parent / "templates_user_accounts"
-    module.template_context = dict(module=module)
-    module.has_graphql_schema = True
-    return module
+    return create_django_module(
+        DjangoModule,
+        term,
+        Path(__file__).parent / "templates_user_accounts",
+        has_graphql_schema=True,
+    )
 
 
 @create("users:module")
 def create_users_module(term):
-    module = DjangoModule(name=kebab_to_camel(term.data), kebab_name=term.data)
-    module.template_dir = Path(__file__).parent / "templates_users"
-    module.template_context = dict(module=module)
-    return module
+    return create_django_module(
+        DjangoModule, term, Path(__file__).parent / "templates_users"
+    )
 
 
 @rule("django-app", has, "module")

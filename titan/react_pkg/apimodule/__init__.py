@@ -1,18 +1,12 @@
 from pathlib import Path
 
 import moonleap.packages.extensions.props as P
-from moonleap import (
-    create,
-    create_forward,
-    extend,
-    get_root_resource,
-    kebab_to_camel,
-    rule,
-)
+from moonleap import create, create_forward, extend, get_root_resource, rule
 from moonleap.blocks.verbs import has
 from titan.api_pkg.apiregistry import get_api_reg
 from titan.api_pkg.apiregistry.get_public_type_specs import get_public_type_specs
 from titan.react_pkg.reactapp import ReactApp
+from titan.react_pkg.reactmodule import create_react_module
 from titan.types_pkg.typeregistry import get_type_reg
 
 from .resources import ApiModule  # noqa
@@ -22,9 +16,12 @@ rules = {}
 
 @create("api:module")
 def create_api_module(term):
-    api_module = ApiModule(name=kebab_to_camel(term.data))
-    api_module.template_dir = Path(__file__).parent / "templates"
-    api_module.template_context = dict(api_module=api_module, api_reg=get_api_reg())
+    api_module = create_react_module(
+        ApiModule, term, Path(__file__).parent / "templates"
+    )
+    api_module.render_context = lambda api_module: dict(
+        module=api_module, api_reg=get_api_reg()
+    )
     return api_module
 
 
@@ -71,7 +68,7 @@ def add_api_render_tasks(react_app, api_module):
             if "client" in x.api_spec.has_endpoint
         ],
         "mutations",
-        lambda mutation: dict(mutation=mutation),
+        lambda mutation: dict(mutation=mutation, api_reg=get_api_reg()),
         [Path(__file__).parent / "templates_mutation"],
     )
 
