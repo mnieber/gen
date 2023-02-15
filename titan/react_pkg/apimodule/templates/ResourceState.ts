@@ -1,5 +1,4 @@
 import * as R from 'ramda';
-import { EndpointData } from 'src/api/EndpointData';
 
 export const symbolRS = Symbol('ResourceState');
 
@@ -30,64 +29,4 @@ export const initRS = (resource: any, state?: ResourceStateT) => {
     resource[symbolRS] = state ?? undefined;
   }
   return resource;
-};
-
-export type RegOptionsT = {
-  loading?: any[];
-  updating?: any[];
-};
-
-export const cloneAndSetState = (resource: any, options: RegOptionsT) => {
-  if (resource === null) {
-    return resource;
-  }
-
-  let state: ResourceStateT = undefined;
-
-  for (const source of options.loading ?? []) {
-    if (source !== undefined && isLoading(source)) {
-      state = 'loading';
-      break;
-    }
-  }
-
-  if (!state) {
-    for (const source of options.updating ?? []) {
-      if (source !== undefined && isUpdating(source)) {
-        state = 'updating';
-        break;
-      }
-    }
-  }
-
-  if (R.isNil(resource)) {
-    return state === 'loading' ? null : undefined;
-  }
-
-  const result = Array.isArray(resource) ? [...resource] : { ...resource };
-  const currentState = (resource as any)[symbolRS];
-  // When we set the result RS, then a "loading" or "updating" state from the
-  // input "resource" takes precedence.
-  (result as any)[symbolRS] =
-    currentState === 'loading' || currentState === 'updating'
-      ? currentState
-      : state;
-  return result;
-};
-
-export const maybe = (
-  endpoint: EndpointData,
-  state: ResourceStateT,
-  flag: boolean
-) => {
-  const result = initRS({});
-
-  if (flag) {
-    const isEndpointLoading =
-      endpoint.status === 'loading' ||
-      (endpoint.status === 'idle' && state === 'loading');
-    setState(result, isEndpointLoading ? state : 'ready');
-  }
-
-  return result;
 };

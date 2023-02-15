@@ -54,16 +54,15 @@ import { useQueryData } from 'src/api/hooks';
       get myListItems() {                                                                                     {% for named_item_list in state_provider.named_item_lists_provided %}
         return cloneAndSetState(
           {{ get_data_path(named_item_list) }}, {
-            loading: [],
-            updating: []
+            // TODO:
+            // ['loading', props.playlist, 'playlist'],
+            // ['updating', [getPlaylist, !!props.playlist], 'playlist'],
           }
         );
       },                                                                                                      {% endfor %}
       get myItem() {                                                                                          {% for named_item in state_provider.named_items_provided %}
         return cloneAndSetState(
           {{ get_data_path(named_item) }}, {
-            loading: [],
-            updating: []
           }
         );
       },                                                                                                      {% endfor %}
@@ -71,16 +70,12 @@ import { useQueryData } from 'src/api/hooks';
         const containerItemsDisplay = {{ get_data_path(container, state, "items") }};
         return cloneAndSetState(
           containerItemsDisplay, {
-            loading: [],
-            updating: []
           }
         );
       },                                                                                                      {% endif %}
       get containerItem() {                                                                                   {% if container.get_bvr("highlight") %}
         return cloneAndSetState(
           {{ get_data_path(container, state, "highlighted_item") }}, {
-            loading: [],
-            updating: []
           }
         );
       },                                                                                                      {% endif %}{% endfor %}{% endfor %}
