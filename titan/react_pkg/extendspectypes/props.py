@@ -35,7 +35,6 @@ def field_spec_ts_type(field_spec):
     if field_spec.field_type in (
         "string",
         "text",
-        "json",
         "url",
         "slug",
         "uuid",
@@ -43,6 +42,9 @@ def field_spec_ts_type(field_spec):
         "markdown",
     ):
         return "string"
+
+    if field_spec.field_type in ("json",):
+        return "ObjT"
 
     if field_spec.field_type in ("string[]", "uuid[]", "tags"):
         return "string[]"

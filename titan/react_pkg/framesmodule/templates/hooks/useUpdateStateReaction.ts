@@ -1,4 +1,4 @@
-import { reaction } from 'mobx';
+import { comparer, IEqualsComparer, reaction } from 'mobx';
 import React from 'react';
 import { flags } from 'src/app/flags';
 
@@ -6,6 +6,7 @@ export type PropsT<ArgsT> = {
   getInputs: () => ArgsT;
   updateState: (args: ArgsT) => any;
   logState?: (args: ArgsT) => any;
+  equals?: IEqualsComparer<ArgsT>;
 };
 
 export const useUpdateStateReaction = <ArgsT>(props: PropsT<ArgsT>) => {
@@ -18,7 +19,7 @@ export const useUpdateStateReaction = <ArgsT>(props: PropsT<ArgsT>) => {
           props.logState(inputs);
         }
       },
-      { fireImmediately: true }
+      { fireImmediately: true, equals: props.equals ?? comparer.default }
     );
   });
 

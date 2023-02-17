@@ -28,5 +28,5 @@ def widget_spec_get_bvr_names(widget_spec, recurse=False):
     while ws:
         if bvr_names := ws.bvr_names:
             return bvr_names
-        ws = ws.parent if recurse else None
-    return None
+        ws = ws.parent if recurse else []
+    return []

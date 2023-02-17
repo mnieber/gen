@@ -50,6 +50,6 @@ def dps_str_to_term(dps_value):
         dps_name = get_dps_name(dps_value)
         term_str = lut.get(dps_name)
         if not term_str:
-            raise Exception(f"Dps term not found for {dps_name}")
+            raise Exception(f"Dps term not found for {dps_name}. Check settings.py")
         term = str_to_term(term_str)
     return term
