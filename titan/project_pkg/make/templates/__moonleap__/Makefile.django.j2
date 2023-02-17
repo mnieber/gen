@@ -8,6 +8,9 @@ collect-static:
 create-superuser:
 	python manage.py createsuperuser --noinput || true
 
+dump-db:																			{% if _.service.django_app.db_backup %}
+	mkdir -p /app/dumps && python manage.py dbbackup								{% endif %}
+
 make-migrations-users:																{% if _.service.django_app.get_module_by_name("users") %}
 	python manage.py makemigrations users
 

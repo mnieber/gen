@@ -34,6 +34,8 @@ def load_settings(settings_fn):
     )(None)
 
     settings["dps_term_str_by_ts_var"] = {
+        "action": "+action:item",
+        "actions": "+action:item~list",
         "clip": "+clip:item",
         "clips": "+clip:item~list",
         "clipsState": "+dashboard:state",

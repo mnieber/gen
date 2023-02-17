@@ -15,3 +15,6 @@ DATABASES = {
 }
 
 MIGRATION_MODULES = {}
+
+DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"                        {% if _.django_app.db_backup %}
+DBBACKUP_STORAGE_OPTIONS = {"location": "/app/dumps"}                                   {% endif %}

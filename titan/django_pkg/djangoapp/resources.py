@@ -1,10 +1,9 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from titan.project_pkg.service import Tool
-
 from moonleap import Resource, get_session
 from moonleap.utils.get_or_create_secret_key import get_or_create_secret_key
+from titan.project_pkg.service import Tool
 
 
 @dataclass
@@ -31,4 +30,9 @@ class DjangoApp(Tool):
 
 @dataclass
 class DjangoAdminReorder(Resource):
+    pass
+
+
+@dataclass
+class DjangoDbBackup(Resource):
     pass
