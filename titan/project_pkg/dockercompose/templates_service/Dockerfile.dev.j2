@@ -3,10 +3,10 @@ FROM {{ __.dockerfile.image_name }}
 
 RUN {{ _.service.pip }} install --upgrade pip                                   {% ?? _.service.pip %}
 
-# Add ppa for postgresql-client-13                                              {% if _.service.is_dependent_on("postgres") %}
-RUN apt install curl ca-certificates gnupg
-RUN curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
-RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" >> /etc/apt/sources.list.d/postgresql.list'
+# Add ppa for postgresql-client-14                                              {% if _.service.is_dependent_on("postgres") %}
+RUN apt policy postgresql
+RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 
                                                                                 {% endif %}
 # install pkg dependencies
@@ -18,7 +18,7 @@ RUN {{ __.docker_image.install_command }} \
     curl \
     fish \                                                                      {% ?? _.service.fish %}
     nano \
-    postgresql-client-13 \                                                      {% ?? _.service.is_dependent_on("postgres") %}
+    postgresql-client-14 \                                                      {% ?? _.service.is_dependent_on("postgres") %}
     {% remove_trailing suffix="__backslash__" %}                                {% end_min_lines %}
 
 # create a python venv that we can easily store inside a docker volume          {% if _.service.pip %}
