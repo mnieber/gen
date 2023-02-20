@@ -8,7 +8,7 @@ from titan.typespec.get_api_spec import get_api_spec
 def load_api_specs(api_reg, spec_dir):
     fn = os.path.join(spec_dir, "api.yaml")
     if os.path.exists(fn):
-        get_all_api_specs(api_reg, "client", load_yaml(fn))
+        get_all_api_specs(api_reg, "server", load_yaml(fn))
 
 
 def get_all_api_specs(api_reg, host, root_api_spec_dict):
