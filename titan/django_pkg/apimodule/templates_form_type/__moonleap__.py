@@ -5,6 +5,6 @@ def get_helpers(_):
         ]
 
         def args(self, field_spec):
-            return "required=False" if field_spec.is_optional("server") else ""
+            return "" if field_spec.is_optional("server") else "required=True"
 
     return Helpers()
