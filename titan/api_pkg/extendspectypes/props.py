@@ -7,7 +7,7 @@ def tn_graphene(self: TypeSpec):
     return f"{u0(self.type_name)}T"
 
 
-def graphene_type(self: FieldSpec, args):
+def field_spec_graphene_type(self: FieldSpec, args):
     infix = ", " if args else ""
     if self.field_type == "relatedSet":
         return f"graphene.List({self.target_type_spec.tn_graphene}{infix}{args})"
@@ -30,14 +30,14 @@ def graphene_type(self: FieldSpec, args):
     if self.field_type == "float":
         return f"graphene.Float({args})"
 
-    if self.field_type in ("string", "text", "slug", "markdown"):
+    if self.field_type in ("string", "text", "slug", "markdown", "uuid"):
         return f"graphene.String({args})"
 
     if self.field_type in "string[], tags":
         return f"graphene.List(graphene.String{infix}{args})"
 
-    if self.field_type == "uuid":
-        return f"graphene.ID({args})"
+    # if self.field_type == "uuid":
+    #     return f"graphene.ID({args})"
 
     if self.field_type == "uuid[]":
         return f"graphene.List(graphene.String{infix}{args})"

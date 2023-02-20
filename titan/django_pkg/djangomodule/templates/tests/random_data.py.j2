@@ -7,10 +7,12 @@ from api.types.my_item_form_t import MyItemFormT                                
 f = faker.Faker()
 
 def create_random_my_item(                                                          {% for django_model in _.module.django_models %}
-    my_field_id,                                                                    {% for field_spec in __.get_field_specs(django_model.type_spec) %}{% ?? field_spec.field_type == "fk" %}{% endfor %}
+    my_field_id,                                                                    {% for field_spec in __.get_field_specs(django_model.type_spec) %}{% ?? field_spec.field_type == "fk" %}
+    my_field,                                                                       {% ?? field_spec.field_type == "uuid" and field_spec.target %}{% endfor %}
 ):
     obj, created = MyItem.objects.get_or_create(
         my_field_id=my_field_id,                                                    {% for field_spec in __.get_field_specs(django_model.type_spec) %}{% if field_spec.field_type == "fk" %}
+        my_field=my_field,                                                          {% elif field_spec.field_type == "uuid" and field_spec.target %}
         my_field={{ __.get_faker_value(field_spec) }},                              {% else %}{% endif %}{% endfor %}
     )
     return obj

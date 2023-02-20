@@ -61,8 +61,9 @@ def get_helpers(_):
                 x
                 for x in type_spec.get_field_specs()
                 if "server" in x.has_model
-                # and "server" not in x.optional
-                and x.name not in field_name_block_list and x.field_type != "relatedSet"
+                and not x.is_optional("server")
+                and x.name not in field_name_block_list
+                and x.field_type != "relatedSet"
             ]
 
         def get_faker_value(self, field_spec):
