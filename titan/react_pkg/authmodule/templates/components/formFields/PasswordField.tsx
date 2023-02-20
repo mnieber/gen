@@ -6,13 +6,8 @@ export const PasswordField = (props: PropsT) => {
   const fieldProps = useFieldProps({
     fieldType: 'password',
     placeholder: props.placeholder,
+    autoSelect: true,
   });
 
-  return (
-    <input
-      onFocus={(event) => event.target.select()}
-      className={props.className}
-      {...fieldProps}
-    />
-  );
+  return <input className={props.className} {...fieldProps} />;
 };

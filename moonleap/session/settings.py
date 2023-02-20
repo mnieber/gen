@@ -43,7 +43,6 @@ def load_settings(settings_fn):
         "clipsHighlight": "+clip:highlight",
         "clipsSelection": "+clip:selection",
         "dashboardState": "+dashboard:state",
-        "locationState": "+location:state",
         "playlist": "+playlist:item",
         "playlists": "+playlist:item~list",
         "playlistsState": "+playlists:state",
@@ -51,6 +50,7 @@ def load_settings(settings_fn):
         "playlistsHighlight": "+playlist:highlight",
         "playlistsSelection": "+playlist:selection",
         "userProfile": "+user-profile:item",
+        "urlState": "+url:state",
         "videoPlayerState": "+video-player:state",
     }
 

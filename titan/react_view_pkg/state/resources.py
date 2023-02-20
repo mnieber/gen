@@ -12,7 +12,7 @@ class State(Component):
 
 
 @dataclass
-class LocationState(State):
+class UrlState(State):
     pass
 
 

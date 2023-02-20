@@ -52,7 +52,7 @@ class FormStateProviderBuilder(Builder):
             type_spec=get_type_reg().get(u0(item_name) + "Form"),
             mutation=form_data.mutation,
             editing_bvr=form_data.editing_bvr,
-            location_state=get_location_state_default_prop(self.widget_spec),
+            url_state=get_url_state_default_prop(self.widget_spec),
             fields=fields,
             uuid_fields=[
                 x
@@ -100,11 +100,9 @@ def _get_validated_fields(fields):
     ]
 
 
-def get_location_state_default_prop(widget_spec):
-    def _is_location_state(named_res):
+def get_url_state_default_prop(widget_spec):
+    def _is_url_state(named_res):
         term = named_res.meta.term
         return term.tag == "state" and term.data == "location"
 
-    return R.head(
-        [x for x in widget_spec.root.named_default_props if _is_location_state(x)]
-    )
+    return R.head([x for x in widget_spec.root.named_default_props if _is_url_state(x)])

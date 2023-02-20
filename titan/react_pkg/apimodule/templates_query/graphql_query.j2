@@ -15,7 +15,7 @@ import { myTypeSpecNameGqlFields } from 'src/api/types/MyTypeSpecNameT';        
 import { hydrateMyOutputFieldType } from 'src/api/types/MyOutputFieldTypeT';                        {% !! output_field_spec in __.hydrated_fields %}
 
 export type ArgsT = {
-  myInputFieldName: myInputFieldTsType;                                                             {% !! input_field_spec in __.input_field_specs %}
+  myInputFieldName: myInputFieldTsType;                                                             {% !! input_field_spec in __.input_field_specs|sort(attribute="name") %}
 };
 
 export const myEndpoint = (args: ArgsT) => {

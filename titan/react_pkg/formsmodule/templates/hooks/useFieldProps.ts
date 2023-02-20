@@ -17,7 +17,11 @@ export type FieldPropsT = {
   disabled?: boolean;
   fieldType: FieldTypeT;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   placeholder?: string;
+  autoSelect?: boolean;
+  tabIndex?: number;
 };
 
 export const useFieldProps = (props: FieldPropsT) => {
@@ -25,6 +29,13 @@ export const useFieldProps = (props: FieldPropsT) => {
   const fieldContext = useFormFieldContext();
 
   return {
+    onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+      if (props.autoSelect) {
+        e.target.select();
+      }
+      props.onFocus && props.onFocus(e);
+    },
+    onBlur: props.onBlur,
     ...createFormFieldProps({
       formState,
       fieldName: fieldContext.fieldName,
@@ -38,6 +49,7 @@ export const useFieldProps = (props: FieldPropsT) => {
       (fieldContext.useSmartLabel ? fieldContext.label : undefined),
     autoFocus: fieldContext.autoFocus,
     disabled: props.disabled,
+    tabIndex: props.tabIndex,
   };
 };
 

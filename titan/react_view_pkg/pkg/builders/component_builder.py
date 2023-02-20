@@ -2,7 +2,7 @@ from moonleap import append_uniq, u0
 from titan.react_view_pkg.pkg.add_child_widgets import add_child_widgets
 from titan.react_view_pkg.pkg.builder import Builder
 from titan.react_view_pkg.pkg.builders.form_state_provider_builder.form_state_provider_builder import (
-    get_location_state_default_prop,
+    get_url_state_default_prop,
 )
 from titan.widgetspec.create_widget_class_name import get_component_name
 
@@ -22,7 +22,7 @@ class ComponentBuilder(Builder):
         return self.get_value("updateUrl")
 
     def build(self):
-        self.location_state = get_location_state_default_prop(self.widget_spec)
+        self.url_state = get_url_state_default_prop(self.widget_spec)
         self.add_div_open()
         self.add_body()
         self.add_div_close()
@@ -33,8 +33,8 @@ class ComponentBuilder(Builder):
         attrs_str = _get_attrs_str(self.widget_spec)
         if self.update_url:
             attrs_str += (
-                f" updateUrl={{() => props.locationState.moonleapTodo()}}"
-                if self.location_state
+                f" updateUrl={{() => props.urlState.moonleapTodo()}}"
+                if self.url_state
                 else f" updateUrl={{() => routeUfns.moonleapTodo(history.replace)()}}"
             )
 
@@ -64,7 +64,7 @@ class ComponentBuilder(Builder):
         if self.update_url:
             if not self.widget_spec.root.has_tag("update_url"):
                 self.widget_spec.root.add_tag("update_url")
-                if not self.location_state:
+                if not self.url_state:
                     self.output.add(
                         imports=[
                             "import { useRouteUfns } from 'src/routes/hooks/useRoutes';"

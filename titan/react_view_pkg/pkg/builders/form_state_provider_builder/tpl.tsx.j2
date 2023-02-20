@@ -64,15 +64,15 @@ import { usePostMyMutation } from 'src/{{ mutation.api_spec.module_name }}/endpo
         }
         values                                                                                          {% else %}{% endif %}
       )).then((
-        localMyItem: MyItemT                                                                            {% ?? location_state %}
+        localMyItem: MyItemT                                                                            {% ?? url_state %}
       ) => {
         formState.reset(initialValues, initialErrors);
-        props.locationState.goToMyItem(localMyItem);                                                    {% ?? location_state %}
+        props.urlState.goToMyItem(localMyItem);                                                         {% ?? url_state %}
       });                                                                                               {% endif %}
     };
     const handleCancel = ({ formState }: HandleCancelArgsT) => {
       props.myEditingBvr.cancel();                                                                      {% ?? editing_bvr %}
-      props.locationState.goBack();                                                                     {% ?? location_state %}
+      props.urlState.goBack();                                                                          {% ?? url_state %}
       console.log("Moonleap Todo");                                                                     {% ?? not editing_bvr %}
     };
     {{ ""}}

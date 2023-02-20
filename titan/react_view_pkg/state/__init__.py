@@ -8,7 +8,7 @@ from titan.react_pkg.reactmodule import ReactModule
 from titan.react_view_pkg.pkg.hydrate_state import hydrate_state
 
 from . import props
-from .resources import LocationState, State
+from .resources import State, UrlState
 
 base_tags = {"state": ["react-state"]}
 
@@ -20,9 +20,9 @@ def create_state(term):
     return state
 
 
-@create("location:state")
-def create_location_state(term):
-    return LocationState(name="LocationState")
+@create("url:state")
+def create_url_state(term):
+    return UrlState(name="UrlState")
 
 
 @rule("module", has, "state")

@@ -4,6 +4,7 @@ import { primaryButton } from 'src/frames/components';
 export type PropsT = {
   label: string;
   disabled?: boolean;
+  tabIndex?: number;
   className?: any;
 };
 
@@ -12,6 +13,7 @@ export const SaveButton = (props: PropsT) => {
   return (
     <button
       className={props.className ?? `${primaryButton} self-end`}
+      tabIndex={props.tabIndex}
       onClick={(e) => {
         e.preventDefault();
         formState.submit();

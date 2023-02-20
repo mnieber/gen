@@ -6,6 +6,7 @@ export type PropsT = {
   label: string;
   disabled?: boolean;
   className?: any;
+  tabIndex?: number;
   useDefaultClassName?: boolean;
 };
 
@@ -22,6 +23,7 @@ export const CancelButton = (props: PropsT) => {
         e.preventDefault();
         formState.cancel();
       }}
+      tabIndex={props.tabIndex}
       disabled={props.disabled || formState.getFlag('submitting')}
     >
       {props.label}

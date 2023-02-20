@@ -6,6 +6,7 @@ from .sections.databases import *
 from .sections.graphql import *
 from .sections.installed_apps import *
 from .sections.locale import *
+from .sections.logging import *
 from .sections.middleware import *
 from .sections.origins import *
 from .sections.paths import *
