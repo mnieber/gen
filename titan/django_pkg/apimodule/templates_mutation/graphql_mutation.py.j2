@@ -19,7 +19,8 @@ class MutationName(graphene.Mutation):
     def mutate(
         self,
         info,
-        input_field_name,                                                               {% for input_field_spec in __.input_field_specs %}{% endfor %}
+        input_field_name,                                                               {% !! input_field_spec in __.required_input_field_specs %}
+        input_field_name=None,                                                          {% !! input_field_spec in __.optional_input_field_specs %}
         {% remove_trailing suffix="," %}
     ):
         # Moonleap Todo: implement mutation

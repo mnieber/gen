@@ -4,6 +4,12 @@ from moonleap.utils.fp import append_uniq, uniq
 def get_helpers(_):
     class Helpers:
         input_field_specs = _.mutation.api_spec.get_inputs()
+        optional_input_field_specs = [
+            x for x in input_field_specs if x.is_optional("server")
+        ]
+        required_input_field_specs = [
+            x for x in input_field_specs if not x.is_optional("server")
+        ]
         fk_input_field_specs = _.mutation.api_spec.get_inputs(["fk", "relatedSet"])
         output_field_specs = _.mutation.api_spec.get_outputs()
         fk_output_field_specs = _.mutation.api_spec.get_outputs(["fk", "relatedSet"])
@@ -38,7 +44,7 @@ def get_helpers(_):
 
         def graphene_type(self, field_spec):
             return field_spec.graphene_type(
-                "required=False" if field_spec.is_optional("server") else ""
+                "" if field_spec.is_optional("server") else "required=True"
             )
 
     return Helpers()
