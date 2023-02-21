@@ -30,14 +30,14 @@ def field_spec_graphene_type(self: FieldSpec, args):
     if self.field_type == "float":
         return f"graphene.Float({args})"
 
-    if self.field_type in ("string", "text", "slug", "markdown", "uuid"):
+    if self.field_type in ("string", "text", "slug", "markdown"):
         return f"graphene.String({args})"
 
     if self.field_type in "string[], tags":
         return f"graphene.List(graphene.String{infix}{args})"
 
-    # if self.field_type == "uuid":
-    #     return f"graphene.ID({args})"
+    if self.field_type == "uuid":
+        return f"graphene.ID({args})"
 
     if self.field_type == "uuid[]":
         return f"graphene.List(graphene.String{infix}{args})"
