@@ -13,8 +13,11 @@ class WidgetRegistry(Resource):
         self.states_by_module_name = {}
 
     def setdefault(self, widget_name, default_value):
-        if not self.has(widget_name):
-            self._widget_spec_by_widget_name[widget_name] = default_value
+        if self.has(widget_name):
+            return self.get(widget_name)
+
+        self._widget_spec_by_widget_name[widget_name] = default_value
+        return default_value
 
     def has(self, widget_name):
         return widget_name in self._widget_spec_by_widget_name

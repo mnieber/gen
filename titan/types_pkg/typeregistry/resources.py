@@ -37,8 +37,11 @@ class TypeRegistry(Resource):
     def setdefault(self, type_name, default_value):
         assert type_name and type_name[0] == type_name[0].upper()
 
-        if not self.has(type_name):
-            self._type_spec_by_type_name[type_name] = default_value
+        if self.has(type_name):
+            return self.get(type_name)
+
+        self._type_spec_by_type_name[type_name] = default_value
+        return default_value
 
     def has(self, type_name):
         assert type_name and type_name[0] == type_name[0].upper()

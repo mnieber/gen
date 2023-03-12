@@ -73,7 +73,7 @@ def get_api_spec(api_reg, host, endpoint_key, endpoint_spec_dict, known_type_nam
             )
         )
 
-    api_reg.setdefault(
+    return api_reg.setdefault(
         name,
         ApiSpec(
             name=name,

@@ -38,8 +38,11 @@ class ApiRegistry(Resource):
         self._mutation_by_mutation_name = {}
 
     def setdefault(self, name, default_value):
-        if not self.has(name):
-            self._api_spec_by_name[name] = default_value
+        if self.has(name):
+            return self.get(name)
+
+        self._api_spec_by_name[name] = default_value
+        return default_value
 
     def has(self, name):
         return bool(self._api_spec_by_name.get(name, None))
