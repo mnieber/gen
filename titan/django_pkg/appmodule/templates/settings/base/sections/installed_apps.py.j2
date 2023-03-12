@@ -21,6 +21,7 @@ THIRD_PARTY_APPS = [
     *django_rtk_green_apps,                                             {% ?? _.django_app.user_accounts_module %}
     "graphene_django",                                                  {% ?? _.django_app.api_module %}
     "graphql_jwt.refresh_token.apps.RefreshTokenConfig",                {% ?? _.django_app.user_accounts_module %}
+    "martor"                                                            {% ?? _.has_flag("django/hasMarkdownFields") %}
 ]
 
 LOCAL_APPS = [

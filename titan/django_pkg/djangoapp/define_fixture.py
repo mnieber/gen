@@ -31,7 +31,7 @@ def create_fixture(field_spec):
 def define_fixture(root, fixture):
     target_type_spec = fixture.field_spec.target_type_spec
     provided_item_names = [
-        l0(sn(x.target)) for x in target_type_spec.get_field_specs(["fk"])
+        l0(sn(x.name)) for x in target_type_spec.get_field_specs(["fk"])
     ]
     django_model_args = [f"{sn(x + 'Id')}={sn(x)}.id" for x in provided_item_names]
 

@@ -1,7 +1,7 @@
 import os
 import sys
 
-from .paths import APP_DIR
+from .paths import BASE_DIR
 
 LOGGING = {
     "version": 1,
@@ -10,7 +10,7 @@ LOGGING = {
             "level": "DEBUG",
             "class": "logging.FileHandler",
             "formatter": "simple",
-            "filename": os.path.join(APP_DIR, "log/django-file.log"),
+            "filename": os.path.join(BASE_DIR, "log/django-file.log"),
         },
         "mail_admins": {
             "level": "ERROR",

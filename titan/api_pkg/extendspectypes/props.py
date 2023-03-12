@@ -37,10 +37,10 @@ def field_spec_graphene_type(self: FieldSpec, args):
         return f"graphene.List(graphene.String{infix}{args})"
 
     if self.field_type == "uuid":
-        return f"graphene.ID({args})"
+        return f"graphene.UUID({args})"
 
     if self.field_type == "uuid[]":
-        return f"graphene.List(graphene.String{infix}{args})"
+        return f"graphene.List(graphene.UUID{infix}{args})"
 
     if self.field_type in ("any", "json"):
         return f"GenericScalar({args})"
@@ -78,10 +78,10 @@ def field_spec_graphql_type(self: FieldSpec, host):
         return "Float" + postfix
 
     if self.field_type in ("uuid",):
-        return "ID" + postfix
+        return "UUID" + postfix
 
     if self.field_type in ("uuid[]",):
-        return "[String]" + postfix
+        return "[UUID]" + postfix
 
     if self.field_type in ("form",):
         return f"{self.target_type_spec.type_name}T" + postfix
