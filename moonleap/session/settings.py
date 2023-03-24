@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 
 import ramda as R
-
 from moonleap.utils import yaml2dict
 from moonleap.utils.merge_into_config import merge_into_config
 
@@ -43,6 +42,8 @@ def load_settings(settings_fn):
         "clipsHighlight": "+clip:highlight",
         "clipsSelection": "+clip:selection",
         "dashboardState": "+dashboard:state",
+        "node": "+node:item",
+        "nodes": "+node:item~list",
         "playlist": "+playlist:item",
         "playlists": "+playlist:item~list",
         "playlistsState": "+playlists:state",
