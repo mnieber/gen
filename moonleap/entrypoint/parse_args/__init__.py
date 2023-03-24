@@ -6,15 +6,7 @@ def parse_args(parser):
         action="store_true",
         help="If true, CRCs of output files are recorded, "
         + "and - on subsequent runs - output files are not written if "
-        + "they have the same CRC. Moreover, output files are replaced with "
-        + " a symlink if they have the same timestamp as the reference file.",
-    )
-    parser.add_argument(
-        "--no-scan",
-        required=False,
-        action="store_true",
-        help="If true, then the --smart option is made a little faster by not "
-        + "scanning the output directory and creating symlinks to expected files.",
+        + "they have the same CRC.",
     )
     parser.add_argument(
         "--post-process-all",
@@ -24,8 +16,7 @@ def parse_args(parser):
         help="If true, post process all output files, not just the ones that were written",
     )
     parser.add_argument("--output-dir", required=False, default=".moonleap")
-    parser.add_argument("--sudo", required=False, action="store_true")
     parser.add_argument("--stacktrace", required=False, action="store_true")
-    parser.add_argument("action", choices=["gen", "diff"])
+    parser.add_argument("action", choices=["gen"])
 
     return parser.parse_args()

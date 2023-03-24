@@ -1,7 +1,7 @@
 import traceback
 from argparse import ArgumentParser
 
-from moonleap.entrypoint import create_session, diff, gen, parse_args
+from moonleap.entrypoint import create_session, gen, parse_args
 from moonleap.entrypoint.check_args import check_args
 
 
@@ -25,6 +25,3 @@ if __name__ == "__main__":
                 traceback.print_exc()
         finally:
             pass
-
-    if args.action == "diff":
-        diff(session, args.sudo)

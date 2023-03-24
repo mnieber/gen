@@ -46,8 +46,7 @@ Also, considering that operations such as selection, filtering and drag-and-drop
 
 ```
 pip install requirements.txt
-python moonleap.py --spec=specs/titan.md --smart --restore-missing gen
-python moonleap.py --spec=specs/titan.md diff
+python moonleap.py --spec=specs/titan.md --smart gen
 ```
 
 ## A short example

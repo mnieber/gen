@@ -1,8 +1,7 @@
 # Entrypoint
 
 The Moonleap entrypoint `parses the args` and `checks the args`.
-It then creates a `session`.
-It either executes a `gen` or a `diff` operation.
+It then creates a `session` and executes the `gen` operation.
 
 ## The `gen` operation
 

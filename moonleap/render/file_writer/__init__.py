@@ -1,21 +1,19 @@
-from __future__ import unicode_literals
-
 import json
 import zlib
 from pathlib import Path
 
+from __future__ import unicode_literals
 from moonleap.render.file_merger import get_file_merger
 from moonleap.session import get_session
 
 
 class FileWriter:
-    def __init__(self, snapshot_fn, check_crc_before_write, skip_list):
+    def __init__(self, snapshot_fn, check_crc_before_write):
         self.output_filenames = []
         self.all_output_filenames = []
         self.warnings = []
         self.root_dir = Path(get_session().output_dir)
         self.check_crc_before_write = check_crc_before_write
-        self.skip_list = skip_list
         self.fn_parts = {}
         self.snapshot_fn = Path(snapshot_fn)
         self._load_crc_snapshot(snapshot_fn)
@@ -29,10 +27,6 @@ class FileWriter:
             self.crc_by_fn = {}
 
     def write_file(self, fn, content, is_dir=False):
-        if str(fn) in self.skip_list:
-            get_session().warn("Skipping file: " + str(fn))
-            return
-
         fn = (self.root_dir / fn).absolute()
 
         if is_dir:
@@ -65,8 +59,6 @@ class FileWriter:
 
         self.output_filenames.append(fn_str)
         self.crc_by_fn[fn_str] = crc
-        if fn.is_symlink():
-            fn.unlink()
         fn.parent.mkdir(parents=True, exist_ok=True)
         with open(fn, "wb" if _is_binary(content) else "w") as ofs:
             ofs.write(content)
