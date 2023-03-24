@@ -26,7 +26,7 @@ class ListViewItemBuilder(Builder):
         if not self.ih.maybe_add_item_pipeline_to_spec_extension(
             "component:props", extension
         ):
-            raise Exception("FormStateProviderBuilder: no item pipeline")
+            raise Exception("ListViewItemBuilder: no item pipeline")
         return extension
 
     def _get_context(self):
