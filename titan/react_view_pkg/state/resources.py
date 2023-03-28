@@ -1,3 +1,4 @@
+import typing as T
 from dataclasses import dataclass, field
 
 from moonleap import named
@@ -8,7 +9,7 @@ from titan.types_pkg.itemlist import ItemList
 
 @dataclass
 class State(Component):
-    containers: list["Container"] = field(default_factory=list)
+    containers: T.List["Container"] = field(default_factory=list)
 
 
 @dataclass
@@ -19,9 +20,9 @@ class UrlState(State):
 @dataclass
 class Container:
     name: str
-    bvrs: list[Behavior] = field(default_factory=list)
+    bvrs: T.List[Behavior] = field(default_factory=list)
     named_item_list: named(ItemList) = None
-    named_items: list[named(ItemList)] = field(default_factory=list)
+    named_items: T.List[named(ItemList)] = field(default_factory=list)
 
     def get_bvr(self, name):
         for bvr in self.bvrs:

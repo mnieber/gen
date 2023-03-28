@@ -1,8 +1,9 @@
+from __future__ import unicode_literals
+
 import json
 import zlib
 from pathlib import Path
 
-from __future__ import unicode_literals
 from moonleap.render.file_merger import get_file_merger
 from moonleap.session import get_session
 

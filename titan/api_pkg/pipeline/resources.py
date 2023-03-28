@@ -1,3 +1,4 @@
+import typing as T
 from dataclasses import dataclass, field
 
 from moonleap import Resource
@@ -8,7 +9,7 @@ from . import props
 @dataclass
 class Pipeline:
     name: str
-    resources: list[Resource] = field(default_factory=list)
+    resources: T.List[Resource] = field(default_factory=list)
 
     def data_path(self, obj):
         return props.pipeline_data_path(self, obj)

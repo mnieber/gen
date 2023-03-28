@@ -1,10 +1,12 @@
+import typing as T
+
 from jdoc.titan.imports import *
 from jdoc.titan.widget_reg import *
 
 
 class Pipeline(Resource):
     component: "ReactComponent" = None
-    resources: list[Resource] = []
+    resources: T.List[Resource] = []
 
     def source(self) -> Resource:
         pass
@@ -15,6 +17,6 @@ class Pipeline(Resource):
 
 class ReactComponent(Resource):
     name: str = ""
-    pipelines: list[Pipeline] = []
-    props: list[Resource] = []
+    pipelines: T.List[Pipeline] = []
+    props: T.List[Resource] = []
     widget_spec: WidgetSpec = None

@@ -1,3 +1,5 @@
+import typing as T
+
 from jdoc.moonleap.block import *
 from jdoc.moonleap.imports import *
 from jdoc.moonleap.resource import *
@@ -5,7 +7,7 @@ from jdoc.moonleap.settings import *
 
 
 class Blocks(Entity):
-    blocks: list[Block] = []
+    blocks: T.List[Block] = []
 
 
 class RawMarkdown(Entity):

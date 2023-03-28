@@ -1,3 +1,5 @@
+import typing as T
+
 from jdoc.moonleap.imports import *
 
 
@@ -6,14 +8,14 @@ class RenderContext(Entity):
 
 
 class Resource(Entity):
-    render_tasks: list["RenderTask"] = []
+    render_tasks: T.List["RenderTask"] = []
 
     def renders(
         self,
         resource: "Resource",
         output_path: str = ".",
         render_context: RenderContext = factory(RenderContext),
-        template_dirs: list[str] = [],
+        template_dirs: T.List[str] = [],
     ):
         self.render_tasks += [
             RenderTask(

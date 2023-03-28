@@ -1,3 +1,5 @@
+import typing as T
+
 from jdoc.moonleap.imports import *
 
 
@@ -27,8 +29,8 @@ class Action(Entity):
 
 
 class Forwards(Entity):
-    relations: list[Relation] = []
+    relations: T.List[Relation] = []
 
 
 class Actions(Entity):
-    actions: list[Action] = []
+    actions: T.List[Action] = []

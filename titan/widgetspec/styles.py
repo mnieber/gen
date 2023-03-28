@@ -1,4 +1,5 @@
 import re
+import typing as T
 
 from dataclassy import dataclass
 
@@ -10,7 +11,7 @@ class StylePattern:
     is_scss: bool
     is_tailwind: bool
     pattern: str
-    scss_imports: list[str] = []
+    scss_imports: T.List[str] = []
 
     def match(self, style):
         pattern = self.pattern.replace("*", "(.*)")

@@ -1,3 +1,5 @@
+import typing as T
+
 from jdoc.moonleap.resource import *
 from jdoc.scenario import *
 
@@ -5,12 +7,12 @@ from jdoc.scenario import *
 class WidgetSpec(Entity):
     module_name: str
     component_term: str
-    widget_base_types: list[str] = []
-    child_widget_specs: list["WidgetSpec"] = []
+    widget_base_types: T.List[str] = []
+    child_widget_specs: T.List["WidgetSpec"] = []
 
 
 class WidgetReg(Entity):
-    widget_specs: list[WidgetSpec] = []
+    widget_specs: T.List[WidgetSpec] = []
 
     def load_widget_specs(self):
         pass

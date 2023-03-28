@@ -1,3 +1,5 @@
+import typing as T
+
 from jdoc.moonleap.resource import *
 from jdoc.scenario import *
 
@@ -7,7 +9,7 @@ class TypeSpec(Resource):
 
 
 class TypeReg(Entity):
-    type_specs: list[TypeSpec] = []
+    type_specs: T.List[TypeSpec] = []
 
     def load_type_specs(self):
         pass
