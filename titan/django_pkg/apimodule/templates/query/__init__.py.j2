@@ -17,7 +17,7 @@ class GrapheneNonEmptyQuery(graphene.ObjectType):
 
 class Query(
     foo_module.schema.Query,                                              {% for module in __.modules %}{% endfor %}
-    FooQuery,                                                             {% for query in _.api_reg.get_queries(module_name="api") %}{% endfor %}
+    FooQuery,                                                             {% for query in _.api_reg.get_queries(module_name="api")|sort(attribute="name") %}{% endfor %}
     GrapheneNonEmptyQuery
 ):
     pass

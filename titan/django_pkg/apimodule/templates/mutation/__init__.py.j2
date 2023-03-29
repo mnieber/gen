@@ -16,7 +16,7 @@ class GrapheneNonEmptyMutation(graphene.Mutation):
 
 
 class Mutation(
-    foo_module.schema.Mutation,                                                 {% for module in __.modules %}{% endfor %}
+    foo_module.schema.Mutation,                                                 {% for module in __.modules|sort(attribute="name") %}{% endfor %}
     GrapheneNonEmptyMutation
 ):
     foo_mutation = FooMutation.Field()                                          {% for mutation in _.api_reg.get_mutations(module_name="api") %}

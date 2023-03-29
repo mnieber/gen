@@ -61,7 +61,12 @@ def get_helpers(_):
                         api_specs.append((api_spec, paths))
 
                 self.orders_data.append(
-                    (order_parent, order_child, order_ids, api_specs)
+                    (
+                        order_parent,
+                        order_child,
+                        order_ids,
+                        sorted(api_specs, key=lambda x: x[0].name),
+                    )
                 )
 
     return Helpers()
