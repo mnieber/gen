@@ -10,6 +10,7 @@ def get_helpers(_):
             for x in type_spec.get_field_specs()
             if ("server" in x.has_api and "server" not in x.has_model)
         ]
+        tag_field_specs = [x for x in model_field_specs if x.field_type == "tags"]
 
         @property
         def excluded_field_specs(self):
