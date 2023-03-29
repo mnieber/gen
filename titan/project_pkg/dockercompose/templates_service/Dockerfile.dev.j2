@@ -6,7 +6,7 @@ RUN {{ _.service.pip }} install --upgrade pip                                   
 # Add ppa for postgresql-client-14                                              {% if _.service.is_dependent_on("postgres") %}
 RUN apt policy postgresql
 RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
-RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt bullseye-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 
                                                                                 {% endif %}
 # install pkg dependencies
