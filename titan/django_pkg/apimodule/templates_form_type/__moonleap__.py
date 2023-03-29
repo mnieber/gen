@@ -1,7 +1,9 @@
 def get_helpers(_):
     class Helpers:
         field_specs = [
-            x for x in _.form_type_spec.get_field_specs() if "server" in x.has_api
+            x
+            for x in _.form_type_spec.get_field_specs()
+            if "server" in x.has_api and "client" in x.has_api
         ]
 
         def args(self, field_spec):
