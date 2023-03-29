@@ -7,8 +7,9 @@ Props
 
 {% section props %}
 myItem={myItem}
-isHighlighted={myItem && props.myItemsHighlight.id === myItem.id}                             {% ?? bvrs_has_highlight %}
+isHighlighted={myItem && props.myItemsHighlight.id === myItem.id}                             {% ?? bvrs_has_highlight and bvrs_has_selection %}
 onDelete={() => props.myItemsDeletion.delete([myItem.id])}                                    {% ?? bvrs_has_deletion %}
 selectionUIProps={selectionUIConnector.handle(myItem.id)}                                     {% ?? bvrs_has_selection %}
+highlightUIProps={highlightUIConnector.handle(myItem.id)}                                     {% ?? bvrs_has_highlight and not bvrs_has_selection %}
 dragAndDropUIProps={dragAndDropUIConnector.handle(myItem.id)}                                 {% ?? bvrs_has_drag_and_drop %}
 {% end_section %}

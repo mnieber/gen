@@ -1,10 +1,11 @@
 {% magic_with myItem = __item_name %}
-
+{% magic_with Blah = lvi_component_name %}
 
 {% section imports %}
 import { MyItemT } from 'src/api/types/MyItemT';
 import {
     useSelectionUIConnector,                                                                  {% ?? bvrs_has_selection %}
+    useHighlightUIConnector,                                                                  {% ?? bvrs_has_highlight and not bvrs_has_selection %}
     useDragAndDropUIConnector,                                                                {% ?? bvrs_has_drag_and_drop %}
 } from 'skandha-mobx/hooks';
 import { createOnSelectItemHandler } from 'src/routes/utils';                                 {% ?? update_url %}
@@ -23,10 +24,23 @@ const dragAndDropUIConnector = useDragAndDropUIConnector(                       
 );                                                                                            {% endif %}
 const selectionUIConnector = useSelectionUIConnector(                                         {% if bvrs_has_selection %}
     props.myItemsSelection,
-    {                                                                                         {% if update_url %}
-      onSelectItem: createOnSelectItemHandler(props.myItems, props.updateUrl),
+    {
+      itemSelector: '.Blah',
+      onSelectItem: createOnSelectItemHandler(props.myItems, props.updateUrl),                {% ?? update_url %}
     },
-    [props.myItems, props.updateUrl]                                                          {% endif %}
+    [
+      props.myItems, props.updateUrl                                                          {% ?? update_url %}
+    ]
+);                                                                                            {% endif %}
+const highlightUIConnector = useHighlightUIConnector(                                         {% if bvrs_has_highlight and not bvrs_has_selection %}
+    props.myItemsHighlight,
+    {
+      itemSelector: '.Blah',
+      onSelectItem: createOnSelectItemHandler(props.myItems, props.updateUrl),                {% ?? update_url %}
+    },
+    [
+      props.myItems, props.updateUrl                                                          {% ?? update_url %}
+    ]
 );                                                                                            {% endif %}
 {{ "" }}
 {% end_section %}

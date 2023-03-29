@@ -22,12 +22,15 @@ class ListViewBuilder(Builder):
         extend_uniq(self.output.default_props, self.bvrs_helper.bvrs_default_props())
 
     def _get_context(self):
+        child_widget_spec = self.widget_spec.get_place("ListViewItem")
+
         return {
             **self.bvrs_helper.bvrs_context(),
             "__item_name": self.ilh.working_item_name,
             "__items_expr": self.ilh.item_list_data_path(),
             "update_url": self.widget_spec.get_value("updateUrl"),
             "context_menu": self.widget_spec.get_value("contextMenu"),
+            "lvi_component_name": child_widget_spec.widget_class_name,
         }
 
     def _add_lines(self):
@@ -48,7 +51,7 @@ class ListViewBuilder(Builder):
 
         child_widget_spec = self.widget_spec.get_place("ListViewItem")
         with child_widget_spec.memo(["div"]):
-            child_widget_spec.div.key = f"{self.ilh.working_item_name}.id"
+            child_widget_spec.div.key = f"`item-${{{self.ilh.working_item_name}.id}}`"
             append_uniq(child_widget_spec.div.attrs, lvi_props)
             return build_widget_spec(child_widget_spec)
 
