@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 from moonleap.blocks.builder.build_blocks import build_blocks
 from moonleap.blocks.parser.expand_markdown import expand_markdown
@@ -7,6 +8,7 @@ from moonleap.post_process import post_process_output_files
 from moonleap.render.render_mixin import get_root_resource, render_resource
 from moonleap.report.report_resources import report_resources
 from moonleap.session import trace
+from moonleap.entrypoint.gen.sync_files import sync_files
 
 
 def generate_code(session, file_writer, post_process_all_files):
@@ -42,6 +44,11 @@ def generate_code(session, file_writer, post_process_all_files):
             else file_writer.output_filenames,
             session.get_post_process_settings(),
             session.get_bin_settings(),
+        )
+        sync_files(
+            session.output_dir,
+            os.path.join(session.output_root_dir, "shadow"),
+            os.path.join(session.output_root_dir, "stage"),
         )
 
     trace("Creating report...")
