@@ -49,12 +49,14 @@ class TakeItemFromLocalVars(PipelineElement):
     pass
 
 
+@dataclass
 class TakeItemListFromQuery(PipelineElement):
-    pass
+    ts_var: T.Optional[str] = None
 
 
+@dataclass
 class TakeItemFromQuery(PipelineElement):
-    pass
+    ts_var: T.Optional[str] = None
 
 
 class ExtractItemFromItem(PipelineElement):
@@ -87,6 +89,9 @@ def _get_elements(self):
                     TakeItemFromQuery(
                         subj=query,
                         obj=named_item,
+                        ts_var=get_query_output_field_name(
+                            query, named_item.typ, ["fk"]
+                        ),
                     )
                 )
             elif isinstance(next_res, named(ItemList)):
@@ -95,6 +100,9 @@ def _get_elements(self):
                     TakeItemListFromQuery(
                         subj=query,
                         obj=named_item_list,
+                        ts_var=get_query_output_field_name(
+                            query, named_item_list.typ, ["relatedSet"]
+                        ),
                     )
                 )
             else:
@@ -256,7 +264,7 @@ def pipeline_data_path(self, obj):
             result = f"props.{elm.obj.typ.ts_var}{postfix}" + result
         elif isinstance(elm, (TakeItemFromQuery, TakeItemListFromQuery)):
             query = elm.subj
-            result = f"{query.name}.data?.{elm.obj.typ.ts_var}"
+            result = f"{query.name}.data?.{elm.ts_var}"
         elif isinstance(
             elm, (TakeItemFromProps, TakeItemListFromProps, TakeBvrFromProps)
         ):
@@ -289,3 +297,10 @@ def pipeline_source(pipeline):
             + " Did you forget to add :props?"
         )
     return source_res
+
+
+def get_query_output_field_name(query, item_or_item_list, field_types):
+    for field_spec in query.api_spec.get_outputs(field_types):
+        if field_spec.target_type_spec is item_or_item_list.type_spec:
+            return field_spec.name
+    return None
