@@ -12,7 +12,8 @@ import * as R from 'ramda';
 import React from 'react';
 import { makeAutoObservable } from 'mobx';
 import { NestedDefaultPropsContext } from 'react-default-props-context';
-import { cloneAndSetState, maybe, initRS } from 'src/api/utils';
+import { cloneAndSetState, maybe } from 'src/api/utils';
+import { initRS } from 'src/api/ResourceState';
 import { MyState } from 'src/{{ state.module.module_path }}/MyState';                           {% !! state in states %}
 import { useMyState } from 'src/{{ state.module.module_path }}/hooks/useMyState';               {% !! state in states %}
 import { dps, withDefaultProps } from 'src/app/defaultProps';
