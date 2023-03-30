@@ -1,4 +1,5 @@
 from moonleap import u0
+from moonleap.utils import chop_suffix
 from moonleap.utils.case import sn
 from titan.types_pkg.typeregistry import get_type_reg
 
@@ -24,7 +25,7 @@ def item_django_module(item):
 
 def type_spec_django_module(type_spec):
     type_name = (
-        type_spec.type_name.removesuffix("Form")
+        chop_suffix(type_spec.type_name, "Form")
         if type_spec.is_form
         else type_spec.type_name
     )

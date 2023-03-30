@@ -13,6 +13,10 @@ def chop(x):
     return x[:-1] if x.endswith(os.linesep) else x
 
 
+def chop_suffix(x, suffix):
+    return x[: -len(suffix)] if x.endswith(suffix) else x
+
+
 def yaml2dict(x):
     s = StringIO(chop0(x))
     return yaml.safe_load(s)

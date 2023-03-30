@@ -3,9 +3,8 @@ import json
 import os
 
 import jinja2
-
 from moonleap.blocks.term import verb_to_word
-from moonleap.utils import dbg
+from moonleap.utils import chop_suffix, dbg
 from moonleap.utils.case import camel_to_kebab, l0, sn, u0
 from moonleap.utils.inflect import plural
 from moonleap.utils.ruamel_yaml import ruamel_yaml
@@ -44,6 +43,7 @@ filters = {
     "bool": lambda x: bool(x),
     "dbg": dbg,
     "dot": dot,
+    "chop_suffix": chop_suffix,
     "expand_vars": lambda x: os.path.expandvars(x),
     "l0": l0,
     "negate": lambda x: not bool(x),

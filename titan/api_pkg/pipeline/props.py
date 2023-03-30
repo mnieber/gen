@@ -2,6 +2,7 @@ import typing as T
 from dataclasses import dataclass
 
 from moonleap import Resource, named
+from moonleap.utils import chop_suffix
 from moonleap.utils.fp import aperture
 from titan.api_pkg.mutation import Mutation
 from titan.api_pkg.query import Query
@@ -283,7 +284,7 @@ def pipeline_data_path(self, obj):
             raise Exception(f"Unexpected element {elm}")
 
         if elm.obj.typ is obj.typ:
-            return result.removesuffix("?")
+            return chop_suffix(result, "?")
 
     return None
 

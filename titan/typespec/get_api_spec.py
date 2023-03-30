@@ -1,4 +1,5 @@
 from moonleap import u0
+from moonleap.utils import chop_suffix
 from titan.typespec.api_spec import ApiSpec
 from titan.typespec.field_spec import FieldSpec
 from titan.typespec.type_spec import TypeSpec
@@ -40,7 +41,7 @@ def get_api_spec(api_reg, host, endpoint_key, endpoint_spec_dict, known_type_nam
     deletes = []
     for item_name in endpoint_spec_dict.get("deletes", []):
         is_list = item_name.endswith("Set")
-        deletes.append((item_name.removesuffix("Set"), is_list))
+        deletes.append((chop_suffix(item_name, "Set"), is_list))
 
     orders = [x.split(".") for x in endpoint_spec_dict.get("orders", [])]
     for x in orders:
@@ -49,7 +50,7 @@ def get_api_spec(api_reg, host, endpoint_key, endpoint_spec_dict, known_type_nam
     saves = []
     for item_name in endpoint_spec_dict.get("saves", []):
         is_list = item_name.endswith("Set")
-        saves.append((item_name.removesuffix("Set"), is_list))
+        saves.append((chop_suffix(item_name, "Set"), is_list))
 
     has_endpoint = endpoint_spec_dict.get("hasEndpoint", ["server", "client"])
 

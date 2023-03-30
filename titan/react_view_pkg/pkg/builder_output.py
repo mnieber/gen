@@ -2,6 +2,7 @@ import os
 import typing as T
 from dataclasses import dataclass, field
 
+from moonleap.utils import chop_suffix
 from moonleap.utils.fp import extend_uniq
 
 
@@ -90,4 +91,4 @@ class BuilderOutput:
 
 
 def _trim(lines):
-    return [x if x == "\n" else x.removesuffix("\n") for x in lines]
+    return [x if x == "\n" else chop_suffix(x, "\n") for x in lines]

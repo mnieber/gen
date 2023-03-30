@@ -1,3 +1,6 @@
+from moonleap.utils import chop_suffix
+
+
 def format_tr(fn):
     with open(fn) as ifs:
         lines = ifs.readlines()
@@ -9,7 +12,7 @@ def format_tr(fn):
             block = [line]
         elif block:
             block.append(line)
-            if line.rstrip().removesuffix(",").endswith("}"):
+            if chop_suffix(line.rstrip(), ",").endswith("}"):
                 blocks.append(block)
                 block = None
 

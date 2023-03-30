@@ -11,7 +11,7 @@ import { queryClient } from 'src/api/queryClient';                              
 import { doQuery } from 'src/api/graphqlClient';
 import { ObjT } from 'src/utils/types';
 import { wait } from 'src/utils/wait';
-import { {{ type_spec.type_name }}T } from 'src/api/types/{{ type_spec.type_name.removesuffix("Form") }}T'; {% !! type_spec in __.form_input_type_specs %}
+import { {{ type_spec.type_name }}T } from 'src/api/types/{{ type_spec.type_name|chop_suffix("Form") }}T'; {% !! type_spec in __.form_input_type_specs %}
 import { myTypeSpecNameGqlFields } from 'src/api/types/MyTypeSpecNameT'                                     {% !! type_spec in __.type_specs_to_import %}
 import { {{ order_parent }}T } from 'src/api/types/{{ order_parent }}T';                                    {% !! order_parent, order_child, order_ids, order_api_specs in __.orders_data %}
 import { hydrateMyOutputFieldType } from 'src/api/types/MyOutputFieldTypeT';                                {% !! output_field_spec in __.hydrated_fields %}
