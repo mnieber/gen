@@ -1,6 +1,6 @@
+import filecmp
 import os
 import shutil
-import filecmp
 
 
 def sync_files(output_dir, shadow_dir, stage_dir):
@@ -45,5 +45,6 @@ def sync_files(output_dir, shadow_dir, stage_dir):
                 output_dir, shadow_file_path[len(shadow_dir) + 1 :]
             )
             if not os.path.exists(output_file_path):
+                os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
                 with open(output_file_path, "w") as f:
                     f.write("Deleted")
