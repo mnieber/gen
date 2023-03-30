@@ -23,6 +23,17 @@ def uniq(items):
     return result
 
 
+def uniq_by(pred, items):
+    result = []
+    keys = []
+    for x in items:
+        key = pred(x)
+        if key not in keys:
+            result.append(x)
+            keys.append(key)
+    return result
+
+
 def aperture(size, items):
     result = []
     for i in range(0, len(items) - size + 1):

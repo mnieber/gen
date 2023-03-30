@@ -2,7 +2,7 @@ import os
 
 from moonleap.utils.case import l0, sn
 from moonleap.utils.codeblock import CodeBlock
-from moonleap.utils.fp import uniq
+from moonleap.utils.fp import uniq, uniq_by
 from titan.django_pkg.djangoapp.define_fixture import create_fixture, define_fixture
 from titan.types_pkg.typeregistry import get_type_reg
 
@@ -63,7 +63,9 @@ def get_helpers(_):
             x for x in output_field_specs if x.field_type not in ("fk", "relatedSet")
         ]
         fk_output_field_specs = _.mutation.api_spec.get_outputs(["fk"])
-        fixtures = [create_fixture(x) for x in id_input_field_specs]
+        fixtures = uniq_by(
+            lambda x: x.name, [create_fixture(x) for x in id_input_field_specs]
+        )
         ids_fixtures = [x for x in fixtures if x.field_spec.field_type == "uuid[]"]
         id_fixtures = [x for x in fixtures if x.field_spec.field_type == "uuid"]
 
