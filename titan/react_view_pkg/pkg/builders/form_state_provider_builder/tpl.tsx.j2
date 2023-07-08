@@ -14,7 +14,12 @@ import {
 } from 'react-form-state-context';
 import { createUUID } from '/src/utils/ids';
 import { MyItemT } from '/src/api/types/MyItemT';
-import { usePostMyMutation } from '/src/{{ mutation.api_spec.module_name }}/endpoints';                  {% ?? mutation %}
+import { rowSkewer } from '/src/frames/components';
+import {
+  CancelButton,
+  GlobalError,
+  SaveButton,
+} from '/src/forms/components';
 {% end_section %}
 
 
@@ -29,51 +34,37 @@ import { usePostMyMutation } from '/src/{{ mutation.api_spec.module_name }}/endp
 {% end_section %}
 
 
+{% section lines %}
+    <GlobalError />
+    <div className={cn(rowSkewer, "self-end")}>
+      <CancelButton
+        label="Cancel"
+        disabled={false}
+      />
+      <SaveButton
+        label="Save"
+        disabled={false}
+      />
+    </div>
+{% end_section %}
+
+
 {% section div_close %}
     </FormStateProvider>
 {% end_section %}
 
 
-{% section preamble_hooks %}
-  const postMyMutation = props.myEditingBvr.save.bind(props.myEditingBvr);                              {% if editing_bvr %}
-  const postMyMutation = usePostMyMutation().mutateAsync;                                               {% elif mutation %}
-  {{ "" }}                                                                                              {% endif %}
-{% end_section %}
-
-
 {% section preamble %}
     const initialValues = {
-      'myField': (                                                                                      {% for field in fields|sort(attribute="name") %}
-        props.myItem.{{ field.field_spec.name}}
-        ?? {{ get_initial_value(field) }}
-      ),{% if field.through %} // Moonleap Todo{% endif %}                                              {% endfor %}
+      // MOONLEAP TODO
     };
     const initialErrors = {};
-    const handleValidate = ({values, setError} : HandleValidateArgsT) => {
-      if (R.isNil(values['myField'])) {                                                                 {% for field in validated_fields %}{% if field.field_spec.field_type not in ("uuid",) %}
-        setError('myField', 'This field is required');
-      }                                                                                                 {% endif %}{% endfor %}
-    };
+    const handleValidate = ({values, setError} : HandleValidateArgsT) => {};
     const handleSubmit = ({ formState, values }: HandleSubmitArgsT) => {
-      return postMyMutation(unflatten(                                                                  {% if mutation %}
-        {                                                                                               {% if uuid_fields or through_fields %}
-          ...values,
-          'myField': values['myField'].id,                                                              {% !! field in uuid_fields %}
-          '{{ field.prefix }}{{ field.name }}': values['myField'],  // MoonleapTodo                     {% !! field in through_fields|sort(attribute="name") %}
-          'myField': undefined,                                                                         {% !! field in through_fields|sort(attribute="name") %}
-        }
-        values                                                                                          {% else %}{% endif %}
-      )).then((
-        localMyItem: MyItemT                                                                            {% ?? url_state %}
-      ) => {
+      return Promise.resolve().then(() => {
         formState.reset(initialValues, initialErrors);
-        props.urlState.goToMyItem(localMyItem);                                                         {% ?? url_state %}
-      });                                                                                               {% endif %}
+      });
     };
-    const handleCancel = ({ formState }: HandleCancelArgsT) => {
-      props.myEditingBvr.cancel();                                                                      {% ?? editing_bvr %}
-      props.urlState.goBack();                                                                          {% ?? url_state %}
-      console.log("Moonleap Todo");                                                                     {% ?? not editing_bvr %}
-    };
+    const handleCancel = ({ formState }: HandleCancelArgsT) => {};
     {{ ""}}
 {% end_section %}
