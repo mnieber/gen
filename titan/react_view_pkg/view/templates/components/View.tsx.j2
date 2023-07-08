@@ -3,7 +3,6 @@ import { dps, withDefaultProps } from '/src/app/defaultProps';
 import { cn } from '/src/utils/classnames';
 import { observer } from 'mobx-react-lite';
 import { isLoading, isUpdating } from '/src/api/getState';
-import UIkit from '/src/frames/styles/uikit';
 {# Imports #}
 {{ line }}                                                                                          {% !! line in __.build.imports_lines %}
 
@@ -17,8 +16,6 @@ const DefaultProps = {};                                                        
 export const MyComponent = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {                                       {% ?? __.has_default_props %}
   (props: PropsT) => {                                                                              {% ?? not __.has_default_props %}
-{# View body #}
-{{ __.build.div }}
   }, DefaultProps)                                                                                  {% ?? __.has_default_props %}
   }                                                                                                 {% ?? not __.has_default_props %}
 );
