@@ -2,17 +2,12 @@
 {% magic_with myInputFieldGqlType = input_field_spec.graphql_type("client") %}
 {% magic_with myInputFieldName = input_field_spec.name %}
 {% magic_with myInputFieldTsType = input_field_spec.ts_type %}
-{% magic_with myOutputFieldName = output_field_spec.name %}
-{% magic_with myOutputFieldType = output_field_spec.target %}
-{% magic_with MyTypeSpecName = type_spec.type_name %}
 import { useQuery } from '@tanstack/react-query';
 import { doQuery } from '/src/api/graphqlClient';                                                    {% ?? _.react_app.use_graphql %}
 import * as R from 'ramda';
 import { ObjT } from '/src/utils/types';
 import myEndpointStub from '/src/api/stubs/myEndpointStub.json';                                     {% ?? _.query.api_spec.is_stub %}
 import { wait } from '/src/utils/wait';
-import { myTypeSpecNameGqlFields } from '/src/api/types/MyTypeSpecNameT';                            {% !! type_spec in __.type_specs_to_import %}
-import { hydrateMyOutputFieldType } from '/src/api/types/MyOutputFieldTypeT';                        {% !! output_field_spec in __.hydrated_fields %}
 
 export type ArgsT = {
   myInputFieldName: myInputFieldTsType;                                                             {% !! input_field_spec in __.input_field_specs|sort(attribute="name") %}
@@ -29,7 +24,7 @@ export const myEndpoint = (args: ArgsT) => {
       ) {
     `query myEndpoint {                                                                             {% else %}
       myEndpoint {                                                                                  {% endif %}
-{{ __.graphql_body }}
+        // MOONLEAP TODO
       }
     }`,
     args
@@ -58,9 +53,5 @@ export const useMyEndpoint = (
     args                                                                                            {% ?? __.input_field_specs %}
     {}                                                                                              {% ?? not __.input_field_specs %}
   )})
-  .then((response: ObjT) => {                                                                       {% if __.hydrated_fields %}
-    response.myOutputFieldName = hydrateMyOutputFieldType(response.myOutputFieldName);              {% for output_field_spec in __.hydrated_fields %}{% ?? output_field_spec.field_type == "fk" %}
-    response.myOutputFieldName = R.map(hydrateMyOutputFieldType, response.myOutputFieldName);       {% ?? output_field_spec.field_type == "relatedSet" %}{% endfor %}
-  })                                                                                                {% endif %}
   ;
 };

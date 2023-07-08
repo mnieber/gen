@@ -1,13 +1,6 @@
-{% magic_with fieldSpecName = field_spec.name %}
-{% magic_with FieldSpecTarget = field_spec.target %}
-{% magic_with fieldSpecTsType = field_spec.ts_type %}
 {% magic_with MyBaseName = _.type_spec.base_type_name %}
 {% magic_with MyType = _.type_spec.type_name %}
-{% magic_with TypeSpecName = type_spec.type_name %}
-import { FieldSpecTargetT } from '/src/api/types/FieldSpecTargetT';                                  {% !! field_spec in __.fk_field_specs %}
-import { typeSpecNameFields } from '/src/api/types/TypeSpecNameT';                                   {% !! type_spec in __.dependency_type_specs %}
 import { MyBaseNameT } from '/src/api/types/MyBaseNameT';                                            {% ?? _.type_spec.base_type_name %}
-import { FieldSpecTargetT, getHydratedFieldSpecTarget } from '/src/api/types/FieldSpecTargetT';      {% for field_spec in __.hydrated_field_specs %}{% ?? field_spec.field_type in ("fk", "relatedSet") %}{% endfor %}
 import * as R from 'ramda';
 import { createUUID } from '/src/utils/ids';
 import { ObjT } from '/src/utils/types';
@@ -15,36 +8,17 @@ import { initRS } from '/src/api/ResourceState';
 
 export type MyTypeT = {                                                                             {% ?? not _.type_spec.base_type_name %}
 export type MyTypeT = {{ _.type_spec.base_type_name}}T & {                                          {% ?? _.type_spec.base_type_name %}
-  fieldSpecName: fieldSpecTsType;                                                                   {% for field_spec in __.field_specs|sort(attribute="name") %}{% ?? not field_spec.is_optional("client") %}
-  fieldSpecName?: fieldSpecTsType;                                                                  {% ?? field_spec.is_optional("client") %}{% endfor %}
 };
 
-export type MyTypeByIdT = { [id: string]: MyTypeT };                                                {% ?? __.has_id_field %}
+export type MyTypeByIdT = { [id: string]: MyTypeT };
 
 export type {{ _.type_spec.type_name }}FormT = {                                                    {% if __.form_field_specs %}
-  fieldSpecName: fieldSpecTsType;                                                                   {% for field_spec in __.form_field_specs|sort(attribute="name") %}{% ?? not field_spec.is_optional("client") %}
-  fieldSpecName?: fieldSpecTsType;                                                                  {% ?? field_spec.is_optional("client") %}{% endfor %}
+  // MOONLEAP TODO
 };                                                                                                  {% endif %}
 
-export const myTypeGqlFields = `                                                                    {% if _.type_spec.extract_gql_fields %}
-{{ __.graphql_fields() }}
-`                                                                                                   {% endif %}
-
-export const hydrateMyType = (data: ObjT) => {                                                      {% if __.hydrated_field_specs %}
-  return {
-    ...data,
-    fieldSpecName: R.isNil(data.fieldSpecName)                                                      {% for field_spec in __.hydrated_field_specs %}{% if field_spec.field_type == "fk" %}
-      ? undefined
-      : getHydratedFieldSpecTarget(data.fieldSpecName),                                             {% endif %}
-    fieldSpecName: R.map(getHydratedFieldSpecTarget, data.fieldSpecName ?? []),                     {% ?? field_spec.field_type == "relatedSet" %}
-    // fieldSpecName: Moonleap Todo,                                                                {% ?? field_spec.field_type not in ("fk", "relatedSet") %}{% endfor %}
-  };
-}                                                                                                   {% endif %}
-
 export const createMyType = (values: ObjT): MyTypeT => {                                            {% if __.item.addition %}
+  // MOONLEAP TODO
   return initRS({
     id: createUUID(),
-    name: 'New myType',
-    slug: 'new-myType',
   }) as MyTypeT;
 };                                                                                                  {% endif %}

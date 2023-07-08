@@ -2,9 +2,6 @@
 {% magic_with myFieldGqlType = field_spec.graphql_type("client") %}
 {% magic_with myFieldName = field_spec.name %}
 {% magic_with myFieldTsType = field_spec.ts_type %}
-{% magic_with myOutputFieldName = output_field_spec.name %}
-{% magic_with myOutputFieldType = output_field_spec.target %}
-{% magic_with MyTypeSpecName = type_spec.type_name %}
 import * as R from 'ramda';
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '/src/api/queryClient';                                                          {% ?? _.mutation.api_spec.invalidates %}
@@ -12,12 +9,7 @@ import { doQuery } from '/src/api/graphqlClient';
 import { ObjT } from '/src/utils/types';
 import { wait } from '/src/utils/wait';
 import { {{ type_spec.type_name }}T } from '/src/api/types/{{ type_spec.type_name|chop_suffix("Form") }}T'; {% !! type_spec in __.form_input_type_specs %}
-import { myTypeSpecNameGqlFields } from '/src/api/types/MyTypeSpecNameT'                                     {% !! type_spec in __.type_specs_to_import %}
-import { {{ order_parent }}T } from '/src/api/types/{{ order_parent }}T';                                    {% !! order_parent, order_child, order_ids, order_api_specs in __.orders_data %}
-import { hydrateMyOutputFieldType } from '/src/api/types/MyOutputFieldTypeT';                                {% !! output_field_spec in __.hydrated_fields %}
 import { queryClient } from '/src/api/queryClient';
-import { applyUpdate } from '/src/utils/applyUpdate';
-import { sortByIds } from '/src/utils/ids';
 
 export type ArgsT = {
   myFieldName: myFieldTsType;                                                                               {% !! field_spec in __.input_field_specs %}
@@ -33,7 +25,7 @@ export const callMyEndpoint = (args: ArgsT) => {
       ) {
     `mutation callMyEndpoint {                                                                              {% else %}
       callMyEndpoint {                                                                                      {% endif %}
-{{ __.graphql_body }}
+        // MOONLEAP TODO
       }
     }`,
     args
@@ -51,6 +43,18 @@ export const useCallMyEndpoint = () => {
   return useMutation({
     mutationKey: ['callMyEndpoint'],
     mutationFn: callMyEndpoint,
-    {% include_snippet "__moonleap__/onSuccess.ts.j2" %}
+    onMutate: (args: ArgsT) => {                                                                            {% if _.mutation.api_spec.orders %}
+      // MOONLEAP TODO: update ordering of {{ _.mutation.api_spec.orders }} in the query cache.
+    },                                                                                                      {% endif %}
+    onSuccess: (response: ObjT) => {                                                                        {% min_lines count=5 %}
+      return queryClient.invalidateQueries(                                                                 {% if _.mutation.api_spec.invalidates %}
+        {
+          queryKey: [
+            '{{ queryName }}',                                                                              {% !! queryName in _.mutation.api_spec.invalidates %}
+            {% remove_trailing suffix="," %}
+          ]
+        }
+      );                                                                                                    {% endif %}
+    },                                                                                                      {% end_min_lines %}
   });
 };

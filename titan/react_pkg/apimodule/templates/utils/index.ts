@@ -1,1 +1,0 @@
-export { cloneAndSetState } from './cloneAndSetState';
