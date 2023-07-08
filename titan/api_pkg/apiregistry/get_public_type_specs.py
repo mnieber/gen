@@ -3,6 +3,7 @@ from moonleap.utils.queue import Queue
 from titan.types_pkg.typeregistry import get_type_reg
 
 
+# Return all type-specs used by the api
 def get_public_type_specs(api_reg, include_stubs, predicate):
     type_reg = get_type_reg()
     result = []

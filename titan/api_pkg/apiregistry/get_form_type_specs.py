@@ -1,6 +1,7 @@
 from moonleap.utils.fp import append_uniq
 
 
+# Return all form-type inputs for all queries and mutations
 def get_form_type_specs(api_reg):
     result = []
 

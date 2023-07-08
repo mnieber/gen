@@ -1,5 +1,4 @@
 {% magic_with inputFieldName = input_field_spec.name %}
-{% magic_with itemTypeName = item.item_name %}
 {% magic_with mutationName = _.mutation.name %}
 {% magic_with outputFieldName = output_field_spec.name %}
 {% magic_with OutputFieldTarget = output_field_spec.target %}
@@ -24,8 +23,6 @@ class MutationName(graphene.Mutation):
         {% remove_trailing suffix="," %}
     ):
         # Moonleap Todo: implement mutation
-        {{ item.item_name }}, created = ItemTypeName.objects.update_or_create()         {% !! item in __.items_saved %}
-        ItemTypeName.objects.none().delete()                                            {% !! item in __.items_deleted %}
 
         return MutationName(
             success=True,

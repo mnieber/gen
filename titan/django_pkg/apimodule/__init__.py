@@ -43,29 +43,6 @@ def add_query_render_tasks(django_app, api_module):
         [Path(__file__).parent / "templates_mutation"],
     )
 
-    if django_app.add_tests:
-        api_module.renders(
-            lambda: [
-                x
-                for x in get_api_reg().get_mutations(module_name="api")
-                if not x.api_spec.is_stub
-            ],
-            "tests",
-            lambda mutation: dict(mutation=mutation),
-            [Path(__file__).parent / "templates_mutation_tests"],
-        )
-
-        api_module.renders(
-            lambda: [
-                x
-                for x in get_api_reg().get_queries(module_name="api")
-                if not x.api_spec.is_stub
-            ],
-            "tests",
-            lambda query: dict(query=query),
-            [Path(__file__).parent / "templates_query_tests"],
-        )
-
     api_module.renders(
         lambda: get_public_type_specs(
             get_api_reg(),
