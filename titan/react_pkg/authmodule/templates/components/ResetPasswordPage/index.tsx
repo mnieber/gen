@@ -1,12 +1,12 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { AuthFrame } from 'src/auth/components/AuthFrame';
-import { ResetPasswordForm } from 'src/auth/components/ResetPasswordForm';
-import { useResetPassword } from 'src/auth/endpoints';
-import { States } from 'src/auth/endpoints/states';
-import { useAuthStateContext } from 'src/auth/hooks';
 import { useMessages } from './useMessages';
+import { AuthFrame } from '/src/auth/components/AuthFrame';
+import { ResetPasswordForm } from '/src/auth/components/ResetPasswordForm';
+import { useResetPassword } from '/src/auth/endpoints';
+import { States } from '/src/auth/endpoints/states';
+import { useAuthStateContext } from '/src/auth/hooks';
 
 export const ResetPasswordPage = observer(() => {
   const { messages } = useMessages();

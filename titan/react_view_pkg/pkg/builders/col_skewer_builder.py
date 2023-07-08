@@ -8,4 +8,4 @@ class ColSkewerBuilder(Builder):
         self.widget_spec.div.prepend_styles(["colSkewer"])
 
     def build(self):
-        self.output.add(imports=["import { colSkewer } from 'src/frames/components';"])
+        self.output.add(imports=["import { colSkewer } from '/src/frames/components';"])

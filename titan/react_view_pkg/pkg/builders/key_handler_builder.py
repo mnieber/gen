@@ -11,7 +11,7 @@ class KeyHandlerBuilder(Builder):
             imports=[
                 "import * as R from 'ramda';",
                 "import KeyboardEventHandler from 'react-keyboard-event-handler';",
-                "import { createKeyDownHandler } from 'src/utils';",
+                "import { createKeyDownHandler } from '/src/utils';",
             ],
         )
         self.output.set_flags(["app/keyboardHandler"])

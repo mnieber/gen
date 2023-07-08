@@ -1,6 +1,6 @@
 import { useFormStateContext } from 'react-form-state-context';
-import { button } from 'src/frames/components';
-import { cn } from 'src/utils/classnames';
+import { button } from '/src/frames/components';
+import { cn } from '/src/utils/classnames';
 
 export type PropsT = {
   label: string;

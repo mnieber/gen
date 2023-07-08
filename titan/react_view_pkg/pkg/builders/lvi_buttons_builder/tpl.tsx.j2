@@ -20,12 +20,12 @@ onDelete: Function;                                                             
 
 {% section preamble %}
 if (isUpdating(props.myItemName)) {
-  return UIkit && <div data-uk-spinner className=""></div>;
+  return <Spinner />;
 }
 {{ "" }}
 {% end_section %}
 
 
 {% section imports %}
-import { smallButton } from 'src/frames/components';
+import { smallButton } from '/src/frames/components';
 {% end_section %}

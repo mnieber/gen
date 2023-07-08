@@ -1,13 +1,13 @@
 {% magic_with myComponent = _.component.name %}
 {% magic_with myItem = _.component.item_list.item_name %}
 import { observer } from 'mobx-react-lite';
-import { dps, withDefaultProps } from 'src/app/defaultProps';
+import { dps, withDefaultProps } from '/src/app/defaultProps';
 import { Selection } from 'skandha-facets/Selection';
-import { Effect } from 'src/utils/components';
+import { Effect } from '/src/utils/components';
 import * as R from 'ramda';
 import {
   {{ _.component.item_list.item.ts_type }}
-} from 'src/api/types/{{ _.component.item_list.item.type_name }}T';
+} from '/src/api/types/{{ _.component.item_list.item.type_name }}T';
 
 type ArgsT = {
   myItemId?: string;                                                                  {% ?? __.get_item_id() %}

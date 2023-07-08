@@ -67,7 +67,7 @@ class ComponentBuilder(Builder):
                 if not self.url_state:
                     self.output.add(
                         imports=[
-                            "import { useRouteUfns } from 'src/routes/hooks/useRoutes';"
+                            "import { useRouteUfns } from '/src/routes/hooks/useRoutes';"
                         ]
                     )
                     self.output.add(

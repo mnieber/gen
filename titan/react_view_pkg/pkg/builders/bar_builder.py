@@ -98,5 +98,5 @@ class BarBuilder(Builder):
         if not self._widgets:
             raise Exception("Bar must have at least one used slot")
 
-        self.output.add(imports=["import { rowSkewer } from 'src/frames/components';"])
+        self.output.add(imports=["import { rowSkewer } from '/src/frames/components';"])
         add_child_widgets(self, self._widgets)

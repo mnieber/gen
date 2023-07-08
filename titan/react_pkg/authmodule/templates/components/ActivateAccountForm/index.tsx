@@ -1,11 +1,11 @@
 import { FormStateProvider } from 'react-form-state-context';
-import { PasswordField } from 'src/auth/components/formFields/PasswordField';
-import { SubmitButton } from 'src/auth/components/formFields/SubmitButton';
-import { Field, GlobalError } from 'src/forms/components';
-import { colSkewer } from 'src/frames/components';
-import { cn } from 'src/utils/classnames';
 import { form } from './form';
 import { useMessages } from './useMessages';
+import { PasswordField } from '/src/auth/components/formFields/PasswordField';
+import { SubmitButton } from '/src/auth/components/formFields/SubmitButton';
+import { Field, GlobalError } from '/src/forms/components';
+import { colSkewer } from '/src/frames/components';
+import { cn } from '/src/utils/classnames';
 
 export const formFields = {
   password: 'password',

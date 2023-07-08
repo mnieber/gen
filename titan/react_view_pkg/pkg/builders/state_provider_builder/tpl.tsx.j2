@@ -12,18 +12,18 @@ import * as R from 'ramda';
 import React from 'react';
 import { makeAutoObservable } from 'mobx';
 import { NestedDefaultPropsContext } from 'react-default-props-context';
-import { cloneAndSetState, maybe } from 'src/api/utils';
-import { initRS } from 'src/api/ResourceState';
-import { MyState } from 'src/{{ state.module.module_path }}/MyState';                           {% !! state in states %}
-import { useMyState } from 'src/{{ state.module.module_path }}/hooks/useMyState';               {% !! state in states %}
-import { dps, withDefaultProps } from 'src/app/defaultProps';
-import { flags } from 'src/app/flags';
-import { useUpdateStateReaction } from 'src/frames/hooks/useUpdateStateReaction';
-import { lookUp, getIds } from 'src/utils/ids';
-import { log } from 'src/utils/logging';
-import { ObjT } from 'src/utils/types';
-import { useMyQuery } from 'src/{{ query.api_spec.module_name }}/endpoints';                    {% !! query in queries %}
-import { useQueryData } from 'src/api/hooks';
+import { cloneAndSetState, maybe } from '/src/api/utils';
+import { initRS } from '/src/api/ResourceState';
+import { MyState } from '/src/{{ state.module.module_path }}/MyState';                           {% !! state in states %}
+import { useMyState } from '/src/{{ state.module.module_path }}/hooks/useMyState';               {% !! state in states %}
+import { dps, withDefaultProps } from '/src/app/defaultProps';
+import { flags } from '/src/app/flags';
+import { useUpdateStateReaction } from '/src/frames/hooks/useUpdateStateReaction';
+import { lookUp, getIds } from '/src/utils/ids';
+import { log } from '/src/utils/logging';
+import { ObjT } from '/src/utils/types';
+import { useMyQuery } from '/src/{{ query.api_spec.module_name }}/endpoints';                    {% !! query in queries %}
+import { useQueryData } from '/src/api/hooks';
 {% end_section %}
 
 

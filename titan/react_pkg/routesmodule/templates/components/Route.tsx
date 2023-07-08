@@ -1,8 +1,8 @@
 import * as R from 'ramda';
 import React from 'react';
 import { Route as BaseRoute } from 'react-router-dom';
-import { useRouteTable } from 'src/routes/hooks/useRoutes';
-import { ObjT } from 'src/utils/types';
+import { useRouteTable } from '/src/routes/hooks/useRoutes';
+import { ObjT } from '/src/utils/types';
 
 type RoutePropsT = React.PropsWithChildren<{
   path: string;

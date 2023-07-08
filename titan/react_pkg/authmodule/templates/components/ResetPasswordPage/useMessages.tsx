@@ -1,5 +1,5 @@
-import { RouterLink } from 'src/routes/components';
-import { useRoutes } from 'src/routes/hooks/useRoutes';
+import { RouterLink } from '/src/routes/components';
+import { useRoutes } from '/src/routes/hooks/useRoutes';
 
 export const useMessages = () => {
   const routes = useRoutes();

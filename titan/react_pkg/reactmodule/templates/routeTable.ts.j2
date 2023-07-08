@@ -1,4 +1,4 @@
-import { RouteTable } from 'src/routes/utils/RouteTable';
+import { RouteTable } from '/src/routes/utils/RouteTable';
 
 export const getRouteTable = () => {
   const routeTable = new RouteTable();

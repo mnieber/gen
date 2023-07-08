@@ -1,6 +1,6 @@
 import { comparer, IEqualsComparer, reaction } from 'mobx';
 import React from 'react';
-import { flags } from 'src/app/flags';
+import { flags } from '/src/app/flags';
 
 export type PropsT<ArgsT> = {
   getInputs: () => ArgsT;

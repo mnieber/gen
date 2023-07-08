@@ -2,7 +2,7 @@
 {% raw %}
 {% block text_body %}
 You can use the following link to sign in:
-{{ domain }}/sign-in/{{ result.magic_link_token }}
+{{ domain }}/auth/sign-in/{{ result.magic_link_token }}
 {% endraw %}
 The {{ project_name }} team{% raw %}
 {% endblock text_body %}
@@ -10,8 +10,8 @@ The {{ project_name }} team{% raw %}
 {% block html_body %}
 
 <p>You can use the following link to sign in:</p>
-<p><a href="{{ domain }}/sign-in/{{ result.magic_link_token }}">
-{{ domain }}/sign-in/{{ result.magic_link_token }}
+<p><a href="{{ domain }}/auth/sign-in/{{ result.magic_link_token }}">
+{{ domain }}/auth/sign-in/{{ result.magic_link_token }}
 </a></p>
 
 {% endraw %}

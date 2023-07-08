@@ -8,4 +8,4 @@ class RowSkewerBuilder(Builder):
         self.widget_spec.div.prepend_styles(["rowSkewer"])
 
     def build(self):
-        self.output.add(imports=["import { rowSkewer } from 'src/frames/components';"])
+        self.output.add(imports=["import { rowSkewer } from '/src/frames/components';"])

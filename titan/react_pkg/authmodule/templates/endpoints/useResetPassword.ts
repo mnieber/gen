@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import { doQuery } from 'src/api/graphqlClient';
-import { AuthState } from 'src/auth/AuthState';
-import { States } from 'src/auth/endpoints/states';
-import { hasErrorCode, isError } from 'src/auth/endpoints/utils';
-import { ObjT } from 'src/utils/types';
+import { doQuery } from '/src/api/graphqlClient';
+import { AuthState } from '/src/auth/AuthState';
+import { States } from '/src/auth/endpoints/states';
+import { hasErrorCode, isError } from '/src/auth/endpoints/utils';
+import { ObjT } from '/src/utils/types';
 
 export type ArgsT = {
   password: string;

@@ -8,4 +8,4 @@ class ColBannerBuilder(Builder):
         self.widget_spec.div.prepend_styles(["colBanner"])
 
     def build(self):
-        self.output.add(imports=["import { colBanner } from 'src/frames/components';"])
+        self.output.add(imports=["import { colBanner } from '/src/frames/components';"])

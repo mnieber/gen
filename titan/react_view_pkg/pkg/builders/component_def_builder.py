@@ -19,7 +19,7 @@ def _get_prop_import_paths(widget_spec):
             type_name = u0(kebab_to_camel(t.data))
             append_uniq(
                 result,
-                f"import {{ { type_name }T }} from 'src/api/types/{ type_name }T';",
+                f"import {{ { type_name }T }} from '/src/api/types/{ type_name }T';",
             )
     return result
 

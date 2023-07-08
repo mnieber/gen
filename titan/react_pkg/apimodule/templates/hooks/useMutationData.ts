@@ -1,7 +1,7 @@
 import { runInAction } from 'mobx';
 import React from 'react';
-import { MutationData } from 'src/api/MutationData';
-import { ObjT } from 'src/utils/types';
+import { MutationData } from '/src/api/MutationData';
+import { ObjT } from '/src/utils/types';
 
 export type OptionsT = {
   fetchAsLoad?: boolean;

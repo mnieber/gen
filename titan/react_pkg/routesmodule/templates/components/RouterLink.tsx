@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { cn } from 'src/utils/classnames';
+import { cn } from '/src/utils/classnames';
 
 type PropsT = React.PropsWithChildren<{
   to: string;

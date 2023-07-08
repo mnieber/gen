@@ -8,4 +8,4 @@ class RowBannerBuilder(Builder):
         self.widget_spec.div.prepend_styles(["rowBanner"])
 
     def build(self):
-        self.output.add(imports=["import { rowBanner } from 'src/frames/components';"])
+        self.output.add(imports=["import { rowBanner } from '/src/frames/components';"])

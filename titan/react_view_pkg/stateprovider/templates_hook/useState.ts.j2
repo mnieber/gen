@@ -11,13 +11,13 @@
 {% magic_with saveMyCtrItem         = container.save_item_mutation.name %}
 import * as R from 'ramda';
 import React from 'react';
-import { setToUpdating, setToReady } from 'src/api/ResourceState';
-import { MyState } from 'src/{{ _.state.module.module_path }}/MyState';
-import { useMyMutation, type MyMutationArgsT } from 'src/{{ mutation.api_spec.module_name }}/endpoints';        {% !! mutation in __.mutations %}
-import { useMutationData } from 'src/api/hooks';
-import { lookUp, getIds } from 'src/utils/ids';
-import { ObjT } from 'src/utils/types';
-import { MyTypeT } from 'src/api/types/MyTypeT';                                                                {% !! type_spec in __.type_specs_to_import %}
+import { setToUpdating, setToReady } from '/src/api/ResourceState';
+import { MyState } from '/src/{{ _.state.module.module_path }}/MyState';
+import { useMyMutation, type MyMutationArgsT } from '/src/{{ mutation.api_spec.module_name }}/endpoints';        {% !! mutation in __.mutations %}
+import { useMutationData } from '/src/api/hooks';
+import { lookUp, getIds } from '/src/utils/ids';
+import { ObjT } from '/src/utils/types';
+import { MyTypeT } from '/src/api/types/MyTypeT';                                                                {% !! type_spec in __.type_specs_to_import %}
 
 export type PropsT = {};
 

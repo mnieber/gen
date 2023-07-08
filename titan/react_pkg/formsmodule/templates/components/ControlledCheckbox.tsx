@@ -1,5 +1,7 @@
-import { useFieldProps } from 'src/forms/hooks';
-import { cn } from 'src/utils/classnames';
+import { useFieldProps } from '/src/forms/hooks';
+import { cn } from '/src/utils/classnames';
+
+// Import styles
 import './ControlledCheckbox.scss';
 
 type PropsT = {};

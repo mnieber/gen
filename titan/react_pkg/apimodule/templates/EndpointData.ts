@@ -1,5 +1,5 @@
 import { action, makeObservable, observable } from 'mobx';
-import { ObjT } from 'src/utils/types';
+import { ObjT } from '/src/utils/types';
 
 export class EndpointData {
   @observable data: ObjT | undefined = undefined;

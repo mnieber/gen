@@ -1,4 +1,4 @@
-import { ObjT } from 'src/utils/types';
+import { ObjT } from '/src/utils/types';
 
 export const applyUpdate = (paths: string[], data: ObjT, update: Function) => {
   let result = data;

@@ -1,4 +1,6 @@
-import { cn } from 'src/utils/classnames';
+import { cn } from '/src/utils/classnames';
+
+// Import styles
 import './Check.scss';
 
 type PropsT = {

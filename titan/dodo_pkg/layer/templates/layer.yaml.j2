@@ -12,7 +12,7 @@ DJANGO:                                                               {% if _.se
 
 DOCKER_OPTIONS:                                                       {% if _.service and _.project.docker_compose %}
   '*':
-    container: {{ _.project.kebab_name }}-dev_{{ _.service.name }}_1  {% endif %}
+    container: {{ _.project.kebab_name }}-dev-{{ _.service.name }}-1  {% endif %}
 
 
 MAKE:                                                                 {% if _.service %}

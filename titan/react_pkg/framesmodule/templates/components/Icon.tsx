@@ -1,5 +1,7 @@
-import UIkit from 'src/frames/styles/uikit';
-import { cn } from 'src/utils/classnames';
+import UIkit from '/src/frames/styles/uikit';
+import { cn } from '/src/utils/classnames';
+
+// Import styles
 import './Icon.scss';
 
 export type PropsT = {

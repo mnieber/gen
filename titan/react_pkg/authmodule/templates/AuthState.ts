@@ -1,7 +1,7 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 import * as R from 'ramda';
-import { States } from 'src/auth/endpoints/states';
-import { ObjT } from 'src/utils/types';
+import { States } from '/src/auth/endpoints/states';
+import { ObjT } from '/src/utils/types';
 
 const lutSuccess: ObjT = {
   signIn: States.SIGN_IN_SUCCEEDED,

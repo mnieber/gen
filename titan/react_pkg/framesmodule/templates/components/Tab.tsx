@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import React from 'react';
-import { cn } from 'src/utils/classnames';
+import { cn } from '/src/utils/classnames';
 
 export type PropsT = React.PropsWithChildren<{
   active?: boolean;

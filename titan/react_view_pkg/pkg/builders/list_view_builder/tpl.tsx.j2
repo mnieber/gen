@@ -2,14 +2,14 @@
 {% magic_with Blah = lvi_component_name %}
 
 {% section imports %}
-import { MyItemT } from 'src/api/types/MyItemT';
+import { MyItemT } from '/src/api/types/MyItemT';
 import {
     useSelectionUIConnector,                                                                  {% ?? bvrs_has_selection %}
     useHighlightUIConnector,                                                                  {% ?? bvrs_has_highlight and not bvrs_has_selection %}
     useDragAndDropUIConnector,                                                                {% ?? bvrs_has_drag_and_drop %}
 } from 'skandha-mobx/hooks';
-import { createOnSelectItemHandler } from 'src/routes/utils';                                 {% ?? update_url %}
-import { useMenuHandler } from 'src/frames/hooks/useMenuHandler';                             {% ?? context_menu %}
+import { createOnSelectItemHandler } from '/src/routes/utils';                                 {% ?? update_url %}
+import { useMenuHandler } from '/src/frames/hooks/useMenuHandler';                             {% ?? context_menu %}
 {% end_section %}
 
 

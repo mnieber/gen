@@ -7,8 +7,8 @@ import {
 import {
   FormFieldContextPropsT,
   useFormFieldContext,
-} from 'src/forms/components';
-import { handleEnterAsTabToNext } from 'src/forms/utils';
+} from '/src/forms/components';
+import { handleEnterAsTabToNext } from '/src/forms/utils';
 
 type FieldTypeT = 'checkbox' | 'text' | 'password';
 

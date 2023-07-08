@@ -6,7 +6,7 @@ import {
   ResourceStateT,
   setState,
   symbolRS,
-} from 'src/api/ResourceState';
+} from '/src/api/ResourceState';
 
 export type OptionsT = {
   debugLabel?: string;

@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
-import { useSearchAndUrlParams } from 'src/utils/hooks/useSearchAndUrlParams';
-import { ObjT } from 'src/utils/types';
 import useDeepCompareEffect from 'use-deep-compare-effect';
+import { useSearchAndUrlParams } from '/src/utils/hooks/useSearchAndUrlParams';
+import { ObjT } from '/src/utils/types';
 
 interface IProps<ArgsT> {
   f: (args: ArgsT) => void | (() => void);

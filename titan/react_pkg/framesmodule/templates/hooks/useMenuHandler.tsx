@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import React from 'react';
-import UIkit from 'src/frames/styles/uikit';
+import UIkit from '/src/frames/styles/uikit';
 
 export const useMenuHandler = () => {
   const _ref = React.useRef(null);

@@ -3,12 +3,12 @@
 
 
 {% section imports %}
-import { PickerValueT, ValuePicker } from 'src/utils/components/ValuePicker';
-import { useValuePickerState } from 'src/utils/hooks/useValuePickerState';
-import { MyItemT } from 'src/api/types/MyItemT';                                {% ?? update_url %}
-import { error } from 'src/frames/components/Error';
-import { slugify } from 'src/utils';
-import { createUUID } from 'src/utils/ids';
+import { PickerValueT, ValuePicker } from '/src/utils/components/ValuePicker';
+import { useValuePickerState } from '/src/utils/hooks/useValuePickerState';
+import { MyItemT } from '/src/api/types/MyItemT';                                {% ?? update_url %}
+import { error } from '/src/frames/components/Error';
+import { slugify } from '/src/utils';
+import { createUUID } from '/src/utils/ids';
 {% end_section %}
 
 
@@ -51,13 +51,7 @@ import { createUUID } from 'src/utils/ids';
 
 
 {% section lines %}
-    {UIkit && state.isUpdating && (                                             {% if spinner %}
-      <div
-        data-uk-spinner
-        className="absolute"
-        style={{ "{{" }}zIndex: 100 {{ "}}" }}
-      ></div>                                                                   {% endif %}
-    )}
+    {state.isUpdating && <Spinner />                                          {% ?? spinner %}
     <ValuePicker
         isMulti={false}
         isCreatable={true}

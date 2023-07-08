@@ -2,15 +2,15 @@
 {% raw %}
 {% block text_body %}
 Please go to the following page to activate your account:
-{{ domain }}/activate-account/{{ result.activation_token }}
+{{ domain }}/auth/activate-account/{{ result.activation_token }}
 {% endraw %}
 The {{ project_name }} team{% raw %}
 {% endblock text_body %}
 
 {% block html_body %}
 <p>Please go to the following page to activate your account:</p>
-<p><a href="{{ domain }}/activate-account/{{ result.activation_token }}">
-{{ domain }}/activate-account/{{ result.activation_token }}
+<p><a href="{{ domain }}/auth/activate-account/{{ result.activation_token }}">
+{{ domain }}/auth/activate-account/{{ result.activation_token }}
 </a></p>
 
 {% endraw %}

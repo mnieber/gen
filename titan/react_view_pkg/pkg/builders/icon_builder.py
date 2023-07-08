@@ -14,5 +14,5 @@ class IconBuilder(Builder):
 
         self.output.add(
             lines=[f'<Icon name="{name}" />'],
-            imports=[f"import {{ Icon }} from 'src/frames/components';"],
+            imports=[f"import {{ Icon }} from '/src/frames/components';"],
         )

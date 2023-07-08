@@ -1,14 +1,14 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { AuthFrame } from 'src/auth/components/AuthFrame';
-import { SignUpForm } from 'src/auth/components/SignUpForm';
-import { useSignUp } from 'src/auth/endpoints';
-import { States } from 'src/auth/endpoints/states';
-import { useAuthStateContext } from 'src/auth/hooks';
 import { useMessages } from './useMessages';
+import { AuthFrame } from '/src/auth/components/AuthFrame';
+import { SignUpForm } from '/src/auth/components/SignUpForm';
+import { useSignUp } from '/src/auth/endpoints';
+import { States } from '/src/auth/endpoints/states';
+import { useAuthStateContext } from '/src/auth/hooks';
 
 export const termsVersion: string =
-  process.env.REACT_APP_TERMS_VERSION ?? '1.0.0';
+  import.meta.env.VITE_TERMS_VERSION ?? '1.0.0';
 
 export const SignUpPage = observer(() => {
   const { messages } = useMessages();

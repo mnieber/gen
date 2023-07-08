@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { ObjT } from 'src/utils/types';
+import { ObjT } from '/src/utils/types';
 
 export const createFormErrorsObject = (): ObjT => {
   const formErrors: ObjT = {};

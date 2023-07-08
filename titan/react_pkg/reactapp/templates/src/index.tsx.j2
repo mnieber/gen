@@ -1,16 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { App } from 'src/app/components';
+import { App } from '/src/app/components';
 import reportWebVitals from './reportWebVitals';                                      {% ?? _.has_flag("app/reportWebVitals") %}
 import { toJS } from 'mobx';                                                          {% if _.has_flag("app/useStates") %}
 import { action } from 'mobx';
 import { setOptions } from 'skandha';                                                 {% endif %}
-import { flags } from 'src/app/flags';
+import { flags } from '/src/app/flags';
 import { applyFormatters } from 'mobx-log';
-import { RoutesProvider } from 'src/routes/components/RoutesProvider';                {% ?? _.react_app.routes_module %}
+import { RoutesProvider } from '/src/routes/components/RoutesProvider';                {% ?? _.react_app.routes_module %}
 import { QueryClientProvider } from '@tanstack/react-query';                          {% ?? _.react_app.api_module %}
-import { queryClient } from 'src/api/queryClient';                                    {% ?? _.react_app.api_module %}
-import 'src/frames/styles/index.scss';                                                {% ?? _.react_app.frames_module %}
+import { queryClient } from '/src/api/queryClient';                                    {% ?? _.react_app.api_module %}
+
+// Import styles                                                                      {% if _.react_app.frames_module %}
+import 'src/frames/styles/index.scss';                                                {% endif %}
 
 const strict = false;
 
@@ -18,7 +20,7 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
-if (process.env.NODE_ENV === 'development') {
+if (import.meta.env.DEV) {
   applyFormatters();
 }
 

@@ -1,3 +1,4 @@
+// Import styles
 import 'src/frames/components/Icon.scss';
 
 export const BackwardArrowIcon = () => {

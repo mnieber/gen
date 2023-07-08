@@ -1,5 +1,5 @@
-import { doQuery, getRefreshToken, setToken } from 'src/api/graphqlClient';
-import { ObjT } from 'src/utils/types';
+import { doQuery, getRefreshToken, setToken } from '/src/api/graphqlClient';
+import { ObjT } from '/src/utils/types';
 
 export function refreshToken() {
   return doQuery(

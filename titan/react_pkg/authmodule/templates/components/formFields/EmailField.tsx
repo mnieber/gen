@@ -1,4 +1,4 @@
-import { useFieldProps } from 'src/forms/hooks';
+import { useFieldProps } from '/src/forms/hooks';
 
 type PropsT = {
   className?: any;

@@ -1,7 +1,7 @@
-import { useSignOut } from 'src/auth/endpoints';
-import { RouterLink } from 'src/routes/components';
-import { history } from 'src/routes/components/UrlRouter';
-import { useRoutes } from 'src/routes/hooks/useRoutes';
+import { useSignOut } from '/src/auth/endpoints';
+import { RouterLink } from '/src/routes/components';
+import { history } from '/src/routes/components/UrlRouter';
+import { useRoutes } from '/src/routes/hooks/useRoutes';
 
 type PropsT = {
   menuHandler: any;

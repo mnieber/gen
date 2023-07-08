@@ -1,5 +1,5 @@
-import { EndpointData } from 'src/api/EndpointData';
-import { ObjT } from 'src/utils/types';
+import { EndpointData } from '/src/api/EndpointData';
+import { ObjT } from '/src/utils/types';
 
 export class MutationData extends EndpointData {
   mutation: ObjT = {};

@@ -27,12 +27,14 @@ class ButtonBuilder(Builder):
             self.widget_spec.div.append_styles(["button"])
 
     def build(self):
-        self.output.add(imports=["import { rowSkewer } from 'src/frames/components';"])
+        self.output.add(imports=["import { rowSkewer } from '/src/frames/components';"])
 
         if self.size == "big":
             self.output.add(
-                imports=["import { bigButton } from 'src/frames/components';"]
+                imports=["import { bigButton } from '/src/frames/components';"]
             )
 
         elif self.size == "medium":
-            self.output.add(imports=["import { button } from 'src/frames/components';"])
+            self.output.add(
+                imports=["import { button } from '/src/frames/components';"]
+            )

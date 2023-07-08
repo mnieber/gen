@@ -29,7 +29,7 @@
       response.myOutputFieldName = hydrateMyOutputFieldType(response.myOutputFieldName);                    {% if __.hydrated_fields %}{% for output_field_spec in __.hydrated_fields %}{% ?? output_field_spec.field_type == "fk" %}
       response.myOutputFieldName = R.map(hydrateMyOutputFieldType, response.myOutputFieldName);             {% ?? output_field_spec.field_type == "relatedSet" %}{% endfor %}{% endif %}
 
-      queryClient.invalidateQueries(                                                                        {% if _.mutation.api_spec.invalidates %}
+      return queryClient.invalidateQueries(                                                                 {% if _.mutation.api_spec.invalidates %}
         {
           queryKey: [
             '{{ queryName }}',                                                                              {% !! queryName in _.mutation.api_spec.invalidates %}

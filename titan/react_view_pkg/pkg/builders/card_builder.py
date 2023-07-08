@@ -15,5 +15,5 @@ class CardBuilder(Builder):
         add_div_close(self)
 
     def add_body(self):
-        self.output.add(imports=["import { card } from 'src/frames/components';"])
+        self.output.add(imports=["import { card } from '/src/frames/components';"])
         add_child_widgets(self, self.widget_spec.child_widget_specs)

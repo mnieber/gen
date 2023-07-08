@@ -1,5 +1,7 @@
 import { useFormStateContext } from 'react-form-state-context';
-import { cn } from 'src/utils/classnames';
+import { cn } from '/src/utils/classnames';
+
+// Import styles
 import './GlobalError.scss';
 
 type PropsT = {

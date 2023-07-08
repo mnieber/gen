@@ -11,5 +11,5 @@ class Project(RenderMixin, Resource):
     @property
     def opt_dir_fn(self):
         return get_session().get_setting_or(
-            "/opt/" + self.kebab_name, ["project", "opt_dir_fn"]
+            "/opt/projects/" + self.kebab_name, ["project", "opt_dir_fn"]
         )

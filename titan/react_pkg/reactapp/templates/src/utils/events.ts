@@ -1,4 +1,4 @@
-import { ObjT } from 'src/utils/types';
+import { ObjT } from '/src/utils/types';
 
 export type EventT = {
   payload: ObjT;

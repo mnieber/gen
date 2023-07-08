@@ -1,6 +1,6 @@
 import React from 'react';
-import { AuthState } from 'src/auth/AuthState';
-import { States } from 'src/auth/endpoints/states';
+import { AuthState } from '/src/auth/AuthState';
+import { States } from '/src/auth/endpoints/states';
 
 export const AuthStateContext = React.createContext<AuthState | undefined>(
   undefined

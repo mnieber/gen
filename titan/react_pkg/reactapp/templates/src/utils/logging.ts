@@ -1,7 +1,7 @@
 import { toJS } from 'mobx';
 import { map } from 'ramda';
 
-const isLogging = process.env.NODE_ENV === 'development';
+const isLogging = import.meta.env.DEV;
 
 export function log(msg: string, ...args: any[]) {
   if (isLogging) {

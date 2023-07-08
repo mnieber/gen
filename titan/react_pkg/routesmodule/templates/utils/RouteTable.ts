@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import { generatePath } from 'react-router-dom';
-import { ObjT } from 'src/utils/types';
-import { pathname } from 'src/utils/urls';
+import { ObjT } from '/src/utils/types';
+import { pathname } from '/src/utils/urls';
 
 export class RouteTable {
   routeByName: ObjT = {};

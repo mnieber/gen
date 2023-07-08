@@ -1,8 +1,8 @@
 import { GraphQLClient } from 'graphql-request';
 
 export const graphqlHostUrl = window.location.host.startsWith('localhost')
-  ? process.env.REACT_APP_LOCALHOST_API_ENDPOINT
-  : process.env.REACT_APP_BACKEND_API_ENDPOINT ?? '';
+  ? import.meta.env.VITE_LOCALHOST_API_ENDPOINT
+  : import.meta.env.VITE_BACKEND_API_ENDPOINT ?? '';
 
 function _createClient() {
   if (!graphqlHostUrl) throw Error('No graphql endpoint was configured');

@@ -1,7 +1,7 @@
 {% magic_with myContainer = _.container.name %}
 {% magic_with myItem = _.container.item.item_name %}
 {% magic_with MyState = _.state.name %}
-import { PropsT, MyState } from 'src/{{ _.module.name }}/MyState';
+import { PropsT, MyState } from '/src/{{ _.module.name }}/MyState';
 import * as FacetPolicies from 'skandha-facets/policies';
 import { SelectionCbs, handleSelectItem } from 'skandha-facets/Selection';                              {% ?? _.container.get_bvr("selection") %}
 import { AdditionCbs } from 'skandha-facets/Addition';
@@ -10,14 +10,14 @@ import { InsertionCbs } from 'skandha-facets/Insertion';                        
 import { DeletionCbs } from 'skandha-facets/Deletion';                                                  {% ?? _.container.get_bvr("deletion") %}
 import { EditingCbs } from 'skandha-facets/Editing';                                                    {% ?? _.container.get_bvr("editing") %}
 import { setCallbackMap } from 'aspiration';
-import { MyItemT } from 'src/api/types/MyItemT';
+import { MyItemT } from '/src/api/types/MyItemT';
 import {
   addCleanUpFunctionToCtr,
   cleanUpCtr,
 } from 'react-default-props-context';
 
 export const initMyContainer = (state: MyState, props: PropsT) => {
-  const ctr = state.myContainer;
+  const ctr = state.myContainerCtr;
   addCleanUpFunctionToCtr(state, () => cleanUpCtr(ctr));
 
   setCallbackMap(ctr.addition, {                                                                        {% if _.container.get_bvr("addition") %}

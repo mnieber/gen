@@ -1,12 +1,14 @@
 import { FormStateProvider } from 'react-form-state-context';
-import { EmailField } from 'src/auth/components/formFields/EmailField';
-import { SubmitButton } from 'src/auth/components/formFields/SubmitButton';
-import { ControlledCheckbox, Field, GlobalError } from 'src/forms/components';
-import { colSkewer } from 'src/frames/components';
-import { cn } from 'src/utils/classnames';
 import { form } from './form';
-import './SignUpForm.scss';
 import { useMessages } from './useMessages';
+import { EmailField } from '/src/auth/components/formFields/EmailField';
+import { SubmitButton } from '/src/auth/components/formFields/SubmitButton';
+import { ControlledCheckbox, Field, GlobalError } from '/src/forms/components';
+import { colSkewer } from '/src/frames/components';
+import { cn } from '/src/utils/classnames';
+
+// Import styles
+import './SignUpForm.scss';
 
 export const formFields = {
   email: 'email',
