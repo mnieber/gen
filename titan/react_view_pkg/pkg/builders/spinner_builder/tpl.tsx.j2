@@ -1,7 +1,0 @@
-{% section preamble %}
-    if (isLoading({{ data_path }})) {
-        return <Spinner />;
-    }
-    else if ({{ test }}) return null;                                             {% ?? guard %}
-    {{ "" }}
-{% end_section %}
