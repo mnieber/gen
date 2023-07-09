@@ -8,8 +8,10 @@ def insert_id(ids, parent_id, id):
 def sort_items(items, keys, get_key):
     """Changes the values of `item.sort_pos` so that `items.map(get_key)`
     returns `keys`."""
+    item_keys = [get_key(item) for item in items]
+    valid_keys = [x for x in keys if x in item_keys]
     for item in items:
-        new_sort_pos = keys.index(get_key(item))
+        new_sort_pos = valid_keys.index(get_key(item))
         assert new_sort_pos >= 0
         if new_sort_pos != item.sort_pos:
             item.sort_pos = new_sort_pos
