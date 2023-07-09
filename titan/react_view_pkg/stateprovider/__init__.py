@@ -5,7 +5,6 @@ from moonleap import create, empty_rule, extend, kebab_to_camel, rule, u0
 from moonleap.blocks.verbs import has, provides
 from titan.react_view_pkg.view import default_view_templates_dir
 
-from . import props
 from .resources import StateProvider
 
 base_tags = {"state~provider": ["component"]}
@@ -25,11 +24,6 @@ def create_state_provider(term):
     )
     state_provider.template_dir = default_view_templates_dir
     return state_provider
-
-
-@rule("state~provider")
-def created_state_provider(state_provider):
-    return props.state_provider_load(state_provider)
 
 
 @rule("module", has, "state~provider")

@@ -7,13 +7,3 @@ expanded_markdown = """
 
     The frontend:service /has a :react-app.
 """
-
-widget_spec_todos_yaml = """
-todo-:view as Div:
-    todo-form-:view: pass
-
-todo-form-:view as Div:
-  __item__: +todo:item
-  FormStateProvider:
-    __fields__: [name,description]
-"""

@@ -2,12 +2,11 @@ from moonleap.utils.inflect import plural
 
 
 class BvrsHelper:
-    def __init__(self, widget_spec, item_name):
+    def __init__(self, item_name):
         assert item_name
-        self.widget_spec = widget_spec
         self.bvrs_items_name = plural(item_name)
 
-        self.bvr_names = self.widget_spec.get_bvr_names(recurse=True)
+        self.bvr_names = self.get_bvr_names(recurse=True)
         self.bvrs_has_addition = "addition" in self.bvr_names
         self.bvrs_has_deletion = "deletion" in self.bvr_names
         self.bvrs_has_drag_and_drop = "dragAndDrop" in self.bvr_names

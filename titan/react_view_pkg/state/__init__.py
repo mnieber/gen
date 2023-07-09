@@ -5,7 +5,6 @@ from moonleap import Prop, create, extend, kebab_to_camel, rule, u0
 from moonleap.blocks.verbs import has, provides
 from moonleap.render.render_mixin import get_root_resource
 from titan.react_pkg.reactmodule import ReactModule
-from titan.react_view_pkg.pkg.hydrate_state import hydrate_state
 
 from . import props
 from .resources import State, UrlState
@@ -43,15 +42,9 @@ def module_renders_state(module, state):
         )
 
 
-@rule("react-app")
-def create_states_in_modules(react_app):
-    return props.create_states_in_modules()
-
-
 @rule("state")
 def created_state(state):
     get_root_resource().set_flags(["app/useStates"])
-    hydrate_state(state)
 
 
 @extend(ReactModule)

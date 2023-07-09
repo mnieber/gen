@@ -16,9 +16,6 @@ class KeyHandlerBuilder(Builder):
         )
         self.output.set_flags(["app/keyboardHandler"])
 
-    def update_widget_spec(self):
-        self.widget_spec.root.add_tag("has_children_prop")
-
 
 tpl_preamble = """
     const keyHandlers = {

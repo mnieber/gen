@@ -11,7 +11,6 @@ class BuilderOutput(Entity):
 
 
 class Builder(Entity):
-    widget_spec: WidgetSpec = None
     output: BuilderOutput = None
 
     def build(self):

@@ -4,7 +4,6 @@ from moonleap import append_uniq
 def get_helpers(_):
     class Helpers:
         states = _.state_provider.states
-        widget_spec = _.state_provider.widget_spec
         mutations = []
 
         def __init__(self):
@@ -12,7 +11,7 @@ def get_helpers(_):
             self.type_specs_to_import = self._type_specs_to_import()
 
         def _get_mutations(self):
-            mutations = self.widget_spec.mutations
+            mutations = []
             for state in self.states:
                 for container in state.containers:
                     if delete_items_mutation := container.delete_items_mutation:

@@ -1,14 +1,6 @@
 from titan.react_view_pkg import accountmenu
 
-from . import (
-    accountmenu,
-    behavior,
-    selectitemeffect,
-    state,
-    stateprovider,
-    view,
-    widgetregistry,
-)
+from . import accountmenu, behavior, selectitemeffect, state, stateprovider, view
 
 modules = [
     accountmenu,
@@ -17,5 +9,4 @@ modules = [
     state,
     stateprovider,
     view,
-    widgetregistry,
 ]

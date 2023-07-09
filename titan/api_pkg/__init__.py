@@ -1,9 +1,8 @@
-from . import apiregistry, extendspectypes, mutation, pipeline, query
+from . import apiregistry, extendspectypes, mutation, query
 
 modules = [
     apiregistry,
     extendspectypes,
     mutation,
-    pipeline,
     query,
 ]

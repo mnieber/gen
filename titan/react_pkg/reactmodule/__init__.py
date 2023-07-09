@@ -38,19 +38,6 @@ def react_app_has_module(react_app, module):
     )
 
 
-@rule("react-app")
-def assign_components_to_react_modules(react_app):
-    from titan.react_pkg.component.props import create_forwards_for_widget_spec
-    from titan.react_view_pkg.widgetregistry import get_widget_reg
-
-    widget_reg = get_widget_reg()
-    forwards = []
-    for widget_spec in widget_reg.widget_specs():
-        forwards += create_forwards_for_widget_spec(react_app, widget_spec)
-
-    return forwards
-
-
 @extend(ReactModule)
 class ExtendModule:
     react_app = P.parent("react-app", has, required=True)

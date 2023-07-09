@@ -1,6 +1,5 @@
-from pipeop import pipes
-
 from jdoc.scenarios.imports import *
+from pipeop import pipes
 
 from . import contents
 from .entities import *
@@ -44,18 +43,6 @@ def build_all_blocks():
                     rule=assign_components_to_react_modules,
                     src_rel=react_app_is_created,
                 ),
-                Action(
-                    rule=create_forwards_for_component_pipelines,
-                    src_rel=component_is_created,
-                ),
-                Action(
-                    rule=create_forwards_for_component_props,
-                    src_rel=component_is_created,
-                ),
-                Action(
-                    rule=build_component_widget_spec,
-                    src_rel=component_is_created,
-                ),
             ]
 
         with (
@@ -65,16 +52,3 @@ def build_all_blocks():
         ) >> add_fact:
             #
             add_info("Components are assigned to react-modules")
-            widget_spec_parser.widget_spec_yaml = contents.widget_spec_todos_yaml
-
-        with (
-            run_actions,
-            runs_(),
-            create_forwards_for_component_pipelines,
-        ) >> add_fact:
-            #
-            add_info("A component has pipelines")
-
-        with (run_actions, runs_(), build_component_widget_spec) >> add_fact:
-            #
-            add_info("Fn build() builds a widget_spec")

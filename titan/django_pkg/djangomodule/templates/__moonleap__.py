@@ -1,12 +1,10 @@
 from moonleap.utils.inflect import plural
-from titan.django_pkg.djangomodel.sort_django_models import sort_django_models
 
 
 def get_helpers(_):
     class Helpers:
         django_app = _.module.django_app
-
-        django_models = sort_django_models(_.module.django_models)
+        django_models = _.module.django_models
         translations = []
 
         def __init__(self):
