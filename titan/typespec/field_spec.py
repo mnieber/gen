@@ -25,7 +25,6 @@ class FieldSpec:
     optional: T.List[str] = field(default_factory=lambda: [])
     primary_key: T.Optional[bool] = field(default=None, repr=False)
     readonly: T.Optional[bool] = field(default=None, repr=False)
-    select: T.Optional[bool] = field(default=None, repr=False)
     target: T.Optional[str] = None
     readonly: T.Optional[bool] = field(default=None, repr=False)
     unique: T.Optional[bool] = field(default=None, repr=False)

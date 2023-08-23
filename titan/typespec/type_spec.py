@@ -2,7 +2,6 @@ import typing as T
 from dataclasses import dataclass, field
 
 import ramda as R
-
 from titan.typespec.field_spec import FieldSpec
 
 
@@ -13,7 +12,6 @@ class TypeSpec:
     admin_search_by: T.List[str] = field(default_factory=list, repr=False)
     display_field: T.Optional[FieldSpec] = field(default=None, repr=False)
     module_name: T.Optional[str] = None
-    select_by: T.List[str] = field(default_factory=list, repr=False)
     is_entity: T.Optional[bool] = None
     base_type_name: T.Optional[str] = None
     extract_gql_fields: bool = field(default=False, repr=False)

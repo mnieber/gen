@@ -37,9 +37,6 @@ def add_field_spec(type_spec, field_spec):
     if field_spec.admin_search:
         append_uniq(type_spec.admin_search_by, field_spec.key)
 
-    if field_spec.select:
-        append_uniq(type_spec.select_by, field_spec.key)
-
     return True
 
 
@@ -68,9 +65,6 @@ def _remove_field_spec_by_key(type_spec, key):
 
     if type_spec.admin_search_by:
         type_spec.admin_search_by = [x for x in type_spec.admin_search_by if x != key]
-
-    if type_spec.select_by:
-        type_spec.select_by = [x for x in type_spec.select_by if x != key]
 
     if type_spec.display_field and type_spec.display_field.key == key:
         type_spec.display_field = None

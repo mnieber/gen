@@ -97,12 +97,6 @@ def get_scalar_field_spec(host, key, field_spec_value):
         field_attrs["display"] = True
 
     #
-    # select
-    #
-    if "select" in parts:
-        field_attrs["select"] = True
-
-    #
     # readonly
     #
     if "readonly" in parts:

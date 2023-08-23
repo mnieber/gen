@@ -12,9 +12,7 @@ def get_helpers(_):
         route_params = []
 
         def __init__(self):
-            self.route_params = [
-                self.item_name + u0(param) for param in self.type_spec.select_by or []
-            ]
+            self.route_params = []
 
         def select_effect_args(self):
             return ", ".join(
@@ -33,17 +31,7 @@ def get_helpers(_):
             )
 
         def get_item_id(self):
-            search_function = f"(x: {self.item_list.item.ts_type}) => " + (
-                " && ".join(
-                    [
-                        f"x.{param} === params.{self.item_name + u0(param)}"
-                        for param in self.type_spec.select_by or []
-                    ]
-                )
-                if self.route_params
-                else "true"
-            )
-
+            search_function = f"(x: {self.item_list.item.ts_type}) => true"
             return (
                 ""
                 if self.route_params == [f"{self.item_name}Id"]
