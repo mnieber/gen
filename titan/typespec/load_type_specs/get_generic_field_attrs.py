@@ -1,9 +1,6 @@
 def get_generic_field_attrs(host, key, value_parts):
     field_attrs = dict(field_type=None, default_value=None, choices=None)
 
-    if "auto" in value_parts:
-        field_attrs["is_auto"] = True
-
     field_attrs["optional"] = []
     if f"optional" in value_parts:
         if f"required" not in value_parts:

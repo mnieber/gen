@@ -4,7 +4,6 @@ from moonleap import is_private_key, l0, u0
 
 from .add_extra_model_fields import add_extra_model_fields
 from .add_field_spec import add_field_spec
-from .apply_type_updates import apply_type_updates
 from .field_spec_from_dict import field_spec_from_dict, is_pass
 from .foreign_key import ForeignKey
 from .update_or_create_type_spec import update_or_create_type_spec
@@ -85,10 +84,6 @@ class TypeSpecParser:
                 if fk.parts:
                     fk_trace["__attrs__"] = ",".join(fk.parts)
                 trace[_trace_key(fk)] = org_value if is_pass else fk_trace
-
-        if "__update__" in type_spec_dict:
-            trace["__update__"] = type_spec_dict["__update__"]
-            apply_type_updates(host, type_spec, type_spec_dict["__update__"])
 
         return trace
 

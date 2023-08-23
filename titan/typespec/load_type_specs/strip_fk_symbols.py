@@ -11,6 +11,10 @@ def strip_fk_symbols(key):
     if is_sorted or "sorted" in words:
         parts.append("is_sorted")
 
+    symbols, is_inverse = pop(symbols, "<")
+    if is_inverse or "inverse" in words:
+        parts.append("is_inverse")
+
     symbols, extract_gql_fields = pop(symbols, "&")
     if extract_gql_fields or "extract_gql_fields" in words:
         parts.append("extract_gql_fields")

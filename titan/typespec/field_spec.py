@@ -16,7 +16,7 @@ class FieldSpec:
     display: T.Optional[bool] = field(default=None, repr=False)
     help: T.Optional[bool] = field(default=None, repr=False)
     index: T.Optional[bool] = field(default=None, repr=False)
-    is_auto: T.Optional[bool] = field(default=None)
+    is_inverse: T.Optional[bool] = field(default=None)
     is_slug_src: T.Optional[bool] = field(default=None, repr=False)
     max_length: T.Optional[int] = field(default=None, repr=False)
     # If "server" in optional, then the field is optional on the server.
@@ -26,7 +26,6 @@ class FieldSpec:
     primary_key: T.Optional[bool] = field(default=None, repr=False)
     readonly: T.Optional[bool] = field(default=None, repr=False)
     target: T.Optional[str] = None
-    readonly: T.Optional[bool] = field(default=None, repr=False)
     unique: T.Optional[bool] = field(default=None, repr=False)
 
     def is_optional(self, host):

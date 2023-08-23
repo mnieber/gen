@@ -1,5 +1,19 @@
-clips.clip[@]:
-  'name': String,90
+userProfiles.userProfile[@]:
+  userId: Id
+  username: String,90,display
 
-  playlist:
-    'name': String,90
+clips.clip[@]:
+  'description?': Markdown
+  sourcePlaylist as playlist: pass
+  owner as userProfile: pass
+
+playlists.playlist[@>]:
+  'description?': Markdown
+
+  clipSet^: pass
+  entrySet=[@>]:
+    clip: pass
+    playlist[<]: pass
+    isDeleted: Boolean = False
+  owner as userProfile:
+    playlistSet[<]: pass
