@@ -1,0 +1,5 @@
+clips.clip[@]:
+  'name': String,90
+
+  playlist:
+    'name': String,90

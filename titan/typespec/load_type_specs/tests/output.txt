@@ -1,0 +1,6 @@
+TypeSpec(type_name='Clip', module_name='clips', is_entity=True, base_type_name=None)
+  FieldSpec(field_type='string', key='name', has_api=['server'], has_model=['server'], is_auto=None, optional=[], target=None)
+  FieldSpec(field_type='uuid', key='id', has_api=['server'], has_model=['server'], is_auto=True, optional=[], target=None)
+  FkFieldSpec(field_type='fk', key='playlist', has_api=['server'], has_model=['server'], is_auto=None, optional=[], target='Playlist', related_name=None)
+TypeSpec(type_name='Playlist', module_name=None, is_entity=None, base_type_name=None)
+  FieldSpec(field_type='string', key='name', has_api=['server'], has_model=['server'], is_auto=None, optional=[], target=None)
