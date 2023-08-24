@@ -18,7 +18,8 @@ def get_helpers(_):
         def type_specs_to_import(self):
             result = []
             for field_spec in self.fk_input_field_specs + self.fk_output_field_specs:
-                append_uniq(result, field_spec.target_type_spec)
+                if not field_spec.target_type_spec.only_api:
+                    append_uniq(result, field_spec.target_type_spec)
 
             return result
 

@@ -77,14 +77,15 @@ def django_modules_provide_item_lists(django_app):
     lut = get_map_from_item_to_django_module(get_type_reg(), django_app.modules)
     forwards = []
     for data in lut.values():
-        django_model_term = f"{data.item.meta.term.data}:django-model"
-        forwards.extend(
-            [
-                create_forward(data.django_module, provides, data.item.item_list),
-                create_forward(data.django_module, has, django_model_term),
-                create_forward(django_model_term, provides, data.item.item_list),
-            ]
-        )
+        if not data.item.type_spec.only_api:
+            django_model_term = f"{data.item.meta.term.data}:django-model"
+            forwards.extend(
+                [
+                    create_forward(data.django_module, provides, data.item.item_list),
+                    create_forward(data.django_module, has, django_model_term),
+                    create_forward(django_model_term, provides, data.item.item_list),
+                ]
+            )
     return forwards
 
 

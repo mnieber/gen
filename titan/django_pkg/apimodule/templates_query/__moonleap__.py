@@ -20,7 +20,8 @@ def get_helpers(_):
         def type_specs_to_import(self):
             result = []
             for field_spec in _.query.api_spec.get_outputs(["fk", "relatedSet"]):
-                append_uniq(result, field_spec.target_type_spec)
+                if not field_spec.target_type_spec.only_api:
+                    append_uniq(result, field_spec.target_type_spec)
 
             return result
 

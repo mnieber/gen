@@ -31,8 +31,8 @@ class QueryName:
         # Moonleap Todo: implement query
         return QueryNameOutputs(
                                                                                                             {% for output_field_spec in __.output_field_specs %}
-            output_field_name=OutputFieldTarget.objects.filter().first(),                                   {% ?? output_field_spec.field_type == "fk" %}
-            output_field_name=OutputFieldTarget.objects.filter(),                                           {% ?? output_field_spec.field_type == "relatedSet" %}
+            output_field_name=OutputFieldTarget.objects.filter().first(),                                   {% ?? output_field_spec.field_type == "fk" and output_field_spec.target_type_spec in __.type_specs_to_import %}
+            output_field_name=OutputFieldTarget.objects.filter(),                                           {% ?? output_field_spec.field_type == "relatedSet" and output_field_spec.target_type_spec in __.type_specs_to_import %}
             output_field_name={},                                                                           {% ?? output_field_spec.field_type == "json" %}
             output_field_name=0,                                                                            {% ?? output_field_spec.field_type == "int" %}
             output_field_name="",                                                                           {% ?? output_field_spec.field_type not in ("fk", "relatedSet", "json", "int") %}
