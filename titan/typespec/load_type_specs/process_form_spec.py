@@ -5,12 +5,6 @@ def process_form_spec(type_reg, form_type_spec):
             existing_form_type_spec.add_field_spec(field_spec)
         form_type_spec = existing_form_type_spec
 
-        if existing_form_type_spec.module_name and form_type_spec.module_name:
-            if existing_form_type_spec.module_name != form_type_spec.module_name:
-                raise Exception(
-                    f"Form type {form_type_spec.type_name} is defined in two modules: "
-                    + f"{existing_form_type_spec.module_name} and {form_type_spec.module_name}"
-                )
         if not existing_form_type_spec.module_name:
             existing_form_type_spec.module_name = form_type_spec.module_name
     else:

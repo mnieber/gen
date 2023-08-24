@@ -75,13 +75,7 @@ class TypeSpecParser:
                     fk.var_type,
                     (u0(value["__base_type__"]) if "__base_type__" in value else None),
                     fk.parts,
-                )
-
-                add_type_spec_to_type_reg(
-                    self.type_reg,
-                    fk_type_spec,
-                    fk.module_name or value.get("__module__"),
-                    parent_type_spec=parent_type_spec,
+                    module_name=(value.get("__module__") or fk.module_name),
                 )
 
                 add_extra_model_fields(fk_type_spec, value)
@@ -96,6 +90,17 @@ class TypeSpecParser:
                     set_related_name(
                         field_spec=field_spec, type_spec=fk_type_spec, keys=fk_keys
                     )
+
+                add_type_spec_to_type_reg(
+                    self.type_reg,
+                    fk_type_spec,
+                    parent_type_spec=parent_type_spec,
+                )
+
+                # Update trace
+                if fk.parts:
+                    fk_trace["__attrs__"] = ",".join(fk.parts)
+                trace[_trace_key(fk)] = org_value if is_pass else fk_trace
 
                 # If there is an api spec then we create a related api-type_spec and
                 # use it to update fk_type_spec.
@@ -122,11 +127,6 @@ class TypeSpecParser:
                         fk_type_spec.type_name
                     ).module_name
                     process_form_spec(self.type_reg, form_type_spec)
-
-                # Update trace
-                if fk.parts:
-                    fk_trace["__attrs__"] = ",".join(fk.parts)
-                trace[_trace_key(fk)] = org_value if is_pass else fk_trace
 
         return trace, keys
 

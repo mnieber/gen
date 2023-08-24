@@ -11,4 +11,4 @@ def add_extra_model_fields(type_spec, value):
         and not type_spec.get_field_spec_by_key("sortPos")
         and not value.get("sortPos")
     ):
-        value["sortPos|"] = "Int = 0"
+        value["sortPos"] = "Int = 0"
