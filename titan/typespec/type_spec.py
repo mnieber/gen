@@ -13,11 +13,14 @@ class TypeSpec:
     display_field: T.Optional[FieldSpec] = field(default=None, repr=False)
     module_name: T.Optional[str] = None
     is_entity: T.Optional[bool] = None
-    only_api: T.Optional[bool] = None
     base_type_name: T.Optional[str] = None
     extract_gql_fields: bool = field(default=False, repr=False)
     is_sorted: bool = field(default=False, repr=False)
     is_form: bool = field(default=False, repr=False)
+
+    @property
+    def only_api(self):
+        return not any([x.has_model for x in self.field_specs])
 
     def get_field_specs(self, field_types=None):
         return [

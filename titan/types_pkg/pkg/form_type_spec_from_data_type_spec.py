@@ -5,7 +5,7 @@ import ramda as R
 from titan.typespec.type_spec import TypeSpec
 
 
-def form_type_spec_from_data_type_spec(data_type_spec, form_type_name):
+def form_type_spec_from_data_type_spec(data_type_spec, form_type_name, skip_keys):
     def _convert(field_spec):
         new_field_spec = deepcopy(field_spec)
 
@@ -25,10 +25,11 @@ def form_type_spec_from_data_type_spec(data_type_spec, form_type_name):
         is_form=True,
         is_entity=False,
         is_sorted=False,
-        only_api=False,
         field_specs=R.pipe(
             R.always(data_type_spec.field_specs),
             R.filter(lambda x: x.field_type != "relatedSet"),
+            R.filter(lambda x: x.has_model),
+            R.filter(lambda x: x.key not in skip_keys),
             R.map(_convert),
         )(None),
     )

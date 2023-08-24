@@ -1,12 +1,22 @@
 import typing as T
 
 from moonleap import is_private_key, l0, u0
+from titan.types_pkg.pkg.form_type_spec_from_data_type_spec import (
+    form_type_spec_from_data_type_spec,
+)
+from titan.typespec.load_type_specs.add_type_spec_to_type_reg import (
+    add_type_spec_to_type_reg,
+)
+from titan.typespec.load_type_specs.process_api_spec import process_api_spec
+from titan.typespec.load_type_specs.process_form_spec import process_form_spec
+from titan.typespec.load_type_specs.set_related_name import set_related_name
+from titan.typespec.type_spec import TypeSpec
 
 from .add_extra_model_fields import add_extra_model_fields
 from .add_field_spec import add_field_spec
+from .create_type_spec import create_type_spec
 from .field_spec_from_dict import field_spec_from_dict, is_pass
 from .foreign_key import ForeignKey
-from .update_or_create_type_spec import update_or_create_type_spec
 
 
 class TypeSpecParser:
@@ -61,18 +71,20 @@ class TypeSpecParser:
 
             # Get/update the target type
             if field_spec.field_type in ("fk", "relatedSet", "form"):
-                fk_type_spec = update_or_create_type_spec(
-                    self.type_reg,
+                fk_type_spec = create_type_spec(
                     fk.var_type,
                     (u0(value["__base_type__"]) if "__base_type__" in value else None),
                     fk.parts,
+                )
+
+                add_type_spec_to_type_reg(
+                    self.type_reg,
+                    fk_type_spec,
                     fk.module_name or value.get("__module__"),
                     parent_type_spec=parent_type_spec,
                 )
-                if "omit_model" not in fk.parts:
-                    add_extra_model_fields(
-                        fk_type_spec, value, fk, parent_type_spec=parent_type_spec
-                    )
+
+                add_extra_model_fields(fk_type_spec, value)
 
                 #
                 # Use recursion to convert child type specs
@@ -81,7 +93,35 @@ class TypeSpecParser:
 
                 # Set related name.
                 if parent_type_spec and field_spec.field_type in ("fk", "relatedSet"):
-                    _set_related_name(field_spec=field_spec, type_spec=fk_type_spec, keys=fk_keys)
+                    set_related_name(
+                        field_spec=field_spec, type_spec=fk_type_spec, keys=fk_keys
+                    )
+
+                # If there is an api spec then we create a related api-type_spec and
+                # use it to update fk_type_spec.
+                api_spec = value.get("__api__")
+                if api_spec:
+                    api_type_spec = TypeSpec(
+                        type_name=fk_type_spec.type_name + "Api", field_specs=[]
+                    )
+                    self.parse(api_spec, parent_type_spec=api_type_spec)
+                    process_api_spec(fk_type_spec, api_spec, api_type_spec)
+
+                # If there is an form type spec then we create a related form-type_spec.
+                # If there is an existing form-type_spec then we update it.
+                form_spec = value.get("__form__")
+                if form_spec:
+                    form_type_spec_name = fk_type_spec.type_name + "Form"
+                    form_type_spec = form_type_spec_from_data_type_spec(
+                        fk_type_spec,
+                        form_type_spec_name,
+                        form_spec.get("__delete__", []),
+                    )
+                    self.parse(form_spec, parent_type_spec=form_type_spec)
+                    form_type_spec.module_name = self.type_reg.get(
+                        fk_type_spec.type_name
+                    ).module_name
+                    process_form_spec(self.type_reg, form_type_spec)
 
                 # Update trace
                 if fk.parts:
@@ -112,31 +152,3 @@ def _trace_key(fk):
         if fk.maybe_var
         else fk.default_var
     )
-
-
-def _set_related_name(field_spec, type_spec, keys):
-    related_field_spec = None
-    for key in keys:
-        rhs_field_spec = type_spec.get_field_spec_by_key(key)
-        if rhs_field_spec.is_inverse:
-            if related_field_spec:
-                raise Exception(
-                    f"Multiple inverse fields in {type_spec.type_name} for {field_spec.key}"
-                )
-            related_field_spec = rhs_field_spec
-
-    if not related_field_spec:
-        return
-
-    if field_spec.field_type == "relatedSet":
-        if related_field_spec.field_type != "fk":
-            raise Exception(
-                f"Field {field_spec.key} in {type_spec.type_name} is not a fk"
-            )
-        related_field_spec.related_name = field_spec.name
-    else:
-        if related_field_spec.field_type != "relatedSet":
-            raise Exception(
-                f"Field {field_spec.key} in {type_spec.type_name} is not a relatedSet"
-            )
-        field_spec.related_name = related_field_spec.name

@@ -99,7 +99,7 @@ Here, we see from the value for the `__attrs__` key that the `todolist` type is 
 
 ## Fact: A `relatedSet` field implies a related `fk` field on the target type.
 
-For technical reasons (that have to do with relational databases), when we declare that `todolist` has a `todoSet` field then we also need a related `fk` field on `todo` that targets `todolist`. This related `fk` will be added automatically to `todo` as follows: `todolist for todoSet: pass.auto.optional`. The `for` clause identifies the related field name in the parent type. The `auto` attribute indicates an automatically added field. If you also manually specify the `todolist` field in the `todo` type, then the automatically added field is ignored.
+For technical reasons (that have to do with relational databases), when we declare that `todolist` has a `todoSet` field then we also need a related `fk` field on `todo` that targets `todolist`. This related `fk` will be added automatically to `todo` as follows: `todolist for todoSet: pass.optional`. The `for` clause identifies the related field name in the parent type.
 
 ## Scalar fields
 

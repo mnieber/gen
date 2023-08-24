@@ -14,7 +14,7 @@ class FieldSpec:
     description: T.Optional[str] = field(default=None, repr=False)
     display: T.Optional[bool] = field(default=None, repr=False)
     has_api: T.Optional[bool] = field(default=None)
-    has_model: T.Optional[bool] = field(default=None)
+    has_model: T.Optional[bool] = field(default=True)
     help: T.Optional[bool] = field(default=None, repr=False)
     index: T.Optional[bool] = field(default=None, repr=False)
     is_inverse: T.Optional[bool] = field(default=None)
