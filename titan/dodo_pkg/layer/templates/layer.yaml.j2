@@ -19,6 +19,13 @@ MAKE:                                                                 {% if _.se
   cwd: ${/SERVER/src_dir}                                             {% endif %}
 
 
+MENU:                                                                 {% if _.service and _.service.npm_source_maps %}
+  session_id: {{ _.project.name|sn }}_tsc
+  commands:
+    stack:
+    - dodo frontend.tsc --watch {{ name }}                            {% !! name, dir in _.service.npm_source_maps.items() %}{% endif %}
+
+
 NODE:                                                                 {% if _.service|dot("node_package") %}
   node_modules_dir: ${/SERVER/src_dir}/node_modules                   {% endif %}
 
@@ -53,11 +60,5 @@ SERVER:                                                               {% if _.se
 TSC:                                                                  {% if _.service.npm_source_maps %}
   src_dir_map:
     {{ name }}: /npm/{{ name }}                                       {% !! name, dir in _.service.npm_source_maps.items() %}
-
-MENU:
-  session_id: {{ _.project.name|sn }}_tsc
-  commands:
-    stack:
-    - dodo frontend.tsc --watch {{ name }}                            {% !! name, dir in _.service.npm_source_maps.items() %}
                                                                       {% endif %}{% endif %}
 {% end_trim_newlines %}
