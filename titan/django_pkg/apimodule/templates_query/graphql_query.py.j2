@@ -25,7 +25,7 @@ class QueryName:
         self,
         info,
         input_field_name,                                                                                   {% !! input_field_spec in __.required_input_field_specs %}
-        input_field_name=None,                                                                              {% !! input_field_spec in __.optional_input_field_specs %}
+        input_field_name={{ input_field_spec.default_value }},                                              {% !! input_field_spec in __.optional_input_field_specs %}
         {% remove_trailing suffix="," %}
     ):
         # Moonleap Todo: implement query
