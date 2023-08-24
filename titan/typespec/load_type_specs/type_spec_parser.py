@@ -1,6 +1,5 @@
 import typing as T
 
-import ramda as R
 from moonleap import is_private_key, l0, u0
 
 from .add_extra_model_fields import add_extra_model_fields
@@ -14,7 +13,7 @@ class TypeSpecParser:
     def __init__(self, type_reg):
         self.type_reg = type_reg
 
-    def parse(self, host, type_spec_dict, parent_type_spec=None):
+    def parse(self, type_spec_dict, parent_type_spec=None):
         # For debugging purposes, we create a new dict that shows how the parser
         # interprets and modifies the type_spec_dict.
         trace = dict()
@@ -36,7 +35,7 @@ class TypeSpecParser:
 
         for key, value in scalar_items:
             # Get field spec and related data from key/value pair
-            field_spec_data = field_spec_from_dict(host, key, value)
+            field_spec_data = field_spec_from_dict(key, value)
             field_spec = field_spec_data["field_spec"]
             trace[field_spec_data["new_key"]] = field_spec_data["new_value"]
 
@@ -49,7 +48,7 @@ class TypeSpecParser:
             key, value = fk_items.pop(0)
 
             # Get field spec and related data from key/value pair
-            field_spec_data = field_spec_from_dict(host, key, value)
+            field_spec_data = field_spec_from_dict(key, value)
             org_value, value = value, T.cast(T.Dict, field_spec_data["new_value"])
             is_pass = field_spec_data["is_pass"]
             fk = T.cast(ForeignKey, field_spec_data["fk"])
@@ -63,7 +62,6 @@ class TypeSpecParser:
             # Get/update the target type
             if field_spec.field_type in ("fk", "relatedSet", "form"):
                 fk_type_spec = update_or_create_type_spec(
-                    host,
                     self.type_reg,
                     fk.var_type,
                     (u0(value["__base_type__"]) if "__base_type__" in value else None),
@@ -79,7 +77,7 @@ class TypeSpecParser:
                 #
                 # Use recursion to convert child type specs
                 #
-                fk_trace, fk_keys = self.parse(host, value, parent_type_spec=fk_type_spec)
+                fk_trace, fk_keys = self.parse(value, parent_type_spec=fk_type_spec)
 
                 # Set related name.
                 if parent_type_spec and field_spec.field_type in ("fk", "relatedSet"):

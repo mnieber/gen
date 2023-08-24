@@ -1,5 +1,5 @@
 {% magic_with myEndpoint = _.query.name %}
-{% magic_with myInputFieldGqlType = input_field_spec.graphql_type("client") %}
+{% magic_with myInputFieldGqlType = input_field_spec.graphql_type %}
 {% magic_with myInputFieldName = input_field_spec.name %}
 {% magic_with myInputFieldTsType = input_field_spec.ts_type %}
 import { useQuery } from '@tanstack/react-query';

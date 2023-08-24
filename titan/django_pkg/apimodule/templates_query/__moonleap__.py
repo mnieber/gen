@@ -10,10 +10,10 @@ def get_helpers(_):
             list(_.query.api_spec.get_outputs()), key=lambda x: x.name
         )
         required_input_field_specs = [
-            x for x in input_field_specs if not x.is_optional("server")
+            x for x in input_field_specs if not x.is_optional
         ]
         optional_input_field_specs = [
-            x for x in input_field_specs if x.is_optional("server")
+            x for x in input_field_specs if x.is_optional
         ]
 
         @property

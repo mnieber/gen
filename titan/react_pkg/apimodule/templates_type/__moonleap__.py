@@ -5,7 +5,7 @@ from titan.types_pkg.typeregistry import get_type_reg
 def get_helpers(_):
     class Helpers:
         form_field_specs = (
-            [x for x in _.form_type_spec.get_field_specs() if "client" in x.has_model]
+            [x for x in _.form_type_spec.get_field_specs() if x.has_model]
             if _.form_type_spec
             else []
         )

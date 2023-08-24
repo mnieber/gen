@@ -5,10 +5,10 @@ def get_helpers(_):
     class Helpers:
         input_field_specs = _.mutation.api_spec.get_inputs()
         optional_input_field_specs = [
-            x for x in input_field_specs if x.is_optional("server")
+            x for x in input_field_specs if x.is_optional
         ]
         required_input_field_specs = [
-            x for x in input_field_specs if not x.is_optional("server")
+            x for x in input_field_specs if not x.is_optional
         ]
         fk_input_field_specs = _.mutation.api_spec.get_inputs(["fk", "relatedSet"])
         output_field_specs = _.mutation.api_spec.get_outputs()
@@ -24,7 +24,7 @@ def get_helpers(_):
 
         def graphene_type(self, field_spec):
             return field_spec.graphene_type(
-                "" if field_spec.is_optional("server") else "required=True"
+                "" if field_spec.is_optional else "required=True"
             )
 
     return Helpers()

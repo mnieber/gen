@@ -1,6 +1,6 @@
 def get_helpers(_):
     class Helpers:
-        has_endpoint = "client" in _.mutation.api_spec.has_endpoint
+        has_endpoint = _.mutation.api_spec.has_endpoint
         input_field_specs = _.mutation.api_spec.get_inputs()
         form_input_field_specs = _.mutation.api_spec.get_inputs(["form"])
 

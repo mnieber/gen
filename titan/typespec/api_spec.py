@@ -16,9 +16,7 @@ class ApiSpec:
     invalidates: T.List[str] = field(default_factory=list)
     is_stub: bool = False
     module_name: str = "api"
-    # If "server" in has_endpoint, then the endpoint is implemented in the server.
-    # If "client" in has_endpoint, then the endpoint is implemented in the client.
-    has_endpoint: T.List[T.List[str]] = field(default_factory=list)
+    has_endpoint: T.Optional[bool] = field(default=None)
 
     def get_inputs(self, field_types=None):
         return self.inputs_type_spec.get_field_specs(field_types)

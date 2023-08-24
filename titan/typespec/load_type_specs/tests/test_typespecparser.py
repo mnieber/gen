@@ -13,7 +13,7 @@ class TestTypeSpecParser:
 
         type_spec_dict_fn = Path(__file__).parent / "models.yaml"
         type_spec_dict = load_yaml(str(type_spec_dict_fn))
-        parser.parse("server", type_spec_dict)
+        parser.parse(type_spec_dict)
 
         output_fn = Path(__file__).parent / "output.txt"
         with open(str(output_fn), "w") as f:

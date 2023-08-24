@@ -48,8 +48,8 @@ def field_spec_graphene_type(self: FieldSpec, args):
     raise Exception(f"Cannot deduce arg type for {self.field_type}")
 
 
-def field_spec_graphql_type(self: FieldSpec, host):
-    postfix = "" if self.is_optional(host) else "!"
+def field_spec_graphql_type(self: FieldSpec):
+    postfix = "" if self.is_optional else "!"
 
     if self.field_type in (
         "string",

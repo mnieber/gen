@@ -1,20 +1,14 @@
-def get_generic_field_attrs(host, key, value_parts):
+def get_generic_field_attrs(key, value_parts):
     field_attrs = dict(field_type=None, default_value=None, choices=None)
 
-    field_attrs["optional"] = []
     if f"optional" in value_parts:
-        if f"required" not in value_parts:
-            field_attrs["optional"].append(host)
-    if f"required" in value_parts:
-        field_attrs["optional"].append(f"required_{host}")
+        field_attrs["is_optional"] = True
 
-    field_attrs["has_model"] = []
     if f"omit_model" not in value_parts:
-        field_attrs["has_model"].append(host)
+        field_attrs["has_model"] = True
 
-    field_attrs["has_api"] = []
     if f"omit_api" not in value_parts:
-        field_attrs["has_api"].append(host)
+        field_attrs["has_api"] = True
 
     if "is_inverse" in value_parts:
         field_attrs["is_inverse"] = True

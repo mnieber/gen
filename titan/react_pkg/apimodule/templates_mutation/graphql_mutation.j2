@@ -1,5 +1,5 @@
 {% magic_with callMyEndpoint = _.mutation.name %}
-{% magic_with myFieldGqlType = field_spec.graphql_type("client") %}
+{% magic_with myFieldGqlType = field_spec.graphql_type %}
 {% magic_with myFieldName = field_spec.name %}
 {% magic_with myFieldTsType = field_spec.ts_type %}
 import * as R from 'ramda';

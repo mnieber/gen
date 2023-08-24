@@ -3,11 +3,9 @@ from titan.types_pkg.pkg.form_type_spec_from_data_type_spec import (
 )
 from titan.typespec.type_spec import TypeSpec
 
-from .add_host_to_type_specs import add_host_to_type_spec
-
 
 def update_or_create_type_spec(
-    host, type_reg, type_name, base_type_name, parts, module_name, parent_type_spec
+    type_reg, type_name, base_type_name, parts, module_name, parent_type_spec
 ):
     type_spec = type_reg.get(type_name, default=None)
     if not type_spec:
@@ -17,8 +15,6 @@ def update_or_create_type_spec(
                 type_spec = form_type_spec_from_data_type_spec(
                     data_type_spec, type_name
                 )
-                if host != "server":
-                    add_host_to_type_spec(host, type_spec)
         if not type_spec:
             type_spec = TypeSpec(type_name=type_name, field_specs=[])
         if base_type_name:

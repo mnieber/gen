@@ -18,10 +18,6 @@ def strip_generic_symbols(key):
     if optional:
         append_uniq(parts, f"optional")
 
-    key, required = pop(key, "!")
-    if required:
-        append_uniq(parts, f"required")
-
     key, is_help = pop(key, "/")
     if is_help:
         parts.append("help")

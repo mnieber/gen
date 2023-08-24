@@ -14,7 +14,5 @@ def load_api_specs(api_reg, spec_dir):
 def get_all_api_specs(api_reg, root_api_spec_dict):
     for key, api_spec_dict in root_api_spec_dict.items():
         api_spec = get_api_spec(
-            api_reg, "server", key, api_spec_dict, get_type_reg().type_names
+            api_reg, key, api_spec_dict, get_type_reg().type_names
         )
-        for output_field_spec in api_spec.outputs_type_spec.field_specs:
-            output_field_spec.has_api.append("client")
