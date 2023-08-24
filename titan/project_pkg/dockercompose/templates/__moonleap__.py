@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 
 import ramda as R
-
 from moonleap import get_session
 from moonleap.utils.case import sn
 
@@ -10,7 +9,7 @@ from moonleap.utils.case import sn
 def make_abs(service, p):
     result = Path(p)
     if not Path(os.path.expandvars(p)).is_absolute():
-        base_path = Path("/opt") / service.project.kebab_name / service.name
+        base_path = Path("/opt/projects") / service.project.kebab_name / service.name
         result = base_path / p
     return result
 
