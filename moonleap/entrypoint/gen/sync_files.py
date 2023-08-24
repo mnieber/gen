@@ -73,6 +73,9 @@ def sync_files(output_dir, shadow_dir, stage_dir):
     # Count files in stage dir that are not in shadow_dir.
     for root, dirs, files in os.walk(stage_dir):
         for file in files:
-            shadow_file_path = os.path.join(root, file)
+            stage_file_path = os.path.join(root, file)
+            shadow_file_path = os.path.join(
+                shadow_dir, stage_file_path[len(stage_dir) + 1 :]
+            )
             if not os.path.exists(shadow_file_path):
                 session.report(f"New file: {file}")

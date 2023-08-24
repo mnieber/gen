@@ -10,7 +10,7 @@ import myEndpointStub from '/src/api/stubs/myEndpointStub.json';                
 import { wait } from '/src/utils/wait';
 
 export type ArgsT = {
-  myInputFieldName: myInputFieldTsType;                                                             {% !! input_field_spec in __.input_field_specs|sort(attribute="name") %}
+  myInputFieldName: myInputFieldTsType;                                                             {% !! input_field_spec in __.input_field_specs %}
 };
 
 export const myEndpoint = (args: ArgsT) => {
@@ -20,7 +20,7 @@ export const myEndpoint = (args: ArgsT) => {
       $myInputFieldName: myInputFieldGqlType                                                        {% !! input_field_spec in __.input_field_specs %}
     ) {
       myEndpoint(
-        myInputFieldName: $myInputFieldName                                                         {% !! input_field_spec in __.input_field_specs|sort(attribute="name") %}
+        myInputFieldName: $myInputFieldName                                                         {% !! input_field_spec in __.input_field_specs %}
       ) {
     `query myEndpoint {                                                                             {% else %}
       myEndpoint {                                                                                  {% endif %}
