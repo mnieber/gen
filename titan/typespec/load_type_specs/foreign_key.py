@@ -15,7 +15,6 @@ class ForeignKey:
         self.field_type: T.Optional[str] = None
         self.module_name: T.Optional[str] = None
         self.parts: T.List[str] = []
-        self.related_name: T.Optional[str] = None
 
         self._process_data(
             key, parts=value["__attrs__"].split(",") if "__attrs__" in value else []
@@ -27,11 +26,6 @@ class ForeignKey:
 
     def _process_data(self, value, parts):
         self.parts = list(parts)
-
-        parts_with = value.split(" with ")
-        if len(parts_with) == 2:
-            self.related_name = parts_with[1]
-            value = parts_with[0]
 
         parts_as = value.split(" as ")
         parts_as[-1], more_parts = strip_fk_symbols(parts_as[-1])

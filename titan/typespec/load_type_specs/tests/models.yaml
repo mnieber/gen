@@ -2,11 +2,6 @@ userProfiles.userProfile[@]:
   userId: Id
   username: String,90,display
 
-clips.clip[@]:
-  'description?': Markdown
-  sourcePlaylist as playlist: pass
-  owner as userProfile: pass
-
 playlists.playlist[@>]:
   'description?': Markdown
 
@@ -17,3 +12,8 @@ playlists.playlist[@>]:
     isDeleted: Boolean = False
   owner as userProfile:
     playlistSet[<]: pass
+
+clips.clip[@]:
+  'description?': Markdown
+  sourcePlaylist as playlist: pass
+  owner as userProfile: pass

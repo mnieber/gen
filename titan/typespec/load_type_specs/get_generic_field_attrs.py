@@ -16,6 +16,9 @@ def get_generic_field_attrs(host, key, value_parts):
     if f"omit_api" not in value_parts:
         field_attrs["has_api"].append(host)
 
+    if "is_inverse" in value_parts:
+        field_attrs["is_inverse"] = True
+
     field_attrs["key"] = key.strip()
 
     return field_attrs
