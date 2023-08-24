@@ -74,8 +74,7 @@ def sync_files(output_dir, shadow_dir, stage_dir):
     for root, dirs, files in os.walk(stage_dir):
         for file in files:
             stage_file_path = os.path.join(root, file)
-            shadow_file_path = os.path.join(
-                shadow_dir, stage_file_path[len(stage_dir) + 1 :]
-            )
+            rel_file = stage_file_path[len(stage_dir) + 1 :]
+            shadow_file_path = os.path.join(shadow_dir, rel_file)
             if not os.path.exists(shadow_file_path):
-                session.report(f"New file: {file}")
+                session.report(f"New file: {rel_file}")
