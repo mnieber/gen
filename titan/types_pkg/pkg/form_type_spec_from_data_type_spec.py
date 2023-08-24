@@ -2,7 +2,6 @@ from copy import deepcopy
 from dataclasses import replace
 
 import ramda as R
-
 from titan.typespec.type_spec import TypeSpec
 
 
@@ -26,6 +25,7 @@ def form_type_spec_from_data_type_spec(data_type_spec, form_type_name):
         is_form=True,
         is_entity=False,
         is_sorted=False,
+        only_api=False,
         field_specs=R.pipe(
             R.always(data_type_spec.field_specs),
             R.filter(lambda x: x.field_type != "relatedSet"),

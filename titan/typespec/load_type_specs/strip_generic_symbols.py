@@ -4,14 +4,13 @@ from moonleap.utils.pop import pop
 
 def strip_generic_symbols(key):
     parts = list()
-    key, removed = pop(key, "*")
 
-    key, no_model = pop(key, "^")
-    if no_model or removed:
+    key, omit_model = pop(key, "^")
+    if omit_model:
         append_uniq(parts, f"omit_model")
 
     key, no_api = pop(key, "|")
-    if no_api or removed:
+    if no_api:
         parts.append(f"omit_api")
 
     key, optional = pop(key, "?")

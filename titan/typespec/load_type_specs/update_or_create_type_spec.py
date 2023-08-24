@@ -36,6 +36,9 @@ def update_or_create_type_spec(
     if "entity" in parts:
         type_spec.is_entity = True
 
+    if "only_api" in parts:
+        type_spec.only_api = True
+
     if "extract_gql_fields" in parts:
         type_spec.extract_gql_fields = True
 

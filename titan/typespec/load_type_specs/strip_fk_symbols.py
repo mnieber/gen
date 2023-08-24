@@ -7,6 +7,10 @@ def strip_fk_symbols(key):
     key, symbols, parts = split_raw_key(key)
     words = symbols.split(",")
 
+    symbols, only_api = pop(symbols, "*")
+    if only_api or "only_api" in words:
+        parts.append("only_api")
+
     symbols, is_sorted = pop(symbols, ">")
     if is_sorted or "sorted" in words:
         parts.append("is_sorted")
