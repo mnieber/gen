@@ -9,6 +9,10 @@ def strip_generic_symbols(key):
     if optional:
         append_uniq(parts, f"optional")
 
+    key, is_indexed = pop(key, "%")
+    if is_indexed:
+        append_uniq(parts, f"is_indexed")
+
     key, is_help = pop(key, "/")
     if is_help:
         parts.append("help")

@@ -16,7 +16,7 @@ class FieldSpec:
     has_api: T.Optional[bool] = field(default=True)
     has_model: T.Optional[bool] = field(default=True)
     help: T.Optional[bool] = field(default=None, repr=False)
-    index: T.Optional[bool] = field(default=None, repr=False)
+    is_indexed: T.Optional[bool] = field(default=None, repr=False)
     is_inverse: T.Optional[bool] = field(default=None)
     is_optional: T.Optional[bool] = field(default=None)
     is_slug_src: T.Optional[bool] = field(default=None, repr=False)

@@ -30,7 +30,6 @@ def get_scalar_field_spec(key, field_spec_value):
     # field_type
     #
     if True:
-
         if field_attrs["choices"]:
             field_attrs["field_type"] = "string"
 
@@ -88,12 +87,6 @@ def get_scalar_field_spec(key, field_spec_value):
 
         if field_attrs["field_type"] is None:
             raise Exception(f"Bad field type: {field_spec_value}")
-
-    #
-    # index
-    #
-    if "index" in parts:
-        field_attrs["index"] = True
 
     #
     # display

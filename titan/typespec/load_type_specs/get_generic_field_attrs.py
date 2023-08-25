@@ -7,6 +7,9 @@ def get_generic_field_attrs(key, value_parts):
     if "is_inverse" in value_parts:
         field_attrs["is_inverse"] = True
 
+    if "is_indexed" in value_parts:
+        field_attrs["is_indexed"] = True
+
     field_attrs["key"] = key.strip()
 
     return field_attrs
