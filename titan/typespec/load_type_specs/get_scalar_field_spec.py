@@ -71,13 +71,18 @@ def get_scalar_field_spec(key, field_spec_value):
                 else None
             )
 
-        if field_attrs["default_value"] is not None:
+        if field_attrs["default_value"] is None:
+            if field_attrs["field_type"] == "tags":
+                field_attrs["default_value"] = "create_empty_tags"
+        else:
             if field_attrs["field_type"] == "boolean":
                 field_attrs["default_value"] = (
                     field_attrs["default_value"].lower() == "true"
                 )
+
             if field_attrs["field_type"] == "int":
                 field_attrs["default_value"] = int(field_attrs["default_value"])
+
             if field_attrs["field_type"] == "float":
                 field_attrs["default_value"] = float(field_attrs["default_value"])
 

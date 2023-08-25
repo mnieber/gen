@@ -21,9 +21,7 @@ class DjangoModelField(Resource):
         return []
 
     def arg_null_blank(self):
-        return (
-            ["null=True", "blank=True"] if self.field_spec.is_optional else []
-        )
+        return ["null=True", "blank=True"] if self.field_spec.is_optional else []
 
     def arg_unique(self):
         return ["unique=True"] if self.field_spec.unique else []
@@ -125,7 +123,7 @@ class DjangoJsonField(DjangoModelField):
 
     def arg_default(self):
         return (
-            [f'default="{self.field_spec.default_value}"']
+            [f"default={self.field_spec.default_value}"]
             if self.field_spec.default_value
             else []
         )
@@ -241,7 +239,7 @@ class DjangoModel(RenderMixin, Resource):
 
     @property
     def indexed_fields(self):
-        return [x for x in self.fields if x.field_spec.index]
+        return [x for x in self.fields if x.field_spec.is_indexed]
 
     @property
     def slug_fields(self):

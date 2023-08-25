@@ -5,6 +5,7 @@
 import uuid                                                                                             {% clean_up_py_imports %}
 from django.db import models
 from django.utils.text import slugify
+from app.utils.tags import create_empty_tags
 from martor.models import MartorField
 from {{ type_spec.django_module.module_path }}.models import {{ type_spec.type_name }}                  {% !! type_spec in __.type_specs_to_import %}
 from app.utils.validate_file import validate_image_file

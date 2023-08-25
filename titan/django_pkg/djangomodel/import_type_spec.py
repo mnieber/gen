@@ -1,3 +1,4 @@
+import ramda as R
 from moonleap import get_root_resource
 from moonleap.utils.case import camel_to_kebab, sn
 from titan.django_pkg.djangomodel.resources import (
@@ -55,7 +56,9 @@ def import_type_spec(type_spec, django_model):
             django_model.fields.append(DjangoCharField(**args))
         elif field_spec.field_type == "text":
             django_model.fields.append(DjangoTextField(**args))
-        elif field_spec.field_type in ("json", "tags"):
+        elif field_spec.field_type in ("json"):
+            django_model.fields.append(DjangoJsonField(**args))
+        elif field_spec.field_type in ("tags"):
             django_model.fields.append(DjangoJsonField(**args))
         elif field_spec.field_type == "url":
             django_model.fields.append(DjangoUrlField(**args))

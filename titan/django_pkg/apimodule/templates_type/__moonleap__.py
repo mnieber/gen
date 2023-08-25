@@ -15,7 +15,6 @@ def get_helpers(_):
             ],
             key=lambda x: x.type_name,
         )
-        __import__("pudb").set_trace()  # zz
 
         @property
         def excluded_field_specs(self):
