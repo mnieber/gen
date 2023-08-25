@@ -15,12 +15,8 @@ class MyItemT(graphene.ObjectType):                                             
         ]                                                                       {% endif %}
                                                                                 {% endif %}
     field_spec_name = {{ field_spec.graphene_type("") }}                        {% !! field_spec in __.derived_field_specs %}
-    field_spec_name = graphene.List(graphene.String)                            {% !! field_spec in __.tag_field_specs %}
-
                                                                                 {% if not __.type_spec.only_api %}
     def resolve_field_spec_name(self, info):                                    {% for field_spec in __.derived_field_specs %}
-        return None  # Moonleap Todo
-                                                                                {% endfor %}
-    def resolve_field_spec_name(self, info):                                    {% for field_spec in __.tag_field_specs %}
-        return [x for x in self.field_spec_name["tags"]]
+        return [x for x in self.field_spec_name["tags"]]                        {% ?? field_spec.field_type == "tags" %}
+        return None  # Moonleap Todo                                            {% ?? field_spec.field_type != "tags" %}
                                                                                 {% endfor %}{% endif %}

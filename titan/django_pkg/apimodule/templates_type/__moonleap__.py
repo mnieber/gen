@@ -4,10 +4,14 @@ def get_helpers(_):
         django_module = type_spec.django_module
         model_field_specs = [x for x in type_spec.get_field_specs() if x.has_model]
 
-        derived_field_specs = [
-            x for x in type_spec.get_field_specs() if (x.has_api and not x.has_model)
-        ]
-        tag_field_specs = [x for x in model_field_specs if x.field_type == "tags"]
+        derived_field_specs = sorted(
+            [
+                x
+                for x in type_spec.get_field_specs()
+                if (x.field_type == "tags" or (x.has_api and not x.has_model))
+            ],
+            key=lambda x: x.name,
+        )
 
         @property
         def excluded_field_specs(self):
@@ -17,6 +21,6 @@ def get_helpers(_):
                 for field_spec in self.model_field_specs
                 if not field_spec.has_api and field_spec.name not in derived_field_names
             ]
-            return result
+            return sorted(result, key=lambda x: x.name)
 
     return Helpers()
