@@ -1,29 +1,28 @@
 import typing as T
 
-from moonleap import is_private_key, l0, u0
+from moonleap import is_private_key, l0
+from moonleap.utils.merge_into_config import merge_into_config
 from titan.types_pkg.pkg.form_type_spec_from_data_type_spec import (
     form_type_spec_from_data_type_spec,
 )
-from titan.typespec.load_type_specs.add_type_spec_to_type_reg import (
-    add_type_spec_to_type_reg,
-)
 from titan.typespec.load_type_specs.process_api_spec import process_api_spec
-from titan.typespec.load_type_specs.process_form_spec import process_form_spec
 from titan.typespec.load_type_specs.set_related_name import set_related_name
 from titan.typespec.type_spec import TypeSpec
 
-from .add_extra_model_fields import add_extra_model_fields
 from .add_field_spec import add_field_spec
-from .create_type_spec import create_type_spec
 from .field_spec_from_dict import field_spec_from_dict, is_pass
 from .foreign_key import ForeignKey
+from .update_or_create_type_spec import update_or_create_type_spec
 
 
 class TypeSpecParser:
     def __init__(self, type_reg):
         self.type_reg = type_reg
 
-    def parse(self, type_spec_dict, parent_type_spec=None):
+    def parse(self, type_spec_dict, parent_type_spec=None, form_spec_dict=None):
+        if not form_spec_dict:
+            form_spec_dict = dict()
+
         # For debugging purposes, we create a new dict that shows how the parser
         # interprets and modifies the type_spec_dict.
         trace = dict()
@@ -71,19 +70,20 @@ class TypeSpecParser:
 
             # Get/update the target type
             if field_spec.field_type in ("fk", "relatedSet", "form"):
-                fk_type_spec = create_type_spec(
-                    fk.var_type,
-                    (u0(value["__base_type__"]) if "__base_type__" in value else None),
-                    fk.parts,
-                    module_name=(value.get("__module__") or fk.module_name),
-                )
-
-                add_extra_model_fields(fk_type_spec, value)
+                fk_type_spec = update_or_create_type_spec(self.type_reg, fk, value)
+                if parent_type_spec:
+                    self.type_reg.register_parent_child(
+                        parent_type_spec.type_name, fk_type_spec.type_name
+                    )
 
                 #
                 # Use recursion to convert child type specs
                 #
-                fk_trace, fk_keys = self.parse(value, parent_type_spec=fk_type_spec)
+                fk_trace, fk_keys = self.parse(
+                    value,
+                    parent_type_spec=fk_type_spec,
+                    form_spec_dict=form_spec_dict,
+                )
 
                 # Set related name.
                 if parent_type_spec and field_spec.field_type in ("fk", "relatedSet"):
@@ -101,32 +101,36 @@ class TypeSpecParser:
                     self.parse(api_spec, parent_type_spec=api_type_spec)
                     process_api_spec(fk_type_spec, api_spec, api_type_spec)
 
-                add_type_spec_to_type_reg(
-                    self.type_reg,
-                    fk_type_spec,
-                    parent_type_spec=parent_type_spec,
-                )
-
                 # Update trace
                 if fk.parts:
                     fk_trace["__attrs__"] = ",".join(fk.parts)
                 trace[_trace_key(fk)] = org_value if is_pass else fk_trace
 
-                # If there is an form type spec then we create a related form-type_spec.
-                # If there is an existing form-type_spec then we update it.
+                # Update form_spec_dict. We will process it at the end.
                 form_spec = value.get("__form__")
                 if form_spec:
+                    form_spec["__data_type_spec_name__"] = fk_type_spec.type_name
                     form_type_spec_name = fk_type_spec.type_name + "Form"
-                    form_type_spec = form_type_spec_from_data_type_spec(
-                        fk_type_spec,
-                        form_type_spec_name,
-                        form_spec.get("__delete__", []),
+                    merge_into_config(
+                        form_spec_dict.setdefault(form_type_spec_name, {}),
+                        form_spec,
                     )
-                    self.parse(form_spec, parent_type_spec=form_type_spec)
-                    form_type_spec.module_name = self.type_reg.get(
-                        fk_type_spec.type_name
-                    ).module_name
-                    process_form_spec(self.type_reg, form_type_spec)
+
+        if parent_type_spec is None:
+            for form_type_spec_name, form_spec in form_spec_dict.items():
+                data_type_spec_name = form_spec["__data_type_spec_name__"]
+                data_type_spec = self.type_reg.get(data_type_spec_name)
+                form_type_spec = form_type_spec_from_data_type_spec(
+                    data_type_spec,
+                    form_type_spec_name,
+                    form_spec.get("__delete__", []),
+                )
+                self.parse(form_spec, parent_type_spec=form_type_spec)
+                form_type_spec.module_name = data_type_spec.module_name
+                self.type_reg.setdefault(form_type_spec_name, form_type_spec)
+                self.type_reg.register_parent_child(
+                    form_type_spec_name, data_type_spec_name
+                )
 
         return trace, keys
 
