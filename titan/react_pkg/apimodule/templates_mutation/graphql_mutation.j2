@@ -3,12 +3,13 @@
 {% magic_with myFieldName = field_spec.name %}
 {% magic_with myFieldTsType = field_spec.ts_type %}
 import * as R from 'ramda';
-import { useMutation } from '@tanstack/react-query';
+import { useObservableMutation } from '/src/api/ObservableMutation';
 import { queryClient } from '/src/api/queryClient';                                                          {% ?? _.mutation.api_spec.invalidates %}
 import { doQuery } from '/src/api/graphqlClient';
 import { ObjT } from '/src/utils/types';
 import { wait } from '/src/utils/wait';
-import { {{ type_spec.type_name }}T } from '/src/api/types/{{ type_spec.type_name|chop_suffix("Form") }}T'; {% !! type_spec in __.form_input_type_specs %}
+import { {{ queryName }}QueryKey } from '/src/api/queries';                                                  {% !! queryName in _.mutation.api_spec.invalidates %}
+import { {{ type_spec.type_name }}T } from '/src/api/types/{{ type_spec.type_name|chop_suffix("Form") }}T';  {% !! type_spec in __.form_input_type_specs %}
 import { queryClient } from '/src/api/queryClient';
 
 export type ArgsT = {
@@ -26,6 +27,8 @@ export const callMyEndpoint = (args: ArgsT) => {
     `mutation callMyEndpoint {                                                                              {% else %}
       callMyEndpoint {                                                                                      {% endif %}
         // MOONLEAP TODO
+        errors
+        success
       }
     }`,
     args
@@ -40,21 +43,19 @@ export const callMyEndpoint = (args: ArgsT) => {
 };
 
 export const useCallMyEndpoint = () => {
-  return useMutation({
-    mutationKey: ['callMyEndpoint'],
+  return useObservableMutation({
     mutationFn: callMyEndpoint,
     onMutate: (args: ArgsT) => {                                                                            {% if _.mutation.api_spec.orders %}
       // MOONLEAP TODO: update ordering of {{ _.mutation.api_spec.orders }} in the query cache.
     },                                                                                                      {% endif %}
-    onSuccess: (response: ObjT) => {                                                                        {% min_lines count=5 %}
-      return queryClient.invalidateQueries(                                                                 {% if _.mutation.api_spec.invalidates %}
-        {
-          queryKey: [
-            '{{ queryName }}',                                                                              {% !! queryName in _.mutation.api_spec.invalidates %}
-            {% remove_trailing suffix="," %}
-          ]
-        }
-      );                                                                                                    {% endif %}
-    },                                                                                                      {% end_min_lines %}
+    onSuccess: (response: ObjT, args: ArgsT) => {                                                           {% if _.mutation.api_spec.invalidates %}
+      return Promise.all([
+        queryClient.invalidateQueries(                                                                      {% for queryName in _.mutation.api_spec.invalidates %}
+          {
+            queryKey: {{ queryName }}QueryKey()
+          }
+        ),                                                                                                  {% endfor %}
+      ])
+    },                                                                                                      {% endif %}
   });
 };

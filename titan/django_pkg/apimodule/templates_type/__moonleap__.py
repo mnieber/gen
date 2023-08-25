@@ -11,7 +11,9 @@ def get_helpers(_):
             [
                 x.target_type_spec
                 for x in type_spec.get_field_specs(["fk", "relatedSet"])
-                if is_api_field(x) and x.target_type_spec
+                if x.target_type_spec
+                and x.target != _.type_spec.type_name
+                and x.has_api
             ],
             key=lambda x: x.type_name,
         )

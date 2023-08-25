@@ -1,8 +1,0 @@
-{{ line }}                                              {% !! line in __.scss_imports %}
-{{ "" }}                                                {% ?? __.scss_imports %}
-{{ line }}                                              {% !! line in __.build.scss_lines %}
-{{ "" }}                                                {% ?? __.build.scss_lines %}
-.{{ class_name }} {                                     {% for class_name, styles in __.scss_styles_by_class_name.items() %}
-    {{ style }}                                         {% !! style in styles %}
-}
-{{ "" }}                                                {% endfor %}

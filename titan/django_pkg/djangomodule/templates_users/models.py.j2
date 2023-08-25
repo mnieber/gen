@@ -4,7 +4,7 @@ import uuid
 from django.conf import settings
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
                                         PermissionsMixin)
-from django.db import models
+from django.db import models, transaction
 from app.tr import tr                                                                       {% ?? _.django_app.use_translation %}
 from user_profiles.models import UserProfile                                                {% ?? _.django_app.get_module_by_name("userProfiles", None) %}
 
@@ -21,14 +21,16 @@ class UserManager(BaseUserManager):
             raise ValueError("Users must have an email address.")
         if not accepts_terms:
             raise ValueError("Users must accept the terms.")
-        user = self.model(email=self.normalize_email(email))
-        user.accepts_terms = accepts_terms
-        user.terms_version_accepted = terms_version_accepted or settings.TERMS_VERSION
-        user.set_password(password)
-        user.save()
 
-        user_profile = UserProfile.objects.create(user_id=user.id)                          {% if _.django_app.get_module_by_name("userProfiles", None) %}
-        user_profile.save()                                                                 {% endif %}
+        with transaction.atomic():
+            user = self.model(email=self.normalize_email(email))
+            user.accepts_terms = accepts_terms
+            user.terms_version_accepted = terms_version_accepted or settings.TERMS_VERSION
+            user.set_password(password)
+            user.save()
+
+            user_profile = UserProfile.objects.create(user_id=user.id)                          {% if _.django_app.get_module_by_name("userProfiles", None) %}
+            user_profile.save()                                                                 {% endif %}
 
         return user
 

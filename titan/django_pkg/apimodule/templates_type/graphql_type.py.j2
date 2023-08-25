@@ -4,8 +4,8 @@ import graphene                                                                 
 from graphene_django.types import DjangoObjectType
 
 from {{ __.django_module.module_path }}.models import MyItem                                                       {% ?? __.django_module %}
-from api.types.{{ type_spec.type_name | lower }}_t import {{ type_spec.type_name}}T                                {% !! type_spec in __.type_specs %}
                                                                                                                    {% end_clean_up_py_imports %}
+from api.types.{{ type_spec.type_name | lower }}_t import {{ type_spec.type_name}}T  # noqa: F401                  {% !! type_spec in __.type_specs %}
 
 class MyItemT(DjangoObjectType):                                                                                   {% ?? not __.type_spec.only_api %}
 class MyItemT(graphene.ObjectType):                                                                                {% ?? __.type_spec.only_api %}

@@ -34,7 +34,8 @@ export const useObservableQuery = (
       updateObservableQuery(observableQuery, query, fetchAsLoad);
       if (debugLabel && flags.logQueries) {
         observableQuery.log(
-          `ObservableQuery ${observableQuery.id} (${debugLabel}) updated to ${observableQuery.status}`
+          `ObservableQuery ${observableQuery.id} (${debugLabel}) ` +
+            `updated to ${observableQuery.status}`
         );
       }
     });
@@ -43,12 +44,12 @@ export const useObservableQuery = (
   return observableQuery;
 };
 
-function updateObservableQuery(
+const updateObservableQuery = (
   observableQuery: ObservableQuery,
   tanstackQuery: TanstackQuery,
   fetchAsLoad: boolean | undefined
-) {
+) => {
   observableQuery.data = tanstackQuery.data;
   observableQuery.status =
     fetchAsLoad && tanstackQuery.isFetching ? 'loading' : tanstackQuery.status;
-}
+};

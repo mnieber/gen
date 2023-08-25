@@ -1,7 +1,15 @@
 from pathlib import Path
 
 import moonleap.packages.extensions.props as P
-from moonleap import create, empty_rule, extend, kebab_to_camel, rule, u0
+from moonleap import (
+    create,
+    create_forward,
+    empty_rule,
+    extend,
+    kebab_to_camel,
+    rule,
+    u0,
+)
 from moonleap.blocks.verbs import has, provides
 from titan.react_view_pkg.view import default_view_templates_dir
 
@@ -35,6 +43,12 @@ def module_renders_state_provider(module, state_provider):
             lambda state_provider: dict(state_provider=state_provider, state=state),
             [Path(__file__).parent / "templates_hook"],
         )
+
+
+@rule("module", has, "state~provider")
+def module_has_state(module, state_provider):
+    state_term = f"{state_provider.base_name}:state"
+    return create_forward(module, has, state_term)
 
 
 @extend(StateProvider)
