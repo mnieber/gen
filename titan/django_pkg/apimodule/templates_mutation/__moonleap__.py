@@ -1,15 +1,11 @@
-from moonleap.utils.fp import append_uniq, uniq
+from moonleap.utils.fp import append_uniq
 
 
 def get_helpers(_):
     class Helpers:
         input_field_specs = _.mutation.api_spec.get_inputs()
-        optional_input_field_specs = [
-            x for x in input_field_specs if x.is_optional
-        ]
-        required_input_field_specs = [
-            x for x in input_field_specs if not x.is_optional
-        ]
+        optional_input_field_specs = [x for x in input_field_specs if x.is_optional]
+        required_input_field_specs = [x for x in input_field_specs if not x.is_optional]
         fk_input_field_specs = _.mutation.api_spec.get_inputs(["fk", "relatedSet"])
         output_field_specs = _.mutation.api_spec.get_outputs()
         fk_output_field_specs = _.mutation.api_spec.get_outputs(["fk", "relatedSet"])

@@ -1,22 +1,23 @@
 {% magic_with fieldSpecName = field_spec.name %}
 {% magic_with myItem = _.type_spec.type_name %}
-import graphene                                                                 {% clean_up_py_imports %}
+import graphene                                                                                                    {% clean_up_py_imports %}
 from graphene_django.types import DjangoObjectType
 
-from {{ __.django_module.module_path }}.models import MyItem                    {% ?? __.django_module %}
-                                                                                {% end_clean_up_py_imports %}
+from {{ __.django_module.module_path }}.models import MyItem                                                       {% ?? __.django_module %}
+from api.types.{{ type_spec.type_name | lower }}_t import {{ type_spec.type_name}}T                                {% !! type_spec in __.type_specs %}
+                                                                                                                   {% end_clean_up_py_imports %}
 
-class MyItemT(DjangoObjectType):                                                {% ?? not __.type_spec.only_api %}
-class MyItemT(graphene.ObjectType):                                             {% ?? __.type_spec.only_api %}
-    class Meta:                                                                 {% if not __.type_spec.only_api %}
+class MyItemT(DjangoObjectType):                                                                                   {% ?? not __.type_spec.only_api %}
+class MyItemT(graphene.ObjectType):                                                                                {% ?? __.type_spec.only_api %}
+    class Meta:                                                                                                    {% if not __.type_spec.only_api %}
         model = MyItem
-        exclude = [                                                             {% if __.excluded_field_specs %}
-          "field_spec_name",                                                      {% !! field_spec in __.excluded_field_specs %}
-        ]                                                                       {% endif %}
-                                                                                {% endif %}
-    field_spec_name = {{ field_spec.graphene_type("") }}                        {% !! field_spec in __.derived_field_specs %}
-                                                                                {% if not __.type_spec.only_api %}
-    def resolve_field_spec_name(self, info):                                    {% for field_spec in __.derived_field_specs %}
-        return [x for x in self.field_spec_name["tags"]]                        {% ?? field_spec.field_type == "tags" %}
-        return None  # Moonleap Todo                                            {% ?? field_spec.field_type != "tags" %}
-                                                                                {% endfor %}{% endif %}
+        exclude = [                                                                                                {% if __.excluded_field_specs %}
+          "field_spec_name",                                                                                       {% !! field_spec in __.excluded_field_specs %}
+        ]                                                                                                          {% endif %}
+                                                                                                                   {% endif %}
+    field_spec_name = {{ field_spec.graphene_type("") }}                                                           {% !! field_spec in __.field_specs %}
+                                                                                                                   {% if not __.type_spec.only_api %}
+    def resolve_field_spec_name(self, info):                                                                       {% for field_spec in __.field_specs %}
+        return [x for x in self.field_spec_name["tags"]]                                                           {% ?? field_spec.field_type == "tags" %}
+        return None  # Moonleap Todo                                                                               {% ?? field_spec.field_type != "tags" %}
+                                                                                                                   {% endfor %}{% endif %}
