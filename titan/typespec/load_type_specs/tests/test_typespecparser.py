@@ -7,7 +7,6 @@ from titan.typespec.load_type_specs.type_spec_parser import TypeSpecParser
 
 class TestTypeSpecParser:
     def test_parse_type_spec(self):
-        __import__("pudb").set_trace()  # zzz
         type_reg = TypeRegistry()
         parser = TypeSpecParser(type_reg)
 

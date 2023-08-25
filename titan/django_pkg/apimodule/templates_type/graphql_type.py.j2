@@ -6,19 +6,21 @@ from graphene_django.types import DjangoObjectType
 from {{ __.django_module.module_path }}.models import MyItem                    {% ?? __.django_module %}
                                                                                 {% end_clean_up_py_imports %}
 
-class MyItemT(DjangoObjectType):
-    class Meta:
+class MyItemT(DjangoObjectType):                                                {% ?? not __.type_spec.only_api %}
+class MyItemT(graphene.ObjectType):                                             {% ?? __.type_spec.only_api %}
+    class Meta:                                                                 {% if not __.type_spec.only_api %}
         model = MyItem
         exclude = [                                                             {% if __.excluded_field_specs %}
           "field_spec_name",                                                      {% !! field_spec in __.excluded_field_specs %}
         ]                                                                       {% endif %}
-
+                                                                                {% endif %}
     field_spec_name = {{ field_spec.graphene_type("") }}                        {% !! field_spec in __.derived_field_specs %}
     field_spec_name = graphene.List(graphene.String)                            {% !! field_spec in __.tag_field_specs %}
 
+                                                                                {% if not __.type_spec.only_api %}
     def resolve_field_spec_name(self, info):                                    {% for field_spec in __.derived_field_specs %}
         return None  # Moonleap Todo
                                                                                 {% endfor %}
     def resolve_field_spec_name(self, info):                                    {% for field_spec in __.tag_field_specs %}
         return [x for x in self.field_spec_name["tags"]]
-                                                                                {% endfor %}
+                                                                                {% endfor %}{% endif %}

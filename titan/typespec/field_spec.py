@@ -13,7 +13,7 @@ class FieldSpec:
     default_value: T.Any = field(default=None, repr=False)
     description: T.Optional[str] = field(default=None, repr=False)
     display: T.Optional[bool] = field(default=None, repr=False)
-    has_api: T.Optional[bool] = field(default=None)
+    has_api: T.Optional[bool] = field(default=True)
     has_model: T.Optional[bool] = field(default=True)
     help: T.Optional[bool] = field(default=None, repr=False)
     index: T.Optional[bool] = field(default=None, repr=False)

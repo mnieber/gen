@@ -33,4 +33,5 @@ def form_type_spec_from_data_type_spec(data_type_spec, form_type_name, skip_keys
             R.map(_convert),
         )(None),
     )
+
     return form_type_spec
