@@ -91,6 +91,16 @@ class TypeSpecParser:
                         field_spec=field_spec, type_spec=fk_type_spec, keys=fk_keys
                     )
 
+                # If there is an api spec then we create a related api-type_spec and
+                # use it to update fk_type_spec.
+                api_spec = value.get("__api__")
+                if api_spec:
+                    api_type_spec = TypeSpec(
+                        type_name=fk_type_spec.type_name + "Api", field_specs=[]
+                    )
+                    self.parse(api_spec, parent_type_spec=api_type_spec)
+                    process_api_spec(fk_type_spec, api_spec, api_type_spec)
+
                 add_type_spec_to_type_reg(
                     self.type_reg,
                     fk_type_spec,
@@ -101,16 +111,6 @@ class TypeSpecParser:
                 if fk.parts:
                     fk_trace["__attrs__"] = ",".join(fk.parts)
                 trace[_trace_key(fk)] = org_value if is_pass else fk_trace
-
-                # If there is an api spec then we create a related api-type_spec and
-                # use it to update fk_type_spec.
-                api_spec = value.get("__api__")
-                if api_spec:
-                    api_type_spec = TypeSpec(
-                        type_name=fk_type_spec.type_name + "Api", field_specs=[]
-                    )
-                    self.parse(api_spec, parent_type_spec=api_type_spec)
-                    process_api_spec(fk_type_spec, api_spec, api_type_spec)
 
                 # If there is an form type spec then we create a related form-type_spec.
                 # If there is an existing form-type_spec then we update it.
