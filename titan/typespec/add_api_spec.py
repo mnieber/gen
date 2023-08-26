@@ -7,7 +7,7 @@ from titan.typespec.type_spec import TypeSpec
 from .load_type_specs.field_spec_from_dict import field_spec_from_dict
 
 
-def get_api_spec(api_reg, endpoint_key, endpoint_spec_dict, known_type_names):
+def add_api_spec(api_reg, endpoint_key, endpoint_spec_dict, known_type_names):
     parts = endpoint_key.split()
     if not parts:
         raise Exception("Invalid endpoint key: " + endpoint_key)

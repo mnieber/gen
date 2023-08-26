@@ -27,7 +27,8 @@ class MutationName(graphene.Mutation):
         return MutationName(
             success=True,
             errors={},
-                                                                                        {% for output_field_spec in __.output_field_specs %}{% with field_type=output_field_spec.field_type %}
+                                                                                        {% for output_field_spec in __.output_field_specs %}
+                                                                                        {% with field_type=output_field_spec.field_type %}
                                                                                         {% if output_field_spec.name not in ("success", "errors") %}
             output_field_name=OutputFieldTarget.objects.filter().first(),               {% ?? field_type == "fk" and output_field_spec.target_type_spec in __.type_specs_to_import %}
             output_field_name=OutputFieldTarget.objects.filter(),                       {% ?? field_type == "relatedSet" and output_field_spec.target_type_spec in __.type_specs_to_import %}
@@ -35,5 +36,6 @@ class MutationName(graphene.Mutation):
             output_field_name=0,                                                        {% ?? field_type == "int" %}
             output_field_name="",                                                       {% ?? field_type not in ("fk", "relatedSet", "json", "int") %}
                                                                                         {% endif %}
-                                                                                        {% endwith %}{% endfor %}
+                                                                                        {% endwith %}
+                                                                                        {% endfor %}
         )

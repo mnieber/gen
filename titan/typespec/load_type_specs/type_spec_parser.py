@@ -2,16 +2,14 @@ import typing as T
 
 from moonleap import is_private_key, l0
 from moonleap.utils.merge_into_config import merge_into_config
-from titan.types_pkg.pkg.form_type_spec_from_data_type_spec import (
-    form_type_spec_from_data_type_spec,
-)
-from titan.typespec.load_type_specs.process_api_spec import process_api_spec
-from titan.typespec.load_type_specs.set_related_name import set_related_name
 from titan.typespec.type_spec import TypeSpec
 
 from .add_field_spec import add_field_spec
 from .field_spec_from_dict import field_spec_from_dict, is_pass
 from .foreign_key import ForeignKey
+from .form_type_spec_from_data_type_spec import form_type_spec_from_data_type_spec
+from .process_api_spec import process_api_spec
+from .set_related_name import set_related_name
 from .update_or_create_type_spec import update_or_create_type_spec
 
 
