@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from '/src/app/components';
-import reportWebVitals from './reportWebVitals';                                      {% ?? _.has_flag("app/reportWebVitals") %}
-import { toJS } from 'mobx';                                                          {% if _.has_flag("app/useStates") %}
+import reportWebVitals from './reportWebVitals';                                      {% ?? _.react_app.has_flag("app/reportWebVitals") %}
+import { toJS } from 'mobx';                                                          {% if _.react_app.has_flag("app/useStates") %}
 import { action } from 'mobx';
 import { setOptions } from 'skandha';                                                 {% endif %}
 import { flags } from '/src/app/flags';
@@ -34,12 +34,12 @@ const body = (
 
 root.render(strict ? <React.StrictMode>{body}</React.StrictMode> : body);
 
-// If you want to start measuring performance in your app, pass a function            {% if _.has_flag("app/reportWebVitals") %}
+// If you want to start measuring performance in your app, pass a function            {% if _.react_app.has_flag("app/reportWebVitals") %}
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();                                                                    {% endif %}
 
-setOptions({                                                                          {% if _.has_flag("app/useStates") %}
+setOptions({                                                                          {% if _.react_app.has_flag("app/useStates") %}
   logging: flags.logSkandha,
   formatObject: toJS,
   decorateCb: action,

@@ -21,7 +21,7 @@ def create_routes_module(term):
 
 @rule("routes:module")
 def created_routes_module(routes_module):
-    get_root_resource().set_flags(["app/useRouter"])
+    routes_module.react_app.set_flags(["app/useRouter"])
 
 
 @create("route")

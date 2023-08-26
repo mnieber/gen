@@ -44,7 +44,7 @@ def module_renders_state(module, state):
 
 @rule("state")
 def created_state(state):
-    get_root_resource().set_flags(["app/useStates"])
+    state.module.react_app.set_flags(["app/useStates"])
 
 
 @extend(ReactModule)
@@ -55,4 +55,5 @@ class ExtendModule:
 @extend(State)
 class ExtendState:
     state_provider = P.parent("state~provider", provides)
+    module = P.parent("react-module", has)
     ts_var = Prop(props.state_ts_var)

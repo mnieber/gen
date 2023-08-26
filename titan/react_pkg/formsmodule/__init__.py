@@ -15,7 +15,7 @@ def create_forms_module(term):
 
 @rule("forms:module")
 def created_forms_module(forms_module):
-    get_root_resource().set_flags(
+    forms_module.react_app.set_flags(
         ["utils/useScheduledCall", "utils/ValuePicker", "utils/slugify"]
     )
 

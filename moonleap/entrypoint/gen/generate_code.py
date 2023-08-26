@@ -1,14 +1,14 @@
-from pathlib import Path
 import os
+from pathlib import Path
 
 from moonleap.blocks.builder.build_blocks import build_blocks
 from moonleap.blocks.parser.expand_markdown import expand_markdown
 from moonleap.blocks.parser.get_blocks import get_blocks
+from moonleap.entrypoint.gen.sync_files import sync_files
 from moonleap.post_process import post_process_output_files
 from moonleap.render.render_mixin import get_root_resource, render_resource
 from moonleap.report.report_resources import report_resources
 from moonleap.session import trace
-from moonleap.entrypoint.gen.sync_files import sync_files
 
 
 def generate_code(session, file_writer, post_process_all_files):
@@ -28,7 +28,7 @@ def generate_code(session, file_writer, post_process_all_files):
             root_resource,
             write_file=file_writer.write_file,
             output_path="",
-            context=dict(has_flag=root_resource.has_flag),
+            context=dict(),
         )
 
         file_writer.write_merged_files()

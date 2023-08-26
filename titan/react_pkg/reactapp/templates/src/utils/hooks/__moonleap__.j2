@@ -1,20 +1,20 @@
 useNextUrl.ts:
-    include: {{ _.has_flag("utils/useNextUrl") }}
+    include: {{ _.react_app.has_flag("utils/useNextUrl") }}
 
 useNextUrl.index.ts:
-    include: {{ _.has_flag("utils/useNextUrl") }}
+    include: {{ _.react_app.has_flag("utils/useNextUrl") }}
     name: index.ts
 
 useScheduledCall.ts:
-    include: {{ _.has_flag("utils/useScheduledCall") }}
+    include: {{ _.react_app.has_flag("utils/useScheduledCall") }}
 
 useScheduledCall.index.ts:
-    include: {{ _.has_flag("utils/useScheduledCall") }}
+    include: {{ _.react_app.has_flag("utils/useScheduledCall") }}
     name: index.ts
 
 useValuePickerState.ts:
-    include: {{ _.has_flag("utils/ValuePicker") }}
+    include: {{ _.react_app.has_flag("utils/ValuePicker") }}
 
 useValuePickerState.index.ts:
-    include: {{ _.has_flag("utils/ValuePicker") }}
+    include: {{ _.react_app.has_flag("utils/ValuePicker") }}
     name: index.ts

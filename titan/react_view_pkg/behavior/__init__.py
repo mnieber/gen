@@ -1,14 +1,5 @@
 import moonleap.packages.extensions.props as P
-from moonleap import (
-    create,
-    create_forward,
-    empty_rule,
-    extend,
-    get_root_resource,
-    kebab_to_camel,
-    named,
-    rule,
-)
+from moonleap import create, create_forward, empty_rule, extend, kebab_to_camel, rule
 from moonleap.blocks.verbs import has
 from titan.types_pkg.item import Item
 
@@ -86,7 +77,7 @@ def created_addition(addition):
 
 @rule("selection")
 def created_selection(selection):
-    get_root_resource().set_flags(["utils/mergeClickHandlers"])
+    selection.state.module.react_app.set_flags(["utils/mergeClickHandlers"])
 
 
 @extend(Item)

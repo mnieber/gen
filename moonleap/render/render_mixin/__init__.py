@@ -5,7 +5,6 @@ from pathlib import Path
 
 from moonleap.render.render_templates import render_templates
 from moonleap.resources.resource import Resource
-from moonleap.utils.fp import extend_uniq
 
 
 def render_resource(res, write_file, output_path, context=None, template_dirs=None):
@@ -83,14 +82,7 @@ class TemplateDirMixin:
 
 @dataclass
 class RootResource(RenderMixin, Resource):
-    flags: T.List[str] = field(default_factory=list, init=False, repr=False)
-
-    def set_flags(self, flags):
-        extend_uniq(self.flags, flags)
-
-    def has_flag(self, pkg_name):
-        return pkg_name in self.flags
-
+    pass
 
 _root_resource = None
 

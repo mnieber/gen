@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from titan.project_pkg.service import Tool
+from moonleap import RenderMixin, Resource
 
 
 @dataclass
-class NodePackage(Tool):
+class NodePackage(RenderMixin, Resource):
     pass
