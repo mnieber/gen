@@ -6,5 +6,5 @@ django-dbbackup                             {% ?? _.service.django_app.db_backup
 django-extensions
 django-rtk-green                            {% ?? _.service.django_app.user_accounts_module %}
 graphene-django                             {% ?? _.service.django_app.api_module %}
-martor                                      {% ?? _.has_flag("django/hasMarkdownFields") %}
+martor                                      {% ?? _.service.django_app.has_markdown_fields %}
                                             {% endif %}

@@ -9,6 +9,7 @@ from titan.project_pkg.service import Tool
 @dataclass
 class DjangoApp(Tool):
     translation_ids: T.List[str] = field(default_factory=list)
+    has_markdown_fields: bool = False
 
     @property
     def secret_key_dev(self):
