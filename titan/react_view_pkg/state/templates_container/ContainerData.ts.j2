@@ -1,5 +1,5 @@
 {% magic_with myContainer = _.container.name %}
-{% magic_with myItem = _.container.item.item_name %}
+{% magic_with myItem = _.container.item_list.item_name %}
 import { input, output } from 'skandha';
 import { MyItemByIdT, MyItemT } from '/src/api/types/MyItemT';
 import { listToItemById } from '/src/utils/ids';

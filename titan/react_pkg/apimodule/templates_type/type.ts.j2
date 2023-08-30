@@ -16,7 +16,7 @@ export type {{ _.type_spec.type_name }}FormT = {                                
   // MOONLEAP TODO
 };                                                                                                  {% endif %}
 
-export const createMyType = (values: ObjT): MyTypeT => {                                            {% if __.item.addition %}
+export const createMyType = (values: ObjT): MyTypeT => {                                            {% if __.item.item_list.addition %}
   // MOONLEAP TODO
   return initRS({
     id: createUUID(),

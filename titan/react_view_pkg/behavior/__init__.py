@@ -1,85 +1,76 @@
-import moonleap.packages.extensions.props as P
-from moonleap import create, create_forward, empty_rule, extend, kebab_to_camel, rule
-from moonleap.blocks.verbs import has
-from titan.types_pkg.item import Item
+from moonleap import create, rule
 
 from .resources import Behavior, DeletionBehavior, EditingBehavior, InsertionBehavior
 
-base_tags = {
-    "addition": ["behavior"],
-    "deletion": ["behavior"],
-    "drag-and-drop": ["behavior"],
-    "editing": ["behavior"],
-    "filtering": ["behavior"],
-    "highlight": ["behavior"],
-    "insertion": ["behavior"],
-    "selection": ["behavior"],
-}
+base_tags = {}
 
-rules = {
-    ("x+item~list", has, "behavior"): empty_rule(),
-    ("item", has, "addition"): empty_rule(),
-}
+rules = {}
 
 
-@create("behavior")
-def create_behavior(term):
-    has_param = term.tag in ("selection", "filtering", "highlight", "insertion")
-    return Behavior(
-        item_name=kebab_to_camel(term.data),
-        name=kebab_to_camel(term.tag),
-        has_param=has_param,
-    )
-
-
-@create("addition")
+@create("addition:bvr")
 def create_addition_behavior(term):
-    item_name = kebab_to_camel(term.data)
     return Behavior(
-        item_name=item_name,
-        name=kebab_to_camel(term.tag),
+        name="addition",
         has_param=True,
     )
 
 
-@create("editing")
-def create_editing_behavior(term):
-    return EditingBehavior(
-        item_name=kebab_to_camel(term.data),
-        name=kebab_to_camel(term.tag),
-        has_param=False,
-    )
-
-
-@create("deletion")
+@create("deletion:bvr")
 def create_deletion_behavior(term):
     return DeletionBehavior(
-        item_name=kebab_to_camel(term.data),
-        name=kebab_to_camel(term.tag),
+        name="deletion",
         has_param=False,
     )
 
 
-@create("insertion")
-def create_insertion_behavior(term):
-    return InsertionBehavior(
-        item_name=kebab_to_camel(term.data),
-        name=kebab_to_camel(term.tag),
+@create("drag-and-drop:bvr")
+def create_drag_and_drop_behavior(term):
+    return Behavior(
+        name="drag-and-drop",
         has_param=True,
     )
 
 
-@rule("addition")
-def created_addition(addition):
-    item_term_str = f"{addition.item_name}:item"
-    return create_forward(item_term_str, has, addition)
+@create("editing:bvr")
+def create_editing_behavior(term):
+    return EditingBehavior(
+        name="editing",
+        has_param=False,
+    )
 
 
-@rule("selection")
+@create("filtering:bvr")
+def create_filtering_behavior(term):
+    return Behavior(
+        name="filtering",
+        has_param=False,
+    )
+
+
+@create("highlight:bvr")
+def create_highlight_behavior(term):
+    return Behavior(
+        name="highlight",
+        has_param=False,
+    )
+
+
+@create("insertion:bvr")
+def create_insertion_behavior(term):
+    return InsertionBehavior(
+        name="insertion",
+        has_param=True,
+    )
+
+
+@create("selection:bvr")
+def create_selection_behavior(term):
+    return Behavior(
+        name="selection",
+        has_param=True,
+    )
+
+
+@rule("selection:bvr")
 def created_selection(selection):
-    selection.state.module.react_app.set_flags(["utils/mergeClickHandlers"])
-
-
-@extend(Item)
-class ExtendItem:
-    addition = P.child(has, "addition")
+    selection.container.state.module.react_app.set_flags(["utils/mergeClickHandlers"])

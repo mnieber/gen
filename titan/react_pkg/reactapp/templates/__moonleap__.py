@@ -34,14 +34,13 @@ def get_helpers(_):
                             self._add_provided_item(named_item)
                         for named_item_list in state_provider.named_item_lists_provided:
                             self._add_provided_item(named_item_list)
-                        for state in state_provider.states:
-                            self._add_state(state)
-                            for container in state.containers:
-                                for named_item in container.named_items:
-                                    self._add_provided_item(named_item)
-                                self._add_provided_item_list(container.named_item_list)
-                                for bvr in container.bvrs:
-                                    self._add_provided_bvr(bvr)
+                        self._add_state(state_provider.state)
+                        for container in state_provider.state.containers:
+                            for named_item in container.named_items:
+                                self._add_provided_item(named_item)
+                            self._add_provided_item_list(container.named_item_list)
+                            for bvr in container.bvrs:
+                                self._add_provided_bvr(bvr)
 
         def _add_state(self, state):
             self.provided_states.append(state)
@@ -64,14 +63,14 @@ def get_helpers(_):
 
         def _add_provided_bvr(self, bvr):
             provided_data = self._provided_data_by_item_name.setdefault(
-                bvr.item_name, ProvidedData()
+                bvr.container.item_name, ProvidedData()
             )
             append_uniq(provided_data.bvrs, bvr)
             append_uniq(self.bvr_names, bvr.name)
 
             if bvr.name == "highlight":
-                provided_data.item = get_type_reg().get_item(bvr.item_name)
-                append_uniq(self.item_names, bvr.item_name)
+                provided_data.item = get_type_reg().get_item(bvr.container.item_name)
+                append_uniq(self.item_names, bvr.container.item_name)
 
         @property
         def provided_data(self):

@@ -1,6 +1,6 @@
 {% magic_with myBvr = bvr.name %}
 {% magic_with myContainer = container.name %}
-{% magic_with myItem = container.item.item_name %}
+{% magic_with myItem = container.item_list.item_name %}
 {% magic_with MyState = _.state.name %}
 import { makeObservable } from 'mobx';
 import { mapDataToProps, pmap } from 'skandha';

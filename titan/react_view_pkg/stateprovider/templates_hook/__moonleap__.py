@@ -3,7 +3,7 @@ from moonleap import append_uniq
 
 def get_helpers(_):
     class Helpers:
-        states = _.state_provider.states
+        state = _.state_provider.state
         mutations = []
 
         def __init__(self):
@@ -12,16 +12,15 @@ def get_helpers(_):
 
         def _get_mutations(self):
             mutations = []
-            for state in self.states:
-                for container in state.containers:
-                    if delete_items_mutation := container.delete_items_mutation:
-                        append_uniq(mutations, delete_items_mutation)
-                    if delete_item_mutation := container.delete_item_mutation:
-                        append_uniq(mutations, delete_item_mutation)
-                    if save_item_mutation := container.save_item_mutation:
-                        append_uniq(mutations, save_item_mutation)
-                    if order_items_mutation := container.order_items_mutation:
-                        append_uniq(mutations, order_items_mutation)
+            for container in self.state.containers:
+                if delete_items_mutation := container.delete_items_mutation:
+                    append_uniq(mutations, delete_items_mutation)
+                if delete_item_mutation := container.delete_item_mutation:
+                    append_uniq(mutations, delete_item_mutation)
+                if save_item_mutation := container.save_item_mutation:
+                    append_uniq(mutations, save_item_mutation)
+                if order_items_mutation := container.order_items_mutation:
+                    append_uniq(mutations, order_items_mutation)
             return mutations
 
         def _type_specs_to_import(self):

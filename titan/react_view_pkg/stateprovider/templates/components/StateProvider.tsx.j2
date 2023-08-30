@@ -1,0 +1,76 @@
+{% magic_with containerItem = container.item_list.item_name %}
+{% magic_with myComponent = _.component.name %}
+{% magic_with MyState = _.component.state.name %}
+import React from 'react';
+import { makeAutoObservable } from 'mobx';
+import { NestedDefaultPropsContext } from 'react-default-props-context';
+import { dps, withDefaultProps } from '/src/app/defaultProps';
+import { cn } from '/src/utils/classnames';
+import { observer } from 'mobx-react-lite';
+import { isLoading, isUpdating } from '/src/api/getState';
+import { MyState } from '/src/{{ __.state.module.module_path }}/MyState';
+import { useMyState } from '/src/{{ __.state.module.module_path }}/hooks/useMyState';
+
+// Import styles
+import './MyComponent.scss';
+
+export type PropsT = {};
+
+const DefaultProps = {};
+
+export const MyComponent = observer(
+  withDefaultProps((props: PropsT & typeof DefaultProps) => {
+    const {
+      myState,
+    } = useMyState({
+    });
+
+    const [cache] = React.useState(() =>
+      makeAutoObservable({
+        get containerItems() {                                                                                  {% for container in __.state_provider.state.containers %}
+          return cloneAndSetState(
+            state.{{ container.name }}Ctr.data.items, {
+              // MOONLEAP TODO:
+            }
+          );
+        },
+        get containerItem() {                                                                                   {% if container.get_bvr("highlight") %}
+          return cloneAndSetState(
+            state.{{ container.name }}Ctr.highlight.item, {
+              // MOONLEAP TODO:
+            }
+          );
+        },                                                                                                      {% endif %}{% endfor %}
+      })
+    );
+
+    const getDefaultPropsContext = () => {
+      const result: any = { defaultProps: {
+        myState: () => myState,
+        myListItems: () => cache.myListItems,                                                                   {% !! named_item_list in __.state_provider.named_item_lists_provided %}
+        myItem: () => cache.myItem,                                                                             {% !! named_item in __.state_provider.named_items_provided %}
+      } };
+
+      result.defaultProps = {                                                                                   {% for container in __.state.containers %}
+        ...result.defaultProps,
+        containerItems: () => cache.containerItems,                                                             {% ?? container.named_item_list %}
+        containerItem: () => cache.containerItem,                                                               {% ?? container.get_bvr("highlight") %}
+        containerItemsAddition: () => myState.myContainer.addition,                                             {% ?? container.get_bvr("addition") %}
+        containerItemsDeletion: () => myState.myContainer.deletion,                                             {% ?? container.get_bvr("deletion") %}
+        containerItemsDragAndDrop: () => myState.myContainer.dragAndDrop,                                       {% ?? container.get_bvr("dragAndDrop") %}
+        containerItemsEditing: () => myState.myContainer.editing,                                               {% ?? container.get_bvr("editing") %}
+        containerItemsFiltering: () => myState.myContainer.filtering,                                           {% ?? container.get_bvr("filtering") %}
+        containerItemsHighlight: () => myState.myContainer.highlight,                                           {% ?? container.get_bvr("highlight") %}
+        containerItemsSelection: () => myState.myContainer.selection,                                           {% ?? container.get_bvr("selection") %}
+      };
+      {{ "" }}                                                                                                  {% endfor %}
+      return result;
+    };
+
+    return (
+      <NestedDefaultPropsContext value={getDefaultPropsContext()}>
+        {props.children}
+      </NestedDefaultPropsContext>
+    );
+  }, DefaultProps)
+);
