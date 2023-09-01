@@ -1,4 +1,4 @@
-{% magic_with containerItem = container.item_list.item_name %}
+{% magic_with containerItem = container.item_name %}
 {% magic_with myComponent = _.component.name %}
 {% magic_with MyState = _.component.state.name %}
 import React from 'react';
@@ -10,9 +10,6 @@ import { observer } from 'mobx-react-lite';
 import { isLoading, isUpdating } from '/src/api/getState';
 import { MyState } from '/src/{{ __.state.module.module_path }}/MyState';
 import { useMyState } from '/src/{{ __.state.module.module_path }}/hooks/useMyState';
-
-// Import styles
-import './MyComponent.scss';
 
 export type PropsT = {};
 
@@ -27,7 +24,7 @@ export const MyComponent = observer(
 
     const [cache] = React.useState(() =>
       makeAutoObservable({
-        get containerItems() {                                                                                  {% for container in __.state_provider.state.containers %}
+        get containerItems() {                                                                                  {% for container in __.state_provider.state.containers %}{% if container.item_list %}
           return cloneAndSetState(
             state.{{ container.name }}Ctr.data.items, {
               // MOONLEAP TODO:
@@ -40,30 +37,30 @@ export const MyComponent = observer(
               // MOONLEAP TODO:
             }
           );
-        },                                                                                                      {% endif %}{% endfor %}
+        },                                                                                                      {% endif %}{% endif %}{% endfor %}
       })
     );
 
     const getDefaultPropsContext = () => {
-      const result: any = { defaultProps: {
-        myState: () => myState,
-        myListItems: () => cache.myListItems,                                                                   {% !! named_item_list in __.state_provider.named_item_lists_provided %}
-        myItem: () => cache.myItem,                                                                             {% !! named_item in __.state_provider.named_items_provided %}
-      } };
+      const result: any = {
+        defaultProps: {
+          myState: () => myState,
+        }
+      };
 
-      result.defaultProps = {                                                                                   {% for container in __.state.containers %}
+      result.defaultProps = {                                                                                   {% for container in __.state.containers %}{% if container.item_list %}
         ...result.defaultProps,
-        containerItems: () => cache.containerItems,                                                             {% ?? container.named_item_list %}
+        containerItems: () => cache.containerItems,                                                             {% ?? container.item_list %}
         containerItem: () => cache.containerItem,                                                               {% ?? container.get_bvr("highlight") %}
         containerItemsAddition: () => myState.myContainer.addition,                                             {% ?? container.get_bvr("addition") %}
         containerItemsDeletion: () => myState.myContainer.deletion,                                             {% ?? container.get_bvr("deletion") %}
         containerItemsDragAndDrop: () => myState.myContainer.dragAndDrop,                                       {% ?? container.get_bvr("dragAndDrop") %}
-        containerItemsEditing: () => myState.myContainer.editing,                                               {% ?? container.get_bvr("editing") %}
+        containerItemsEditing: () => myState.myContainer.editing,                                               {% ?? container.get_bvr("edit") %}
         containerItemsFiltering: () => myState.myContainer.filtering,                                           {% ?? container.get_bvr("filtering") %}
         containerItemsHighlight: () => myState.myContainer.highlight,                                           {% ?? container.get_bvr("highlight") %}
         containerItemsSelection: () => myState.myContainer.selection,                                           {% ?? container.get_bvr("selection") %}
       };
-      {{ "" }}                                                                                                  {% endfor %}
+      {{ "" }}                                                                                                  {% endif %}{% endfor %}
       return result;
     };
 

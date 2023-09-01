@@ -22,6 +22,7 @@ rules = {
     ("state", has, "container"): empty_rule(),
     ("container", has + stores, "item~list"): empty_rule(),
     ("container", has, "bvr"): empty_rule(),
+    ("item~list", has, "bvr"): empty_rule(),
 }
 
 

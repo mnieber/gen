@@ -1,6 +1,6 @@
 {% magic_with myBvr = bvr.name %}
 {% magic_with myContainer = container.name %}
-{% magic_with myItem = container.item_list.item_name %}
+{% magic_with myItem = container.item_name %}
 {% magic_with MyState = _.state.name %}
 import { makeObservable } from 'mobx';
 import { mapDataToProps, pmap } from 'skandha';
@@ -8,92 +8,51 @@ import { addCleanUpFunctionToCtr, cleanUpCtr } from 'react-default-props-context
 import * as Skandha from 'skandha';
 import * as FacetPolicies from 'skandha-facets/policies';
 import { registerCtr } from 'skandha-mobx';
-import { MyItemT } from '/src/api/types/MyItemT';                                                        {% !! container in __.containers %}
+import { MyItemT } from '/src/api/types/MyItemT';                                                       {% for container in __.containers %}{% ?? container.item_list %}{% endfor %}
 import { getIds } from '/src/utils/ids';
 import { ObjT } from '/src/utils/types';
 import * as Facets from 'skandha-facets';
-import { Addition, AdditionCbs } from 'skandha-facets/Addition';                                        {% ?? __.import_bvr("addition") %}
-import { Deletion, DeletionCbs } from 'skandha-facets/Deletion';                                        {% ?? __.import_bvr("deletion") %}
-import { DragAndDrop } from 'skandha-facets/DragAndDrop';                                               {% ?? __.import_bvr("dragAndDrop") %}
-import { Editing, EditingCbs } from 'skandha-facets/Editing';                                           {% ?? __.import_bvr("editing") %}
-import { Filtering, FilteringCbs } from 'skandha-facets/Filtering';                                     {% ?? __.import_bvr("filtering") %}
-import { Highlight, HighlightCbs } from 'skandha-facets/Highlight';                                     {% ?? __.import_bvr("highlight") %}
-import { Insertion } from 'skandha-facets/Insertion';                                                   {% ?? __.import_bvr("insertion") %}
-import { Selection, SelectionCbs, handleSelectItem } from 'skandha-facets/Selection';                   {% ?? __.import_bvr("selection") %}
-import { initMyContainer, MyItemsData } from './myItems';                                               {% !! container in __.containers %}
+import {
+  Addition                                                                                              {% ?? __.import_bvr("addition") %}
+  Deletion,                                                                                             {% ?? __.import_bvr("deletion") %}
+  DragAndDrop,                                                                                          {% ?? __.import_bvr("dragAndDrop") %}
+  Editing,                                                                                              {% ?? __.import_bvr("edit") %}
+  Filtering,                                                                                            {% ?? __.import_bvr("filtering") %}
+  Highlight,                                                                                            {% ?? __.import_bvr ("highlight") %}
+  Hovering,                                                                                             {% ?? __.import_bvr("hovering") %}
+  Insertion,                                                                                            {% ?? __.import_bvr("insertion") %}
+  Selection                                                                                             {% ?? __.import_bvr("selection") %}
+   } from 'skandha-facets';
+import { {{ bvr.name|u0 }} } from './facets/{{ bvr.name|u0 }}';                                         {% !! bvr in __.other_bvrs %}
+import { registerMyContainerCtr } from './registerMyContainerCtr';                                      {% !! container in __.containers %}
 
 export type PropsT = {
   deleteMyItems: (ids: string[]) => Promise<any>;                                                       {% for container in __.containers %}{% ?? container.get_bvr("deletion") %}
-  saveMyItem: (values: ObjT) => Promise<MyItemT>;                                                       {% ?? container.get_bvr("editing") %}
-  saveMyItemOrdering: (myItems: MyItemT[]) => Promise<any>;                                             {% ?? container.get_bvr("dragAndDrop") %}{% endfor %}
+  saveMyItem: (values: ObjT) => Promise<MyItemT>;                                                       {% ?? container.get_bvr("edit") and container.item_list %}
+  saveMyItemOrdering: (myItems: MyItemT[]) => Promise<any>;                                             {% ?? container.get_bvr("dragAndDrop") and container.item_list %}{% endfor %}
 };
 
 export class MyState {
+  props: PropsT;
+
   myContainerCtr = {                                                                                    {% for container in __.containers %}
-    data: new MyContainerData(),
+    store: new Store(),                                                                                 {% ?? container.item_list %}
     myBvr: new MyBvr{% if bvr.has_param %}<MyItemT>{% endif %}(),                                       {% !! bvr in container.bvrs|sort(attribute="name") %}
   }
   {{ "" }}                                                                                              {% endfor %}
 
-  _myContainerMapData(props: PropsT) {                                                                  {% for container in __.containers %}
-    const ctr = this.myContainerCtr;
-
-    const getMyItemById = (x: string | undefined) =>                                                    {% if container.get_bvr("selection") or container.get_bvr("highlight") %}
-      x ? ctr.data.myItemById[x] : undefined;
-    {{ "" }}                                                                                            {% endif %}
-    mapDataToProps(ctr, {                                                                               {% min_lines count=3 %}
-      selection: {                                                                                      {% if container.get_bvr("selection") %}
-          selectableIds:
-            () => getIds(ctr.data.myItems),                                                             {% ?? not (container.get_bvr("filtering") or container.get_bvr("insertion")) %}
-            () => getIds(ctr.data.myItemsDisplay),                                                      {% ?? container.get_bvr("filtering") or container.get_bvr("insertion") %}
-          items:
-            () => ctr.selection.ids.map(getMyItemById as any),
-      },                                                                                                {% endif %}
-      highlight: {                                                                                      {% if container.get_bvr("highlight") %}
-        item: () => getMyItemById(ctr.highlight.id)
-      },                                                                                                {% endif %}
-      filtering: {                                                                                      {% if container.get_bvr("filtering") %}
-        inputItems: () => ctr.data.myItems,
-      },                                                                                                {% endif %}
-      insertion: {                                                                                      {% if container.get_bvr("insertion") %}
-        inputItems:
-          () => ctr.filtering.filteredItems,                                                            {% ?? container.get_bvr("filtering") %}
-          () => ctr.data.myItems,                                                                       {% ?? not container.get_bvr("filtering") %}
-        preview:                                                                                        {% if container.get_bvr("addition") and container.get_bvr("insertion") %}
-          () =>
-            FacetPolicies.insertionPreviewUsesDragSources(
-              [FacetPolicies.DragSourceFromNewItem],
-              this.myItems
-            )(this.myItems.insertion.inputItems)                                                        {% endif %}
-      },                                                                                                {% endif %}
-      display: {
-        items:
-          () => ctr.insertion.preview,                                                                  {% ?? container.get_bvr("insertion") %}
-          () => ctr.filtering.filteredItems,                                                            {% ?? not container.get_bvr("insertion") and container.get_bvr("filtering") %}
-          () => ctr.data.items,                                                                         {% ?? not container.get_bvr("insertion") and not container.get_bvr("filtering") %}
-      },
-    });                                                                                                 {% end_min_lines %}
-  }
-  {{ "" }}                                                                                              {% endfor %}
   getSummary() {
     return {
-      myContainer: Skandha.getCtrState(this.myContainerCtr),                                            {% !! container in __.containers %}
+      myContainerCtr: Skandha.getCtrState(this.myContainerCtr),                                            {% !! container in __.containers %}
     }
   }
 
   destroy() {
-    cleanUpCtr(this);
+    Skandha.cleanUpCtr(this);
   }
 
   constructor(props: PropsT) {
-    registerCtr({                                                                                       {% for container in __.containers %}
-      ctr: this.myContainerCtr,
-      options: { name: 'MyState.MyContainer' },
-      initCtr: () => {
-        initMyContainer(this, props);
-        this._myContainerMapData(props);
-      },
-    });
-    {{ "" }}                                                                                            {% endfor %}
+    this.props = props;
+    registerMyContainerCtr(this);                                                                       {% !! container in __.containers %}
   }
 }

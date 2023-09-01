@@ -1,4 +1,4 @@
-{% magic_with containerItem         = container.item_list.item_name %}
+{% magic_with containerItem         = container.item_name %}
 {% magic_with deleteMyCtrItems      = container.delete_items_mutation.name %}
 {% magic_with deleteMySingleCtrItem = container.delete_item_mutation.name %}
 {% magic_with idsThatAreReordered   = container.order_items_mutation.get_field_name(["uuid[]"]) %}
@@ -42,7 +42,7 @@ export const useMyState = (props: PropsT) => {
             return response;
           });
       },                                                                                                        {% endif %}
-      saveContainerItem: (values: ObjT) => {                                                                    {% if container.editing_bvr  %}
+      saveContainerItem: (values: ObjT) => {                                                                    {% if container.editing_bvr and container.item_list  %}
         return saveMyCtrItem.mutateAsync(                                                                       {% if container.editing_bvr.mutation %}
           values as SaveMyCtrItemArgsT
         ).then(

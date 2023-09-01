@@ -1,4 +1,5 @@
-from moonleap import create, rule
+from moonleap import create, create_forward, rule
+from moonleap.blocks.verbs import has
 
 from .resources import Behavior, DeletionBehavior, EditingBehavior, InsertionBehavior
 
@@ -26,15 +27,15 @@ def create_deletion_behavior(term):
 @create("drag-and-drop:bvr")
 def create_drag_and_drop_behavior(term):
     return Behavior(
-        name="drag-and-drop",
-        has_param=True,
+        name="dragAndDrop",
+        has_param=False,
     )
 
 
 @create("editing:bvr")
 def create_editing_behavior(term):
     return EditingBehavior(
-        name="editing",
+        name="edit",
         has_param=False,
     )
 
@@ -51,6 +52,14 @@ def create_filtering_behavior(term):
 def create_highlight_behavior(term):
     return Behavior(
         name="highlight",
+        has_param=True,
+    )
+
+
+@create("hovering:bvr")
+def create_hovering_behavior(term):
+    return Behavior(
+        name="hovering",
         has_param=False,
     )
 
@@ -71,6 +80,20 @@ def create_selection_behavior(term):
     )
 
 
+@create("bvr")
+def create_behavior(term):
+    return Behavior(
+        name=term.data,
+        has_param=False,
+        is_skandha=False,
+    )
+
+
 @rule("selection:bvr")
 def created_selection(selection):
     selection.container.state.module.react_app.set_flags(["utils/mergeClickHandlers"])
+
+
+@rule("container", has, "drag-and-drop:bvr")
+def container_has_drag_and_drop_behavior(container, bvr):
+    return create_forward(container, has, "hovering:bvr")

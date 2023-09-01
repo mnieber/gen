@@ -9,6 +9,7 @@ from titan.types_pkg.typeregistry import get_type_reg
 class Behavior(Resource):
     name: str
     has_param: bool
+    is_skandha: bool = True
 
     @property
     def mutation(self):
@@ -21,7 +22,10 @@ class EditingBehavior(Behavior):
     def mutation(self):
         for mutation in get_api_reg().get_mutations():
             for item_saved in mutation.items_saved:
-                if self.item_name == item_saved.item_name:
+                if (
+                    self.container.item_list
+                    and self.container.item_name == item_saved.item_name
+                ):
                     return mutation
 
 
@@ -37,7 +41,10 @@ class InsertionBehavior(Behavior):
                     .get_field_spec_by_key(parent_key)
                 )
 
-                if u0(self.item_name) == field_spec.target:
+                if (
+                    self.container.item_list
+                    and u0(self.container.item_name) == field_spec.target
+                ):
                     return mutation
 
 
@@ -47,8 +54,14 @@ class DeletionBehavior(Behavior):
     def mutation(self):
         for mutation in get_api_reg().get_mutations():
             for item_list_deleted in mutation.item_lists_deleted:
-                if self.item_name == item_list_deleted.item.item_name:
+                if (
+                    self.container.item_list
+                    and self.container.item_name == item_list_deleted.item.item_name
+                ):
                     return mutation
             for item_deleted in mutation.items_deleted:
-                if self.item_name == item_deleted.item_name:
+                if (
+                    self.container.item_list
+                    and self.container.item_name == item_deleted.item_name
+                ):
                     return mutation

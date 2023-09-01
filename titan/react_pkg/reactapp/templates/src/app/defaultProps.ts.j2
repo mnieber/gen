@@ -17,7 +17,7 @@ const dpsStates = {                                                             
     },                                                                          {% endfor %}
 }                                                                               {% endif %}
 
-const dps{{ item_name|u0|plural }} = {                                          {% for item_name, data in __.provided_data %}
+const dps{{ item_name|u0|plural }} = {                                          {% for item_name, data in __.provided_data.items() %}
     listItems: {                                                                {% if data.item_list %}
       listItems: stub as ListItemT[],
     },                                                                          {% endif %}
@@ -32,7 +32,7 @@ const dps{{ item_name|u0|plural }} = {                                          
 
 export const defaultProps = {
     ...dpsStates,                                                               {% ?? __.provided_states %}
-    ...dps{{ item_name|u0|plural }},                                            {% !! item_name, data in __.provided_data %}
+    ...dps{{ item_name|u0|plural }},                                            {% !! item_name, data in __.provided_data.items() %}
 };
 
 export const dps = defaultProps;
