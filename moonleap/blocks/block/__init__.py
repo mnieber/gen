@@ -48,7 +48,8 @@ class Block:
     def describes(self, term):
         def stem_term(term):
             pos = term.tag.find("~")
-            return Term(data=term.data, tag=term.tag[:pos] if pos != -1 else term.tag)
+            tag = term.tag[:pos] if pos != -1 else term.tag
+            return Term(parts=(*term.parts[:-1], tag))
 
         if term.name is not None:
             return False
@@ -61,7 +62,7 @@ class Block:
                     return True
 
         for base_tag in _get_base_tags(stemmed_term, self, False):
-            if self.describes(Term(data="", tag=base_tag)):
+            if self.describes(Term(parts=(base_tag,))):
                 return True
 
         return False

@@ -52,7 +52,7 @@ class Scope:
 
                     if (
                         not result_term
-                        or (result_term.data == "x" and term.data != "x")
+                        or result_term.parts.count("x") > term.parts.count("x")
                         or (result_term.tag in term_base_tags)
                     ):
                         result = rule

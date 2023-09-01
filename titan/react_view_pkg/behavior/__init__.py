@@ -1,4 +1,4 @@
-from moonleap import create, create_forward, rule
+from moonleap import create, create_forward, rule, u0
 from moonleap.blocks.verbs import has
 
 from .resources import Behavior, DeletionBehavior, EditingBehavior, InsertionBehavior
@@ -77,6 +77,18 @@ def create_selection_behavior(term):
     return Behavior(
         name="selection",
         has_param=True,
+    )
+
+
+@create("x:store:bvr")
+def create_selection_behavior(term):
+    if term.parts[0].endswith("-"):
+        name = term.parts[0][:-1] + u0(term.parts[1])
+    else:
+        name = term.parts[0]
+    return Behavior(
+        name=name,
+        has_param=False,
     )
 
 

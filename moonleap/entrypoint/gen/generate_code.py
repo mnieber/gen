@@ -6,6 +6,7 @@ from moonleap.blocks.parser.expand_markdown import expand_markdown
 from moonleap.blocks.parser.get_blocks import get_blocks
 from moonleap.entrypoint.gen.sync_files import sync_files
 from moonleap.post_process import post_process_output_files
+from moonleap.post_process.remove_stale_output_files import remove_stale_output_files
 from moonleap.render.render_mixin import get_root_resource, render_resource
 from moonleap.report.report_resources import report_resources
 from moonleap.session import trace
@@ -34,8 +35,6 @@ def generate_code(session, file_writer, post_process_all_files):
         file_writer.write_merged_files()
         for warning in file_writer.warnings:
             trace(warning)
-    finally:
-        file_writer.write_snapshot()
 
         trace("Post processing...")
         post_process_output_files(
@@ -45,6 +44,11 @@ def generate_code(session, file_writer, post_process_all_files):
             session.get_post_process_settings(),
             session.get_bin_settings(),
         )
+    except Exception as e:
+        raise e
+    else:
+        file_writer.write_snapshot()
+        remove_stale_output_files(file_writer.all_output_filenames, session.output_dir)
         sync_files(
             session.output_dir,
             os.path.join(session.output_root_dir, "shadow"),

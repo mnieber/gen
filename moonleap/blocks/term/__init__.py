@@ -7,18 +7,23 @@ from moonleap.utils.case import kebab_to_camel
 
 @dataclass(frozen=True)
 class Term:
-    data: str
-    tag: str
+    parts: T.Tuple[str]
     name: T.Optional[str] = None
     # This field is not used in term comparisons
     is_title: T.Optional[bool] = field(default=False, compare=False)
 
+    @property
+    def data(self):
+        return ":".join(self.parts[:-1])
+
+    @property
+    def tag(self):
+        return self.parts[-1]
+
     def __repr__(self):
         return (
             (self.name + "+" if self.name is not None else "")
-            + self.data
-            + ":"
-            + self.tag
+            + ":".join(self.parts)
             + ("^" if self.is_title else "")
         )
 
@@ -38,16 +43,20 @@ def str_to_term(word, default_to_tag=False) -> T.Optional[Term]:
         name = None
 
     sep_tag = stripped_word.rfind(":")
-    if sep_tag != -1:
-        tag = stripped_word[sep_tag + len(":") :]
-        data = stripped_word[:sep_tag]
-    else:
+    if sep_tag == -1:
         if not default_to_tag:
             return None
-        tag = stripped_word
-        data = "x"
+        parts = ["x", stripped_word]
+    else:
+        parts = []
+        while sep_tag != -1:
+            part = stripped_word[sep_tag + len(":") :]
+            parts.insert(0, part)
+            stripped_word = stripped_word[:sep_tag]
+            sep_tag = stripped_word.rfind(":")
+        parts.insert(0, stripped_word)
 
-    return Term(data, tag, name, is_title)
+    return Term(tuple(parts), name, is_title)
 
 
 def strs_to_terms(strs):
@@ -75,29 +84,32 @@ def _match(lhs, rhs):
 
 
 def match_term_to_pattern(term, pattern_term):
-    return (
-        _match(term.data, pattern_term.data)
-        and _match(term.tag, pattern_term.tag)
-        and _match(term.name, pattern_term.name)
-    )
+    if len(term.parts) != len(pattern_term.parts):
+        return False
+
+    for i in range(len(term.parts)):
+        if not _match(term.parts[i], pattern_term.parts[i]):
+            return False
+
+    return _match(term.name, pattern_term.name)
 
 
 def named_term(term, name=""):
     if term.name:
         raise Exception("Term already has a name")
 
-    return Term(term.data, term.tag, name=name)
+    return Term(term.parts, name=name)
 
 
 def unnamed_term(term):
-    return Term(data=term.data, tag=term.tag, is_title=term.is_title)
+    return Term(parts=term.parts, is_title=term.is_title)
 
 
 def patch_tag(term, tag):
     return (
         term
         if tag is None
-        else Term(data="generic", tag=tag, name=term.name if term else None)
+        else Term(parts=("generic", tag), name=term.name if term else None)
     )
 
 

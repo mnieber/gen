@@ -19,7 +19,7 @@ def create_layer_group(term):
 
 @create("service:layer-group")
 def create_service_layer_group(term):
-    layer_group = create_layer_group(Term("server", "layer-group"))
+    layer_group = create_layer_group(Term(("server", "layer-group")))
     return layer_group
 
 

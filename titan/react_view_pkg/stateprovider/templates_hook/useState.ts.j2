@@ -32,11 +32,12 @@ export const useMyState = (props: PropsT) => {
         return deleteMyCtrItems.mutateAsync(                                                                    {% if container.delete_items_mutation %}
           { idsToBeDeleted: ids } as DeleteMyCtrItemsArgsT
         )
-        return Promise.all(R.map(                                                                               {% else %}
+        return Promise.all(R.map(                                                                               {% elif container.delete_item_mutation %}
           (x: string) => deleteMySingleCtrItem.mutateAsync(
             { idToBeDeleted: x } as DeleteMySingleCtrItemArgsT
           ),
-          ids))                                                                                                 {% endif %}
+          ids))
+        return Promise.resolve("MOONLEAP TODO")                                                                 {% else %}{% endif %}
           .then((response: ObjT) => {
             R.map(setToReady, containerItems);
             return response;
