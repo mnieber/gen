@@ -36,6 +36,9 @@ def update_or_create_type_spec(type_reg, fk, value):
         type_spec.is_entity = True
         value["id"] = "Id,primary_key"
 
+    if "no_api" in parts:
+        type_spec.no_api = True
+
     if "extract_gql_fields" in parts:
         type_spec.extract_gql_fields = True
 

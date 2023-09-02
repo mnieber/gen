@@ -47,7 +47,7 @@ def add_query_render_tasks(django_app, api_module):
         lambda: get_public_type_specs(
             get_api_reg(),
             include_stubs=False,
-            predicate=lambda field_spec: field_spec.has_api,
+            predicate=lambda type_spec: not type_spec.no_api,
         ),
         "types",
         lambda type_spec: dict(type_spec=type_spec),

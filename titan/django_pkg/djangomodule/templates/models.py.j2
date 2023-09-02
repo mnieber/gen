@@ -34,7 +34,7 @@ class MyModel(                                                                  
         super().save(*args, **kwargs)                                                                   {% endif %}
 
     def __str__(self):
-        return f"{u0(tr('{{ model.kebab_name }}'))}: {{{ __.display_field_expr(model) }}}"              {% ?? _.django_app.use_translation %}
-        return "MyModel: " + {{ __.display_field_expr(model) }}                                         {% ?? not _.django_app.use_translation %}
+        return f"{u0(tr('{{ model.kebab_name }}'))}: {self.id}"                                         {% ?? _.django_app.use_translation %}
+        return f"MyModel: {self.id}"                                                                    {% ?? not _.django_app.use_translation %}
 
                                                                                                         {% endfor %}

@@ -74,6 +74,12 @@ def field_spec_ts_default_value(field_spec):
     if field_spec.field_type in ("int", "float"):
         return "0"
 
+    if field_spec.field_type in ("uuid[]",):
+        return "[]"
+
+    if field_spec.field_type in ("uuid",):
+        return "''"
+
     raise Exception(f"Cannot deduce ts default value for {field_spec.field_type}")
 
 

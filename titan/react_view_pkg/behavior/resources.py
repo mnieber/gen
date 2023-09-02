@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from moonleap import Resource, u0
+from moonleap.utils.case import kebab_to_camel
 from titan.api_pkg.apiregistry import get_api_reg
 from titan.types_pkg.typeregistry import get_type_reg
 
@@ -12,12 +13,16 @@ class Behavior(Resource):
     is_skandha: bool = True
 
     @property
+    def facet_name(self):
+        return kebab_to_camel(self.meta.term.parts[-2])
+
+    @property
     def mutation(self):
         return None
 
 
 @dataclass
-class EditingBehavior(Behavior):
+class EditBehavior(Behavior):
     @property
     def mutation(self):
         for mutation in get_api_reg().get_mutations():
@@ -65,3 +70,14 @@ class DeletionBehavior(Behavior):
                     and self.container.item_name == item_deleted.item_name
                 ):
                     return mutation
+
+
+@dataclass
+class StoreBehavior(Behavior):
+    @property
+    def get_items_query(self):
+        for query in get_api_reg().get_queries():
+            for output_field_spec in query.api_spec.get_outputs(["relatedSet"]):
+                if output_field_spec.target == u0(self.container.item_name):
+                    return query
+        return None

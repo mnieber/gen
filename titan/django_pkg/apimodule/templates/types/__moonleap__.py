@@ -7,11 +7,8 @@ def get_helpers(_):
         public_type_specs = get_public_type_specs(
             _.api_reg,
             include_stubs=False,
-            predicate=lambda field_spec: field_spec.has_api,
+            predicate=lambda type_spec: not type_spec.no_api,
         )
-        public_type_specs = [
-            x for x in public_type_specs if x.django_module or x.only_api
-        ]
         form_type_specs = get_form_type_specs(_.api_reg)
 
     return Helpers()

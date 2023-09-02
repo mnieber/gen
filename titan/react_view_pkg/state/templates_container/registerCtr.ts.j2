@@ -1,23 +1,64 @@
 {% magic_with myContainer = _.container.name %}
 {% magic_with myItem = _.container.item_name %}
 {% magic_with MyState = _.state.name %}
+import { getIds } from '/src/utils/ids';
+import { registerCtr } from 'skandha-mobx';
 import { PropsT, MyState } from '/src/{{ _.module.name }}/MyState';
-import { mapDataToProps } from 'skandha';
+import { addCleanUpFunctionToCtr, cleanUpCtr, mapDataToProps } from 'skandha';
 import * as FacetPolicies from 'skandha-facets/policies';
 import { SelectionCbs, handleSelectItem } from 'skandha-facets/Selection';                              {% ?? _.container.get_bvr("selection") %}
 import { AdditionCbs } from 'skandha-facets/Addition';
 import { HighlightCbs } from 'skandha-facets/Highlight';                                                {% ?? _.container.get_bvr("highlight") %}
 import { InsertionCbs } from 'skandha-facets/Insertion';                                                {% ?? _.container.get_bvr("insertion") %}
 import { DeletionCbs } from 'skandha-facets/Deletion';                                                  {% ?? _.container.get_bvr("deletion") %}
-import { EditingCbs } from 'skandha-facets/Editing';                                                    {% ?? _.container.get_bvr("edit") %}
+import { EditCbs } from 'skandha-facets/Edit';                                                          {% ?? _.container.get_bvr("edit") %}
 import { setCallbackMap } from 'aspiration';
 import { MyItemT } from '/src/api/types/MyItemT';                                                       {% ?? _.container.item_list %}
-import {
-  addCleanUpFunctionToCtr,
-  cleanUpCtr,
-} from 'react-default-props-context';
 
-export const setCallbacks = (state: MyState) => {
+const mapData = (state: MyState) => {
+  const ctr = state.myContainerCtr;
+
+  const getMyItemById = (x: string | undefined) =>                                                    {% if _.container.get_bvr("selection") or _.container.get_bvr("highlight") %}
+    x ? ctr.store.itemById[x] : undefined;
+  {{ "" }}                                                                                            {% endif %}
+  mapDataToProps(ctr, {                                                                               {% min_lines count=3 %}
+    store: {                                                                                          {% if _.container.get_bvr("store") %}
+      items: () => state.props.getMyItems(),
+    },                                                                                                {% endif %}
+    selection: {                                                                                      {% if _.container.get_bvr("selection") %}
+        selectableIds:
+          () => getIds(ctr.store.myItems),                                                            {% ?? not (_.container.get_bvr("filtering") or _.container.get_bvr("insertion")) %}
+          () => getIds(ctr.store.myItemsDisplay),                                                     {% ?? _.container.get_bvr("filtering") or _.container.get_bvr("insertion") %}
+        items:
+          () => ctr.selection.ids.map(getMyItemById as any),
+    },                                                                                                {% endif %}
+    highlight: {                                                                                      {% if _.container.get_bvr("highlight") %}
+      item: () => getMyItemById(ctr.highlight.id),
+      highlightableIds: () => getIds(ctr.store.items ?? []),
+    },                                                                                                {% endif %}
+    filtering: {                                                                                      {% if _.container.get_bvr("filtering") %}
+      inputItems: () => ctr.store.myItems,
+    },                                                                                                {% endif %}
+    insertion: {                                                                                      {% if _.container.get_bvr("insertion") %}
+      inputItems:
+        () => ctr.filtering.filteredItems,                                                            {% ?? _.container.get_bvr("filtering") %}
+        () => ctr.store.myItems,                                                                      {% ?? not _.container.get_bvr("filtering") %}
+      preview:                                                                                        {% if _.container.get_bvr("addition") and _.container.get_bvr("insertion") %}
+        () =>
+          FacetPolicies.insertionPreviewUsesDragSources(
+            [FacetPolicies.DragSourceFromNewItem],
+            this.myItems
+          )(this.myItems.insertion.inputItems)                                                        {% endif %}
+    },                                                                                                {% endif %}
+    display: {                                                                                        {% if _.container.get_bvr("display") %}
+      items:
+        () => ctr.insertion.preview,                                                                  {% ?? _.container.get_bvr("insertion") %}
+        () => ctr.filtering.filteredItems,                                                            {% ?? not _.container.get_bvr("insertion") and _.container.get_bvr("filtering") %}
+    },                                                                                                {% endif %}
+  });                                                                                                 {% end_min_lines %}
+}
+
+const setCallbacks = (state: MyState) => {
   const ctr = state.myContainerCtr;
   addCleanUpFunctionToCtr(state, () => cleanUpCtr(ctr));
 
@@ -46,21 +87,21 @@ export const setCallbacks = (state: MyState) => {
     },
   } as DeletionCbs);                                                                                    {% endif %}
 
-  setCallbackMap(ctr.editing, {                                                                         {% if _.container.get_bvr("edit") %}
+  setCallbackMap(ctr.edit, {                                                                            {% if _.container.get_bvr("edit") %}
     save: {
-      saveItem(this: EditingCbs['save']) {
+      saveItem(this: EditCbs['save']) {
         const values = this.values;
         return state.props.saveMyItem(values).then((localMyItem: MyItemT) => {
-          FacetPolicies.newItemsAreConfirmedOnEditingSave(ctr.editing);
+          FacetPolicies.newItemsAreConfirmedOnEditingSave(ctr.edit);
         });
       },
     },
     cancel: {
       exit() {
-        FacetPolicies.newItemsAreCancelledOnEditingCancel(ctr.editing);
+        FacetPolicies.newItemsAreCancelledOnEditingCancel(ctr.edit);
       },
     },
-  } as EditingCbs);                                                                                     {% endif %}
+  } as EditCbs);                                                                                        {% endif %}
 
   setCallbackMap(ctr.highlight, {                                                                       {% if _.container.get_bvr("selection") %}
     highlightItem: {                                                                                    {% if _.container.get_bvr("addition") %}
@@ -91,50 +132,10 @@ export const setCallbacks = (state: MyState) => {
   } as SelectionCbs);                                                                                   {% endif %}
 }
 
-export const mapData = (state: MyState) => {
-  const ctr = state.myContainerCtr;
-
-  const getMyItemById = (x: string | undefined) =>                                                    {% if _.container.get_bvr("selection") or _.container.get_bvr("highlight") %}
-    x ? ctr.data.myItemById[x] : undefined;
-  {{ "" }}                                                                                            {% endif %}
-  mapDataToProps(ctr, {                                                                               {% min_lines count=3 %}
-    selection: {                                                                                      {% if _.container.get_bvr("selection") %}
-        selectableIds:
-          () => getIds(ctr.data.myItems),                                                             {% ?? not (_.container.get_bvr("filtering") or _.container.get_bvr("insertion")) %}
-          () => getIds(ctr.data.myItemsDisplay),                                                      {% ?? _.container.get_bvr("filtering") or _.container.get_bvr("insertion") %}
-        items:
-          () => ctr.selection.ids.map(getMyItemById as any),
-    },                                                                                                {% endif %}
-    highlight: {                                                                                      {% if _.container.get_bvr("highlight") %}
-      item: () => getMyItemById(ctr.highlight.id)
-    },                                                                                                {% endif %}
-    filtering: {                                                                                      {% if _.container.get_bvr("filtering") %}
-      inputItems: () => ctr.data.myItems,
-    },                                                                                                {% endif %}
-    insertion: {                                                                                      {% if _.container.get_bvr("insertion") %}
-      inputItems:
-        () => ctr.filtering.filteredItems,                                                            {% ?? _.container.get_bvr("filtering") %}
-        () => ctr.data.myItems,                                                                       {% ?? not _.container.get_bvr("filtering") %}
-      preview:                                                                                        {% if _.container.get_bvr("addition") and _.container.get_bvr("insertion") %}
-        () =>
-          FacetPolicies.insertionPreviewUsesDragSources(
-            [FacetPolicies.DragSourceFromNewItem],
-            this.myItems
-          )(this.myItems.insertion.inputItems)                                                        {% endif %}
-    },                                                                                                {% endif %}
-    display: {
-      items:
-        () => ctr.insertion.preview,                                                                  {% ?? _.container.get_bvr("insertion") %}
-        () => ctr.filtering.filteredItems,                                                            {% ?? not _.container.get_bvr("insertion") and _.container.get_bvr("filtering") %}
-        () => ctr.data.items,                                                                         {% ?? not _.container.get_bvr("insertion") and not _.container.get_bvr("filtering") %}
-    },
-  });                                                                                                 {% end_min_lines %}
-}
-
 export const registerMyContainerCtr = (state: MyState) => {
   registerCtr({
-    ctr: this.myContainerCtr,
-    options: { name: 'MyState.MyContainerCtr' },
+    ctr: state.myContainerCtr,
+    options: { name: 'MyState.MyContainer' },
     initCtr: () => {
       setCallbacks(state);
       mapData(state);

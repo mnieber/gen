@@ -1,10 +1,10 @@
 {% magic_with myBvr = bvr.name %}
+{% magic_with myFacet = bvr.facet_name %}
 {% magic_with myContainer = container.name %}
 {% magic_with myItem = container.item_name %}
 {% magic_with MyState = _.state.name %}
 import { makeObservable } from 'mobx';
-import { mapDataToProps, pmap } from 'skandha';
-import { addCleanUpFunctionToCtr, cleanUpCtr } from 'react-default-props-context';
+import { addCleanUpFunctionToCtr, cleanUpCtr, mapDataToProps, pmap } from 'skandha';
 import * as Skandha from 'skandha';
 import * as FacetPolicies from 'skandha-facets/policies';
 import { registerCtr } from 'skandha-mobx';
@@ -16,12 +16,13 @@ import {
   Addition                                                                                              {% ?? __.import_bvr("addition") %}
   Deletion,                                                                                             {% ?? __.import_bvr("deletion") %}
   DragAndDrop,                                                                                          {% ?? __.import_bvr("dragAndDrop") %}
-  Editing,                                                                                              {% ?? __.import_bvr("edit") %}
+  Edit,                                                                                                 {% ?? __.import_bvr("edit") %}
   Filtering,                                                                                            {% ?? __.import_bvr("filtering") %}
   Highlight,                                                                                            {% ?? __.import_bvr ("highlight") %}
   Hovering,                                                                                             {% ?? __.import_bvr("hovering") %}
   Insertion,                                                                                            {% ?? __.import_bvr("insertion") %}
   Selection                                                                                             {% ?? __.import_bvr("selection") %}
+  Store                                                                                                 {% ?? __.import_bvr("store") %}
    } from 'skandha-facets';
 import { {{ bvr.name|u0 }} } from './facets/{{ bvr.name|u0 }}';                                         {% !! bvr in __.other_bvrs %}
 import { registerMyContainerCtr } from './registerMyContainerCtr';                                      {% !! container in __.containers %}
@@ -36,14 +37,13 @@ export class MyState {
   props: PropsT;
 
   myContainerCtr = {                                                                                    {% for container in __.containers %}
-    store: new Store(),                                                                                 {% ?? container.item_list %}
-    myBvr: new MyBvr{% if bvr.has_param %}<MyItemT>{% endif %}(),                                       {% !! bvr in container.bvrs|sort(attribute="name") %}
+    myFacet: new MyBvr{% if bvr.has_param %}<MyItemT>{% endif %}(),                                     {% !! bvr in container.bvrs|sort(attribute="name") %}
   }
   {{ "" }}                                                                                              {% endfor %}
 
   getSummary() {
     return {
-      myContainerCtr: Skandha.getCtrState(this.myContainerCtr),                                            {% !! container in __.containers %}
+      myContainer: Skandha.getCtrState(this.myContainerCtr),                                            {% !! container in __.containers %}
     }
   }
 

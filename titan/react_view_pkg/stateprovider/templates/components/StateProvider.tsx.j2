@@ -1,41 +1,58 @@
 {% magic_with containerItem = container.item_name %}
 {% magic_with myComponent = _.component.name %}
+{% magic_with myContainer = container.name %}
 {% magic_with MyState = _.component.state.name %}
 import React from 'react';
 import { makeAutoObservable } from 'mobx';
-import { NestedDefaultPropsContext } from 'react-default-props-context';
+import { updateSources } from '/src/resourceStates';
+import { DefaultPropsProvider } from 'react-default-props-context';
 import { dps, withDefaultProps } from '/src/app/defaultProps';
 import { cn } from '/src/utils/classnames';
+import { useBuilder } from '/src/utils/hooks/useBuilder';
 import { observer } from 'mobx-react-lite';
 import { isLoading, isUpdating } from '/src/api/getState';
+import { shareRS } from '/src/resourceStates/ResourceState';
 import { MyState } from '/src/{{ __.state.module.module_path }}/MyState';
 import { useMyState } from '/src/{{ __.state.module.module_path }}/hooks/useMyState';
 
-export type PropsT = {};
+export type PropsT = React.PropsWithChildren<{}>;
 
 const DefaultProps = {};
 
 export const MyComponent = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
-    const {
-      myState,
-    } = useMyState({
+    const { myState: state, } = useMyState({});
+
+    // The display pagination adapts the default pagination                                                     {% for container in __.state_provider.state.containers %}{% if container.get_bvr("pagination") %}
+    const myContainerDisplayPagination = useBuilder(() => {
+      return new PaginationAdapter(state.myContainerCtr.pagination, 5);
     });
 
-    const [cache] = React.useState(() =>
+                                                                                                                {% endif %}{% endfor %}
+    const cache = useBuilder(() =>
       makeAutoObservable({
         get containerItems() {                                                                                  {% for container in __.state_provider.state.containers %}{% if container.item_list %}
-          return cloneAndSetState(
-            state.{{ container.name }}Ctr.data.items, {
-              // MOONLEAP TODO:
-            }
+          return updateSources(
+            { resource: state.{{ container.name }}Ctr.display.items },                                          {% ?? container.get_bvr("display") %}
+            { resource: state.{{ container.name }}Ctr.store.items },                                            {% ?? not container.get_bvr("display") %}
+            [ 'loading', () => "MOONLEAP TODO" ],
+            [ 'updating', () => "MOONLEAP TODO" ],
           );
         },
+        get containerItemsPage() {                                                                              {% if container.get_bvr("pagination") %}
+          const items = getDisplayPage(
+            state.myContainerCtr.pagination,
+            myContainerDisplayPagination,
+            cache.containerItems
+          );
+          shareRS(cache.containerItems, items);
+          return items;
+        },                                                                                                      {% endif %}
         get containerItem() {                                                                                   {% if container.get_bvr("highlight") %}
-          return cloneAndSetState(
-            state.{{ container.name }}Ctr.highlight.item, {
-              // MOONLEAP TODO:
-            }
+          return updateSources(
+            { resource: state.{{ container.name }}Ctr.highlight.item },
+            [ 'loading', () => "MOONLEAP TODO" ],
+            [ 'updating', () => "MOONLEAP TODO" ],
           );
         },                                                                                                      {% endif %}{% endif %}{% endfor %}
       })
@@ -44,30 +61,32 @@ export const MyComponent = observer(
     const getDefaultPropsContext = () => {
       const result: any = {
         defaultProps: {
-          myState: () => myState,
+          myState: () => state,
         }
       };
 
       result.defaultProps = {                                                                                   {% for container in __.state.containers %}{% if container.item_list %}
         ...result.defaultProps,
         containerItems: () => cache.containerItems,                                                             {% ?? container.item_list %}
+        containerItemsPage: () => cache.containerItemsPage,                                                     {% ?? container.get_bvr("pagination") %}
         containerItem: () => cache.containerItem,                                                               {% ?? container.get_bvr("highlight") %}
-        containerItemsAddition: () => myState.myContainer.addition,                                             {% ?? container.get_bvr("addition") %}
-        containerItemsDeletion: () => myState.myContainer.deletion,                                             {% ?? container.get_bvr("deletion") %}
-        containerItemsDragAndDrop: () => myState.myContainer.dragAndDrop,                                       {% ?? container.get_bvr("dragAndDrop") %}
-        containerItemsEditing: () => myState.myContainer.editing,                                               {% ?? container.get_bvr("edit") %}
-        containerItemsFiltering: () => myState.myContainer.filtering,                                           {% ?? container.get_bvr("filtering") %}
-        containerItemsHighlight: () => myState.myContainer.highlight,                                           {% ?? container.get_bvr("highlight") %}
-        containerItemsSelection: () => myState.myContainer.selection,                                           {% ?? container.get_bvr("selection") %}
+        containerItemsAddition: () => state.myContainerCtr.addition,                                            {% ?? container.get_bvr("addition") %}
+        containerItemsDeletion: () => state.myContainerCtr.deletion,                                            {% ?? container.get_bvr("deletion") %}
+        containerItemsDragAndDrop: () => state.myContainerCtr.dragAndDrop,                                      {% ?? container.get_bvr("dragAndDrop") %}
+        containerItemsEdit: () => state.myContainerCtr.edit,                                                    {% ?? container.get_bvr("edit") %}
+        containerItemsFiltering: () => state.myContainerCtr.filtering,                                          {% ?? container.get_bvr("filtering") %}
+        containerItemsHighlight: () => state.myContainerCtr.highlight,                                          {% ?? container.get_bvr("highlight") %}
+        containerItemsPagination: () => myContainerDisplayPagination,                                           {% ?? container.get_bvr("pagination") %}
+        containerItemsSelection: () => state.myContainerCtr.selection,                                          {% ?? container.get_bvr("selection") %}
       };
       {{ "" }}                                                                                                  {% endif %}{% endfor %}
       return result;
     };
 
     return (
-      <NestedDefaultPropsContext value={getDefaultPropsContext()}>
+      <DefaultPropsProvider extend value={getDefaultPropsContext()}>
         {props.children}
-      </NestedDefaultPropsContext>
+      </DefaultPropsProvider>
     );
   }, DefaultProps)
 );

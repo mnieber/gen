@@ -1,9 +1,6 @@
 cookies.ts:
     include: {{ _.service.cypress|bool }}
 
-mergeClickHandlers.ts:
-    include: {{ _.react_app.has_flag("utils/mergeClickHandlers") }}
-
 slugify.ts:
     include: {{ _.react_app.has_flag("utils/slugify") }}
 

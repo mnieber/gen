@@ -1,4 +1,3 @@
-from moonleap.utils.case import sn
 from moonleap.utils.fp import append_uniq
 from moonleap.utils.inflect import plural
 from titan.django_pkg.djangomodel.sort_django_models import sort_django_models
@@ -46,11 +45,5 @@ def get_helpers(_):
                     if type_spec.django_module is not _.module:
                         append_uniq(result, type_spec)
             return result
-
-        def display_field_expr(self, django_model):
-            if django_model.type_spec.display_field:
-                display_field_name = sn(django_model.type_spec.display_field.name)
-                return f"str(self.{display_field_name})"
-            return "str(self.id)"
 
     return Helpers()

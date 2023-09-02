@@ -89,12 +89,6 @@ def get_scalar_field_spec(key, field_spec_value):
             raise Exception(f"Bad field type: {field_spec_value}")
 
     #
-    # display
-    #
-    if "display" in parts:
-        field_attrs["display"] = True
-
-    #
     # readonly
     #
     if "readonly" in parts:

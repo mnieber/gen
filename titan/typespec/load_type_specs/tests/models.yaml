@@ -1,6 +1,6 @@
 userProfiles.userProfile[@]:
   userId: Id
-  username: String,90,display
+  username: String,90
 
 playlists.playlist[@>]:
   'description?': Markdown

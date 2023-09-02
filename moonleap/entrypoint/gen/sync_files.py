@@ -17,6 +17,7 @@ from moonleap.session import get_session
 #    If there are no new files, then disabled "New" in Meld.
 #    Copy changes (which hopefully fix the mistakes) from stage to shadow. Verify in the diff between expected and shadow.
 
+
 def sync_files(output_dir, shadow_dir, stage_dir):
     session = get_session()
 
@@ -77,4 +78,4 @@ def sync_files(output_dir, shadow_dir, stage_dir):
             rel_file = stage_file_path[len(stage_dir) + 1 :]
             shadow_file_path = os.path.join(shadow_dir, rel_file)
             if not os.path.exists(shadow_file_path):
-                session.report(f"New file: {rel_file}")
+                session.report(f"New file: {stage_file_path}")

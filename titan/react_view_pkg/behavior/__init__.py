@@ -1,7 +1,13 @@
-from moonleap import create, create_forward, rule, u0
-from moonleap.blocks.verbs import has
+from moonleap import Priorities, create, create_forward, rule, u0
+from moonleap.blocks.verbs import has, stores
 
-from .resources import Behavior, DeletionBehavior, EditingBehavior, InsertionBehavior
+from .resources import (
+    Behavior,
+    DeletionBehavior,
+    EditBehavior,
+    InsertionBehavior,
+    StoreBehavior,
+)
 
 base_tags = {}
 
@@ -32,9 +38,9 @@ def create_drag_and_drop_behavior(term):
     )
 
 
-@create("editing:bvr")
-def create_editing_behavior(term):
-    return EditingBehavior(
+@create("edit:bvr")
+def create_edit_behavior(term):
+    return EditBehavior(
         name="edit",
         has_param=False,
     )
@@ -80,15 +86,24 @@ def create_selection_behavior(term):
     )
 
 
+@create("store:bvr")
+def create_default_store_behavior(term):
+    return StoreBehavior(
+        name="store",
+        has_param=True,
+    )
+
+
 @create("x:store:bvr")
-def create_selection_behavior(term):
+def create_custom_store_behavior(term):
     if term.parts[0].endswith("-"):
         name = term.parts[0][:-1] + u0(term.parts[1])
     else:
         name = term.parts[0]
-    return Behavior(
+    return StoreBehavior(
         name=name,
         has_param=False,
+        is_skandha=False,
     )
 
 
@@ -101,11 +116,27 @@ def create_behavior(term):
     )
 
 
+@rule("container", has + stores, "item~list", priority=Priorities.LOW.value)
+def container_has_item_list(container, item_list):
+    if not [bvr for bvr in container.bvrs if bvr.facet_name == "store"]:
+        return create_forward(container, has, "store:bvr")
+
+
 @rule("selection:bvr")
 def created_selection(selection):
-    selection.container.state.module.react_app.set_flags(["utils/mergeClickHandlers"])
+    selection.container.state.module.react_app.set_flags(["app/useMergeHandlers"])
 
 
 @rule("container", has, "drag-and-drop:bvr")
 def container_has_drag_and_drop_behavior(container, bvr):
     return create_forward(container, has, "hovering:bvr")
+
+
+@rule("container", has, "insertion:bvr")
+def container_has_insertion(container, bvr):
+    return create_forward(container, has, "display:bvr")
+
+
+@rule("container", has, "filtering:bvr")
+def container_has_filtering(container, bvr):
+    return create_forward(container, has, "display:bvr")

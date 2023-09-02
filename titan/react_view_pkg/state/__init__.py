@@ -35,6 +35,15 @@ def module_renders_state(module, state):
             [Path(__file__).parent / "templates_container"],
         )
 
+        for bvr in container.bvrs:
+            if not bvr.is_skandha:
+                state.renders(
+                    [bvr],
+                    ".",
+                    lambda state, bvr=bvr: dict(bvr=bvr),
+                    [Path(__file__).parent / "templates_bvr"],
+                )
+
 
 @rule("state")
 def created_state(state):

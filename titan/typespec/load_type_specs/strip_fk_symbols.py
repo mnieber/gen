@@ -23,8 +23,8 @@ def strip_fk_symbols(key):
     if is_entity or "entity" in words:
         parts.append("entity")
 
-    symbols, is_owner = pop(symbols, "$")
-    if is_owner or "owner" in words:
-        parts.append("is_owner")
+    symbols, no_api = pop(symbols, "|")
+    if no_api or "no_api" in words:
+        parts.append("no_api")
 
     return key, parts

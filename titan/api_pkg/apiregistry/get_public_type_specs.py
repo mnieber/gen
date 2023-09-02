@@ -31,6 +31,6 @@ def _add_target_type_specs(q, field_specs, predicate=None):
         [
             field_spec.target_type_spec
             for field_spec in field_specs
-            if (not predicate or predicate(field_spec))
+            if (not predicate or predicate(field_spec.target_type_spec))
         ]
     )

@@ -26,7 +26,7 @@ MENU:                                                                 {% if _.se
     - dodo frontend.tsc --watch {{ name }}                            {% !! name, dir in _.service.npm_source_maps.items() %}{% endif %}
 
 
-NODE:                                                                 {% if _.service|dot("node_package") %}
+NODE:                                                                 {% if _.service|dot("node") %}
   node_modules_dir: ${/SERVER/src_dir}/node_modules                   {% endif %}
 
 

@@ -13,6 +13,7 @@ base_tags = {
     "fish": ["tool"],
     "isort": ["tool"],
     "opt-dir": ["tool"],
+    "node": ["tool"],
     "pip-compile": ["tool"],
     "prettier": ["tool"],
     "pudb": ["tool"],
@@ -67,6 +68,7 @@ class ExtendService:
     cypress = P.child(runs + uses, "cypress")
     fish = P.child(runs + uses, "fish")
     isort = P.child(runs + uses, "isort")
+    node = P.child(runs + uses, "node")
     opt_dir = P.child(runs + uses, "opt-dir")
     pip_compile = P.child(runs + uses, "pip-compile")
     prettier = P.child(runs + uses, "prettier")

@@ -83,7 +83,7 @@ def add_api_render_tasks(react_app, api_module):
         lambda: get_public_type_specs(
             get_api_reg(),
             include_stubs=True,
-            predicate=lambda field_spec: field_spec.has_model,
+            predicate=lambda type_spec: not type_spec.no_api,
         ),
         "types",
         lambda type_spec: dict(

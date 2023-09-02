@@ -34,11 +34,11 @@ data-type is defined.
 server:
   todolists.todolist:
     '__attrs__': entity.sorted
-    'name': String.255.display
+    'name': String.255
 
     todos.todoSet=[@>]:
       'isCompleted': Boolean = False
-      'name': String.255.display
+      'name': String.255
 ```
 
 ### :type-spec are loaded from models.yaml
@@ -72,11 +72,11 @@ The `name` key belongs to what is called a :scalar-field. The `todos.todoSet=[@>
 server:
   todolists.todolist:
     '__attrs__': entity.sorted
-    'name': String.255.display
+    'name': String.255
 
     todos.todoSet=[@>]:
       'isCompleted': Boolean = False
-      'name': String.255.display
+      'name': String.255
 ```
 
 ### Every :relational-field has a dict value (or "pass")
@@ -105,7 +105,7 @@ For technical reasons (that have to do with relational databases), when we decla
 
 ## Every :scalar-field has a string value.
 
-If the value for a key is not a yaml dict (or "pass"), then it's part of a scalar field. In our example, the `todolist` type has `name` as a scalar field. The value for a scalar field starts with the (scalar) type-name, followed by some attributes. In our case, the attributes are `255` (which means that the maximum string length is 255) and `display` (which means that this field is used to display the type in - for example - a list-view).
+If the value for a key is not a yaml dict (or "pass"), then it's part of a scalar field. In our example, the `todolist` type has `name` as a scalar field. The value for a scalar field starts with the (scalar) type-name, followed by some attributes. In our case, the attributes are `255` (which means that the maximum string length is 255).
 
 ## Form types
 
@@ -123,7 +123,7 @@ If `TypeSpec.is_form` is true, the then `TypeSpec` describes the fields that are
 server:
   todolists.todolist:
     '__attrs__': entity.sorted
-    'name|': String.255.display
+    'name|': String.255
     'description^': String
 
 client:
