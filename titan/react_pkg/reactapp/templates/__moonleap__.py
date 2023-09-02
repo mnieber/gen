@@ -1,10 +1,12 @@
-from moonleap import append_uniq
+from moonleap import append_uniq, u0
+from moonleap.utils.inflect import plural
 
 
 def get_helpers(_):
     class Helpers:
         provided_states = list()
-        bvr_names = list()
+        bvrs = list()
+        skandha_bvrs = list()
         item_names = list()
         provided_data = dict()
 
@@ -28,10 +30,24 @@ def get_helpers(_):
                         data["item"] = container.item_list.item
                     data["bvrs"] = data.setdefault("bvrs", [])
                     for bvr in container.bvrs:
-                        if not [x for x in data["bvrs"] if x.name == bvr.name]:
-                            data["bvrs"].append(bvr)
+                        if _is_exposed_bvr(bvr):
+                            if not [x for x in data["bvrs"] if x.name == bvr.name]:
+                                data["bvrs"].append(bvr)
 
                 for bvr in container.bvrs:
-                    append_uniq(self.bvr_names, bvr.name)
+                    if _is_exposed_bvr(bvr):
+                        append_uniq(self.bvrs, bvr)
+                        if bvr.is_skandha:
+                            append_uniq(self.skandha_bvrs, bvr)
+
+        def section_names(self):
+            result = ["dpsStates"]
+            for key in self.provided_data.keys():
+                result.append(f"dps{ u0(plural(key)) }")
+            return sorted(result)
 
     return Helpers()
+
+
+def _is_exposed_bvr(bvr):
+    return bvr.facet_name not in ("store", "display")

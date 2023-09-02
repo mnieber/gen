@@ -1,61 +1,85 @@
 {% magic_with containerItem         = container.item_name %}
+{% magic_with myContainer           = container.name %}
 {% magic_with deleteMyCtrItems      = container.delete_items_mutation.name %}
 {% magic_with deleteMySingleCtrItem = container.delete_item_mutation.name %}
-{% magic_with idsThatAreReordered   = container.order_items_mutation.get_field_name(["uuid[]"]) %}
-{% magic_with idsToBeDeleted        = container.delete_items_mutation.get_field_name(["uuid[]"]) %}
-{% magic_with idToBeDeleted         = container.delete_item_mutation.get_field_name(["uuid", "string"]) %}
 {% magic_with myMutation            = mutation.name %}
+{% magic_with myQuery               = query.name %}
 {% magic_with MyState               = _.state.name %}
 {% magic_with MyType                = type_spec.type_name %}
 {% magic_with orderMyCtrItems       = container.order_items_mutation.name %}
 {% magic_with saveMyCtrItem         = container.save_item_mutation.name %}
 import * as R from 'ramda';
 import React from 'react';
-import { setToUpdating, setToReady } from '/src/api/ResourceState';
 import { MyState } from '/src/{{ _.state.module.module_path }}/MyState';
 import { useMyMutation, type MyMutationArgsT } from '/src/{{ mutation.api_spec.module_name }}/endpoints';        {% !! mutation in __.mutations %}
 import { useMutationData } from '/src/api/hooks';
-import { lookUp, getIds } from '/src/utils/ids';
+import { lookUp } from '/src/utils/ids';
 import { ObjT } from '/src/utils/types';
 import { MyTypeT } from '/src/api/types/MyTypeT';                                                                {% !! type_spec in __.type_specs_to_import %}
 
 export type PropsT = {};
 
 export const useMyState = (props: PropsT) => {
-  const myMutation = useMutationData(useMyMutation());                                                          {% !! mutation in __.mutations|sort(attribute="name") %}
+  // Mutations                                                                                                  {% if __.mutations %}
+  const myMutation = useMyMutation();                                                                           {% !! mutation in __.mutations|sort(attribute="name") %}
+                                                                                                                {% endif %}
+  // Queries                                                                                                    {% ?? __.queries %}
+  const myQuery = useObservableQuery(                                                                           {% for query in __.queries|sort(attribute="name") %}
+    useMyQuery({
+      {{ fieldSpec.name }}: {{ fieldSpec.ts_default_value }},                                                   {% !! fieldSpec in query.api_spec.get_inputs() %}
+    })
+  );
+                                                                                                                {% endfor %}
 
-  const [myState] = React.useState(() => {
+  const myState = useBuilder<MyState>(() => {
     return new MyState({
-      deleteContainerItems: (ids: string[]) => {                                                                {% for container in _.state.containers %}{% if container.deletion_bvr %}
-        const containerItems = lookUp(ids, myState.containerItems.data.containerItemById);
-        R.map(setToUpdating, containerItems);
+                                                                                                                {% for container in _.state.containers %}
+      getContainerItems: () => {                                                                                {% if container.store_bvr %}
+        return graftResourceStatesFromMemo({
+          resources: [] /* MOONLEAP TODO */,
+        });
+      },                                                                                                        {% endif %}
+      //                                                                                                        {% if container.get_bvr("pagination") %}
+      getActionsPagination: () => {
+        return null; /* MOONLEAP TODO */
+      },                                                                                                        {% endif %}
+      deleteContainerItems: (ids: string[]) => {                                                                {% if container.deletion_bvr %}
+        const containerItems = lookUp(
+          ids,
+          myState.myContainerCtr.display.itemById                                                               {% ?? container.display_bvr %}
+          myState.myContainerCtr.store.itemById                                                                 {% ?? not container.display_bvr %}
+        );
         return deleteMyCtrItems.mutateAsync(                                                                    {% if container.delete_items_mutation %}
-          { idsToBeDeleted: ids } as DeleteMyCtrItemsArgsT
+          {
+            {{ fieldSpec.name }}: {{ fieldSpec.ts_default_value }},                                             {% !! fieldSpec in container.delete_items_mutation.api_spec.get_inputs() %}
+          } as DeleteMyCtrItemsArgsT
         )
         return Promise.all(R.map(                                                                               {% elif container.delete_item_mutation %}
           (x: string) => deleteMySingleCtrItem.mutateAsync(
-            { idToBeDeleted: x } as DeleteMySingleCtrItemArgsT
+            {
+              {{ fieldSpec.name }}: {{ fieldSpec.ts_default_value }},                                           {% !! fieldSpec in container.delete_item_mutation.api_spec.get_inputs() %}
+            } as DeleteMySingleCtrItemArgsT
           ),
           ids))
         return Promise.resolve("MOONLEAP TODO")                                                                 {% else %}{% endif %}
           .then((response: ObjT) => {
-            R.map(setToReady, containerItems);
             return response;
           });
       },                                                                                                        {% endif %}
-      saveContainerItem: (values: ObjT) => {                                                                    {% if container.editing_bvr and container.item_list  %}
-        return saveMyCtrItem.mutateAsync(                                                                       {% if container.editing_bvr.mutation %}
+      saveContainerItem: (values: ObjT) => {                                                                    {% if container.edit_bvr and container.item_list  %}
+        return saveMyCtrItem.mutateAsync(                                                                       {% if container.edit_bvr.mutation %}
           values as SaveMyCtrItemArgsT
         ).then(
           () => { return values.containerItemForm }
         );                                                                                                      {% endif %}
       },                                                                                                        {% endif %}
       saveContainerItemOrdering: (containerItems: ContainerItemT[]) => {                                        {% if container.drag_and_drop_bvr %}
+        // Moonleap Todo
         return orderMyCtrItems.mutateAsync({
-          // Moonleap Todo
-          idsThatAreReordered: getIds(containerItems),
+          {{ fieldSpec.name }}: {{ fieldSpec.ts_default_value }},                                               {% !! fieldSpec in container.order_items_mutation.api_spec.get_inputs() %}
         } as OrderMyCtrItemsArgsT );
-      }                                                                                                         {% endif %}{% endfor %}
+      }                                                                                                         {% endif %}
+                                                                                                                {% endfor %}
     });
   });
 

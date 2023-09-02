@@ -94,13 +94,26 @@ def create_default_store_behavior(term):
     )
 
 
-@create("x:store:bvr")
-def create_custom_store_behavior(term):
+@create("x:x:bvr")
+def create_custom_behavior(term):
+    facet_name = term.parts[1]
     if term.parts[0].endswith("-"):
-        name = term.parts[0][:-1] + u0(term.parts[1])
+        name = term.parts[0][:-1] + u0(facet_name)
     else:
         name = term.parts[0]
-    return StoreBehavior(
+
+    klass = (
+        StoreBehavior
+        if facet_name == "store"
+        else DeletionBehavior
+        if facet_name == "deletion"
+        else EditBehavior
+        if facet_name == "edit"
+        else InsertionBehavior
+        if facet_name == "insertion"
+        else Behavior
+    )
+    return klass(
         name=name,
         has_param=False,
         is_skandha=False,

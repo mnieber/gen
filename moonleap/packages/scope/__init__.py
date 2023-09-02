@@ -41,6 +41,13 @@ class Scope:
         result_term = None
         result_term_base_tags = []
 
+        def _specificity_scores(term):
+            # Lower scores are more specific.
+            # E.g. (1, 2) means that term has one part more (or less) than subj_term,
+            # and 2 x's are used to match term to subj_term.
+            delta = len(term.parts) - len(subj_term.parts)
+            return (abs(delta), term.parts.count("x"))
+
         for subj_base_tag in [None, *(subj_base_tags or [])]:
             patched_subj_term = patch_tag(subj_term, subj_base_tag)
             for term, rule in self.create_rule_by_term.items():
@@ -52,7 +59,7 @@ class Scope:
 
                     if (
                         not result_term
-                        or result_term.parts.count("x") > term.parts.count("x")
+                        or _specificity_scores(term) < _specificity_scores(result_term)
                         or (result_term.tag in term_base_tags)
                     ):
                         result = rule
