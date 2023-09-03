@@ -1,36 +1,20 @@
 {% magic_with containerItem         = container.item_name %}
 {% magic_with myContainer           = container.name %}
-{% magic_with deleteMyCtrItems      = container.delete_items_mutation.name %}
-{% magic_with deleteMySingleCtrItem = container.delete_item_mutation.name %}
 {% magic_with myMutation            = mutation.name %}
 {% magic_with myQuery               = query.name %}
 {% magic_with MyState               = _.state.name %}
-{% magic_with MyType                = type_spec.type_name %}
-{% magic_with orderMyCtrItems       = container.order_items_mutation.name %}
-{% magic_with saveMyCtrItem         = container.save_item_mutation.name %}
 import * as R from 'ramda';
 import React from 'react';
 import { MyState } from '/src/{{ _.state.module.module_path }}/MyState';
-import { useMyMutation, type MyMutationArgsT } from '/src/{{ mutation.api_spec.module_name }}/endpoints';        {% !! mutation in __.mutations %}
-import { useMutationData } from '/src/api/hooks';
+import { trackPromise } from '/src/resourceStates/trackPromise';
+import { useBuilder } from '/src/utils/hooks/useBuilder';
+import { useGraftResourceStatesFromMemo } from '/src/utils/hooks/useGraftResourceStatesFromMemo';
 import { lookUp } from '/src/utils/ids';
 import { ObjT } from '/src/utils/types';
-import { MyTypeT } from '/src/api/types/MyTypeT';                                                                {% !! type_spec in __.type_specs_to_import %}
 
 export type PropsT = {};
 
 export const useMyState = (props: PropsT) => {
-  // Mutations                                                                                                  {% if __.mutations %}
-  const myMutation = useMyMutation();                                                                           {% !! mutation in __.mutations|sort(attribute="name") %}
-                                                                                                                {% endif %}
-  // Queries                                                                                                    {% ?? __.queries %}
-  const myQuery = useObservableQuery(                                                                           {% for query in __.queries|sort(attribute="name") %}
-    useMyQuery({
-      {{ fieldSpec.name }}: {{ fieldSpec.ts_default_value }},                                                   {% !! fieldSpec in query.api_spec.get_inputs() %}
-    })
-  );
-                                                                                                                {% endfor %}
-
   const myState = useBuilder<MyState>(() => {
     return new MyState({
                                                                                                                 {% for container in _.state.containers %}
@@ -49,44 +33,25 @@ export const useMyState = (props: PropsT) => {
           myState.myContainerCtr.display.itemById                                                               {% ?? container.display_bvr %}
           myState.myContainerCtr.store.itemById                                                                 {% ?? not container.display_bvr %}
         );
-        return deleteMyCtrItems.mutateAsync(                                                                    {% if container.delete_items_mutation %}
-          {
-            {{ fieldSpec.name }}: {{ fieldSpec.ts_default_value }},                                             {% !! fieldSpec in container.delete_items_mutation.api_spec.get_inputs() %}
-          } as DeleteMyCtrItemsArgsT
-        )
-        return Promise.all(R.map(                                                                               {% elif container.delete_item_mutation %}
-          (x: string) => deleteMySingleCtrItem.mutateAsync(
-            {
-              {{ fieldSpec.name }}: {{ fieldSpec.ts_default_value }},                                           {% !! fieldSpec in container.delete_item_mutation.api_spec.get_inputs() %}
-            } as DeleteMySingleCtrItemArgsT
-          ),
-          ids))
-        return Promise.resolve("MOONLEAP TODO")                                                                 {% else %}{% endif %}
-          .then((response: ObjT) => {
-            return response;
-          });
+        return trackPromise({
+          name: 'deleteContainerItems',
+          states: { updating: containerItems },
+          promise: Promise.resolve("MOONLEAP TODO")
+        }).result;
       },                                                                                                        {% endif %}
       saveContainerItem: (values: ObjT) => {                                                                    {% if container.edit_bvr and container.item_list  %}
-        return saveMyCtrItem.mutateAsync(                                                                       {% if container.edit_bvr.mutation %}
-          values as SaveMyCtrItemArgsT
-        ).then(
-          () => { return values.containerItemForm }
-        );                                                                                                      {% endif %}
+        return Promise.resolve("MOONLEAP TODO");
       },                                                                                                        {% endif %}
       saveContainerItemOrdering: (containerItems: ContainerItemT[]) => {                                        {% if container.drag_and_drop_bvr %}
-        // Moonleap Todo
-        return orderMyCtrItems.mutateAsync({
-          {{ fieldSpec.name }}: {{ fieldSpec.ts_default_value }},                                               {% !! fieldSpec in container.order_items_mutation.api_spec.get_inputs() %}
-        } as OrderMyCtrItemsArgsT );
+        return Promise.resolve("MOONLEAP TODO");
       }                                                                                                         {% endif %}
                                                                                                                 {% endfor %}
     });
-  });
+  }) as MyState;
 
   React.useEffect(() => () => myState.destroy(), [myState]);
 
   return {
     myState,
-    myMutation,                                                                                                 {% !! mutation in __.mutations|sort(attribute="name") %}
   };
 };

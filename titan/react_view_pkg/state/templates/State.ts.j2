@@ -37,7 +37,7 @@ export class MyState {
   props: PropsT;
 
   myContainerCtr = {                                                                                    {% for container in __.containers %}
-    myFacet: new MyBvr{% if bvr.has_param %}<MyItemT>{% endif %}(),                                     {% !! bvr in container.bvrs|sort(attribute="name") %}
+    myFacet: new MyBvr{% if bvr.has_param %}<MyItemT>{% endif %}(),                                     {% !! bvr in container.bvrs|sort(attribute="facet_name") %}
   }
   {{ "" }}                                                                                              {% endfor %}
 

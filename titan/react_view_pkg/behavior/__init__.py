@@ -1,13 +1,7 @@
 from moonleap import Priorities, create, create_forward, rule, u0
 from moonleap.blocks.verbs import has, stores
 
-from .resources import (
-    Behavior,
-    DeletionBehavior,
-    EditBehavior,
-    InsertionBehavior,
-    StoreBehavior,
-)
+from .resources import Behavior
 
 base_tags = {}
 
@@ -24,7 +18,7 @@ def create_addition_behavior(term):
 
 @create("deletion:bvr")
 def create_deletion_behavior(term):
-    return DeletionBehavior(
+    return Behavior(
         name="deletion",
         has_param=False,
     )
@@ -40,7 +34,7 @@ def create_drag_and_drop_behavior(term):
 
 @create("edit:bvr")
 def create_edit_behavior(term):
-    return EditBehavior(
+    return Behavior(
         name="edit",
         has_param=False,
     )
@@ -72,7 +66,7 @@ def create_hovering_behavior(term):
 
 @create("insertion:bvr")
 def create_insertion_behavior(term):
-    return InsertionBehavior(
+    return Behavior(
         name="insertion",
         has_param=True,
     )
@@ -88,8 +82,16 @@ def create_selection_behavior(term):
 
 @create("store:bvr")
 def create_default_store_behavior(term):
-    return StoreBehavior(
+    return Behavior(
         name="store",
+        has_param=True,
+    )
+
+
+@create("display:bvr")
+def create_display_behavior(term):
+    return Behavior(
+        name="display",
         has_param=True,
     )
 
@@ -102,18 +104,7 @@ def create_custom_behavior(term):
     else:
         name = term.parts[0]
 
-    klass = (
-        StoreBehavior
-        if facet_name == "store"
-        else DeletionBehavior
-        if facet_name == "deletion"
-        else EditBehavior
-        if facet_name == "edit"
-        else InsertionBehavior
-        if facet_name == "insertion"
-        else Behavior
-    )
-    return klass(
+    return Behavior(
         name=name,
         has_param=False,
         is_skandha=False,
