@@ -3,36 +3,35 @@
 {% magic_with MyState = state.name %}
 {% magic_with singleItem = data.item.item_name %}
 import { stub, withDefaultProps } from 'react-default-props-context';
-import { {{ bvr.name|u0 }} } from 'skandha-facets';                              {% !! bvr in __.skandha_bvrs %}
-import { {{ item_name|u0 }}T } from '/src/api/types/{{ item_name|u0 }}T';        {% !! item_name in __.item_names %}
-import { MyState } from '/src/{{ state.module.name }}/MyState';                  {% !! state in __.provided_states %}
+import { {{ bvr.name }} } from 'skandha-facets';                                          {% !! bvr in __.skandha_bvrs %}
+import { {{ item_name|u0 }}T } from '/src/api/types/{{ item_name|u0 }}T';                 {% !! item_name in __.item_names %}
+import { MyState } from '/src/{{ state.module.name }}/MyState';                           {% !! state in __.provided_states %}
 export { stub, withDefaultProps } from 'react-default-props-context';
 
 // This is a workaround for a bug in webpack
 !withDefaultProps && (console as any).log(withDefaultProps);
 
-const dpsStates = {                                                             {% if __.provided_states %}
-    myState: {                                                                  {% for state in __.provided_states|sort(attribute="name") %}
+const dpsStates = {                                                                       {% if __.provided_states %}
+    myState: {                                                                            {% for state in __.provided_states|sort(attribute="name") %}
       myState: stub as MyState,
-    },                                                                          {% endfor %}
-}                                                                               {% endif %}
+    },                                                                                    {% endfor %}
+}                                                                                         {% endif %}
 
-const dps{{ item_name|u0|plural }} = {                                          {% for item_name, data in __.provided_data.items() %}
-    listItems: {                                                                {% if data.item_list %}
+const dps{{ item_name|u0|plural }} = {                                                    {% for item_name, data in __.provided_data.items() %}
+    listItems: {                                                                          {% if data.item_list %}
       listItems: stub as ListItemT[],
-    },                                                                          {% endif %}
-    singleItem: {                                                               {% if data.item %}
+    },                                                                                    {% endif %}
+    singleItem: {                                                                         {% if data.item %}
       singleItem: stub as SingleItemT,
-    },                                                                          {% endif %}
-    bvrItems{{ bvr.facet_name|u0 }}: {                                          {% for bvr in data.bvrs|sort(attribute="name") %}
-      bvrItems{{ bvr.facet_name|u0 }}: stub as IPagination,                     {% ?? bvr.name == "pagination" %}
-      bvrItems{{ bvr.facet_name|u0 }}: stub as {{ bvr.name|u0 }},               {% ?? bvr.name != "pagination" %}
-    },                                                                          {% endfor %}
+    },                                                                                    {% endif %}
+    bvrItems{{ bvr.facet_name }}: {                                                       {% for bvr in data.bvrs|sort(attribute="name") %}
+      bvrItems{{ bvr.facet_name }}: stub as {{ bvr.interface_name or bvr.name }},
+    },                                                                                    {% endfor %}
 };
-{{ "" }}                                                                        {% endfor %}
+{{ "" }}                                                                                  {% endfor %}
 
 export const defaultProps = {
-    ...{{ section_name }},                                                      {% !! section_name in __.section_names() %}
+    ...{{ section_name }},                                                                {% !! section_name in __.section_names() %}
 };
 
 export const dps = defaultProps;

@@ -26,7 +26,7 @@ def get_helpers(_):
                         container.item_list.item_name, {}
                     )
                     data["item_list"] = container.item_list
-                    if container.get_bvr("highlight"):
+                    if container.highlight_bvr:
                         data["item"] = container.item_list.item
                     data["bvrs"] = data.setdefault("bvrs", [])
                     for bvr in container.bvrs:
@@ -50,4 +50,4 @@ def get_helpers(_):
 
 
 def _is_exposed_bvr(bvr):
-    return bvr.facet_name not in ("store", "display")
+    return bvr.facet_name not in ("Store", "Display")

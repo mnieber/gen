@@ -1,5 +1,5 @@
-{% magic_with myBvr = bvr.name %}
-{% magic_with myFacet = bvr.facet_name %}
+{% magic_with MyBvr = bvr.name %}
+{% magic_with MyFacet = bvr.facet_name %}
 {% magic_with myContainer = container.name %}
 {% magic_with myItem = container.item_name %}
 {% magic_with MyState = _.state.name %}
@@ -13,24 +13,26 @@ import { getIds } from '/src/utils/ids';
 import { ObjT } from '/src/utils/types';
 import * as Facets from 'skandha-facets';
 import {
-  Addition                                                                                              {% ?? __.import_bvr("addition") %}
-  Deletion,                                                                                             {% ?? __.import_bvr("deletion") %}
-  DragAndDrop,                                                                                          {% ?? __.import_bvr("dragAndDrop") %}
-  Edit,                                                                                                 {% ?? __.import_bvr("edit") %}
-  Filtering,                                                                                            {% ?? __.import_bvr("filtering") %}
-  Highlight,                                                                                            {% ?? __.import_bvr ("highlight") %}
-  Hovering,                                                                                             {% ?? __.import_bvr("hovering") %}
-  Insertion,                                                                                            {% ?? __.import_bvr("insertion") %}
-  Selection                                                                                             {% ?? __.import_bvr("selection") %}
-  Store                                                                                                 {% ?? __.import_bvr("store") %}
+  Addition                                                                                              {% ?? __.import_bvr("Addition") %}
+  Deletion,                                                                                             {% ?? __.import_bvr("Deletion") %}
+  DragAndDrop,                                                                                          {% ?? __.import_bvr("DragAndDrop") %}
+  Edit,                                                                                                 {% ?? __.import_bvr("Edit") %}
+  Filtering,                                                                                            {% ?? __.import_bvr("Filtering") %}
+  Highlight,                                                                                            {% ?? __.import_bvr("Highlight") %}
+  Hovering,                                                                                             {% ?? __.import_bvr("Hovering") %}
+  Insertion,                                                                                            {% ?? __.import_bvr("Insertion") %}
+  Pagination,                                                                                            {% ?? __.import_bvr("Pagination") %}
+  Selection                                                                                             {% ?? __.import_bvr("Selection") %}
+  Store                                                                                                 {% ?? __.import_bvr("Store") %}
    } from 'skandha-facets';
-import { {{ bvr.name|u0 }} } from './facets/{{ bvr.name|u0 }}';                                         {% !! bvr in __.other_bvrs %}
+import { {{ bvr.name }} } from './facets/{{ bvr.name }}';                                               {% !! bvr in __.other_bvrs %}
 import { registerMyContainerCtr } from './registerMyContainerCtr';                                      {% !! container in __.containers %}
 
 export type PropsT = {
-  deleteMyItems: (ids: string[]) => Promise<any>;                                                       {% for container in __.containers %}{% ?? container.get_bvr("deletion") %}
-  saveMyItem: (values: ObjT) => Promise<MyItemT>;                                                       {% ?? container.get_bvr("edit") and container.item_list %}
-  saveMyItemOrdering: (myItems: MyItemT[]) => Promise<any>;                                             {% ?? container.get_bvr("dragAndDrop") and container.item_list %}{% endfor %}
+  getMyItems: () => MyItemT[];                                                                          {% for container in __.containers %}{% ?? container.item_list %}
+  deleteMyItems: (ids: string[]) => Promise<any>;                                                       {% ?? container.deletion_bvr %}
+  saveMyItem: (values: ObjT) => Promise<MyItemT>;                                                       {% ?? container.edit_bvr and container.item_list %}
+  saveMyItemOrdering: (myItems: MyItemT[]) => Promise<any>;                                             {% ?? container.drag_and_drop_bvr and container.item_list %}{% endfor %}
 };
 
 export class MyState {

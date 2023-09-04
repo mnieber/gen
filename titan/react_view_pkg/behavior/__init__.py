@@ -1,4 +1,4 @@
-from moonleap import Priorities, create, create_forward, rule, u0
+from moonleap import Priorities, create, create_forward, kebab_to_camel, rule, u0
 from moonleap.blocks.verbs import has, stores
 
 from .resources import Behavior
@@ -11,7 +11,7 @@ rules = {}
 @create("addition:bvr")
 def create_addition_behavior(term):
     return Behavior(
-        name="addition",
+        name="Addition",
         has_param=True,
     )
 
@@ -19,7 +19,7 @@ def create_addition_behavior(term):
 @create("deletion:bvr")
 def create_deletion_behavior(term):
     return Behavior(
-        name="deletion",
+        name="Deletion",
         has_param=False,
     )
 
@@ -27,7 +27,7 @@ def create_deletion_behavior(term):
 @create("drag-and-drop:bvr")
 def create_drag_and_drop_behavior(term):
     return Behavior(
-        name="dragAndDrop",
+        name="DragAndDrop",
         has_param=False,
     )
 
@@ -35,7 +35,7 @@ def create_drag_and_drop_behavior(term):
 @create("edit:bvr")
 def create_edit_behavior(term):
     return Behavior(
-        name="edit",
+        name="Edit",
         has_param=False,
     )
 
@@ -43,7 +43,7 @@ def create_edit_behavior(term):
 @create("filtering:bvr")
 def create_filtering_behavior(term):
     return Behavior(
-        name="filtering",
+        name="Filtering",
         has_param=False,
     )
 
@@ -51,7 +51,7 @@ def create_filtering_behavior(term):
 @create("highlight:bvr")
 def create_highlight_behavior(term):
     return Behavior(
-        name="highlight",
+        name="Highlight",
         has_param=True,
     )
 
@@ -59,7 +59,7 @@ def create_highlight_behavior(term):
 @create("hovering:bvr")
 def create_hovering_behavior(term):
     return Behavior(
-        name="hovering",
+        name="Hovering",
         has_param=False,
     )
 
@@ -67,7 +67,7 @@ def create_hovering_behavior(term):
 @create("insertion:bvr")
 def create_insertion_behavior(term):
     return Behavior(
-        name="insertion",
+        name="Insertion",
         has_param=True,
     )
 
@@ -75,7 +75,7 @@ def create_insertion_behavior(term):
 @create("selection:bvr")
 def create_selection_behavior(term):
     return Behavior(
-        name="selection",
+        name="Selection",
         has_param=True,
     )
 
@@ -83,7 +83,7 @@ def create_selection_behavior(term):
 @create("store:bvr")
 def create_default_store_behavior(term):
     return Behavior(
-        name="store",
+        name="Store",
         has_param=True,
     )
 
@@ -91,18 +91,27 @@ def create_default_store_behavior(term):
 @create("display:bvr")
 def create_display_behavior(term):
     return Behavior(
-        name="display",
+        name="Display",
         has_param=True,
+    )
+
+
+@create("pagination:bvr")
+def create_pagination_behavior(term):
+    return Behavior(
+        name="Pagination",
+        interface_name="IPagination",
+        has_param=False,
     )
 
 
 @create("x:x:bvr")
 def create_custom_behavior(term):
-    facet_name = term.parts[1]
     if term.parts[0].endswith("-"):
-        name = term.parts[0][:-1] + u0(facet_name)
+        facet_name = u0(term.parts[1])
+        name = u0(term.parts[0][:-1]) + facet_name
     else:
-        name = term.parts[0]
+        name = u0(term.parts[0])
 
     return Behavior(
         name=name,
@@ -114,7 +123,7 @@ def create_custom_behavior(term):
 @create("bvr")
 def create_behavior(term):
     return Behavior(
-        name=term.data,
+        name=u0(kebab_to_camel(term.data)),
         has_param=False,
         is_skandha=False,
     )
@@ -122,7 +131,7 @@ def create_behavior(term):
 
 @rule("container", has + stores, "item~list", priority=Priorities.LOW.value)
 def container_has_item_list(container, item_list):
-    if not [bvr for bvr in container.bvrs if bvr.facet_name == "store"]:
+    if not [bvr for bvr in container.bvrs if bvr.facet_name == "Store"]:
         return create_forward(container, has, "store:bvr")
 
 

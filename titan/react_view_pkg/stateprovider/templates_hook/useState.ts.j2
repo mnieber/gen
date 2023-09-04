@@ -23,10 +23,6 @@ export const useMyState = (props: PropsT) => {
           resources: [] /* MOONLEAP TODO */,
         });
       },                                                                                                        {% endif %}
-      //                                                                                                        {% if container.get_bvr("pagination") %}
-      getActionsPagination: () => {
-        return null; /* MOONLEAP TODO */
-      },                                                                                                        {% endif %}
       deleteContainerItems: (ids: string[]) => {                                                                {% if container.deletion_bvr %}
         const containerItems = lookUp(
           ids,
