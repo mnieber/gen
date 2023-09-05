@@ -3,15 +3,10 @@
 {% magic_with myContainer = container.name %}
 {% magic_with myItem = container.item_name %}
 {% magic_with MyState = _.state.name %}
-import { makeObservable } from 'mobx';
-import { addCleanUpFunctionToCtr, cleanUpCtr, mapDataToProps, pmap } from 'skandha';
+import { cleanUpCtr } from 'skandha';
 import * as Skandha from 'skandha';
-import * as FacetPolicies from 'skandha-facets/policies';
-import { registerCtr } from 'skandha-mobx';
 import { MyItemT } from '/src/api/types/MyItemT';                                                       {% for container in __.containers %}{% ?? container.item_name %}{% endfor %}
-import { getIds } from '/src/utils/ids';
 import { ObjT } from '/src/utils/types';
-import * as Facets from 'skandha-facets';
 import {
   Addition                                                                                              {% ?? __.import_bvr("Addition") %}
   Deletion,                                                                                             {% ?? __.import_bvr("Deletion") %}
@@ -25,7 +20,9 @@ import {
   Pagination,                                                                                           {% ?? __.import_bvr("Pagination") %}
   Selection                                                                                             {% ?? __.import_bvr("Selection") %}
   Store                                                                                                 {% ?? __.import_bvr("Store") %}
-   } from 'skandha-facets';
+} from 'skandha-facets';
+
+// Local imports
 import { {{ bvr.name }} } from './facets/{{ bvr.name }}';                                               {% !! bvr in __.other_bvrs %}
 import { registerMyContainerCtr } from './registerMyContainerCtr';                                      {% !! container in __.containers %}
 

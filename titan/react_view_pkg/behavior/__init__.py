@@ -109,12 +109,12 @@ def create_pagination_behavior(term):
 def create_custom_behavior(term):
     if term.parts[0].endswith("-"):
         facet_name = u0(term.parts[1])
-        name = u0(term.parts[0][:-1]) + facet_name
+        name = term.parts[0][:-1] + facet_name
     else:
-        name = u0(term.parts[0])
+        name = term.parts[0]
 
     return Behavior(
-        name=name,
+        name=u0(kebab_to_camel(name)),
         has_param=False,
         is_skandha=False,
     )
