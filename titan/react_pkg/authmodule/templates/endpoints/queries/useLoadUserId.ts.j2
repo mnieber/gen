@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { doQuery, getRefreshToken, setToken } from '/src/api/graphqlClient';
-import { refreshToken } from '/src/auth/endpoints/refreshToken';
+import { queryClient } from '/src/api/queryClient';
+import { refreshToken } from '/src/auth/endpoints/mutations/refreshToken';
+import { createQueryKey } from '/src/utils/createQueryKey';
 import { maybeSetCypressCookie } from '/src/utils/cookies';                          {% ?? _.service.cypress %}
 import { ObjT } from '/src/utils/types';
 
@@ -54,10 +56,16 @@ export function loadUserId(args: ArgsT): Promise<any> {
     });
 }
 
+export type QueryKeyT = {};
+
+export function queryKey(args: QueryKeyT) {
+  return createQueryKey<QueryKeyT>('loadUserId', args);
+}
+
 export const useLoadUserId = () => {
   return useQuery(
     {
-      queryKey: ['loadUserId'],
+      queryKey: queryKey({}),
       queryFn: () => {
         maybeSetCypressCookie('cypressLoadedUserId', '');                         {% ?? _.service.cypress %}
         return loadUserId({ maybeRefreshToken: true });
@@ -67,4 +75,8 @@ export const useLoadUserId = () => {
       },                                                                          {% endif %}
     }
   );
+};
+
+export const invalidateLoadUserId = (args: QueryKeyT) => {
+  return queryClient.invalidateQueries(queryKey(args));
 };

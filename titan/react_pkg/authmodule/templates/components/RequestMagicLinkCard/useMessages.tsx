@@ -9,7 +9,7 @@ export const useMessages = () => {
       If you've found your password then you can{' '}
       <RouterLink
         key="_signIn"
-        dataCy="goToSignInLink"
+        dataCy="linkToSignIn"
         to={routes.signIn()}
         className="ml-1"
       >
@@ -23,7 +23,8 @@ export const useMessages = () => {
     messages: {
       haveYouFoundYourPassword,
       divYourPasswordHasBeenReset:
-        'Your password has been reset. Please check your email for further instructions.',
+        "You've requested a magic link. " +
+        'Please check your email for further instructions.',
     },
   };
 };

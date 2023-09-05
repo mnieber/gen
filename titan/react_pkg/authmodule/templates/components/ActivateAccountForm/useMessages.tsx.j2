@@ -18,6 +18,7 @@ export const useMessages = () => {
   return {
     messages: {
       divSorryThatPasswordIsTooShort: 'Sorry, that password is too short',
+      divUsernameAlreadyTaken: 'Sorry, that username is already taken',                                                 {% ?? _.module.uses_username %}
       divTheActivationFailed,
       divSorryTechnicalError:
         'Sorry, there seems to be a technical problem. ' +
@@ -25,9 +26,8 @@ export const useMessages = () => {
       pleaseProvideANewPassword: 'Please provide a new password',
       sorryThatPasswordIsTooShort: 'Sorry, that password is too short',
       divYouAreOneStepAway:
-        'You are one step away from activating your account.',
-      divToProceedPleaseChooseANewPassword:
-        'To proceed, please choose a new password.',
+        'You are one step away from activating your account. To proceed, please choose a username and password.',       {% ?? _.module.uses_username %}
+        'You are one step away from activating your account. To proceed, please choose a password.',                    {% ?? not _.module.uses_username %}
     },
   };
 };

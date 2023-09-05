@@ -24,7 +24,7 @@ const getInitialValues = () => {
 };
 
 const getHandleValidate =
-  (useMagicLink: boolean, messages: ObjT) =>
+  (messages: ObjT) =>
   ({
     values,
     setError,
@@ -35,19 +35,15 @@ const getHandleValidate =
     if (!values[ff.email]) {
       setError(ff.email, messages.divPleaseEnterYourEmailAddress);
     }
-    if (!useMagicLink && !values[ff.password]) {
+    if (!values[ff.password]) {
       setError(ff.password, messages.divPleaseEnterYourPassword);
     }
   };
 
 const getHandleSubmit =
-  (useMagicLink: boolean, props: PropsT) =>
+  (props: PropsT) =>
   ({ values }: { values: FormState['values'] }) => {
-    if (useMagicLink) {
-      return props.requestMagicLink(values[ff.email]);
-    } else {
-      return props.signIn(values[ff.email], values[ff.password]);
-    }
+    return props.signIn(values[ff.email], values[ff.password]);
   };
 
 export const form = {

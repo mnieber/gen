@@ -1,40 +1,15 @@
 import { observer } from 'mobx-react-lite';
-import React from 'react';
-import { useMessages } from './useMessages';
-import { AuthFrame } from '/src/auth/components/AuthFrame';
-import { SignUpForm } from '/src/auth/components/SignUpForm';
-import { useSignUp } from '/src/auth/endpoints';
-import { States } from '/src/auth/endpoints/states';
-import { useAuthStateContext } from '/src/auth/hooks';
-
-export const termsVersion: string =
-  import.meta.env.VITE_TERMS_VERSION ?? '1.0.0';
+import { AuthPage, AuthPageS } from '/src/auth/components/AuthPage';
+import { SignUpCard } from '/src/auth/components/SignUpCard';
+import { SignInLogo } from '/src/frames/components/SignInLogo';
+import { cn } from '/src/utils/classnames';
 
 export const SignUpPage = observer(() => {
-  const { messages } = useMessages();
-  const authState = useAuthStateContext(true);
-  const signUp = useSignUp(authState).mutateAsync;
-
   return (
-    <AuthFrame header="Sign Up" id="SignUpPage">
-      {authState.state === States.SIGN_UP_SUCCEEDED && (
-        <div>{messages.divYouHaveBeenSignedUp}</div>
-      )}
-      {authState.state !== States.SIGN_UP_SUCCEEDED && (
-        <React.Fragment>
-          <SignUpForm
-            signUp={(email: string, acceptsTerms: boolean) => {
-              return signUp({
-                userId: email,
-                acceptsTerms,
-                termsVersionAccepted: termsVersion,
-              });
-            }}
-            errors={authState.errors}
-          />
-          <div className="mt-4">{messages.ifYouAlreadyHaveAnAccount}</div>
-        </React.Fragment>
-      )}
-    </AuthFrame>
+    <AuthPage>
+      <SignInLogo />
+      <div className={cn(AuthPageS.Gap())} />
+      <SignUpCard />
+    </AuthPage>
   );
 });

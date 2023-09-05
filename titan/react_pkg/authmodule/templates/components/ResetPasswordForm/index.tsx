@@ -1,12 +1,16 @@
 import { FormStateProvider } from 'react-form-state-context';
-import { PasswordField } from '/src/auth/components/formFields/PasswordField';
-import { SubmitButton } from '/src/auth/components/formFields/SubmitButton';
-import { Field, GlobalError } from '/src/forms/components';
-import { colSkewer } from '/src/frames/components';
-import { cn } from '/src/utils/classnames';
-
 import { form } from './form';
 import { useMessages } from './useMessages';
+import { AuthFormS } from '/src/auth/components/AuthForm';
+import {
+  Field,
+  FormSaveButton,
+  GlobalError,
+  PasswordField,
+} from '/src/forms/components';
+import { getErrorKeys } from '/src/forms/utils/createFormErrorsObject';
+import { L } from '/src/frames/layout';
+import { cn } from '/src/utils/classnames';
 
 export const formFields = {
   password: 'password',
@@ -20,33 +24,57 @@ export type PropsT = {
 
 export function ResetPasswordForm(props: PropsT) {
   const { messages } = useMessages();
+  const externalErrors = form.getExternalErrors(messages, props.errors);
 
   return (
     <FormStateProvider
       initialValues={form.getInitialValues()}
-      initialErrors={form.getExternalErrors(messages, props.errors)}
+      initialErrors={externalErrors}
       handleValidate={form.getHandleValidate(messages)}
       handleSubmit={form.getHandleSubmit(props)}
     >
+      {
+        // 🔳 Form 🔳
+      }
       <div
-        className={cn(
-          'ResetPasswordForm',
-          colSkewer,
-          'items-stretch',
-          props.className
-        )}
+        className={cn('ResetPasswordForm', [L.col.banner(), props.className])}
       >
-        <GlobalError className="mb-4" />
-        <Field
-          fieldName={formFields.password}
-          label="Password"
-          useSmartLabel={true}
-          submitOnEnter={true}
-        >
-          <PasswordField placeholder="Enter your password" />
-        </Field>
-        <div className="my-4">{}</div>{' '}
-        <SubmitButton dataCy="passwordChangeBtn" label="Change password" />
+        {
+          // 🔳 Global error 🔳
+        }
+        <GlobalError className={AuthFormS.GlobalError()} />
+
+        {!getErrorKeys(externalErrors).includes('global') && (
+          <>
+            {
+              // 🔳 Enter your password message 🔳
+            }
+            <div className={AuthFormS.Header()}>
+              {messages.divEnterYourNewPassword}
+            </div>
+
+            {
+              // 🔳 Password field 🔳
+            }
+            <Field
+              className={AuthFormS.Field()}
+              fieldName={formFields.password}
+              submitOnEnter={true}
+            >
+              <PasswordField placeholder="Password" />
+            </Field>
+
+            {
+              // 🔳 Save button 🔳
+            }
+            <FormSaveButton
+              theme="AuthCard"
+              dataCy="passwordChangeBtn"
+              label="Change password"
+              className={AuthFormS.Button()}
+            />
+          </>
+        )}
       </div>
     </FormStateProvider>
   );

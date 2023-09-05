@@ -10,7 +10,7 @@ import myEndpointStub from '/src/api/stubs/myEndpointStub.json';                
 import { wait } from '/src/utils/wait';
 
 export type ArgsT = {
-  myInputFieldName: myInputFieldTsType;                                                             {% !! input_field_spec in __.input_field_specs %}
+  myInputFieldName{% if input_field_spec.is_optional %}?{% endif %}: myInputFieldTsType;            {% !! input_field_spec in __.input_field_specs %}
 };
 
 export const myEndpoint = (args: ArgsT) => {
@@ -40,18 +40,26 @@ export const myEndpoint = (args: ArgsT) => {
   );
 };
 
+export function queryKey(args: QueryKeyT) {
+  return createQueryKey<QueryKeyT>('myEndpoint', args);
+}
+
 export const useMyEndpoint = (
   args: ArgsT                                                                                       {% ?? __.input_field_specs %}
 ) => {
   return useQuery({
-    queryKey: [
-      'myEndpoint',
+    queryKey: queryKey(
       args                                                                                          {% ?? __.input_field_specs %}
-      {% remove_trailing suffix="," %}
-    ],
+    ),
     queryFn: () => myEndpoint(
     args                                                                                            {% ?? __.input_field_specs %}
     {}                                                                                              {% ?? not __.input_field_specs %}
   )})
   ;
+};
+
+export const invalidateMyEndpoint = (args: QueryKeyT) => {
+  return queryClient.invalidateQueries({
+    queryKey: queryKey(args),
+  });
 };

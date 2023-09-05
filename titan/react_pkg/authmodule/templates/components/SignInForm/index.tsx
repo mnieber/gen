@@ -1,12 +1,15 @@
-import React from 'react';
 import { FormStateProvider } from 'react-form-state-context';
 import { form } from './form';
 import { useMessages } from './useMessages';
-import { EmailField } from '/src/auth/components/formFields/EmailField';
-import { PasswordField } from '/src/auth/components/formFields/PasswordField';
-import { SubmitButton } from '/src/auth/components/formFields/SubmitButton';
-import { Field, GlobalError } from '/src/forms/components';
-import { colSkewer } from '/src/frames/components';
+import { AuthFormS } from '/src/auth/components/AuthForm';
+import {
+  EmailField,
+  Field,
+  FormSaveButton,
+  GlobalError,
+  PasswordField,
+} from '/src/forms/components';
+import { L } from '/src/frames/layout';
 import { cn } from '/src/utils/classnames';
 
 export const formFields = {
@@ -16,88 +19,58 @@ export const formFields = {
 
 export type PropsT = {
   signIn: (email: string, password: string) => any;
-  requestMagicLink: (email: string) => any;
   errors: Array<string>;
   className?: any;
 };
 
 export function SignInForm(props: PropsT) {
   const { messages } = useMessages();
-  const [useMagicLink, setUseMagicLink] = React.useState(false);
 
   return (
+    //
+    // 🔳 FormStateProvider 🔳
+    //
     <FormStateProvider
       initialValues={form.getInitialValues()}
       initialErrors={form.getExternalErrors(messages, props.errors)}
-      handleValidate={form.getHandleValidate(useMagicLink, messages)}
-      handleSubmit={form.getHandleSubmit(useMagicLink, props)}
+      handleValidate={form.getHandleValidate(messages)}
+      handleSubmit={form.getHandleSubmit(props)}
     >
-      <div
-        className={cn(
-          'SignInForm',
-          colSkewer,
-          'items-stretch',
-          props.className
-        )}
-      >
-        <GlobalError className="mb-2" />
+      {
+        // 🔳 SignInForm 🔳
+      }
+      <div className={cn('SignInForm', [L.col.banner(), props.className])}>
+        <GlobalError className={AuthFormS.GlobalError()} />
 
-        <div className={cn('grid grid-cols-[1fr,1fr] gap-x-2')}>
-          <label>
-            <input
-              className={cn('uk-radio', 'mr-2')}
-              type="radio"
-              value={'password'}
-              checked={!useMagicLink}
-              onChange={() => setUseMagicLink(false)}
-            />
-            <span className="ml-2">{messages.divImUsingMyPassword}</span>
-          </label>
-          <label>
-            <input
-              className={cn('uk-radio', 'mr-2')}
-              data-cy="signInByMagicLinkBtn"
-              type="radio"
-              value={'magicLink'}
-              checked={useMagicLink}
-              onChange={() => setUseMagicLink(true)}
-            />
-            <span className="ml-2">{messages.divImUsingAMagicLink}</span>
-          </label>
-        </div>
-
+        {
+          // 🔳 EmailField 🔳
+        }
         <Field
+          className={AuthFormS.Field()}
           fieldName={formFields.email}
-          label="Email"
-          useSmartLabel={true}
-          tabOnEnter={!useMagicLink}
-          submitOnEnter={useMagicLink}
-          autoFocus={true}
-          className="my-4"
+          tabOnEnter={true}
         >
-          <EmailField />
+          <EmailField autoFocus={true} placeholder="Email" />
         </Field>
 
-        {!useMagicLink && (
-          <Field
-            fieldName="password"
-            label="Password"
-            useSmartLabel={true}
-            submitOnEnter={true}
-            className="my-4"
-          >
-            <PasswordField placeholder={messages.divEnterYourPassword} />
-          </Field>
-        )}
+        {
+          // 🔳 PasswordField 🔳
+        }
+        <Field
+          className={AuthFormS.Field()}
+          fieldName="password"
+          submitOnEnter={true}
+        >
+          <PasswordField placeholder="Password" />
+        </Field>
 
-        <SubmitButton
-          dataCy={useMagicLink ? 'sendMagicLinkBtn' : 'signInBtn'}
-          label={
-            useMagicLink
-              ? messages.labelSendMeTheMagicLink
-              : messages.labelSignIn
-          }
-          className={cn('place-self-center', 'my-4')}
+        {
+          // 🔳 FormSaveButton 🔳
+        }
+        <FormSaveButton
+          dataCy={'signInBtn'}
+          label={messages.labelSignIn}
+          className={cn(AuthFormS.Button())}
         />
       </div>
     </FormStateProvider>

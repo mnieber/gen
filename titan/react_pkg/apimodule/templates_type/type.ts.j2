@@ -8,6 +8,8 @@ import { initRS } from '/src/api/ResourceState';
 
 export type MyTypeT = {                                                                             {% ?? not _.type_spec.base_type_name %}
 export type MyTypeT = {{ _.type_spec.base_type_name}}T & {                                          {% ?? _.type_spec.base_type_name %}
+  // MOONLEAP TODO
+  id: string;
 };
 
 export type MyTypeByIdT = { [id: string]: MyTypeT };

@@ -1,10 +1,14 @@
 import { FormStateProvider } from 'react-form-state-context';
 import { form } from './form';
 import { useMessages } from './useMessages';
-import { EmailField } from '/src/auth/components/formFields/EmailField';
-import { SubmitButton } from '/src/auth/components/formFields/SubmitButton';
-import { Field, GlobalError } from '/src/forms/components';
-import { colSkewer } from '/src/frames/components';
+import { AuthFormS } from '/src/auth/components/AuthForm';
+import {
+  EmailField,
+  Field,
+  FormSaveButton,
+  GlobalError,
+} from '/src/forms/components';
+import { L } from '/src/frames/layout';
 import { cn } from '/src/utils/classnames';
 
 export const formFields = {
@@ -27,33 +31,45 @@ export function RequestPasswordResetForm(props: PropsT) {
       handleValidate={form.getHandleValidate(messages)}
       handleSubmit={form.getHandleSubmit(props)}
     >
+      {
+        // 🔳 Form 🔳
+      }
       <div
-        className={cn(
-          'RequestPasswordResetForm',
-          colSkewer,
-          'items-stretch',
-          props.className
-        )}
+        className={cn('RequestPasswordResetForm', [
+          L.col.banner(),
+          props.className,
+        ])}
       >
-        <GlobalError />
+        {
+          // 🔳 Global error 🔳
+        }
+        <GlobalError className={AuthFormS.GlobalError()} />
 
-        <Field
-          fieldName={formFields.email}
-          label="Email"
-          useSmartLabel={true}
-          submitOnEnter={true}
-        >
-          <EmailField />
-        </Field>
-
-        <div className={cn('place-self-center', 'my-4')}>
+        {
+          // 🔳 Message 🔳
+        }
+        <div className={AuthFormS.Header()}>
           {messages.divEnterYourEmailToResetYourPassword}
         </div>
 
-        <SubmitButton
+        {
+          // 🔳 Email field 🔳
+        }
+        <Field
+          fieldName={formFields.email}
+          submitOnEnter={true}
+          className={AuthFormS.Field()}
+        >
+          <EmailField placeholder="Email" />
+        </Field>
+
+        {
+          // 🔳 Save button 🔳
+        }
+        <FormSaveButton
           dataCy="passwordResetBtn"
           label="Request password reset"
-          className={cn('place-self-center', 'my-4')}
+          className={cn(AuthFormS.Button())}
         />
       </div>
     </FormStateProvider>

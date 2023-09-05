@@ -3,7 +3,7 @@ import * as R from 'ramda';
 import { States } from '/src/auth/endpoints/states';
 import { ObjT } from '/src/utils/types';
 
-const lutSuccess: ObjT = {
+const lutSuccess = {
   signIn: States.SIGN_IN_SUCCEEDED,
   loadUserId: States.LOAD_USER_ID_SUCCEEDED,
   signUp: States.SIGN_UP_SUCCEEDED,
@@ -15,7 +15,7 @@ const lutSuccess: ObjT = {
   signInByMagicLink: States.SIGN_IN_BY_MAGIC_LINK_SUCCEEDED,
 };
 
-const lutFailure: ObjT = {
+const lutFailure = {
   signIn: States.SIGN_IN_FAILED,
   loadUserId: States.LOAD_USER_ID_FAILED,
   signUp: States.SIGN_UP_FAILED,
@@ -64,9 +64,10 @@ export class AuthState {
   @action onUpdated(queryName: string, data: ObjT) {
     if (this.isTrackedQuery(queryName)) {
       this.errors = data.errors ?? [];
-      this.state = data.errors
-        ? (lutFailure[queryName] as string)
-        : (lutSuccess[queryName] as string);
+      this.state =
+        data.errors && data.errors.length > 0
+          ? (lutFailure[queryName as keyof typeof lutFailure] as string)
+          : (lutSuccess[queryName as keyof typeof lutSuccess] as string);
     }
   }
 
@@ -79,8 +80,8 @@ export class AuthState {
   @action onErrored(queryName: string, message: string) {
     if (this.isTrackedQuery(queryName)) {
       this.details = { message: message };
-      this.errors = [lutFailure[queryName]];
-      this.state = lutFailure[queryName];
+      this.errors = [lutFailure[queryName as keyof typeof lutFailure]];
+      this.state = lutFailure[queryName as keyof typeof lutSuccess];
     }
   }
 }

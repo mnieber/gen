@@ -7,9 +7,10 @@ export const useMessages = () => {
   const yourPasswordHasBeenChanged = (
     <div>
       Your password has been changed. You can now{' '}
-      <RouterLink dataCy={'goToSignInLink'} to={routes.signIn()}>
+      <RouterLink dataCy={'linkToSignIn'} to={routes.signIn()}>
         sign in
       </RouterLink>
+      .
     </div>
   );
 

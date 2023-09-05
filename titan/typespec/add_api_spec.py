@@ -52,9 +52,9 @@ def add_api_spec(api_reg, endpoint_key, endpoint_spec_dict, known_type_names):
         is_list = item_name.endswith("Set")
         saves.append((chop_suffix(item_name, "Set"), is_list))
 
-    has_endpoint = endpoint_spec_dict.get("hasEndpoint", True)
+    use_in_client = endpoint_spec_dict.get("useInClient", True)
 
-    invalidates = endpoint_spec_dict.get("invalidates", [])
+    invalidates = [x for x in endpoint_spec_dict.get("invalidates", [])]
     is_stub = endpoint_spec_dict.get("isStub", False)
 
     if is_mutation:
@@ -84,7 +84,7 @@ def add_api_spec(api_reg, endpoint_key, endpoint_spec_dict, known_type_names):
             orders=orders,
             saves=saves,
             invalidates=invalidates,
-            has_endpoint=has_endpoint,
+            use_in_client=use_in_client,
             is_stub=is_stub,
             inputs_type_spec=TypeSpec(type_name=name + "Inputs", field_specs=inputs),
             outputs_type_spec=TypeSpec(type_name=name + "Outputs", field_specs=outputs),

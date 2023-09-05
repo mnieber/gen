@@ -4,12 +4,14 @@ import moonleap.packages.extensions.props as P
 from moonleap import create, create_forward, extend, rule
 from moonleap.blocks.verbs import has
 from titan.react_pkg.reactapp import ReactApp
-from titan.react_pkg.reactmodule import ReactModule, create_react_module
+from titan.react_pkg.reactmodule import create_react_module
+
+from .resources import AuthModule
 
 
 @create("auth:module")
 def create_auth_module(term):
-    return create_react_module(ReactModule, term, Path(__file__).parent / "templates")
+    return create_react_module(AuthModule, term, Path(__file__).parent / "templates")
 
 
 @rule("react-app", has, "auth:module")

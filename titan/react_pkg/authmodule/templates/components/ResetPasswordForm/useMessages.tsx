@@ -6,11 +6,11 @@ export const useMessages = () => {
 
   const divSorryWeCouldNotResetThePassword = (
     <div>
-      Sorry, we could not reset the password. Please{' '}
+      Sorry, we could not reset the password. You may try to{' '}
       <RouterLink key="_tryAgain" to={routes.requestPasswordReset()}>
-        try again
-      </RouterLink>
-      .
+        reset your password
+      </RouterLink>{' '}
+      again.
     </div>
   );
 
@@ -25,7 +25,7 @@ export const useMessages = () => {
         'Sorry, there seems to be a technical problem. ' +
         'Check your internet connection, or try again later.',
       divPleaseProvideANewPassword: 'Please provide a new password',
-      pleaseEnterYourNewPassword: 'Please enter your new password',
+      divEnterYourNewPassword: 'Please enter your new password',
     },
   };
 };

@@ -7,6 +7,9 @@ import { ObjT } from '/src/utils/types';
 const getExternalErrors = (messages: ObjT, errors: Array<string>) => {
   const fieldErrors = createFormErrorsObject();
 
+  if (errors?.includes(States.USERNAME_ALREADY_TAKEN)) {                                                    {% if _.module.uses_username %}
+    fieldErrors[ff.username] = messages.divUsernameAlreadyTaken;
+  }                                                                                                         {% endif %}
   if (errors?.includes(States.PASSWORD_TOO_SHORT)) {
     fieldErrors[ff.password] = messages.divSorryThatPasswordIsTooShort;
   }
@@ -20,7 +23,11 @@ const getExternalErrors = (messages: ObjT, errors: Array<string>) => {
 };
 
 const getInitialValues = () => {
-  return { password: null };
+  return {
+    [ff.password]: null,
+    [ff.username]: null,                                                                                   {% ?? _.module.uses_username %}
+    {% remove_trailing suffix="," %}
+  };
 };
 
 const getHandleValidate =
@@ -34,6 +41,8 @@ const getHandleValidate =
   }) => {
     if (!values.password) {
       setError(ff.password, messages.pleaseProvideANewPassword);
+    } else if (values.username) {                                                                          {% if _.module.uses_username %}
+      setError(ff.username, messages.pleaseProvideANewUsername);                                           {% endif %}
     } else if (values.password.length < 8) {
       setError(ff.password, messages.sorryThatPasswordIsTooShort);
     }
@@ -42,7 +51,11 @@ const getHandleValidate =
 const getHandleSubmit =
   (props: PropsT) =>
   ({ values }: { values: FormState['values'] }) => {
-    return props.activateAccount(values[ff.password]);
+    return props.activateAccount(
+      values[ff.username],                                                                                 {% ?? _.module.uses_username %}
+      values[ff.password],
+      {% remove_trailing suffix="," %}
+    );
   };
 
 export const form = {

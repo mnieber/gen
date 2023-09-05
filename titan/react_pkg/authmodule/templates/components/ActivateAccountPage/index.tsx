@@ -1,41 +1,15 @@
 import { observer } from 'mobx-react-lite';
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { useMessages } from './useMessages';
-import { ActivateAccountForm } from '/src/auth/components/ActivateAccountForm';
-import { AuthFrame } from '/src/auth/components/AuthFrame';
-import { useActivateAccount } from '/src/auth/endpoints';
-import { States } from '/src/auth/endpoints/states';
-import { useAuthStateContext } from '/src/auth/hooks';
-import { ObjT } from '/src/utils/types';
+import { ActivateAccountCard } from '/src/auth/components/ActivateAccountCard';
+import { AuthPage, AuthPageS } from '/src/auth/components/AuthPage';
+import { SignInLogo } from '/src/frames/components/SignInLogo';
+import { cn } from '/src/utils/classnames';
 
 export const ActivateAccountPage = observer(() => {
-  const { messages } = useMessages();
-  const params = useParams() as ObjT;
-  const authState = useAuthStateContext(true);
-  const activateAccount = useActivateAccount(authState).mutateAsync;
-
-  const activateAccountForm = (
-    <ActivateAccountForm
-      activateAccount={(password: string) =>
-        activateAccount({ password, activationToken: params.activationToken })
-      }
-      errors={authState.errors}
-    />
-  );
-
-  // Note that if we show the activateAccountForm and the user submits the form,
-  // then the authState will be updated which causes this component to also re-render.
-
   return (
-    <AuthFrame header="Activate your account" id="ActivateAccountPage">
-      <div id="ActivateAccountPage" className="">
-        {authState.state === States.ACTIVATE_ACCOUNT_SUCCEEDED && (
-          <div>{messages.yourAccountWasActivated}</div>
-        )}
-        {authState.state !== States.ACTIVATE_ACCOUNT_SUCCEEDED &&
-          activateAccountForm}
-      </div>
-    </AuthFrame>
+    <AuthPage>
+      <SignInLogo />
+      <div className={cn(AuthPageS.Gap())} />
+      <ActivateAccountCard />
+    </AuthPage>
   );
 });

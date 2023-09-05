@@ -1,2 +1,2 @@
-{% magic_with getMyQuery = _.query.name %}
-export { queryKey as getMyQueryQueryKey, useGetMyQuery } from "./useGetMyQuery";
+{% magic_with myQuery = _.query.name %}
+export { queryKey as myQueryQueryKey, useMyQuery, invalidateMyQuery } from "./useMyQuery";

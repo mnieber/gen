@@ -16,7 +16,7 @@ class ApiSpec:
     invalidates: T.List[str] = field(default_factory=list)
     is_stub: bool = False
     module_name: str = "api"
-    has_endpoint: T.Optional[bool] = field(default=None)
+    use_in_client: T.Optional[bool] = field(default=None)
 
     def get_inputs(self, field_types=None):
         return self.inputs_type_spec.get_field_specs(field_types)

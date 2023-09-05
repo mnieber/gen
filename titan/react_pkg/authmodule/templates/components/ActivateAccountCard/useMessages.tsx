@@ -7,7 +7,17 @@ export const useMessages = () => {
   const yourAccountWasActivated = (
     <div>
       Your account was activated. You can now{' '}
-      <RouterLink dataCy={'goToSignInLink'} to={routes.signIn()}>
+      <RouterLink dataCy={'linkToSignIn'} to={routes.signIn()}>
+        sign in
+      </RouterLink>
+      .
+    </div>
+  );
+
+  const ifYouAlreadyHaveAnAccount = (
+    <div>
+      If you already have an account then you can{' '}
+      <RouterLink key="_signIn" dataCy={'navToSignInLink'} to={routes.signIn()}>
         sign in
       </RouterLink>
       .
@@ -16,6 +26,7 @@ export const useMessages = () => {
 
   return {
     messages: {
+      ifYouAlreadyHaveAnAccount,
       yourAccountWasActivated,
     },
   };

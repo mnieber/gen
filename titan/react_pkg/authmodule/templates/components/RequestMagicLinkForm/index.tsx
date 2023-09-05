@@ -3,7 +3,6 @@ import { form } from './form';
 import { useMessages } from './useMessages';
 import { AuthFormS } from '/src/auth/components/AuthForm';
 import {
-  ControlledCheckbox,
   EmailField,
   Field,
   FormSaveButton,
@@ -14,16 +13,15 @@ import { cn } from '/src/utils/classnames';
 
 export const formFields = {
   email: 'email',
-  acceptsTerms: 'acceptsTerms',
 };
 
 export type PropsT = {
-  signUp: (email: string, acceptsTerms: boolean) => any;
+  requestMagicLink: (email: string) => any;
   errors: Array<string>;
   className?: any;
 };
 
-export function SignUpForm(props: PropsT) {
+export function RequestMagicLinkForm(props: PropsT) {
   const { messages } = useMessages();
 
   return (
@@ -34,41 +32,45 @@ export function SignUpForm(props: PropsT) {
       handleSubmit={form.getHandleSubmit(props)}
     >
       {
-        // 🔳 SignUpForm 🔳
+        // 🔳 Form 🔳
       }
-      <div className={cn('SignInForm', [L.col.banner(), props.className])}>
+      <div
+        className={cn('RequestMagicLinkForm', [
+          L.col.banner(),
+          props.className,
+        ])}
+      >
         {
           // 🔳 Global error 🔳
         }
         <GlobalError className={AuthFormS.GlobalError()} />
 
         {
-          // 🔳 EmailField 🔳
+          // 🔳 Reset password message 🔳
         }
-        <Field fieldName={formFields.email} className={AuthFormS.Field()}>
-          <EmailField autoFocus={true} placeholder="Email" />
-        </Field>
+        <div className={cn(AuthFormS.Header())}>
+          {messages.divEnterYourEmailToResetYourPassword}
+        </div>
 
         {
-          // 🔳 TermsField 🔳
+          // 🔳 Email field 🔳
         }
         <Field
-          fieldName={formFields.acceptsTerms}
+          fieldName={formFields.email}
+          submitOnEnter={true}
           className={AuthFormS.Field()}
         >
-          <div className={cn('SignUpForm__Terms', [L.row.skewer()])}>
-            <ControlledCheckbox />
-            <div className={cn('ml-2')}>{messages.divIAgreeToTheTerms}</div>
-          </div>
+          <EmailField placeholder="Email" />
         </Field>
 
         {
-          // 🔳 FormSaveButton 🔳
+          // 🔳 Save button 🔳
         }
         <FormSaveButton
-          dataCy="signUpBtn"
-          label="Sign Up"
-          className={cn(AuthFormS.Button())}
+          theme="AuthCard"
+          dataCy="magicLinkBtn"
+          label="Request Magic Link"
+          className={AuthFormS.Button()}
         />
       </div>
     </FormStateProvider>

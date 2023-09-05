@@ -4,12 +4,14 @@ export const getRouteTable = () => {
   const routeTable = new RouteTable();
 
   routeTable.addRoutes({
-    signIn: () => '/sign-in/',
-    signInByMagicLink: () => '/sign-in/:magicLinkToken/',
-    signUp: () => '/sign-up/',
-    requestPasswordReset: () => '/request-password-reset/',
-    resetPassword: () => '/reset-password/:passwordResetToken/',
-    activateAccount: () => '/activate-account/:activationToken/',
+    signIn: () => '/auth/sign-in/',
+    signInByMagicLink: () => '/auth/sign-in/:magicLinkToken/',
+    signUp: () => '/auth/sign-up/',
+    termsAndConditions: () => '/terms-and-conditions/',
+    requestPasswordReset: () => '/auth/request-password-reset/',
+    requestMagicLink: () => '/auth/request-magic-link/',
+    resetPassword: () => '/auth/reset-password/:passwordResetToken/',
+    activateAccount: () => '/auth/activate-account/:activationToken/',
   });
 
   return routeTable;

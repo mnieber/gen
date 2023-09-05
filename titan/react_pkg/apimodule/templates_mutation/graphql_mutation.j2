@@ -2,18 +2,19 @@
 {% magic_with myFieldGqlType = field_spec.graphql_type %}
 {% magic_with myFieldName = field_spec.name %}
 {% magic_with myFieldTsType = field_spec.ts_type %}
+{% magic_with myQuery = queryName %}
 import * as R from 'ramda';
 import { useObservableMutation } from '/src/api/ObservableMutation';
 import { queryClient } from '/src/api/queryClient';                                                          {% ?? _.mutation.api_spec.invalidates %}
 import { doQuery } from '/src/api/graphqlClient';
 import { ObjT } from '/src/utils/types';
 import { wait } from '/src/utils/wait';
-import { {{ queryName }}QueryKey } from '/src/api/queries';                                                  {% !! queryName in _.mutation.api_spec.invalidates %}
+import { invalidateMyQuery from '/src/{{ module }}/endpoints/queries';                                       {% !! module, queryName in __.split_query_names(_.mutation.api_spec.invalidates) %}
 import { {{ type_spec.type_name }}T } from '/src/api/types/{{ type_spec.type_name|chop_suffix("Form") }}T';  {% !! type_spec in __.form_input_type_specs %}
 import { queryClient } from '/src/api/queryClient';
 
 export type ArgsT = {
-  myFieldName: myFieldTsType;                                                                               {% !! field_spec in __.input_field_specs %}
+  myFieldName{% if field_spec.is_optional %}?{% endif %}: myFieldTsType;                                    {% !! field_spec in __.input_field_specs %}
 };
 
 export const callMyEndpoint = (args: ArgsT) => {
@@ -50,11 +51,7 @@ export const useCallMyEndpoint = () => {
     },                                                                                                      {% endif %}
     onSuccess: (response: ObjT, args: ArgsT) => {                                                           {% if _.mutation.api_spec.invalidates %}
       return Promise.all([
-        queryClient.invalidateQueries(                                                                      {% for queryName in _.mutation.api_spec.invalidates %}
-          {
-            queryKey: {{ queryName }}QueryKey()
-          }
-        ),                                                                                                  {% endfor %}
+        invalidateMyQuery({ /* MOONLEAP TODO */ }),                                                         {% !! module, queryName in __.split_query_names(_.mutation.api_spec.invalidates) %}
       ])
     },                                                                                                      {% endif %}
   });
