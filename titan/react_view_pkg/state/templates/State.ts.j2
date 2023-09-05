@@ -8,7 +8,7 @@ import { addCleanUpFunctionToCtr, cleanUpCtr, mapDataToProps, pmap } from 'skand
 import * as Skandha from 'skandha';
 import * as FacetPolicies from 'skandha-facets/policies';
 import { registerCtr } from 'skandha-mobx';
-import { MyItemT } from '/src/api/types/MyItemT';                                                       {% for container in __.containers %}{% ?? container.item_list %}{% endfor %}
+import { MyItemT } from '/src/api/types/MyItemT';                                                       {% for container in __.containers %}{% ?? container.item_name %}{% endfor %}
 import { getIds } from '/src/utils/ids';
 import { ObjT } from '/src/utils/types';
 import * as Facets from 'skandha-facets';
@@ -16,12 +16,13 @@ import {
   Addition                                                                                              {% ?? __.import_bvr("Addition") %}
   Deletion,                                                                                             {% ?? __.import_bvr("Deletion") %}
   DragAndDrop,                                                                                          {% ?? __.import_bvr("DragAndDrop") %}
+  Display,                                                                                              {% ?? __.import_bvr("Display") %}
   Edit,                                                                                                 {% ?? __.import_bvr("Edit") %}
   Filtering,                                                                                            {% ?? __.import_bvr("Filtering") %}
   Highlight,                                                                                            {% ?? __.import_bvr("Highlight") %}
   Hovering,                                                                                             {% ?? __.import_bvr("Hovering") %}
   Insertion,                                                                                            {% ?? __.import_bvr("Insertion") %}
-  Pagination,                                                                                            {% ?? __.import_bvr("Pagination") %}
+  Pagination,                                                                                           {% ?? __.import_bvr("Pagination") %}
   Selection                                                                                             {% ?? __.import_bvr("Selection") %}
   Store                                                                                                 {% ?? __.import_bvr("Store") %}
    } from 'skandha-facets';
@@ -31,7 +32,7 @@ import { registerMyContainerCtr } from './registerMyContainerCtr';              
 export type PropsT = {
   getMyItems: () => MyItemT[];                                                                          {% for container in __.containers %}{% ?? container.item_list %}
   deleteMyItems: (ids: string[]) => Promise<any>;                                                       {% ?? container.deletion_bvr %}
-  saveMyItem: (values: ObjT) => Promise<MyItemT>;                                                       {% ?? container.edit_bvr and container.item_list %}
+  saveMyItem: (values: ObjT) => Promise<MyItemT>;                                                       {% ?? container.edit_bvr and container.item_name %}
   saveMyItemOrdering: (myItems: MyItemT[]) => Promise<any>;                                             {% ?? container.drag_and_drop_bvr and container.item_list %}{% endfor %}
 };
 

@@ -1,5 +1,6 @@
 import moonleap.packages.extensions.props as P
 from moonleap import (
+    Priorities,
     Prop,
     create,
     create_forward,
@@ -21,6 +22,7 @@ base_tags = {}
 rules = {
     ("state", has, "container"): empty_rule(),
     ("container", has + stores, "item~list"): empty_rule(),
+    ("container", has + stores, "item"): empty_rule(),
     ("container", has, "bvr"): empty_rule(),
     ("item~list", has, "bvr"): empty_rule(),
 }
@@ -32,7 +34,7 @@ def create_container(term):
     return Container(name=name)
 
 
-@rule("container", has, "addition:bvr")
+@rule("container", has, "addition:bvr", priority=Priorities.LOW.value)
 def container_has_addition_behavior(container, addition_bvr):
     return create_forward(container.item_list, has, addition_bvr)
 
@@ -46,6 +48,7 @@ class ExtendState:
 class ExtendContainer:
     state = P.parent("state", has)
     item_list = P.child(has + stores, "item~list")
+    item = P.child(has + stores, "item")
     bvrs = P.children(has, "bvr")
     item_name = Prop(props.container_item_name)
 

@@ -1,5 +1,5 @@
-from moonleap import Priorities, create, create_forward, kebab_to_camel, rule, u0
-from moonleap.blocks.verbs import has, stores
+from moonleap import create, create_forward, kebab_to_camel, rule, u0
+from moonleap.blocks.verbs import has
 
 from .resources import Behavior, is_exposed_bvr  # noqa: F401
 
@@ -127,12 +127,6 @@ def create_behavior(term):
         has_param=False,
         is_skandha=False,
     )
-
-
-@rule("container", has + stores, "item~list", priority=Priorities.LOW.value)
-def container_has_item_list(container, item_list):
-    if not [bvr for bvr in container.bvrs if bvr.facet_name == "Store"]:
-        return create_forward(container, has, "store:bvr")
 
 
 @rule("selection:bvr")

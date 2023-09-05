@@ -22,14 +22,16 @@ def get_helpers(_):
             self.provided_states.append(state)
             for container in state.containers:
                 bvrs = [x for x in container.bvrs if is_exposed_bvr(x)]
-                if container.item_list:
-                    append_uniq(self.item_names, container.item_list.item_name)
+                if container.item_name:
+                    append_uniq(self.item_names, container.item_name)
 
-                if container.item_list or bvrs:
+                if container.item_name or bvrs:
                     data = self.provided_data.setdefault(container.name, {})
                     data["item_list"] = container.item_list
                     data["item"] = (
-                        container.item_list.item if container.highlight_bvr else None
+                        container.item_list.item
+                        if container.highlight_bvr
+                        else container.item
                     )
                     data["bvrs"] = data.setdefault("bvrs", [])
                     for bvr in bvrs:

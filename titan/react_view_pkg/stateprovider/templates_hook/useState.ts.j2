@@ -35,12 +35,12 @@ export const useMyState = (props: PropsT) => {
           promise: Promise.resolve("MOONLEAP TODO")
         }).result;
       },                                                                                                        {% endif %}
-      saveContainerItem: (values: ObjT) => {                                                                    {% if container.edit_bvr and container.item_list  %}
+      saveContainerItem: (values: ObjT) => {                                                                    {% if container.edit_bvr and container.item_name  %}
         return Promise.resolve("MOONLEAP TODO");
       },                                                                                                        {% endif %}
       saveContainerItemOrdering: (containerItems: ContainerItemT[]) => {                                        {% if container.drag_and_drop_bvr %}
         return Promise.resolve("MOONLEAP TODO");
-      }                                                                                                         {% endif %}
+      },                                                                                                        {% endif %}
                                                                                                                 {% endfor %}
     });
   }) as MyState;
