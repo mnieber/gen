@@ -1,5 +1,6 @@
 from moonleap import append_uniq, u0
 from moonleap.utils.inflect import plural
+from titan.react_view_pkg.behavior.resources import is_exposed_bvr
 
 
 def get_helpers(_):
@@ -20,34 +21,30 @@ def get_helpers(_):
         def _add_state(self, state):
             self.provided_states.append(state)
             for container in state.containers:
+                bvrs = [x for x in container.bvrs if is_exposed_bvr(x)]
                 if container.item_list:
                     append_uniq(self.item_names, container.item_list.item_name)
-                    data = self.provided_data.setdefault(
-                        container.item_list.item_name, {}
-                    )
-                    data["item_list"] = container.item_list
-                    if container.highlight_bvr:
-                        data["item"] = container.item_list.item
-                    data["bvrs"] = data.setdefault("bvrs", [])
-                    for bvr in container.bvrs:
-                        if _is_exposed_bvr(bvr):
-                            if not [x for x in data["bvrs"] if x.name == bvr.name]:
-                                data["bvrs"].append(bvr)
 
-                for bvr in container.bvrs:
-                    if _is_exposed_bvr(bvr):
-                        append_uniq(self.bvrs, bvr)
-                        if bvr.is_skandha:
-                            append_uniq(self.skandha_bvrs, bvr)
+                if container.item_list or bvrs:
+                    data = self.provided_data.setdefault(container.name, {})
+                    data["item_list"] = container.item_list
+                    data["item"] = (
+                        container.item_list.item if container.highlight_bvr else None
+                    )
+                    data["bvrs"] = data.setdefault("bvrs", [])
+                    for bvr in bvrs:
+                        if not [x for x in data["bvrs"] if x.name == bvr.name]:
+                            data["bvrs"].append(bvr)
+
+                for bvr in bvrs:
+                    append_uniq(self.bvrs, bvr)
+                    if bvr.is_skandha:
+                        append_uniq(self.skandha_bvrs, bvr)
 
         def section_names(self):
             result = ["dpsStates"]
             for key in self.provided_data.keys():
-                result.append(f"dps{ u0(plural(key)) }")
+                result.append(f"dps{ u0(key) }")
             return sorted(result)
 
     return Helpers()
-
-
-def _is_exposed_bvr(bvr):
-    return bvr.facet_name not in ("Store", "Display")
