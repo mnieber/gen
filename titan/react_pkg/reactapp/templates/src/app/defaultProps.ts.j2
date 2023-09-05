@@ -1,4 +1,4 @@
-{% magic_with bvrItem = bvr.container.item_name %}
+{% magic_with myContainer = bvr.container.name %}
 {% magic_with listItem = data.item_list.item_name %}
 {% magic_with MyState = state.name %}
 {% magic_with singleItem = data.item.item_name %}
@@ -17,15 +17,15 @@ const dpsStates = {                                                             
     },                                                                                    {% endfor %}
 }                                                                                         {% endif %}
 
-const dps{{ item_name|u0|plural }} = {                                                    {% for item_name, data in __.provided_data.items() %}
+const dps{{ container_name|u0 }} = {                                                      {% for container_name, data in __.provided_data.items() %}
     listItems: {                                                                          {% if data.item_list %}
       listItems: stub as ListItemT[],
     },                                                                                    {% endif %}
     singleItem: {                                                                         {% if data.item %}
       singleItem: stub as SingleItemT,
     },                                                                                    {% endif %}
-    bvrItems{{ bvr.facet_name }}: {                                                       {% for bvr in data.bvrs|sort(attribute="name") %}
-      bvrItems{{ bvr.facet_name }}: stub as {{ bvr.interface_name or bvr.name }},
+    myContainer{{ bvr.facet_name }}: {                                                    {% for bvr in data.bvrs|sort(attribute="name") %}
+      myContainer{{ bvr.facet_name }}: stub as {{ bvr.interface_name or bvr.name }},
     },                                                                                    {% endfor %}
 };
 {{ "" }}                                                                                  {% endfor %}

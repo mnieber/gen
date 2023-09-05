@@ -2,7 +2,7 @@
 {% magic_with myComponent = _.component.name %}
 {% magic_with myContainer = container.name %}
 {% magic_with MyState = _.component.state.name %}
-{% magic_with MyBvr = bvr.name %}
+{% magic_with MyBvr = bvr.facet_name %}
 import React from 'react';
 import { makeAutoObservable } from 'mobx';
 import { updateSources } from '/src/resourceStates';
@@ -53,21 +53,22 @@ export const MyComponent = observer(
         }
       };
 
-      result.defaultProps = {                                                                                   {% for container in __.state.containers %}{% if container.item_list %}
+      result.defaultProps = {                                                                                   {% for container in __.state.containers %}
         ...result.defaultProps,
         containerItems: () => cache.containerItems,                                                             {% ?? container.item_list %}
         containerItem: () => cache.containerItem,                                                               {% ?? container.highlight_bvr %}
-        containerItemsAddition: () => state.myContainerCtr.addition,                                            {% ?? container.addition_bvr %}
-        containerItemsDeletion: () => state.myContainerCtr.deletion,                                            {% ?? container.deletion_bvr %}
-        containerItemsDragAndDrop: () => state.myContainerCtr.dragAndDrop,                                      {% ?? container.drag_and_drop_bvr %}
-        containerItemsEdit: () => state.myContainerCtr.edit,                                                    {% ?? container.edit_bvr %}
-        containerItemsFiltering: () => state.myContainerCtr.filtering,                                          {% ?? container.filtering_bvr %}
-        containerItemsHighlight: () => state.myContainerCtr.highlight,                                          {% ?? container.highlight_bvr %}
-        containerItemsPagination: () => state.myContainerCtr.pagination,                                        {% ?? container.pagination_bvr %}
-        containerItemsSelection: () => state.myContainerCtr.selection,                                          {% ?? container.selection_bvr %}
-        containerItemsMyBvr: () => state.myContainerCtr.myBvr,                                                  {% !! bvr in __.other_bvrs(container) %}
+        myContainerAddition: () => state.myContainerCtr.addition,                                            {% ?? container.addition_bvr %}
+        myContainerDeletion: () => state.myContainerCtr.deletion,                                            {% ?? container.deletion_bvr %}
+        myContainerDragAndDrop: () => state.myContainerCtr.dragAndDrop,                                      {% ?? container.drag_and_drop_bvr %}
+        myContainerEdit: () => state.myContainerCtr.edit,                                                    {% ?? container.edit_bvr %}
+        myContainerFiltering: () => state.myContainerCtr.filtering,                                          {% ?? container.filtering_bvr %}
+        myContainerHighlight: () => state.myContainerCtr.highlight,                                          {% ?? container.highlight_bvr %}
+        myContainerHovering: () => state.myContainerCtr.hovering,                                            {% ?? container.hovering_bvr %}
+        myContainerPagination: () => state.myContainerCtr.pagination,                                        {% ?? container.pagination_bvr %}
+        myContainerSelection: () => state.myContainerCtr.selection,                                          {% ?? container.selection_bvr %}
+        myContainerMyBvr: () => state.myContainerCtr.myBvr,                                                  {% !! bvr in __.other_bvrs(container) %}
       };
-      {{ "" }}                                                                                                  {% endif %}{% endfor %}
+      {{ "" }}                                                                                                  {% endfor %}
       return result;
     };
 

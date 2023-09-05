@@ -21,3 +21,7 @@ class Behavior(Resource):
     @property
     def mutation(self):
         return None
+
+
+def is_exposed_bvr(bvr):
+    return bvr.facet_name not in ("Store", "Display")

@@ -1,7 +1,7 @@
 from moonleap import Priorities, create, create_forward, kebab_to_camel, rule, u0
 from moonleap.blocks.verbs import has, stores
 
-from .resources import Behavior
+from .resources import Behavior, is_exposed_bvr  # noqa: F401
 
 base_tags = {}
 

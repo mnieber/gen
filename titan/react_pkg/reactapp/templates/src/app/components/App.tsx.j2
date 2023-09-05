@@ -1,18 +1,26 @@
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from '/src/api/queryClient';
+import { AuthStateProvider } from '/src/auth/components/AuthStateProvider';
+import { L, breakpoints } from '/src/frames/layout';
 import { cn } from '/src/utils/classnames';
-import { UrlRouter } from '/src/routes/components';                          {% ?? _.react_app.routes_module %}
-
-// Import styles
-import './App.scss';
+import { RouteTableProvider } from '/src/routes/components/RouteTableProvider';     {% ?? _.react_app.routes_module %}
+import { UrlRouter } from '/src/routes/components';                                 {% ?? _.react_app.routes_module %}
 
 export const App = () => {
   return (
-    <div
-      className={cn(
-        'App',
-        'flex flex-col',
-        'mx-auto xl:w-4/5',
-    )}>
-      <UrlRouter />                                                       {% ?? _.react_app.routes_module %}
-    </div>
+    <QueryClientProvider client={queryClient}>                                      {% ?? _.react_app.api_module %}
+      <div
+        className={cn('App', [
+            L.col.banner(),
+            `min-width-[${breakpoints.xs}] h-screen overflow-x-hidden`
+        ]
+      )}>
+        <RouteTableProvider>                                                    {% ?? _.react_app.routes_module %}
+          <AuthStateProvider>                                                   {% ?? _.react_app.auth_module %}
+            <UrlRouter />                                                       {% ?? _.react_app.routes_module %}
+          </AuthStateProvider>                                                  {% ?? _.react_app.auth_module %}
+        </RouteTableProvider>                                                   {% ?? _.react_app.routes_module %}
+      </div>
+    </QueryClientProvider>                                                      {% ?? _.react_app.api_module %}
   );
 }

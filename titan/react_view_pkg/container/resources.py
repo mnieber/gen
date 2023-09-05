@@ -43,6 +43,10 @@ class Container(Resource):
         return self.get_bvr("Highlight")
 
     @property
+    def hovering_bvr(self):
+        return self.get_bvr("Hovering")
+
+    @property
     def insertion_bvr(self):
         return self.get_bvr("Insertion")
 
