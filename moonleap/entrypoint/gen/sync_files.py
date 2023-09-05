@@ -49,11 +49,17 @@ def sync_files(output_dir, shadow_dir, stage_dir):
             )
             stage_file_dir = os.path.dirname(stage_file_path)
 
-            if not os.path.exists(shadow_file_path) or not filecmp.cmp(
+            shadow_file_path_exists = os.path.exists(shadow_file_path)
+            if not shadow_file_path_exists or not filecmp.cmp(
                 output_file_path, shadow_file_path
             ):
                 os.makedirs(stage_file_dir, exist_ok=True)
                 shutil.copy2(output_file_path, stage_file_path)
+                if not shadow_file_path_exists:
+                    # Also create an empty shadow file.
+                    # This way, we can select "Modified" in Meld to see all
+                    # modified and new files.
+                    touch(shadow_file_path)
 
     # Create "Deleted" files in stage_dir for files in shadow_dir but
     # not in output_dir
@@ -71,11 +77,9 @@ def sync_files(output_dir, shadow_dir, stage_dir):
                 with open(stage_file_path, "w") as f:
                     f.write("Deleted")
 
-    # Count files in stage dir that are not in shadow_dir.
-    for root, dirs, files in os.walk(stage_dir):
-        for file in files:
-            stage_file_path = os.path.join(root, file)
-            rel_file = stage_file_path[len(stage_dir) + 1 :]
-            shadow_file_path = os.path.join(shadow_dir, rel_file)
-            if not os.path.exists(shadow_file_path):
-                session.report(f"New file: {stage_file_path}")
+
+def touch(file_path):
+    if not os.path.exists(file_path):
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path, "w") as f:
+            f.write("New file\n")
