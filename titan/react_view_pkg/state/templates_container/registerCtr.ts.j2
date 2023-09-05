@@ -6,12 +6,12 @@ import { registerCtr } from 'skandha-mobx';
 import { PropsT, MyState } from '/src/{{ _.module.name }}/MyState';
 import { addCleanUpFunctionToCtr, cleanUpCtr, mapDataToProps } from 'skandha';
 import * as FacetPolicies from 'skandha-facets/policies';
-import { SelectionCbs, handleSelectItem } from 'skandha-facets/Selection';                              {% ?? _.container.selection_bvr %}
-import { AdditionCbs } from 'skandha-facets/Addition';
-import { HighlightCbs } from 'skandha-facets/Highlight';                                                {% ?? _.container.highlight_bvr %}
-import { InsertionCbs } from 'skandha-facets/Insertion';                                                {% ?? _.container.insertion_bvr %}
-import { DeletionCbs } from 'skandha-facets/Deletion';                                                  {% ?? _.container.deletion_bvr %}
-import { EditCbs } from 'skandha-facets/Edit';                                                          {% ?? _.container.edit_bvr %}
+import { SelectionCbs, handleSelectItem } from 'skandha-facets';                                        {% ?? _.container.selection_bvr %}
+import { AdditionCbs } from 'skandha-facets';
+import { HighlightCbs } from 'skandha-facets';                                                          {% ?? _.container.highlight_bvr %}
+import { InsertionCbs } from 'skandha-facets';                                                          {% ?? _.container.insertion_bvr %}
+import { DeletionCbs } from 'skandha-facets';                                                           {% ?? _.container.deletion_bvr %}
+import { EditCbs } from 'skandha-facets';                                                               {% ?? _.container.edit_bvr %}
 import { setCallbackMap } from 'aspiration';
 import { MyItemT } from '/src/api/types/MyItemT';                                                       {% ?? _.container.item_name %}
 
@@ -87,26 +87,30 @@ const setCallbacks = (state: MyState) => {
     },
   } as DeletionCbs);                                                                                    {% endif %}
 
-  setCallbackMap(ctr.edit, {                                                                            {% if _.container.edit_bvr %}
+  setCallbackMap(ctr.edit, {                                                                            {% if _.container.edit_bvr and _.container.item_name %}
     save: {
       saveItem(this: EditCbs['save']) {
-        const values = this.values;
-        return state.props.saveMyItem(values).then((localMyItem: MyItemT) => {
-          FacetPolicies.newItemsAreConfirmedOnEditingSave(ctr.edit);
-        });
+        return state.props.saveMyItem(this.args.values)
+          .then(() => {                                                                                 {% if _.container.addition_bvr %}
+            ctr.addition.confirm();
+          })                                                                                            {% endif %}
+        ;
       },
     },
     cancel: {
-      exit() {
-        FacetPolicies.newItemsAreCancelledOnEditingCancel(ctr.edit);
-      },
+      exit() {                                                                                          {% if _.container.addition_bvr %}
+        ctr.addition.cancel();
+      },                                                                                                {% endif %}
     },
   } as EditCbs);                                                                                        {% endif %}
 
   setCallbackMap(ctr.highlight, {                                                                       {% if _.container.selection_bvr %}
     highlightItem: {                                                                                    {% if _.container.addition_bvr %}
       enter(this: HighlightCbs['highlightItem']) {
-        FacetPolicies.cancelNewItemOnHighlightChange(ctr.highlight, this.id);
+        // Cancel adding a new item on highlight change
+        if (ctr.addition.item && ctr.addition.item.id !== this.args.id) {
+          ctr.addition.cancel();
+        }
       },
     },                                                                                                  {% endif %}
   } as HighlightCbs);                                                                                   {% endif %}
