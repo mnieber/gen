@@ -1,4 +1,5 @@
 {% magic_with myContainer = _.container.name %}
+{% magic_with MySource = __.item_source %}
 {% magic_with myItem = _.container.item_name %}
 {% magic_with MyState = _.state.name %}
 import { getIds } from '/src/utils/ids';
@@ -19,7 +20,7 @@ const mapData = (state: MyState) => {
   const ctr = state.myContainerCtr;
 
   const getMyItemById = (x: string | undefined) =>                                                    {% if _.container.selection_bvr or _.container.highlight_bvr %}
-    x ? ctr.store.itemById[x] : undefined;
+    x ? ctr.mySource.itemById[x] : undefined;
   {{ "" }}                                                                                            {% endif %}
   mapDataToProps(ctr, {                                                                               {% min_lines count=3 %}
     store: {                                                                                          {% if _.container.store_bvr %}
@@ -27,14 +28,21 @@ const mapData = (state: MyState) => {
     },                                                                                                {% endif %}
     selection: {                                                                                      {% if _.container.selection_bvr %}
         selectableIds:
-          () => getIds(ctr.store.myItems),                                                            {% ?? not (_.container.filtering_bvr or _.container.insertion_bvr) %}
-          () => getIds(ctr.store.myItemsDisplay),                                                     {% ?? _.container.filtering_bvr or _.container.insertion_bvr %}
+          () => getIds(
+            ctr.mySource.items
+            ?? []                                                                                     {% ?? not _.container.display_bvr %}
+          ),
         items:
-          () => ctr.selection.ids.map(getMyItemById as any),
+          () => ctr.selection.ids
+            .map(getMyItemById)
+            .filter((x?: MyItemT) => !!x) as MyItemT[],
     },                                                                                                {% endif %}
     highlight: {                                                                                      {% if _.container.highlight_bvr %}
+      highlightableIds: () => getIds(
+        ctr.mySource.items
+        ?? []                                                                                         {% ?? not _.container.display_bvr %}
+      ),
       item: () => getMyItemById(ctr.highlight.id),
-      highlightableIds: () => getIds(ctr.store.items ?? []),
     },                                                                                                {% endif %}
     filtering: {                                                                                      {% if _.container.filtering_bvr %}
       inputItems: () => ctr.store.myItems,
@@ -42,13 +50,16 @@ const mapData = (state: MyState) => {
     insertion: {                                                                                      {% if _.container.insertion_bvr %}
       inputItems:
         () => ctr.filtering.filteredItems,                                                            {% ?? _.container.filtering_bvr %}
-        () => ctr.store.myItems,                                                                      {% ?? not _.container.filtering_bvr %}
+        () => ctr.store.items ?? [],                                                                  {% ?? not _.container.filtering_bvr %}
       preview:                                                                                        {% if _.container.addition_bvr and _.container.insertion_bvr %}
         () =>
-          FacetPolicies.insertionPreviewUsesDragSources(
-            [FacetPolicies.DragSourceFromNewItem],
-            this.myItems
-          )(this.myItems.insertion.inputItems)                                                        {% endif %}
+          createInsertionPreview(
+            [DragSourceFromNewItem],
+            ctr
+          )(ctr.insertion.inputItems),                                                                {% endif %}
+    },                                                                                                {% endif %}
+    deletion: {                                                                                       {% if _.container.deletion_bvr %}
+      disabled: () => R.any((x: MyItemT) => isUpdating(x), ctr.selection.items),
     },                                                                                                {% endif %}
     display: {                                                                                        {% if _.container.display_bvr %}
       items:
@@ -64,17 +75,22 @@ const setCallbacks = (state: MyState) => {
 
   setCallbackMap(ctr.addition, {                                                                        {% if _.container.addition_bvr %}
     add: {
-      storeLocation() {
-        FacetPolicies.newItemsAreAddedBelowTheHighlight(ctr.addition);
+      stageAdd() {
+        ctr.addition.parentId = ctr.highlight.id || topOfTheList;                                       {% ?? _.container.highlight_bvr %}
       },
       highlightNewItem() {
         ctr.selection.selectItem({ itemId: ctr.addition.item?.id });
-        FacetPolicies.editingSetEnabled(ctr.addition);
+        ctr.edit.enable();
       },
     },
     cancel: {
-      restoreLocation() {
-        FacetPolicies.editingSetDisabled(ctr.addition);
+      unstageAdd(parentId: string | undefined) {
+        ctr.edit.cancel();
+      },
+    },
+    confirm: {
+      confirmAdd() {
+        FacetPolicies.newItemsAreInsertedWhenConfirmed(ctr.addition);
       },
     },
   } as AdditionCbs<MyItemT>);                                                                           {% endif %}
@@ -82,7 +98,7 @@ const setCallbacks = (state: MyState) => {
   setCallbackMap(ctr.deletion, {                                                                        {% if _.container.deletion_bvr %}
     delete: {
       deleteItems(this: DeletionCbs['delete']) {
-        return state.props.deleteMyItems(this.itemIds);
+        return state.props.deleteMyItems(this.args.itemIds);
       },
     },
   } as DeletionCbs);                                                                                    {% endif %}
@@ -98,7 +114,7 @@ const setCallbacks = (state: MyState) => {
       },
     },
     cancel: {
-      exit() {                                                                                          {% if _.container.addition_bvr %}
+      onCancel() {                                                                                      {% if _.container.addition_bvr %}
         ctr.addition.cancel();
       },                                                                                                {% endif %}
     },
@@ -126,11 +142,11 @@ const setCallbacks = (state: MyState) => {
   setCallbackMap(ctr.selection, {                                                                       {% if _.container.selection_bvr %}
     selectItem: {
       selectItem(this: SelectionCbs['selectItem']) {
-        handleSelectItem(ctr.selection, this.selectionParams);
-        FacetPolicies.highlightFollowsSelection(                                                        {% if _.container.highlight_bvr %}
-          ctr.selection,
-          this.selectionParams
-        );                                                                                              {% endif %}
+        handleSelectItem(ctr.selection, this.args);
+        // Highlight follows selection                                                                  {% if _.container.highlight_bvr %}
+        if (!this.args.isCtrl && !this.args.isShift) {
+          ctr.highlight.highlightItem({ id: this.args.itemId });
+        }                                                                                               {% endif %}
       }
     },
   } as SelectionCbs);                                                                                   {% endif %}
