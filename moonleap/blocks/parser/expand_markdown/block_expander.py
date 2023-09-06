@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import mistune
-
 from moonleap.packages.scope_manager import get_local_scope_names
 
 
@@ -48,7 +47,7 @@ class BlockExpander(mistune.Renderer):
                 raise Exception("Every sub-spec file must have a unique name")
             sub_spec_content = expand_markdown(
                 self.file_path / self.sub_spec_link[1],
-                base_level=level,
+                base_level=self.base_level + level,
                 scope_names=self.scope_names + [sub_spec_scope_name],
             )
         else:

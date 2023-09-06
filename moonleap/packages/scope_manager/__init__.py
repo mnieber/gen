@@ -18,10 +18,7 @@ class ScopeManager:
         self._package_by_name = {}
 
     def get_scope(self, scope_name):
-        scope = self._scope_by_name.get(scope_name)
-        if not scope:
-            raise Exception(f"Scope not specified in packages.yml: {scope_name}")
-        return scope
+        return self._scope_by_name.get(scope_name)
 
     def import_packages(self, packages_by_scope):
         for scope_name, package_names in packages_by_scope.items():
