@@ -21,7 +21,7 @@ from moonleap.resources.relations.rel import Rel  # noqa
 from moonleap.resources.resource import Resource  # noqa
 from moonleap.session import get_session  # noqa
 from moonleap.utils import chop0, yaml2dict  # noqa
-from moonleap.utils.case import kebab_to_camel, l0, sn, u0  # noqa
+from moonleap.utils.case import kebab_to_camel, l0, parts_to_camel, sn, u0  # noqa
 from moonleap.utils.fp import append_uniq  # noqa
 from moonleap.utils.keys import is_private_key  # noqa
 from moonleap.utils.load_yaml import load_yaml  # noqa

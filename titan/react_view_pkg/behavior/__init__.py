@@ -1,4 +1,4 @@
-from moonleap import create, create_forward, kebab_to_camel, rule, u0
+from moonleap import create, create_forward, kebab_to_camel, parts_to_camel, rule, u0
 from moonleap.blocks.verbs import has
 
 from .resources import Behavior, is_exposed_bvr  # noqa: F401
@@ -107,14 +107,8 @@ def create_pagination_behavior(term):
 
 @create("x:x:bvr")
 def create_custom_behavior(term):
-    if term.parts[0].endswith("-"):
-        facet_name = u0(term.parts[1])
-        name = term.parts[0][:-1] + facet_name
-    else:
-        name = term.parts[0]
-
     return Behavior(
-        name=u0(kebab_to_camel(name)),
+        name=u0(parts_to_camel(term.parts)),
         has_param=False,
         is_skandha=False,
     )

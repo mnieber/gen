@@ -2,8 +2,6 @@ import typing as T
 from dataclasses import dataclass, field
 from fnmatch import fnmatch
 
-from moonleap.utils.case import kebab_to_camel
-
 
 @dataclass(frozen=True)
 class Term:
@@ -111,7 +109,3 @@ def patch_tag(term, tag):
         if tag is None
         else Term(parts=("generic", tag), name=term.name if term else None)
     )
-
-
-def term_to_camel(prefix, suffix):
-    return kebab_to_camel(prefix + (suffix if prefix.endswith("-") else ""))

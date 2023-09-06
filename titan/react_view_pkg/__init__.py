@@ -1,9 +1,19 @@
-from . import behavior, container, div, selectitemeffect, state, stateprovider, view
+from . import (
+    behavior,
+    container,
+    div,
+    listview,
+    selectitemeffect,
+    state,
+    stateprovider,
+    view,
+)
 
 modules = [
     behavior,
     container,
     div,
+    listview,
     selectitemeffect,
     state,
     stateprovider,

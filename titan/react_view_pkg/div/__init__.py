@@ -1,24 +1,25 @@
 import moonleap.packages.extensions.props as P
-from moonleap import create, empty_rule, extend, named, u0
-from moonleap.blocks.term import term_to_camel
+from moonleap import create, empty_rule, extend, named, parts_to_camel, u0
 from moonleap.blocks.verbs import has
 
 from .resources import Div
 
 rules = {
-    ("div", has, "component"): empty_rule(),
+    ("x+div", has, "x+component"): empty_rule(),
+    ("x+div", has, "x+div"): empty_rule(),
 }
 
 
 @create("x+div")
 def create_named_div(term):
+    name = u0(parts_to_camel([term.name]))
     named_div = named(Div)()
-    named_div.name = u0(term_to_camel(prefix=term.name, suffix=term.tag))
-    named_div.type = Div()
+    named_div.name = name
+    named_div.typ = Div(name=name, classnames=[f"'{name}'"])
     return named_div
 
 
 @extend(named(Div))
 class ExtendNamedDiv:
-    components = P.children(has, "component")
-    divs = P.children(has, "x+div")
+    named_components = P.children(has, "x+component")
+    named_divs = P.children(has, "x+div")

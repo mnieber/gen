@@ -7,5 +7,5 @@ from titan.react_view_pkg.div.resources import Div
 
 
 @dataclass
-class View(Component):
+class ListView(Component):
     pass

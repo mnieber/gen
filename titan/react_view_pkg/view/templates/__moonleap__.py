@@ -1,22 +1,83 @@
+from moonleap import append_uniq
 from moonleap.utils.indent import indent
 
 
 def get_helpers(_):
     class Helpers:
         view = _.component
+        main_div = ""
+        imported_components = []
 
         def __init__(self):
-            pass
+            self.level = 6
+            self.render_main_div()
 
         def render_main_div(self):
-            return indent(6)(tpl.replace("MyComponent", self.view.name))
+            self.imported_components = []
+            self.main_div = ""
+
+            name = self.view.name
+            classnames_str = f'"{name}", [props.className]'
+
+            result = indent(self.level)(
+                tpl_main_open.format(name=name, classnames=classnames_str)
+            )
+
+            self.level += 2
+            for named_component in self.view.named_components:
+                append_uniq(self.imported_components, named_component.typ)
+                result += indent(self.level)(
+                    tpl_component.format(name=named_component.typ.name)
+                )
+
+            for named_div in self.view.named_divs:
+                result += self.render_named_div(named_div)
+            self.level -= 2
+
+            result += indent(self.level)(tpl_close)
+            self.main_div = result
+
+        def render_named_div(self, named_div):
+            name = named_div.typ.name
+            classnames_str = ",".join(named_div.typ.classnames)
+
+            result = indent(self.level)(
+                tpl_open.format(name=name, classnames=classnames_str)
+            )
+
+            self.level += 2
+            for named_component in named_div.named_components:
+                append_uniq(self.imported_components, named_component.typ)
+                result += indent(self.level)(
+                    tpl_component.format(name=named_component.typ.name)
+                )
+
+            for named_div in named_div.named_divs:
+                result += self.render_named_div(named_div)
+            self.level -= 2
+
+            result += indent(self.level)(tpl_close)
+            return result
 
     return Helpers()
 
 
-tpl = """/*
-🔳 MyComponent 🔳
+tpl_main_open = """/*
+🔳 {name} 🔳
 */
-<div className={cn('MyComponent', 'yes!', props.className)}>
-</div>
+<div className={{cn({classnames})}}>
+"""
+
+
+tpl_open = """{{
+// 🔳 {name} 🔳
+}}
+<div className={{cn({classnames})}}>
+"""
+
+
+tpl_close = """</div>
+"""
+
+tpl_component = """<{name} />
 """

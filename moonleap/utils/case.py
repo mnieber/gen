@@ -57,3 +57,16 @@ def camel_join(lhs, rhs):
 
 
 sn = camel_to_snake
+
+
+def parts_to_camel(parts):
+    result = ""
+    for part in parts:
+        part = u0(part) if result else part
+
+        if part.endswith("-"):
+            result += kebab_to_camel(part[:-1])
+        else:
+            result += kebab_to_camel(part)
+            return result
+    return result
