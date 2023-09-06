@@ -15,9 +15,10 @@ import { DeletionCbs } from 'skandha-facets';                                   
 import { EditCbs } from 'skandha-facets';                                                               {% ?? _.container.edit_bvr %}
 import { setCallbackMap } from 'aspiration';
 import { MyItemT } from '/src/api/types/MyItemT';                                                       {% ?? _.container.item_name %}
+import { ObjT } from '/src/utils/types';
 
 const mapData = (state: MyState) => {
-  const ctr = state.myContainerCtr;
+  const ctr = state.myContainerCtr;                                                                   {% min_lines count=2 %}
 
   const getMyItemById = (x: string | undefined) =>                                                    {% if _.container.selection_bvr or _.container.highlight_bvr %}
     x ? ctr.mySource.itemById[x] : undefined;
@@ -58,15 +59,12 @@ const mapData = (state: MyState) => {
             ctr
           )(ctr.insertion.inputItems),                                                                {% endif %}
     },                                                                                                {% endif %}
-    deletion: {                                                                                       {% if _.container.deletion_bvr %}
-      disabled: () => R.any((x: MyItemT) => isUpdating(x), ctr.selection.items),
-    },                                                                                                {% endif %}
     display: {                                                                                        {% if _.container.display_bvr %}
       items:
         () => ctr.insertion.preview,                                                                  {% ?? _.container.insertion_bvr %}
         () => ctr.filtering.filteredItems,                                                            {% ?? not _.container.insertion_bvr and _.container.filtering_bvr %}
     },                                                                                                {% endif %}
-  });                                                                                                 {% end_min_lines %}
+  });                                                                                                 {% end_min_lines %}{% end_min_lines %}
 }
 
 const setCallbacks = (state: MyState) => {
@@ -107,8 +105,9 @@ const setCallbacks = (state: MyState) => {
     save: {
       saveItem(this: EditCbs['save']) {
         return state.props.saveMyItem(this.args.values)
-          .then(() => {                                                                                 {% if _.container.addition_bvr %}
+          .then((response: ObjT) => {                                                                   {% if _.container.addition_bvr %}
             ctr.addition.confirm();
+            return response;
           })                                                                                            {% endif %}
         ;
       },
@@ -157,8 +156,8 @@ export const registerMyContainerCtr = (state: MyState) => {
     ctr: state.myContainerCtr,
     options: { name: 'MyState.MyContainer' },
     initCtr: () => {
-      setCallbacks(state);
       mapData(state);
+      setCallbacks(state);
     },
   });
 }
