@@ -6,12 +6,17 @@ import { observer } from 'mobx-react-lite';
 // Import styles
 import './MyComponent.scss';
 
-export type PropsT = {};
+export type PropsT = {
+  className?: any;
+};
 
 const DefaultProps = {};
 
 export const MyComponent = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
+    return (
+      {{ __.render_main_div() }}
+    );
   }, DefaultProps)
 );
 

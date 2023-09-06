@@ -1,4 +1,4 @@
-from moonleap import Prop, create, extend, kebab_to_camel, named
+from moonleap import Prop, create, extend, kebab_to_camel
 from titan.types_pkg.typeregistry.resources import Item
 
 from . import props

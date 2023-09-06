@@ -113,5 +113,5 @@ def patch_tag(term, tag):
     )
 
 
-def term_to_camel(term):
-    return kebab_to_camel(term.data + (term.tag if term.data.endswith("-") else ""))
+def term_to_camel(prefix, suffix):
+    return kebab_to_camel(prefix + (suffix if prefix.endswith("-") else ""))
