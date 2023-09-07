@@ -6,6 +6,7 @@ def get_helpers(_):
         component_name = list_view.name + "KeyHandler"
         item_name = list_view.item_list.item_name
         has_highlight = bool(list_view.highlight_bvr)
+        has_selection = bool(list_view.selection_bvr)
 
         def __init__(self):
             self.level = 6

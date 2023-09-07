@@ -1,6 +1,7 @@
 {% magic_with myItem = __.item_name %}
 {% magic_with myModule = _.component.module.name %}
 {% magic_with myListView = _.component.name %}
+{% trim_newlines keep=1 %}
 .MyListViewItem {
   @apply cursor-pointer;
 }
@@ -12,3 +13,12 @@
 .MyListViewItem--selected {                                                 {% if __.has_selection %}
   @apply bg-[green];
 }                                                                           {% endif %}
+
+.MyListViewItem--drag-before {                                              {% if __.has_drag_and_drop %}
+  border-top: solid;
+}
+
+.MyListViewItem--drag-after {
+  border-bottom: solid;
+}                                                                           {% endif %}
+{% end_trim_newlines %}

@@ -11,6 +11,7 @@ import { isLoading } from '/src/resourceStates';
 import { MyListViewKeyHandler } from '/src/myModule/components';                               {% ?? __.has_key_handler %}
 import { MyListViewItem } from '/src/myModule/components/MyListViewItem';
 import {
+    Selection,                                                                                 {% ?? __.has_selection %}
     SelectionUIConnector,                                                                      {% ?? __.has_selection %}
     HighlightUIConnector,                                                                      {% ?? __.has_highlight and not __.has_selection %}
     DragAndDropUIConnector,                                                                    {% ?? __.has_drag_and_drop %}
@@ -25,32 +26,62 @@ export type PropsT = {
 
 const DefaultProps = {
   ...dps.myItems,
-  ...dps.myItemsHighlight,                                                                      {% ?? __.has_highlight and not __.has_selection %}
+  ...dps.myItemsDragAndDrop,                                                                    {% ?? __.has_drag_and_drop %}
+  ...dps.myItemsHighlight,                                                                      {% ?? __.has_highlight or __.has_selection %}
+  ...dps.myItemsHovering,                                                                       {% ?? __.has_drag_and_drop %}
+  ...dps.myItemsSelection,                                                                      {% ?? __.has_selection %}
 };
 
 export const MyListView = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
+    //
+    // 🔳  Handle loading state 🔳
+    //
+    if (isLoading(props.myItems)) {
+      return <MyListViewLoader {...props} />;
+    }
+
     const highlightUIConnector = new HighlightUIConnector({                                     {% if __.has_highlight %}
       highlight: props.myItemsHighlight,
     });
                                                                                                 {% endif %}
 
-    //
-    // 🔳  Handle loading state 🔳
-    //
-    if (isLoading(props.myItems)) {
-      return <MyListViewLoader />;
-    }
+    const dragAndDropUIConnector = new DragAndDropUIConnector({                                 {% if __.has_drag_and_drop %}
+      dragAndDrop: props.myItemsDragAndDrop,
+      hovering: props.myItemsHovering,
+    });
+                                                                                                {% endif %}
+
+
+    const selectionUIConnector = new SelectionUIConnector({                                     {% if __.has_selection %}
+      selection: props.myItemsSelection as Selection<MyItemT>,
+      onSelect: (args: {
+        itemId: string | undefined;
+        isShift?: boolean | undefined;
+        isCtrl?: boolean | undefined;
+      }) => {
+        if (!args.isShift && !args.isCtrl) {
+          const myItem = props.myItems.find((x) => x.id === args.itemId);
+          if (myItem) {
+            // MOONLEAP TODO: navigate to myItem
+          }
+        }
+      },
+    });
+                                                                                                {% endif %}
 
     //
     // 🔳 myItemDivs 🔳
     //
-    const myItemDivs: any[] = props.myItems.map((myItem) => {
+    const myItemDivs = props.myItems.map((myItem) => {
       return (
         <MyListViewItem
           key={`item-${myItem.id}`}
           myItem={myItem}
-          highlightUIProps={highlightUIConnector.handle(myItem.id)}
+          isHighlighted={myItem && props.myItemsHighlight.id === myItem.id}                     {% ?? __.has_selection %}
+          highlightUIProps={highlightUIConnector.handle(myItem.id)}                             {% ?? __.has_highlight and not __.has_selection %}
+          selectionUIProps={selectionUIConnector.handle(myItem.id)}                             {% ?? __.has_selection %}
+          dragAndDropUIProps={dragAndDropUIConnector.handle(myItem.id)}                         {% ?? __.has_drag_and_drop %}
         />
       );
     });
@@ -61,15 +92,19 @@ export const MyListView = observer(
     // 🔳 MyListView 🔳
     //
     return (
-      <MyListViewKeyHandler>                                                                   {% ?? __.has_key_handler %}
+      <MyListViewKeyHandler className={cn(props.className)}>                                    {% ?? __.has_key_handler %}
         <div
-          className={cn('MyListView', [L.col.banner(), props.className])}
+          className={cn('MyListView', [
+            L.col.banner(),
+            props.className,                                                                    {% ?? not __.has_key_handler %}
+            {% remove_trailing suffix="," %}
+          ])}
           tabIndex={0}                                                                          {% ?? __.has_key_handler %}
         >
           {myItemDivs.length > 0 && myItemDivs}
           {myItemDivs.length === 0 && noItems}
         </div>
-      </MyListViewKeyHandler>                                                                  {% ?? __.has_key_handler %}
+      </MyListViewKeyHandler>                                                                   {% ?? __.has_key_handler %}
     );
   }, DefaultProps)
 );
@@ -77,7 +112,7 @@ export const MyListView = observer(
 
 export const MyListViewLoader = (props: { className?: any }) => {
   const loaderBars = ['1', '2', '3'].map((id: string) => {
-    return <LoaderBar key={id} className={cn('h-6 my-4')} />;
+    return <LoaderBar key={`item-${id}`} className={cn('h-6 my-4')} />;
   });
 
   return (

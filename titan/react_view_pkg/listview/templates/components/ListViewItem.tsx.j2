@@ -2,53 +2,66 @@
 {% magic_with myListView = _.component.name %}
 import { observer } from 'mobx-react-lite';
 import * as R from 'ramda';
+import { dragAndDropUIHandlers, DragAndDropUIPropsT } from 'skandha-facets';       {% ?? __.has_drag_and_drop %}
 import { highlightUIHandlers, HighlightUIPropsT } from 'skandha-facets';           {% ?? __.has_highlight and not __.has_selection %}
 import { selectionUIHandlers, SelectionUIPropsT } from 'skandha-facets';           {% ?? __.has_selection %}
 import { MyItemT } from '/src/api/types/MyItemT';
 import { L } from '/src/frames/layout';
 import { isUpdating } from '/src/resourceStates';
 import { cn } from '/src/utils/classnames';
+import { dps, withDefaultProps } from '/src/app/defaultProps';
 
 // Import styles
 import './MyListViewItem.scss';
 
 export type PropsT = {
-  myItem: MyItemT;
+  isHighlighted: boolean;                                                          {% ?? __.has_selection %}
+  dragAndDropUIProps: DragAndDropUIPropsT;                                         {% ?? __.has_drag_and_drop %}
   highlightUIProps: HighlightUIPropsT;                                             {% ?? __.has_highlight and not __.has_selection %}
-  selectionUIProps: HighlightUIPropsT;                                             {% ?? __.has_selection %}
+  selectionUIProps: SelectionUIPropsT;                                             {% ?? __.has_selection %}
   className?: any;
 };
 
-export const MyListViewItem = observer((props: PropsT) => {
-  return (
-    /*
-    🔳 MyListViewItem 🔳
-    */
-    <div
-      className={cn(
-        [
-          'MyListViewItem',
-          {                                                                         {% if __.has_highlight and not __.has_selection %}
-            'MyListViewItem--highlighted':
-              props.highlightUIProps.isHighlighted,
-            'animate-delete': isUpdating(props.myItem),
-          },                                                                        {% endif %}
-          {                                                                         {% if __.has_selection %}
-            'MyListViewItem--selected':
-              props.highlightUIProps.isSelected,
-          },                                                                        {% endif %}
-        ],
-        [L.col.banner(), 'py-3 px-4', props.className]
-      )}
-      {...highlightUIHandlers(props.highlightUIProps)}                              {% ?? __.has_highlight and not __.has_selection %}
-      {...selectionUIHandlers(props.selectionUIProps)}                              {% ?? __.has_selection %}
-    >
-      {
-        // 🔳 Body 🔳
-      }
-      <div className={cn('MyListViewItem__Body', [L.row.skewer()])}>
-        MyItem
+const DefaultProps = {
+  ...dps.myItem,
+};
+
+export const MyListViewItem = observer(
+  withDefaultProps((props: PropsT & typeof DefaultProps) => {
+    return (
+      /*
+      🔳 MyListViewItem 🔳
+      */
+      <div
+        className={cn(
+          [
+            'MyListViewItem',
+            {                                                                         {% if __.has_highlight and not __.has_selection %}
+              'MyListViewItem--highlighted':
+                props.highlightUIProps.isHighlighted,
+              'animate-delete': isUpdating(props.myItem),
+            },                                                                        {% endif %}
+            {                                                                         {% if __.has_selection %}
+              'MyListViewItem--selected':
+                props.selectionUIProps.isSelected,
+              'MyListViewItem--highlighted':
+                props.isHighlighted,
+            },                                                                        {% endif %}
+            `MyListViewItem--drag-${props.dragAndDropUIProps.dragState}`,             {% ?? __.has_drag_and_drop %}
+          ],
+          [props.className]
+        )}
+        {...highlightUIHandlers(props.highlightUIProps)}                              {% ?? __.has_highlight and not __.has_selection %}
+        {...selectionUIHandlers(props.selectionUIProps)}                              {% ?? __.has_selection %}
+        {...dragAndDropUIHandlers(props.dragAndDropUIProps)}                          {% ?? __.has_drag_and_drop %}
+      >
+        {
+          // 🔳 Body 🔳
+        }
+        <div className={cn('MyListViewItem__Body', [L.row.skewer()])}>
+          MyItem
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }, DefaultProps)
+);

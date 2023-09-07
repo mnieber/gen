@@ -123,11 +123,6 @@ def create_behavior(term):
     )
 
 
-@rule("selection:bvr")
-def created_selection(selection):
-    selection.container.state.module.react_app.set_flags(["app/useMergeHandlers"])
-
-
 @rule("container", has, "drag-and-drop:bvr")
 def container_has_drag_and_drop_behavior(container, bvr):
     return create_forward(container, has, "hovering:bvr")
