@@ -3,8 +3,10 @@ import { ObjT } from '/src/utils/types';
 export const applyUpdate = (paths: string[], data: ObjT, update: Function) => {
   let result = data;
   for (const path of paths) {
-    const pathParts = path.split('.');
-    result = applyUpdateImp(pathParts, 0, result, update);
+    result =
+      path === '.'
+        ? update(result)
+        : applyUpdateImp(path.split('.'), 0, result, update);
   }
   return result;
 };

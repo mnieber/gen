@@ -16,7 +16,6 @@ def create_auth_module(term):
 
 @rule("react-app", has, "auth:module")
 def react_app_has_auth_module(react_app, auth_module):
-    react_app.set_flags(["utils/useNextUrl"])
     return [
         create_forward(auth_module.react_app, has, "forms:module"),
         create_forward(auth_module.react_app, has, ":graphql"),

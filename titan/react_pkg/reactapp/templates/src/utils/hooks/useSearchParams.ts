@@ -8,9 +8,9 @@ export interface SearchParamsT {
   all: { [name: string]: string };
 }
 
-export const useSearchParams = (): SearchParamsT => {
+export const useSearchParams = (location: any): SearchParamsT => {
   const history = useHistory();
-  const search_params = new URLSearchParams(window.location.search);
+  const search_params = new URLSearchParams(location.search);
 
   return {
     get: (name: string) => search_params.get(name),
