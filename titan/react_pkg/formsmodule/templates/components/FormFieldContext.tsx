@@ -1,22 +1,16 @@
 import React from 'react';
 
-export type FormFieldContextPropsT = React.PropsWithChildren<{
+export type FormFieldContextPropsT = {
   fieldName: string;
-  label?: string;
-  useSmartLabel?: boolean;
   submitOnEnter?: boolean;
   tabOnEnter?: boolean;
-  autoFocus?: boolean;
-}>;
+};
 
 const getNullFormFieldContext = (): FormFieldContextPropsT => {
   return {
     fieldName: '',
-    label: undefined,
-    useSmartLabel: false,
     submitOnEnter: false,
     tabOnEnter: false,
-    autoFocus: false,
   };
 };
 
