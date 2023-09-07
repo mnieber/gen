@@ -1,0 +1,37 @@
+{% magic_with MyKeyHandler = __.component_name %}
+{% magic_with MyItem = __.item_name %}
+import { dps, withDefaultProps } from '/src/app/defaultProps';
+import { cn } from '/src/utils/classnames';
+import { observer } from 'mobx-react-lite';
+import * as R from 'ramda';
+import React from 'react';
+import KeyboardEventHandler from 'react-keyboard-event-handler';
+import { createHighlightKeyHandlers } from 'skandha-facets';
+import { createKeyDownHandler } from '/src/utils';
+
+export type PropsT = React.PropsWithChildren<{ className?: any }>;
+
+const DefaultProps = {
+  ...dps.myItemsHighlight,                                                                  {% ?? __.has_highlight %}
+};
+
+export const MyKeyHandler = observer(
+  withDefaultProps((props: PropsT & typeof DefaultProps) => {
+    const keyHandlers = {
+      ...createHighlightKeyHandlers(props.myItemsHighlight),                                {% ?? __.has_highlight %}
+    };
+
+    const handledKeys = R.keys(keyHandlers);
+    const onKeyDown = createKeyDownHandler(keyHandlers);
+
+    return (
+      <KeyboardEventHandler
+        handleKeys={handledKeys}
+        onKeyEvent={onKeyDown}
+        className={cn('MyKeyHandler', [props.className])}
+      >
+        {props.children}
+      </KeyboardEventHandler>
+    );
+  }, DefaultProps)
+);

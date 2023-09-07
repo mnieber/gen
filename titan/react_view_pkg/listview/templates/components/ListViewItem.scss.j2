@@ -1,0 +1,14 @@
+{% magic_with myItem = __.item_name %}
+{% magic_with myModule = _.component.module.name %}
+{% magic_with myListView = _.component.name %}
+.MyListViewItem {
+  @apply cursor-pointer;
+}
+
+.MyListViewItem--highlighted {                                              {% if __.has_highlight %}
+  @apply font-bold;
+}                                                                           {% endif %}
+
+.MyListViewItem--selected {                                                 {% if __.has_selection %}
+  @apply bg-[green];
+}                                                                           {% endif %}

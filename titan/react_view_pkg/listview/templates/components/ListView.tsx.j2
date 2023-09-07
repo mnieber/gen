@@ -1,23 +1,90 @@
-{% magic_with myComponent = _.component.name %}
-import { withDefaultProps } from '/src/app/defaultProps';
+{% magic_with myItem = __.item_name %}
+{% magic_with myModule = _.component.module.name %}
+{% magic_with myListView = _.component.name %}
+import { LoaderBar } from '/src/frames/components/LoaderBar';
+import { L } from '/src/frames/layout';
+import { dps, withDefaultProps } from '/src/app/defaultProps';
 import { cn } from '/src/utils/classnames';
 import { observer } from 'mobx-react-lite';
+import { MyItemT } from '/src/api/types/MyItemT';
+import { isLoading } from '/src/resourceStates';
+import { MyListViewKeyHandler } from '/src/myModule/components';                               {% ?? __.has_key_handler %}
+import { MyListViewItem } from '/src/myModule/components/MyListViewItem';
+import {
+    SelectionUIConnector,                                                                      {% ?? __.has_selection %}
+    HighlightUIConnector,                                                                      {% ?? __.has_highlight and not __.has_selection %}
+    DragAndDropUIConnector,                                                                    {% ?? __.has_drag_and_drop %}
+} from 'skandha-facets';
 
 // Import styles
-import './MyComponent.scss';
+import './MyListView.scss';
 
 export type PropsT = {
   className?: any;
 };
 
-const DefaultProps = {};
+const DefaultProps = {
+  ...dps.myItems,
+  ...dps.myItemsHighlight,                                                                      {% ?? __.has_highlight and not __.has_selection %}
+};
 
-export const MyComponent = observer(
+export const MyListView = observer(
   withDefaultProps((props: PropsT & typeof DefaultProps) => {
-    // Listview
+    const highlightUIConnector = new HighlightUIConnector({                                     {% if __.has_highlight %}
+      highlight: props.myItemsHighlight,
+    });
+                                                                                                {% endif %}
+
+    //
+    // 🔳  Handle loading state 🔳
+    //
+    if (isLoading(props.myItems)) {
+      return <MyListViewLoader />;
+    }
+
+    //
+    // 🔳 myItemDivs 🔳
+    //
+    const myItemDivs: any[] = props.myItems.map((myItem) => {
+      return (
+        <MyListViewItem
+          key={`item-${myItem.id}`}
+          myItem={myItem}
+          highlightUIProps={highlightUIConnector.handle(myItem.id)}
+        />
+      );
+    });
+
+    const noItems = <div>There are no myItems</div>;
+
+    //
+    // 🔳 MyListView 🔳
+    //
     return (
-      <div></div>
+      <MyListViewKeyHandler>                                                                   {% ?? __.has_key_handler %}
+        <div
+          className={cn('MyListView', [L.col.banner(), props.className])}
+          tabIndex={0}                                                                          {% ?? __.has_key_handler %}
+        >
+          {myItemDivs.length > 0 && myItemDivs}
+          {myItemDivs.length === 0 && noItems}
+        </div>
+      </MyListViewKeyHandler>                                                                  {% ?? __.has_key_handler %}
     );
   }, DefaultProps)
 );
 
+
+export const MyListViewLoader = (props: { className?: any }) => {
+  const loaderBars = ['1', '2', '3'].map((id: string) => {
+    return <LoaderBar key={id} className={cn('h-6 my-4')} />;
+  });
+
+  return (
+    <div
+      className={cn('MyListViewLoader', [L.col.banner(), props.className])}
+    >
+      {loaderBars}
+    </div>
+  );
+};

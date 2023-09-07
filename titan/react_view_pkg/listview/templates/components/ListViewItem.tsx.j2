@@ -1,0 +1,54 @@
+{% magic_with myItem = __.item_name %}
+{% magic_with myListView = _.component.name %}
+import { observer } from 'mobx-react-lite';
+import * as R from 'ramda';
+import { highlightUIHandlers, HighlightUIPropsT } from 'skandha-facets';           {% ?? __.has_highlight and not __.has_selection %}
+import { selectionUIHandlers, SelectionUIPropsT } from 'skandha-facets';           {% ?? __.has_selection %}
+import { MyItemT } from '/src/api/types/MyItemT';
+import { L } from '/src/frames/layout';
+import { isUpdating } from '/src/resourceStates';
+import { cn } from '/src/utils/classnames';
+
+// Import styles
+import './MyListViewItem.scss';
+
+export type PropsT = {
+  myItem: MyItemT;
+  highlightUIProps: HighlightUIPropsT;                                             {% ?? __.has_highlight and not __.has_selection %}
+  selectionUIProps: HighlightUIPropsT;                                             {% ?? __.has_selection %}
+  className?: any;
+};
+
+export const MyListViewItem = observer((props: PropsT) => {
+  return (
+    /*
+    🔳 MyListViewItem 🔳
+    */
+    <div
+      className={cn(
+        [
+          'MyListViewItem',
+          {                                                                         {% if __.has_highlight and not __.has_selection %}
+            'MyListViewItem--highlighted':
+              props.highlightUIProps.isHighlighted,
+            'animate-delete': isUpdating(props.myItem),
+          },                                                                        {% endif %}
+          {                                                                         {% if __.has_selection %}
+            'MyListViewItem--selected':
+              props.highlightUIProps.isSelected,
+          },                                                                        {% endif %}
+        ],
+        [L.col.banner(), 'py-3 px-4', props.className]
+      )}
+      {...highlightUIHandlers(props.highlightUIProps)}                              {% ?? __.has_highlight and not __.has_selection %}
+      {...selectionUIHandlers(props.selectionUIProps)}                              {% ?? __.has_selection %}
+    >
+      {
+        // 🔳 Body 🔳
+      }
+      <div className={cn('MyListViewItem__Body', [L.row.skewer()])}>
+        MyItem
+      </div>
+    </div>
+  );
+});
