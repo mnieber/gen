@@ -5,5 +5,5 @@ from titan.react_pkg.component.resources import Component
 
 
 @dataclass
-class ListView(Component):
+class FormView(Component):
     pass
