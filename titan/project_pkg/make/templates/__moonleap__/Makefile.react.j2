@@ -6,7 +6,7 @@ install:
 	yarn install
 
 run-server:
-	yarn start
+	yarn dev --host
 
 create-bundle:																	    {% if _.service.use_create_bundle %}
 	rm -rf /app/bundle/*

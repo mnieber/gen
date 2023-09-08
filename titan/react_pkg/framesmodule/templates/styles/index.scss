@@ -1,0 +1,13 @@
+// Import third party styles
+@import '/src/frames/styles/thirdParty.scss';
+
+// Import fonts
+@import '/src/frames/styles/fonts.scss';
+
+// Customize base level styles
+@import '/src/frames/styles/autocomplete.scss';
+@import '/src/frames/styles/focusedElement.scss';
+@import '/src/frames/styles/inputElement.scss';
+
+// Style the root element in index.html
+@import '/src/frames/styles/rootElement.scss';
