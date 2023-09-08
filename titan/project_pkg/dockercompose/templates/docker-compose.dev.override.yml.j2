@@ -2,14 +2,16 @@ version: "3.7"
 
 services:
   {{ service.name }}:                                                                                                     {% for service in _.project.services %}{% min_lines count=2 %}
-    volumes:                                                                                                              {% if service.opt_dir %}
-      - {{ __.pudb_path }}:/root/.config/pudb                                                                             {% ?? service.pudb %}
+    volumes:                                                                                                              {% if service.opt_dir %}{% min_lines count=2 %}
+      - {{ __.pudb_path }}:/root/.config/pudb                                                                             {% sort_lines %}{% ?? service.pudb %}
+      - {{ _.project.opt_dir_fn }}/{{ service.name }}/assets:{{ service.install_dir }}/assets                             {% ?? service.pytest %}
+      - {{ _.project.opt_dir_fn }}/{{ service.name }}/dumps:{{ service.install_dir }}/dumps                               {% ?? service.has_django_app %}
       - {{ _.project.opt_dir_fn }}/{{ service.name }}/fish_history:/root/.local/share/fish/fish_history                   {% ?? service.fish %}
       - {{ _.project.opt_dir_fn }}/{{ service.name }}/ipython:/root/.ipython                                              {% ?? service.pudb %}
+      - {{ _.project.opt_dir_fn }}/{{ service.name }}/log:{{ service.install_dir }}/log                                   {% ?? service.has_django_app %}
+      - {{ _.project.opt_dir_fn }}/{{ service.name }}/media:{{ service.install_dir }}/media                               {% ?? service.has_django_app %}
       - {{ _.project.opt_dir_fn }}/{{ service.name }}/pytest_report.html:{{ service.install_dir }}/pytest_report.html     {% ?? service.pytest %}
-      - {{ _.project.opt_dir_fn }}/{{ service.name }}/assets:{{ service.install_dir }}/assets                             {% ?? service.pytest %}
-      - {{ _.project.opt_dir_fn }}/{{ service.name }}/static:{{ service.install_dir }}/static                             {% ?? service.has_django_app %}
-      - {{ _.project.opt_dir_fn }}/{{ service.name }}/media:{{ service.install_dir }}/media                               {% ?? service.has_django_app %}{% endif %}{% end_min_lines %}
-      # Map editable packages to the container                                                                            {% ?? service.npm_source_maps or service.pypi_source_maps %}
-      - {{ src_dir }}:/npm/{{ name }}                                                                                     {% !! name, src_dir in service.npm_source_maps.items() %}
-      - {{ src_dir }}:/pypi/{{ name }}                                                                                    {% !! name, src_dir in service.pypi_source_maps.items() %}{% endfor %}
+      - {{ _.project.opt_dir_fn }}/{{ service.name }}/static:{{ service.install_dir }}/static                             {% ?? service.has_django_app %}{% end_sort_lines %}{% endif %}{% end_min_lines %}
+      # Map editable packages to the container                                                                            {% ?? service.npm_source_maps or service.pypi_source_maps %}{% min_lines count=2 %}
+      - {{ src_dir }}:/npm/{{ name }}                                                                                     {% sort_lines %}{% !! name, src_dir in service.npm_source_maps.items() %}
+      - {{ src_dir }}:/pypi/{{ name }}                                                                                    {% !! name, src_dir in service.pypi_source_maps.items() %}{% end_sort_lines %}{% end_min_lines %}{% end_min_lines %}{% endfor %}

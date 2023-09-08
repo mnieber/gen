@@ -23,7 +23,7 @@ MENU:                                                                 {% if _.se
   session_id: {{ _.project.name|sn }}_tsc
   commands:
     stack:
-    - dodo frontend.tsc --watch {{ name }}                            {% !! name, dir in _.service.npm_source_maps.items() %}{% endif %}
+    - dodo frontend.tsc --watch {{ name }}                            {% sort_lines %}{% !! name, dir in _.service.npm_source_maps.items() %}{% end_sort_lines %}{% endif %}
 
 
 NODE:                                                                 {% if _.service|dot("node") %}
@@ -59,6 +59,6 @@ SERVER:                                                               {% if _.se
 
 TSC:                                                                  {% if _.service.npm_source_maps %}
   src_dir_map:
-    {{ name }}: /npm/{{ name }}                                       {% !! name, dir in _.service.npm_source_maps.items() %}
+    {{ name }}: /npm/{{ name }}                                       {% sort_lines %}{% !! name, dir in _.service.npm_source_maps.items() %}{% end_sort_lines %}
                                                                       {% endif %}{% endif %}
 {% end_trim_newlines %}
