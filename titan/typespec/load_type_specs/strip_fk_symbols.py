@@ -15,10 +15,6 @@ def strip_fk_symbols(key):
     if is_inverse or "inverse" in words:
         parts.append("is_inverse")
 
-    symbols, extract_gql_fields = pop(symbols, "&")
-    if extract_gql_fields or "extract_gql_fields" in words:
-        parts.append("extract_gql_fields")
-
     symbols, is_entity = pop(symbols, "@")
     if is_entity or "entity" in words:
         parts.append("entity")

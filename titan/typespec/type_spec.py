@@ -13,7 +13,6 @@ class TypeSpec:
     module_name: T.Optional[str] = None
     is_entity: T.Optional[bool] = None
     base_type_name: T.Optional[str] = None
-    extract_gql_fields: bool = field(default=False, repr=False)
     is_sorted: bool = field(default=False, repr=False)
     is_form: bool = field(default=False, repr=False)
     no_api: bool = field(default=False, repr=False)
