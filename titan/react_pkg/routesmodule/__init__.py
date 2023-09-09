@@ -1,17 +1,22 @@
 from pathlib import Path
 
 import moonleap.packages.extensions.props as P
-from moonleap import create, empty_rule, extend, kebab_to_camel, rule
+from moonleap import (
+    Priorities,
+    create,
+    create_forward,
+    empty_rule,
+    extend,
+    kebab_to_camel,
+    rule,
+)
 from moonleap.blocks.verbs import has
-from moonleap.render.render_mixin import get_root_resource
 from titan.react_pkg.reactapp import ReactApp
 from titan.react_pkg.reactmodule import ReactModule, create_react_module
 
-from .resources import Route  # noqa
+from .resources import NavPage, Route  # noqa
 
-rules = {
-    ("module", has, "route"): empty_rule(),
-}
+rules = {}
 
 
 @create("routes:module")
@@ -30,9 +35,37 @@ def create_route(term):
     return route
 
 
+@create("nav-page")
+def create_nav_page(term):
+    nav_page = NavPage()
+    return nav_page
+
+
+@rule("module", has, "route")
+def module_has_route(module, route):
+    return create_forward(module, has, f"{module.name}:nav-page")
+
+
+@rule("module", has, "nav-page", priority=Priorities.LOW.value)
+def module_has_nav_page(module, nav_page):
+    frames_module = module.react_app.frames_module
+    if frames_module:
+        frames_module.renders(
+            [nav_page],
+            f"pages",
+            lambda nav_page: dict(nav_page=nav_page),
+            [Path(__file__).parent / "templates_pages"],
+        )
+
+
 @extend(ReactModule)
 class ExtendModule:
     routes = P.children(has, "route")
+
+
+@extend(NavPage)
+class ExtendNavPage:
+    module = P.parent("module", has)
 
 
 @extend(ReactApp)

@@ -7,3 +7,8 @@ from moonleap import Resource
 class Route(Resource):
     name: str
     path: str
+
+
+@dataclass
+class NavPage(Resource):
+    pass

@@ -1,7 +1,16 @@
 from pathlib import Path
 
 import moonleap.packages.extensions.props as P
-from moonleap import MemFun, Prop, create, empty_rule, extend, kebab_to_camel, rule
+from moonleap import (
+    MemFun,
+    Priorities,
+    Prop,
+    create,
+    empty_rule,
+    extend,
+    kebab_to_camel,
+    rule,
+)
 from moonleap.blocks.verbs import has
 from titan.react_pkg.reactapp import ReactApp
 
