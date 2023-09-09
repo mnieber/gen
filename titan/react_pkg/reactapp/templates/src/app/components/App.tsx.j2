@@ -3,24 +3,25 @@ import { queryClient } from '/src/api/queryClient';
 import { AuthStateProvider } from '/src/auth/components/AuthStateProvider';
 import { L, breakpoints } from '/src/frames/layout';
 import { cn } from '/src/utils/classnames';
-import { RouteTableProvider } from '/src/routes/components/RouteTableProvider';     {% ?? _.react_app.routes_module %}
-import { UrlRouter } from '/src/routes/components';                                 {% ?? _.react_app.routes_module %}
+import { RootSwitch } from '/src/routes/components';                                {% ?? _.react_app.routes_module %}
+import { Router } from 'react-router-dom';                                          {% ?? _.react_app.routes_module %}
+import { history } from '/src/routes/history';                                      {% ?? _.react_app.routes_module %}
 
 export const App = () => {
   return (
     <QueryClientProvider client={queryClient}>                                      {% ?? _.react_app.api_module %}
-      <div
-        className={cn('App', [
-            L.col.banner(),
-            `min-width-[${breakpoints.xs}] h-screen overflow-x-hidden`
-        ]
-      )}>
-        <RouteTableProvider>                                                    {% ?? _.react_app.routes_module %}
-          <AuthStateProvider>                                                   {% ?? _.react_app.auth_module %}
-            <UrlRouter />                                                       {% ?? _.react_app.routes_module %}
-          </AuthStateProvider>                                                  {% ?? _.react_app.auth_module %}
-        </RouteTableProvider>                                                   {% ?? _.react_app.routes_module %}
-      </div>
-    </QueryClientProvider>                                                      {% ?? _.react_app.api_module %}
+      <Router history={history}>                                                    {% ?? _.react_app.routes_module %}
+        <div
+          className={cn('App', [
+              L.col.banner(),
+              `min-width-[${breakpoints.xs}] h-screen overflow-x-hidden`
+          ]
+        )}>
+          <AuthStateProvider>                                                         {% ?? _.react_app.auth_module %}
+            <RootSwitch />                                                            {% ?? _.react_app.routes_module %}
+          </AuthStateProvider>                                                        {% ?? _.react_app.auth_module %}
+        </div>
+      </Router>                                                                     {% ?? _.react_app.routes_module %}
+    </QueryClientProvider>                                                          {% ?? _.react_app.api_module %}
   );
 }

@@ -2,10 +2,15 @@ import { RouteTable } from '/src/routes/utils/RouteTable';
 
 export const getRouteTable = () => {
   const routeTable = new RouteTable();
-
-  routeTable.addRoutes({
-    {{ route.name }}: () => '/{{ _.module.name }}/{{ route.path }}',                 {% !! route in _.module.routes %}
-  });
-
+  routeTable.addRoutes(routes);
   return routeTable;
 };
+
+export const routes = {
+  {{ route.name }}: () => '/{{ _.module.name }}/{{ route.path }}',                 {% !! route in _.module.routes %}
+};
+
+export type RoutesT = {
+  // MOONLEAP TODO
+};
+

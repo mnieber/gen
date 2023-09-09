@@ -47,7 +47,7 @@ export const useCallMyEndpoint = () => {
   return useObservableMutation({
     mutationFn: callMyEndpoint,
     onMutate: (args: ArgsT) => {                                                                            {% if _.mutation.api_spec.orders %}
-      // MOONLEAP TODO: update ordering of {{ _.mutation.api_spec.orders }} in the query cache.
+      // MOONLEAP TODO: update ordering of {{ __.orders_field }} in the query cache.
     },                                                                                                      {% endif %}
     onSuccess: (response: ObjT, args: ArgsT) => {                                                           {% if _.mutation.api_spec.invalidates %}
       return Promise.all([

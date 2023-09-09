@@ -1,8 +1,10 @@
 GRAPHENE = {
+    "APPROVED_QUERY_CRCS": [],                                      {% ?? _.django_app.user_accounts_module %}
     "MIDDLEWARE": [
         "graphql_jwt.middleware.JSONWebTokenMiddleware",            {% ?? _.django_app.user_accounts_module %}
         "api.middleware.GraphqlCheckCRCMiddleware",
     ],
     "SCHEMA": "api.schema.schema",
+    "TESTING_ENDPOINT": "/graphql/",
 }
 

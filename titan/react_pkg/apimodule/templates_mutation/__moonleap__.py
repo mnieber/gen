@@ -14,4 +14,8 @@ def get_helpers(_):
         def split_query_names(self, query_names):
             return [x.split(".") if "." in x else ("api", x) for x in query_names]
 
+        @property
+        def orders_field(self):
+            return ", ".join([".".join(x) for x in _.mutation.api_spec.orders])
+
     return Helpers()

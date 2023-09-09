@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useObservableMutation } from '/src/api/ObservableMutation';
 import { doQuery } from '/src/api/graphqlClient';
 import { AuthState } from '/src/auth/AuthState';
 import { States } from '/src/auth/endpoints/states';
@@ -7,6 +7,7 @@ import { ObjT } from '/src/utils/types';
 
 export type ArgsT = {
   activationToken: string;
+  username: string;                                                                       {% ?? _.module.uses_username %}
   password: string;
 };
 
@@ -14,10 +15,12 @@ export function activateAccount(args: ArgsT) {
   return doQuery(
     `mutation (
       $activationToken: String!,
+      $username: String!,                                                                 {% ?? _.module.uses_username %}
       $password: String!,
     ) {
       activateAccount(
         activationToken: $activationToken,
+        username: $username,                                                              {% ?? _.module.uses_username %}
         password: $password,
       ) {
         success,
@@ -26,6 +29,7 @@ export function activateAccount(args: ArgsT) {
     }`,
     {
       activationToken: args.activationToken,
+      username: args.username,                                                            {% ?? _.module.uses_username %}
       password: args.password,
     }
   ).then((response: ObjT) => {
@@ -39,6 +43,17 @@ export function activateAccount(args: ArgsT) {
         success: false,
         errors: [States.PASSWORD_TOO_SHORT],
       };
+
+    if (                                                                                   {% if _.module.uses_username %}
+      hasErrorCode(
+        ['activateAccount', 'errors', 'username'],
+        'ALREADY_TAKEN'
+      )(response)
+    )
+      return {
+        success: false,
+        errors: [States.USERNAME_ALREADY_TAKEN],
+      };                                                                                   {% endif %}
 
     if (
       hasErrorCode(
@@ -66,8 +81,7 @@ export function activateAccount(args: ArgsT) {
 export const useActivateAccount = (authState?: AuthState) => {
   const queryName = 'activateAccount';
 
-  return useMutation({
-    mutationKey: [queryName],
+  return useObservableMutation({
     mutationFn: activateAccount,
     onMutate: () => {
       if (authState) authState.onUpdating(queryName);

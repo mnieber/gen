@@ -1,3 +1,2 @@
-export { Route } from './Route';
+export { RootSwitch } from './RootSwitch';
 export { RouterLink } from './RouterLink';
-export { UrlRouter } from './UrlRouter';

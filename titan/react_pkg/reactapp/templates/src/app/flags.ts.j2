@@ -2,6 +2,7 @@ import { observable } from 'mobx';
 
 export const flags = observable({
   logQueries: false,                                                        {% ?? _.react_app.api_module %}
+  logResourceStates: false,
   logSkandha: false,                                                        {% if _.react_app.has_flag("app/useStates") %}
   logStateProviders: false,                                                 {% endif %}
 });

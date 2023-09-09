@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useObservableMutation } from '/src/api/ObservableMutation';
 import { doQuery } from '/src/api/graphqlClient';
 import { States } from '/src/auth/endpoints/states';
 import { isError } from '/src/auth/endpoints/utils';
@@ -41,8 +41,7 @@ export function requestMagicLink(args: ArgsT) {
 export const useRequestMagicLink = (authState?: AuthState) => {
   const queryName = 'requestMagicLink';
 
-  return useMutation({
-    mutationKey: [queryName],
+  return useObservableMutation({
     mutationFn: requestMagicLink,
     onMutate: () => {
       maybeSetCypressCookie('cypressMagicLinkToken', '');                       {% ?? _.service.cypress %}

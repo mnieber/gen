@@ -1,8 +1,7 @@
 import { when } from 'mobx';
+import { isLoading } from 'mobx-resource-states';
 import React from 'react';
-import { Highlight } from 'skandha-facets/Highlight';
-import { Selection } from 'skandha-facets/Selection';
-import { isLoading } from '/src/api/getState';
+import { Highlight, Selection } from 'skandha-facets';
 
 export type PropsT<ValueT> = {
   values: ValueT[];
@@ -19,7 +18,7 @@ export const useValuePickerState = <ValueT extends { id: string }>(
 
   const setItem = React.useMemo(
     () => (value: ValueT) => {
-      props.highlight && props.highlight.highlightItem(value.id);
+      props.highlight && props.highlight.highlightItem({ id: value.id });
       props.selection && props.selection.selectItem({ itemId: value.id });
       props.updateUrl && props.updateUrl(value);
     },

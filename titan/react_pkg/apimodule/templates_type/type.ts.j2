@@ -4,7 +4,7 @@ import { MyBaseNameT } from '/src/api/types/MyBaseNameT';                       
 import * as R from 'ramda';
 import { createUUID } from '/src/utils/ids';
 import { ObjT } from '/src/utils/types';
-import { initRS } from '/src/resourceStates';
+import { initRS } from 'mobx-resource-states';
 
 export type MyTypeT = {                                                                             {% ?? not _.type_spec.base_type_name %}
 export type MyTypeT = {{ _.type_spec.base_type_name}}T & {                                          {% ?? _.type_spec.base_type_name %}

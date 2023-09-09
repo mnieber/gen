@@ -49,7 +49,7 @@ export function RequestMagicLinkForm(props: PropsT) {
           // 🔳 Reset password message 🔳
         }
         <div className={cn(AuthFormS.Header())}>
-          {messages.divEnterYourEmailToResetYourPassword}
+          {messages.divEnterYourEmailToRequestAMagicLink}
         </div>
 
         {

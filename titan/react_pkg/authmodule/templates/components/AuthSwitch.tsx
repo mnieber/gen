@@ -5,10 +5,11 @@ import { RequestPasswordResetPage } from '/src/auth/components/RequestPasswordRe
 import { ResetPasswordPage } from '/src/auth/components/ResetPasswordPage';
 import { SignInPage } from '/src/auth/components/SignInPage';
 import { SignUpPage } from '/src/auth/components/SignUpPage';
-import { useRoutes } from '/src/routes/hooks/useRoutes';
+import type { RoutesT as AuthRoutesT } from '/src/auth/routeTable';
+import { getRoutes } from '/src/routes/routeTable';
 
 export const AuthSwitch = () => {
-  const routes = useRoutes();
+  const routes = getRoutes<AuthRoutesT>();
 
   return (
     <Switch>

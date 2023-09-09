@@ -40,6 +40,8 @@ export const myEndpoint = (args: ArgsT) => {
   );
 };
 
+export type QueryKeyT = ArgsT;
+
 export function queryKey(args: QueryKeyT) {
   return createQueryKey<QueryKeyT>('myEndpoint', args);
 }

@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useObservableMutation } from '/src/api/ObservableMutation';
 import { doQuery } from '/src/api/graphqlClient';
 import { AuthState } from '/src/auth/AuthState';
 import { States } from '/src/auth/endpoints/states';
@@ -74,8 +74,7 @@ export function resetPassword(args: ArgsT) {
 export const useResetPassword = (authState?: AuthState) => {
   const queryName = 'resetPassword';
 
-  return useMutation({
-    mutationKey: [queryName],
+  return useObservableMutation({
     mutationFn: resetPassword,
     onMutate: () => {
       if (authState) authState.onUpdating(queryName);

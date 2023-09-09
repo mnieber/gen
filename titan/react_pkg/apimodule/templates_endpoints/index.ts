@@ -1,2 +1,2 @@
-export * from '/src/api/mutations';
-export * from '/src/api/queries';
+export * from '/src/api/endpoints/mutations';
+export * from '/src/api/endpoints/queries';

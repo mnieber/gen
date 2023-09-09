@@ -1,1 +1,1 @@
-export { handleEnterAsTabToNext } from './handleEnterAsTabToNext';
+export { tabToNext } from './tabToNext';

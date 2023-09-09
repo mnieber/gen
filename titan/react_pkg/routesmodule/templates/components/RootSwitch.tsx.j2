@@ -1,17 +1,14 @@
 {% magic_with moduleName = module.name %}
-import { Router, Switch } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
-import { createBrowserHistory } from 'history';
 import { ModuleNameSwitch } from '/src/moduleName/components';                {% !! module in __.modules_with_routes %}
 
 type PropsT = {};
 
-export const history = createBrowserHistory();
-
-export const UrlRouter = observer((props: PropsT) => {
+export const RootSwitch = observer((props: PropsT) => {
   return (
-    <Router history={history}>
+    <>
       <ModuleNameSwitch />                                                   {% !! module in __.modules_with_routes %}
-    </Router>
+    </>
   );
 });

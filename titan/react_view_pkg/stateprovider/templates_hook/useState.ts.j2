@@ -6,7 +6,7 @@
 import * as R from 'ramda';
 import React from 'react';
 import { MyState } from '/src/{{ _.state.module.module_path }}/MyState';
-import { trackPromise } from '/src/resourceStates/trackPromise';
+import { trackPromise } from 'mobx-resource-states';
 import { useBuilder } from '/src/utils/hooks/useBuilder';
 import { useGraftResourceStatesFromMemo } from '/src/utils/hooks/useGraftResourceStatesFromMemo';
 import { lookUp } from '/src/utils/ids';
@@ -26,8 +26,7 @@ export const useMyState = (props: PropsT) => {
       deleteContainerItems: (ids: string[]) => {                                                                {% if container.deletion_bvr %}
         const containerItems = lookUp(
           ids,
-          myState.myContainerCtr.display.itemById                                                               {% ?? container.display_bvr %}
-          myState.myContainerCtr.store.itemById                                                                 {% ?? not container.display_bvr %}
+          myState.myContainerCtr.store.itemById
         );
         return trackPromise({
           name: 'deleteContainerItems',

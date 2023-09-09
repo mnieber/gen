@@ -1,7 +1,7 @@
-import { useMutation } from '@tanstack/react-query';
+import { useObservableMutation } from '/src/api/ObservableMutation';
 import { doQuery, setToken } from '/src/api/graphqlClient';
-import { queryClient } from '/src/api/queryClient';
 import { AuthState } from '/src/auth/AuthState';
+import { invalidateLoadUserId } from '/src/auth/endpoints';
 import { States } from '/src/auth/endpoints/states';
 import { hasErrorCode, isError } from '/src/auth/endpoints/utils';
 import { ObjT } from '/src/utils/types';
@@ -67,15 +67,14 @@ export function signInByMagicLink(args: ArgsT) {
 export const useSignInByMagicLink = (authState?: AuthState) => {
   const queryName = 'signInByMagicLink';
 
-  return useMutation({
-    mutationKey: [queryName],
+  return useObservableMutation({
     mutationFn: signInByMagicLink,
     onMutate: () => {
       if (authState) authState.onUpdating(queryName);
     },
     onSuccess: (data: ObjT) => {
       if (authState) authState.onUpdated(queryName, data);
-      queryClient.invalidateQueries({ queryKey: ['loadUserId'] });
+      invalidateLoadUserId({});
     },
     onError: (error: Error) => {
       if (authState) authState.onErrored(queryName, error.message);

@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 
 export function listToItemById(qsList: Array<any>, key: string = 'id') {
   const result: any = {};

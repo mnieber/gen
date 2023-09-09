@@ -69,8 +69,13 @@ class DjangoFkField(DjangoModelField):
 
     def field_args(self, django_model):
         related_name = self.field_spec.related_name or "+"
+        target = (
+            f'"{self.field_spec.target}"'
+            if django_model.type_spec.type_name == self.field_spec.target
+            else self.field_spec.target
+        )
         return [
-            self.field_spec.target,
+            target,
             "on_delete=models.SET_NULL"
             if self.field_spec.set_null
             else "on_delete=models.CASCADE",
