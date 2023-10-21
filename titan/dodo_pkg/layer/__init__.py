@@ -28,18 +28,6 @@ def create_layer(term):
     return DodoLayer(name=name, is_root=name == "config")
 
 
-@rule("project", has, "layer")
-def project_has_layer(project, layer):
-    get_root_resource().renders(
-        [layer],
-        ".dodo_commands",
-        lambda layer: dict(
-            project=project, layer=layer, service=layer.configures_service
-        ),
-        [Path(__file__).parent / "templates"],
-    )
-
-
 @rule("docker-compose", configured_by, "layer")
 def docker_compose_configured_by_layer(docker_compose, layer):
     return create_forward(docker_compose.project, has, layer)

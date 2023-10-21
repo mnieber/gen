@@ -1,6 +1,3 @@
-import os
-
-
 def get_helpers(_):
     class Helpers:
         vscode_project = _.project.vscode_project
