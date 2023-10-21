@@ -11,11 +11,6 @@ base_tags = {
     "django-app": ["tool"],
 }
 
-rules = {
-    ("django-app", uses, "admin-reorder"): empty_rule(),
-    ("django-app", uses, "db-backup"): empty_rule(),
-}
-
 
 @create("django-app")
 def create_django(term):
@@ -23,6 +18,11 @@ def create_django(term):
     django_app.template_dir = Path(__file__).parent / "templates"
     django_app.template_context = dict(django_app=django_app)
     return django_app
+
+
+@rule("django-app")
+def created_django(django_app):
+    return create_forward(django_app, has, "app:module")
 
 
 @create("admin-reorder")
@@ -35,16 +35,6 @@ def create_db_backup(term):
     return DjangoDbBackup()
 
 
-@rule("django-app")
-def created_django(django_app):
-    return create_forward(django_app, has, "app:module")
-
-
-@rule("django-app", connects, "postgres:service")
-def django_uses_postgres_service(django_app, postgres_service):
-    return create_forward(django_app.service, uses, "postgres:service")
-
-
 @extend(DjangoApp)
 class ExtendDjangoApp:
     admin_reorder = P.child(uses, ":admin-reorder")
@@ -55,3 +45,17 @@ class ExtendDjangoApp:
 class ExtendService:
     django_app = P.child(runs, ":django-app")
     postgres = P.child(uses, "postgres:14:docker-image")
+
+
+rules = {
+    "django-app": {
+        (uses, "admin-reorder"): empty_rule(),
+        (uses, "db-backup"): empty_rule(),
+        (connects, "postgres:service"): (
+            # then service uses postgres
+            lambda django_app, postgres_service: create_forward(
+                django_app.service, uses, postgres_service
+            )
+        ),
+    },
+}

@@ -1,13 +1,9 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from moonleap import create, create_forward, empty_rule, rule
+from moonleap import create, create_forward, rule
 from moonleap.blocks.verbs import has
 from titan.project_pkg.service import Tool
-
-rules = {
-    ("project", has, "env"): empty_rule(),
-}
 
 
 @dataclass
@@ -28,27 +24,36 @@ def created_project(project):
     return create_forward(project, has, ":env")
 
 
-@rule("project", has, "service")
 def project_has_service_that_has_env(project, service):
     if service.has_env:
         return create_forward(service, has, ":env")
 
 
-@rule("project", has, ":env")
-def project_has_env(project, env):
-    project.renders(
-        [env],
-        "env",
-        dict(env=env),
-        [Path(__file__).parent / "templates"],
-    )
-
-
-@rule("service", has, ":env")
-def service_has_env(service, env):
-    service.renders(
-        [env],
-        ".env",
-        dict(env=env),
-        [Path(__file__).parent / "templates_service"],
-    )
+rules = {
+    "project": {
+        (has, "env"): (
+            #
+            lambda project, env: project.renders(
+                [env],
+                "env",
+                dict(env=env),
+                [Path(__file__).parent / "templates"],
+            )
+        ),
+        (has, "service"): (
+            # then maybe create relation :service /has :env
+            project_has_service_that_has_env
+        ),
+    },
+    "service": {
+        (has, ":env"): (
+            #
+            lambda service, env: service.renders(
+                [env],
+                ".env",
+                dict(env=env),
+                [Path(__file__).parent / "templates_service"],
+            )
+        )
+    },
+}

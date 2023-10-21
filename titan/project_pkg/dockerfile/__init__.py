@@ -24,11 +24,20 @@ def create_docker_image(term):
     return docker_image
 
 
-@rule("dockerfile", has, "docker-image")
-def dockerfile_use_docker_image(dockerfile, docker_image):
+def set_dockerfile_image_name(dockerfile, docker_image):
     dockerfile.image_name = docker_image.name
 
 
 @extend(Dockerfile)
 class ExtendDockerfile:
     docker_image = P.child(has, "docker-image")
+
+
+rules = {
+    "dockerfile": {
+        (has, "docker-image"): (
+            #
+            set_dockerfile_image_name
+        )
+    },
+}

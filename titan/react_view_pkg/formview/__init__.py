@@ -10,10 +10,6 @@ base_tags = {
     "form-view": ["component", "react-view"],
 }
 
-rules = {
-    ("form-view", saves, "item"): empty_rule(),
-}
-
 
 @create("form-view")
 def create_form_view(term):
@@ -26,3 +22,8 @@ def create_form_view(term):
 @extend(FormView)
 class ExtendFormView:
     item = P.child(saves, "item")
+
+
+rules = {
+    "form-view": {(saves, "item"): empty_rule()},
+}

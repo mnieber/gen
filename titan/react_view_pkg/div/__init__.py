@@ -4,11 +4,6 @@ from moonleap.blocks.verbs import has
 
 from .resources import Div
 
-rules = {
-    ("x+div", has, "x+component"): empty_rule(),
-    ("x+div", has, "x+div"): empty_rule(),
-}
-
 
 @create("x+div")
 def create_named_div(term):
@@ -23,3 +18,12 @@ def create_named_div(term):
 class ExtendNamedDiv:
     named_components = P.children(has, "x+component")
     named_divs = P.children(has, "x+div")
+
+
+rules = {
+    "x+div": {
+        #
+        (has, "x+component"): empty_rule(),
+        (has, "x+div"): empty_rule(),
+    },
+}

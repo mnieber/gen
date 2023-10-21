@@ -10,12 +10,6 @@ base_tags = {
     "list-view": ["component", "react-view"],
 }
 
-rules = {
-    ("list-view", shows, "item~list"): empty_rule(),
-    ("list-view", has, "bvr"): empty_rule(),
-    ("list-view", has, "key-handler"): empty_rule(),
-}
-
 
 @create("list-view")
 def create_list_view(term):
@@ -32,3 +26,12 @@ class ExtendListView:
     selection_bvr = P.child(has, "selection:bvr")
     highlight_bvr = P.child(has, "highlight:bvr")
     drag_and_drop_bvr = P.child(has, "drag-and-drop:bvr")
+
+
+rules = {
+    "list-view": {
+        (shows, "item~list"): empty_rule(),
+        (has, "bvr"): empty_rule(),
+        (has, "key-handler"): empty_rule(),
+    },
+}

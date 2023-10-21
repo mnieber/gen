@@ -9,10 +9,6 @@ from .resources import ReactApp
 
 base_tags = {"react-app": ["tool"]}
 
-rules = {
-    ("react-app", has, "node-package"): empty_rule(),
-}
-
 
 @create("react-app")
 def create_react_app(term):
@@ -42,3 +38,8 @@ class ExtendReactApp:
     frames_module = P.child(has, "frames:module")
     use_graphql = P.child(has, ":graphql")
     node_package = P.child(has, "node-package")
+
+
+rules = {
+    "react-app": {(has, "node-package"): empty_rule()},
+}

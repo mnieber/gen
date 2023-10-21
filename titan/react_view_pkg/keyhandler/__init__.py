@@ -19,7 +19,6 @@ def create_key_handler(term):
     return view
 
 
-@rule("list-view", has, "key-handler", priority=Priorities.LOW.value)
 def list_view_has_key_handler(list_view, key_handler):
     if not key_handler.module:
         return create_forward(list_view.module, has, key_handler)
@@ -28,3 +27,13 @@ def list_view_has_key_handler(list_view, key_handler):
 @extend(KeyHandler)
 class ExtendKeyHandler:
     list_view = P.parent("list-view", has)
+
+
+rules = {
+    "list-view": {
+        (has, "key-handler", Priorities.LOW.value): (
+            # then the list view's module has a key handler
+            list_view_has_key_handler
+        )
+    }
+}

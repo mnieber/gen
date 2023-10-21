@@ -15,23 +15,11 @@ from .resources import Service, Tool
 
 render_the_service = lambda x: "render the {x.name} service"
 
-rules = {
-    ("service", has, "docker-image"): empty_rule(),
-    ("service", has + runs, "tool"): empty_rule(),
-    ("service", uses, "service"): empty_rule(),
-    ("service", has, "create-bundle:makefile-command"): empty_rule(),
-}
-
 
 @create("service")
 def create_service(term):
     service = Service(name=kebab_to_camel(term.data))
     return service
-
-
-@rule("dockerfile", has, "docker-image")
-def dockerfile_use_docker_image(dockerfile, docker_image):
-    return create_forward(dockerfile.service, has, docker_image)
 
 
 @rule("service", uses + has + runs, "tool")
@@ -68,3 +56,21 @@ class ExtendService:
 @extend(Tool)
 class ExtendTool:
     service = P.parent("service", has + runs, required=True)
+
+
+rules = {
+    "service": {
+        (has, "docker-image"): empty_rule(),
+        (has + runs, "tool"): empty_rule(),
+        (uses, "service"): empty_rule(),
+        (has, "create-bundle:makefile-command"): empty_rule(),
+    },
+    "dockerfile": {
+        (has, "docker-image"): (
+            # then the service also has this docker_image
+            lambda dockerfile, docker_image: create_forward(
+                dockerfile.service, has, docker_image
+            )
+        )
+    },
+}

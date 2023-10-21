@@ -7,11 +7,6 @@ from . import props
 from .import_type_spec import import_type_spec
 from .resources import DjangoModel
 
-rules = {
-    ("module", contains + provides, "item~list"): empty_rule(),
-    ("module", has, "django-model"): empty_rule(),
-}
-
 base_tags = {"module": ["django-module"]}
 
 
@@ -21,13 +16,24 @@ def create_django_model(term):
     return django_model
 
 
-@rule("django-model", provides, "item~list")
-def django_model_provides_item_list(django_model, item_list):
-    import_type_spec(item_list.item.type_spec, django_model)
-
-
 @extend(DjangoModel)
 class ExtendDjangoModel:
     item_list = P.child(provides, "item~list")
     module = P.parent("module", has)
     form_field_spec = Prop(props.django_model_form_field_spec)
+
+
+rules = {
+    "module": {
+        (contains + provides, "item~list"): empty_rule(),
+        (has, "django-model"): empty_rule(),
+    },
+    "django-model": {
+        (provides, "item~list"): (
+            # base django_model on the type_spec of the item list
+            lambda django_model, item_list: import_type_spec(
+                item_list.item.type_spec, django_model
+            )
+        )
+    },
+}

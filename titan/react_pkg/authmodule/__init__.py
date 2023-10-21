@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import moonleap.packages.extensions.props as P
-from moonleap import create, create_forward, extend, rule
+from moonleap import create, create_forward, extend
 from moonleap.blocks.verbs import has
 from titan.react_pkg.reactapp import ReactApp
 from titan.react_pkg.reactmodule import create_react_module
@@ -14,14 +14,19 @@ def create_auth_module(term):
     return create_react_module(AuthModule, term, Path(__file__).parent / "templates")
 
 
-@rule("react-app", has, "auth:module")
-def react_app_has_auth_module(react_app, auth_module):
-    return [
-        create_forward(auth_module.react_app, has, "forms:module"),
-        create_forward(auth_module.react_app, has, ":graphql"),
-    ]
-
-
 @extend(ReactApp)
 class ExtendReactApp:
     auth_module = P.child(has, "auth:module")
+
+
+rules = {
+    "react-app": {
+        (has, "auth:module"): (
+            # then react_app has a forms module and graphql
+            lambda react_app, auth_module: [
+                create_forward(react_app, has, "forms:module"),
+                create_forward(react_app, has, ":graphql"),
+            ]
+        )
+    }
+}

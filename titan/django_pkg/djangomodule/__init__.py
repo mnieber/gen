@@ -25,10 +25,6 @@ from titan.typespec.type_spec import TypeSpec
 from . import props
 from .resources import DjangoModule
 
-rules = {
-    ("module", contains + provides, "item~list"): empty_rule(),
-}
-
 base_tags = {"module": ["django-module"]}
 
 
@@ -62,8 +58,7 @@ def create_users_module(term):
     )
 
 
-@rule("django-app", has, "module")
-def django_app_has_module(django_app, module):
+def django_app_renders_module(django_app, module):
     django_app.renders(
         [module],
         sn(module.name),
@@ -119,3 +114,16 @@ class ExtendDjangoApp:
     )
     user_accounts_module = P.child(has, "user-accounts:module")
     get_module_by_name = MemFun(props.get_module_by_name)
+
+
+rules = {
+    "module": {
+        (contains + provides, "item~list"): empty_rule(),
+    },
+    "django-app": {
+        (has, "module"): (
+            #
+            django_app_renders_module
+        )
+    },
+}

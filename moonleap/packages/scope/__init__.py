@@ -28,9 +28,10 @@ class Scope:
             if hasattr(f, "moonleap_rule"):
                 self.rules.append(f.moonleap_rule)
 
-        for rel_tuple, f in getattr(module, "rules", {}).items():
-            rule = rule_decorator(*rel_tuple)(f).moonleap_rule
-            self.rules.append(rule)
+        for res_term_str, rules in getattr(module, "rules", {}).items():
+            for rel_tuple, f in rules.items():
+                rule = rule_decorator(res_term_str, *rel_tuple)(f).moonleap_rule
+                self.rules.append(rule)
 
         for tag, base_tags in getattr(module, "base_tags", {}).items():
             self.register_base_tags(tag, base_tags)

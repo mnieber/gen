@@ -11,8 +11,6 @@ from titan.types_pkg.typeregistry import get_type_reg
 
 from .resources import ApiModule  # noqa
 
-rules = {}
-
 
 @create("api:module")
 def create_api_module(term):
@@ -25,8 +23,7 @@ def create_api_module(term):
     return api_module
 
 
-@rule("react-app", has, "api:module")
-def react_app_uses_graphql(react_app, api_module):
+def react_app_maybe_uses_graphql(react_app, api_module):
     use_graphql = False
     for endpoint in get_api_reg().get_queries(
         module_name="api"
@@ -34,12 +31,7 @@ def react_app_uses_graphql(react_app, api_module):
         if not endpoint.api_spec.is_stub:
             use_graphql = True
     if use_graphql:
-        return create_forward(":react-app", has, ":graphql")
-
-
-@rule("react-app", has, ":graphql")
-def react_app_uses_graphql_node_pkg(react_app, graphql):
-    react_app.set_flags(["app/useGraphql"])
+        return create_forward(react_app, has, ":graphql")
 
 
 @rule("react-app", has, "api:module")
@@ -97,3 +89,17 @@ def add_api_render_tasks(react_app, api_module):
 @extend(ReactApp)
 class ExtendReactApp:
     api_module = P.child(has, "api:module")
+
+
+rules = {
+    "react-app": {
+        (has, "api:module"): (
+            # Maybe add the relation that react_app uses graphql
+            react_app_maybe_uses_graphql
+        ),
+        (has, ":graphql"): (
+            # set the useGraphql flag
+            lambda react_app, graphql: react_app.set_flags(["app/useGraphql"])
+        ),
+    },
+}

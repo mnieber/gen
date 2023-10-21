@@ -10,9 +10,6 @@ from .resources import SelectItemEffect
 base_tags = {"select-item-effect": ["component"]}
 
 
-rules = {("select-item-effect", has, "item~list"): empty_rule()}
-
-
 @create("select-item-effect")
 def create_select_item_effect(term):
     select_item_effect = SelectItemEffect(
@@ -33,3 +30,6 @@ def created_select_item_effect(select_item_effect):
 @extend(SelectItemEffect)
 class ExtendSelectItemEffect:
     item_list = P.child(has, "item~list", required=True)
+
+
+rules = {"select-item-effect": {(has, "item~list"): empty_rule()}}

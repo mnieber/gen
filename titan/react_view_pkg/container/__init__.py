@@ -7,7 +7,6 @@ from moonleap import (
     empty_rule,
     extend,
     kebab_to_camel,
-    rule,
 )
 from moonleap.blocks.verbs import has, stores
 from titan.react_view_pkg.behavior.resources import Behavior
@@ -19,24 +18,11 @@ from .resources import Container
 
 base_tags = {}
 
-rules = {
-    ("state", has, "container"): empty_rule(),
-    ("container", has + stores, "item~list"): empty_rule(),
-    ("container", has + stores, "item"): empty_rule(),
-    ("container", has, "bvr"): empty_rule(),
-    ("item~list", has, "bvr"): empty_rule(),
-}
-
 
 @create("container")
 def create_container(term):
     name = kebab_to_camel(term.data)
     return Container(name=name)
-
-
-@rule("container", has, "addition:bvr", priority=Priorities.LOW.value)
-def container_has_addition_behavior(container, addition_bvr):
-    return create_forward(container.item_list, has, addition_bvr)
 
 
 @extend(State)
@@ -61,3 +47,20 @@ class ExtendBehavior:
 @extend(ItemList)
 class ExtendItemList:
     addition = P.child(has, "addition:bvr")
+
+
+rules = {
+    "container": {
+        (has, "addition:bvr", Priorities.LOW.value): (
+            #
+            lambda container, addition_bvr: create_forward(
+                container.item_list, has, addition_bvr
+            )
+        ),
+        (has + stores, "item~list"): empty_rule(),
+        (has + stores, "item"): empty_rule(),
+        (has, "bvr"): empty_rule(),
+    },
+    "state": {(has, "container"): empty_rule()},
+    "item~list": {(has, "bvr"): empty_rule()},
+}

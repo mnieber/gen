@@ -20,10 +20,24 @@ def react_app_has_node_package(react_app, node_package):
         lambda node_package: dict(node_package=node_package),
         [Path(__file__).parent / "templates"],
     )
-    return create_forward(react_app.service, runs, ":node")
 
 
-@rule("react-app", has, "cypress")
 def react_app_has_cypress(react_app, cypress):
     react_app.set_flags(["app/useCypress"])
     return create_forward(react_app.service, runs, cypress)
+
+
+rules = {
+    "react-app": {
+        (has, "cypress"): (
+            # then the service runs cypress
+            react_app_has_cypress
+        ),
+        (has, "node-package"): (
+            #
+            lambda react_app, node_package: create_forward(
+                react_app.service, runs, ":node"
+            )
+        ),
+    }
+}

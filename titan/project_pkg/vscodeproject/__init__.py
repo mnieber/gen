@@ -7,8 +7,6 @@ from titan.project_pkg.project import Project
 
 from .resources import VsCodeProject
 
-rules = {("project", has, "vscode-project"): empty_rule()}
-
 
 @create("vscode-project")
 def create_vscode_project(term):
@@ -33,3 +31,6 @@ class ExtendProject:
 @extend(VsCodeProject)
 class ExtendVsCodeProject:
     project = P.parent("project", has)
+
+
+rules = {"project": {(has, "vscode-project"): empty_rule()}}

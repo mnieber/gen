@@ -1,11 +1,9 @@
-from moonleap import create, create_forward, kebab_to_camel, parts_to_camel, rule, u0
+from moonleap import create, create_forward, kebab_to_camel, parts_to_camel, u0
 from moonleap.blocks.verbs import has
 
 from .resources import Behavior, is_exposed_bvr  # noqa: F401
 
 base_tags = {}
-
-rules = {}
 
 
 @create("addition:bvr")
@@ -123,16 +121,19 @@ def create_behavior(term):
     )
 
 
-@rule("container", has, "drag-and-drop:bvr")
-def container_has_drag_and_drop_behavior(container, bvr):
-    return create_forward(container, has, "hovering:bvr")
-
-
-@rule("container", has, "insertion:bvr")
-def container_has_insertion(container, bvr):
-    return create_forward(container, has, "display:bvr")
-
-
-@rule("container", has, "filtering:bvr")
-def container_has_filtering(container, bvr):
-    return create_forward(container, has, "display:bvr")
+rules = {
+    "container": {
+        (has, "drag-and-drop:bvr"): (
+            #
+            lambda container, bvr: create_forward(container, has, "hovering:bvr")
+        ),
+        (has, "filtering:bvr"): (
+            #
+            lambda container, bvr: create_forward(container, has, "display:bvr")
+        ),
+        (has, "insertion:bvr"): (
+            #
+            lambda container, bvr: create_forward(container, has, "display:bvr")
+        ),
+    }
+}

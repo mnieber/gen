@@ -5,10 +5,6 @@ from titan.project_pkg.project import Project
 
 from .resources import Config
 
-rules = {
-    ("project", has, "config"): empty_rule(),
-}
-
 
 @create("config")
 def create_config(term):
@@ -19,3 +15,8 @@ def create_config(term):
 class ExtendProject:
     has_dev_config = P.child(has, "dev:config")
     has_prod_config = P.child(has, "prod:config")
+
+
+rules = {
+    "project": {(has, "config"): empty_rule()},
+}

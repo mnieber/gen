@@ -8,7 +8,6 @@ from moonleap import (
     empty_rule,
     extend,
     parts_to_camel,
-    rule,
     u0,
 )
 from moonleap.blocks.verbs import has
@@ -17,11 +16,6 @@ from .resources import View
 
 base_tags = {
     "view": ["component", "react-view"],
-}
-
-rules = {
-    ("view", has, "x+component"): empty_rule(),
-    ("view", has, "x+div"): empty_rule(),
 }
 
 
@@ -33,7 +27,6 @@ def create_view(term):
     return view
 
 
-@rule("view", has, "x+component", priority=Priorities.LOW.value)
 def component_is_in_a_module(view, named_component):
     if not named_component.typ.module:
         return create_forward(view.module, has, named_component.typ)
@@ -43,3 +36,14 @@ def component_is_in_a_module(view, named_component):
 class ExtendView:
     named_components = P.children(has, "x+component")
     named_divs = P.children(has, "x+div")
+
+
+rules = {
+    "view": {
+        (has, "x+component", Priorities.LOW.value): (
+            #
+            component_is_in_a_module
+        ),
+        (has, "x+div"): empty_rule(),
+    },
+}

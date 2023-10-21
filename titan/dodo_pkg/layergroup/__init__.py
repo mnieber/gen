@@ -5,11 +5,6 @@ from titan.dodo_pkg.layer.resources import DodoLayer
 
 from .resources import DodoLayerGroup
 
-rules = {
-    ("layer-group", contains, "layer"): empty_rule(),
-    ("layer", has, "layer-group"): empty_rule(),
-}
-
 
 @create("layer-group")
 def create_layer_group(term):
@@ -33,3 +28,15 @@ class ExtendLayer:
     parent_layer_group = P.parent("layer-group", contains)
     layer_groups = P.children(has, "layer-group")
     service_layer_group = P.child(has, "service:layer-group")
+
+
+rules = {
+    "layer-group": {
+        (contains, "layer"): empty_rule()
+        #
+    },
+    "layer": {
+        (has, "layer-group"): empty_rule()
+        #
+    },
+}

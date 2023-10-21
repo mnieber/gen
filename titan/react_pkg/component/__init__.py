@@ -5,20 +5,6 @@ from titan.react_pkg.reactmodule import ReactModule
 
 from .resources import Component  # noqa
 
-rules = {
-    ("widget-registry", has, "component"): empty_rule(),
-}
-
-
-@rule("module", has, "component")
-def module_has_component(module, component):
-    module.renders(
-        [component],
-        "",
-        dict(component=component),
-        [component.template_dir],
-    )
-
 
 @extend(Component)
 class ExtendComponent:
@@ -28,3 +14,19 @@ class ExtendComponent:
 @extend(ReactModule)
 class ExtendReactModule:
     components = P.children(has, "component")
+
+
+rules = {
+    "widget-registry": {(has, "component"): empty_rule()},
+    "module": {
+        (has, "component"): (
+            #
+            lambda module, component: module.renders(
+                [component],
+                "",
+                dict(component=component),
+                [component.template_dir],
+            )
+        )
+    },
+}
