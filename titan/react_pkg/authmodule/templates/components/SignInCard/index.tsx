@@ -5,14 +5,14 @@ import { SignInForm } from '/src/auth/components/SignInForm';
 import { useSignIn } from '/src/auth/endpoints';
 import { useAuthStateContext } from '/src/auth/hooks';
 import {
-  navToNextPageAfterSignIn,
-  navToSignUp,
-} from '/src/frames/FramesNavEvents';
-import {
   DialogButton,
   TealWithWhiteTextDialogButtonTrim,
 } from '/src/frames/components/DialogButton';
 import { L } from '/src/frames/layout';
+import {
+  navToNextPageAfterSignIn,
+  navToSignUp,
+} from '/src/frames/navEvents';
 import { cn } from '/src/utils/classnames';
 import { ObjT } from '/src/utils/types';
 
