@@ -16,5 +16,5 @@ create-opt-paths:
 	sudo mkdir -p /opt/projects/{{ _.project.name }}/{{ service.name }}/media                                                            {% ?? service.has_django_app %}
 	sudo mkdir -p /opt/projects/{{ _.project.name }}/{{ service.name }}/static                                                           {% ?? service.has_django_app %}
 {% endfor %}
-	sudo chmod -R 777 -p /opt/projects/{{ _.project.name }}																			     {% ?? _.project.services %}
+	sudo chmod -R 777 /opt/projects/{{ _.project.name }}																			     {% ?? _.project.services %}
 	echo                                                   																			     {% ?? not _.project.services %}

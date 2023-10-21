@@ -3,7 +3,7 @@ admin:
     include: {{ _.module.django_models|bool }}
 migrations:
     include: {{ _.module.django_models|bool }}
-models.py:
+models.py.j2:
     include: {{ _.module.django_models|bool }}
 tr.py.j2:
     include: {{ _.django_app.use_translation|bool }}

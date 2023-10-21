@@ -6,6 +6,8 @@ import { useQuery } from '@tanstack/react-query';
 import { doQuery } from '/src/api/graphqlClient';                                                    {% ?? _.react_app.use_graphql %}
 import * as R from 'ramda';
 import { ObjT } from '/src/utils/types';
+import { createQueryKey } from '/src/utils/createQueryKey';
+import { queryClient } from '/src/api/queryClient';
 import myEndpointStub from '/src/api/stubs/myEndpointStub.json';                                     {% ?? _.query.api_spec.is_stub %}
 import { wait } from '/src/utils/wait';
 
@@ -46,17 +48,23 @@ export function queryKey(args: QueryKeyT) {
   return createQueryKey<QueryKeyT>('myEndpoint', args);
 }
 
+export type OptionsT = {
+  enabled?: boolean;
+};
+
 export const useMyEndpoint = (
-  args: ArgsT                                                                                       {% ?? __.input_field_specs %}
+  args: ArgsT,
+  options?: OptionsT
 ) => {
   return useQuery({
     queryKey: queryKey(
-      args                                                                                          {% ?? __.input_field_specs %}
+      args
     ),
     queryFn: () => myEndpoint(
-    args                                                                                            {% ?? __.input_field_specs %}
-    {}                                                                                              {% ?? not __.input_field_specs %}
-  )})
+      args
+    ),
+    enabled: !!(options?.enabled ?? true),
+  })
   ;
 };
 

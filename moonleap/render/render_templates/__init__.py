@@ -2,7 +2,6 @@ from argparse import Namespace
 from pathlib import Path
 
 from jinja2 import Template
-
 from moonleap.render.render_templates.create_render_helpers import create_render_helpers
 from moonleap.utils.ruamel_yaml import ruamel_yaml
 
@@ -76,6 +75,8 @@ def _load_moonleap_data(meta_filename, render_in_context):
 
     meta_data_by_fn = ruamel_yaml.load(content)
     for fn, meta_data in meta_data_by_fn.items():
+        if not Path(Path(meta_filename).parent / fn).exists():
+            raise Exception(f"File {fn} does not exist in {meta_filename}")
         if not isinstance(meta_data.get("include", False), bool):
             raise Exception(
                 f"Invalid include value: "

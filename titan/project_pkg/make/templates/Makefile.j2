@@ -13,7 +13,7 @@ init-dev: \
 	create-db \            															{% ?? _.service.has_django_app %}
 	pip-compile \																	{% ?? _.service.pip %}
 	install \
-	make-migrations-users \                         								{% ?? _.service.has_django_app and _.service.django_app.get_module_by_name("users") %}
+	make-migrations-users \                         								{% ?? _.service.has_django_app and _.service.django_app.get_module_by_name("users", None) %}
 	migrate \            															{% ?? _.service.has_django_app %}
 	collect-static \       															{% ?? _.service.has_django_app %}
 	create-superuser \  															{% ?? _.service.has_django_app %}
