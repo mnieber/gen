@@ -17,3 +17,18 @@ def get_helpers(_):
             )
 
     return Helpers()
+
+
+def get_contexts(_):
+    __import__("pudb").set_trace()  # zz
+    result = []
+    for layer in _.root_resource.project.layers:
+        result.append(dict(project=_.root_resource.project, layer=layer))
+    return result
+
+
+def get_meta_data_by_fn(_, __):
+    return {
+        "[root_layer]": {"include": _.layer.is_root, "name": "."},
+        "[layer]": {"name": "."},
+    }

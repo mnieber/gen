@@ -17,13 +17,18 @@ class Session:
         self.spec_dir = spec_dir
         self.settings_fn = settings_fn
         self.settings = None
-        self.scope_manager = ScopeManager()
         self.output_root_dir = output_root_dir
         self.output_dir = f"{output_root_dir}/output"
         self.expected_dir = f"{output_root_dir}/expected"
         self.snapshot_fn = f"{output_root_dir}/snapshot.json"
         self.type_specs_dir = os.path.join(self.spec_dir, "type_specs")
         self.trace_level = 1
+        self.scope_manager = None
+        self.file_writer = None
+
+    def init(self, scope_manager, file_writer):
+        self.scope_manager = scope_manager
+        self.file_writer = file_writer
 
     @property
     def spec_fn(self):

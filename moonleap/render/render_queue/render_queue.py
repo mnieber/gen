@@ -1,4 +1,6 @@
 import typing as T
+from argparse import Namespace
+from pathlib import Path
 
 from dataclassy import dataclass
 from moonleap.render.root_resource import get_root_resource
@@ -6,15 +8,34 @@ from moonleap.render.root_resource import get_root_resource
 
 @dataclass
 class RenderQueueTask:
-    path: str
-    context: []
+    root_path: str
+    rel_path: str
+    context: Namespace
     get_helpers: T.Callable
     get_meta_data_by_fn: T.Callable
     parent_task: "RenderQueueTask"
+    _helpers = None
 
     @property
-    def parent_helpers(self):
-        return None if self.parent_task is None else self.parent_task.helpers
+    def helpers(self):
+        if self._helpers:
+            return self._helpers
+        if self.get_helpers:
+            self._helpers = self.get_helpers(_=self.context)
+            return self._helpers
+        elif self.parent_task:
+            return self.parent_task.helpers
+        return dict()
+
+    @property
+    def meta_data_by_fn(self):
+        if self.get_meta_data_by_fn:
+            return self.get_meta_data_by_fn(_=self.context, __=self.helpers)
+        return dict()
+
+    @property
+    def templates_dir(self):
+        return Path(self.root_path) / self.rel_path
 
 
 class RenderQueue:
@@ -39,11 +60,12 @@ def get_render_queue():
 
 
 _root_render_task = RenderQueueTask(
-    path=".",
-    context=[get_root_resource()],
-    parent_task=None,
-    get_helpers=lambda: dict(),
+    root_path="",
+    rel_path=".",
+    context=Namespace(root_resource=get_root_resource()),
+    get_helpers=None,
     get_meta_data_by_fn=lambda: dict(),
+    parent_task=None,
 )
 
 

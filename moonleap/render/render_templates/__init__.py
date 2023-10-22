@@ -28,19 +28,6 @@ def render_templates(templates_dir, write_file, output_path, context, helpers):
     if not current_dir_meta_data.get("include", True):
         return
 
-    def render_in_context(template_fn, prefix=True, default="__not_set__"):
-        full_template_fn = templates_dir / template_fn if prefix else template_fn
-
-        if not full_template_fn.exists():
-            if default == "__not_set__":
-                raise Exception(f"Template not found: {full_template_fn}")
-            return None
-
-        return render_template(
-            full_template_fn,
-            dict(settings=get_session().settings, _=context_ns, __=helpers),
-        )
-
     # create output directory
     write_file(output_path, content="", is_dir=True)
 
@@ -68,7 +55,10 @@ def render_templates(templates_dir, write_file, output_path, context, helpers):
         else:
             write_file(
                 output_fn,
-                content=render_in_context(template_fn),
+                content=render_template(
+                    templates_dir / template_fn,
+                    dict(settings=get_session().settings, _=context_ns, __=helpers),
+                ),
                 is_dir=False,
             )
 

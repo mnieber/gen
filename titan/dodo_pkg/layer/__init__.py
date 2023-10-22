@@ -24,7 +24,7 @@ class ExtendDockerCompose:
 @extend(Project)
 class ExtendProject:
     config_layer = P.child(has, "config:layer")
-    layers = P.child(has, "layer")
+    layers = P.children(has, "layer")
 
 
 @extend(Service)

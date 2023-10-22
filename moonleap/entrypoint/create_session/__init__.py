@@ -1,5 +1,7 @@
 import os
 
+from moonleap.packages.scope_manager import ScopeManager
+from moonleap.render.file_writer import FileWriter
 from moonleap.session import Session, set_session
 
 
@@ -12,6 +14,13 @@ def create_session(args):
         "settings.yml",
         output_root_dir=args.output_dir,
     )
-    session.load_settings()
     set_session(session)
+    session.init(
+        ScopeManager(),
+        FileWriter(
+            session.snapshot_fn,
+            check_crc_before_write=args.smart,
+        ),
+    )
+    session.load_settings()
     return session

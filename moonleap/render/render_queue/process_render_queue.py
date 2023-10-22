@@ -1,7 +1,13 @@
+from pathlib import Path
+
+from moonleap.render.render_queue.add_render_tasks import add_render_tasks
 from moonleap.render.render_queue.render_queue import RenderQueueTask, get_render_queue
+from moonleap.render.render_template import render_template
+from moonleap.session import get_session
 
 
 def process_render_queue():
+    __import__("pudb").set_trace()  # zz
     render_queue = get_render_queue()
     while len(render_queue) > 0:
         task = render_queue.pop()
@@ -9,4 +15,37 @@ def process_render_queue():
 
 
 def _render(task: RenderQueueTask):
-    pass
+    helpers = task.helpers
+    meta_data_by_fn = task.meta_data_by_fn
+
+    template_fns = [x for x in Path(task.templates_dir).glob("*") if not _exclude(x)]
+    for template_fn in template_fns:
+        meta_data = meta_data_by_fn.get(template_fn.name, dict())
+        if not meta_data.get("include", True):
+            continue
+
+        if template_fn.is_dir():
+            add_render_tasks(template_fn, task)
+        else:
+            output_fn = _get_output_fn(task.rel_path, template_fn, meta_data)
+            get_session().file_writer.write_file(
+                output_fn,
+                content=render_template(
+                    task.templates_dir / template_fn,
+                    dict(settings=get_session().settings, _=task.context, __=helpers),
+                ),
+                is_dir=False,
+            )
+
+
+def _get_output_fn(output_path, template_fn, meta_data):
+    name = meta_data["name"] if "name" in meta_data else template_fn.name
+
+    if name.endswith(".j2"):
+        name = name[:-3]
+
+    return Path(output_path) / name
+
+
+def _exclude(fn):
+    return fn.name.startswith("__moonleap__") or fn.name == "__pycache__"
