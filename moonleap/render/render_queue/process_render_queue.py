@@ -35,12 +35,12 @@ def _render(task: RenderQueueTask):
 
 
 def _get_output_fn(output_path, template_fn, meta_data):
+    prefix = meta_data.get(".", ".")
     name = meta_data["name"] if "name" in meta_data else template_fn.name
-
     if name.endswith(".j2"):
         name = name[:-3]
 
-    return Path(output_path) / name
+    return Path(output_path) / prefix / name
 
 
 def _exclude(fn):

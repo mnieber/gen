@@ -30,7 +30,7 @@ def get_meta_data_by_fn(_, __):
     return {
         ".dodo-start-env": {"include": _.layer.is_root},
         "config.yaml.j2": {"include": _.layer.is_root},
-        "layer.yaml.j2": {
+        "[layer.yaml.j2]": {
             "include": not _.layer.is_root,
             "name": f"{_.layer.basename}.yaml",
         },
