@@ -3,19 +3,13 @@ from pathlib import Path
 
 from jinja2 import Template
 from moonleap.render.render_templates.create_render_helpers import create_render_helpers
-from moonleap.utils.ruamel_yaml import ruamel_yaml
 
 
 def render_templates(templates_dir, write_file, output_path, context, helpers):
     # Get next render helpers. Note that the existing helpers are continued to be
     # used in case the new __moonleap__.py file does not define get_helpers.
-    helpers, render_in_context = create_render_helpers(
+    helpers, render_in_context, meta_data_by_fn = create_render_helpers(
         templates_dir, context, prev_helpers=helpers
-    )
-
-    # Get template meta data
-    meta_data_by_fn = _load_moonleap_data(
-        templates_dir / "__moonleap__.j2", render_in_context
     )
 
     # Check if we must skip the current template directory
@@ -66,21 +60,3 @@ def _get_output_fn(output_path, template_fn, meta_data, context):
         name = name[:-3]
 
     return Path(output_path) / name
-
-
-def _load_moonleap_data(meta_filename, render_in_context):
-    content = render_in_context(meta_filename, prefix=False, default=None)
-    if not content:
-        return {}
-
-    meta_data_by_fn = ruamel_yaml.load(content)
-    for fn, meta_data in meta_data_by_fn.items():
-        if not Path(Path(meta_filename).parent / fn).exists():
-            raise Exception(f"File {fn} does not exist in {meta_filename}")
-        if not isinstance(meta_data.get("include", False), bool):
-            raise Exception(
-                f"Invalid include value: "
-                + f"{meta_data.get('include')} for filename {fn} in {meta_filename}"
-            )
-
-    return meta_data_by_fn

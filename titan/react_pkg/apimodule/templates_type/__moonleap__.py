@@ -12,3 +12,11 @@ def get_helpers(_):
         item = get_type_reg().get_item(l0(_.type_spec.type_name))
 
     return Helpers()
+
+
+def get_meta_data_by_fn(_, __):
+    return {
+        "type.ts.j2": {
+            "name": f"{_.type_spec.type_name}T.ts",
+        }
+    }

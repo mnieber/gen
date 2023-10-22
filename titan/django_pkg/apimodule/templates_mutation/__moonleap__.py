@@ -25,3 +25,11 @@ def get_helpers(_):
             )
 
     return Helpers()
+
+
+def get_meta_data_by_fn(_, __):
+    return {
+        "graphql_mutation.py.j2": {
+            "name": f"{_.mutation.name.lower()}.py",
+        }
+    }

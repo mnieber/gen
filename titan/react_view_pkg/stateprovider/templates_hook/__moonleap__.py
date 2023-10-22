@@ -1,3 +1,6 @@
+from moonleap import u0
+
+
 def get_helpers(_):
     class Helpers:
         state = _.state_provider.state
@@ -6,3 +9,14 @@ def get_helpers(_):
             pass
 
     return Helpers()
+
+
+def get_meta_data_by_fn(_, __):
+    return {
+        "useState.ts.j2": {
+            "name": f"use{u0(_.state.name)}.ts",
+        },
+        "useState.index.ts.j2": {
+            "name": f"index.ts",
+        },
+    }

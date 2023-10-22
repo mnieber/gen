@@ -14,3 +14,17 @@ def get_helpers(_):
                     self.postgres_service = service
 
     return Helpers()
+
+
+def get_meta_data_by_fn(_, __):
+    return {
+        "django.env.j2": {
+            "include": bool(__.django_service),
+        },
+        "postgres.env.j2": {
+            "include": bool(__.postgres_service),
+        },
+        "react.env.j2": {
+            "include": bool(__.react_service),
+        },
+    }

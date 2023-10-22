@@ -19,3 +19,11 @@ def get_helpers(_):
             return [x for x in self.bvrs_to_import if x.name == name]
 
     return Helpers()
+
+
+def get_meta_data_by_fn(_, __):
+    return {
+        "State.ts.j2": {
+            "name": f"{_.state.name}.ts",
+        },
+    }

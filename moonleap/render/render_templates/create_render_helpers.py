@@ -12,6 +12,7 @@ def create_render_helpers(templates_dir, context, prev_helpers):
         raise Exception(f"{templates_dir} is not a directory")
 
     helpers = prev_helpers
+    meta_data_by_fn = {}
     context_ns = Namespace(**context, render=None)
     helpers_fn = templates_dir / "__moonleap__.py"
 
@@ -24,6 +25,9 @@ def create_render_helpers(templates_dir, context, prev_helpers):
 
         if hasattr(m, "get_helpers"):
             helpers = m.get_helpers(_=context_ns)
+
+        if hasattr(m, "get_meta_data_by_fn"):
+            meta_data_by_fn = m.get_meta_data_by_fn(_=context_ns, __=helpers)
 
     def render_in_context(template_fn, prefix=True, default="__not_set__"):
         full_template_fn = templates_dir / template_fn if prefix else template_fn
@@ -39,7 +43,7 @@ def create_render_helpers(templates_dir, context, prev_helpers):
         )
 
     context_ns.render = render_in_context
-    return helpers, render_in_context
+    return helpers, render_in_context, meta_data_by_fn
 
 
 def _validate_render_helpers_module(fn):

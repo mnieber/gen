@@ -3,11 +3,12 @@ import typing as T
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from moonleap.render.render_templates import render_templates
 from moonleap.resources.resource import Resource
 
 
 def render_resource(res, write_file, output_path, context=None, template_dirs=None):
+    from moonleap.render.render_templates import render_templates
+
     if context is None:
         context = dict()
 
@@ -78,17 +79,3 @@ class TemplateDirMixin:
     template_context: T.Union[dict, T.Callable] = field(
         default_factory=dict, init=False, repr=False
     )
-
-
-@dataclass
-class RootResource(RenderMixin, Resource):
-    pass
-
-_root_resource = None
-
-
-def get_root_resource():
-    global _root_resource
-    if not _root_resource:
-        _root_resource = RootResource()
-    return _root_resource

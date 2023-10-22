@@ -47,3 +47,21 @@ def get_helpers(_):
             return result
 
     return Helpers()
+
+
+def get_meta_data_by_fn(_, __):
+    return {
+        "admin": {
+            "name": ".",
+            "include": bool(_.module.django_models),
+        },
+        "migrations": {
+            "include": bool(_.module.django_models),
+        },
+        "models.py.j2": {
+            "include": bool(_.module.django_models),
+        },
+        "tr.py.j2": {
+            "include": bool(_.django_app.use_translation),
+        },
+    }

@@ -1,3 +1,6 @@
+from moonleap import u0
+
+
 def get_helpers(_):
     class Helpers:
         @property
@@ -9,3 +12,11 @@ def get_helpers(_):
             return None
 
     return Helpers()
+
+
+def get_meta_data_by_fn(_, __):
+    return {
+        "registerCtr.ts.j2": {
+            "name": f"register{u0(_.container.name)}Ctr.ts",
+        },
+    }

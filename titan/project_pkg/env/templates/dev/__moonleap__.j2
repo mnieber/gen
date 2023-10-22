@@ -1,8 +1,0 @@
-django.env.j2:
-  include: {{ __.django_service|bool }}
-
-postgres.env.j2:
-  include: {{ __.postgres_service|bool }}
-
-react.env.j2:
-  include: {{ __.react_service|bool }}

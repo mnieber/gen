@@ -28,3 +28,15 @@ def get_helpers(_):
             return R.path_or("pudb", ["pudb_opt_path"])(get_session().settings)
 
     return Helpers()
+
+
+def get_meta_data_by_fn(_, __):
+    return {
+        "docker-compose.dev.override.yml.j2": {
+            "name": _.docker_compose.override_fn,
+            "include": bool(_.docker_compose.override_fn),
+        },
+        "docker-compose.prod.yml.j2": {
+            "include": bool(_.project.has_prod_config),
+        },
+    }

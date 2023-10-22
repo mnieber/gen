@@ -1,3 +1,6 @@
+from moonleap import u0
+
+
 def get_helpers(_):
     class Helpers:
         use_in_client = _.mutation.api_spec.use_in_client
@@ -19,3 +22,12 @@ def get_helpers(_):
             return ", ".join([".".join(x) for x in _.mutation.api_spec.orders])
 
     return Helpers()
+
+
+def get_meta_data_by_fn(_, __):
+    return {
+        "graphql_mutation.ts.j2": {
+            "name": f"use{_.mutation.name | u0}.ts",
+            "include": bool(__.use_in_client),
+        },
+    }

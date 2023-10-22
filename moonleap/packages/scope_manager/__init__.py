@@ -5,7 +5,7 @@ from moonleap.packages.install_package import install_package
 from moonleap.packages.scope import Scope
 
 
-def _import_package(package_name):
+def import_package(package_name):
     try:
         return importlib.import_module(package_name)
     except ImportError:
@@ -34,7 +34,7 @@ class ScopeManager:
         if package:
             return package
 
-        self._package_by_name[package_name] = package = _import_package(package_name)
+        self._package_by_name[package_name] = package = import_package(package_name)
         install_package(package)
         return package
 

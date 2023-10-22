@@ -3,7 +3,6 @@ from pathlib import Path
 import moonleap.packages.extensions.props as P
 from moonleap import create, extend, rule
 from moonleap.blocks.verbs import has
-from moonleap.render.render_mixin import get_root_resource
 from titan.react_pkg.reactapp import ReactApp
 from titan.react_pkg.reactmodule import ReactModule, create_react_module
 

@@ -35,3 +35,11 @@ def is_api_field(field_spec):
     return field_spec.field_type == "tags" or (
         field_spec.has_api and not field_spec.has_model
     )
+
+
+def get_meta_data_by_fn(_, __):
+    return {
+        "graphql_type.py.j2": {
+            "name": f"{_.type_spec.type_name.lower()}_t.py",
+        }
+    }

@@ -5,12 +5,8 @@ def get_helpers(_):
     class Helpers:
         input_field_specs = list(_.query.api_spec.get_inputs())
         output_field_specs = list(_.query.api_spec.get_outputs())
-        required_input_field_specs = [
-            x for x in input_field_specs if not x.is_optional
-        ]
-        optional_input_field_specs = [
-            x for x in input_field_specs if x.is_optional
-        ]
+        required_input_field_specs = [x for x in input_field_specs if not x.is_optional]
+        optional_input_field_specs = [x for x in input_field_specs if x.is_optional]
 
         @property
         def type_specs_to_import(self):
@@ -22,3 +18,11 @@ def get_helpers(_):
             return result
 
     return Helpers()
+
+
+def get_meta_data_by_fn(_, __):
+    return {
+        "graphql_query.py.j2": {
+            "name": f"{_.query.name.lower()}.py",
+        }
+    }
