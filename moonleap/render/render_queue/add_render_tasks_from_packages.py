@@ -1,8 +1,8 @@
 import os
 
 from moonleap.packages.scope_manager import import_package
-from moonleap.render.render_queue.render_queue import RenderQueueTask, get_render_queue
-from moonleap.render.root_resource import get_root_resource
+from moonleap.render.render_queue.add_render_tasks import add_render_tasks
+from moonleap.render.render_queue.render_queue import get_root_render_task
 
 
 def add_render_tasks_from_packages(packages_by_scope):
@@ -11,10 +11,4 @@ def add_render_tasks_from_packages(packages_by_scope):
             package = import_package(package_name)
             template_dir = os.path.join(package.__path__[0], "templates")
             if os.path.exists(template_dir):
-                get_render_queue().add(
-                    RenderQueueTask(
-                        path=template_dir,
-                        context=[get_root_resource()],
-                        parent_task=None,
-                    )
-                )
+                add_render_tasks(template_dir, get_root_render_task())

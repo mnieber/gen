@@ -27,7 +27,7 @@ def get_helpers(_):
 def get_meta_data_by_fn(_, __):
     return {
         "graphql_mutation.ts.j2": {
-            "name": f"use{_.mutation.name | u0}.ts",
+            "name": f"use{u0(_.mutation.name)}.ts",
             "include": bool(__.use_in_client),
         },
     }

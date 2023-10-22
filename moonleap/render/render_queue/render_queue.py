@@ -1,13 +1,15 @@
 import typing as T
 
 from dataclassy import dataclass
+from moonleap.render.root_resource import get_root_resource
 
 
 @dataclass
 class RenderQueueTask:
     path: str
     context: []
-    helpers: dict = {}
+    get_helpers: T.Callable
+    get_meta_data_by_fn: T.Callable
     parent_task: "RenderQueueTask"
 
     @property
@@ -34,3 +36,16 @@ _render_queue = RenderQueue()
 
 def get_render_queue():
     return _render_queue
+
+
+_root_render_task = RenderQueueTask(
+    path=".",
+    context=[get_root_resource()],
+    parent_task=None,
+    get_helpers=lambda: dict(),
+    get_meta_data_by_fn=lambda: dict(),
+)
+
+
+def get_root_render_task():
+    return _root_render_task

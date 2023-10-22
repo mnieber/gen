@@ -12,7 +12,7 @@ def get_helpers(_):
 def get_meta_data_by_fn(_, __):
     return {
         "graphql_query.ts.j2": {
-            "name": f"use{_.query.name | u0}.ts",
+            "name": f"use{u0(_.query.name)}.ts",
             "include": bool(__.use_in_client),
         },
     }
