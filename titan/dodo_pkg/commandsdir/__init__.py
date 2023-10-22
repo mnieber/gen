@@ -1,8 +1,7 @@
 from dataclasses import dataclass
-from pathlib import Path
 
 import moonleap.packages.extensions.props as P
-from moonleap import RenderMixin, Resource, create, extend, rule
+from moonleap import RenderMixin, Resource, create, extend
 from moonleap.blocks.verbs import has
 from titan.project_pkg.project import Project
 
@@ -15,17 +14,6 @@ class CommandsDir(RenderMixin, Resource):
 @create("commands-dir")
 def create_commands_dir(term):
     return CommandsDir()
-
-
-@rule("project", has, "commands-dir")
-def project_has_commands_dir(project, commands_dir):
-    project.renders(
-        #
-        [commands_dir],
-        "",
-        dict(),
-        [Path(__file__).parent / "templates"],
-    )
 
 
 @extend(Project)

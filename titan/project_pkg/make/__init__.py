@@ -47,15 +47,5 @@ class ExtendService:
 
 rules = {
     "service": {(has, "makefile"): empty_rule()},
-    "project": {
-        (has, "project:makefile"): (
-            #
-            lambda project, makefile: project.renders(
-                [makefile],
-                ".",
-                dict(makefile=makefile),
-                [Path(__file__).parent / "templates_project"],
-            )
-        )
-    },
+    "project": {(has, "project:makefile"): empty_rule()},
 }

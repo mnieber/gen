@@ -45,23 +45,6 @@ def created_pip_compile(pip_compile):
     pip_compile.template_dir = Path(__file__).parent / "templates_pip_compile"
 
 
-@rule("service", runs + uses, "vandelay")
-def service_uses_vandelay(service, vandelay):
-    if vandelay.language == "js":
-        template_dir = "templates_vandelay_js"
-    elif vandelay.language == "py":
-        template_dir = "templates_vandelay_py"
-    else:
-        raise Exception("Unknown language", vandelay.language)
-
-    service.project.renders(
-        [vandelay],
-        ".vandelay",
-        dict(service=service),
-        [Path(__file__).parent / template_dir],
-    )
-
-
 @extend(Service)
 class ExtendService:
     black = P.child(runs + uses, "black")

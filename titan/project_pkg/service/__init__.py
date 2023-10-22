@@ -1,13 +1,5 @@
 import moonleap.packages.extensions.props as P
-from moonleap import (
-    MemFun,
-    create,
-    create_forward,
-    empty_rule,
-    extend,
-    kebab_to_camel,
-    rule,
-)
+from moonleap import MemFun, create, create_forward, empty_rule, extend, kebab_to_camel
 from moonleap.blocks.verbs import has, runs, uses
 
 from . import props
@@ -20,26 +12,6 @@ render_the_service = lambda x: "render the {x.name} service"
 def create_service(term):
     service = Service(name=kebab_to_camel(term.data))
     return service
-
-
-@rule("service", uses + has + runs, "tool")
-def service_runs_tool(service, tool):
-    service.renders(
-        [tool],
-        "",
-        tool.template_context,
-        [tool.template_dir],
-    )
-
-
-@rule("project", has, "service")
-def project_has_service(project, service):
-    project.renders(
-        [service],
-        service.name,
-        dict(service=service),
-        [],
-    )
 
 
 @extend(Service)

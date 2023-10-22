@@ -1,10 +1,7 @@
-from pathlib import Path
-
-from titan.project_pkg.project import Project
-
 import moonleap.packages.extensions.props as P
-from moonleap import create, extend, rule
+from moonleap import create, extend
 from moonleap.blocks.verbs import has, runs
+from titan.project_pkg.project import Project
 
 from .resources import DockerCompose  # noqa
 
@@ -12,26 +9,6 @@ from .resources import DockerCompose  # noqa
 @create("docker-compose")
 def create_docker_compose(term):
     return DockerCompose()
-
-
-@rule("project", has, "docker-compose")
-def project_renders_docker_compose_file(project, docker_compose):
-    project.renders(
-        [docker_compose],
-        "",
-        dict(docker_compose=docker_compose),
-        [Path(__file__).parent / "templates"],
-    )
-
-
-@rule("docker-compose", runs, "service")
-def service_adds_to_docker_compose_file(docker_compose, service):
-    service.renders(
-        [docker_compose],
-        "",
-        dict(docker_compose=docker_compose),
-        [Path(__file__).parent / "templates_service"],
-    )
 
 
 @extend(DockerCompose)

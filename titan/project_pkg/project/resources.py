@@ -13,3 +13,7 @@ class Project(RenderMixin, Resource):
         return get_session().get_setting_or(
             "/opt/projects/" + self.kebab_name, ["project", "opt_dir_fn"]
         )
+
+    @property
+    def has_python(self):
+        return [service for service in self.services if service.is_python]

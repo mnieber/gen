@@ -33,7 +33,7 @@ def get_helpers(_):
 def get_meta_data_by_fn(_, __):
     return {
         ".": "..",
-        "[docker-compose.dev.override.yml.j2]": {
+        "docker-compose.dev.override.yml.j2": {
             "name": _.docker_compose.override_fn,
             "include": bool(_.docker_compose.override_fn),
         },

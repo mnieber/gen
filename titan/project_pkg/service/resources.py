@@ -76,6 +76,10 @@ class Service(RenderMixin, Resource):
     def pypi_source_maps(self):
         return self.get_setting_or({}, ["pypi_source_maps"])
 
+    @property
+    def is_python(self):
+        return self.docker_image and self.docker_image.name.startswith("python")
+
 
 @dataclass
 class Tool(TemplateDirMixin, RenderMixin, Resource):

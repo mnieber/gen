@@ -25,12 +25,6 @@ def create_project(term):
 @rule("project")
 def root_resource_renders_project(project):
     get_root_resource().project = project
-    get_root_resource().renders(
-        [project],
-        "src",
-        dict(project=project),
-        [Path(__file__).parent / "templates"],
-    )
 
 
 @extend(Project)

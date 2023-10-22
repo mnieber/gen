@@ -31,29 +31,9 @@ def project_has_service_that_has_env(project, service):
 
 rules = {
     "project": {
-        (has, "env"): (
-            #
-            lambda project, env: project.renders(
-                [env],
-                "env",
-                dict(env=env),
-                [Path(__file__).parent / "templates"],
-            )
-        ),
         (has, "service"): (
             # then maybe create relation :service /has :env
             project_has_service_that_has_env
         ),
-    },
-    "service": {
-        (has, ":env"): (
-            #
-            lambda service, env: service.renders(
-                [env],
-                ".env",
-                dict(env=env),
-                [Path(__file__).parent / "templates_service"],
-            )
-        )
     },
 }
