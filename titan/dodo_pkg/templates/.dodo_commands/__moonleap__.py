@@ -20,15 +20,18 @@ def get_helpers(_):
 
 
 def get_contexts(_):
-    __import__("pudb").set_trace()  # zz
     result = []
     for layer in _.root_resource.project.layers:
-        result.append(dict(project=_.root_resource.project, layer=layer))
+        result.append(dict(layer=layer, service=layer.configures_service))
     return result
 
 
 def get_meta_data_by_fn(_, __):
     return {
-        "[root_layer]": {"include": _.layer.is_root, "name": "."},
-        "[layer]": {"name": "."},
+        ".dodo-start-env": {"include": _.layer.is_root},
+        "config.yaml.j2": {"include": _.layer.is_root},
+        "layer.yaml.j2": {
+            "include": not _.layer.is_root,
+            "name": f"{_.layer.basename}.yaml",
+        },
     }

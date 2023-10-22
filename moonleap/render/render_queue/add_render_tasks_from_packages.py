@@ -11,4 +11,4 @@ def add_render_tasks_from_packages(packages_by_scope):
             package = import_package(package_name)
             template_dir = os.path.join(package.__path__[0], "templates")
             if os.path.exists(template_dir):
-                add_render_tasks(template_dir, get_root_render_task())
+                add_render_tasks(template_dir, ".", get_root_render_task())

@@ -7,7 +7,6 @@ from moonleap.session import get_session
 
 
 def process_render_queue():
-    __import__("pudb").set_trace()  # zz
     render_queue = get_render_queue()
     while len(render_queue) > 0:
         task = render_queue.pop()
@@ -24,16 +23,13 @@ def _render(task: RenderQueueTask):
         if not meta_data.get("include", True):
             continue
 
+        output_fn = _get_output_fn(task.output_path, template_fn, meta_data)
         if template_fn.is_dir():
-            add_render_tasks(template_fn, task)
+            add_render_tasks(template_fn, output_fn, task)
         else:
-            output_fn = _get_output_fn(task.rel_path, template_fn, meta_data)
             get_session().file_writer.write_file(
                 output_fn,
-                content=render_template(
-                    task.templates_dir / template_fn,
-                    dict(settings=get_session().settings, _=task.context, __=helpers),
-                ),
+                content=render_template(template_fn, dict(_=task.context, __=helpers)),
                 is_dir=False,
             )
 

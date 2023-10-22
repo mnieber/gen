@@ -4,7 +4,7 @@ from moonleap.render.render_queue.render_queue import RenderQueueTask, get_rende
 from moonleap.render.render_templates.create_render_helpers import create_render_helpers
 
 
-def add_render_tasks(templates_dir, parent_render_task):
+def add_render_tasks(templates_dir, output_path, parent_render_task):
     (
         get_helpers,
         get_meta_data_by_fn,
@@ -22,8 +22,8 @@ def add_render_tasks(templates_dir, parent_render_task):
         )
         get_render_queue().add(
             RenderQueueTask(
-                root_path=templates_dir,
-                rel_path=".",
+                templates_dir=templates_dir,
+                output_path=output_path,
                 context=full_context,
                 parent_task=parent_render_task,
                 get_helpers=get_helpers,

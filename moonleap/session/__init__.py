@@ -2,10 +2,6 @@ import os
 from pathlib import Path
 
 import ramda as R
-from moonleap.packages.scope_manager import ScopeManager
-from moonleap.render.render_queue.add_render_tasks_from_packages import (
-    add_render_tasks_from_packages,
-)
 from moonleap.session.settings import load_settings
 from moonleap.utils.inflect import install_plural
 
@@ -46,7 +42,6 @@ class Session:
 
         packages_by_scope = self.settings.get("packages_by_scope", {})
         self.scope_manager.import_packages(packages_by_scope)
-        add_render_tasks_from_packages(packages_by_scope)
 
         for one, many in self.settings.get("plurals", {}).items():
             install_plural(one, many)
