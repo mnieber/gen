@@ -1,5 +1,5 @@
 import moonleap.packages.extensions.props as P
-from moonleap import create, extend
+from moonleap import create, empty_rule, extend
 from moonleap.blocks.verbs import has, runs
 from titan.project_pkg.project import Project
 
@@ -22,3 +22,13 @@ class ExtendDockerCompose:
 @extend(Project)
 class ExtendProject:
     docker_compose = P.child(has, "docker-compose")
+
+
+rules = {
+    "project": {
+        (has, "docker-compose"): empty_rule(),
+    },
+    "docker-compose": {
+        (runs, "service"): empty_rule(),
+    },
+}

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from moonleap import create, create_forward, rule
+from moonleap import create, create_forward, empty_rule, rule
 from moonleap.blocks.verbs import has
 from titan.project_pkg.service import Tool
 
@@ -35,5 +35,9 @@ rules = {
             # then maybe create relation :service /has :env
             project_has_service_that_has_env
         ),
+        (has, ":env"): empty_rule(),
+    },
+    "service": {
+        (has, ":env"): empty_rule(),
     },
 }

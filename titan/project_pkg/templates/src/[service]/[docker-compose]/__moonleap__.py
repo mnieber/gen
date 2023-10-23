@@ -16,4 +16,3 @@ def get_meta_data_by_fn(_, __):
             "include": bool(_.project.has_prod_config),
         },
     }
-

@@ -32,7 +32,10 @@ def get_helpers(_):
 
 def get_meta_data_by_fn(_, __):
     return {
-        ".": "..",
+        ".": {
+            "name": "..",
+            "include": bool(_.project.docker_compose),
+        },
         "docker-compose.dev.override.yml.j2": {
             "name": _.docker_compose.override_fn,
             "include": bool(_.docker_compose.override_fn),
@@ -41,3 +44,7 @@ def get_meta_data_by_fn(_, __):
             "include": bool(_.project.has_prod_config),
         },
     }
+
+
+def get_contexts(_):
+    return [dict(docker_compose=_.project.docker_compose)]

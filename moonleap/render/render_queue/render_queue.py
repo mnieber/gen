@@ -38,6 +38,10 @@ class RenderQueue:
         self.queue = []
 
     def add(self, task):
+        for i in range(len(self.queue)):
+            if self.queue[i].parent_task != task.parent_task:
+                self.queue.insert(i, task)
+                return
         self.queue.append(task)
 
     def pop(self):

@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from moonleap.render.render_queue.add_render_tasks import add_render_tasks
@@ -14,16 +15,17 @@ def process_render_queue():
 
 
 def _render(task: RenderQueueTask):
-    helpers = task.helpers
     meta_data_by_fn = task.meta_data_by_fn
+    if not meta_data_by_fn.get(".", dict()).get("include", True):
+        return
 
-    template_fns = [x for x in Path(task.templates_dir).glob("*") if not _exclude(x)]
+    template_fns = _get_template_fns(task, meta_data_by_fn)
+    if not template_fns:
+        return
+
+    helpers = task.helpers
     for template_fn in template_fns:
-        meta_data = meta_data_by_fn.get(template_fn.name, dict())
-        if not meta_data.get("include", True):
-            continue
-
-        output_fn = _get_output_fn(task.output_path, template_fn, meta_data)
+        output_fn = _get_output_fn(task.output_path, template_fn, meta_data_by_fn)
         if template_fn.is_dir():
             add_render_tasks(template_fn, output_fn, task)
         else:
@@ -34,14 +36,30 @@ def _render(task: RenderQueueTask):
             )
 
 
-def _get_output_fn(output_path, template_fn, meta_data):
-    prefix = meta_data.get(".", ".")
+def _get_template_fns(task, meta_data_by_fn):
+    return [
+        x
+        for x in Path(task.templates_dir).glob("*")
+        if not _exclude(meta_data_by_fn, x)
+    ]
+
+
+def _get_output_fn(output_path, template_fn, meta_data_by_fn):
+    prefix = meta_data_by_fn.get(".", {}).get("name", ".")
+    meta_data = meta_data_by_fn.get(template_fn.name, dict())
     name = meta_data["name"] if "name" in meta_data else template_fn.name
     if name.endswith(".j2"):
         name = name[:-3]
 
-    return Path(output_path) / prefix / name
+    return os.path.normpath(os.path.join(str(output_path), prefix, name))
 
 
-def _exclude(fn):
-    return fn.name.startswith("__moonleap__") or fn.name == "__pycache__"
+def _exclude(meta_data_by_fn, fn):
+    if fn.name.startswith("__moonleap__") or fn.name == "__pycache__":
+        return True
+
+    meta_data = meta_data_by_fn.get(fn.name, dict())
+    if not meta_data.get("include", True):
+        return True
+
+    return False
