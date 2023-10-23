@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
-from moonleap import RenderMixin, Resource, TemplateDirMixin, get_session
+from moonleap import Resource, get_session
 
 
 @dataclass
-class Service(RenderMixin, Resource):
+class Service(Resource):
     name: str
     install_dir: str = "/app"
 
@@ -82,5 +82,5 @@ class Service(RenderMixin, Resource):
 
 
 @dataclass
-class Tool(TemplateDirMixin, RenderMixin, Resource):
+class Tool(Resource):
     name: str

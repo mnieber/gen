@@ -1,6 +1,4 @@
-from pathlib import Path
-
-from moonleap import create, create_forward, rule
+from moonleap import create, create_forward
 from moonleap.blocks.verbs import has, runs
 
 from .resources import NodePackage  # noqa
@@ -10,16 +8,6 @@ from .resources import NodePackage  # noqa
 def create_node_package(term):
     node_package = NodePackage()
     return node_package
-
-
-@rule("react-app", has, "node-package")
-def react_app_has_node_package(react_app, node_package):
-    react_app.renders(
-        [node_package],
-        "",
-        lambda node_package: dict(node_package=node_package),
-        [Path(__file__).parent / "templates"],
-    )
 
 
 def react_app_has_cypress(react_app, cypress):

@@ -1,7 +1,7 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap import RenderMixin, Resource
+from moonleap import Resource
 from moonleap.blocks.parser.utils.get_meta import get_meta
 from moonleap.utils.case import l0
 from titan.types_pkg.typeregistry import get_type_reg
@@ -9,13 +9,13 @@ from titan.typespec.api_spec import ApiSpec
 
 
 @dataclass
-class Query(RenderMixin, Resource):
+class Query(Resource):
     name: str
     api_spec: "ApiSpec" = field(repr=False)
 
 
 @dataclass
-class Mutation(RenderMixin, Resource):
+class Mutation(Resource):
     name: str
     api_spec: "ApiSpec" = field(repr=False)
     items_saved: T.List[str] = field(default_factory=list)

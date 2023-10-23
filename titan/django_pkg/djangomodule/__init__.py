@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import moonleap.packages.extensions.props as P
 from moonleap import (
     MemFun,
@@ -12,7 +10,6 @@ from moonleap import (
     rule,
 )
 from moonleap.blocks.verbs import contains, has, provides
-from moonleap.utils.case import sn
 from titan.django_pkg.djangoapp import DjangoApp
 from titan.django_pkg.djangomodule.get_map_from_item_to_django_module import (
     get_map_from_item_to_django_module,
@@ -28,43 +25,25 @@ from .resources import DjangoModule
 base_tags = {"module": ["django-module"]}
 
 
-def create_django_module(klass, term, template_dir, has_graphql_schema=False):
+def create_django_module(klass, term, has_graphql_schema=False):
     module = klass(name=kebab_to_camel(term.data), kebab_name=term.data)
-    module.template_dir = template_dir
-    module.template_context = dict(module=module)
     module.has_graphql_schema = has_graphql_schema
     return module
 
 
 @create("module")
 def create_module(term):
-    return create_django_module(DjangoModule, term, Path(__file__).parent / "templates")
+    return create_django_module(DjangoModule, term)
 
 
 @create("user-accounts:module")
 def create_accounts_module(term):
-    return create_django_module(
-        DjangoModule,
-        term,
-        Path(__file__).parent / "templates_user_accounts",
-        has_graphql_schema=True,
-    )
+    return create_django_module(DjangoModule, term, has_graphql_schema=True)
 
 
 @create("users:module")
 def create_users_module(term):
-    return create_django_module(
-        DjangoModule, term, Path(__file__).parent / "templates_users"
-    )
-
-
-def django_app_renders_module(django_app, module):
-    django_app.renders(
-        [module],
-        sn(module.name),
-        module.template_context,
-        [module.template_dir],
-    )
+    return create_django_module(DjangoModule, term)
 
 
 @rule("django-app")
@@ -120,10 +99,5 @@ rules = {
     "module": {
         (contains + provides, "item~list"): empty_rule(),
     },
-    "django-app": {
-        (has, "module"): (
-            #
-            django_app_renders_module
-        )
-    },
+    "django-app": {(has, "module"): empty_rule()},
 }

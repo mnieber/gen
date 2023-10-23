@@ -1,11 +1,10 @@
 from dataclasses import dataclass
 
-from moonleap.render.render_mixin import RenderMixin
 from moonleap.resources.resource import Resource
 
 
 @dataclass
-class RootResource(RenderMixin, Resource):
+class RootResource(Resource):
     pass
 
 

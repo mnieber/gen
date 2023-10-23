@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import moonleap.packages.extensions.props as P
-from moonleap import MemFun, Prop, create, extend, kebab_to_camel
+from moonleap import MemFun, Prop, create, empty_rule, extend, kebab_to_camel
 from moonleap.blocks.verbs import has
 from titan.react_pkg.reactapp import ReactApp
 
@@ -38,15 +38,5 @@ class ExtendReactApp:
 
 
 rules = {
-    "react-app": {
-        (has, "module"): (
-            #
-            lambda react_app, module: react_app.renders(
-                [module],
-                f"src/{module.name}",
-                module.template_context,
-                [module.template_dir],
-            )
-        )
-    },
+    "react-app": {(has, "module"): empty_rule()},
 }

@@ -1,7 +1,5 @@
-from pathlib import Path
-
 import moonleap.packages.extensions.props as P
-from moonleap import Prop, create, extend, kebab_to_camel, rule, u0
+from moonleap import Prop, create, empty_rule, extend, kebab_to_camel, rule, u0
 from moonleap.blocks.verbs import has, provides
 from titan.react_pkg.reactmodule import ReactModule
 
@@ -16,33 +14,6 @@ def create_state(term):
     name = u0(kebab_to_camel(term.data) + "State")
     state = State(name=name)
     return state
-
-
-@rule("module", has, "state")
-def module_renders_state(module, state):
-    module.renders(
-        [state],
-        state.name,
-        lambda state: dict(state=state),
-        [Path(__file__).parent / "templates"],
-    )
-
-    for container in state.containers:
-        state.renders(
-            [container],
-            ".",
-            lambda state, ctr=container: dict(container=ctr),
-            [Path(__file__).parent / "templates_container"],
-        )
-
-        for bvr in container.bvrs:
-            if not bvr.is_skandha:
-                state.renders(
-                    [bvr],
-                    ".",
-                    lambda state, bvr=bvr: dict(bvr=bvr),
-                    [Path(__file__).parent / "templates_bvr"],
-                )
 
 
 @rule("state")
@@ -60,3 +31,10 @@ class ExtendState:
     state_provider = P.parent("state~provider", provides)
     module = P.parent("react-module", has)
     ts_var = Prop(props.state_ts_var)
+
+
+rules = {
+    "module": {
+        (has, "state"): empty_rule(),
+    }
+}

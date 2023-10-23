@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from moonleap import RenderMixin, Resource, TemplateDirMixin
+from moonleap import Resource
 
 
 @dataclass
-class ReactModule(TemplateDirMixin, RenderMixin, Resource):
+class ReactModule(Resource):
     name: str

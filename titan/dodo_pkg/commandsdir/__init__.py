@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 
 import moonleap.packages.extensions.props as P
-from moonleap import RenderMixin, Resource, create, extend
+from moonleap import Resource, create, extend
 from moonleap.blocks.verbs import has
 from titan.project_pkg.project import Project
 
 
 @dataclass
-class CommandsDir(RenderMixin, Resource):
+class CommandsDir(Resource):
     pass
 
 

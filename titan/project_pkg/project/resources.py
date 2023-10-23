@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
-from moonleap import RenderMixin, Resource, get_session
+from moonleap import Resource, get_session
 
 
 @dataclass
-class Project(RenderMixin, Resource):
+class Project(Resource):
     name: str
     kebab_name: str
 

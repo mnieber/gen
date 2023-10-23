@@ -1,7 +1,7 @@
 import typing as T
 from dataclasses import dataclass, field
 
-from moonleap import RenderMixin, Resource
+from moonleap import Resource
 from moonleap.utils.case import sn, snake_to_kebab
 from titan.typespec.field_spec import FieldSpec
 from titan.typespec.type_spec import TypeSpec
@@ -236,7 +236,7 @@ class DjangoDateField(DjangoModelField):
 
 
 @dataclass
-class DjangoModel(RenderMixin, Resource):
+class DjangoModel(Resource):
     name: str
     kebab_name: str
     type_spec: T.Optional[TypeSpec] = None

@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from moonleap import RenderMixin, Resource
+from moonleap import Resource
 
 
 @dataclass
-class NodePackage(RenderMixin, Resource):
+class NodePackage(Resource):
     pass

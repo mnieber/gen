@@ -1,7 +1,15 @@
 from pathlib import Path
 
 import moonleap.packages.extensions.props as P
-from moonleap import Priorities, create, create_forward, extend, kebab_to_camel, rule
+from moonleap import (
+    Priorities,
+    create,
+    create_forward,
+    empty_rule,
+    extend,
+    kebab_to_camel,
+    rule,
+)
 from moonleap.blocks.verbs import has
 from titan.react_pkg.reactapp import ReactApp
 from titan.react_pkg.reactmodule import ReactModule, create_react_module
@@ -31,18 +39,6 @@ def create_nav_page(term):
     return nav_page
 
 
-@rule("module", has, "nav-page", priority=Priorities.LOW.value)
-def module_has_nav_page(module, nav_page):
-    frames_module = module.react_app.frames_module
-    if frames_module:
-        frames_module.renders(
-            [nav_page],
-            f"pages",
-            lambda nav_page: dict(nav_page=nav_page),
-            [Path(__file__).parent / "templates_pages"],
-        )
-
-
 @extend(ReactModule)
 class ExtendModule:
     routes = P.children(has, "route")
@@ -63,6 +59,7 @@ rules = {
         (has, "route"): (
             # then the module has a nav-page
             lambda module, route: create_forward(module, has, f"{module.name}:nav-page")
-        )
+        ),
+        (has, "nav-page"): empty_rule(),
     }
 }

@@ -40,16 +40,6 @@ rules = {
                 module, has, f"{state_provider.base_name}:state"
             )
         ),
-        (has + ("hack",), "state~provider"): (
-            #
-            lambda module, state_provider: module.renders(
-                [state_provider],
-                "hooks",
-                lambda state_provider: dict(
-                    state_provider=state_provider, state=state_provider.state
-                ),
-                [Path(__file__).parent / "templates_hook"],
-            )
-        ),
+        (has + ("hack",), "state~provider"): empty_rule(),
     },
 }

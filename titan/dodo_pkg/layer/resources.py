@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
-from moonleap import RenderMixin, Resource
+from moonleap import Resource
 
 
 @dataclass
-class DodoLayer(RenderMixin, Resource):
+class DodoLayer(Resource):
     name: str
     is_root: bool
 

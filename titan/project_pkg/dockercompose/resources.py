@@ -1,11 +1,11 @@
 import typing as T
 from dataclasses import dataclass
 
-from moonleap import RenderMixin, Resource, get_session
+from moonleap import Resource, get_session
 
 
 @dataclass
-class DockerCompose(RenderMixin, Resource):
+class DockerCompose(Resource):
     @property
     def override_fn(self):
         return get_session().get_setting_or(

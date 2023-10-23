@@ -18,15 +18,5 @@ class ExtendReactModule:
 
 rules = {
     "widget-registry": {(has, "component"): empty_rule()},
-    "module": {
-        (has, "component"): (
-            #
-            lambda module, component: module.renders(
-                [component],
-                "",
-                dict(component=component),
-                [component.template_dir],
-            )
-        )
-    },
+    "module": {(has, "component"): empty_rule()},
 }

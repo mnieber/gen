@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
-from moonleap import RenderMixin, Resource, TemplateDirMixin
+from moonleap import Resource
 
 
 @dataclass
-class DjangoModule(TemplateDirMixin, RenderMixin, Resource):
+class DjangoModule(Resource):
     name: str
     kebab_name: str
     # Note that most the graphql api is directly defined in the api module
