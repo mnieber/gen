@@ -1,15 +1,7 @@
 from pathlib import Path
 
 import moonleap.packages.extensions.props as P
-from moonleap import (
-    Priorities,
-    create,
-    create_forward,
-    empty_rule,
-    extend,
-    kebab_to_camel,
-    rule,
-)
+from moonleap import create, create_forward, empty_rule, extend, kebab_to_camel, rule
 from moonleap.blocks.verbs import has
 from titan.react_pkg.reactapp import ReactApp
 from titan.react_pkg.reactmodule import ReactModule, create_react_module
@@ -42,6 +34,7 @@ def create_nav_page(term):
 @extend(ReactModule)
 class ExtendModule:
     routes = P.children(has, "route")
+    nav_page = P.child(has, "nav-page")
 
 
 @extend(NavPage)

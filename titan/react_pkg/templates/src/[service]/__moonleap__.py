@@ -49,3 +49,11 @@ def get_helpers(_):
             return sorted(result)
 
     return Helpers()
+
+
+def get_contexts(_):
+    return [
+        dict(service=service, react_app=service.react_app)
+        for service in _.project.services
+        if service.has_react_app
+    ]

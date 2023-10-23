@@ -51,6 +51,7 @@ def get_helpers(_):
 
 def get_meta_data_by_fn(_, __):
     return {
+        ".": {"name": _.module.name},
         "admin": {
             "name": ".",
             "include": bool(_.module.django_models),

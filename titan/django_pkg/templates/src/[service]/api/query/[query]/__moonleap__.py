@@ -26,3 +26,7 @@ def get_meta_data_by_fn(_, __):
             "name": f"{_.query.name.lower()}.py",
         }
     }
+
+
+def get_contexts(_):
+    return [dict(query=query) for query in _.api_reg.get_queries(module_name="api")]

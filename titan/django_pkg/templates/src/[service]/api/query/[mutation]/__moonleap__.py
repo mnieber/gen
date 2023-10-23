@@ -33,3 +33,11 @@ def get_meta_data_by_fn(_, __):
             "name": f"{_.mutation.name.lower()}.py",
         }
     }
+
+
+def get_contexts(_):
+    return [
+        dict(mutation=mutation)
+        for mutation in _.api_reg.get_mutations(module_name="api")
+        if not mutation.api_spec.is_stub
+    ]

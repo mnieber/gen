@@ -1,3 +1,6 @@
+from titan.api_pkg.apiregistry.get_public_type_specs import get_public_type_specs
+
+
 def get_helpers(_):
     class Helpers:
         type_spec = _.type_spec
@@ -39,7 +42,19 @@ def is_api_field(field_spec):
 
 def get_meta_data_by_fn(_, __):
     return {
+        ".": {"name": ".."},
         "graphql_type.py.j2": {
             "name": f"{_.type_spec.type_name.lower()}_t.py",
-        }
+        },
     }
+
+
+def get_contexts(_):
+    return [
+        dict(type_spec=type_spec)
+        for type_spec in get_public_type_specs(
+            _.api_reg,
+            include_stubs=False,
+            predicate=lambda type_spec: not type_spec.no_api,
+        )
+    ]
