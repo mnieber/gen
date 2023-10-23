@@ -1,7 +1,7 @@
 from argparse import Namespace
 
+from moonleap.render.create_render_helpers import create_render_helpers
 from moonleap.render.render_queue.render_queue import RenderQueueTask, get_render_queue
-from moonleap.render.render_templates.create_render_helpers import create_render_helpers
 
 
 def add_render_tasks(templates_dir, output_path, parent_render_task):
