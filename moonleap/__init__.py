@@ -10,7 +10,6 @@ from moonleap.packages.rule import Priorities  # noqa
 from moonleap.packages.rule import rule  # noqa
 from moonleap.packages.scope import create  # noqa
 from moonleap.render.render_template.tpl import Tpl, get_tpl  # noqa
-from moonleap.render.render_templates import render_templates  # noqa
 from moonleap.render.root_resource import RootResource  # noqa
 from moonleap.render.root_resource import get_root_resource  # noqa
 from moonleap.report.report_resources import report_resources  # noqa

@@ -1,5 +1,4 @@
 from moonleap import append_uniq, u0
-from moonleap.utils.inflect import plural
 from titan.react_view_pkg.behavior.resources import is_exposed_bvr
 
 

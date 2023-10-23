@@ -65,3 +65,7 @@ def get_meta_data_by_fn(_, __):
             "include": bool(_.django_app.use_translation),
         },
     }
+
+
+def get_contexts(_):
+    return [dict(module=module) for module in _.django_app.modules]

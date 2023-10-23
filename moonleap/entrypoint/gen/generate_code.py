@@ -7,12 +7,10 @@ from moonleap.blocks.parser.get_blocks import get_blocks
 from moonleap.entrypoint.gen.sync_files import sync_files
 from moonleap.post_process import post_process_output_files
 from moonleap.post_process.remove_stale_output_files import remove_stale_output_files
-from moonleap.render.render_mixin import render_resource
 from moonleap.render.render_queue.add_render_tasks_from_packages import (
     add_render_tasks_from_packages,
 )
 from moonleap.render.render_queue.process_render_queue import process_render_queue
-from moonleap.render.root_resource import get_root_resource
 from moonleap.report.report_resources import report_resources
 from moonleap.session import trace
 
@@ -29,14 +27,6 @@ def generate_code(session, post_process_all_files):
     try:
         trace("Rendering...")
         trace("Rendering root resource", 1)
-        root_resource = get_root_resource()
-        render_resource(
-            root_resource,
-            write_file=session.file_writer.write_file,
-            output_path="",
-            context=dict(settings=session.settings),
-        )
-
         add_render_tasks_from_packages(session.settings.get("packages_by_scope", {}))
         process_render_queue()
 
