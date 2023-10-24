@@ -101,8 +101,6 @@ def get_scalar_field_spec(key, field_spec_value):
         field_attrs["primary_key"] = True
         field_attrs["readonly"] = True
         if field_attrs["field_type"] == "uuid":
-            if not field_attrs.get("default_value", None):
-                field_attrs["default_value"] = "uuid.uuid4"
             if not field_attrs.get("readonly", None):
                 field_attrs["readonly"] = True
 
