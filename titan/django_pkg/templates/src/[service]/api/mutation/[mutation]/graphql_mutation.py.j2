@@ -9,7 +9,7 @@ from api.types import *
 from {{ type_spec.django_module.module_path }}.models import {{ type_spec.type_name }}  {% !! type_spec in __.type_specs_to_import %}
 
 class MutationName(graphene.Mutation):
-    output_field_name = {{ output_field_spec.graphene_type("") }}                       {% for output_field_spec in __.output_field_specs %}{% endfor %}
+    output_field_name = {{ output_field_spec.graphene_type("") }}                       {% !! output_field_spec in __.output_field_specs %}
 
     class Arguments:
         input_field_name = {{ __.graphene_type(input_field_spec) }}                     {% for input_field_spec in __.input_field_specs %}

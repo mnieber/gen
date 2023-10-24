@@ -1,9 +1,9 @@
 DIAL:                                                                 {% if _.layer.service_layer_group %}
   default:
-    '{{ loop.index }}': dodo {{ layer.name }}.                        {% for layer in _.layer.service_layer_group.layers %}{% endfor %}
+    '{{ loop.index }}': dodo {{ layer.name }}.                        {% !! layer in _.layer.service_layer_group.layers %}
   shift:
     '1': ${/ROOT/src_dir}/
-    '{{ loop.index + 1 }}': ${/ROOT/src_dir}/{{ layer.name }}         {% for layer in __.shift_layers %}{% endfor %}
+    '{{ loop.index + 1 }}': ${/ROOT/src_dir}/{{ layer.name }}         {% !! layer in __.shift_layers %}
   ctrl:
     '1': ${/ROOT/project_dir}/
     '2': ${/ROOT/config_dir}/
