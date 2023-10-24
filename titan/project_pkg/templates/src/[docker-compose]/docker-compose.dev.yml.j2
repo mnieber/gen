@@ -6,23 +6,22 @@ services:
       context: ./{{ service.name }}
       dockerfile: Dockerfile.dev                                                {% endif %}
     command: sleep infinity                                                     {% ?? service.serve_command_dev %}
-    depends_on:                                                                 {% min_lines count=2 %}
-      - {{ other_service.name }}                                                {% !! other_service in service.depends_on %}{% end_min_lines %}
-    env_file:                                                                   {% min_lines count=2 %}
-      - ./{{ service.name }}/.env/dev.injected.env                              {% end_min_lines %}
-    environment:                                                                {% min_lines count=2 %}
-      - DJANGO_SETTINGS_MODULE=app.settings.dev                                 {% ?? service.has_django_app %}{% end_min_lines %}
+    depends_on:                                                                 {% if service.depends_on %}
+      - {{ other_service.name }}                                                {% !! other_service in service.depends_on %}{% endif %}
+    env_file:
+      - ./{{ service.name }}/.env/dev.injected.env
+    environment:                                                                {% if service.has_django_app %}
+      - DJANGO_SETTINGS_MODULE=app.settings.dev                                 {% endif %}
     image: {{ __.get_image(service) }}
-    ports:                                                                      {% min_lines count=2 %}
-      - {{ port }}:{{ port }}                                                   {% !! port in service.ports.values() %}{% end_min_lines %}
-    volumes:
+    ports:                                                                      {% if service.ports.values() %}
+      - {{ port }}:{{ port }}                                                   {% !! port in service.ports.values() %}{% endif %}
+    volumes:                                                                    {% min_lines count=2 %}
       - ./{{ service.name }}:{{ service.install_dir }}/src                      {% ?? service.dockerfile %}
       - postgres_data:/var/lib/postgresql/data                                  {% ?? service.name == "postgres" %}
       - {{ service.name }}_venv:{{ service.install_dir }}/env                   {% ?? service.pip %}
-      - bundle:/app/bundle                                                      {% ?? service.use_create_bundle %}
+      - bundle:/app/bundle                                                      {% ?? service.use_create_bundle %}{% end_min_lines %}
                                                                               {% endfor %}
 volumes:                                                                      {% min_lines count=2 %}
   postgres_data: {}                                                           {% ?? _.project.get_service_by_name("postgres", None) %}
   {{ service.name }}_venv: {}                                                 {% for service in _.project.services %}{% ?? service.pip %}{% endfor %}
-  bundle: {}                                                                  {% ?? __.add_bundle_volume %}
-                                                                              {% end_min_lines %}
+  bundle: {}                                                                  {% ?? __.add_bundle_volume %}{% end_min_lines %}
