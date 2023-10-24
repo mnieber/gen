@@ -20,10 +20,10 @@ def get_helpers(_):
 
 
 def get_contexts(_):
-    result = []
-    for layer in _.root_resource.project.layers:
-        result.append(dict(layer=layer, service=layer.configures_service))
-    return result
+    return [
+        dict(layer=layer, service=layer.configures_service)
+        for layer in _.root_resource.project.layers
+    ]
 
 
 def get_meta_data_by_fn(_, __):

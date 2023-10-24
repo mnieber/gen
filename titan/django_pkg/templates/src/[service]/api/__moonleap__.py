@@ -2,12 +2,6 @@ from titan.api_pkg.apiregistry import get_api_reg
 
 
 def get_contexts(_):
+    if not _.django_app.api_module:
+        return []
     return [dict(api_reg=get_api_reg())]
-
-
-def get_meta_data_by_fn(_, __):
-    return {
-        ".": {
-            "include": bool(_.django_app.api_module),
-        }
-    }

@@ -22,9 +22,10 @@ def get_helpers(_):
 
 def get_meta_data_by_fn(_, __):
     return {
+        ".": {"name": ".."},
         "graphql_query.py.j2": {
             "name": f"{_.query.name.lower()}.py",
-        }
+        },
     }
 
 

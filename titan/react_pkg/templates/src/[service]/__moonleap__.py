@@ -1,5 +1,5 @@
 from moonleap import append_uniq, u0
-from titan.react_view_pkg.behavior.resources import is_exposed_bvr
+from titan.react_pkg.behavior.resources import is_exposed_bvr
 
 
 def get_helpers(_):

@@ -1,8 +1,5 @@
 def get_contexts(_):
-    result = []
-    for service in _.project.services:
-        result.append(dict(service=service))
-    return result
+    return [dict(service=service) for service in _.project.services]
 
 
 def get_meta_data_by_fn(_, __):

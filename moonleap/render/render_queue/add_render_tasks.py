@@ -16,6 +16,9 @@ def add_render_tasks(templates_dir, output_path, parent_render_task):
     context_extentions = (
         get_contexts(parent_render_task.context) if get_contexts else [{}]
     )
+    if not context_extentions:
+        return
+
     for context_extention in context_extentions:
         full_context = Namespace(
             **parent_render_task.context.__dict__, **context_extention
