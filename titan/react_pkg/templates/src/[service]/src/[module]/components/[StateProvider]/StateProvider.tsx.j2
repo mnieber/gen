@@ -2,6 +2,7 @@
 {% magic_with myComponent = _.component.name %}
 {% magic_with myContainer = container.name %}
 {% magic_with MyState = _.component.state.name %}
+{% magic_with myPrefix = _.component.state.prefix %}
 {% magic_with MyBvr = bvr.facet_name %}
 import React from 'react';
 import { makeAutoObservable } from 'mobx';
@@ -46,36 +47,34 @@ export const MyComponent = observer(
       })
     );
 
-    const getDefaultPropsContext = () => {
-      const result: any = {
-        defaultProps: {
-          myState: () => state,
-        }
-      };
-
-      result.defaultProps = {                                                                                   {% for container in __.state.containers %}
-        ...result.defaultProps,
-        containerItems: () => cache.containerItems,                                                             {% ?? container.item_list %}
-        containerItem: () => cache.containerItem,                                                               {% ?? container.highlight_bvr %}
-        myContainerAddition: () => state.myContainerCtr.addition,                                            {% ?? container.addition_bvr %}
-        myContainerDeletion: () => state.myContainerCtr.deletion,                                            {% ?? container.deletion_bvr %}
-        myContainerDragAndDrop: () => state.myContainerCtr.dragAndDrop,                                      {% ?? container.drag_and_drop_bvr %}
-        myContainerEdit: () => state.myContainerCtr.edit,                                                    {% ?? container.edit_bvr %}
-        myContainerFiltering: () => state.myContainerCtr.filtering,                                          {% ?? container.filtering_bvr %}
-        myContainerHighlight: () => state.myContainerCtr.highlight,                                          {% ?? container.highlight_bvr %}
-        myContainerHovering: () => state.myContainerCtr.hovering,                                            {% ?? container.hovering_bvr %}
-        myContainerPagination: () => state.myContainerCtr.pagination,                                        {% ?? container.pagination_bvr %}
-        myContainerSelection: () => state.myContainerCtr.selection,                                          {% ?? container.selection_bvr %}
-        myContainerMyBvr: () => state.myContainerCtr.myBvr,                                                  {% !! bvr in __.other_bvrs(container) %}
-      };
-      {{ "" }}                                                                                                  {% endfor %}
-      return result;
+    const getMyPrefixContext = () => {
+      return createGetProps(
+        R.mergeAll([
+          {
+            myState: () => state,
+          },
+          {                                                                                              {% for container in __.state.containers %}
+            containerItems: () => cache.containerItems,                                                    {% ?? container.item_list %}
+            containerItem: () => cache.containerItem,                                                      {% ?? container.highlight_bvr %}
+            myContainerAddition: () => state.myContainerCtr.addition,                                      {% ?? container.addition_bvr %}
+            myContainerDeletion: () => state.myContainerCtr.deletion,                                      {% ?? container.deletion_bvr %}
+            myContainerDragAndDrop: () => state.myContainerCtr.dragAndDrop,                                {% ?? container.drag_and_drop_bvr %}
+            myContainerEdit: () => state.myContainerCtr.edit,                                              {% ?? container.edit_bvr %}
+            myContainerFiltering: () => state.myContainerCtr.filtering,                                    {% ?? container.filtering_bvr %}
+            myContainerHighlight: () => state.myContainerCtr.highlight,                                    {% ?? container.highlight_bvr %}
+            myContainerHovering: () => state.myContainerCtr.hovering,                                      {% ?? container.hovering_bvr %}
+            myContainerPagination: () => state.myContainerCtr.pagination,                                  {% ?? container.pagination_bvr %}
+            myContainerSelection: () => state.myContainerCtr.selection,                                    {% ?? container.selection_bvr %}
+            myContainerMyBvr: () => state.myContainerCtr.myBvr,                                            {% !! bvr in __.other_bvrs(container) %}
+          },                                                                                            {% endfor %}
+        ])
+      );
     };
 
     return (
-      <DefaultPropsProvider extend value={getDefaultPropsContext()}>
+      <MyPrefixContext.Provider value={getMyPrefixContext()}>
         {props.children}
-      </DefaultPropsProvider>
+      </MyPrefixContext.Provider>
     );
   }, ContextProps)
 );

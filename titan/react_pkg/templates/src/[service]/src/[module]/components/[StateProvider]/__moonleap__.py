@@ -36,6 +36,9 @@ def get_helpers(_):
 
 def get_meta_data_by_fn(_, __):
     return {
+        ".": {
+            "name": "..",
+        },
         "StateProvider.tsx.j2": {
             "name": f"{_.component.name}.tsx",
         },

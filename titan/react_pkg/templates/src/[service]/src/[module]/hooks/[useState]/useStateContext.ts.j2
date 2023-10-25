@@ -38,12 +38,12 @@ export const useMyPrefixContext = () => {
 };
 
 export const myPrefixCtx = {
-  myState: [useMyPrefixContext, 'myState'] as any as MyState,                                {% for container in _.state.containers %}
-  myItem: [useMyPrefixContext, 'myItem'] as any as MyItemT,                                  {% ?? container.item_name %}
-  myItems: [useMyPrefixContext, 'myItems'] as any as MyItemT[],                              {% ?? container.item_name %}
-  myPrefixHighlight: [useMyPrefixContext, 'myPrefixHighlight'] as any as Highlight,          {% ?? container.highlight_bvr %}
-  myPrefixSelection: [useMyPrefixContext, 'myPrefixSelection'] as any as Selection,          {% ?? container.selection_bvr %}
-  myPrefixAddition: [useMyPrefixContext, 'myPrefixAddition'] as any as Addition,             {% ?? container.addition_bvr %}
-  myPrefixDragAndDrop: [useMyPrefixContext, 'myPrefixDragAndDrop'] as any as DragAndDrop,    {% ?? container.drag_and_drop_bvr %}
-  myPrefixEdit: [useMyPrefixContext, 'myPrefixEdit'] as any as Edit,                         {% ?? container.edit_bvr %}{% endfor %}
+  myState: [useMyPrefixContext, 'myState'] as any as MyState,                                      {% for container in _.state.containers %}
+  myItem: [useMyPrefixContext, 'myItem'] as any as MyItemT,                                        {% ?? container.item_name %}
+  myItems: [useMyPrefixContext, 'myItems'] as any as MyItemT[],                                    {% ?? container.item_name %}
+  myContainerHighlight: [useMyPrefixContext, 'myContainerHighlight'] as any as Highlight,          {% ?? container.highlight_bvr %}
+  myContainerSelection: [useMyPrefixContext, 'myContainerSelection'] as any as Selection,          {% ?? container.selection_bvr %}
+  myContainerAddition: [useMyPrefixContext, 'myContainerAddition'] as any as Addition,             {% ?? container.addition_bvr %}
+  myContainerDragAndDrop: [useMyPrefixContext, 'myContainerDragAndDrop'] as any as DragAndDrop,    {% ?? container.drag_and_drop_bvr %}
+  myContainerEdit: [useMyPrefixContext, 'myContainerEdit'] as any as Edit,                         {% ?? container.edit_bvr %}{% endfor %}
 };
