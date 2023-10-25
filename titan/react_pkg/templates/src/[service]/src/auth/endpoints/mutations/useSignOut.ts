@@ -1,7 +1,7 @@
 import { useObservableMutation } from '/src/api/ObservableMutation';
 import { setToken } from '/src/api/graphqlClient';
+import { queryClient } from '/src/api/queryClient';
 import { AuthState } from '/src/auth/AuthState';
-import { invalidateLoadUserId } from '/src/auth/endpoints';
 import { ObjT } from '/src/utils/types';
 
 export type ArgsT = {};
@@ -24,8 +24,10 @@ export const useSignOut = (authState?: AuthState) => {
       if (authState) authState.onUpdating(queryName);
     },
     onSuccess: (data: ObjT) => {
+      // We completely clear the query cache so that the anonymous user
+      // will never see results from the previous user.
+      queryClient.getQueryCache().clear();
       if (authState) authState.onUpdated(queryName, data);
-      invalidateLoadUserId({});
     },
     onError: (error: Error) => {
       if (authState) authState.onErrored(queryName, error.message);

@@ -1,9 +1,9 @@
 import type { RoutesT as AuthRoutesT } from '/src/auth/routeTable';
 import { RouterLink } from '/src/routes/components';
-import { getRoutes } from '/src/routes/routeTable';
+import { getRouteFns } from '/src/routes/routeTable';
 
 export const useMessages = () => {
-  const routes = getRoutes<AuthRoutesT>();
+  const routes = getRouteFns<AuthRoutesT>();
 
   const divTheActivationFailed = (
     <div>

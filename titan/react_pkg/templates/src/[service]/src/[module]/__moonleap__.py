@@ -4,7 +4,7 @@ def get_meta_data_by_fn(_, __):
         "routeTable.ts.j2": {
             "include": bool(_.module.routes),
         },
-        "navEvents.ts": {
+        "navFunctions.ts": {
             "include": bool(_.module.routes),
         },
     }

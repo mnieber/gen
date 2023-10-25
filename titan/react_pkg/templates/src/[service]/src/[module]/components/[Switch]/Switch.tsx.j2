@@ -3,14 +3,14 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { getRoutes } from '/src/routes/routeTable';
+import { getRouteFns } from '/src/routes/routeTable';
 import type { RoutesT as ModuleNameRoutesT } from '/src/moduleName/routeTable';
 
 export const ModuleNameSwitch = observer(() => {
-  const routes = getRoutes<ModuleNameRoutesT>();
+  const routeFns = getRouteFns<ModuleNameRoutesT>();
   return (
     <Switch>
-        <Route exact={true} path={routes.routeName()}>                          {% for route in _.module.routes %}
+        <Route exact={true} path={routeFns.routeName()}>                        {% for route in _.module.routes %}
         </Route>                                                                {% endfor %}
     </Switch>
   );

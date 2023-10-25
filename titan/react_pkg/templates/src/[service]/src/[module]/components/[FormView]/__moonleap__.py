@@ -15,7 +15,7 @@ def get_helpers(_):
 def get_meta_data_by_fn(_, __):
     return {
         ".": {
-            "name": "..",
+            "name": f"../{u0(_.component.name)}",
         },
         "FormView.tsx.j2": {
             "name": f"{u0(_.component.name)}.tsx",
