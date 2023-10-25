@@ -1,10 +1,10 @@
-{% magic_with myItem = __.item_name %}
+{% magic_with myItem = __.item.item_name %}
 {% magic_with MyFormView = _.component.name %}
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { FormState, FormStateProvider } from 'react-form-state-context';
 import { form } from './form';
-import { dps, withDefaultProps } from '/src/app/defaultProps';
+import { withContextProps } from 'react-props-from-context';
 import { MainFormS } from '/src/dashboard/components/MainForm';
 import {
   Field,
@@ -24,13 +24,13 @@ export type PropsT = {
   className?: any;
 };
 
-export const DefaultProps = {
-  ...dps.myItem,
-  ...dps.myItemsEdit,
+export const ContextProps = {
+  myItem: fooCtx.myItem,
+  myItemsEdit: fooCtx.myItemsEdit,
 };
 
 export const MyFormView = observer(
-  withDefaultProps((props: PropsT & typeof DefaultProps) => {
+  withContextProps((props: PropsT & typeof ContextProps) => {
     if (!props.myItem) {
       return null;
     }
@@ -94,5 +94,5 @@ export const MyFormView = observer(
         </FormStateProvider>
       </div>
     );
-  }, DefaultProps)
+  }, ContextProps)
 );

@@ -13,6 +13,9 @@ def get_helpers(_):
 
 def get_meta_data_by_fn(_, __):
     return {
+        ".": {
+            "name": "..",
+        },
         "useState.ts.j2": {
             "name": f"use{u0(_.state.name)}.ts",
         },

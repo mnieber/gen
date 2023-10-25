@@ -1,9 +1,9 @@
-{% magic_with myItem = __.item_name %}
+{% magic_with myItem = __.item_list.item_name %}
 {% magic_with myModule = _.component.module.name %}
 {% magic_with MyListView = _.component.name %}
 import { LoaderBar } from '/src/frames/components/LoaderBar';
 import { L } from '/src/frames/layout';
-import { dps, withDefaultProps } from '/src/app/defaultProps';
+import { withContextProps } from 'react-props-from-context';
 import { cn } from '/src/utils/classnames';
 import { observer } from 'mobx-react-lite';
 import { MyItemT } from '/src/api/types/MyItemT';
@@ -24,16 +24,17 @@ export type PropsT = {
   className?: any;
 };
 
-const DefaultProps = {
-  ...dps.myItems,
-  ...dps.myItemsDragAndDrop,                                                                    {% ?? __.has_drag_and_drop %}
-  ...dps.myItemsHighlight,                                                                      {% ?? __.has_highlight or __.has_selection %}
-  ...dps.myItemsHovering,                                                                       {% ?? __.has_drag_and_drop %}
-  ...dps.myItemsSelection,                                                                      {% ?? __.has_selection %}
+const ContextProps = {
+  // container: {{ __.item_list.container.name }}                                               {% ?? __.item_list.container %}
+  myItems: fooCtx.myItems,
+  myItemsDragAndDrop: fooCtx.myItemsDragAndDrop,                                                {% ?? __.has_drag_and_drop %}
+  myItemsHighlight: fooCtx.myItemsHighlight,                                                    {% ?? __.has_highlight or __.has_selection %}
+  myItemsHovering: fooCtx.myItemsHovering,                                                      {% ?? __.has_drag_and_drop %}
+  myItemsSelection: fooCtx.myItemsSelection,                                                    {% ?? __.has_selection %}
 };
 
 export const MyListView = observer(
-  withDefaultProps((props: PropsT & typeof DefaultProps) => {
+  withContextProps((props: PropsT & typeof ContextProps) => {
     //
     // 🔳  Handle loading state 🔳
     //
@@ -78,7 +79,7 @@ export const MyListView = observer(
         <MyListViewItem
           key={`item-${myItem.id}`}
           myItem={myItem}
-          isHighlighted={myItem && props.myItemsHighlight.id === myItem.id}                     {% ?? __.has_selection %}
+          isHighlighted={myItem && props.myItemsHighlight.itemId === myItem.id}                 {% ?? __.has_selection %}
           highlightUIProps={highlightUIConnector.handle(myItem.id)}                             {% ?? __.has_highlight and not __.has_selection %}
           selectionUIProps={selectionUIConnector.handle(myItem.id)}                             {% ?? __.has_selection %}
           dragAndDropUIProps={dragAndDropUIConnector.handle(myItem.id)}                         {% ?? __.has_drag_and_drop %}
@@ -106,7 +107,7 @@ export const MyListView = observer(
         </div>
       </MyListViewKeyHandler>                                                                   {% ?? __.has_key_handler %}
     );
-  }, DefaultProps)
+  }, ContextProps)
 );
 
 

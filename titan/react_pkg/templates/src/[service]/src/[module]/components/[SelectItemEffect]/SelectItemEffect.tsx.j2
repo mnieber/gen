@@ -1,7 +1,7 @@
 {% magic_with myComponent = _.component.name %}
 {% magic_with myItem = _.component.item_list.item_name %}
 import { observer } from 'mobx-react-lite';
-import { dps, withDefaultProps } from '/src/app/defaultProps';
+import { withContextProps } from 'react-props-from-context';
 import { Selection } from 'skandha-facets/Selection';
 import { Effect } from '/src/utils/components';
 import * as R from 'ramda';
@@ -16,13 +16,13 @@ type ArgsT = {
 
 type PropsT = {};
 
-const DefaultProps = {
-  ...dps.myItemsSelection,
-  ...dps.myItems,                                                                     {% ?? __.get_item_id() %}
+const ContextProps = {
+  myItemsSelection: fooCtx.myItemsSelection,
+  myItems: fooCtx.myItems,                                                            {% ?? __.get_item_id() %}
 };
 
 export const MyComponent = observer(
-  withDefaultProps((props: PropsT & typeof DefaultProps) => {
+  withContextProps((props: PropsT & typeof ContextProps) => {
     return (
       <Effect
         getArgs={(params) => {
@@ -40,5 +40,5 @@ export const MyComponent = observer(
         }
       />
     );
-  }, DefaultProps)
+  }, ContextProps)
 );

@@ -18,7 +18,7 @@ export const useValuePickerState = <ValueT extends { id: string }>(
 
   const setItem = React.useMemo(
     () => (value: ValueT) => {
-      props.highlight && props.highlight.highlightItem({ id: value.id });
+      props.highlight && props.highlight.set({ id: value.id });
       props.selection && props.selection.selectItem({ itemId: value.id });
       props.updateUrl && props.updateUrl(value);
     },

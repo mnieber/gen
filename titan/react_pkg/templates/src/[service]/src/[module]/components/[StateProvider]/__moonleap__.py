@@ -46,5 +46,5 @@ def get_contexts(_):
     return [
         dict(component=component)
         for component in _.module.components
-        if component.meta.term.tag == "state-provider"
+        if component.meta.term.tag == "state~provider"
     ]

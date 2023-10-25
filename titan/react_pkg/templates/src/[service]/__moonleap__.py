@@ -57,3 +57,11 @@ def get_contexts(_):
         for service in _.project.services
         if service.has_react_app
     ]
+
+
+def get_meta_data_by_fn(_, __):
+    return {
+        ".": {
+            "name": f"../{_.service.name}",
+        }
+    }

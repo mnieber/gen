@@ -46,6 +46,7 @@ class ExtendBehavior:
 
 @extend(ItemList)
 class ExtendItemList:
+    container = P.parent("container", stores)
     addition = P.child(has, "addition:bvr")
 
 

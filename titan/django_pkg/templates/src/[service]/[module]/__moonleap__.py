@@ -1,3 +1,4 @@
+from moonleap.utils.case import sn
 from moonleap.utils.fp import append_uniq
 from moonleap.utils.inflect import plural
 from titan.django_pkg.djangomodel.sort_django_models import sort_django_models
@@ -51,7 +52,7 @@ def get_helpers(_):
 
 def get_meta_data_by_fn(_, __):
     return {
-        ".": {"name": _.module.name},
+        ".": {"name": f"../{sn(_.module.name)}"},
         "admin": {
             "name": ".",
             "include": bool(_.module.django_models),

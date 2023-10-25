@@ -1,6 +1,6 @@
 {% magic_with MyKeyHandler = __.component_name %}
 {% magic_with MyItem = __.item_name %}
-import { dps, withDefaultProps } from '/src/app/defaultProps';
+import { withContextProps } from 'react-props-from-context';
 import { cn } from '/src/utils/classnames';
 import { observer } from 'mobx-react-lite';
 import * as R from 'ramda';
@@ -12,13 +12,13 @@ import { createKeyDownHandler } from '/src/utils';
 
 export type PropsT = React.PropsWithChildren<{ className?: any }>;
 
-const DefaultProps = {
-  ...dps.myItemsHighlight,                                                                  {% ?? __.has_highlight %}
-  ...dps.myItemsSelection,                                                                  {% ?? __.has_selection %}
+const ContextProps = {
+  myItemsHighlight: fooCtx.myItemsHighlight,                                                {% ?? __.has_highlight %}
+  myItemsSelection: fooCtx.myItemsSelection,                                                {% ?? __.has_selection %}
 };
 
 export const MyKeyHandler = observer(
-  withDefaultProps((props: PropsT & typeof DefaultProps) => {
+  withContextProps((props: PropsT & typeof ContextProps) => {
     const keyHandlers = {
       ...createHighlightKeyHandlers(props.myItemsHighlight),                                {% ?? __.has_highlight %}
       ...createSelectionKeyHandlers(props.myItemsSelection),                                {% ?? __.has_selection %}
@@ -35,5 +35,5 @@ export const MyKeyHandler = observer(
         {props.children}
       </KeyboardEventHandler>
     );
-  }, DefaultProps)
+  }, ContextProps)
 );

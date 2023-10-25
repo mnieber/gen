@@ -4,7 +4,7 @@ from moonleap import u0
 def get_helpers(_):
     class Helpers:
         view = _.component
-        item_name = view.item_list.item_name
+        item_list = view.item_list
         has_key_handler = bool(view.key_handler)
         has_selection = bool(view.selection_bvr)
         has_highlight = bool(view.highlight_bvr)
@@ -18,6 +18,9 @@ def get_helpers(_):
 
 def get_meta_data_by_fn(_, __):
     return {
+        ".": {
+            "name": "..",
+        },
         "ListView.tsx.j2": {
             "name": f"{u0(_.component.name)}.tsx",
         },

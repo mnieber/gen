@@ -4,7 +4,7 @@ from moonleap import u0
 def get_helpers(_):
     class Helpers:
         view = _.component
-        item_name = view.item.item_name
+        item = view.item
 
         def __init__(self):
             pass
@@ -15,7 +15,7 @@ def get_helpers(_):
 def get_meta_data_by_fn(_, __):
     return {
         ".": {
-            "name": f"../{u0(_.component.name)}",
+            "name": "..",
         },
         "FormView.tsx.j2": {
             "name": f"{u0(_.component.name)}.tsx",

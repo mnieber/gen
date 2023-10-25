@@ -1,6 +1,6 @@
 def get_meta_data_by_fn(_, __):
     return {
-        ".": {"name": _.module.name},
+        ".": {"name": f"../{_.module.name}"},
         "routeTable.ts.j2": {
             "include": bool(_.module.routes),
         },

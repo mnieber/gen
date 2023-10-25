@@ -1,6 +1,6 @@
 {% magic_with myComponent = _.component.name %}
 {% magic_with MyImportedComponent = component.name %}
-import { withDefaultProps } from '/src/app/defaultProps';
+import { withContextProps } from '/src/app/defaultProps';
 import { cn } from '/src/utils/classnames';
 import { observer } from 'mobx-react-lite';
 import { MyImportedComponent } from '/src/{{ component.module.name }}/components/MyImportedComponent';            {% !! component in __.imported_components %}
@@ -12,13 +12,13 @@ export type PropsT = {
   className?: any;
 };
 
-const DefaultProps = {};
+const ContextProps = {};
 
 export const MyComponent = observer(
-  withDefaultProps((props: PropsT & typeof DefaultProps) => {
+  withContextProps((props: PropsT & typeof ContextProps) => {
     return (
       {{ __.main_div }}
     );
-  }, DefaultProps)
+  }, ContextProps)
 );
 

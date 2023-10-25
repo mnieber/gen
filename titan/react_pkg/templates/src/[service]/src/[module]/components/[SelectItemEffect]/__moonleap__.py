@@ -43,6 +43,9 @@ def get_helpers(_):
 
 def get_meta_data_by_fn(_, __):
     return {
+        ".": {
+            "name": "..",
+        },
         "SelectItemEffect.tsx.j2": {
             "name": f"{u0(_.component.name)}.tsx",
         },

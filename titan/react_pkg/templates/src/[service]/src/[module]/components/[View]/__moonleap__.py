@@ -85,11 +85,14 @@ tpl_component = """<{name} />
 
 def get_meta_data_by_fn(_, __):
     return {
+        ".": {
+            "name": "..",
+        },
         "View.tsx.j2": {
-            "name": f"{u0(_.component.name)}.tsx",
+            "name": f"{_.component.name}.tsx",
         },
         "View.scss.j2": {
-            "name": f"{u0(_.component.name)}.scss",
+            "name": f"{_.component.name}.scss",
         },
     }
 

@@ -34,7 +34,7 @@ const mapData = (state: MyState) => {
             ?? []                                                                                     {% ?? not _.container.display_bvr %}
           ),
         items:
-          () => ctr.selection.ids
+          () => ctr.selection.itemIds
             .map(getMyItemById)
             .filter((x?: MyItemT) => !!x) as MyItemT[],
     },                                                                                                {% endif %}
@@ -43,7 +43,7 @@ const mapData = (state: MyState) => {
         ctr.mySource.items
         ?? []                                                                                         {% ?? not _.container.display_bvr %}
       ),
-      item: () => getMyItemById(ctr.highlight.id),
+      item: () => getMyItemById(ctr.highlight.itemId),
     },                                                                                                {% endif %}
     filtering: {                                                                                      {% if _.container.filtering_bvr %}
       inputItems: () => ctr.store.myItems,
@@ -74,7 +74,7 @@ const setCallbacks = (state: MyState) => {
   setCallbackMap(ctr.addition, {                                                                        {% if _.container.addition_bvr %}
     add: {
       stageAdd() {
-        ctr.addition.parentId = ctr.highlight.id || topOfTheList;                                       {% ?? _.container.highlight_bvr %}
+        ctr.addition.parentId = ctr.highlight.itemId || topOfTheList;                                   {% ?? _.container.highlight_bvr %}
       },
       highlightNewItem() {
         ctr.selection.selectItem({ itemId: ctr.addition.item?.id });
@@ -120,8 +120,8 @@ const setCallbacks = (state: MyState) => {
   } as EditCbs);                                                                                        {% endif %}
 
   setCallbackMap(ctr.highlight, {                                                                       {% if _.container.selection_bvr %}
-    highlightItem: {                                                                                    {% if _.container.addition_bvr %}
-      enter(this: HighlightCbs['highlightItem']) {
+    set: {                                                                                              {% if _.container.addition_bvr %}
+      enter(this: HighlightCbs['set']) {
         // Cancel adding a new item on highlight change
         if (ctr.addition.item && ctr.addition.item.id !== this.args.id) {
           ctr.addition.cancel();
@@ -144,7 +144,7 @@ const setCallbacks = (state: MyState) => {
         handleSelectItem(ctr.selection, this.args);
         // Highlight follows selection                                                                  {% if _.container.highlight_bvr %}
         if (!this.args.isCtrl && !this.args.isShift) {
-          ctr.highlight.highlightItem({ id: this.args.itemId });
+          ctr.highlight.set({ id: this.args.itemId });
         }                                                                                               {% endif %}
       }
     },

@@ -7,7 +7,7 @@ import React from 'react';
 import { makeAutoObservable } from 'mobx';
 import { updateSources } from 'mobx-resource-states';
 import { DefaultPropsProvider } from 'react-default-props-context';
-import { dps, withDefaultProps } from '/src/app/defaultProps';
+import { withDefaultProps } from '/src/app/defaultProps';
 import { cn } from '/src/utils/classnames';
 import { useBuilder } from '/src/utils/hooks/useBuilder';
 import { observer } from 'mobx-react-lite';
@@ -17,10 +17,10 @@ import { useMyState } from '/src/{{ __.state.module.module_path }}/hooks/useMySt
 
 export type PropsT = React.PropsWithChildren<{}>;
 
-const DefaultProps = {};
+const ContextProps = {};
 
 export const MyComponent = observer(
-  withDefaultProps((props: PropsT & typeof DefaultProps) => {
+  withContextProps((props: PropsT & typeof ContextProps) => {
     const { myState: state, } = useMyState({ /* MOONLEAP TODO */ });
 
     const cache = useBuilder(() =>
@@ -77,5 +77,5 @@ export const MyComponent = observer(
         {props.children}
       </DefaultPropsProvider>
     );
-  }, DefaultProps)
+  }, ContextProps)
 );

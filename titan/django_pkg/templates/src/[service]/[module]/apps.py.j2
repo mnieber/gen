@@ -1,5 +1,6 @@
 from django.apps import AppConfig
-from app.tr import tr                                               {% ?? _.django_app.use_translation %}
+from app.tr import tr                                                  {% ?? _.django_app.use_translation %}
+
 
 class {{ _.module.name | u0 }}Config(AppConfig):
     name = "{{ _.module.name|sn }}"

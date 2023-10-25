@@ -17,7 +17,7 @@ def get_helpers(_):
 def get_meta_data_by_fn(_, __):
     return {
         ".": {
-            "name": f"{_.container.name}",
+            "name": "..",
         },
         "registerCtr.ts.j2": {
             "name": f"register{u0(_.container.name)}Ctr.ts",
