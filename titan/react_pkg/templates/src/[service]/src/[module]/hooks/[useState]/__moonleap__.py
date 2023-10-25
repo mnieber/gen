@@ -19,8 +19,8 @@ def get_meta_data_by_fn(_, __):
         "useState.ts.j2": {
             "name": f"use{u0(_.state.name)}.ts",
         },
-        "useState.index.ts.j2": {
-            "name": f"index.ts",
+        "useStateContext.ts.j2": {
+            "name": f"use{u0(_.state.prefix)}Context.ts",
         },
     }
 

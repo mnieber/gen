@@ -1,0 +1,49 @@
+{% magic_with myItem      = container.item_name %}
+{% magic_with myContainer = container.name %}
+{% magic_with MyState     = _.state.name %}
+{% magic_with myPrefix     = _.state.prefix %}
+import * as R from 'ramda';
+import React from 'react';
+import { MyState } from '/src/{{ _.state.module.module_path }}/MyState';
+import { trackPromise } from 'mobx-resource-states';
+import { useBuilder } from '/src/utils/hooks/useBuilder';
+import { useGraftResourceStatesFromMemo } from '/src/utils/hooks/useGraftResourceStatesFromMemo';
+import { lookUp } from '/src/utils/ids';
+import { ObjT } from '/src/utils/types';
+import {
+  Addition
+  Deletion,
+  DragAndDrop,
+  Display,
+  Edit,
+  Filtering,
+  Highlight,
+  Hovering,
+  Insertion,
+  Pagination,
+  Selection
+  Store
+} from 'skandha-facets';
+
+export const MyPrefixContext = React.createContext<any>(null);
+
+export const useMyPrefixContext = () => {
+  const context = React.useContext(MyPrefixContext);
+  if (!context) {
+    throw new Error(
+      'useMyPrefixContext must be used within a MyPrefixContext.Provider'
+    );
+  }
+  return context;
+};
+
+export const myPrefixCtx = {
+  myState: [useMyPrefixContext, 'myState'] as any as MyState,                                {% for container in _.state.containers %}
+  myItem: [useMyPrefixContext, 'myItem'] as any as MyItemT,                                  {% ?? container.item_name %}
+  myItems: [useMyPrefixContext, 'myItems'] as any as MyItemT[],                              {% ?? container.item_name %}
+  myPrefixHighlight: [useMyPrefixContext, 'myPrefixHighlight'] as any as Highlight,          {% ?? container.highlight_bvr %}
+  myPrefixSelection: [useMyPrefixContext, 'myPrefixSelection'] as any as Selection,          {% ?? container.selection_bvr %}
+  myPrefixAddition: [useMyPrefixContext, 'myPrefixAddition'] as any as Addition,             {% ?? container.addition_bvr %}
+  myPrefixDragAndDrop: [useMyPrefixContext, 'myPrefixDragAndDrop'] as any as DragAndDrop,    {% ?? container.drag_and_drop_bvr %}
+  myPrefixEdit: [useMyPrefixContext, 'myPrefixEdit'] as any as Edit,                         {% ?? container.edit_bvr %}{% endfor %}
+};
