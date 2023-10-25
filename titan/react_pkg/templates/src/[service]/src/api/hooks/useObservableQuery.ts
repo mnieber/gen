@@ -6,8 +6,8 @@ import { useBuilder } from '/src/utils/hooks/useBuilder';
 
 export interface TanstackQuery {
   data: QueryDataT;
-  status: string;
   isFetching: boolean;
+  isInitialLoading: boolean;
 }
 
 export type OptionsT = {
@@ -51,5 +51,7 @@ const updateObservableQuery = (
 ) => {
   observableQuery.data = tanstackQuery.data;
   observableQuery.status =
-    fetchAsLoad && tanstackQuery.isFetching ? 'loading' : tanstackQuery.status;
+    (fetchAsLoad && tanstackQuery.isFetching) || tanstackQuery.isInitialLoading
+      ? 'loading'
+      : 'idle';
 };

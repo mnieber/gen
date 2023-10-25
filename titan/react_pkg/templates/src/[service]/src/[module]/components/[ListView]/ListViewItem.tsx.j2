@@ -1,3 +1,4 @@
+{% magic_with myState = __.state.prefix %}
 {% magic_with myItem = __.item_list.item_name %}
 {% magic_with myListView = _.component.name %}
 import { observer } from 'mobx-react-lite';
@@ -6,15 +7,16 @@ import { dragAndDropUIHandlers, DragAndDropUIPropsT } from 'skandha-facets';    
 import { highlightUIHandlers, HighlightUIPropsT } from 'skandha-facets';           {% ?? __.has_highlight and not __.has_selection %}
 import { selectionUIHandlers, SelectionUIPropsT } from 'skandha-facets';           {% ?? __.has_selection %}
 import { MyItemT } from '/src/api/types/MyItemT';
+import { myStateCtx } from '/src/{{ __.state.module.name }}/hooks/useMyStateContext';
 import { L } from '/src/frames/layout';
 import { isUpdating } from 'mobx-resource-states';
 import { cn } from '/src/utils/classnames';
-import { withContextProps } from 'react-props-from-context';
 
 // Import styles
 import './MyListViewItem.scss';
 
 export type PropsT = {
+  myItem: {{ __.item_list.item.ts_type }};
   isHighlighted: boolean;                                                          {% ?? __.has_selection %}
   dragAndDropUIProps: DragAndDropUIPropsT;                                         {% ?? __.has_drag_and_drop %}
   highlightUIProps: HighlightUIPropsT;                                             {% ?? __.has_highlight and not __.has_selection %}
@@ -22,12 +24,8 @@ export type PropsT = {
   className?: any;
 };
 
-const ContextProps = {
-  myItem: fooCtx.myItem,
-};
-
 export const MyListViewItem = observer(
-  withContextProps((props: PropsT & typeof ContextProps) => {
+  (props: PropsT) => {
     return (
       /*
       🔳 MyListViewItem 🔳
@@ -63,5 +61,5 @@ export const MyListViewItem = observer(
         </div>
       </div>
     );
-  }, ContextProps)
+  }
 );

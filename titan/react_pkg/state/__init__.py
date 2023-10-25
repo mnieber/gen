@@ -11,8 +11,9 @@ base_tags = {"state": ["react-state"]}
 
 @create("state")
 def create_state(term):
-    name = u0(kebab_to_camel(term.data) + "State")
-    state = State(name=name)
+    prefix = kebab_to_camel(term.data)
+    name = u0(prefix + "State")
+    state = State(prefix=prefix, name=name)
     return state
 
 

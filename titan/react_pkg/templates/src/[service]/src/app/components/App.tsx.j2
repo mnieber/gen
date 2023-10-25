@@ -11,17 +11,29 @@ export const App = () => {
   return (
     <QueryClientProvider client={queryClient}>                                      {% ?? _.react_app.api_module %}
       <Router history={history}>                                                    {% ?? _.react_app.routes_module %}
-        <div
-          className={cn('App', [
-              L.col.banner(),
-              `min-width-[${breakpoints.xs}] h-screen overflow-x-hidden`
-          ]
-        )}>
+        <AppFrame>
           <AuthStateProvider>                                                         {% ?? _.react_app.auth_module %}
             <RootSwitch />                                                            {% ?? _.react_app.routes_module %}
           </AuthStateProvider>                                                        {% ?? _.react_app.auth_module %}
-        </div>
+        </AppFrame>
       </Router>                                                                     {% ?? _.react_app.routes_module %}
     </QueryClientProvider>                                                          {% ?? _.react_app.api_module %}
   );
 }
+
+export const AppFrame = (props: React.PropsWithChildren<{}>) => {
+  return (
+    <div
+      id="App"
+      className={cn('App', [
+          L.col.banner(),
+          `min-width-[${breakpoints.xs}] h-screen overflow-x-hidden`
+      ]
+      )}
+      tabIndex={0}
+      ref={(x: any) => x.focus()}
+    >
+      {props.children}
+    </div>
+  );
+};

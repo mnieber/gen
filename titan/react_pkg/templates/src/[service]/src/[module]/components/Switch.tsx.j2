@@ -1,11 +1,12 @@
 {% magic_with moduleName = _.module.name %}
 {% magic_with routeName = route.name %}
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { getRoutes } from '/src/routes/routeTable';
 import type { RoutesT as ModuleNameRoutesT } from '/src/moduleName/routeTable';
 
-export const ModuleNameSwitch = () => {
+export const ModuleNameSwitch = observer(() => {
   const routes = getRoutes<ModuleNameRoutesT>();
   return (
     <Switch>
@@ -13,4 +14,4 @@ export const ModuleNameSwitch = () => {
         </Route>                                                                {% endfor %}
     </Switch>
   );
-};
+});

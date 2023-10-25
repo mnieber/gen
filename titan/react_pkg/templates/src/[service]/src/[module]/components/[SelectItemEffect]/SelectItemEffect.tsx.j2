@@ -7,7 +7,7 @@ import { Effect } from '/src/utils/components';
 import * as R from 'ramda';
 import {
   {{ _.component.item_list.item.ts_type }}
-} from '/src/api/types/{{ _.component.item_list.item.type_name }}T';
+} from '/src/api/types/{{ _.component.item_list.item.ts_type }}';
 
 type ArgsT = {
   myItemId?: string;                                                                  {% ?? __.get_item_id() %}

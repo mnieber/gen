@@ -1,3 +1,4 @@
+{% magic_with myState = __.state.prefix %}
 {% magic_with myItem = __.item_list.item_name %}
 {% magic_with myModule = _.component.module.name %}
 {% magic_with MyListView = _.component.name %}
@@ -7,6 +8,7 @@ import { withContextProps } from 'react-props-from-context';
 import { cn } from '/src/utils/classnames';
 import { observer } from 'mobx-react-lite';
 import { MyItemT } from '/src/api/types/MyItemT';
+import { myStateCtx } from '/src/{{ __.state.module.name }}/hooks/useMyStateContext';
 import { isLoading } from 'mobx-resource-states';
 import { MyListViewKeyHandler } from '/src/myModule/components';                               {% ?? __.has_key_handler %}
 import { MyListViewItem } from '/src/myModule/components/MyListViewItem';
@@ -25,12 +27,11 @@ export type PropsT = {
 };
 
 const ContextProps = {
-  // container: {{ __.item_list.container.name }}                                               {% ?? __.item_list.container %}
-  myItems: fooCtx.myItems,
-  myItemsDragAndDrop: fooCtx.myItemsDragAndDrop,                                                {% ?? __.has_drag_and_drop %}
-  myItemsHighlight: fooCtx.myItemsHighlight,                                                    {% ?? __.has_highlight or __.has_selection %}
-  myItemsHovering: fooCtx.myItemsHovering,                                                      {% ?? __.has_drag_and_drop %}
-  myItemsSelection: fooCtx.myItemsSelection,                                                    {% ?? __.has_selection %}
+  myItems: myStateCtx.myItems,
+  myItemsDragAndDrop: myStateCtx.myItemsDragAndDrop,                                           {% ?? __.has_drag_and_drop %}
+  myItemsHighlight: myStateCtx.myItemsHighlight,                                               {% ?? __.has_highlight or __.has_selection %}
+  myItemsHovering: myStateCtx.myItemsHovering,                                                 {% ?? __.has_drag_and_drop %}
+  myItemsSelection: myStateCtx.myItemsSelection,                                               {% ?? __.has_selection %}
 };
 
 export const MyListView = observer(
@@ -93,11 +94,11 @@ export const MyListView = observer(
     // 🔳 MyListView 🔳
     //
     return (
-      <MyListViewKeyHandler className={cn(props.className)}>                                    {% ?? __.has_key_handler %}
+      <MyListViewKeyHandler>                                                                    {% ?? __.has_key_handler %}
         <div
           className={cn('MyListView', [
             L.col.banner(),
-            props.className,                                                                    {% ?? not __.has_key_handler %}
+            props.className,
             {% remove_trailing suffix="," %}
           ])}
           tabIndex={0}                                                                          {% ?? __.has_key_handler %}

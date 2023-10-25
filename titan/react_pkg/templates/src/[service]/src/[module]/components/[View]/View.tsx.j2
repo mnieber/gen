@@ -1,6 +1,6 @@
 {% magic_with myComponent = _.component.name %}
 {% magic_with MyImportedComponent = component.name %}
-import { withContextProps } from '/src/app/defaultProps';
+import { withContextProps } from 'react-props-from-context';
 import { cn } from '/src/utils/classnames';
 import { observer } from 'mobx-react-lite';
 import { MyImportedComponent } from '/src/{{ component.module.name }}/components/MyImportedComponent';            {% !! component in __.imported_components %}
