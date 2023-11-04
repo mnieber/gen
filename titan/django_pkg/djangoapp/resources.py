@@ -22,10 +22,6 @@ class DjangoApp(Tool):
     def use_translation(self):
         return False
 
-    @property
-    def add_tests(self):
-        return False
-
     def add_translation(self, id, value, translations):
         if id in self.translation_ids:
             return
