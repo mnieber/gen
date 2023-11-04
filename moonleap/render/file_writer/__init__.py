@@ -5,15 +5,14 @@ import zlib
 from pathlib import Path
 
 from moonleap.render.file_merger import get_file_merger
-from moonleap.session import get_session
 
 
 class FileWriter:
-    def __init__(self, snapshot_fn, check_crc_before_write):
+    def __init__(self, snapshot_fn, check_crc_before_write, root_dir):
         self.output_filenames = []
         self.all_output_filenames = []
         self.warnings = []
-        self.root_dir = Path(get_session().output_dir)
+        self.root_dir = Path(root_dir)
         self.check_crc_before_write = check_crc_before_write
         self.fn_parts = {}
         self.snapshot_fn = Path(snapshot_fn)

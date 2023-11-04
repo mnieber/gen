@@ -29,7 +29,7 @@ def _render(task: RenderQueueTask):
         if template_fn.is_dir():
             add_render_tasks(template_fn, output_fn, task)
         else:
-            get_session().file_writer.write_file(
+            get_session().ws.file_writer.write_file(
                 output_fn,
                 content=render_template(template_fn, dict(_=task.context, __=helpers)),
                 is_dir=False,

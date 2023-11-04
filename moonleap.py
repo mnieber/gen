@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     if args.action == "gen":
         try:
-            gen(args, args.smart, session)
+            gen(args, session)
         except NeverException as e:
             session.report("Error: " + str(e))
             if args.stacktrace:

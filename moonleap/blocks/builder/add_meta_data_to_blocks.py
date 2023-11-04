@@ -11,7 +11,7 @@ def _get_extended_scope_names(root_block):
 
 
 def add_meta_data_to_blocks(blocks):
-    scope_manager = get_session().scope_manager
+    scope_manager = get_session().ws.scope_manager
     for block in blocks:
         block.set_scopes(_get_scopes(scope_manager, block))
 

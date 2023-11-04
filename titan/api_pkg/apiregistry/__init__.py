@@ -10,6 +10,6 @@ def get_api_reg():
     global _api_registry
     if not _api_registry:
         _api_registry = ApiRegistry()
-        load_api_specs(_api_registry, get_session().spec_dir)
+        load_api_specs(_api_registry, get_session().ws.spec_dir)
 
     return _api_registry

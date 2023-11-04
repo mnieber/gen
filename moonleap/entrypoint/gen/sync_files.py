@@ -2,8 +2,6 @@ import filecmp
 import os
 import shutil
 
-from moonleap.session import get_session
-
 # Workflow:
 #
 # 1. Generate the output dir
@@ -19,8 +17,6 @@ from moonleap.session import get_session
 
 
 def sync_files(output_dir, shadow_dir, stage_dir):
-    session = get_session()
-
     if not os.path.exists(shadow_dir):
         os.makedirs(shadow_dir)
 

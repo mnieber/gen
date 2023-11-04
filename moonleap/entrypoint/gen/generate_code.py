@@ -17,7 +17,7 @@ from moonleap.session import trace
 
 def generate_code(session, post_process_all_files):
     expanded_markdown = expand_markdown(
-        session.spec_fn, output_fn=Path(".moonleap") / "spec.md"
+        session.ws.spec_fn, output_fn=Path(".moonleap") / "spec.md"
     )
 
     trace("Parsing...")
@@ -30,29 +30,30 @@ def generate_code(session, post_process_all_files):
         add_render_tasks_from_packages(session.settings.get("packages_by_scope", {}))
         process_render_queue()
 
-        session.file_writer.write_merged_files()
-        for warning in session.file_writer.warnings:
+        file_writer = session.ws.file_writer
+        file_writer.write_merged_files()
+        for warning in file_writer.warnings:
             trace(warning)
 
         trace("Post processing...")
         post_process_output_files(
-            session.file_writer.all_output_filenames
+            file_writer.all_output_filenames
             if post_process_all_files
-            else session.file_writer.output_filenames,
+            else file_writer.output_filenames,
             session.get_post_process_settings(),
             session.get_bin_settings(),
         )
     except Exception as e:
         raise e
     else:
-        session.file_writer.write_snapshot()
+        file_writer.write_snapshot()
         remove_stale_output_files(
-            session.file_writer.all_output_filenames, session.output_dir
+            file_writer.all_output_filenames, session.ws.output_dir
         )
         sync_files(
-            session.output_dir,
-            os.path.join(session.output_root_dir, "shadow"),
-            os.path.join(session.output_root_dir, "stage"),
+            session.ws.output_dir,
+            os.path.join(session.ws.output_root_dir, "shadow"),
+            os.path.join(session.ws.output_root_dir, "stage"),
         )
 
     trace("Creating report...")
