@@ -9,9 +9,8 @@ base_tags = {"state~provider": ["component"]}
 
 @create("state~provider")
 def create_state_provider(term):
-    base_name = kebab_to_camel(term.data)
     state_provider = StateProvider(
-        base_name=base_name, name=f"{u0(base_name)}StateProvider"
+        name=f"{u0(kebab_to_camel(term.data))}StateProvider",
     )
     return state_provider
 
@@ -34,7 +33,7 @@ rules = {
         (has, "state~provider"): (
             # then the module also has a state
             lambda module, state_provider: create_forward(
-                module, has, f"{state_provider.base_name}:state"
+                module, has, f"{state_provider.kebab_data}:state"
             )
         ),
         (has + ("hack",), "state~provider"): empty_rule(),

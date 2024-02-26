@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from jdoc.moonleap.block import Block
 from moonleap.blocks.term import Term
 from moonleap.resources.relations.slctrs import RelSelector
+from moonleap.utils.case import kebab_to_camel
 from moonleap.utils.get_id import get_id
 
 
@@ -43,3 +44,11 @@ class Resource:
         if not self.has_relation(relation, obj_res):
             self._relations.append((relation, obj_res))
             obj_res._inv_relations.append((relation, self))
+
+    @property
+    def kebab_data(self):
+        return self.meta.term.data
+
+    @property
+    def camel_data(self):
+        return kebab_to_camel(self.meta.term.data)
