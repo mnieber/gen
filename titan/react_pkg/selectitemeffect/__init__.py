@@ -1,4 +1,3 @@
-from pathlib import Path
 
 import moonleap.packages.extensions.props as P
 from moonleap import create, create_forward, empty_rule, extend, rule, u0
@@ -16,7 +15,6 @@ def create_select_item_effect(term):
         item_name=kebab_to_camel(term.data),
         name=kebab_to_camel(f"Select{u0(term.data)}Effect"),
     )
-    select_item_effect.template_dir = Path(__file__).parent / "templates"
     return select_item_effect
 
 

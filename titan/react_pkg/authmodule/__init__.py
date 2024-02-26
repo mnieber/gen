@@ -1,4 +1,3 @@
-from pathlib import Path
 
 import moonleap.packages.extensions.props as P
 from moonleap import create, create_forward, extend
@@ -11,7 +10,7 @@ from .resources import AuthModule
 
 @create("auth:module")
 def create_auth_module(term):
-    return create_react_module(AuthModule, term, Path(__file__).parent / "templates")
+    return create_react_module(AuthModule, term)
 
 
 @extend(ReactApp)

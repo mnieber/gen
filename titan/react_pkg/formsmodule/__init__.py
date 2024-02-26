@@ -1,4 +1,3 @@
-from pathlib import Path
 
 import moonleap.packages.extensions.props as P
 from moonleap import create, extend, rule
@@ -9,7 +8,7 @@ from titan.react_pkg.reactmodule import ReactModule, create_react_module
 
 @create("forms:module")
 def create_forms_module(term):
-    return create_react_module(ReactModule, term, Path(__file__).parent / "templates")
+    return create_react_module(ReactModule, term)
 
 
 @rule("forms:module")

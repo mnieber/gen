@@ -1,4 +1,3 @@
-from pathlib import Path
 
 import moonleap.packages.extensions.props as P
 from moonleap import create, create_forward, empty_rule, extend, rule
@@ -15,8 +14,6 @@ base_tags = {
 @create("django-app")
 def create_django(term):
     django_app = DjangoApp(name="django-app")
-    django_app.template_dir = Path(__file__).parent / "templates"
-    django_app.template_context = dict(django_app=django_app)
     return django_app
 
 

@@ -1,4 +1,3 @@
-from pathlib import Path
 
 import moonleap.packages.extensions.props as P
 from moonleap import MemFun, Prop, create, empty_rule, extend, kebab_to_camel
@@ -11,16 +10,14 @@ from .resources import ReactModule  # noqa
 base_tags = {"module": ["react-module"]}
 
 
-def create_react_module(klass, term, template_dir):
+def create_react_module(klass, term):
     module = klass(name=kebab_to_camel(term.data))
-    module.template_dir = template_dir
-    module.template_context = dict(module=module)
     return module
 
 
 @create("module")
 def create_module(term):
-    return create_react_module(ReactModule, term, Path(__file__).parent / "templates")
+    return create_react_module(ReactModule, term)
 
 
 @extend(ReactModule)

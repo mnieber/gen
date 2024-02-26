@@ -1,7 +1,6 @@
-from pathlib import Path
 
 import moonleap.packages.extensions.props as P
-from moonleap import create, create_forward, extend, rule
+from moonleap import create, create_forward, extend
 from moonleap.blocks.verbs import has
 from moonleap.packages.rule import Priorities
 
@@ -15,7 +14,6 @@ base_tags = {
 @create("key-handler")
 def create_key_handler(term):
     view = KeyHandler(name="KeyHandler")
-    view.template_dir = Path(__file__).parent / "templates"
     return view
 
 

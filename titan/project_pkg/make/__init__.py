@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from pathlib import Path
 
 import moonleap.packages.extensions.props as P
 from moonleap import create, create_forward, empty_rule, extend, rule
@@ -19,8 +18,6 @@ class Makefile(Tool):
 @create("makefile")
 def create_makefile(term):
     makefile = Makefile("makefile")
-    makefile.template_dir = Path(__file__).parent / "templates"
-    makefile.template_context = dict(makefile=makefile)
     return makefile
 
 

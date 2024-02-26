@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from pathlib import Path
 
 from moonleap import create, create_forward, empty_rule, rule
 from moonleap.blocks.verbs import has
@@ -14,8 +13,6 @@ class Env(Tool):
 @create("env")
 def create_env(term):
     env = Env("env")
-    env.template_dir = Path(__file__).parent / "templates"
-    env.template_context = dict(env=env)
     return env
 
 

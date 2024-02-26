@@ -1,4 +1,3 @@
-from pathlib import Path
 
 import moonleap.packages.extensions.props as P
 from moonleap import Priorities, create, create_forward, empty_rule, extend, rule
@@ -13,8 +12,6 @@ base_tags = {"react-app": ["tool"]}
 @create("react-app")
 def create_react_app(term):
     react_app = ReactApp(name="react-app")
-    react_app.template_dir = Path(__file__).parent / "templates"
-    react_app.template_context = dict(react_app=react_app)
     return react_app
 
 

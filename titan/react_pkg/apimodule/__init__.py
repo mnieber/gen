@@ -1,4 +1,3 @@
-from pathlib import Path
 
 import moonleap.packages.extensions.props as P
 from moonleap import create, create_forward, extend
@@ -12,9 +11,7 @@ from .resources import ApiModule  # noqa
 
 @create("api:module")
 def create_api_module(term):
-    api_module = create_react_module(
-        ApiModule, term, Path(__file__).parent / "templates"
-    )
+    api_module = create_react_module(ApiModule, term)
     api_module.render_context = lambda api_module: dict(
         module=api_module, api_reg=get_api_reg()
     )

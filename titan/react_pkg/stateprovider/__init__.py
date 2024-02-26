@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import moonleap.packages.extensions.props as P
 from moonleap import create, create_forward, empty_rule, extend, kebab_to_camel, u0
 from moonleap.blocks.verbs import has, provides
@@ -15,7 +13,6 @@ def create_state_provider(term):
     state_provider = StateProvider(
         base_name=base_name, name=f"{u0(base_name)}StateProvider"
     )
-    state_provider.template_dir = Path(__file__).parent / "templates"
     return state_provider
 
 

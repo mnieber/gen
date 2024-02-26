@@ -1,7 +1,6 @@
-from pathlib import Path
 
 import moonleap.packages.extensions.props as P
-from moonleap import create, extend, rule
+from moonleap import create, extend
 from moonleap.blocks.verbs import runs, uses
 from titan.project_pkg.service import Service, Tool
 
@@ -33,16 +32,6 @@ def create_tool(term):
 @create("vandelay")
 def create_vandelay(term):
     return Vandelay(name=term.tag, language=term.data)
-
-
-@rule("setup.cfg")
-def created_setupcfg(setupcfg):
-    setupcfg.template_dir = Path(__file__).parent / "templates_setupcfg"
-
-
-@rule("pip-compile")
-def created_pip_compile(pip_compile):
-    pip_compile.template_dir = Path(__file__).parent / "templates_pip_compile"
 
 
 @extend(Service)

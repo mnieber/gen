@@ -1,4 +1,3 @@
-from pathlib import Path
 
 import moonleap.packages.extensions.props as P
 from moonleap import create, create_forward, empty_rule, extend, kebab_to_camel, rule
@@ -11,7 +10,7 @@ from .resources import NavPage, Route  # noqa
 
 @create("routes:module")
 def create_routes_module(term):
-    return create_react_module(ReactModule, term, Path(__file__).parent / "templates")
+    return create_react_module(ReactModule, term)
 
 
 @rule("routes:module")

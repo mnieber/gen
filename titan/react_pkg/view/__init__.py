@@ -1,4 +1,3 @@
-from pathlib import Path
 
 import moonleap.packages.extensions.props as P
 from moonleap import (
@@ -23,7 +22,6 @@ base_tags = {
 def create_view(term):
     name = u0(parts_to_camel(term.parts))
     view = View(name=f"{name}")
-    view.template_dir = Path(__file__).parent / "templates"
     return view
 
 
