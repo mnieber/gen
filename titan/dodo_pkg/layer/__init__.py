@@ -1,8 +1,6 @@
-from pathlib import Path
-
-import moonleap.packages.extensions.props as P
+import moonleap.extension.props as P
 from moonleap import create, create_forward, empty_rule, extend, kebab_to_camel
-from moonleap.blocks.verbs import configured_by, contains, has
+from moonleap.spec.verbs import configured_by, contains, has
 from titan.project_pkg.dockercompose.resources import DockerCompose
 from titan.project_pkg.project import Project
 from titan.project_pkg.service import Service

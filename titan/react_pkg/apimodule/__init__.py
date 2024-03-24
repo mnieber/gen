@@ -1,7 +1,6 @@
-
-import moonleap.packages.extensions.props as P
+import moonleap.extension.props as P
 from moonleap import create, create_forward, extend
-from moonleap.blocks.verbs import has
+from moonleap.spec.verbs import has
 from titan.api_pkg.apiregistry import get_api_reg
 from titan.react_pkg.reactapp import ReactApp
 from titan.react_pkg.reactmodule import create_react_module

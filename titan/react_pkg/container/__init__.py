@@ -1,4 +1,4 @@
-import moonleap.packages.extensions.props as P
+import moonleap.extension.props as P
 from moonleap import (
     Priorities,
     Prop,
@@ -8,7 +8,7 @@ from moonleap import (
     extend,
     kebab_to_camel,
 )
-from moonleap.blocks.verbs import has, stores
+from moonleap.spec.verbs import has, stores
 from titan.react_pkg.behavior.resources import Behavior
 from titan.react_pkg.state.resources import State
 from titan.types_pkg.itemlist import ItemList

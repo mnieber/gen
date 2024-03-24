@@ -2,7 +2,7 @@ import typing as T
 from dataclasses import dataclass, field
 
 from moonleap import Resource
-from moonleap.blocks.parser.utils.get_meta import get_meta
+from moonleap.spec_parser.get_meta import get_meta
 from moonleap.utils.case import l0
 from titan.types_pkg.typeregistry import get_type_reg
 from titan.typespec.api_spec import ApiSpec

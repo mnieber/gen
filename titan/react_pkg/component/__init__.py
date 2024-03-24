@@ -1,6 +1,6 @@
-import moonleap.packages.extensions.props as P
+import moonleap.extension.props as P
 from moonleap import empty_rule, extend, rule
-from moonleap.blocks.verbs import has
+from moonleap.spec.verbs import has
 from titan.react_pkg.reactmodule import ReactModule
 
 from .resources import Component  # noqa

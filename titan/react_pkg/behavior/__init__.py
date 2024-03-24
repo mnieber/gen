@@ -1,5 +1,5 @@
 from moonleap import create, create_forward, kebab_to_camel, parts_to_camel, u0
-from moonleap.blocks.verbs import has
+from moonleap.spec.verbs import has
 
 from .resources import Behavior, is_exposed_bvr  # noqa: F401
 

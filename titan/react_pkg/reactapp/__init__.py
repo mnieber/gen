@@ -1,7 +1,6 @@
-
-import moonleap.packages.extensions.props as P
+import moonleap.extension.props as P
 from moonleap import Priorities, create, create_forward, empty_rule, extend, rule
-from moonleap.blocks.verbs import has, runs
+from moonleap.spec.verbs import has, runs
 from titan.project_pkg.service import Service
 
 from .resources import ReactApp

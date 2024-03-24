@@ -1,5 +1,5 @@
 from moonleap import create, create_forward
-from moonleap.blocks.verbs import has, runs
+from moonleap.spec.verbs import has, runs
 
 from .resources import NodePackage  # noqa
 

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from moonleap import create, create_forward, empty_rule, rule
-from moonleap.blocks.verbs import has
+from moonleap.spec.verbs import has
 from titan.project_pkg.service import Tool
 
 

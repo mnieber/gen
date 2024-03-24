@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-import moonleap.packages.extensions.props as P
+import moonleap.extension.props as P
 from moonleap import Resource, create, extend
-from moonleap.blocks.verbs import has
+from moonleap.spec.verbs import has
 from titan.project_pkg.project import Project
 
 

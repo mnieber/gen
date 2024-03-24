@@ -1,6 +1,6 @@
-import moonleap.packages.extensions.props as P
+import moonleap.extension.props as P
 from moonleap import create, create_forward, empty_rule, extend, kebab_to_camel, u0
-from moonleap.blocks.verbs import has, provides
+from moonleap.spec.verbs import has, provides
 
 from .resources import StateProvider
 

@@ -1,7 +1,6 @@
-
-import moonleap.packages.extensions.props as P
+import moonleap.extension.props as P
 from moonleap import create, create_forward, empty_rule, extend, rule, u0
-from moonleap.blocks.verbs import has
+from moonleap.spec.verbs import has
 from moonleap.utils.case import kebab_to_camel
 
 from .resources import SelectItemEffect

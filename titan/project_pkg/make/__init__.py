@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-import moonleap.packages.extensions.props as P
+import moonleap.extension.props as P
 from moonleap import create, create_forward, empty_rule, extend, rule
-from moonleap.blocks.verbs import has
+from moonleap.spec.verbs import has
 from titan.project_pkg.service import Service, Tool
 
 base_tags = {

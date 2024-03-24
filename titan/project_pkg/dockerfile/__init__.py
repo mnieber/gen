@@ -1,6 +1,6 @@
-import moonleap.packages.extensions.props as P
+import moonleap.extension.props as P
 from moonleap import create, extend, rule
-from moonleap.blocks.verbs import has
+from moonleap.spec.verbs import has
 
 from .resources import Dockerfile, DockerImage
 

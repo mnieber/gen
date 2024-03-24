@@ -1,5 +1,4 @@
-
-import moonleap.packages.extensions.props as P
+import moonleap.extension.props as P
 from moonleap import (
     Priorities,
     create,
@@ -9,7 +8,7 @@ from moonleap import (
     parts_to_camel,
     u0,
 )
-from moonleap.blocks.verbs import has
+from moonleap.spec.verbs import has
 
 from .resources import View
 

@@ -1,4 +1,4 @@
-import moonleap.packages.extensions.props as P
+import moonleap.extension.props as P
 from moonleap import (
     MemFun,
     Prop,
@@ -9,7 +9,7 @@ from moonleap import (
     kebab_to_camel,
     rule,
 )
-from moonleap.blocks.verbs import contains, has, provides
+from moonleap.spec.verbs import contains, has, provides
 from titan.django_pkg.djangoapp import DjangoApp
 from titan.django_pkg.djangomodule.get_map_from_item_to_django_module import (
     get_map_from_item_to_django_module,

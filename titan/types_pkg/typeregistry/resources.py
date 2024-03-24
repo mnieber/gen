@@ -3,7 +3,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 
 from moonleap import Resource, u0
-from moonleap.blocks.parser.utils.get_meta import get_meta
+from moonleap.spec_parser.get_meta import get_meta
 from moonleap.utils.case import l0
 from titan.typespec.type_spec import TypeSpec
 

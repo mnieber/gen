@@ -1,6 +1,6 @@
-import moonleap.packages.extensions.props as P
+import moonleap.extension.props as P
 from moonleap import MemFun, create, create_forward, empty_rule, extend, kebab_to_camel
-from moonleap.blocks.verbs import has, runs, uses
+from moonleap.spec.verbs import has, runs, uses
 
 from . import props
 from .resources import Service, Tool

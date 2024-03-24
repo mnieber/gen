@@ -1,7 +1,6 @@
-
-import moonleap.packages.extensions.props as P
+import moonleap.extension.props as P
 from moonleap import create, extend
-from moonleap.blocks.verbs import runs, uses
+from moonleap.spec.verbs import runs, uses
 from titan.project_pkg.service import Service, Tool
 
 from .resources import Vandelay

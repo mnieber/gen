@@ -1,6 +1,6 @@
-import moonleap.packages.extensions.props as P
+import moonleap.extension.props as P
 from moonleap import create, empty_rule, extend
-from moonleap.blocks.verbs import has, runs
+from moonleap.spec.verbs import has, runs
 from titan.project_pkg.project import Project
 
 from .resources import DockerCompose  # noqa

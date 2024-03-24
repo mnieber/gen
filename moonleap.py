@@ -1,8 +1,9 @@
 import traceback
 from argparse import ArgumentParser
 
-from moonleap.entrypoint import create_session, gen, parse_args
+from moonleap.entrypoint import gen, parse_args
 from moonleap.entrypoint.check_args import check_args
+from moonleap.session.create_session import create_session
 
 
 class NeverException(Exception):

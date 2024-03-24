@@ -1,7 +1,6 @@
-
-import moonleap.packages.extensions.props as P
+import moonleap.extension.props as P
 from moonleap import create, create_forward, empty_rule, extend, rule
-from moonleap.blocks.verbs import connects, has, runs, uses
+from moonleap.spec.verbs import connects, has, runs, uses
 from titan.project_pkg.service import Service
 
 from .resources import DjangoAdminReorder, DjangoApp, DjangoDbBackup

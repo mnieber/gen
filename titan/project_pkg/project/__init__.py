@@ -1,6 +1,6 @@
 from pathlib import Path
 
-import moonleap.packages.extensions.props as P
+import moonleap.extension.props as P
 from moonleap import (
     MemFun,
     RootResource,
@@ -10,8 +10,8 @@ from moonleap import (
     kebab_to_camel,
     rule,
 )
-from moonleap.blocks.verbs import has
-from moonleap.packages.extensions.memfield import MemField
+from moonleap.extension.memfield import MemField
+from moonleap.spec.verbs import has
 
 from . import props
 from .resources import Project

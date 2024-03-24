@@ -3,7 +3,7 @@ import json
 import os
 
 import jinja2
-from moonleap.blocks.term import verb_to_word
+from moonleap.spec.term import verb_to_word
 from moonleap.utils import chop_suffix, dbg
 from moonleap.utils.case import camel_to_kebab, l0, sn, u0
 from moonleap.utils.inflect import plural
