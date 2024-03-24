@@ -1,8 +1,6 @@
-import os
 from pathlib import Path
 
 from moonleap.block_builder.build_blocks import build_blocks
-from moonleap.entrypoint.sync_files import sync_files
 from moonleap.render.post_process_output_files import post_process_output_files
 from moonleap.render.remove_stale_output_files import remove_stale_output_files
 from moonleap.render_queue.add_render_tasks_from_packages import (
@@ -51,11 +49,6 @@ def generate_code(session, post_process_all_files):
         file_writer.write_snapshot()
         remove_stale_output_files(
             file_writer.all_output_filenames, session.ws.output_dir
-        )
-        sync_files(
-            session.ws.output_dir,
-            os.path.join(session.ws.output_root_dir, "shadow"),
-            os.path.join(session.ws.output_root_dir, "stage"),
         )
 
     trace("Creating report...")
