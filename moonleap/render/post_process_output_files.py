@@ -41,6 +41,8 @@ def post_process_output_files(output_filenames, post_process_configs, bin_config
     fns_by_tool_name = defaultdict(lambda: [])
 
     for output_fn in output_filenames:
+        if not Path(output_fn).exists():
+            continue
         for suffix_regex, tool_names in post_process_configs.items():
             if re.match(suffix_regex, Path(output_fn).suffix):
                 for tool_name in tool_names:

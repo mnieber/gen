@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import json
+import shutil
 import zlib
 from pathlib import Path
 
@@ -18,13 +19,28 @@ class FileWriter:
         self.snapshot_fn = Path(snapshot_fn)
         self._load_crc_snapshot(snapshot_fn)
 
+    @property
+    def crc_by_fn(self) -> dict:
+        return self.snapshot["crc_by_fn"]
+
+    @property
+    def files_to_post_process(self) -> list:
+        return self.snapshot["files_to_post_process"]
+
+    @property
+    def ml_filenames_to_copy(self) -> list:
+        return self.snapshot["ml_filenames_to_copy"]
+
     def _load_crc_snapshot(self, snapshot_fn):
+        self.snapshot = dict(
+            crc_by_fn={},
+            files_to_post_process=[],
+            ml_filenames_to_copy=[],
+        )
         if self.snapshot_fn.exists():
             with open(snapshot_fn, "r") as f:
                 f_str = f.read()
-                self.crc_by_fn = json.loads(f_str)
-        else:
-            self.crc_by_fn = {}
+                self.snapshot = json.loads(f_str)
 
     def write_file(self, fn, content, is_dir=False):
         fn = (self.root_dir / fn).absolute()
@@ -42,26 +58,39 @@ class FileWriter:
 
     def _write(self, fn, content):
         fn_str = str(fn)
+        ml_fn = fn.parent / ".moonleap" / fn.name
+        ml_fn_str = str(ml_fn)
 
-        if fn_str in self.all_output_filenames:
-            self.warnings.append(f"Warning: writing twice to {fn_str}")
+        if ml_fn_str in self.all_output_filenames:
+            self.warnings.append(f"Warning: writing twice to {ml_fn_str}")
         else:
-            self.all_output_filenames.append(fn_str)
+            self.all_output_filenames.append(ml_fn_str)
 
         crc = _crc(content)
         if (
-            fn_str in self.crc_by_fn
-            and self.crc_by_fn[fn_str] == crc
+            ml_fn_str in self.crc_by_fn
+            and self.crc_by_fn[ml_fn_str] == crc
             and self.check_crc_before_write
             and fn.exists()
         ):
             return
 
-        self.output_filenames.append(fn_str)
-        self.crc_by_fn[fn_str] = crc
-        fn.parent.mkdir(parents=True, exist_ok=True)
-        with open(fn, "wb" if _is_binary(content) else "w") as ofs:
+        self.output_filenames.append(ml_fn_str)
+        self.crc_by_fn[ml_fn_str] = crc
+        if ml_fn_str not in self.files_to_post_process:
+            self.files_to_post_process.append(ml_fn_str)
+
+        # At this point we know that the file has changed and we need to write it.
+        # We will always write the shadow file (with .ml in it).
+        # We will also write the original file if it doesn't exist and there is no
+        # shadow file yet (when the user removes the original file but keeps the shadow file
+        # then it indicates that the user doesn't want to use the shadow file in their project).
+        ml_fn.parent.mkdir(parents=True, exist_ok=True)
+        write_to_fn = not fn.exists() and not ml_fn.exists()
+        with open(ml_fn_str, "wb" if _is_binary(content) else "w") as ofs:
             ofs.write(content)
+        if write_to_fn:
+            self.ml_filenames_to_copy.append((ml_fn_str, fn_str))
 
     def write_merged_files(self):
         for fn_str, parts in self.fn_parts.items():
@@ -72,9 +101,17 @@ class FileWriter:
                 content = file_merger.merge(content, part)
             self._write(Path(fn_str), content)
 
-    def write_snapshot(self):
+    def write_snapshot(self, clear_files_to_post_process):
+        if clear_files_to_post_process:
+            self.snapshot["files_to_post_process"] = []
+            self.snapshot["ml_filenames_to_copy"] = []
         with open(self.snapshot_fn, "w") as f:
-            json.dump(self.crc_by_fn, f)
+            json.dump(self.snapshot, f)
+
+    def copy_ml_files(self):
+        for ml_fn_str, fn_str in self.ml_filenames_to_copy:
+            if not Path(fn_str).exists():
+                shutil.copy(ml_fn_str, fn_str)
 
 
 def _is_binary(content):

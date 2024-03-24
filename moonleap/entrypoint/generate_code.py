@@ -2,7 +2,6 @@ from pathlib import Path
 
 from moonleap.block_builder.build_blocks import build_blocks
 from moonleap.render.post_process_output_files import post_process_output_files
-from moonleap.render.remove_stale_output_files import remove_stale_output_files
 from moonleap.render_queue.add_render_tasks_from_packages import (
     add_render_tasks_from_packages,
 )
@@ -13,7 +12,7 @@ from moonleap.spec_parser.expand_markdown import expand_markdown
 from moonleap.spec_parser.get_blocks import get_blocks
 
 
-def generate_code(session, post_process_all_files):
+def generate_code(session):
     expanded_markdown = expand_markdown(
         session.ws.spec_fn, output_fn=Path(".moonleap") / "spec.md"
     )
@@ -34,22 +33,17 @@ def generate_code(session, post_process_all_files):
             trace(warning)
 
         trace("Post processing...")
+        file_writer.write_snapshot(clear_files_to_post_process=False)
         post_process_output_files(
-            (
-                file_writer.all_output_filenames
-                if post_process_all_files
-                else file_writer.output_filenames
-            ),
+            file_writer.files_to_post_process,
             session.get_post_process_settings(),
             session.get_bin_settings(),
         )
+        file_writer.copy_ml_files()
+        file_writer.write_snapshot(clear_files_to_post_process=True)
     except Exception as e:
+        file_writer.write_snapshot(clear_files_to_post_process=False)
         raise e
-    else:
-        file_writer.write_snapshot()
-        remove_stale_output_files(
-            file_writer.all_output_filenames, session.ws.output_dir
-        )
 
     trace("Creating report...")
     report_resources(blocks)

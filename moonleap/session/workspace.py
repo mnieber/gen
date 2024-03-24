@@ -11,7 +11,6 @@ class Workspace:
         self.spec_dir = spec_dir
         self.output_root_dir = output_root_dir
         self.output_dir = f"{output_root_dir}/output"
-        self.expected_dir = f"{output_root_dir}/expected"
         self.snapshot_fn = f"{output_root_dir}/snapshot.json"
         self.type_specs_dir = os.path.join(self.spec_dir, "type_specs")
         self.scope_manager = None

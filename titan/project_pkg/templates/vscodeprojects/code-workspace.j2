@@ -1,10 +1,10 @@
 {
   "folders": [
     {
-      "path": "{{ _.settings.references.src }}"
+      "path": "{{ _.settings.vscode_project_root_dir }}"
     },
     {                                                               {% if __.has_vandelay %}
-      "path": "{{ _.settings.references.src }}/.vandelay"
+      "path": "{{ _.settings.vscode_project_root_dir }}/.vandelay"
     },                                                              {% endif %}
   ],
   "settings": {}
