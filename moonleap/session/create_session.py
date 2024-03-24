@@ -14,7 +14,7 @@ def create_session(args):
     session.load_settings(Path(args.spec_dir) / "settings.yml")
 
     workspace = Workspace(spec_dir=args.spec_dir, output_root_dir=args.output_dir)
-    workspace.init(is_smart=args.smart)
+    workspace.init(ask=args.ask)
     session.init(workspace)
 
     return session

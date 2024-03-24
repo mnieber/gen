@@ -1,12 +1,10 @@
 def parse_args(parser):
     parser.add_argument("--spec", required=True, dest="spec_dir")
     parser.add_argument(
-        "--smart",
+        "--ask",
         required=False,
         action="store_true",
-        help="If true, CRCs of output files are recorded, "
-        + "and - on subsequent runs - output files are not written if "
-        + "they have the same CRC.",
+        help="Ask to create directories",
     )
     parser.add_argument("--output-dir", required=False, default=".moonleap")
     parser.add_argument("--stacktrace", required=False, action="store_true")

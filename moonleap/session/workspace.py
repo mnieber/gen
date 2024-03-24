@@ -16,11 +16,12 @@ class Workspace:
         self.scope_manager = None
         self.file_writer = None
 
-    def init(self, is_smart):
+    def init(self, ask):
         self.scope_manager = ScopeManager()
         self.file_writer = FileWriter(
             self.snapshot_fn,
-            check_crc_before_write=is_smart,
+            check_crc_before_write=True,
+            ask_to_create_dirs=ask,
             root_dir=self.output_dir,
         )
         packages_by_scope = get_session().settings.get("packages_by_scope", {})

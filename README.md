@@ -46,7 +46,7 @@ Also, considering that operations such as selection, filtering and drag-and-drop
 
 ```
 pip install requirements.txt
-python moonleap.py --spec=specs/titan.md --smart gen
+python moonleap.py --spec=specs/titan.md --ask gen
 ```
 
 ## A short example
