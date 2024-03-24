@@ -50,7 +50,8 @@ class FileWriter:
         fn = (self.root_dir / fn).absolute()
 
         if is_dir:
-            fn.mkdir(parents=True, exist_ok=True)
+            if not fn.exists():
+                self.handle_missing_dir(fn)
             return
 
         if get_file_merger(fn):
@@ -82,43 +83,17 @@ class FileWriter:
         # At this point we know that the file has changed and we need to write it.
         # First we check if we must create the parent directory.
 
-        parent_dir = ml_fn.parent
-
-        # If parent_dir is a subdir of a missing dir that was already created for the
-        # user, then we can just create the parent dir.
+        parent_dir = fn.parent
         if not parent_dir.exists():
-            for missing_dir in self.missing_dirs:
-                if missing_dir.exists() and parent_dir.is_relative_to(missing_dir):
-                    parent_dir.mkdir(parents=True, exist_ok=True)
-                    break
-
-        if not parent_dir.exists:
-            # Find the root dir that is missing
-            missing_dir = parent_dir
-            while not missing_dir.parent.exists():
-                missing_dir = missing_dir.parent
-
-            # If we already knew that the dir was missing, then either this was already
-            # reported on, or we already asked the user if they want to create it.
-            if missing_dir in self.missing_dirs:
+            if not self.handle_missing_dir(parent_dir):
                 return
-
-            self.missing_dirs.append(missing_dir)
-            if self.ask_to_create_dirs:
-                create_dir = input(f"Create directory '{missing_dir}'? (Y/n): ")
-                if create_dir.lower() not in ("y", "yes", ""):
-                    return
-            else:
-                self.warnings.append(f"Skipping the creation of files in {missing_dir}")
-                return
-
-            parent_dir.mkdir(parents=True, exist_ok=True)
 
         # We will always write the shadow file (with .ml in it).
         # We will also write the original file if it doesn't exist and there is no
         # shadow file yet (when the user removes the original file but keeps the shadow file
         # then it indicates that the user doesn't want to use the shadow file in their project).
 
+        ml_fn.parent.mkdir(exist_ok=True)
         self.output_filenames.append(ml_fn_str)
         self.crc_by_fn[ml_fn_str] = crc
         if ml_fn_str not in self.files_to_post_process:
@@ -150,6 +125,41 @@ class FileWriter:
         for ml_fn_str, fn_str in self.ml_filenames_to_copy:
             if not Path(fn_str).exists():
                 shutil.copy(ml_fn_str, fn_str)
+
+    def handle_missing_dir(self, missing_dir):
+        # If missing_dir is a subdir of an already missing dir that was already created
+        # for the user, then we can just create the missing dir.
+        for already_missing_dir in self.missing_dirs:
+            if already_missing_dir.exists() and missing_dir.is_relative_to(
+                already_missing_dir
+            ):
+                missing_dir.mkdir(parents=True, exist_ok=False)
+                return True
+
+        # Find the root dir that is missing
+        root_missing_dir = missing_dir
+        while not root_missing_dir.parent.exists():
+            root_missing_dir = root_missing_dir.parent
+
+        # If we already knew that the dir was missing, then either this was already
+        # reported on, or the user has already said that they do not want to create it.
+        if root_missing_dir in self.missing_dirs:
+            return False
+
+        self.missing_dirs.append(root_missing_dir)
+
+        if self.ask_to_create_dirs:
+            create_dir = input(f"Create directory '{root_missing_dir}'? (Y/n): ")
+            if create_dir.lower() not in ("y", "yes", ""):
+                return False
+        else:
+            self.warnings.append(
+                f"Skipping the creation of files in {root_missing_dir}"
+            )
+            return False
+
+        missing_dir.mkdir(parents=True, exist_ok=False)
+        return True
 
 
 def _is_binary(content):
